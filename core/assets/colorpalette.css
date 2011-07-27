@@ -1,0 +1,99 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-color-palette {
+  cursor: default;
+  outline: none;
+}
+
+.thin-color-palette-table {
+  border: 0;
+  margin: 5px 3px;
+  border-spacing: 2px 0 !important;
+}
+
+.thin-color-palette-cell {
+  border-width: 0 1px;
+  border-color: rgb(220, 220, 220);
+  border-style: solid;
+  cursor: pointer;
+  height: 12px;
+  text-align: center;
+  vertical-align: middle;
+  width: 12px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.thin-color-palette-body > 
+    .thin-color-palette-row:first-child .thin-color-palette-cell {
+  border-top-width: 1px !important;
+}
+.thin-color-palette-body > 
+    .thin-color-palette-row:last-child .thin-color-palette-cell {
+  border-bottom-width: 1px !important;
+}
+
+.thin-color-palette-cell .thin-color-palette-colorswatch {
+  height: 12px;
+  width: 12px;
+}
+
+.thin-color-palette-cell .thin-color-palette-colorswatch[title="none"]:before {
+  display: block;
+  content: ".";
+  font-size: x-small;
+  overflow: hidden;
+  color: rgba(0, 0, 0, 0);
+  height: 1px;
+  -webkit-transform: rotate(45deg);
+  -webkit-transform-origin: left top;
+  background-color: red;
+  width: 14px;
+  position: fixed;
+}
+
+.thin-color-palette-cell-hover .thin-color-palette-colorswatch {
+  border: 1px solid #fff !important;
+  height: 10px !important;
+  width: 10px !important;
+}
+
+.thin-color-palette-cell-selected .thin-color-palette-colorswatch {
+  -webkit-box-shadow: inset 0 0 0 1px red, 
+      inset 0 0 0 2px #fff;
+}
+
+.thin-color-palette-none {
+  padding: 0 5px;
+  margin: 5px 0;
+}
+.thin-color-palette-none-icon {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgb(200, 200, 200);
+  vertical-align: middle;
+  margin-right: 5px;
+  -webkit-border-radius: 2px;
+}
+.thin-color-palette-none-hover .thin-color-palette-none-icon {
+  -webkit-box-shadow: inset 0 0 0 1px #fff;
+}
+.thin-color-palette-none > span{
+  vertical-align: middle;
+}

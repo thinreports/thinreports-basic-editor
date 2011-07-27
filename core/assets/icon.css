@@ -1,0 +1,200 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-icon {
+  width: 16px;
+  height: 16px;
+  content: ".";
+  font-size: 1px !important;
+  color: rgba(0, 0, 0, 0.0) !important;
+  text-shadow: none !important;
+  overflow: hidden;
+  white-space: nowrap;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+}
+
+.thin-icon-left {
+  display: inline-block;
+  vertical-align: text-bottom;
+  margin-right: 2px;
+}
+
+.thin-icon-top {
+  display: block;
+  width: auto !important;
+  margin-bottom: 2px;
+}
+
+.thin-icon-alone {
+  margin: 0 !important;
+}
+
+.thin-icon-medium {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/**
+ * Icon lists.
+ */
+.thin-icon-report-add {
+  background-image: url(icons/document--plus.png);
+}
+.thin-icon-report-save {
+  background-image: url(icons/disk-black.png);
+}
+.thin-icon-report-saveas {
+  background-image: url(icons/disks-black.png);
+}
+.thin-icon-report-open {
+  background-image: url(icons/folder-horizontal-open.png);
+}
+.thin-icon-undo {
+  background-image: url(icons/arrow-curve-180-left.png);
+}
+.thin-icon-redo {
+  background-image: url(icons/arrow-curve.png);
+}
+.thin-icon-report-config {
+  background-image: url(icons/document--gear.png);
+}
+.thin-icon-zoom-in {
+  background-image: url(icons/magnifier-zoom-in.png);
+}
+.thin-icon-zoom-out {
+  background-image: url(icons/magnifier-zoom-out.png);
+}
+.thin-icon-guide {
+  background-image: url(icons/guide.png);
+}
+.thin-icon-guide-add {
+  background-image: url(icons/plus-button.png);
+}
+.thin-icon-guide-delete {
+  background-image: url(icons/cross-button.png);
+}
+.thin-icon-font-bold {
+  background-image: url(icons/edit-bold.png);
+}
+.thin-icon-font-italic {
+  background-image: url(icons/edit-italic.png);
+}
+.thin-icon-font-underline {
+  background-image: url(icons/edit-underline.png);
+}
+.thin-icon-font-strike {
+  background-image: url(icons/edit-strike.png);
+}
+.thin-icon-text-edit {
+  background-image: url(icons/selection-input.png);
+}
+.thin-icon-text-align-left {
+  background-image: url(icons/edit-alignment.png);
+}
+.thin-icon-text-align-right {
+  background-image: url(icons/edit-alignment-right.png);
+}
+.thin-icon-text-align-center {
+  background-image: url(icons/edit-alignment-center.png);
+}
+.thin-icon-text-valign-top {
+  background-image: url(icons/edit-vertical-alignment-top.png);
+}
+.thin-icon-text-valign-center {
+  background-image: url(icons/edit-vertical-alignment-middle.png);
+}
+.thin-icon-text-valign-bottom {
+  background-image: url(icons/edit-vertical-alignment.png);
+}
+.thin-icon-shape-align-left {
+  background-image: url(icons/layers-alignment-left.png);
+}
+.thin-icon-shape-align-center {
+  background-image: url(icons/layers-alignment-center.png);
+}
+.thin-icon-shape-align-right {
+  background-image: url(icons/layers-alignment-right.png);
+}
+.thin-icon-shape-align-top {
+  background-image: url(icons/layers-alignment.png);
+}
+.thin-icon-shape-align-middle {
+  background-image: url(icons/layers-alignment-middle.png);
+}
+.thin-icon-shape-align-bottom {
+  background-image: url(icons/layers-alignment-bottom.png);
+}
+.thin-icon-shape-align-width {
+  background-image: url(icons/layer-resize-replicate.png);
+}
+.thin-icon-shape-align-height {
+  background-image: url(icons/layer-resize-replicate-vertical.png);
+}
+.thin-icon-shape-align-size {
+  background-image: url(icons/layer-resize-actual.png);
+}
+.thin-icon-shape-layer-front {
+  background-image: url(icons/layers-arrange.png);
+}
+.thin-icon-shape-layer-foreground {
+  background-image: url(icons/layers-stack-arrange.png);
+}
+.thin-icon-shape-layer-back {
+  background-image: url(icons/layers-arrange-back.png);
+}
+.thin-icon-shape-layer-backtop {
+  background-image: url(icons/layers-stack-arrange-back.png);
+}
+.thin-icon-document {
+  background-image: url(icons/document-medium.png);
+}
+.thin-icon-colorpicker {
+  background-image: url(icons/color-swatch.png);
+}
+.thin-icon-help {
+  background-image: url(icons/question-white.png);
+}
+.thin-icon-tool-select {
+  background-image: url(icons/x-tool-select.png);
+}
+.thin-icon-tool-text {
+  background-image: url(icons/x-tool-text.png);
+}
+.thin-icon-tool-zoom {
+  background-image: url(icons/x-tool-zoom.png);
+}
+.thin-icon-tool-rect {
+  background-image: url(icons/x-tool-rect.png);
+}
+.thin-icon-tool-ellipse {
+  background-image: url(icons/x-tool-ellipse.png);
+}
+.thin-icon-tool-line {
+  background-image: url(icons/x-tool-line.png);
+}
+.thin-icon-tool-list {
+  background-image: url(icons/x-tool-list.png);
+}
+.thin-icon-tool-block {
+  background-image: url(icons/x-tool-block.png);
+}
+.thin-icon-tool-image {
+  background-image: url(icons/x-tool-image.png);
+}

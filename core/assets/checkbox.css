@@ -1,0 +1,78 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-checkbox {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.thin-checkbox-box {
+  border: 1px solid rgb(150, 150, 150);
+  font-size: 1px;
+  height: 11px;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  vertical-align: text-bottom;
+  background: -webkit-gradient(linear, left top, right bottom, 
+      from(rgb(200, 200, 200)), to(rgb(255, 255, 255)));
+  -webkit-box-shadow: inset 0 0 0 1px rgb(245, 245, 245), 
+      inset 1px 1px 0 1px rgb(180, 185, 189), 
+      inset -1px -1px 0 1px rgba(180, 185, 189, 0.2);
+  width: 11px;
+  overflow: hidden;
+  line-height: normal !important;
+}
+
+.thin-checkbox-box::before {
+  content: ".";
+  font-size: 1px;
+  color: rgba(0, 0, 0, 0.0);
+  display: inline-block;
+  width: 9px !important;
+  height: 9px !important;
+  padding: 1px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+
+.thin-checkbox-label {
+  vertical-align: middle;
+  padding-left: 3px;
+  font: inherit;
+}
+
+.thin-checkbox-label:empty {
+  padding-left: 0 !important;
+}
+
+.thin-checkbox-checked .thin-checkbox-box::before {
+  background-image: url(icons/x-check-sprite.png);
+}
+
+.thin-checkbox-undetermined {
+  background-image: url(icons/x-check-sprite.png);
+  background-color: rgba(180, 185, 189, 0.5) !important;
+}
+
+.thin-checkbox-disabled {
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  cursor: default !important;
+}
+

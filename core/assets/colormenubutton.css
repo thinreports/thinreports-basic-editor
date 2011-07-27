@@ -1,0 +1,109 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-color-menu-button {
+  display: inline-block;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.thin-color-menu-button-body {
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  background-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
+  border: 1px solid rgb(180, 180, 180);
+}
+
+.thin-color-menu-button-button {
+  color: rgb(90, 90, 90);
+  text-align: center;
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+  padding: 1px 5px;
+  white-space: normal !important;
+}
+
+.thin-color-menu-button-button > span {
+  vertical-aligm: middle;
+  padding-left: 3px;
+}
+.thin-color-menu-button-button > span:empty {
+  padding-left: 0 !important;
+}
+
+.thin-color-menu-button-indicator {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.thin-color-menu-button-indicator-body {
+  height: 3px;
+  border: 1px solid transparent;
+  position: relative;
+  top: -2px;
+}
+
+.thin-color-menu-button-indicator-none {
+  border-color: rgb(160, 160, 160) !important;
+}
+
+.thin-color-menu-button-hover .thin-color-menu-button-body {
+  border-color: rgb(140, 140, 140) !important;
+}
+
+.thin-color-menu-button-active .thin-color-menu-button-body, 
+.thin-color-menu-button-open .thin-color-menu-button-body {
+  background: rgb(210, 210, 210) !important;
+}
+
+.thin-color-menu-button-disabled {
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+}
+
+.thin-color-menu-button-arrow-none .thin-color-menu-button-handle {
+  display: none;
+}
+
+.thin-color-menu-button-arrow-auto .thin-color-menu-button-button:after {
+  content: url(icons/x-trigger-small.png);
+  padding-left: 3px;
+  vertical-align: middle;
+  margin: 0;
+}
+
+
+.thin-color-menu-button-arrow-bottom .thin-color-menu-button-handle {
+  content: url(icons/x-trigger-small.png);
+  text-align: center;
+  display: block;
+  height: 10px;
+  line-height: 10px;
+  overflow: hidden;
+}
+
+.thin-color-menu-button-arrow-right .thin-color-menu-button-body {
+  display: -webkit-box !important;
+}
+.thin-color-menu-button-arrow-right .thin-color-menu-button-button {
+  -webkit-box-flex: 1;  
+}
+.thin-color-menu-button-arrow-right .thin-color-menu-button-handle {
+  display: block;
+  width: 12px;
+  background: transparent url(icons/x-trigger-small.png) no-repeat left center;
+}

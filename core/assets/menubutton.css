@@ -1,0 +1,81 @@
+.thin-menu-button {
+  display: inline-block;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.thin-menu-button-body {
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  background-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
+  border: 1px solid rgb(180, 180, 180);
+  margin: 0;
+}
+
+.thin-menu-button-button {
+  color: rgb(90, 90, 90);
+  text-align: center;
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+  padding: 0.2em 7px;
+  white-space: normal !important;
+  margin: 0;
+}
+
+.thin-menu-button-button > span {
+  vertical-align: text-bottom;
+}
+
+.thin-menu-button-button > span:empty:before {
+  content: ".";
+  color: transparent;
+  text-shadow: none !important;
+}
+
+.thin-menu-button-hover .thin-menu-button-body, 
+.thin-menu-button-focused .thin-menu-button-body {
+  border-color: rgb(140, 140, 140) !important;
+}
+
+.thin-menu-button-active .thin-menu-button-body, 
+.thin-menu-button-open .thin-menu-button-body {
+  background: rgb(210, 210, 210) !important;
+}
+
+.thin-menu-button-disabled {
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+}
+
+.thin-menu-button-arrow-none .thin-menu-button-handle {
+  display: none;
+}
+
+.thin-menu-button-arrow-auto .thin-menu-button-button:after {
+  content: url(icons/x-trigger-small.png);
+  padding-left: 3px;
+  vertical-align: text-bottom;
+  margin: 0;
+}
+
+
+.thin-menu-button-arrow-bottom .thin-menu-button-handle {
+  content: url(icons/x-trigger-small.png);
+  text-align: center;
+  display: block;
+  height: 10px;
+  line-height: 10px;
+  overflow: hidden;
+}
+
+.thin-menu-button-arrow-right .thin-menu-button-body {
+  display: -webkit-box !important;
+}
+.thin-menu-button-arrow-right .thin-menu-button-button {
+  -webkit-box-flex: 1;  
+}
+.thin-menu-button-arrow-right .thin-menu-button-handle {
+  display: block;
+  width: 12px;
+  background: transparent url(icons/x-trigger-small.png) no-repeat left center;
+}

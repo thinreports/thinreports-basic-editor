@@ -1,0 +1,73 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-menuitem {
+  white-space: nowrap;
+  cursor: default;
+}
+
+.thin-menuitem-body {
+  display: -webkit-box;
+  -webkit-border-radius: 2px;
+}
+
+.thin-menuitem-body > div {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.thin-menuitem-content {
+  -webkit-box-ordinal-group: 2;
+  -webkit-box-flex: 1;
+  padding-left: 5px;
+  white-space: nowrap;
+}
+
+.thin-menuitem-accel {
+  -webkit-box-ordinal-group: 3;
+  color: #bbb;
+  text-align: right;
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 6em;
+  overflow-x: auto;
+}
+
+.thin-menuitem-symbol {
+  -webkit-box-ordinal-group: 1;
+  width: 25px;
+  border-right: 1px solid rgb(230, 230, 230);
+  -webkit-box-shadow: 1px 0 0 rgb(255, 255, 255);
+  text-align: center;
+}
+
+.thin-menuitem-hover .thin-menuitem-body {
+  background: -webkit-gradient(linear, left top, left bottom, 
+      from(rgba(125, 162, 206, 0.1)), 
+      to(rgba(125, 162, 206, 0.3)));
+  -webkit-box-shadow: inset 0 0 0 1px rgba(125, 162, 206, 0.4);
+}
+.thin-menuitem-hover .thin-menuitem-symbol {
+  -webkit-box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+.thin-menuitem-disabled .thin-menuitem-symbol::before, 
+.thin-menuitem-disabled .thin-menuitem-content {
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+}

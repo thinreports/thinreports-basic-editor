@@ -1,0 +1,118 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-tabpane {
+}
+
+/**
+ * FIXME: Like a TabToolbar, but It's dummy...
+ */
+.thin-tabpane-contents::before {
+  display: block;
+  height: 13px;
+  content: ".";
+  color: rgba(0, 0, 0, 0.0);
+  font-size: 1px;
+  z-index: 0;
+  position: relative;
+  overflow: hidden;
+  -webkit-box-shadow: inset 0 -1px 0 rgb(180, 180, 180);
+  border-bottom: 1px solid rgba(180, 180, 180, 0.1);
+  background-image: -webkit-gradient(linear, left top, left bottom, 
+      color-stop(0.00, rgb(235, 235, 235)), 
+      color-stop(1.00, rgb(220, 220, 220)));
+}
+
+.thin-tabpane-contents-body {
+  overflow: scroll;
+}
+
+.thin-tabpane-content {
+}
+
+.thin-tabpane-tabs {
+  display: -webkit-box;
+  padding: 0 15px;
+  border-top: 1px solid #444;
+  border-bottom: 1px solid rgb(255, 255, 255);
+  height: 26px;
+  background-image: -webkit-gradient(linear, left top, left bottom, 
+      color-stop(0.01, #888), 
+      color-stop(0.40, #777), 
+      color-stop(1.00, #555));
+  -webkit-box-shadow: inset 0 1px 0 rgb(170, 170, 170);
+  font-weight: bold;
+  color: #fff;
+  margin: 0;  
+}
+
+/**
+ * thin.ui.TabPane.TabButton
+ */
+.thin-tabpane-tab-button {
+  width: 120px;
+  cursor: default;
+}
+.thin-tabpane-tab-button-body {
+  display: -webkit-box;
+  padding: 0 3px;
+}
+.thin-tabpane-tab-button-selected {
+  margin-bottom: -1px;
+/* TODO: ...? 
+  border-width: 0 1px;
+  border-color: #666;
+  border-style: solid;
+*/  
+  color: #555 !important;
+  text-shadow: 1px 1px 0 #fff;
+  background: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(245, 245, 245)), 
+      to(rgb(235, 235, 235)));
+/* TODO: ...?
+  background-image: -webkit-gradient(linear, left top, right top, 
+      color-stop(0.01, rgba(200, 200, 200, 0.4)), 
+      color-stop(0.10, rgba(255, 255, 255, 0.0)), 
+      color-stop(0.90, rgba(255, 255, 255, 0.0)), 
+      color-stop(1.00, rgba(200, 200, 200, 0.4)));      
+*/
+}
+
+.thin-tabpane-tab-button-disabled {
+  /* TODO */
+}
+
+.thin-tabpane-tab-button-trigger {
+  -webkit-box-flex: 1;
+}
+.thin-tabpane-tab-button-trigger-body {
+  line-height: 25px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 5px;
+}
+
+.thin-tabpane-tab-button-close-body {
+  line-height: 25px;
+}
+.thin-tabpane-tab-button-hover .thin-tabpane-tab-button-close .thin-icon {
+  background-image: url(icons/x-cross-small-gray.png);
+}
+.thin-tabpane-tab-button-selected .thin-tabpane-tab-button-close .thin-icon {
+  background-image: url(icons/x-cross-small-black.png) !important;
+}

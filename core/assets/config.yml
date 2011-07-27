@@ -1,0 +1,32 @@
+css:
+  options:
+    :charset: utf-8
+  files:
+    - base.css
+    - button.css
+    - checkbox.css
+    - colormenubutton.css
+    - colorpalette.css
+    - combobox.css
+    - dialog.css
+    - dialogs.css
+    - icon.css
+    - inputcolorpicker.css
+    - layout.css
+    - menu.css
+    - menubutton.css
+    - menuitem.css
+    - menuseparator.css
+    - message.css
+    - option.css
+    - optionmenu.css
+    - fontoption.css
+    - panel.css
+    - propertypane.css
+    - splitbutton.css
+    - tabpane.css
+    - toolbar.css
+    - toolbox.css
+    - view.css
+    - workspace.css
+  output: application-compiled.css

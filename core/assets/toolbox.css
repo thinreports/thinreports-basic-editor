@@ -1,0 +1,74 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-toolbox {
+  text-align: center;
+  margin: 2px 0;
+  /* Fix bug */
+  position: relative;
+  z-index: 2;
+}
+
+/**
+ * thin.ui.ToolboxButton
+ */
+.thin-toolbox-button {
+  margin: 1px;
+  display: inline-block;
+  white-space: nowrap;
+  cursor: default;
+  line-height: initial;
+}
+
+.thin-toolbox-button-body {
+  text-align: center;
+  -webkit-border-radius: 2px;
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  background-color: transparent;
+}
+
+.thin-toolbox-button-label {
+  display: none;
+}
+
+.thin-toolbox-button-hover .thin-toolbox-button-body {
+  border-color: rgb(70, 70, 70);
+  -webkit-box-shadow: inset 0 0 0 1px rgb(130, 130, 130);
+}
+
+.thin-toolbox-button-active .thin-toolbox-button-body, 
+.thin-toolbox-button-selected .thin-toolbox-button-body {
+  border-color: rgb(60, 60, 60);
+  -webkit-box-shadow: inset 1px 1px 0 rgba(70, 70, 70, 0.8);
+  background-color: rgba(70, 70, 70, 0.3) !important;
+}
+
+.thin-toolbox-button-disabled {
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+}
+
+/**
+ * thin.ui.ToolboxSeparator
+ */
+.thin-toolbox-separator {
+  height: 1px;
+  margin: 2px 0;
+  background-color: rgb(78, 78, 78);
+  border-bottom: 1px solid rgb(135, 135, 135);
+}

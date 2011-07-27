@@ -1,0 +1,320 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-toolbar {
+  display: -webkit-box;
+  background-image: -webkit-gradient(linear, left top, left bottom, 
+      color-stop(0.01, rgb(255, 255, 255)), 
+      color-stop(1.00, rgb(225, 225, 225)));
+}
+
+.thin-toolbar-group {
+  padding: 4px 3px;
+  -webkit-user-select: none;
+}
+.thin-toolbar-group table, 
+.thin-toolbar-group td {
+  margin: 0;
+  padding: 0;
+  border-spacing: 0;
+  border-collapse: collapse;
+  border: 0;
+}
+.thin-toolbar-group table {
+  height: 44px;
+}
+.thin-toolbar-group td {
+  vertical-align: middle;
+  height: 50%;
+}
+.thin-toolbar-group-label {
+  margin: 2px 0 0 0;
+  text-align: center;
+  color: rgb(80, 80, 80);
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+  line-height: 110%;
+  position: relative;
+  bottom: 0px;
+}
+
+.thin-toolbar-group-separator {
+  width: 1px;
+  margin: 0;
+  background: -webkit-gradient(linear, left top, left bottom, 
+      color-stop(0.01, rgb(250, 250, 250)), 
+      color-stop(0.30, rgb(230, 230, 230)), 
+      color-stop(1.00, rgb(180, 180, 180)));
+  border-width: 0 1px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, .9);
+}
+
+/**
+ * thin.ui.ToolbarSeparator
+ */
+.thin-toolbar-separator {
+  height: 70%;
+  width: 1px;
+  overflow: hidden;
+  display: inline-block;
+  background-color: rgb(210, 210, 210);
+  border-right: 1px solid rgb(255, 255, 255);
+  vertical-align: text-bottom;
+  margin: 0 3px;
+}
+
+/**
+ * thin.ui.ToolbarButton
+ * thin.ui.ToolbarToggleButton
+ * thin.ui.ToolbarIconButton
+ * thin.ui.ToolbarToggleIconButton
+ */
+.thin-toolbar-button {
+  display: inline-block;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.thin-toolbar-button-body {
+  text-align: center;
+  -webkit-border-radius: 2px;
+  padding: .2em 4px;
+  border: 1px solid transparent;
+}
+
+.thin-toolbar-button-label {
+  color: rgb(90, 90, 90);
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+  display: inline-block;
+  vertical-align: text-bottom;
+}
+
+.thin-toolbar-button-hover .thin-toolbar-button-body {
+  border-color: rgb(200, 200, 200);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.thin-toolbar-button-active .thin-toolbar-button-body, 
+.thin-toolbar-button-checked .thin-toolbar-button-body {
+  border-color: rgb(160, 160, 160);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(90, 90, 90, .1);
+}
+
+.thin-toolbar-button-disabled {
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+}
+
+/**
+ * thin.ui.ToolbarMenuButton
+ */
+.thin-toolbar-menu-button {
+  display: inline-block;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.thin-toolbar-menu-button-body {
+  -webkit-border-radius: 2px; 
+  border: 1px solid transparent;
+}
+
+.thin-toolbar-menu-button-button {
+  color: rgb(90, 90, 90);
+  text-align: center;
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+  padding: .2em 7px;
+  white-space: normal !important;
+}
+
+.thin-toolbar-menu-button-button > span {
+  color: rgb(90, 90, 90);
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+  vertical-align: text-bottom;
+}
+
+.thin-toolbar-menu-button-hover .thin-toolbar-menu-button-body {
+  border-color: rgb(200, 200, 200);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.thin-toolbar-menu-button-active .thin-toolbar-menu-button-body, 
+.thin-toolbar-menu-button-open .thin-toolbar-menu-button-body {
+  border-color: rgb(160, 160, 160);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(90, 90, 90, .1);
+}
+
+.thin-toolbar-menu-button-disabled {
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+}
+
+.thin-toolbar-menu-button-arrow-none .thin-toolbar-menu-button-handle {
+  display: none;
+}
+
+.thin-toolbar-menu-button-arrow-auto .thin-toolbar-menu-button-button:after {
+  content: url(icons/x-trigger-small.png);
+  padding-left: 3px;
+  vertical-align: text-bottom;
+  margin: 0;
+}
+
+
+.thin-toolbar-menu-button-arrow-bottom .thin-toolbar-menu-button-handle {
+  content: url(icons/x-trigger-small.png);
+  text-align: center;
+  display: block;
+  height: 10px;
+  line-height: 10px;
+  overflow: hidden;
+}
+
+.thin-toolbar-menu-button-arrow-right .thin-toolbar-menu-button-body {
+  display: -webkit-box !important;
+}
+.thin-toolbar-menu-button-arrow-right .thin-toolbar-menu-button-button {
+  -webkit-box-flex: 1;  
+}
+.thin-toolbar-menu-button-arrow-right .thin-toolbar-menu-button-handle {
+  display: block;
+  width: 12px;
+  background: transparent url(icons/x-trigger-small.png) no-repeat left center;
+}
+
+/**
+ * thin.ui.ToolbarSplitButton
+ * thin.ui.ToolbarSplitToggleButton
+ */
+.thin-toolbar-split-button {
+  display: inline-block;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.thin-toolbar-split-button-disabled {
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+}
+
+.thin-toolbar-split-button-hover .thin-toolbar-split-button-button-body, 
+.thin-toolbar-split-button-hover .thin-toolbar-split-button-handle, 
+.thin-toolbar-split-button-open .thin-toolbar-split-button-button-body, 
+.thin-toolbar-split-button-open .thin-toolbar-split-button-handle,
+.thin-toolbar-split-button-checked .thin-toolbar-split-button-button-body, 
+.thin-toolbar-split-button-checked .thin-toolbar-split-button-handle {
+  border-color: rgb(200, 200, 200);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+
+.thin-toolbar-split-button-button-body {
+  color: rgb(90, 90, 90);
+  text-align: center;
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+  padding: .2em 4px;
+  border: 1px solid transparent;
+}
+
+.thin-toolbar-split-button-button-label {
+  color: rgb(90, 90, 90);
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+  display: inline-block;
+  vertical-align: text-bottom;
+}
+
+.thin-toolbar-split-button-button-active .thin-toolbar-split-button-button-body, 
+.thin-toolbar-split-button-button-checked .thin-toolbar-split-button-button-body {
+  border-color: rgb(140, 140, 140);
+  background: rgb(240, 240, 240) !important;
+  -webkit-box-shadow: inset 0 0 0 1px rgba(100, 100, 100, .1);
+}
+
+.thin-toolbar-split-button-handle {
+  border: 1px solid transparent;  
+  text-align: center;
+  overflow: hidden; 
+}
+/* FIXME */
+.thin-toolbar-split-button-handle::before {
+  content: url(icons/x-trigger-small.png);
+  display: inline-block;
+}
+.thin-toolbar-split-button-handle-hover {
+/*
+  background: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(240, 240, 240)), to(rgb(250, 250, 250)));
+*/      
+}
+.thin-toolbar-split-button-handle-active, 
+.thin-toolbar-split-button-handle-open {
+  border-color: rgb(140, 140, 140);
+  background: rgb(240, 240, 240) !important;
+  -webkit-box-shadow: inset 0 0 0 1px rgba(100, 100, 100, .1);
+}
+
+.thin-toolbar-split-button-horizontal .thin-toolbar-split-button-body {
+  display: -webkit-box;
+}
+.thin-toolbar-split-button-horizontal .thin-toolbar-split-button-button-body {
+  -webkit-box-flex: 1;
+}
+.thin-toolbar-split-button-horizontal .thin-toolbar-split-button-button-body {
+  -webkit-border-top-left-radius: 2px;
+  -webkit-border-bottom-left-radius: 2px;
+}
+.thin-toolbar-split-button-horizontal .thin-toolbar-split-button-handle {
+  -webkit-border-top-right-radius: 2px;
+  -webkit-border-bottom-right-radius: 2px;
+  width: 13px;
+  border-left: 0 !important;
+  vertical-align: top;
+}
+.thin-toolbar-split-button-horizontal .thin-toolbar-split-button-handle::before {
+  /* Nothing */
+}
+
+.thin-toolbar-split-button-vertical .thin-toolbar-split-button-button-body {
+  -webkit-border-top-left-radius: 2px;
+  -webkit-border-top-right-radius: 2px;
+}
+.thin-toolbar-split-button-vertical .thin-toolbar-split-button-handle {
+  -webkit-border-bottom-left-radius: 2px;
+  -webkit-border-bottom-right-radius: 2px;
+  height: 11px;
+  border-top: 0 !important;
+  line-height: 11px;
+}
+.thin-toolbar-split-button-vertical .thin-toolbar-split-button-handle::before {
+  /* Nothing */
+}
+
+/**
+ * thin.ui.ToolbarSelect
+ * Based on menubutton.css
+ */
+.thin-toolbar-select .thin-menu-button-button {
+  background-color: #fff;
+  border-right: 1px solid rgb(180, 180, 180);
+  text-shadow: none !important;
+}
+
+.thin-toolbar-select .thin-menu-button-handle {
+  width: 18px !important;
+  background-position: center center !important;
+  -webkit-box-shadow: inset 1px 0 0 rgba(255, 255, 255, .7);
+}

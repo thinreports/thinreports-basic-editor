@@ -1,0 +1,59 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-button {
+  display: inline-block;
+  white-space: nowrap;
+  cursor: default;
+  line-height: initial;
+  text-align: initial;
+}
+
+.thin-button-body {
+  text-align: center;
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  background: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
+  padding: .2em 4px;
+  border: 1px solid rgb(180, 180, 180);
+}
+
+.thin-button-label {
+  color: rgb(90, 90, 90);
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+  vertical-align: text-bottom;
+  font-size: inherit;
+}
+
+.thin-button-hover .thin-button-body {
+  border-color: rgb(140, 140, 140) !important;
+}
+
+.thin-button-active .thin-button-body, 
+.thin-button-checked .thin-button-body {
+  background: rgb(210, 210, 210) !important;
+}
+
+.thin-button-focused .thin-button-label {
+  color: rgb(0, 0, 0) !important;
+}
+
+.thin-button-disabled {
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+}

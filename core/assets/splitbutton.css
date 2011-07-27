@@ -1,0 +1,102 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-split-button {
+  display: inline-block;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.thin-split-button-button-body {
+  color: rgb(90, 90, 90);
+  text-align: center;
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  background-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
+  padding: .2em 4px;
+  border: 1px solid rgb(180, 180, 180);
+}
+.thin-split-button-button-hover .thin-split-button-button-body {
+  border-color: rgb(140, 140, 140) !important;
+}
+.thin-split-button-button-active .thin-split-button-button-body, 
+.thin-split-button-button-checked .thin-split-button-button-body {
+  background: rgb(210, 210, 210) !important;
+}
+
+.thin-split-button-handle {
+  position: relative !important;
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  border: 1px solid rgb(180, 180, 180);  
+}
+/* FIXME */
+.thin-split-button-handle::before {
+  content: url(icons/x-trigger-small.png);
+}
+.thin-split-button-handle-hover {
+  border-color: rgb(140, 140, 140) !important;
+}
+.thin-split-button-handle-active, 
+.thin-split-button-handle-open {
+  background: rgb(210, 210, 210) !important;
+}
+
+.thin-split-button-horizontal .thin-split-button-body {
+  display: -webkit-box;
+}
+.thin-split-button-horizontal .thin-split-button-button-body {
+  -webkit-box-flex: 1;
+}
+.thin-split-button-horizontal .thin-split-button-button-body {
+  -webkit-border-top-left-radius: 2px;
+  -webkit-border-bottom-left-radius: 2px;
+}
+.thin-split-button-horizontal .thin-split-button-handle {
+  -webkit-border-top-right-radius: 2px;
+  -webkit-border-bottom-right-radius: 2px;
+  width: 13px;
+  border-left: 0 !important;
+  background: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));    
+}
+.thin-split-button-horizontal .thin-split-button-handle::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -7px;
+  margin-left: -4px;
+}
+
+.thin-split-button-vertical .thin-split-button-button-body {
+  -webkit-border-top-left-radius: 2px;
+  -webkit-border-top-right-radius: 2px;
+}
+.thin-split-button-vertical .thin-split-button-handle {
+  -webkit-border-bottom-left-radius: 2px;
+  -webkit-border-bottom-right-radius: 2px;
+  height: 11px;
+  border-top: 0 !important;
+  line-height: 11px;
+  overflow: hidden;
+  text-align: center;
+  background: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(210, 210, 210)), to(rgb(240, 240, 240)));
+}
+.thin-split-button-vertical .thin-split-button-handle::before {
+  display: inline-block;
+}

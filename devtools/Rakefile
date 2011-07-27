@@ -1,0 +1,134 @@
+# coding: utf-8
+
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
+
+module TREDevelopment
+  ROOT              = File.expand_path(File.dirname(__FILE__))
+  PROJECT_ROOT      = '..'
+  CLOSURE_COMPILER  = File.join(ROOT, 'compiler-latest', 'compiler.jar')
+
+  class CommandBuilder
+    attr_reader :commands
+    
+    def initialize(root_path)
+      @root_path = root_path
+      @commands = []
+    end
+    
+    def add(cmd)
+      @commands << cmd
+    end
+    
+    def to_s
+      @commands.join(' ')
+    end
+    
+    def inspect
+      unless @commands.size.zero?
+        ' ' + @commands.join($/ + ' ' * 3)
+      else
+        '  Nothing  '
+      end
+    end
+    
+    def path_from_root(*paths)
+      options = paths.last.is_a?(::Hash) ? paths.pop : {}
+      
+      path = File.join(([@root_path] + paths).compact)
+      quote_path(path, options)
+    end
+    
+    def quote_path_if_include_blank(path, options = {})
+      q = options[:escape] ? '\"' : '"'
+      path.include?(' ') ? q + path + q : path
+    end
+    alias :quote_path :quote_path_if_include_blank
+  end
+  
+  module Core
+    ROOT = File.join(PROJECT_ROOT, 'core')
+    
+    # @param [Hash] options
+    # @option options [Boolean] :preview (false)
+    # @option options [String?] :output (nil)
+    def run_command(options = {}, &block)
+      builder = CoreCommandBuilder.new
+      if block.arity < 1
+        res = builder.instance_eval(&block)
+        builder.add(res) if res.is_a?(::String)
+      else
+        block[builder]
+      end
+      
+      # Not run with show command
+      if options[:preview] || ENV['preview'] == 'true'
+        puts '- Commmand ' + ('-' * 80)
+        puts builder.inspect
+        puts '-----------' + ('-' * 80)
+      # Run!
+      else
+        # Redirect STDERR to specified file
+        if options[:output]
+          if RUBY_VERSION < '1.9' && Rake.application.windows?
+            begin
+              require 'win32/open3'
+            rescue LoadError
+              raise e, 'You need "win32-open3", ' +
+                       'Please run this command `gem install win32-open3`.'
+            end
+          else
+            require 'open3'
+          end
+          
+          Open3.popen3(builder.to_s) do |stdin, stdout, stderr|
+            File.open(options[:output], 'w') do |f|
+              f.puts stderr.read
+            end
+          end
+        # Normal
+        else
+          system(builder.to_s)
+        end
+      end
+    end
+    
+    class CoreCommandBuilder < CommandBuilder
+      def initialize
+        super(ROOT)
+      end
+      
+      def closure_library_for(*paths)
+        path_from_root(*paths.unshift('closure-library'))
+      end
+      
+      def closure_library_bin_for(*paths)
+        closure_library_for(*(%w( closure bin ) + paths))
+      end
+      
+      def closure_builder_py
+        closure_library_bin_for('build', 'closurebuilder.py')
+      end
+      
+      def closure_compiler_jar(options = {})
+        quote_path(CLOSURE_COMPILER, options)
+      end
+      
+      def closure_depswriter_py
+        closure_library_bin_for('build', 'depswriter.py')
+      end
+      
+      def thin_for(*paths)
+        path_from_root(*paths.unshift('thin'))
+      end
+      
+      def css_config_yml
+        path_from_root('assets', 'config.yml')
+      end
+    end
+  end
+end
+
+# Load tasks
+Dir.glob('tasks/*.rake').each do |r|
+  Rake.application.add_import r
+end

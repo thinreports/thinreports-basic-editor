@@ -1,0 +1,70 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-layout {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  overflow: hidden;
+  min-width: 400px;
+  min-height: 100px;
+}
+
+.thin-layout-left {
+  width: 45px;
+  border-right: 1px solid #444;
+  background-color: #666;
+  -webkit-box-shadow: inset -1px 0 0 #888;
+}
+
+.thin-layout-right {
+  width: 250px;
+  border-left: 1px solid #444;
+  min-width: 250px;
+  max-width: 550px;
+}
+
+.thin-layout-main {
+  -webkit-box-flex: 1;
+  background: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(250, 250, 250)), to(#bbb));
+  min-width: 100px;
+}
+
+/* Fix bug */
+.thin-layout-left, 
+.thin-layout-right {
+  position: relative;
+  z-index: 1;
+}
+
+.thin-layout-separator {
+  position: absolute;
+  background: rgba(0, 0, 0, 0);
+  cursor: col-resize; 
+  width: 3px;
+  z-index: 11;
+}
+
+.thin-layout-separator-bg {
+  background: rgba(0, 0, 0, 0);
+  cursor: col-resize;
+  left: 0;
+  position: absolute;
+  top: 0;
+  z-index: 10;
+}

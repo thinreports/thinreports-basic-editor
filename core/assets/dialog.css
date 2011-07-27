@@ -1,0 +1,98 @@
+.thin-dialog {
+  min-width: 200px;
+  min-height: 80px;
+  background: #f0f0f0;
+  border: 1px solid #444;
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: 2px 2px 0 rgba(160, 160, 160, 0.3);
+  position: absolute;
+  z-index: 200;
+}
+
+.thin-dialog-bg {
+  background: rgba(0, 0, 0, 0);
+  cursor: not-allowed;
+  left: 0;
+  position: absolute;
+  top: 0;
+  z-index: 100;
+}
+
+.thin-dialog-title {
+  height: 25px;
+  display: -webkit-box;
+  -webkit-box-shadow: inset 0 1px 0 rgb(170, 170, 170);
+  background-image: -webkit-gradient(linear, left top, left bottom, 
+      color-stop(0.01, #888), 
+      color-stop(0.40, #777), 
+      color-stop(1.00, #555));
+  padding: 0;
+  margin: 0;
+  line-height: 25px;
+  white-space: nowrap;
+}
+
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-dialog-title-text {
+  /* FIXME For <span> tag, but will be <div>. */
+  display: block !important;
+  -webkit-box-flex: 1;
+  padding: 0 5px 0 8px;
+  text-overflow: ellipsis;
+  font: bold 10px/inherit Tahoma, Arial;
+  font-weight: bold;
+  color: #fff;
+}
+
+.thin-dialog-title-close {
+  /* FIXME For <span> tag, but will be <div>. */
+  display: block !important;
+  width: 22px;
+  background: transparent url(icons/x-cross-small-gray.png) center center no-repeat;
+  -webkit-border-radius: 5px;
+  -webkit-box-sizing: border-box;
+  margin: 4px;
+}
+.thin-dialog-title-close:hover {
+  background-color: rgb(90, 90, 90) !important;
+}
+
+.thin-dialog-title-draggable .thin-dialog-title-text {
+  cursor: move !important;
+}
+
+.thin-dialog-content {
+  padding: 8px;
+}
+
+.thin-dialog-buttons-wrapper {
+  height: 40px;
+  line-height: 40px;
+  padding: 0 6px;
+  text-align: right;
+}
+
+.thin-dialog-buttons-wrapper > div {
+  margin-right: 2px;
+  margin-left: 2px;
+}
+
+.thin-buttonset-default {
+  /* Nothing */
+}

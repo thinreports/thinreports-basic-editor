@@ -1,0 +1,46 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+html {
+  -webkit-user-select: none;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font-size: 0.6em;
+  color: #333;
+}
+
+body, textarea {
+  font-family: "メイリオ", "ＭＳ Ｐゴシック", sans-serif;
+}
+input, select {
+  font-family: Arial, "ＭＳ Ｐゴシック", sans-serif;
+}
+*[lang="x-ascii"] {
+  font-family: Arial !important;
+}
+
+input[type="text"]:disabled {
+  background-color: #fff !important;
+}
+
+svg {
+  -webkit-border-radius: 5px;
+  -webkit-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.02);
+}

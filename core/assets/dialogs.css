@@ -1,0 +1,187 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Base styles.
+ */
+.thin-dialogs .thin-dialog-content {
+  color: #444;
+  font-size: 1.1em;
+}
+
+.thin-dialogs a {
+  color: #444 !important;
+  outline: none;
+}
+
+.thin-dialogs .thin-dialog-content input[type="text"] {
+  padding: 2px;
+  font-size: 12px;
+  border: 1px solid #aaa;
+  margin: 1px;
+  -webkit-border-radius: 2px;
+}
+
+.thin-dialogs .thin-dialog-content textarea {
+  border : 1px solid #aaa;
+  padding: 5px !important;
+  font-size: 12px;
+}
+
+.thin-dialogs .thin-dialog-content input[type="text"]:disabled {
+  background-color: #eee !important;
+}
+
+.thin-dialogs .thin-dialog-content fieldset {
+  border: 1px solid #ccc;
+  -webkit-border-radius: 2px;
+  padding-top: 7px;
+  margin-bottom: 5px;
+}
+
+.thin-dialogs .thin-dialog-content legend {
+  padding: 0 10px;
+  font-weight: bold;
+}
+
+.thin-dialogs .thin-dialogs-setting {
+  display: -webkit-box;
+  width: 100%;
+}
+
+.thin-dialogs .thin-dialogs-setting-caption {
+  width: 30%;
+  text-align: right;
+  padding-right: 15px;
+}
+
+.thin-dialogs .thin-dialogs-setting-control {
+  -webkit-box-flex: 1;
+}
+
+.thin-dialogs .thin-dialogs-caption, 
+.thin-dialogs .thin-dialogs-control {
+  line-height: 16px !important;
+  vertical-align: middle;
+}
+
+/**
+ * TextEditor
+ */
+.thin-dialog-text-editor .goog-textarea {
+  resize : none;
+  overflow-y: scroll !important;
+  width: 300px !important;
+  height: 150px !important;
+}
+
+/**
+ * Page Configuration
+ */
+#edit-config-page-direction label, 
+#new-config-page-direction label {
+  padding-right: 20px; 
+}
+
+#edit-config-page-direction input[type="radio"], 
+#new-config-page-direction input[type="radio"] {
+  margin-right: 4px;
+}
+
+#edit-config-page-title input, 
+#new-config-page-title input {
+  width: 90%;
+}
+
+/* thin.ui.MenuButton */
+.thin-dialog-report-config .thin-menu-button-button {
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+}
+
+/**
+ * Help
+ */
+.thin-dialog-help .thin-dialog-content {
+  background-color: #fff !important;
+  padding: 13px !important;
+}
+
+.thin-dialog-help .thin-dialog-buttons {
+  border-top: 1px solid #ccc;
+  -webkit-box-shadow: inset 0 1px 0 #fff;
+}
+
+.thin-dialog-help-appinfo {
+  font-family: Cambria, Georgia, 'Times New Roman', Times, serif;
+  margin: 12px 0 20px 0;
+  color: #222 !important;
+}
+
+.thin-dialog-help-appinfo h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: normal;
+  text-shadow: #eee 1px 1px 1px; 
+}
+
+#help-dialog-version {
+  padding-left: 2px;
+  margin-top: 3px;
+  font-size: 14px;
+}
+
+.thin-dialog-help-details {
+  border-top: 1px solid #ccc;
+  color: #666;
+  font-size: 12px;
+  padding-top: 5px;
+  margin: 15px 0 5px 0;
+}
+
+.thin-dialog-help-details p {
+  margin: 3px 0;
+}
+
+.thin-dialog-help-copyright {
+  font-family: Cambria, Georgia, 'Times New Roman', Times, serif;
+  margin-bottom: 15px !important;
+  color: #444 !important;
+}
+
+.thin-dialog-help-help {
+  padding-left: 10px;
+  font-family: Cambria, Georgia, 'Times New Roman', Times, serif;
+}
+.thin-dialog-help-help dl,
+.thin-dialog-help-help dt {
+  margin: 0;
+  padding: 0;
+}
+.thin-dialog-help-help dd {
+  margin: 3px 0 5px 20px;
+}
+.thin-dialog-help-help dt {
+  font-weight: bold;
+  color: #333 !important;
+}
+
+.thin-dialog-help-description {
+  margin-bottom: 10px !important;
+  font-size: 10px !important;
+}
+
