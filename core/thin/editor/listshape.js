@@ -776,7 +776,7 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   var listGroup = proppane.addGroup('一覧表');
   
   
-  var changingPageCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('改頁対象');
+  var changingPageCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('自動改ページ');
   changingPageCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var pageSetting = e.target.isChecked();
