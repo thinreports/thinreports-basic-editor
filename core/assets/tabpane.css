@@ -110,6 +110,11 @@
 .thin-tabpane-tab-button-close-body {
   line-height: 25px;
 }
+.thin-tabpane-tab-button-selected .thin-tabpane-tab-button-close .thin-icon:hover {
+  -webkit-border-radius: 3px !important;
+  -webkit-box-shadow: inset 1px 1px 3px rgb(180, 180, 180);
+  background-color: rgb(215, 215, 215);
+}
 .thin-tabpane-tab-button-hover .thin-tabpane-tab-button-close .thin-icon {
   background-image: url(icons/x-cross-small-gray.png);
 }
