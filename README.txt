@@ -2,13 +2,22 @@ ThinReports Editor
 
 Copyright (C) 2010-2011 Matsukei Co.,Ltd. All rights reserved.
 This tool is licensed under a GNU GENERAL PUBLIC LICENSE
-Version 3 license. <http://www.gnu.org/licenses/gpl.html>
-See LICENSE file.
+Version 3 license <http://www.gnu.org/licenses/gpl.html>.
 
-The following places will get you more details:
+-- Get more details about ThinReports
 
   Official site: <http://www.thinreports.org>
   Project site: <http://osc.matsukei.net/projects/thinreports/wiki>
+
+-- Get documentation
+
+  Getting Started: <http://osc.matsukei.net/projects/thinreports/wiki/Getting_Started>
+  Guide: <http://osc.matsukei.net/projects/thinreports/wiki/Guide>
+  Changelog: <http://osc.matsukei.net/projects/thinreports/wiki/Changelog>
+
+-- Get help
+
+  Discussion forum: <http://osc.matsukei.net/projects/thinreports/boards>
 
 ------------------------------------------------------------
 
@@ -38,6 +47,9 @@ The following places will get you more details:
     - edit-italic.png
     - edit-strike.png
     - edit-underline.png
+    - edit-vertical-alignment.png
+    - edit-vertical-alignment-middle.png
+    - edit-vertical-alignment-top.png
     - folder-horizontal-open.png
     - guide.png
     - layer-resize-actual.png
@@ -57,6 +69,7 @@ The following places will get you more details:
     - magnifier-zoom-out.png
     - plus-button.png
     - question-white.png
+    - selection-input.png
     - toggle-small-expand.png
     - toggle-small.png
     - zoom-in.png
