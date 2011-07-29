@@ -87,7 +87,7 @@ thin.editor.TblockShape.Delta_ = {
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.TblockShape.DEFAULT_FILL = new goog.graphics.SolidFill('#000');
+thin.editor.TblockShape.DEFAULT_FILL = new goog.graphics.SolidFill('#000000');
 
 
 /**
