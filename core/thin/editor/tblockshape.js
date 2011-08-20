@@ -237,7 +237,10 @@ thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeI
   var lineHeight = layout.getElementAttribute(element, 'x-line-height');
   var lineHeightRatio = layout.getElementAttribute(element, 'x-line-height-ratio');
   var kerning = layout.getElementAttribute(element, 'kerning');
-
+  
+  if (element.hasAttribute('x-valign')) {
+    shape.setVerticalAlign(layout.getElementAttribute(element, 'x-valign'));
+  }
   if (thin.isExactlyEqual(kerning, 
         thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING)) {
     kerning = thin.editor.TextStyle.DEFAULT_KERNING;
@@ -729,10 +732,25 @@ thin.editor.TblockShape.prototype.setMultiMode = function(multipleMode) {
     if (!thin.isExactlyEqual(ratio, thin.editor.TextStyle.DEFAULT_LINEHEIGHT)) {
       this.setTextLineHeightRatio(ratio);
     }
+    var valign = this.getVerticalAlign();
+    if (thin.isExactlyEqual(valign, thin.editor.TextStyle.DEFAULT_VALIGN)) {
+      this.setVerticalAlign(valign);
+    }
   } else {
     var element = this.getElement();
     element.removeAttribute('x-line-height');
     element.removeAttribute('x-line-height-ratio');
+    element.removeAttribute('x-valign');
+  }
+};
+
+
+/**
+ * @param {string} valign
+ */
+thin.editor.TblockShape.prototype.setVerticalAlign = function(valign) {
+  if (this.isMultiMode()) {
+    thin.editor.TblockShape.superClass_.setVerticalAlign.call(this, valign);
   }
 };
 
@@ -802,6 +820,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
   var display = this.getDisplay();
   var ratio = this.getTextLineHeightRatio();
   var kerning = this.getKerning();
+  var valign = this.getVerticalAlign();
   var anchor = this.getTextAnchor();
   var defvalue = this.getDefaultValueOfLink();
   var formatBase = this.getBaseFormat();
@@ -839,8 +858,9 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
     shape.setFontItalic(italic);
     shape.setFontUnderline(underline);
     shape.setFontLinethrough(linethrough);
-    shape.setTextAnchor(anchor);
     shape.setTextLineHeightRatio(ratio);
+    shape.setTextAnchor(anchor);
+    shape.setVerticalAlign(valign);
     shape.setKerning(kerning);
     shape.setDisplay(display);
     shape.setDefaultValueOfLink(defvalue);
@@ -1017,6 +1037,24 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
   
   
+  var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty('縦位置');
+  var textVerticalAlignSelect = textVerticalAlignSelectProperty.getValueControl();
+  textVerticalAlignSelect.setTextAlignLeft();
+  var verticalAlignType = thin.editor.TextStyle.VerticalAlignTypeName;
+  
+  textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.TOP));
+  textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.CENTER));
+  textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.BOTTOM));
+  
+  textVerticalAlignSelectProperty.addEventListener(propEventType.CHANGE,
+      function(e) {
+        workspace.getAction().actionSetVerticalAlign(
+            thin.editor.TextStyle.getVerticalAlignTypeFromTypeName(e.target.getValue()));
+      }, false, this);
+  
+  proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
+  
+  
   var lineHeightCombProperty = new thin.ui.PropertyPane.ComboBoxProperty('行間');
   var lineHeightComb = lineHeightCombProperty.getValueControl();
   var lineHeightInput = lineHeightComb.getInput();
@@ -1105,6 +1143,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         
           scope.setMultiMode(isMultiple);
           proppane.getChild('line-height').setEnabled(isMultiple);
+          proppane.getChild('text-valign').setEnabled(isMultiple);
           proppane.getChild('height').setEnabled(isMultiple);
 
           if(isMultiple) {
@@ -1540,7 +1579,11 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
  * @return {Object}
  */
 thin.editor.TblockShape.prototype.getProperties = function() {
-
+  var valign = this.getVerticalAlign();
+  if (thin.isExactlyEqual(valign, thin.editor.TextStyle.DEFAULT_VALIGN)) {
+    valign = thin.editor.TextStyle.VerticalAlignType.TOP;
+  }
+  
   var properties = {
     'left': this.getLeft(),
     'top': this.getTop(),
@@ -1552,6 +1595,7 @@ thin.editor.TblockShape.prototype.getProperties = function() {
     'font-family': this.getFontFamily(),
     'line-height': this.getTextLineHeightRatio(),
     'text-halign': this.getTextAnchor(),
+    'text-valign': valign,
     'kerning': this.getKerning(),
     'multiple': this.isMultiMode(),
     'shape-id': this.getShapeId(),
@@ -1612,7 +1656,10 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('font-color').setValue(fontColor);
     proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
     proppane.getPropertyControl('font-family').setValue(properties['font-family']);
-    proppane.getPropertyControl('text-halign').setValue(thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+    proppane.getPropertyControl('text-halign').setValue(
+          thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+    proppane.getPropertyControl('text-valign').setValue(
+          thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
     proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
     proppane.getPropertyControl('kerning').setValue(properties['kerning']);
     proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
@@ -1648,6 +1695,7 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('default-value').setValue(properties['default-value']);
     
     proppane.getChild('line-height').setEnabled(isMultiple);
+    proppane.getChild('text-valign').setEnabled(isMultiple);
     proppane.getChild('height').setEnabled(isMultiple);
     
     this.setDisplayForPropPane(formatType);

@@ -699,6 +699,10 @@ thin.editor.Action.prototype.actionSetVerticalAlign = function(newValign) {
   layout.forTextShapesEach(shapes, function(shape, i) {
     goog.array.insertAt(captureTextVerticalAlignArray, shape.getVerticalAlign(), i);
   });
+  var captureTblockVerticalAlignArray = [];
+  layout.forTblockShapesEach(shapes, function(shape, i) {
+    goog.array.insertAt(captureTblockVerticalAlignArray, shape.getVerticalAlign(), i);
+  });
   
   /**
    * @param {goog.graphics.Element} shape
@@ -709,11 +713,23 @@ thin.editor.Action.prototype.actionSetVerticalAlign = function(newValign) {
     shape.setTop(shape.getTop());
   };
   
+  /**
+   * @param {goog.graphics.Element} shape
+   * @param {string} valign
+   */
+  var setVerticalAlignTblockShape = function(shape, valign) {
+    shape.setVerticalAlign(valign);
+  };
+  
   workspace.normalVersioning(function(version) {
     version.upHandler(function() {
 
       layout.forTextShapesEach(shapes, function(shape, i) {
         setVerticalAlignTextShape(shape, newValign);
+      });
+      
+      layout.forTblockShapesEach(shapes, function(shape, i) {
+        setVerticalAlignTblockShape(shape, newValign);
       });
       
       if (guide.isEnable()) {
@@ -738,7 +754,11 @@ thin.editor.Action.prototype.actionSetVerticalAlign = function(newValign) {
       layout.forTextShapesEach(shapes, function(shape, i) {
         setVerticalAlignTextShape(shape, captureTextVerticalAlignArray[i]);
       });
-
+      
+      layout.forTblockShapesEach(shapes, function(shape, i) {
+        setVerticalAlignTblockShape(shape, captureTblockVerticalAlignArray[i]);
+      });
+      
       if (guide.isEnable()) {
         layout.calculateGuideBounds(shapes);
         guide.adjustToTargetShapeBounds();
