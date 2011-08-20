@@ -1104,7 +1104,6 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         var setMultipleMode = function(isMultiple, textAnchor) {
         
           scope.setMultiMode(isMultiple);
-          proppane.getChild('text-halign').setEnabled(!isMultiple);
           proppane.getChild('line-height').setEnabled(isMultiple);
           proppane.getChild('height').setEnabled(isMultiple);
 
@@ -1648,7 +1647,6 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('ref-id').setValue(properties['ref-id']);
     proppane.getPropertyControl('default-value').setValue(properties['default-value']);
     
-    proppane.getChild('text-halign').setEnabled(!isMultiple);
     proppane.getChild('line-height').setEnabled(isMultiple);
     proppane.getChild('height').setEnabled(isMultiple);
     

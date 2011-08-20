@@ -304,21 +304,16 @@ thin.editor.ModuleShape.prototype.getDeltaCoordinateForGuide = function() {
  * @this {goog.graphics.Element}
  */
 thin.editor.ModuleShape.prototype.adjustToUiStatusForAvailableShape = function() {
-  var isTextShape = this.instanceOfTextShape();
-  var isTblockShape = this.instanceOfTblockShape();
 
-  if (isTextShape || isTblockShape) {
+  var isTblockShape = this.instanceOfTblockShape();
+  if (this.instanceOfTextShape() || isTblockShape) {
     this.adjustToUiStatusForShape();
-    if (isTextShape) {
-      thin.ui.setEnabledForFontUi(true);
-    }
+    thin.ui.setEnabledForFontUi(true);
+
     if (isTblockShape) {
       if (this.isMultiMode()) {
-        thin.ui.setEnabledForFontUi(true);
-        thin.ui.setEnabledForHorizontalAlignTypeUi(false);
-        thin.ui.setEnabledForVerticalAlignTypeUi(false);
+        thin.ui.setEnabledForVerticalAlignTypeUi(true);
       } else {
-        thin.ui.setEnabledForFontUi(true);
         thin.ui.setEnabledForVerticalAlignTypeUi(false);
       }
     }

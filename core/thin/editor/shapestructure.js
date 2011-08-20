@@ -148,7 +148,7 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
   var blank = thin.editor.ShapeStructure.BLANK_;
   var mutliple = shape.getAttribute("x-multiple") || "false";
   var isMultiMode = mutliple == "true";
-  var anchor = shape.getAttribute("text-anchor") || "start";
+  var anchor = shape.getAttribute("text-anchor");
   var tag = isMultiMode ? "textArea" : "text";
   var formatType = isMultiMode ? blank : shape.getAttribute("x-format-type") || blank;
   json["multiple"] = mutliple;
@@ -215,7 +215,6 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
     var ascent = thin.core.Font.getAscent(family, fontSize, isBold);    
     attrs["x"] = left;
     attrs["y"] = thin.editor.numberWithPrecision(top + ascent);
-    attrs["text-anchor"] = anchor;
   } else {
     var heightAt = thin.core.Font.getHeight(family, fontSize);
     var lineHeight = thin.core.Font.getLineHeight(family, fontSize, isBold);
@@ -232,8 +231,7 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
   var defaultLetterSpacing = thin.editor.TextStyle.DEFAULT_LETTERSPACING;
   goog.array.forEach(shape.attributes, function(attr) {
     attrName = attr.name;
-    if (!/x-/.test(attrName) && attrName != "class" && 
-        attrName != "style" && attrName != 'text-anchor') {
+    if (!/x-/.test(attrName) && attrName != "class" && attrName != "style") {
       value = attr.value;
       if ("kerning" == attrName) {
         attrName = "letter-spacing";
