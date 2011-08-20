@@ -2461,8 +2461,42 @@ thin.editor.Action.prototype.actionAdjustToAspect = function() {
 
 
 /**
+ * @return {void}
+ */
+thin.editor.Action.prototype.restfulF2Action = function() {
+
+  var actionTargetShape;
+  var activeShapeManager = this.layout_.getManager().getActiveShape();
+  var singleShapeByGlobal = activeShapeManager.getIfSingle();
+  
+  if (!singleShapeByGlobal) {
+    // Skip F2Action;
+    return;
+  }
+
+  if (singleShapeByGlobal.instanceOfListShape()) {
+    actionTargetShape = singleShapeByGlobal.getActiveShape().getIfSingle();
+  } else {
+    actionTargetShape = singleShapeByGlobal;
+  }
+
+  switch (true) {
+    case actionTargetShape.instanceOfTextShape():
+      this.actionTextEdit();
+      break;
+    case actionTargetShape.instanceOfImageShape():
+      this.actionImageEdit();
+      break;
+    case actionTargetShape.instanceOfTblockShape():
+      var proppane = thin.ui.getComponent('proppane');
+      proppane.getChild('shape-id').activateControl();
+      break;
+  }
+};
+
+
+/**
  * @param {boolean=} opt_isDraw
- * @return {boolean}
  */
 thin.editor.Action.prototype.actionTextEdit = function(opt_isDraw) {
 
@@ -2484,7 +2518,8 @@ thin.editor.Action.prototype.actionTextEdit = function(opt_isDraw) {
   }
   
   if (!targetTextShape) {
-    return false;
+    // Skip actionTextEdit;
+    return;
   }
 
   var textEditorDialog = thin.ui.getComponent('texteditor');
@@ -2549,13 +2584,11 @@ thin.editor.Action.prototype.actionTextEdit = function(opt_isDraw) {
   var textEditAreaElement = textEditArea.getElement();
   textEditAreaElement.focus();
   textEditAreaElement.select();
-  
-  return true;
 };
 
 
 /**
- * @return {boolean}
+ * @return {void}
  */
 thin.editor.Action.prototype.actionImageEdit = function() {
   var layout = this.layout_;
@@ -2577,7 +2610,8 @@ thin.editor.Action.prototype.actionImageEdit = function() {
   }
   
   if (!targetImageShape) {
-    return false;
+    // Skip actionImageEdit;
+    return;
   }
 
   var captureFile = targetImageShape.getFile();
@@ -2655,5 +2689,4 @@ thin.editor.Action.prototype.actionImageEdit = function() {
           workspace.focusElement(e);
         });
   }
-  return true;
 };

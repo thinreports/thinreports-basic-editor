@@ -265,9 +265,7 @@ thin.editor.Workspace.prototype.workspaceKeyEventListenerByUp_ = function(e) {
   }
   
   if (keyCode == keyCodes.F2) {
-    if (!action.actionTextEdit()) {
-      action.actionImageEdit();
-    }
+    action.restfulF2Action();
     return;
   }
   
