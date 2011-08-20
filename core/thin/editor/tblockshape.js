@@ -227,21 +227,25 @@ thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeI
   element.removeAttribute('clip-path');
   var shape = new thin.editor.TblockShape(element, layout);
 
-  shape.setMultiMode(layout.getElementAttribute(element, 'x-multiple') == 'true');
+  shape.setMultiModeInternal(layout.getElementAttribute(element, 'x-multiple') == 'true');
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
   shape.setFontSize(Number(layout.getElementAttribute(element, 'font-size')));
   shape.setFontFamily(layout.getElementAttribute(element, 'font-family'));
 
-  
-  var kerning = layout.getElementAttribute(element, 'kerning');
   var decoration = layout.getElementAttribute(element, 'text-decoration');
+  var lineHeight = layout.getElementAttribute(element, 'x-line-height');
+  var lineHeightRatio = layout.getElementAttribute(element, 'x-line-height-ratio');
+  var kerning = layout.getElementAttribute(element, 'kerning');
 
   if (thin.isExactlyEqual(kerning, 
         thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING)) {
     kerning = thin.editor.TextStyle.DEFAULT_KERNING;
   }
-  shape.setKerning(/** @type {string} */ (kerning));  
+  shape.setKerning(/** @type {string} */ (kerning));
+  if (!goog.isNull(lineHeightRatio)) {
+    shape.setTextLineHeightRatio(lineHeightRatio);
+  }
   shape.setFontUnderline(/underline/.test(decoration));
   shape.setFontLinethrough(/line-through/.test(decoration));
   shape.setFontItalic(layout.getElementAttribute(element, 'font-style') == 'italic');
@@ -640,6 +644,15 @@ thin.editor.TblockShape.prototype.setInternalRefId = function(refId) {
 
 
 /**
+ * @return {string}
+ */
+thin.editor.TblockShape.prototype.getRefId = function() {
+  return /** @type {string} */ (thin.getValIfNotDef(this.refId_, 
+             thin.editor.TblockShape.DEFAULT_REFID));
+};
+
+
+/**
  * @param {goog.graphics.Element} referringShape
  */
 thin.editor.TblockShape.prototype.setReferringShape = function(referringShape) {
@@ -697,7 +710,7 @@ thin.editor.TblockShape.prototype.isMultiMode = function() {
 /**
  * @param {boolean} multipleMode
  */
-thin.editor.TblockShape.prototype.setMultiMode = function(multipleMode) {
+thin.editor.TblockShape.prototype.setMultiModeInternal = function(multipleMode) {
   this.multiMode_ = multipleMode;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-multiple': multipleMode
@@ -706,11 +719,44 @@ thin.editor.TblockShape.prototype.setMultiMode = function(multipleMode) {
 
 
 /**
- * @return {string}
+ * @param {boolean} multipleMode
  */
-thin.editor.TblockShape.prototype.getRefId = function() {
-  return /** @type {string} */ (thin.getValIfNotDef(this.refId_, 
-             thin.editor.TblockShape.DEFAULT_REFID));
+thin.editor.TblockShape.prototype.setMultiMode = function(multipleMode) {
+  this.setMultiModeInternal(multipleMode);
+
+  if (multipleMode) {
+    var ratio = this.getTextLineHeightRatio();
+    if (!thin.isExactlyEqual(ratio, thin.editor.TextStyle.DEFAULT_LINEHEIGHT)) {
+      this.setTextLineHeightRatio(ratio);
+    }
+  } else {
+    var element = this.getElement();
+    element.removeAttribute('x-line-height');
+    element.removeAttribute('x-line-height-ratio');
+  }
+};
+
+
+/**
+ * @param {string} ratio
+ */
+thin.editor.TblockShape.prototype.setTextLineHeightRatio = function(ratio) {
+  if (this.isMultiMode()) {
+    thin.editor.TblockShape.superClass_.setTextLineHeightRatio.call(this, ratio);
+  }
+};
+
+
+/**
+ * @param {number} size
+ */
+thin.editor.TblockShape.prototype.setFontSize = function(size) {
+  thin.editor.TblockShape.superClass_.setFontSize.call(this, size);
+
+  var ratio = this.getTextLineHeightRatio();
+  if (!thin.isExactlyEqual(ratio, thin.editor.TextStyle.DEFAULT_LINEHEIGHT)) {
+    this.setTextLineHeightRatio(ratio);
+  }
 };
 
 
@@ -754,6 +800,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
   var linethrough = this.isFontLinethrough();
 
   var display = this.getDisplay();
+  var ratio = this.getTextLineHeightRatio();
   var kerning = this.getKerning();
   var anchor = this.getTextAnchor();
   var defvalue = this.getDefaultValueOfLink();
@@ -793,6 +840,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
     shape.setFontUnderline(underline);
     shape.setFontLinethrough(linethrough);
     shape.setTextAnchor(anchor);
+    shape.setTextLineHeightRatio(ratio);
     shape.setKerning(kerning);
     shape.setDisplay(display);
     shape.setDefaultValueOfLink(defvalue);
@@ -969,6 +1017,43 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
   
   
+  var lineHeightCombProperty = new thin.ui.PropertyPane.ComboBoxProperty('行間');
+  var lineHeightComb = lineHeightCombProperty.getValueControl();
+  var lineHeightInput = lineHeightComb.getInput();
+  lineHeightInput.setLabel('auto');
+  var lineHeightInputValidation = new thin.ui.NumberValidationHandler(this);
+  lineHeightInputValidation.setAllowBlank(true);
+  lineHeightInputValidation.setAllowDecimal(true, 1);
+  lineHeightInput.setValidationHandler(lineHeightInputValidation);  
+  
+  var lineHeightItem;
+  goog.array.forEach(thin.editor.TextStyle.LINEHEIGHT_LIST, function(lineHeightValue) {
+    lineHeightItem = new thin.ui.ComboBoxItem(lineHeightValue);
+    lineHeightItem.setSticky(true);
+    lineHeightComb.addItem(lineHeightItem);
+  });
+  lineHeightCombProperty.addEventListener(propEventType.CHANGE,
+      function(e) {
+        var ratio = e.target.getValue();
+        var captureRatio = scope.getTextLineHeightRatio();
+
+        workspace.normalVersioning(function(version) {
+        
+          version.upHandler(function() {
+            this.setTextLineHeightRatio(ratio);
+            proppane.getPropertyControl('line-height').setInternalValue(ratio);
+          }, scope);
+          
+          version.downHandler(function() {
+            this.setTextLineHeightRatio(captureRatio);
+            proppane.getPropertyControl('line-height').setInternalValue(captureRatio);
+          }, scope);
+        });
+      }, false, this);
+  
+  proppane.addProperty(lineHeightCombProperty , textGroup, 'line-height');
+  
+  
   var kerningInputProperty = new thin.ui.PropertyPane.InputProperty('文字間隔');
   var kerningInput = kerningInputProperty.getValueControl();
   kerningInput.setLabel('auto');
@@ -1020,6 +1105,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         
           scope.setMultiMode(isMultiple);
           proppane.getChild('text-halign').setEnabled(!isMultiple);
+          proppane.getChild('line-height').setEnabled(isMultiple);
           proppane.getChild('height').setEnabled(isMultiple);
 
           if(isMultiple) {
@@ -1465,6 +1551,7 @@ thin.editor.TblockShape.prototype.getProperties = function() {
     'font-color': this.getFill().getColor(),
     'font-size': this.getFontSize(),
     'font-family': this.getFontFamily(),
+    'line-height': this.getTextLineHeightRatio(),
     'text-halign': this.getTextAnchor(),
     'kerning': this.getKerning(),
     'multiple': this.isMultiMode(),
@@ -1527,6 +1614,7 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
     proppane.getPropertyControl('font-family').setValue(properties['font-family']);
     proppane.getPropertyControl('text-halign').setValue(thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+    proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
     proppane.getPropertyControl('kerning').setValue(properties['kerning']);
     proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
     
@@ -1561,6 +1649,7 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('default-value').setValue(properties['default-value']);
     
     proppane.getChild('text-halign').setEnabled(!isMultiple);
+    proppane.getChild('line-height').setEnabled(isMultiple);
     proppane.getChild('height').setEnabled(isMultiple);
     
     this.setDisplayForPropPane(formatType);

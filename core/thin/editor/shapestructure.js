@@ -152,6 +152,13 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
   var tag = isMultiMode ? "textArea" : "text";
   var formatType = isMultiMode ? blank : shape.getAttribute("x-format-type") || blank;
   json["multiple"] = mutliple;
+
+  if (shape.hasAttribute('x-line-height')) {
+    json["line-height"] = Number(shape.getAttribute('x-line-height'));
+  } else {
+    json["line-height"] = blank;
+  }
+
   var format = {
     "base": shape.getAttribute("x-format-base") || blank,
     "type": formatType

@@ -119,7 +119,6 @@ thin.editor.TextShape.prototype.textContent_;
 thin.editor.TextShape.createFromElement = function(element, layout, opt_shapeIdManager) {
 
   var deco = layout.getElementAttribute(element, 'text-decoration');
-  var lineHeight = layout.getElementAttribute(element, 'x-line-height');
   var lineHeightRatio = layout.getElementAttribute(element, 'x-line-height-ratio');
   var kerning = layout.getElementAttribute(element, 'kerning');
   var shape = new thin.editor.TextShape(element, layout);

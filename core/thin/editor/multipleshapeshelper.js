@@ -744,8 +744,10 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       
         goog.array.forEach(targetShapes, function(shape) {
           shape.setTextLineHeightRatio(ratio);
-          shape.setTop(shape.getTop());
-          shape.getTargetOutline().setBounds(shape.getBounds());
+          if (shape.instanceOfTextShape()) {
+            shape.setTop(shape.getTop());
+            shape.getTargetOutline().setBounds(shape.getBounds());
+          }
         });
         this.setPropertyForNonDestructive(captureProperties, 'line-height', ratio);
         updateGuideAndProperties(shapes);
@@ -755,9 +757,11 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       
         goog.array.forEach(targetShapes, function(shape, count) {
           shape.setTextLineHeightRatio(captureRatioArray[count]);
-          shape.setHeight(captureHeightArray[count]);
-          shape.setTop(captureTopArray[count]);
-          shape.getTargetOutline().setBounds(shape.getBounds());
+          if (shape.instanceOfTextShape()) {
+            shape.setHeight(captureHeightArray[count]);
+            shape.setTop(captureTopArray[count]);
+            shape.getTargetOutline().setBounds(shape.getBounds());
+          }
         });
         this.setCloneProperties(captureProperties);
         updateGuideAndProperties(shapes);
