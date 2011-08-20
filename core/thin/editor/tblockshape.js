@@ -232,8 +232,16 @@ thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeI
   shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
   shape.setFontSize(Number(layout.getElementAttribute(element, 'font-size')));
   shape.setFontFamily(layout.getElementAttribute(element, 'font-family'));
+
   
+  var kerning = layout.getElementAttribute(element, 'kerning');
   var decoration = layout.getElementAttribute(element, 'text-decoration');
+
+  if (thin.isExactlyEqual(kerning, 
+        thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING)) {
+    kerning = thin.editor.TextStyle.DEFAULT_KERNING;
+  }
+  shape.setKerning(/** @type {string} */ (kerning));  
   shape.setFontUnderline(/underline/.test(decoration));
   shape.setFontLinethrough(/line-through/.test(decoration));
   shape.setFontItalic(layout.getElementAttribute(element, 'font-style') == 'italic');
@@ -313,7 +321,8 @@ thin.editor.TblockShape.prototype.createId_ = function(opt_element, opt_classId)
     'font-weight': 'normal',
     'font-style': 'normal',
     'text-decoration': 'none',
-    'text-anchor': thin.editor.TextStyle.HorizonAlignType.START
+    'text-anchor': thin.editor.TextStyle.HorizonAlignType.START,
+    'kerning': thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING
   });
 
   return new thin.editor.IdShape(element, layout, null, 
@@ -745,6 +754,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
   var linethrough = this.isFontLinethrough();
 
   var display = this.getDisplay();
+  var kerning = this.getKerning();
   var anchor = this.getTextAnchor();
   var defvalue = this.getDefaultValueOfLink();
   var formatBase = this.getBaseFormat();
@@ -783,6 +793,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
     shape.setFontUnderline(underline);
     shape.setFontLinethrough(linethrough);
     shape.setTextAnchor(anchor);
+    shape.setKerning(kerning);
     shape.setDisplay(display);
     shape.setDefaultValueOfLink(defvalue);
     shape.setBaseFormat(formatBase);
@@ -957,6 +968,39 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
   
+  
+  var kerningInputProperty = new thin.ui.PropertyPane.InputProperty('文字間隔');
+  var kerningInput = kerningInputProperty.getValueControl();
+  kerningInput.setLabel('auto');
+  var kerningInputValidation = new thin.ui.NumberValidationHandler(this);
+  kerningInputValidation.setAllowDecimal(true, 1);
+  kerningInputValidation.setAllowBlank(true);
+  kerningInput.setValidationHandler(kerningInputValidation);
+  kerningInputProperty.addEventListener(propEventType.CHANGE,
+      function(e) {
+        var kerning = e.target.getValue();
+        if (!thin.isExactlyEqual(kerning, 
+                thin.editor.TextStyle.DEFAULT_KERNING)) {
+          kerning = goog.string.padNumber(Number(kerning), 0);
+        }
+        var captureSpacing = scope.getKerning();
+
+        workspace.normalVersioning(function(version) {
+        
+          version.upHandler(function() {
+            this.setKerning(kerning);
+            proppane.getPropertyControl('kerning').setValue(kerning);
+          }, scope);
+          
+          version.downHandler(function() {
+            this.setKerning(captureSpacing);
+            proppane.getPropertyControl('kerning').setValue(captureSpacing);
+          }, scope);
+        });
+      }, false, this);
+  
+  proppane.addProperty(kerningInputProperty, textGroup, 'kerning');
+
 
   var multipleCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('複数行');
   var multipleCheck = multipleCheckProperty.getValueControl();
@@ -1422,6 +1466,7 @@ thin.editor.TblockShape.prototype.getProperties = function() {
     'font-size': this.getFontSize(),
     'font-family': this.getFontFamily(),
     'text-halign': this.getTextAnchor(),
+    'kerning': this.getKerning(),
     'multiple': this.isMultiMode(),
     'shape-id': this.getShapeId(),
     'ref-id': this.getRefId(),
@@ -1482,6 +1527,7 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
     proppane.getPropertyControl('font-family').setValue(properties['font-family']);
     proppane.getPropertyControl('text-halign').setValue(thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+    proppane.getPropertyControl('kerning').setValue(properties['kerning']);
     proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
     
     var formatType = properties['format-type'];

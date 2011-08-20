@@ -1230,6 +1230,7 @@ thin.editor.Layout.prototype.createTblockShape = function() {
   shape.setDefaultValueOfLink(thin.editor.TblockShape.DEFAULT_VALUE);
   shape.setBaseFormat(thin.editor.TblockShape.DEFAULT_FORMAT_BASE);
   shape.setInternalRefId(thin.editor.TblockShape.DEFAULT_REFID);
+  shape.setKerning(thin.editor.TextStyle.DEFAULT_KERNING);
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
   shape.setMultiMode(thin.editor.TblockShape.DEFAULT_MULTIPLE);
   return shape;

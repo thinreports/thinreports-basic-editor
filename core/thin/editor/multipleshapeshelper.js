@@ -768,6 +768,73 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   proppane.addProperty(lineHeightCombProperty, textGroup, 'line-height');
   
   
+  var kerningInputProperty = new thin.ui.PropertyPane.InputProperty('文字間隔');
+  var kerningInput = kerningInputProperty.getValueControl();
+  kerningInput.setLabel('auto');
+  var kerningInputValidation = new thin.ui.NumberValidationHandler(this);
+  kerningInputValidation.setAllowDecimal(true, 1);
+  kerningInputValidation.setAllowBlank(true);
+  kerningInput.setValidationHandler(kerningInputValidation);
+  kerningInputProperty.addEventListener(propEventType.CHANGE, function(e) {
+    var kerning = e.target.getValue();
+    if (!thin.isExactlyEqual(kerning, 
+            thin.editor.TextStyle.DEFAULT_KERNING)) {
+      kerning = goog.string.padNumber(Number(kerning), 0);
+    }
+    var captureProperties = scope.getCloneProperties();
+
+    var shapes = manager.getActiveShapeByIncludeList().getClone();
+    var targetShapes = [];
+    var captureKerningArray = [];
+    var captureLeftArray = [];
+    var captureWidthArray = [];
+    
+    goog.array.forEach(shapes, function(shape, count) {
+      var properties = shape.getProperties();
+      if (goog.object.containsKey(properties, 'kerning')) {
+        goog.array.insert(targetShapes, shape);
+        goog.array.insertAt(captureKerningArray, properties['kerning'], count);
+        goog.array.insertAt(captureWidthArray, properties['width'], count);
+        goog.array.insertAt(captureLeftArray, properties['left'], count);
+      }
+    });
+    
+    workspace.normalVersioning(function(version) {
+    
+      version.upHandler(function() {
+      
+        goog.array.forEach(targetShapes, function(shape, count) {
+          shape.setKerning(kerning);
+          
+          if (shape.instanceOfTextShape()) {
+            shape.setLeft(captureLeftArray[count]);
+            shape.getTargetOutline().setBounds(shape.getBounds());
+          }
+        });
+        this.setPropertyForNonDestructive(captureProperties, 'kerning', kerning);
+        updateGuideAndProperties(shapes);
+      }, scope);
+      
+      version.downHandler(function() {
+      
+        goog.array.forEach(targetShapes, function(shape, count) {
+          shape.setKerning(captureKerningArray[count]);
+          
+          if (shape.instanceOfTextShape()) {
+            shape.setWidth(captureWidthArray[count]);
+            shape.setLeft(captureLeftArray[count]);
+            shape.getTargetOutline().setBounds(shape.getBounds());
+          }
+        });
+        this.setCloneProperties(captureProperties);
+        updateGuideAndProperties(shapes);
+      }, scope);
+    });
+  }, false, this);
+  
+  proppane.addProperty(kerningInputProperty, textGroup, 'kerning');
+
+
   var multipleCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('複数行');
   var multipleCheck = multipleCheckProperty.getValueControl();
   multipleCheckProperty.addEventListener(propEventType.CHANGE, function(e) {
@@ -950,67 +1017,6 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       }, false, this);
   
   proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
-    
-  
-  var kerningInputProperty = new thin.ui.PropertyPane.InputProperty('文字間隔');
-  var kerningInput = kerningInputProperty.getValueControl();
-  kerningInput.setLabel('auto');
-  var kerningInputValidation = new thin.ui.NumberValidationHandler(this);
-  kerningInputValidation.setAllowDecimal(true, 1);
-  kerningInputValidation.setAllowBlank(true);
-  kerningInput.setValidationHandler(kerningInputValidation);
-  kerningInputProperty.addEventListener(propEventType.CHANGE, function(e) {
-    var kerning = e.target.getValue();
-    if (!thin.isExactlyEqual(kerning, 
-            thin.editor.TextStyle.DEFAULT_KERNING)) {
-      kerning = goog.string.padNumber(Number(kerning), 0);
-    }
-    var captureProperties = scope.getCloneProperties();
-
-    var shapes = manager.getActiveShapeByIncludeList().getClone();
-    var targetShapes = [];
-    var captureKerningArray = [];
-    var captureLeftArray = [];
-    var captureWidthArray = [];
-    
-    goog.array.forEach(shapes, function(shape, count) {
-      var properties = shape.getProperties();
-      if (goog.object.containsKey(properties, 'kerning')) {
-        goog.array.insert(targetShapes, shape);
-        goog.array.insertAt(captureKerningArray, properties['kerning'], count);
-        goog.array.insertAt(captureWidthArray, properties['width'], count);
-        goog.array.insertAt(captureLeftArray, properties['left'], count);
-      }
-    });
-    
-    workspace.normalVersioning(function(version) {
-    
-      version.upHandler(function() {
-      
-        goog.array.forEach(targetShapes, function(shape, count) {
-          shape.setKerning(kerning);
-          shape.setLeft(captureLeftArray[count]);
-          shape.getTargetOutline().setBounds(shape.getBounds());
-        });
-        this.setPropertyForNonDestructive(captureProperties, 'kerning', kerning);
-        updateGuideAndProperties(shapes);
-      }, scope);
-      
-      version.downHandler(function() {
-      
-        goog.array.forEach(targetShapes, function(shape, count) {
-          shape.setKerning(captureKerningArray[count]);
-          shape.setWidth(captureWidthArray[count]);
-          shape.setLeft(captureLeftArray[count]);
-          shape.getTargetOutline().setBounds(shape.getBounds());
-        });
-        this.setCloneProperties(captureProperties);
-        updateGuideAndProperties(shapes);
-      }, scope);
-    });
-  }, false, this);
-  
-  proppane.addProperty(kerningInputProperty, textGroup, 'kerning');
   
   
   // formatGroup

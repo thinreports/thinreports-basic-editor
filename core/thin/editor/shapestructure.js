@@ -220,11 +220,21 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
   attrs["xml:space"] = "preserve";
 
   var attrName;
+  var value;
+  var defaultKerning = thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING;
+  var defaultLetterSpacing = thin.editor.TextStyle.DEFAULT_LETTERSPACING;
   goog.array.forEach(shape.attributes, function(attr) {
     attrName = attr.name;
     if (!/x-/.test(attrName) && attrName != "class" && 
         attrName != "style" && attrName != 'text-anchor') {
-      attrs[attrName] = attr.value;
+      value = attr.value;
+      if ("kerning" == attrName) {
+        attrName = "letter-spacing";
+        if(thin.isExactlyEqual(value, defaultKerning)) {
+          value = defaultLetterSpacing;
+        }
+      }
+      attrs[attrName] = value;
     }
   });
   
