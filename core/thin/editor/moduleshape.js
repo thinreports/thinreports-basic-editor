@@ -314,10 +314,11 @@ thin.editor.ModuleShape.prototype.adjustToUiStatusForAvailableShape = function()
     }
     if (isTblockShape) {
       if (this.isMultiMode()) {
-        thin.ui.setEnabledForFontUi(false);
+        thin.ui.setEnabledForFontUi(true);
+        thin.ui.setEnabledForHorizontalAlignTypeUi(false);
+        thin.ui.setEnabledForVerticalAlignTypeUi(false);
       } else {
         thin.ui.setEnabledForFontUi(true);
-        thin.ui.setEnabledForTextEdit(false);
         thin.ui.setEnabledForVerticalAlignTypeUi(false);
       }
     }

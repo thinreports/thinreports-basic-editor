@@ -227,7 +227,7 @@ thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeI
   element.removeAttribute('clip-path');
   var shape = new thin.editor.TblockShape(element, layout);
 
-  shape.setMultiModeInternal(layout.getElementAttribute(element, 'x-multiple') == 'true');
+  shape.setMultiMode(layout.getElementAttribute(element, 'x-multiple') == 'true');
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
   shape.setFontSize(Number(layout.getElementAttribute(element, 'font-size')));
@@ -359,149 +359,6 @@ thin.editor.TblockShape.prototype.removeClipPath = function() {
 
 thin.editor.TblockShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getTblockOutline());
-};
-
-
-/**
- * @param {string} anchor
- */
-thin.editor.TblockShape.prototype.setTextAnchor = function(anchor) {
-  if (!this.isMultiMode()) {
-    thin.editor.TblockShape.superClass_.setTextAnchor.call(this, anchor);
-  }
-};
-
-
-/**
- * @param {boolean} bold
- */
-thin.editor.TblockShape.prototype.setFontBold = function(bold) {
-  if (!this.isMultiMode()) {
-    thin.editor.TblockShape.superClass_.setFontBold.call(this, bold);
-  }
-};
-
-
-/**
- * @param {boolean} italic
- */
-thin.editor.TblockShape.prototype.setFontItalic = function(italic) {
-  if (!this.isMultiMode()) {
-    thin.editor.TblockShape.superClass_.setFontItalic.call(this, italic);
-  }
-};
-
-
-/**
- * @param {boolean} underline
- */
-thin.editor.TblockShape.prototype.setFontUnderline = function(underline) {
-  if (!this.isMultiMode()) {
-    thin.editor.TblockShape.superClass_.setFontUnderline.call(this, underline);
-  }
-};
-
-
-/**
- * @param {boolean} linethrough
- */
-thin.editor.TblockShape.prototype.setFontLinethrough = function(linethrough) {
-  if (!this.isMultiMode()) {
-    thin.editor.TblockShape.superClass_.setFontLinethrough.call(this, linethrough);
-  }
-};
-
-
-/**
- * @param {boolean} underline
- * @param {boolean} linethrough
- * @private
- */
-thin.editor.TblockShape.prototype.setTextDecoration = function(underline, linethrough) {
-  if (!this.isMultiMode()) {
-    thin.editor.TblockShape.superClass_.setTextDecoration.call(this, underline, linethrough);
-  }
-};
-
-
-/**
- * @param {boolean} multipleMode
- */
-thin.editor.TblockShape.prototype.setMultiMode = function(multipleMode) {
-  this.setMultiModeInternal(multipleMode);
-
-  if (multipleMode) {
-    var element = this.getElement();
-    element.removeAttribute('text-anchor');
-    element.removeAttribute('font-weight');
-    element.removeAttribute('font-style');
-    element.removeAttribute('text-decoration');
-  } else {
-    var isBold = this.isFontBold();
-    if (goog.isBoolean(isBold)) {
-      this.setFontBold(isBold);
-    }
-    var isItalic = this.isFontItalic();
-    if (goog.isBoolean(isItalic)) {
-      this.setFontItalic(isItalic);
-    }
-    this.setTextDecoration(this.isFontUnderline(), this.isFontLinethrough());
-    this.setTextAnchor(this.getTextAnchor());
-  }
-};
-
-
-/**
- * @return {boolean}
- */
-thin.editor.TblockShape.prototype.isFontBold = function() {
-  return this.isMultiMode() ? false : 
-      thin.editor.TblockShape.superClass_.isFontBold.call(this);
-};
-
-
-/**
- * @return {boolean}
- */
-thin.editor.TblockShape.prototype.isFontItalic = function() {
-  return this.isMultiMode() ? false : 
-      thin.editor.TblockShape.superClass_.isFontItalic.call(this);
-};
-
-
-/**
- * @return {boolean}
- */
-thin.editor.TblockShape.prototype.isFontUnderline = function() {
-  return this.isMultiMode() ? false : 
-      thin.editor.TblockShape.superClass_.isFontUnderline.call(this);
-};
-
-
-/**
- * @return {boolean}
- */
-thin.editor.TblockShape.prototype.isFontLinethrough = function() {
-  return this.isMultiMode() ? false : 
-      thin.editor.TblockShape.superClass_.isFontLinethrough.call(this);
-};
-
-
-/**
- * @return {boolean}
- */
-thin.editor.TblockShape.prototype.isAnchorEnd = function() {
-  return this.isMultiMode() ? false :
-      thin.editor.TblockShape.superClass_.isAnchorEnd.call(this);
-};
-
-
-/**
- * @return {boolean}
- */
-thin.editor.TblockShape.prototype.isAnchorMiddle = function() {
-  return this.isMultiMode() ? false : 
-      thin.editor.TblockShape.superClass_.isAnchorMiddle.call(this);
 };
 
 
@@ -831,20 +688,11 @@ thin.editor.TblockShape.prototype.isMultiMode = function() {
 /**
  * @param {boolean} multipleMode
  */
-thin.editor.TblockShape.prototype.setMultiModeInternal = function(multipleMode) {
+thin.editor.TblockShape.prototype.setMultiMode = function(multipleMode) {
   this.multiMode_ = multipleMode;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-multiple': multipleMode
   });
-};
-
-
-/**
- * @return {string}
- */
-thin.editor.TblockShape.prototype.getTextAnchor = function() {
-  return this.isMultiMode() ? thin.editor.TextStyle.HorizonAlignType.START : 
-      thin.editor.TblockShape.superClass_.getTextAnchor.call(this);
 };
 
 

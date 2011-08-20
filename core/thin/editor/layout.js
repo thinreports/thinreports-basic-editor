@@ -1231,7 +1231,7 @@ thin.editor.Layout.prototype.createTblockShape = function() {
   shape.setBaseFormat(thin.editor.TblockShape.DEFAULT_FORMAT_BASE);
   shape.setInternalRefId(thin.editor.TblockShape.DEFAULT_REFID);
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
-  shape.setMultiModeInternal(thin.editor.TblockShape.DEFAULT_MULTIPLE);
+  shape.setMultiMode(thin.editor.TblockShape.DEFAULT_MULTIPLE);
   return shape;
 };
 
