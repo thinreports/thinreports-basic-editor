@@ -231,33 +231,42 @@ thin.editor.LayoutUtil.restoreKerningFromLetterSpacing = function(xml) {
 thin.editor.LayoutUtil.serializeFromChildNodes = function(shapes, opt_sectionDepth) {
 
   var layoutUtilTemplate = thin.editor.LayoutUtil.Template_;
-  var connectTemplate = layoutUtilTemplate.CONNECT;
+  
   var shapeTemplateFactor = layoutUtilTemplate.SHAPE;
-  var shapeTemplate = [shapeTemplateFactor, shapeTemplateFactor];
+  var layoutTemplateFactor = layoutUtilTemplate.LAYOUT;
+
+  var layoutTemplate = goog.array.repeat(layoutTemplateFactor, 2);
+  var shapeTemplate = goog.array.repeat(shapeTemplateFactor, 2);  
   
   if (goog.isNumber(opt_sectionDepth)) {
-    for (var c = 0; c < opt_sectionDepth; c++) {
-      shapeTemplate[0] = connectTemplate + shapeTemplate[0];
-      shapeTemplate[1] += connectTemplate;
-    }
+    var depth = goog.string.repeat(layoutUtilTemplate.CONNECT, opt_sectionDepth);
+    
+    shapeTemplate[0] = depth + shapeTemplate[0];
+    shapeTemplate[1] += depth;
+    layoutTemplate[0] = depth + layoutTemplate[0];
+    layoutTemplate[1] += depth;
+    
     goog.array.forEachRight(shapes, function(shape, i) {
       if (thin.editor.LayoutUtil.isSerializableShape(shape)) {
         goog.dom.replaceNode(thin.editor.LayoutUtil.formatStructure_(
           thin.editor.ShapeStructure.serialize(shape), shapeTemplate), shape);
+      // When visibility of shape is hidden and shape has not id.
+      } else if (thin.editor.LayoutUtil.isHiddenShape(shape)) {
+        goog.dom.replaceNode(thin.editor.LayoutUtil.formatStructure_(
+          thin.editor.serializeToXML(shape), layoutTemplate), shape);
       }
     });
   } else {
-  
-    var layoutComment;
-    var layoutTemplateFactor = layoutUtilTemplate.LAYOUT;
-    var layoutTemplate = [layoutTemplateFactor, layoutTemplateFactor];
-    
     goog.array.forEachRight(shapes, function(shape, i) {
       if (thin.editor.LayoutUtil.isSerializableShape(shape)) {
         goog.dom.insertSiblingBefore(thin.editor.LayoutUtil.formatStructure_(
           thin.editor.ShapeStructure.serialize(shape), shapeTemplate), shape);
         goog.dom.replaceNode(thin.editor.LayoutUtil.formatStructure_(
           thin.editor.serializeToXML(shape), layoutTemplate), shape);
+      // When visibility of shape is hidden and shape has not id.
+      } else if (thin.editor.LayoutUtil.isHiddenShape(shape)) {
+        goog.dom.replaceNode(thin.editor.LayoutUtil.formatStructure_(
+          thin.editor.serializeToXML(shape), layoutTemplate), shape);        
       }
     });
   }
@@ -270,9 +279,19 @@ thin.editor.LayoutUtil.serializeFromChildNodes = function(shapes, opt_sectionDep
  * @return {boolean}
  */
 thin.editor.LayoutUtil.isSerializableShape = function(element) {
-  var hogeId = element.getAttribute('x-id');
-  return goog.isString(hogeId) && 
-         thin.editor.ModuleShape.DEFAULT_SHAPEID != hogeId;
+  var id = element.getAttribute('x-id');
+  return goog.isString(id) && 
+         thin.editor.ModuleShape.DEFAULT_SHAPEID != id;
+};
+
+
+/**
+ * @param {Element} element
+ * @return {boolean}
+ */
+thin.editor.LayoutUtil.isHiddenShape = function(element) {
+  return !thin.editor.LayoutUtil.isSerializableShape(element) &&
+      element.getAttribute('x-display') == 'false';
 };
 
 
