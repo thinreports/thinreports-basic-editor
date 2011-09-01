@@ -219,8 +219,11 @@ thin.ui.InputColorPicker.prototype.handleInputFocus = function(e) {
  * @param {goog.events.Event} e
  */
 thin.ui.InputColorPicker.prototype.handleInputEndEditing = function(e) {
-  if (this.value_ != e.value) {
-    this.setValue(e.value);
+  var current = this.value_ ? goog.color.parse(this.value_).hex : '';
+  var input = e.value ? goog.color.parse(e.value).hex : '';
+  
+  if (current != input) {
+    this.setValue(input);
     this.dispatchEvent(goog.ui.Component.EventType.CHANGE);
   }
 };
