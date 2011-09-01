@@ -42,13 +42,6 @@ goog.inherits(thin.editor.ImageFile, goog.Disposable);
 
 
 /**
- * @type {string}
- * @private
- */
-thin.editor.ImageFile.lastPath_ = thin.core.File.HOME_PATH;
-
-
-/**
  * @type {Array.<string>}
  * @private
  */
@@ -110,7 +103,7 @@ thin.editor.ImageFile.createDataURIScheme_ = function(path, base64String) {
  * @return {string}
  */
 thin.editor.ImageFile.getLastAccessedPath = function() {
-  return thin.editor.ImageFile.lastPath_;
+  return thin.settings.get('last_image_path') || thin.core.File.HOME_PATH;
 };
 
 
@@ -118,7 +111,7 @@ thin.editor.ImageFile.getLastAccessedPath = function() {
  * @param {string} path
  */
 thin.editor.ImageFile.setLastAccessedPath = function(path) {
-  thin.editor.ImageFile.lastPath_ = path;
+  thin.settings.set('last_image_path', path);
 };
 
 
@@ -147,8 +140,8 @@ thin.editor.ImageFile.openDialog = function(opt_path) {
   var path = thin.core.platform.File.getOpenFileName('画像を開く', 
                  thin.editor.ImageFile.getOpenDirPath(opt_path),
                  thin.core.platform.File.createFilter(
-                    [thin.editor.ImageFile.EXT_DESCRIPTION_], 
-                    [thin.editor.ImageFile.EXT_NAME_]));
+                    thin.editor.ImageFile.EXT_DESCRIPTION_, 
+                    thin.editor.ImageFile.EXT_NAME_));
 
   if (!!path) {
     thin.editor.ImageFile.setLastAccessedPath(path);

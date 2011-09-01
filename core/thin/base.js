@@ -18,6 +18,12 @@ goog.provide('thin.Error');
 
 
 /**
+ * @type {thin.Settings}
+ */
+thin.settings;
+
+
+/**
  * @param {*} val
  * @return {boolean}
  */

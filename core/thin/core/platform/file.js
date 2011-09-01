@@ -127,38 +127,19 @@ thin.core.platform.File.write = function(path, content) {
 
 
 /**
- * @param {Array.<string>} descriptions
- * @param {Array.<Array|string>} extNames
+ * @param {string} description
+ * @param {Array.<string>} extNames
  * @param {boolean=} opt_allFiles
  * @return {string}
  */
-thin.core.platform.File.createFilter = function(descriptions, extNames, opt_allFiles) {
-  var filter = [];
-  var extNameString;
-  
-  /**
-   * @param {string} content
-   * @return {string}
-   */
-  var createExtWildcard = function(content) {
-    return (extNameString += goog.string.buildString('*.', content, ';'));
-  };
-  
-  goog.array.forEach(descriptions, function(desc) {
-    extNameString = '';
-    goog.array.forEach(extNames, function(extName) {
-      if (goog.isArray(extName)) {
-        goog.array.forEach(extName, createExtWildcard);
-      } else if (goog.isString(extName)) {
-        createExtWildcard(extName);
-      }
-    });
-    
-    filter.push(goog.string.buildString(desc, '(', extNameString, ')'));
+thin.core.platform.File.createFilter = function(description, extNames, opt_allFiles) {
+  extNames = goog.array.map(extNames, function(ext) {
+    return '*.' + ext;
   });
+  var filters = description + '(' + extNames.join(' ') + ')';
   
-  if (opt_allFiles === true) {
-    filter.push('All Files(*)');
+  if (opt_allFiles) {
+    filters += ';;All Files(*)';
   }
-  return filter.join(';;');
+  return filters;
 };

@@ -41,13 +41,6 @@ goog.inherits(thin.layout.File, goog.Disposable);
  * @type {string}
  * @private
  */
-thin.layout.File.lastPath_ = thin.core.File.HOME_PATH;
-
-
-/**
- * @type {string}
- * @private
- */
 thin.layout.File.EXT_NAME_ = 'tlf';
 
 
@@ -69,7 +62,7 @@ thin.layout.File.prototype.file_;
  * @return {string}
  */
 thin.layout.File.getLastAccessedPath = function() {
-  return thin.layout.File.lastPath_;
+  return thin.settings.get('last_layout_path') || thin.core.File.HOME_PATH;
 };
 
 
@@ -77,7 +70,7 @@ thin.layout.File.getLastAccessedPath = function() {
  * @param {string} path
  */
 thin.layout.File.setLastAccessedPath = function(path) {
-  thin.layout.File.lastPath_ = path;
+  thin.settings.set('last_layout_path', path);
 };
 
 
@@ -125,7 +118,7 @@ thin.layout.File.openDialog = function(opt_path) {
   var path = thin.core.platform.File.getOpenFileName('ファイルを開く', 
                  thin.layout.File.getOpenDirPath(opt_path),
                  thin.core.platform.File.createFilter(
-                    [thin.layout.File.EXT_DESCRIPTION_], 
+                    thin.layout.File.EXT_DESCRIPTION_, 
                     [thin.layout.File.EXT_NAME_], true));
 
   if (!!path) {
@@ -176,7 +169,7 @@ thin.layout.File.prototype.saveAs = function(opt_path) {
   var path = thin.core.platform.File.getSaveFileName('ファイルを保存', 
                  thin.layout.File.getSaveAsDirPath(opt_path),
                  thin.core.platform.File.createFilter(
-                    [thin.layout.File.EXT_DESCRIPTION_], [thin.layout.File.EXT_NAME_]));
+                    thin.layout.File.EXT_DESCRIPTION_, [thin.layout.File.EXT_NAME_]));
 
   var isExistPath = !!path;
   if (isExistPath) {

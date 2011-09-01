@@ -20,6 +20,7 @@ goog.require('goog.ui.Component');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Textarea');
 
+goog.require('thin.Settings');
 goog.require('thin.core');
 goog.require('thin.core.platform');
 goog.require('thin.core.Font');

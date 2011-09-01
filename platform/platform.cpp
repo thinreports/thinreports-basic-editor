@@ -21,14 +21,18 @@
 #include <QtWebKit>
 #include <QDir>
 #include <QFontDatabase>
+#include <QFileInfo>
+#include <QCryptographicHash>
 #include "platform.h"
 
 Platform::Platform(QWidget *parent)
     : QMainWindow(parent)
 {
-    QString core = "../core/application.html";
+    QByteArray uid = QCryptographicHash::hash(QDir::homePath().toLocal8Bit(),
+                                              QCryptographicHash::Md5);
+    QFileInfo app("../core/application.html?uid=" + uid.toHex());
 
-    if (!isDebugMode() && !QFile::exists(core)) {
+    if (!isDebugMode() && !app.exists()) {
         QMessageBox::critical(this, tr("ThinReportsEditor Platform Booting Error"),
                               "Unable to load application.");
         exit(0);
@@ -38,7 +42,7 @@ Platform::Platform(QWidget *parent)
     loadFonts();
 
     view = new QWebView(this);
-    view->load(QUrl(core));
+    view->load(app.absoluteFilePath());
 
     setting();
 
@@ -80,7 +84,10 @@ void Platform::setting()
     view->setMinimumHeight(600);
 
     QWebSettings *settings = view->settings();
+
     settings->setDefaultTextEncoding("utf-8");
+    settings->setAttribute(QWebSettings::LocalStorageEnabled, true);
+    settings->setLocalStoragePath(QDir::currentPath());
 
     view->page()->setLinkDelegationPolicy(QWebPage::DelegateExternalLinks);
 
