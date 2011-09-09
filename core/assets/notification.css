@@ -15,32 +15,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-html {
-  -webkit-user-select: none;
+.thin-notification {
+  z-index: 99999;
+  position: absolute;
+  bottom: 10px;
+  right: 30px;
+  width: 300px;
+  background-position: 10px center;
+  background-repeat: no-repeat;
+  background-color: rgba(240, 240, 240, 0.9);
+  -webkit-border-radius: 4px;
+  -webkit-box-shadow: 0 0 0 6px rgba(180, 180, 180, 0.5);
+  -webit-user-select: none;
+  padding-left: 20px;
+  outline: none;
+  cursor: pointer;
 }
 
-body {
-  margin: 0;
-  overflow: hidden;
-  font-size: 0.6em;
-  color: #333;
+.thin-notification.error {
+  background-image: url(icons/exclamation-red.png);
 }
 
-body, textarea {
-  font-family: Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGothic", sans-serif;
-}
-input, select {
-  font-family: Helvetica, Arial, "MS PGothic", sans-serif;
-}
-*[lang="x-ascii"] {
-  font-family: Helvetica, Arial, sans-serif !important;
+.thin-notification.warn {
+  background-image: url(icons/exclamation-octagon.png);
 }
 
-input[type="text"]:disabled {
-  background-color: #fff !important;
+.thin-notification.info {
+  background-image: url(icons/information.png);
 }
 
-svg {
-  -webkit-border-radius: 5px;
-  -webkit-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.02);
+.thin-notification > p {
+  margin: 10px 20px;
 }

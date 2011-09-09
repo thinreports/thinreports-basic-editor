@@ -195,9 +195,9 @@ thin.editor.DraggableLine.prototype.createPropertyComponent_ = function() {
   var positionInputProperty = new thin.ui.PropertyPane.InputProperty('位置');
   var positionInput = positionInputProperty.getValueControl();
   
-  var positionInputValidation = new thin.ui.NumberValidationHandler(this);
+  var positionInputValidation = new thin.ui.Input.NumberValidator(this);
   positionInputValidation.setAllowDecimal(true, 1);
-  positionInput.setValidationHandler(positionInputValidation);
+  positionInput.setValidator(positionInputValidation);
   positionInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var position = Number(e.target.getValue());

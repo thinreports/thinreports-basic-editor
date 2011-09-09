@@ -135,6 +135,15 @@ thin.core.Font.getSystemFonts = function() {
 
 
 /**
+ * @param {string} font
+ * @return {boolean}
+ */
+thin.core.Font.isBuiltinFont = function(font) {
+  return goog.array.contains(thin.core.Font.BUILTIN_FONTS_, font);
+};
+
+
+/**
  * @private
  */
 thin.core.Font.initSystemFonts_ = function() {

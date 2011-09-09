@@ -891,9 +891,9 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var leftInputProperty = new thin.ui.PropertyPane.InputProperty('左位置');
   var leftInput = leftInputProperty.getValueControl();
 
-  var leftInputValidation = new thin.ui.NumberValidationHandler(this);
+  var leftInputValidation = new thin.ui.Input.NumberValidator(this);
   leftInputValidation.setAllowDecimal(true, 1);
-  leftInput.setValidationHandler(leftInputValidation);
+  leftInput.setValidator(leftInputValidation);
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
   
@@ -903,9 +903,9 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var topInputProperty = new thin.ui.PropertyPane.InputProperty('上位置');
   var topInput = topInputProperty.getValueControl();
 
-  var topInputValidation = new thin.ui.NumberValidationHandler(this);
+  var topInputValidation = new thin.ui.Input.NumberValidator(this);
   topInputValidation.setAllowDecimal(true, 1);
-  topInput.setValidationHandler(topInputValidation);
+  topInput.setValidator(topInputValidation);
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
   
@@ -915,9 +915,9 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var widthInputProperty = new thin.ui.PropertyPane.InputProperty('幅');
   var widthInput = widthInputProperty.getValueControl();
 
-  var widthInputValidation = new thin.ui.NumberValidationHandler(this);
+  var widthInputValidation = new thin.ui.Input.NumberValidator(this);
   widthInputValidation.setAllowDecimal(true, 1);
-  widthInput.setValidationHandler(widthInputValidation);
+  widthInput.setValidator(widthInputValidation);
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
   
@@ -927,9 +927,9 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var heightInputProperty = new thin.ui.PropertyPane.InputProperty('高さ');
   var heightInput = heightInputProperty.getValueControl();
 
-  var heightInputValidation = new thin.ui.NumberValidationHandler(this);
+  var heightInputValidation = new thin.ui.Input.NumberValidator(this);
   heightInputValidation.setAllowDecimal(true, 1);
-  heightInput.setValidationHandler(heightInputValidation);
+  heightInput.setValidator(heightInputValidation);
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
   
@@ -985,10 +985,10 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var fontSizeCombProperty = new thin.ui.PropertyPane.ComboBoxProperty('サイズ');
   var fontSizeComb = fontSizeCombProperty.getValueControl();
   var fontSizeInput = fontSizeComb.getInput();
-  var fontSizeInputValidation = new thin.ui.NumberValidationHandler(this);
+  var fontSizeInputValidation = new thin.ui.Input.NumberValidator(this);
   fontSizeInputValidation.setInputRange(5);
   fontSizeInputValidation.setAllowDecimal(true, 1);
-  fontSizeInput.setValidationHandler(fontSizeInputValidation);
+  fontSizeInput.setValidator(fontSizeInputValidation);
 
   var fontSizeItem;
   goog.array.forEach(thin.editor.FontStyle.FONTSIZE_LIST, function(fontSizeValue) {
@@ -1059,10 +1059,10 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var lineHeightComb = lineHeightCombProperty.getValueControl();
   var lineHeightInput = lineHeightComb.getInput();
   lineHeightInput.setLabel('auto');
-  var lineHeightInputValidation = new thin.ui.NumberValidationHandler(this);
+  var lineHeightInputValidation = new thin.ui.Input.NumberValidator(this);
   lineHeightInputValidation.setAllowBlank(true);
   lineHeightInputValidation.setAllowDecimal(true, 1);
-  lineHeightInput.setValidationHandler(lineHeightInputValidation);  
+  lineHeightInput.setValidator(lineHeightInputValidation);  
   
   var lineHeightItem;
   goog.array.forEach(thin.editor.TextStyle.LINEHEIGHT_LIST, function(lineHeightValue) {
@@ -1095,10 +1095,10 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var kerningInputProperty = new thin.ui.PropertyPane.InputProperty('文字間隔');
   var kerningInput = kerningInputProperty.getValueControl();
   kerningInput.setLabel('auto');
-  var kerningInputValidation = new thin.ui.NumberValidationHandler(this);
+  var kerningInputValidation = new thin.ui.Input.NumberValidator(this);
   kerningInputValidation.setAllowDecimal(true, 1);
   kerningInputValidation.setAllowBlank(true);
-  kerningInput.setValidationHandler(kerningInputValidation);
+  kerningInput.setValidator(kerningInputValidation);
   kerningInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var kerning = e.target.getValue();
@@ -1326,8 +1326,8 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   
   var precisionInputProperty = new thin.ui.PropertyPane.InputProperty('小数点');
   var precisionInput = precisionInputProperty.getValueControl();
-  var precisionValidation = new thin.ui.NumberValidationHandler();
-  precisionInput.setValidationHandler(precisionValidation);
+  var precisionValidation = new thin.ui.Input.NumberValidator();
+  precisionInput.setValidator(precisionValidation);
   precisionInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         
@@ -1355,8 +1355,8 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   
   var lengthInputProperty = new thin.ui.PropertyPane.InputProperty('長さ');
   var lengthInput = lengthInputProperty.getValueControl();
-  var lengthValidation = new thin.ui.NumberValidationHandler();
-  lengthInput.setValidationHandler(lengthValidation);
+  var lengthValidation = new thin.ui.Input.NumberValidator();
+  lengthInput.setValidator(lengthValidation);
   
   lengthInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
@@ -1444,20 +1444,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   
   var cooperationGroup = proppane.addGroup('連携');
   
-  var idInputProperty = new thin.ui.PropertyPane.InputProperty('ID');
-  var idInput = idInputProperty.getValueControl();
-  var idValidation = new thin.ui.IdValidationHandler(this);
-  idValidation.setMethod(function(value) {
-    if (this.methodHandler_(value)) {
-      var opt_shapeIdManager;
-      if (scope.isAffiliationListShape()) {
-        opt_shapeIdManager = scope.getAffiliationColumnShape().getManager().getShapeIdManager();
-      }
-      return layout.isUsableShapeId(value, opt_shapeIdManager);
-    }
-    return false;
-  });
-  idInput.setValidationHandler(idValidation);
+  var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         
@@ -1492,22 +1479,44 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
 
 
-  var refIdInputProperty = new thin.ui.PropertyPane.InputProperty('参照ID');
+  var refIdInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, '参照ID');
+  refIdInputProperty.getIdValidator().setValidateDuplication(false);
+  
   var refIdInput = refIdInputProperty.getValueControl();
-  var refIdValidation = new thin.ui.ValidationHandler(this);
-  refIdValidation.setAllowBlank(true);
-  refIdValidation.setMethod(function(value) {
+  var refIdValidator = new thin.ui.Input.Validator(refIdInput);
+  refIdValidator.setAllowBlank(true);
+  refIdValidator.setMethod(function(value) {
     var opt_shapeIdManager;
     if (scope.isAffiliationListShape()) {
       opt_shapeIdManager = scope.getAffiliationColumnShape().getManager().getShapeIdManager();
     }
     var referenceShape = layout.getShapeForShapeId(value, opt_shapeIdManager);
-    return goog.isDef(referenceShape) && referenceShape.instanceOfTblockShape() &&
-    scope != referenceShape &&
-    !referenceShape.isReferring() &&
-    !scope.isReferences();
+    var notice = null;
+    
+    switch(true) {
+      case !goog.isDef(referenceShape):
+        notice = '"' + value + '" は存在しません。';
+        break;
+      case !referenceShape.instanceOfTblockShape():
+        notice = '"' + value + '" はテキストブロックではありません。';
+        break;
+      case scope == referenceShape:
+        notice = '自身は指定できません。';
+        break;
+      case referenceShape.isReferring():
+        notice = '"' + value + '" は参照先を持っているため、指定できません。';
+        break;
+      case scope.isReferences():
+        notice = '他のテキストブロックから参照されているため、参照先を設定することはできません。';
+        break;
+    }
+    if (notice) {
+      this.setMessage(notice);
+      return false;
+    }
+    return true;
   });
-  refIdInput.setValidationHandler(refIdValidation);
+  refIdInput.addValidator(refIdValidator);
   refIdInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         
@@ -1549,9 +1558,9 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
 
   var defaultValueInputProperty = new thin.ui.PropertyPane.InputProperty('初期値');
   var defaultValueInput = defaultValueInputProperty.getValueControl();
-  var defaultValidation = new thin.ui.ValidationHandler(this);
+  var defaultValidation = new thin.ui.Input.Validator(this);
   defaultValidation.setAllowBlank(true);
-  defaultValueInput.setValidationHandler(defaultValidation);
+  defaultValueInput.setValidator(defaultValidation);
   defaultValueInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         

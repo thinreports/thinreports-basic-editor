@@ -22,11 +22,12 @@ goog.require('goog.events.EventType');
 goog.require('goog.ui.Control');
 goog.require('goog.ui.ControlRenderer');
 goog.require('thin.ui.Input');
+goog.require('thin.ui.Input.Validator');
+goog.require('thin.ui.Input.EventType');
 goog.require('thin.ui.ColorMenuButton');
 goog.require('thin.ui.ColorMenuButtonRenderer');
 goog.require('thin.ui.InputColorPickerRenderer');
 goog.require('thin.ui.StylableControl');
-goog.require('thin.ui.ValidationHandler');
 
 
 /**
@@ -115,7 +116,7 @@ thin.ui.InputColorPicker.prototype.initControls_ = function() {
   this.input_ = new thin.ui.Input();
   
   // validation handler
-  var validation = new thin.ui.ValidationHandler(this);
+  var validation = new thin.ui.Input.Validator(this);
   validation.setAllowBlank(true);
   validation.setMethod(function(value) {
     try {
@@ -125,7 +126,7 @@ thin.ui.InputColorPicker.prototype.initControls_ = function() {
     }
     return true;
   });
-  this.input_.setValidationHandler(validation);
+  this.input_.setValidator(validation);
 };
 
 

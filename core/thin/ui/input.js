@@ -16,12 +16,20 @@
 goog.provide('thin.ui.Input');
 goog.provide('thin.ui.InputEvent');
 goog.provide('thin.ui.Input.EventType');
+goog.provide('thin.ui.Input.Validator');
+goog.provide('thin.ui.Input.ValidatorEvent');
+goog.provide('thin.ui.Input.Validator.EventType');
+goog.provide('thin.ui.Input.NumberValidator');
 
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
+goog.require('goog.array');
+goog.require('goog.string');
 goog.require('goog.style');
 goog.require('goog.events');
+goog.require('goog.events.Event');
 goog.require('goog.ui.Component');
+goog.require('thin.ui.Notification');
 
 
 /**
@@ -37,6 +45,12 @@ thin.ui.Input = function(opt_label) {
    * @private
    */
   this.label_ = opt_label || '';
+  
+  /**
+   * @type {Array.<thin.ui.Input.Validator>}
+   * @private
+   */
+  this.validators_ = [];
 };
 goog.inherits(thin.ui.Input, goog.ui.Component);
 
@@ -60,7 +74,9 @@ thin.ui.Input.prototype.getCssClass = function() {
  */
 thin.ui.Input.EventType = {
   END_EDITING: 'endediting', 
-  CANCEL_EDITING: 'cancelediting'
+  CANCEL_EDITING: 'cancelediting',
+  VALID: 'valid',
+  INVALID: 'invalid'
 };
 
 
@@ -100,13 +116,6 @@ thin.ui.Input.prototype.handleKeyEvents_ = true;
 
 
 /**
- * @type {thin.ui.ValidationHandler}
- * @private
- */
-thin.ui.Input.prototype.validationHandler_;
-
-
-/**
  * @type {Function}
  * @private
  */
@@ -114,22 +123,70 @@ thin.ui.Input.prototype.formatHandler_;
 
 
 /**
- * @return {thin.ui.ValidationHandler}
+ * @type {boolean}
+ * @private
  */
-thin.ui.Input.prototype.getValidationHandler = function() {
-  return this.validationHandler_;
+thin.ui.Input.prototype.editing_ = false;
+
+
+/**
+ * @return {boolean}
+ * @private
+ */
+thin.ui.Input.prototype.nowEditing_ = function() {
+  return this.editing_;
 };
 
 
 /**
- * @param {thin.ui.ValidationHandler} handler
+ * @param {boolean} editing
+ * @private
  */
-thin.ui.Input.prototype.setValidationHandler = function(handler) {
-  if (this.validationHandler_) {
-    this.validationHandler_.dispose();
-    this.validationHandler_ = null;
+thin.ui.Input.prototype.setEditing_ = function(editing) {
+  this.editing_ = editing;
+};
+
+
+/**
+ * @param {thin.ui.Input.Validator} validator
+ */
+thin.ui.Input.prototype.setValidator = function(validator) {
+  if (this.hasValidator()) {
+    goog.array.forEach(this.validators_, function(v) {
+      v.dispose();
+    });
   }
-  this.validationHandler_ = handler;
+  this.validators_ = [validator];
+};
+
+
+/**
+ * @param {thin.ui.Input.Validator} validator
+ */
+thin.ui.Input.prototype.addValidator = function(validator) {
+  this.validators_[this.validators_.length] = validator;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.ui.Input.prototype.hasValidator = function() {
+  return !goog.array.isEmpty(this.validators_);
+};
+
+/**
+ * @param {string} value
+ * @return {boolean}
+ * @private
+ */
+thin.ui.Input.prototype.validate_ = function(value) {
+  if (!this.hasValidator()) {
+    return true;
+  }
+  return goog.array.every(this.validators_, function(validator) {
+    return validator.validate(value);
+  });
 };
 
 
@@ -287,6 +344,7 @@ thin.ui.Input.prototype.isFocused = function() {
 thin.ui.Input.prototype.handleFocus = function(e) {
   this.setFocusState_(true);
   this.getElement().select();
+  this.setEditing_(true);
 };
 
 
@@ -350,7 +408,7 @@ thin.ui.Input.prototype.enableKeyEventsHandling_ = function(enable) {
 /**
  * @param {goog.events.Event} e
  */
-thin.ui.Input.prototype.handleKeyEventInternal = function(e) {  
+thin.ui.Input.prototype.handleKeyEventInternal = function(e) { 
   switch(e.keyCode) {
     case goog.events.KeyCodes.ENTER:
       this.endEditing_();
@@ -375,6 +433,7 @@ thin.ui.Input.prototype.cancelEditing_ = function() {
   this.restoreValue();
   this.dispatchEvent(new thin.ui.InputEvent(
       thin.ui.Input.EventType.CANCEL_EDITING, this.getElement().value));
+  this.setEditing_(false);
 };
 
 
@@ -383,18 +442,34 @@ thin.ui.Input.prototype.cancelEditing_ = function() {
  */
 thin.ui.Input.prototype.endEditing_ = function () {
   var element = this.getElement();
-  var validator = this.getValidationHandler();
   
-  if (validator && !validator.validate(element.value)) {
-    this.restoreValue();
-  } else if (this.dispatchEvent(new thin.ui.InputEvent(
-      thin.ui.Input.EventType.END_EDITING, element.value))) {
-    if (element.value != this.value_) {
-      this.setValue(element.value);
-      this.dispatchEvent(goog.ui.Component.EventType.CHANGE);
+  if (!this.nowEditing_()) {
+    return;
+  }
+  
+  if (element.value != this.value_) {
+    if (!this.validate_(element.value)) {
+      if (this.hasValidator()) {
+        this.dispatchEvent(new thin.ui.InputEvent(
+          thin.ui.Input.EventType.INVALID, element.value));
+      }
+      this.restoreValue();
+    } else {
+      if (this.hasValidator()) {
+        this.dispatchEvent(new thin.ui.InputEvent(
+          thin.ui.Input.EventType.VALID, element.value));
+      }
     }
+    if (this.dispatchEvent(new thin.ui.InputEvent(
+      thin.ui.Input.EventType.END_EDITING, element.value))) {
+        this.setValue(element.value);
+        this.dispatchEvent(goog.ui.Component.EventType.CHANGE);
+    } else {
+      this.restoreValue();
+    }
+    this.setEditing_(false);
   } else {
-    this.restoreValue();
+    this.cancelEditing_();
   }
 };
 
@@ -439,11 +514,10 @@ thin.ui.Input.prototype.disposeInternal = function() {
     delete this.keyHandler_;
   }
   
-  if (this.validationHandler_) {
-    this.validationHandler_.dispose();
-    delete this.validationHandler_;
-  }
-  
+  goog.array.forEach(this.validators_, function(validator) {
+    validator.dispose();
+  });
+  delete this.validators_;
   delete this.formatHandler_;
 };
 
@@ -460,3 +534,351 @@ thin.ui.InputEvent = function(type, value) {
   this.value = value;
 };
 goog.inherits(thin.ui.InputEvent, goog.events.Event);
+
+
+/**
+ * @param {Object=} opt_target
+ * @constructor
+ * @extends {goog.events.EventTarget}
+ */
+thin.ui.Input.Validator = function(opt_target) {
+  goog.events.EventTarget.call(this);
+  
+  if (opt_target) {
+    this.setTarget(opt_target);
+  }
+};
+goog.inherits(thin.ui.Input.Validator, goog.events.EventTarget);
+
+
+/**
+ * @enum {string}
+ */
+thin.ui.Input.Validator.EventType = {
+  INVALID: 'invalid', 
+  VALID: 'valid'
+};
+
+
+/**
+ * @type {Function}
+ * @private
+ */
+thin.ui.Input.Validator.prototype.method_;
+
+
+/**
+ * @type {string}
+ * @private
+ */
+thin.ui.Input.Validator.prototype.message_ = '値が正しくありません。';
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.ui.Input.Validator.prototype.showInvalidMessage_ = true;
+
+/**
+ * @type {Object}
+ * @private
+ */
+thin.ui.Input.Validator.prototype.target_;
+
+
+/**
+ * @param {boolean} show
+ */
+thin.ui.Input.Validator.prototype.setShowInvalidMessage = function(show) {
+  this.showInvalidMessage_ = show;
+};
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.ui.Input.Validator.prototype.allowBlank_ = false;
+
+
+/**
+ * @param {boolean} allow
+ */
+thin.ui.Input.Validator.prototype.setAllowBlank = function(allow) {
+  this.allowBlank_ = allow;
+};
+
+
+/**
+ * @param {string?} value
+ * @return {boolean}
+ */
+thin.ui.Input.Validator.prototype.isBlank_ = function(value) {
+  if (this.allowBlank_) {
+    return !!(goog.isNull(value) || value == '' || value === undefined);
+  }
+  return false;
+};
+
+
+/**
+ * @param {Function} method
+ */
+thin.ui.Input.Validator.prototype.setMethod = function(method) {
+  this.method_ = method;
+};
+
+
+/**
+ * @param {string} message
+ */
+thin.ui.Input.Validator.prototype.setMessage = function(message) {
+  this.message_ = message;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.ui.Input.Validator.prototype.getMessage = function() {
+  return this.message_;
+};
+
+
+/**
+ * @param {Object} target
+ */
+thin.ui.Input.Validator.prototype.setTarget = function(target) {
+  this.target_ = target;
+};
+
+
+/**
+ * @param {string?} value
+ * @return {boolean}
+ */
+thin.ui.Input.Validator.prototype.validate = function(value) {
+  if (goog.isFunction(this.method_)) {
+    if (this.isBlank_(value) || this.method_.call(this, value)) {
+      this.dispatchEvent(
+          new thin.ui.Input.ValidatorEvent(
+              thin.ui.Input.Validator.EventType.VALID, value, this.target_));
+      return true;
+    } else {
+      if (this.showInvalidMessage_ && this.message_) {
+        thin.ui.Notification.error(this.message_);
+      }
+      this.dispatchEvent(
+          new thin.ui.Input.ValidatorEvent(
+              thin.ui.Input.Validator.EventType.INVALID, value, this.target_));
+      return false;
+    }
+  }
+  return true;
+};
+
+
+/** @inheritDoc */
+thin.ui.Input.Validator.prototype.disposeInternal = function() {
+  thin.ui.Input.Validator.superClass_.disposeInternal.call(this);
+  
+  delete this.method_;
+  
+  this.target_ = null;
+  delete this.method_;
+};
+
+
+/**
+ * @param {string} type
+ * @param {string?} value
+ * @param {Object=} opt_target
+ * @constructor
+ * @extends {goog.events.Event}
+ */
+thin.ui.Input.ValidatorEvent = function(type, value, opt_target) {
+  goog.events.Event.call(this, type, opt_target);
+  
+  this.value = value;
+};
+goog.inherits(thin.ui.Input.ValidatorEvent, goog.events.Event);
+
+
+/**
+ * @param {Object=} opt_target
+ * @constructor
+ * @extends {thin.ui.Input.Validator}
+ */
+thin.ui.Input.NumberValidator = function(opt_target) {
+  thin.ui.Input.Validator.call(this, opt_target);
+  this.setMethod(this.validate_);
+};
+goog.inherits(thin.ui.Input.NumberValidator, thin.ui.Input.Validator);
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.ui.Input.NumberValidator.prototype.onlyInteger_ = true;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.ui.Input.NumberValidator.prototype.allowDecimal_ = false;
+
+
+/**
+ * @type {number}
+ * @private
+ */
+thin.ui.Input.NumberValidator.prototype.precision_;
+
+
+/**
+ * @type {number}
+ * @private
+ */
+thin.ui.Input.NumberValidator.prototype.minValue_;
+
+
+/**
+ * @type {number}
+ * @private
+ */
+thin.ui.Input.NumberValidator.prototype.maxValue_;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.ui.Input.NumberValidator.prototype.allowMinus_ = false;
+
+
+/**
+ * @param {string} value
+ * @return {boolean}
+ */
+thin.ui.Input.NumberValidator.prototype.isIntOrDecimal = function(value) {
+  if (!goog.string.isEmpty(value)) {
+    return !isNaN(Number(value));
+  }
+  return false;
+};
+
+
+/**
+ * @param {string} value
+ * @return {boolean}
+ */
+thin.ui.Input.NumberValidator.prototype.isIntNumeric = function(value) {
+  if (!goog.string.isEmpty(value)) {
+    return goog.string.isNumeric(value.replace(/^-/, ''));
+  }
+  return false;
+};
+
+
+/**
+ * @param {number} value
+ * @return {boolean}
+ */
+thin.ui.Input.NumberValidator.prototype.isRangeOk = function(value) {
+  var isRangeOkMin = true;
+  var isRangeOkMax = true;
+  
+  if (goog.isNumber(this.minValue_)) {
+    isRangeOkMin = this.minValue_ <= value;
+  }
+  if (goog.isNumber(this.maxValue_)) {
+    isRangeOkMax = this.maxValue_ >= value;
+  }
+  return isRangeOkMin && isRangeOkMax;
+};
+
+
+/**
+ * @param {string} value
+ * @return {boolean}
+ * @private
+ */
+thin.ui.Input.NumberValidator.prototype.validate_ = function(value) {
+  if (this.allowDecimal_) {
+    var isIntOrDecimal = this.isIntOrDecimal(value);
+    if(isIntOrDecimal && !this.isRangeOk(Number(value))) {
+      return false;
+    }
+    if (isIntOrDecimal && goog.isNumber(this.precision_)) {
+      var padValue = goog.string.padNumber(Number(value), 0, this.precision_);
+      var isEqualValue = Number(value) == Number(padValue);
+      if (isEqualValue && !this.allowMinus_) {
+        return Number(value) >= 0;
+      }
+      return isEqualValue;
+    } else {
+      if (isIntOrDecimal && !this.allowMinus_) {
+        return Number(value) >= 0;
+      }
+      return isIntOrDecimal;
+    }
+  } else {
+    var isInt = this.isIntNumeric(value);
+    if(isInt && !this.isRangeOk(Number(value))) {
+      return false;
+    }
+    if (isInt && !this.allowMinus_) {
+      return Number(value) >= 0;
+    }
+    return isInt;
+  }
+};
+
+
+/**
+ * @param {boolean} allow
+ */
+thin.ui.Input.NumberValidator.prototype.setOnlyInteger = function(allow) {
+  this.onlyInteger_ = allow;
+};
+
+
+/**
+ * @param {boolean} allow
+ * @param {number=} opt_precision
+ */
+thin.ui.Input.NumberValidator.prototype.setAllowDecimal = function(allow, opt_precision) {
+  this.allowDecimal_ = allow;
+  if (allow) {
+    if (goog.isNumber(opt_precision) && opt_precision >= 0) {
+      this.precision_ = opt_precision;
+    }
+  } else {
+    delete this.precision_;
+  }
+};
+
+
+/**
+ * @param {number=} opt_minValue
+ * @param {number=} opt_maxValue
+ */
+thin.ui.Input.NumberValidator.prototype.setInputRange = function(opt_minValue, opt_maxValue) {
+  if(goog.isNumber(opt_minValue)) {
+    this.minValue_ = opt_minValue;
+  }
+  if(goog.isNumber(opt_maxValue)) {
+    this.maxValue_ = opt_maxValue;
+  }
+};
+
+
+/**
+ * @param {boolean} allow
+ */
+thin.ui.Input.NumberValidator.prototype.setAllowMinus = function(allow) {
+  this.allowMinus_ = allow;
+};

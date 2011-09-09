@@ -414,9 +414,9 @@ thin.editor.HeaderColumnShape.prototype.createPropertyComponent_ = function() {
   var heightInputProperty = new thin.ui.PropertyPane.InputProperty('高さ');
   var heightInput = heightInputProperty.getValueControl();
 
-  var heightInputValidation = new thin.ui.NumberValidationHandler(this);
+  var heightInputValidation = new thin.ui.Input.NumberValidator(this);
   heightInputValidation.setAllowDecimal(true, 1);
-  heightInput.setValidationHandler(heightInputValidation);
+  heightInput.setValidator(heightInputValidation);
   heightInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         listShape.setHeightForColumnShape(
@@ -501,9 +501,9 @@ thin.editor.DetailColumnShape.prototype.createPropertyComponent_ = function() {
   var heightInputProperty = new thin.ui.PropertyPane.InputProperty('高さ');
   var heightInput = heightInputProperty.getValueControl();
   
-  var heightInputValidation = new thin.ui.NumberValidationHandler(this);
+  var heightInputValidation = new thin.ui.Input.NumberValidator(this);
   heightInputValidation.setAllowDecimal(true, 1);
-  heightInput.setValidationHandler(heightInputValidation);
+  heightInput.setValidator(heightInputValidation);
   heightInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         listShape.setHeightForColumnShape(
@@ -577,9 +577,9 @@ thin.editor.PageFooterColumnShape.prototype.createPropertyComponent_ = function(
   var heightInputProperty = new thin.ui.PropertyPane.InputProperty('高さ');
   var heightInput = heightInputProperty.getValueControl();
 
-  var heightInputValidation = new thin.ui.NumberValidationHandler(this);
+  var heightInputValidation = new thin.ui.Input.NumberValidator(this);
   heightInputValidation.setAllowDecimal(true, 1);
-  heightInput.setValidationHandler(heightInputValidation);
+  heightInput.setValidator(heightInputValidation);
   heightInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         listShape.setHeightForColumnShape(
@@ -664,9 +664,9 @@ thin.editor.FooterColumnShape.prototype.createPropertyComponent_ = function() {
   var heightInputProperty = new thin.ui.PropertyPane.InputProperty('高さ');
   var heightInput = heightInputProperty.getValueControl();
 
-  var heightInputValidation = new thin.ui.NumberValidationHandler(this);
+  var heightInputValidation = new thin.ui.Input.NumberValidator(this);
   heightInputValidation.setAllowDecimal(true, 1);
-  heightInput.setValidationHandler(heightInputValidation);
+  heightInput.setValidator(heightInputValidation);
   heightInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         listShape.setHeightForColumnShape(

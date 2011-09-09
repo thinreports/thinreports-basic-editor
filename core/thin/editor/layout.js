@@ -1123,12 +1123,16 @@ thin.editor.Layout.prototype.getNextShapeId = function(prefix, opt_shapeIdManage
 
 
 /**
- * @param {string} hogeId
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
+ * @param {string} id
+ * @param {goog.graphics.Element} target
  * @return {boolean}
  */
-thin.editor.Layout.prototype.isUsableShapeId = function(hogeId, opt_shapeIdManager) {
-  return !goog.isDef(this.getShapeForShapeId(hogeId, opt_shapeIdManager));
+thin.editor.Layout.prototype.isUsableShapeId = function(id, target) {
+  var manager;
+  if (target.isAffiliationListShape()) {
+    manager = target.getAffiliationColumnShape().getManager().getShapeIdManager();
+  }
+  return !goog.isDef(this.getShapeForShapeId(id, manager));
 };
 
 

@@ -325,9 +325,9 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
   var leftInputProperty = new thin.ui.PropertyPane.InputProperty('左位置');
   var leftInput = leftInputProperty.getValueControl();
 
-  var leftInputValidation = new thin.ui.NumberValidationHandler(this);
+  var leftInputValidation = new thin.ui.Input.NumberValidator(this);
   leftInputValidation.setAllowDecimal(true, 1);
-  leftInput.setValidationHandler(leftInputValidation);
+  leftInput.setValidator(leftInputValidation);
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
   
@@ -337,9 +337,9 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
   var topInputProperty = new thin.ui.PropertyPane.InputProperty('上位置');
   var topInput = topInputProperty.getValueControl();
 
-  var topInputValidation = new thin.ui.NumberValidationHandler(this);
+  var topInputValidation = new thin.ui.Input.NumberValidator(this);
   topInputValidation.setAllowDecimal(true, 1);
-  topInput.setValidationHandler(topInputValidation);
+  topInput.setValidator(topInputValidation);
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
   
@@ -349,9 +349,9 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
   var widthInputProperty = new thin.ui.PropertyPane.InputProperty('幅');
   var widthInput = widthInputProperty.getValueControl();
 
-  var widthInputValidation = new thin.ui.NumberValidationHandler(this);
+  var widthInputValidation = new thin.ui.Input.NumberValidator(this);
   widthInputValidation.setAllowDecimal(true, 1);
-  widthInput.setValidationHandler(widthInputValidation);
+  widthInput.setValidator(widthInputValidation);
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
   
@@ -361,9 +361,9 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
   var heightInputProperty = new thin.ui.PropertyPane.InputProperty('高さ');
   var heightInput = heightInputProperty.getValueControl();
 
-  var heightInputValidation = new thin.ui.NumberValidationHandler(this);
+  var heightInputValidation = new thin.ui.Input.NumberValidator(this);
   heightInputValidation.setAllowDecimal(true, 1);
-  heightInput.setValidationHandler(heightInputValidation);
+  heightInput.setValidator(heightInputValidation);
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
   
@@ -379,21 +379,7 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
 
   var cooperationGroup = proppane.addGroup('連携');
   
-  var idInputProperty = new thin.ui.PropertyPane.InputProperty('ID');
-  var idInput = idInputProperty.getValueControl();
-  var idValidation = new thin.ui.IdValidationHandler(this);
-  idValidation.setAllowBlank(true);
-  idValidation.setMethod(function(value) {
-    if (this.methodHandler_(value)) {
-      var opt_shapeIdManager;
-      if (scope.isAffiliationListShape()) {
-        opt_shapeIdManager = scope.getAffiliationColumnShape().getManager().getShapeIdManager();
-      }
-      return layout.isUsableShapeId(value, opt_shapeIdManager);
-    }
-    return false;
-  });
-  idInput.setValidationHandler(idValidation);
+  var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
       this.setShapeIdForPropertyUpdate, false, this);
   

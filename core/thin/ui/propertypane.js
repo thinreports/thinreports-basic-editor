@@ -21,6 +21,7 @@ goog.provide('thin.ui.PropertyPane.ComboBoxProperty');
 goog.provide('thin.ui.PropertyPane.CheckboxProperty');
 goog.provide('thin.ui.PropertyPane.ColorProperty');
 goog.provide('thin.ui.PropertyPane.InputProperty');
+goog.provide('thin.ui.PropertyPane.IdInputProperty');
 goog.provide('thin.ui.PropertyPane.CheckableInputProperty');
 goog.provide('thin.ui.PropertyPane.PropertyRenderer');
 goog.provide('thin.ui.PropertyPane.PropertyEvent');
@@ -45,6 +46,8 @@ goog.require('thin.ui.ComboBox');
 goog.require('thin.ui.Checkbox');
 goog.require('thin.ui.MenuButtonRenderer');
 goog.require('thin.ui.CheckboxRenderer');
+goog.require('thin.ui.Input.EventType');
+goog.require('thin.ui.Input.Validator');
 goog.require('thin.ui.InputColorPicker');
 goog.require('thin.ui.InputColorPickerRenderer');
 goog.require('thin.ui.FontSelect');
@@ -156,7 +159,7 @@ thin.ui.PropertyPane.prototype.addItem = function(item, opt_id) {
 
 /**
  * @param {string} id
- * @return {goog.ui.Control?}
+ * @return {goog.ui.Component?}
  */
 thin.ui.PropertyPane.prototype.getPropertyControl = function(id) {
   var property = this.getChild(id);
@@ -615,7 +618,7 @@ thin.ui.PropertyPane.PropertyGroup.prototype.handleDblClickOrSpace_ = function(e
 
 /**
  * @param {string} label
- * @param {goog.ui.Control} control
+ * @param {goog.ui.Component} control
  * @constructor
  * @extends {thin.ui.PropertyPane.AbstractItem}
  */
@@ -664,7 +667,7 @@ thin.ui.PropertyPane.Property.prototype.getValueCell = function(){
 
 
 /**
- * @return {goog.ui.Control}
+ * @return {goog.ui.Component}
  */
 thin.ui.PropertyPane.Property.prototype.getValueControl = function() {
   return this.valueCell_.getControl();
@@ -822,10 +825,7 @@ thin.ui.PropertyPane.PropertyRenderer.prototype.getCssClass = function() {
 };
 
 
-/**
- * @param {goog.ui.Control} prop
- * @return {Element}
- */
+/** @inheritDoc */
 thin.ui.PropertyPane.PropertyRenderer.prototype.createDom = function(prop) {
   var domHelper = prop.getDomHelper();
   return domHelper.createDom('div', this.getClassNames(prop).join(' '), 
@@ -888,7 +888,7 @@ thin.ui.PropertyPane.Property.Key_.prototype.getLabel = function() {
 
 
 /**
- * @param {goog.ui.Control} control
+ * @param {goog.ui.Component} control
  * @constructor
  * @extends {goog.ui.Component}
  * @private
@@ -902,14 +902,14 @@ goog.inherits(thin.ui.PropertyPane.Property.Value_, goog.ui.Component);
 
 
 /**
- * @type {goog.ui.Control?}
+ * @type {goog.ui.Component?}
  * @private
  */
 thin.ui.PropertyPane.Property.Value_.prototype.control_ = null;
 
 
 /**
- * @return {goog.ui.Control}
+ * @return {goog.ui.Component}
  */
 thin.ui.PropertyPane.Property.Value_.prototype.getControl = function() {
   return this.control_;
@@ -1015,7 +1015,7 @@ goog.inherits(thin.ui.PropertyPane.FontSelectProperty, thin.ui.PropertyPane.Sele
 
 /**
  * @param {string} label
- * @param {goog.ui.Control=} opt_control
+ * @param {goog.ui.Component=} opt_control
  * @param {goog.ui.Checkbox.State=} opt_checked
  * @extends {thin.ui.PropertyPane.Property}
  * @constructor
@@ -1053,11 +1053,10 @@ thin.ui.PropertyPane.AbstractCheckableProperty.prototype.getValueControlCheckbox
 
 
 /**
- * @return {goog.ui.Control}
+ * @return {goog.ui.Component}
  */
 thin.ui.PropertyPane.AbstractCheckableProperty.prototype.getValueControlMain = function() {
-  return /** @type {goog.ui.Control} */ (
-            this.getValueControl().getChildAt(1));
+  return this.getValueControl().getChildAt(1);
 };
 
 
@@ -1113,8 +1112,8 @@ thin.ui.PropertyPane.AbstractCheckableProperty.prototype.enterDocument = functio
  */
 thin.ui.PropertyPane.CheckableInputProperty = function(label, opt_label, opt_checked) {
   var control = new thin.ui.Input(opt_label);
-  thin.ui.PropertyPane.AbstractCheckableProperty.call(this, label, 
-      /** @type {goog.ui.Control} */ (control), opt_checked);
+  thin.ui.PropertyPane.AbstractCheckableProperty.call(this, label,
+    control, opt_checked);
 };
 goog.inherits(thin.ui.PropertyPane.CheckableInputProperty, 
     thin.ui.PropertyPane.AbstractCheckableProperty);
@@ -1171,8 +1170,7 @@ thin.ui.PropertyPane.CheckableInputProperty.prototype.enterDocument = function()
  */
 thin.ui.PropertyPane.InputProperty = function(label, opt_label) {
   var control = new thin.ui.Input(opt_label);
-  thin.ui.PropertyPane.Property.call(this, label, 
-        /** @type {goog.ui.Control} */ (control));
+  thin.ui.PropertyPane.Property.call(this, label, control);
 };
 goog.inherits(thin.ui.PropertyPane.InputProperty, thin.ui.PropertyPane.Property);
 
@@ -1209,6 +1207,124 @@ thin.ui.PropertyPane.InputProperty.prototype.enterDocument = function() {
   goog.events.listen(control, 
       [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING], 
       this.handleInactivate, false, this);
+  
+  //goog.events.listen(control,
+  //    thin.ui.Input.EventType.INVALID, this.handleInactivate, false, this);
+};
+
+
+/**
+ * @param {thin.editor.ModuleShape} target
+ * @param {string} label
+ * @param {string=} opt_label
+ * @constructor
+ * @extends {thin.ui.PropertyPane.InputProperty}
+ */
+thin.ui.PropertyPane.IdInputProperty = function(target, label, opt_label) {
+  goog.base(this, label, opt_label);
+  
+  var control = this.getValueControl();
+  var validator = new thin.ui.PropertyPane.IdInputProperty.Validator_(control);
+  validator.setShape(target);
+  control.setValidator(validator);
+  
+  /**
+   * @type {thin.ui.PropertyPane.IdInputProperty.Validator_}
+   * @private
+   */
+  this.idValidator_ = validator;
+};
+goog.inherits(thin.ui.PropertyPane.IdInputProperty,
+  thin.ui.PropertyPane.InputProperty);
+
+
+/**
+ * @return {thin.ui.PropertyPane.IdInputProperty.Validator_}
+ */
+thin.ui.PropertyPane.IdInputProperty.prototype.getIdValidator = function() {
+  return this.idValidator_;
+};
+
+
+/** @inheritDoc */
+thin.ui.PropertyPane.IdInputProperty.prototype.disposeInternal = function() {
+  goog.base(this, 'disposeInternal');
+  
+  delete this.idValidator_;
+};
+
+
+/**
+ * @param {Object=} opt_target
+ * @constructor
+ * @extends {thin.ui.Input.Validator}
+ */
+thin.ui.PropertyPane.IdInputProperty.Validator_ = function(opt_target) {
+  goog.base(this, opt_target);
+  
+  this.setAllowBlank(true);
+  this.setMethod(this.validate_);
+};
+goog.inherits(thin.ui.PropertyPane.IdInputProperty.Validator_,
+  thin.ui.Input.Validator);
+
+
+/**
+ * @type {thin.editor.ModuleShape}
+ * @private
+ */
+thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.shape_;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.validateDuplication_ = true;
+
+
+/**
+ * @param {thin.editor.ModuleShape} shape
+ */
+thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.setShape = function(shape) {
+  this.shape_ = shape;
+};
+
+
+/**
+ * @param {boolean} enabled
+ */
+thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.setValidateDuplication =
+  function(enabled) {
+    this.validateDuplication_ = enabled;
+  };
+
+
+/**
+ * @param {string} value
+ * @return {boolean}
+ * @private
+ */
+thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.validate_ = function(value) {
+  if (!/^[0-9a-zA-Z][\w]*(#\d+)?$/.test(value)) {
+    this.setMessage('IDに使用できる文字は、英数字とアンダースコア"_"のみです。');
+    return false;
+  }
+  if (this.validateDuplication_) {
+    if (!this.shape_.getLayout().isUsableShapeId(value, this.shape_)) {
+      this.setMessage('"' + value + '" は既に使用されています。');
+      return false;
+    }
+  }
+  return true;
+};
+
+
+/** @inheritDoc */
+thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.disposeInternal = function() {
+  goog.base(this, 'disposeInternal');
+  
+  this.shape_ = null;
 };
 
 
@@ -1222,8 +1338,7 @@ thin.ui.PropertyPane.ComboBoxProperty = function(label, opt_menu) {
   var control = thin.ui.ComboBox.getCustomComboBox(
       thin.ui.getCssName(thin.ui.PropertyPane.PropertyRenderer.CSS_CLASS, 'combobox'), opt_menu);
   
-  thin.ui.PropertyPane.Property.call(this, label, 
-        /** @type {goog.ui.Control} */ (control));
+  thin.ui.PropertyPane.Property.call(this, label, control);
 };
 goog.inherits(thin.ui.PropertyPane.ComboBoxProperty, thin.ui.PropertyPane.Property);
 

@@ -21,6 +21,7 @@ goog.require('goog.ui.ComboBoxItem');
 goog.require('goog.ui.ControlRenderer');
 goog.require('thin.ui.StylableControl');
 goog.require('thin.ui.Input');
+goog.require('thin.ui.Input.EventType');
 goog.require('thin.ui.Option');
 goog.require('thin.ui.OptionMenu');
 goog.require('thin.ui.MenuItemRenderer');

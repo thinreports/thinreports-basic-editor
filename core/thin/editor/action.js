@@ -452,6 +452,11 @@ thin.editor.Action.prototype.actionSetFontFamily = function(newFontFamily) {
   var captureProperties = multipleShapesHelper.getCloneProperties();
   var currentFontFamily = workspace.getUiStatusForFontFamily();
   
+  if (!thin.core.Font.isBuiltinFont(newFontFamily)) {
+    thin.ui.Notification.info('"' + newFontFamily + '" は標準フォントではないため、' +
+                              'PDF出力時に正しく表示されない可能性があります。');
+  }
+  
   if (listHelper.isActived()) {
     var activeShapeManager = layout.getManager().getActiveShape();
   } else {
