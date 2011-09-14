@@ -332,6 +332,23 @@ thin.editor.MultiOutlineHelper.prototype.toTblockOutline = function(shape, helpe
  * @param {goog.graphics.Element} shape
  * @param {thin.editor.Helpers} helpers
  */
+thin.editor.MultiOutlineHelper.prototype.toImageblockOutline = function(shape, helpers) {
+  var outline = helpers.createImageblockOutline({
+    'x': shape.getLeft(),
+    'y': shape.getTop(),
+    'width': shape.getWidth(),
+    'height': shape.getHeight(),
+    'stroke-opacity': 0
+  }, null, thin.editor.MultiOutlineHelper.FILL_, this);
+
+  this.setOutlineForMultiple(outline, shape);
+};
+
+
+/**
+ * @param {goog.graphics.Element} shape
+ * @param {thin.editor.Helpers} helpers
+ */
 thin.editor.MultiOutlineHelper.prototype.toImageOutline = function(shape, helpers) {
 
   var outline = helpers.createImageOutline({

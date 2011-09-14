@@ -78,6 +78,7 @@ goog.require('thin.editor.toolaction.TextAction');
 goog.require('thin.editor.toolaction.TblockAction');
 goog.require('thin.editor.toolaction.ListAction');
 goog.require('thin.editor.toolaction.ImageAction');
+goog.require('thin.editor.toolaction.ImageblockAction');
 goog.require('thin.editor.LayoutUtil');
 goog.require('thin.editor.ListHelper');
 goog.require('thin.editor.ListHelper.ColumnName');
@@ -1251,31 +1252,39 @@ thin.setup = function() {
     var toolText = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.TextAction(),
           new thin.ui.Icon('tool-text')), 'text');
-    toolText.setTooltip('静的テキストツール');
+    toolText.setTooltip('テキストツール');
 
     // Image
     var toolImage = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.ImageAction(),
           new thin.ui.Icon('tool-image')), 'image');
     toolImage.setTooltip('画像ツール');
-
+    
     // Separator
     toolbox.addItem(new thin.ui.ToolboxSeparator());
-
+    
     // Tblock
     var toolTblock = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.TblockAction(),
-          new thin.ui.Icon('tool-block')), 'tblock');
-    toolTblock.setTooltip('ブロックツール');
-
+          new thin.ui.Icon('tool-tblock')), 'tblock');
+    toolTblock.setTooltip('テキストブロックツール');
+    
+    // Imageblock
+    var toolTblock = toolbox.addItem(
+        new thin.ui.ToolboxButton(new thin.editor.toolaction.ImageblockAction(),
+          new thin.ui.Icon('tool-iblock')), 'iblock');
+    toolTblock.setTooltip('画像ブロックツール');
+    
+    // Separator
+    toolbox.addItem(new thin.ui.ToolboxSeparator());
+    
     // List
     var toolList = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.ListAction(),
           new thin.ui.Icon('tool-list')), 'list');
     toolList.setTooltip('一覧表ツール');
-
-    thin.ui.registerComponent('toolbox', toolbox);
     
+    thin.ui.registerComponent('toolbox', toolbox);
   })();
 
   (function() {

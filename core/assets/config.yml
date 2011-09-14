@@ -29,4 +29,5 @@ css:
     - toolbox.css
     - view.css
     - workspace.css
+    - notification.css
   output: application-compiled.css

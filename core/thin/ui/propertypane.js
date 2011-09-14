@@ -1262,7 +1262,7 @@ thin.ui.PropertyPane.IdInputProperty.prototype.disposeInternal = function() {
 thin.ui.PropertyPane.IdInputProperty.Validator_ = function(opt_target) {
   goog.base(this, opt_target);
   
-  this.setAllowBlank(true);
+  this.setValidatePresence(this.validatePresence_);
   this.setMethod(this.validate_);
 };
 goog.inherits(thin.ui.PropertyPane.IdInputProperty.Validator_,
@@ -1284,6 +1284,13 @@ thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.validateDuplication_ =
 
 
 /**
+ * @type {boolean}
+ * @private
+ */
+thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.validatePresence_ = false;
+
+
+/**
  * @param {thin.editor.ModuleShape} shape
  */
 thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.setShape = function(shape) {
@@ -1301,11 +1308,27 @@ thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.setValidateDuplication
 
 
 /**
+ * @param {boolean} enabled
+ */
+thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.setValidatePresence =
+  function(enabled) {
+    this.validatePresence_ = enabled;
+    this.setAllowBlank(!enabled);
+  };
+
+
+/**
  * @param {string} value
  * @return {boolean}
  * @private
  */
 thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.validate_ = function(value) {
+  if (this.validatePresence_) {
+    if (value == '') {
+      this.setMessage('IDは必須です。');
+      return false;
+    }
+  }
   if (!/^[0-9a-zA-Z][\w]*(#\d+)?$/.test(value)) {
     this.setMessage('IDに使用できる文字は、英数字とアンダースコア"_"のみです。');
     return false;

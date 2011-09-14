@@ -52,6 +52,8 @@ thin.editor.ShapeStructure.serialize = function(shape) {
     json = thin.editor.ShapeStructure.serializeForList_(shape, json);
   } else if (shapeClassId == thin.editor.TextShape.ClassId.PREFIX) {
     json = thin.editor.ShapeStructure.serializeForText_(shape, json);
+  } else if (shapeClassId == thin.editor.ImageblockShape.ClassId.PREFIX) {
+    json = thin.editor.ShapeStructure.serializeForImageblock_(shape, json);
   } else {
     var svg = {};
     var attrs = {};
@@ -135,6 +137,43 @@ thin.editor.ShapeStructure.serializeForText_ = function(shape, json) {
   json["svg"] = svg;
   return json;
 };
+
+
+/**
+ * @param {Element} shape
+ * @param {Object} json
+ * @return {Object}
+ * @private
+ */
+thin.editor.ShapeStructure.serializeForImageblock_ = function(shape, json) {
+  var svg = {};
+  var left = Number(shape.getAttribute("x-left"));
+  var top = Number(shape.getAttribute("x-top"));
+  var width = Number(shape.getAttribute("x-width"));
+  var height = Number(shape.getAttribute("x-height"));
+  
+  json["box"] = {
+    "x": left,
+    "y": top,
+    "width": width,
+    "height": height
+  };
+  json['position-x'] = shape.getAttribute('x-position-x')
+    || thin.editor.ImageblockShape.PositionX.DEFAULT;
+  json['position-y'] = shape.getAttribute('x-position-y')
+    || thin.editor.ImageblockShape.PositionY.DEFAULT;
+  json['svg'] = svg;
+  
+  svg['tag'] = 'image';
+  svg['attrs'] = {
+    'x': left,
+    'y': top,
+    'width': width,
+    'height': height
+  };
+  return json;
+};
+
 
 
 /**

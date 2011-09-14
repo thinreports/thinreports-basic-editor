@@ -51,7 +51,7 @@ thin.editor.TblockShape = function(element, layout) {
   thin.editor.AbstractTextGroup.call(this, element, layout);
   this.setCss(thin.editor.TblockShape.ClassId.PREFIX);
   
-  this.setFactors_();
+  //this.setFactors_();
   
   /**
    * @type {Array.<thin.editor.TblockShape>}
@@ -313,10 +313,10 @@ thin.editor.TblockShape.prototype.createBox_ = function(opt_element) {
 
 /**
  * @param {Element=} opt_element
- * @param {string=} opt_classId
+ * @return {thin.editor.IdShape}
  * @private
  */
-thin.editor.TblockShape.prototype.createId_ = function(opt_element, opt_classId) {
+thin.editor.TblockShape.prototype.createId_ = function(opt_element) {
   var layout = this.getLayout();
   var classId = thin.editor.TblockShape.ClassId;
   var font = thin.editor.TblockShape.IDSHAPEFONT_;
@@ -337,10 +337,8 @@ thin.editor.TblockShape.prototype.createId_ = function(opt_element, opt_classId)
 };
 
 
-/**
- * @private
- */
-thin.editor.TblockShape.prototype.setFactors_ = function() {
+/** @inheritDoc */
+thin.editor.TblockShape.prototype.setup = function() {
   var element = this.getElement();
   var classId = thin.editor.TblockShape.ClassId;
 
@@ -1445,6 +1443,8 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var cooperationGroup = proppane.addGroup('連携');
   
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
+  idInputProperty.getIdValidator().setValidatePresence(true);
+  
   idInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         
@@ -1763,7 +1763,7 @@ thin.editor.TblockShape.prototype.setInitShapeProperties = function(properties) 
   }
 
   this.setShapeId(this.getLayout().getNextShapeId(
-        thin.editor.ShapeIdManager.DefaultPrefix.BLOCK, 
+        thin.editor.ShapeIdManager.DefaultPrefix.TEXT_BLOCK, 
         opt_shapeIdManager), opt_shapeIdManager);
   this.setFill(thin.editor.TblockShape.DEFAULT_FILL);
   this.setFontSize(properties.SIZE);

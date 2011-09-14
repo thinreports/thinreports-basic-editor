@@ -46,7 +46,7 @@ thin.editor.TextShape = function(element, layout) {
    */
   this.textLineContainer_ = [];
 
-  this.setFactors_();
+  //this.setFactors_();
 };
 goog.inherits(thin.editor.TextShape, thin.editor.AbstractTextGroup);
 goog.mixin(thin.editor.TextShape.prototype, thin.editor.ModuleShape.prototype);
@@ -175,10 +175,8 @@ thin.editor.TextShape.prototype.createBox_ = function(opt_element) {
 };
 
 
-/**
- * @private
- */
-thin.editor.TextShape.prototype.setFactors_ = function() {
+/** @inheritDoc */
+thin.editor.TextShape.prototype.setup = function() {
   var element = this.getElement();
   var classId = thin.editor.TextShape.ClassId;
   var boxClassId = classId.PREFIX + classId.BOX;
@@ -921,7 +919,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
 
   var cooperationGroup = proppane.addGroup('連携');
   
-  var idInputProperty = new thin.ui.PropertyPane.IdInputProperty('ID');
+  var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
       this.setShapeIdForPropertyUpdate, false, this);
   

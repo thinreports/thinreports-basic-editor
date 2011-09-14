@@ -25,6 +25,7 @@ goog.require('thin.editor.RectOutline');
 goog.require('thin.editor.EllipseOutline');
 goog.require('thin.editor.LineOutline');
 goog.require('thin.editor.TblockOutline');
+goog.require('thin.editor.ImageblockOutline');
 goog.require('thin.editor.TextOutline');
 goog.require('thin.editor.ListOutline');
 goog.require('thin.editor.ImageOutline');
@@ -404,6 +405,14 @@ thin.editor.Helpers.prototype.getTblockOutline = function() {
 
 
 /**
+ * @return {thin.editor.ImageblockOutline}
+ */
+thin.editor.Helpers.prototype.getImageblockOutline = function() {
+  return this.outlineHelper_.getImageblockOutline();
+};
+
+
+/**
  * @return {thin.editor.TextOutline}
  */
 thin.editor.Helpers.prototype.getTextOutline = function() {
@@ -495,6 +504,23 @@ thin.editor.Helpers.prototype.createTblockOutline = function(attr, stroke, fill,
                  layout.createSvgElement('rect', attr), layout, stroke, fill);
   tblockOutline.setOutlineHelper(helper);
   return tblockOutline;
+};
+
+
+/**
+ * @param {Object} attr
+ * @param {goog.graphics.Stroke?} stroke
+ * @param {goog.graphics.Fill?} fill
+ * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @return {thin.editor.ImageblockOutline}
+ * @private
+ */
+thin.editor.Helpers.prototype.createImageblockOutline = function(attr, stroke, fill, helper) {
+  var layout = this.layout_;
+  var iblockOutline = new thin.editor.ImageblockOutline(
+                 layout.createSvgElement('rect', attr), layout, stroke, fill);
+  iblockOutline.setOutlineHelper(helper);
+  return iblockOutline;
 };
 
 

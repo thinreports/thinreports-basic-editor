@@ -42,8 +42,9 @@ goog.inherits(thin.editor.ShapeIdManager, thin.editor.AbstractManager);
  * @enum {string}
  */
 thin.editor.ShapeIdManager.DefaultPrefix = {
-  BLOCK: 'Block',
-  LIST: 'List'
+  TEXT_BLOCK: 'text',
+  IMAGE_BLOCK: 'image',
+  LIST: 'list'
 };
 
 

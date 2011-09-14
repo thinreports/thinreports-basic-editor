@@ -192,9 +192,12 @@
 .thin-icon-tool-list {
   background-image: url(icons/x-tool-list.png);
 }
-.thin-icon-tool-block {
-  background-image: url(icons/x-tool-block.png);
-}
 .thin-icon-tool-image {
   background-image: url(icons/x-tool-image.png);
+}
+.thin-icon-tool-tblock {
+  background-image: url(icons/x-tool-tblock.png);
+}
+.thin-icon-tool-iblock {
+  background-image: url(icons/x-tool-iblock.png);
 }

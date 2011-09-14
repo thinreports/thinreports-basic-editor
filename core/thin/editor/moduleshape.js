@@ -224,7 +224,6 @@ thin.editor.ModuleShape.prototype.getDisplay = function() {
 
 /**
  * @this {goog.graphics.Element}
- * @private
  */
 thin.editor.ModuleShape.prototype.disposeInternalForShape = function() {
   this.disposeInternalForDragger_();

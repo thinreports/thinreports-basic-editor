@@ -80,6 +80,13 @@ thin.editor.OutlineHelper.prototype.tblockOutline_;
 
 
 /**
+ * @type {thin.editor.ImageblockOutline}
+ * @private
+ */
+thin.editor.OutlineHelper.prototype.imageblockOutline_;
+
+
+/**
  * @type {thin.editor.TextOutline}
  * @private
  */
@@ -148,6 +155,14 @@ thin.editor.OutlineHelper.prototype.getLineOutline = function() {
  */
 thin.editor.OutlineHelper.prototype.getTblockOutline = function() {
   return this.tblockOutline_;
+};
+
+
+/**
+ * @return {thin.editor.ImageblockOutline}
+ */
+thin.editor.OutlineHelper.prototype.getImageblockOutline = function() {
+  return this.imageblockOutline_;
 };
 
 
@@ -222,6 +237,7 @@ thin.editor.OutlineHelper.prototype.setup = function() {
   var list = helpers.createListOutline(rectAttr, stroke, fill, this);
   var rect = helpers.createRectOutline(rectAttr, stroke, fill, this);
   var tblock = helpers.createTblockOutline(rectAttr, stroke, fill, this);
+  var iblock = helpers.createImageblockOutline(rectAttr, stroke, fill, this);
   var image = helpers.createImageOutline(rectAttr, stroke, fill, this);
 
   var ellipse = helpers.createEllipseOutline({
@@ -247,6 +263,7 @@ thin.editor.OutlineHelper.prototype.setup = function() {
   list.disable();
   rect.disable();
   tblock.disable();
+  iblock.disable();
   ellipse.disable();
   line.disable();
   text.disable();
@@ -255,6 +272,7 @@ thin.editor.OutlineHelper.prototype.setup = function() {
   this.listOutline_ = list;
   this.rectOutline_ = rect;
   this.tblockOutline_ = tblock;
+  this.imageblockOutline_ = iblock;
   this.ellipseOutline_ = ellipse;
   this.lineOutline_ = line;
   this.textOutline_ = text;
@@ -265,6 +283,7 @@ thin.editor.OutlineHelper.prototype.setup = function() {
   layout.appendChild(this.ellipseOutline_, this);
   layout.appendChild(this.rectOutline_, this);
   layout.appendChild(this.tblockOutline_, this);
+  layout.appendChild(this.imageblockOutline_, this);
   layout.appendChild(this.textOutline_, this);
   layout.appendChild(this.selectorOutline_, this);
   layout.appendChild(this.imageOutline_, this);
@@ -277,6 +296,7 @@ thin.editor.OutlineHelper.prototype.disposeInternal = function() {
   this.rectOutline_.dispose();
   this.ellipseOutline_.dispose();
   this.tblockOutline_.dispose();
+  this.imageblockOutline_.dispose();
   this.textOutline_.dispose();
   this.lineOutline_.dispose();
   this.selectorOutline_.dispose();
@@ -286,6 +306,7 @@ thin.editor.OutlineHelper.prototype.disposeInternal = function() {
   delete this.rectOutline_;
   delete this.ellipseOutline_;
   delete this.tblockOutline_;
+  delete this.imageblockOutline_;
   delete this.textOutline_;
   delete this.lineOutline_;
   delete this.selectorOutline_;

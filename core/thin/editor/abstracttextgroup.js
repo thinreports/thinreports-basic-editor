@@ -15,14 +15,9 @@
 
 goog.provide('thin.editor.AbstractTextGroup');
 
-goog.require('goog.dom');
-goog.require('goog.array');
-goog.require('goog.string');
-goog.require('goog.graphics.SvgGroupElement');
+goog.require('thin.editor.AbstractBoxGroup');
 goog.require('thin.editor.FontStyle');
 goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextLineShape');
-goog.require('thin.editor.ModuleElement');
 goog.require('thin.core.Font');
 
 
@@ -30,10 +25,10 @@ goog.require('thin.core.Font');
  * @param {Element} element
  * @param {thin.editor.Layout} layout
  * @constructor
- * @extends {goog.graphics.SvgGroupElement}
+ * @extends {thin.editor.AbstractTextGroup}
  */
 thin.editor.AbstractTextGroup = function(element, layout) {
-  goog.graphics.SvgGroupElement.call(this, element, layout);
+  goog.base(this, element, layout);
   
   /**
    * @type {thin.editor.FontStyle}
@@ -46,33 +41,8 @@ thin.editor.AbstractTextGroup = function(element, layout) {
    * @private
    */
   this.textStyle_ = new thin.editor.TextStyle();
-  
-  /**
-   * @type {number}
-   * @private
-   */
-  this.left_ = Number(layout.getElementAttribute(element, 'x-left'));
-  
-  /**
-   * @type {number}
-   * @private
-   */
-  this.top_ = Number(layout.getElementAttribute(element, 'x-top'));
-  
-  /**
-   * @type {number}
-   * @private
-   */
-  this.width_ = Number(layout.getElementAttribute(element, 'x-width'));
-  
-  /**
-   * @type {number}
-   * @private
-   */
-  this.height_ = Number(layout.getElementAttribute(element, 'x-height'));
 };
-goog.inherits(thin.editor.AbstractTextGroup, goog.graphics.SvgGroupElement);
-goog.mixin(thin.editor.AbstractTextGroup.prototype, thin.editor.ModuleElement.prototype);
+goog.inherits(thin.editor.AbstractTextGroup, thin.editor.AbstractBoxGroup);
 
 
 /**
@@ -89,40 +59,6 @@ thin.editor.AbstractTextGroup.prototype.fill = null;
  * @private
  */
 thin.editor.AbstractTextGroup.prototype.stroke_ = null;
-
-
-/**
- * @type {thin.editor.Box}
- * @private
- */
-thin.editor.AbstractTextGroup.prototype.box_;
-
-
-/**
- * @param {Element=} opt_element
- * @param {string=} opt_classId
- * @private
- */
-thin.editor.AbstractTextGroup.prototype.createBox_ = function(
-      opt_element, opt_classId) {
-
-  var layout = this.getLayout();
-  var element = opt_element || layout.createSvgElement('rect');
-  
-  if (goog.isString(opt_classId)) {
-    layout.setElementAttributes(element, {
-      'class': opt_classId
-    });
-  }
-  
-  return new thin.editor.Box(element, layout, null, null);
-};
-
-
-/**
- * @private
- */
-thin.editor.AbstractTextGroup.prototype.setFactors_ = goog.abstractMethod;
 
 
 /**
@@ -158,58 +94,6 @@ thin.editor.AbstractTextGroup.prototype.setStroke = function(stroke) {
  */
 thin.editor.AbstractTextGroup.prototype.getStroke = function() {
   return this.stroke_;
-};
-
-
-/**
- * @param {number} left
- */
-thin.editor.AbstractTextGroup.prototype.setLeft = function(left) {
-  left = thin.editor.numberWithPrecision(left - this.getParentTransLateX());
-  this.left_ = left;
-  this.getLayout().setElementAttributes(this.getElement(), {
-    'x-left': left
-  });
-  this.box_.setLeft(left);
-};
-
-
-/**
- * @param {number} top
- */
-thin.editor.AbstractTextGroup.prototype.setTop = function(top) {
-  top = thin.editor.numberWithPrecision(top - this.getParentTransLateY());
-  this.top_ = top;
-  this.getLayout().setElementAttributes(this.getElement(), {
-    'x-top': top
-  });
-  this.box_.setTop(top);
-};
-
-
-/**
- * @param {number} width
- */
-thin.editor.AbstractTextGroup.prototype.setWidth = function(width) {
-  width = thin.editor.numberWithPrecision(width);
-  this.width_ = width;
-  this.getLayout().setElementAttributes(this.getElement(), {
-    'x-width': width
-  });
-  this.box_.setWidth(width);
-};
-
-
-/**
- * @param {number} height
- */
-thin.editor.AbstractTextGroup.prototype.setHeight = function(height) {
-  height = thin.editor.numberWithPrecision(height);
-  this.height_ = height;
-  this.getLayout().setElementAttributes(this.getElement(), {
-    'x-height': height
-  });
-  this.box_.setHeight(height);
 };
 
 
@@ -499,10 +383,8 @@ thin.editor.AbstractTextGroup.prototype.adjustToUiStatusForShape = function() {
 
 /** @inheritDoc */
 thin.editor.AbstractTextGroup.prototype.disposeInternal = function() {
-  thin.editor.AbstractTextGroup.superClass_.disposeInternal.call(this);
-  this.box_.dispose();
+  goog.base(this, 'disposeInternal');
   
-  delete this.box_;
   delete this.fontStyle_;
   delete this.textStyle_;
 };

@@ -138,7 +138,9 @@ thin.editor.MultipleShapesHelper.prototype.initializeProperties = function() {
     'format-padding-length': thin.editor.formatstyles.PaddingFormat.DEFAULT_LENGTH,
     'format-padding-char': thin.editor.formatstyles.PaddingFormat.DEFAULT_CHAR,
     'format-padding-direction': thin.editor.formatstyles.PaddingFormat.DEFAULT_DIRECTION,
-    'default-value': thin.editor.TblockShape.DEFAULT_VALUE
+    'default-value': thin.editor.TblockShape.DEFAULT_VALUE,
+    'position-x': proppaneBlank,
+    'position-y': proppaneBlank
   });
 };
 
@@ -1487,6 +1489,102 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   }, false, this);
   proppane.addProperty(directionSelectProperty, formatGroup, 'format-padding-direction');
 
+  
+  var positionGroup = proppane.addGroup('配置');
+  
+  
+  var positionX = thin.editor.ImageblockShape.PositionX;
+  var posXSelectProperty = new thin.ui.PropertyPane.SelectProperty('横位置');
+  var posXSelect = posXSelectProperty.getValueControl();
+  
+  posXSelect.setTextAlignLeft();
+  posXSelect.addItem(new thin.ui.Option('左', positionX.LEFT));
+  posXSelect.addItem(new thin.ui.Option('中央', positionX.CENTER));
+  posXSelect.addItem(new thin.ui.Option('右', positionX.RIGHT));
+  posXSelect.setValue(positionX.DEFAULT);
+
+  posXSelectProperty.addEventListener(propEventType.CHANGE,
+      function(e) {
+        var position = e.target.getValue();
+        var captureProperties = scope.getCloneProperties();
+        var shapes = manager.getActiveShapeByIncludeList().getClone();
+        var targetShapes = [];
+        var capturePositions = [];
+        
+        goog.array.forEach(shapes, function(shape, count) {
+          var properties = shape.getProperties();
+          if (goog.object.containsKey(properties, 'position-x')) {
+            goog.array.insert(targetShapes, shape);
+            goog.array.insertAt(capturePositions, properties['position-x'], count);
+          }
+        });
+        workspace.normalVersioning(function(version) {
+          version.upHandler(function() {
+            goog.array.forEach(targetShapes, function(shape) {
+              shape.setPositionX(position);
+            });
+            this.setPropertyForNonDestructive(captureProperties, 'position-x', position);
+            updateGuideAndProperties(shapes);
+          }, scope);
+          
+          version.downHandler(function() {
+            goog.array.forEach(targetShapes, function(shape, count) {
+              shape.setPositionX(capturePositions[count]);
+            });
+            this.setCloneProperties(captureProperties);
+            updateGuideAndProperties(shapes);
+          }, scope);
+        });
+      }, false, this);
+  
+  proppane.addProperty(posXSelectProperty , positionGroup, 'position-x');
+  
+  var positionY = thin.editor.ImageblockShape.PositionY;
+  var posYSelectProperty = new thin.ui.PropertyPane.SelectProperty('縦位置');
+  var posYSelect = posYSelectProperty.getValueControl();
+  
+  posYSelect.setTextAlignLeft();
+  posYSelect.addItem(new thin.ui.Option('上', positionY.TOP));
+  posYSelect.addItem(new thin.ui.Option('中央', positionY.CENTER));
+  posYSelect.addItem(new thin.ui.Option('下', positionY.BOTTOM));
+  posYSelect.setValue(positionY.DEFAULT);
+
+  posYSelectProperty.addEventListener(propEventType.CHANGE,
+      function(e) {
+        var position = e.target.getValue();
+        var captureProperties = scope.getCloneProperties();
+        var shapes = manager.getActiveShapeByIncludeList().getClone();
+        var targetShapes = [];
+        var capturePositions = [];
+        
+        goog.array.forEach(shapes, function(shape, count) {
+          var properties = shape.getProperties();
+          if (goog.object.containsKey(properties, 'position-y')) {
+            goog.array.insert(targetShapes, shape);
+            goog.array.insertAt(capturePositions, properties['position-y'], count);
+          }
+        });
+        workspace.normalVersioning(function(version) {
+          version.upHandler(function() {
+            goog.array.forEach(targetShapes, function(shape) {
+              shape.setPositionY(position);
+            });
+            this.setPropertyForNonDestructive(captureProperties, 'position-y', position);
+            updateGuideAndProperties(shapes);
+          }, scope);
+          
+          version.downHandler(function() {
+            goog.array.forEach(targetShapes, function(shape, count) {
+              shape.setPositionY(capturePositions[count]);
+            });
+            this.setCloneProperties(captureProperties);
+            updateGuideAndProperties(shapes);
+          }, scope);
+        });
+      }, false, this);
+  
+  proppane.addProperty(posYSelectProperty , positionGroup, 'position-y');
+ 
   
   var cooperationGroup = proppane.addGroup('連携');
 

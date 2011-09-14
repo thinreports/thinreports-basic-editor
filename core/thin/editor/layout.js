@@ -31,6 +31,7 @@ goog.require('thin.editor.RectShape');
 goog.require('thin.editor.LineShape');
 goog.require('thin.editor.EllipseShape');
 goog.require('thin.editor.ImageShape');
+goog.require('thin.editor.ImageblockShape');
 goog.require('thin.editor.ClipPath');
 goog.require('thin.editor.Helpers');
 goog.require('thin.editor.StateManager');
@@ -146,9 +147,14 @@ thin.editor.Layout.prototype.drawBasicShapeFromElement = function(element, opt_c
     case thin.editor.ImageShape.CLASSID:
       shape = thin.editor.ImageShape.createFromElement(element, this, opt_shapeIdManager);
       break;
-      
+    
+    case thin.editor.ImageblockShape.ClassId.PREFIX:
+      shape = thin.editor.ImageblockShape.createFromElement(element, this, opt_shapeIdManager);
+      break;
+    
     default:
-      throw new Error('miss Match!!');
+      throw new Error('Unknown shape.');
+      break;
   }
   
   this.setOutlineForSingle(shape);
@@ -1220,6 +1226,16 @@ thin.editor.Layout.prototype.createListShape = function() {
   } else {
     shape.setChangingPage(false);
   }
+  shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
+  return shape;
+};
+
+
+/**
+ * @return {thin.editor.ImageblockShape}
+ */
+thin.editor.Layout.prototype.createImageblockShape = function() {
+  var shape = new thin.editor.ImageblockShape(this.createSvgElement('g'), this);
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
   return shape;
 };
