@@ -2512,7 +2512,7 @@ thin.editor.Action.prototype.restfulF2Action = function() {
     case actionTargetShape.instanceOfImageShape():
       this.actionImageEdit();
       break;
-    case actionTargetShape.instanceOfTblockShape():
+    case actionTargetShape.instanceOfBlockShape():
       var proppane = thin.ui.getComponent('proppane');
       proppane.getChild('shape-id').activateControl();
       break;

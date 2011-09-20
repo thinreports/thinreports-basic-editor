@@ -59,7 +59,7 @@ thin.editor.ImageblockShape.ClassId = {
  * @private
  */
 thin.editor.ImageblockShape.Mark_ = {
-  SOURCE: 'assets/icons/image-sunset.png',
+  SOURCE: 'assets/icons/x-image-mark.png',
   SIZE: 32
 };
 
@@ -313,8 +313,8 @@ thin.editor.ImageblockShape.prototype.updateMarkStyle_ = function() {
     layout.setElementAttributes(this.mark_.getElement(), {'display': 'inline'});
   }
   
-  this.mark_.setPosition(x + Math.floor(w / 2) - basis,
-                         y + Math.floor(h / 2) - basis);
+  this.mark_.setPosition(x + Math.floor(w / 2) - basis - this.getParentTransLateX(),
+                         y + Math.floor(h / 2) - basis - this.getParentTransLateY());
 };
 
 
