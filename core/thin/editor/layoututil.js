@@ -14,8 +14,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.editor.LayoutUtil');
-goog.provide('thin.editor.LayoutUtil.Template_');
-goog.provide('thin.editor.LayoutUtil.Regexp_');
 
 goog.require('goog.array');
 goog.require('goog.dom');
@@ -50,7 +48,6 @@ thin.editor.LayoutUtil.Regexp_ = {
  * @return {string}
  */
 thin.editor.LayoutUtil.serialize = function(layout, isOutput) {
-
   var listHelper = layout.getHelpers().getListHelper();
   var isActive = !listHelper.isActived();
   
@@ -138,7 +135,6 @@ thin.editor.LayoutUtil.serializeToSvgSection = function(layout) {
       /** @type {Element} */(clone))[0].childNodes);
   var xml = thin.editor.serializeToXML(/** @type {Element} */(clone));
   xml = thin.editor.LayoutUtil.fixSerializationXmlSpace(xml);
-  xml = thin.editor.LayoutUtil.fixSerializationKerningToLetterSpacing(xml);
   xml = thin.editor.LayoutUtil.fixSerializationHref(xml);
   return xml;
 };
@@ -188,20 +184,6 @@ thin.editor.LayoutUtil.fixSerializationXmlSpace = function(xml) {
  * @param {string} xml
  * @return {string}
  */
-thin.editor.LayoutUtil.fixSerializationKerningToLetterSpacing = function(xml) {
-  return xml.replace(/(<[^>]*?)(kerning="(.+?)")([^<]*?>)/g, function(str, prefix, attr, spacing, suffix) {
-    if (thin.isExactlyEqual(spacing, thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING)) {
-      spacing = thin.editor.TextStyle.DEFAULT_LETTERSPACING;
-    }
-    return prefix + 'letter-spacing="' + spacing + '"' + suffix;
-  });
-};
-
-
-/**
- * @param {string} xml
- * @return {string}
- */
 thin.editor.LayoutUtil.fixSerializationHref = function(xml) {
   return xml.replace(/(<[^>]*?)(href="(.+?)")([^<]*?>)/g, function(str, prefix, attr, dataUrl, suffix) {
     return prefix + 'xlink:href="' + dataUrl + '"' + suffix;
@@ -212,10 +194,11 @@ thin.editor.LayoutUtil.fixSerializationHref = function(xml) {
 /**
  * @param {string} xml
  * @return {string}
+ * @deprecated Will be removed in 0.7.0.
  */
 thin.editor.LayoutUtil.restoreKerningFromLetterSpacing = function(xml) {
   return xml.replace(/(<[^>]*?)(letter-spacing="(.+?)")([^<]*?>)/g, function(str, prefix, attr, spacing, suffix) {
-    if (thin.isExactlyEqual(spacing, thin.editor.TextStyle.DEFAULT_LETTERSPACING)) {
+    if (spacing == 'normal') {
       spacing = thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING;
     }
     return prefix + 'kerning="' + spacing + '"' + suffix;
@@ -229,7 +212,6 @@ thin.editor.LayoutUtil.restoreKerningFromLetterSpacing = function(xml) {
  * @return {NodeList}
  */
 thin.editor.LayoutUtil.serializeFromChildNodes = function(shapes, opt_sectionDepth) {
-
   var layoutUtilTemplate = thin.editor.LayoutUtil.Template_;
   
   var shapeTemplateFactor = layoutUtilTemplate.SHAPE;
@@ -312,6 +294,5 @@ thin.editor.LayoutUtil.formatStructure_ = function(content, template) {
  */
 thin.editor.LayoutUtil.restoreStructure = function(svg) {
   var reg = thin.editor.LayoutUtil.Regexp_;
-  return thin.editor.LayoutUtil.restoreKerningFromLetterSpacing(
-           svg.replace(reg.RESTORE, '$1').replace(reg.CLEAN, ''));
+  return svg.replace(reg.RESTORE, '$1').replace(reg.CLEAN, '');
 };

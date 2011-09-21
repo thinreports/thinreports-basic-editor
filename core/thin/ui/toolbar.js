@@ -249,9 +249,7 @@ goog.inherits(thin.ui.ToolbarSelect, thin.ui.Select);
  * @extends {thin.ui.FontSelect}
  */
 thin.ui.ToolbarFontSelect = function() {
-  thin.ui.FontSelect.call(this,
-                          thin.core.Font.getBuiltinFonts(),
-                          thin.core.Font.getSystemFonts());
+  thin.ui.FontSelect.call(this, thin.core.Font.getBuiltinFonts());
   this.addClassName(thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'select'));
 };
 goog.inherits(thin.ui.ToolbarFontSelect, thin.ui.FontSelect);

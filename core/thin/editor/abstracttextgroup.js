@@ -25,7 +25,7 @@ goog.require('thin.core.Font');
  * @param {Element} element
  * @param {thin.editor.Layout} layout
  * @constructor
- * @extends {thin.editor.AbstractTextGroup}
+ * @extends {thin.editor.AbstractBoxGroup}
  */
 thin.editor.AbstractTextGroup = function(element, layout) {
   goog.base(this, element, layout);

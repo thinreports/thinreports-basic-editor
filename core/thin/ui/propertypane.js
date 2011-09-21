@@ -1003,7 +1003,6 @@ thin.ui.PropertyPane.FontSelectProperty = function(opt_label) {
         thin.ui.getCssName(thin.ui.PropertyPane.PropertyRenderer.CSS_CLASS, 'select'));
   
   var control = new thin.ui.FontSelect(thin.core.Font.getBuiltinFonts(),
-                  thin.core.Font.getSystemFonts(), 
                   /** @type {thin.ui.MenuButtonRenderer} */ (renderer));
   
   control.getMenu().setMaxHeight(250);
@@ -1214,7 +1213,7 @@ thin.ui.PropertyPane.InputProperty.prototype.enterDocument = function() {
 
 
 /**
- * @param {thin.editor.ModuleShape} target
+ * @param {goog.graphics.Element} target
  * @param {string} label
  * @param {string=} opt_label
  * @constructor
@@ -1270,7 +1269,7 @@ goog.inherits(thin.ui.PropertyPane.IdInputProperty.Validator_,
 
 
 /**
- * @type {thin.editor.ModuleShape}
+ * @type {goog.graphics.Element}
  * @private
  */
 thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.shape_;
@@ -1291,7 +1290,7 @@ thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.validatePresence_ = fa
 
 
 /**
- * @param {thin.editor.ModuleShape} shape
+ * @param {goog.graphics.Element} shape
  */
 thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.setShape = function(shape) {
   this.shape_ = shape;

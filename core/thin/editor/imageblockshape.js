@@ -14,12 +14,13 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.editor.ImageblockShape');
+goog.provide('thin.editor.ImageblockShape.PositionX');
+goog.provide('thin.editor.ImageblockShape.PositionY');
 goog.provide('thin.editor.ImageblockShape.ClassId');
 
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
 goog.require('goog.graphics.SvgImageElement');
-goog.require('thin.editor.Layout');
 goog.require('thin.editor.IdShape');
 goog.require('thin.editor.AbstractBoxGroup');
 goog.require('thin.editor.ModuleShape');
@@ -55,7 +56,7 @@ thin.editor.ImageblockShape.ClassId = {
 
 
 /**
- * @enum {string}
+ * @enum {string|number}
  * @private
  */
 thin.editor.ImageblockShape.Mark_ = {
@@ -65,7 +66,7 @@ thin.editor.ImageblockShape.Mark_ = {
 
 
 /**
- * enum {string}
+ * @enum {string}
  */
 thin.editor.ImageblockShape.PositionX = {
   DEFAULT: 'left',
@@ -239,7 +240,7 @@ thin.editor.ImageblockShape.createFromElement = function(element, layout, opt_sh
  */
 thin.editor.ImageblockShape.prototype.createBox_ = function(opt_element) {
   var box = goog.base(this, 'createBox_', opt_element,
-    !opt_element ? this.getBoxClassId_() : null);
+    !opt_element ? this.getBoxClassId_() : undefined);
   
   box.setStroke(thin.editor.ImageblockShape.BOX_STROKE_);
   box.setFill(thin.editor.ImageblockShape.BOX_FILL_);
@@ -287,7 +288,7 @@ thin.editor.ImageblockShape.prototype.createMark_ = function(opt_element) {
     var element = mark.getElement();
     var config = thin.editor.ImageblockShape.Mark_;
     
-    mark.setSize(config.SIZE, config.SIZE);
+    mark.setSize(/** @type {number} */ (config.SIZE), /** @type {number} */ (config.SIZE));
     layout.setElementAttributes(mark.getElement(), {'class': this.getMarkClassId_(), 'opacity': 0.5});
     layout.setElementAttributesNS(thin.editor.Layout.SVG_NS_XLINK, mark.getElement(),
       {'xlink:href': config.SOURCE});
@@ -382,7 +383,6 @@ thin.editor.ImageblockShape.prototype.setup = function() {
 };
 
 
-/** @inheritDoc */
 thin.editor.ImageblockShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getImageblockOutline());
 };
@@ -615,7 +615,6 @@ thin.editor.ImageblockShape.prototype.getProperties = function() {
 };
 
 
-/** @inheritDoc */
 thin.editor.ImageblockShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
   proppane.updateAsync(function() {

@@ -22,6 +22,7 @@ goog.require('goog.style');
 goog.require('goog.ui.ControlRenderer');
 goog.require('goog.ui.MenuItemRenderer');
 goog.require('goog.ui.MenuSeparator');
+goog.require('thin.core.Font');
 goog.require('thin.ui.Select');
 goog.require('thin.ui.Option');
 goog.require('thin.ui.OptionMenu');
@@ -29,18 +30,17 @@ goog.require('thin.ui.OptionMenuRenderer');
 
 
 /**
- * @param {Array.<String>} builtinFonts
- * @param {Array.<String>} systemFonts
+ * @param {Array.<Array>} fonts
  * @param {thin.ui.MenuButtonRenderer=} opt_renderer
  * @constructor
  * @extends {thin.ui.Select}
  */
-thin.ui.FontSelect = function(builtinFonts, systemFonts, opt_renderer) {
+thin.ui.FontSelect = function(fonts, opt_renderer) {
   var menu = new thin.ui.OptionMenu(
               thin.ui.FontOptionMenuRenderer.getInstance());
-  thin.ui.Select.call(this, '', menu, opt_renderer);
+  goog.base(this, '', menu, opt_renderer);
   
-  this.addFonts(builtinFonts, systemFonts);
+  this.addFonts(fonts);
   this.setValue(thin.core.Font.getDefaultFont());
   this.setTextAlignLeft();
 };
@@ -48,69 +48,56 @@ goog.inherits(thin.ui.FontSelect, thin.ui.Select);
 
 
 /** @inheritDoc */
-thin.ui.FontSelect.prototype.setValue = function(value) {
-  thin.ui.FontSelect.superClass_.setValue.call(
-      this, value || thin.core.Font.getDefaultFont());
+thin.ui.FontSelect.prototype.setValue = function(name) {
+  goog.base(this, 'setValue', name || thin.core.Font.getDefaultFont());
 };
 
 
 /**
- * @param {Array.<String>} builtinFonts
- * @param {Array.<String>} systemFonts
+ * @param {Array.<Array>} fonts
  */
-thin.ui.FontSelect.prototype.addFonts = function(builtinFonts, systemFonts) {
-  goog.array.forEach(builtinFonts, function(name) {
-    this.addBuiltinFont(name);
-  }, this);
-  
-  this.addItem(new goog.ui.MenuSeparator());
-  
-  goog.array.forEach(systemFonts, function(name) {
-    this.addSystemFont(name);
+thin.ui.FontSelect.prototype.addFonts = function(fonts) {
+  goog.array.forEach(fonts, function(font) {
+    // FIXME
+    if (font[1] == 'IPAMincho') {
+      this.addItem(new goog.ui.MenuSeparator());
+    }
+    this.addBuiltinFont(font[0], font[1]);
   }, this);
 };
 
 
 /**
  * @param {string} name
- * @private
+ * @param {string=} opt_family
  */
-thin.ui.FontSelect.prototype.addBuiltinFont = function(name) {
-  this.addFont(thin.ui.FontSelectOption.Type.BUILTIN, name);
-};
-
-
-/**
- * @param {string} name
- * @private
- */
-thin.ui.FontSelect.prototype.addSystemFont = function(name) {
-  this.addFont(thin.ui.FontSelectOption.Type.SYSTEM, name);
+thin.ui.FontSelect.prototype.addBuiltinFont = function(name, opt_family) {
+  this.addFont(thin.ui.FontSelectOption.Type.BUILTIN, name, opt_family);
 };
 
 
 /**
  * @param {thin.ui.FontSelectOption.Type} type
  * @param {string} name
- * @private
+ * @param {string=} opt_family
  */
-thin.ui.FontSelect.prototype.addFont = function(type, name) {
-  this.addItem(new thin.ui.FontSelectOption(type, name, name));
+thin.ui.FontSelect.prototype.addFont = function(type, name, opt_family) {
+  this.addItem(new thin.ui.FontSelectOption(type, name, opt_family));
 };
 
 
 /**
  * @param {thin.ui.FontSelectOption.Type} type
  * @param {goog.ui.ControlContent} name
- * @param {*=} opt_value
+ * @param {string=} opt_family
  * @constructor
  * @extends {thin.ui.Option}
  */
-thin.ui.FontSelectOption = function(type, name, opt_value) {
+thin.ui.FontSelectOption = function(type, name, opt_family) {
   var renderer = goog.ui.ControlRenderer.getCustomRenderer(
         goog.ui.MenuItemRenderer, thin.ui.getCssName('thin-font-option'));
-  thin.ui.Option.call(this, name, opt_value, 
-        /** @type {goog.ui.MenuItemRenderer} */ (renderer));
+  goog.base(this, name, opt_family, 
+      /** @type {goog.ui.MenuItemRenderer} */ (renderer));
   
   this.addClassName(thin.ui.getCssName(type, 'font'));
 };
@@ -121,8 +108,7 @@ goog.inherits(thin.ui.FontSelectOption, thin.ui.Option);
  * @enum {string}
  */
 thin.ui.FontSelectOption.Type = {
-  BUILTIN: 'builtin',
-  SYSTEM:  'system'
+  BUILTIN: 'builtin'
 };
 
 
@@ -131,7 +117,7 @@ thin.ui.FontSelectOption.Type = {
  * @extends {thin.ui.OptionMenuRenderer}
  */
 thin.ui.FontOptionMenuRenderer = function() {
-  thin.ui.OptionMenuRenderer.call(this);
+  goog.base(this);
 };
 goog.inherits(thin.ui.FontOptionMenuRenderer, thin.ui.OptionMenuRenderer);
 goog.addSingletonGetter(thin.ui.FontOptionMenuRenderer);

@@ -87,12 +87,6 @@ thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING = 'auto';
 /**
  * @type {string}
  */
-thin.editor.TextStyle.DEFAULT_LETTERSPACING = 'normal';
-
-
-/**
- * @type {string}
- */
 thin.editor.TextStyle.DEFAULT_LINEHEIGHT = '';
 
 

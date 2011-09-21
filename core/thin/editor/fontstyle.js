@@ -25,7 +25,10 @@ thin.editor.FontStyle = function() {};
 /**
  * @type {Array.<string>}
  */
-thin.editor.FontStyle.FONTSIZE_LIST = ['8', '9', '10', '11', '12', '14', '18', '36'];
+thin.editor.FontStyle.FONTSIZE_LIST = [
+  '8', '9', '10', '11', '12', '14', '16', '18',
+  '20', '22', '24', '26', '28', '36', '48', '72'
+];
 
 
 /**

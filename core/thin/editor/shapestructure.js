@@ -30,7 +30,7 @@ goog.require('thin.editor.TextStyle.VerticalAlignType');
  * @type {string}
  * @private
  */
-thin.editor.ShapeStructure.BLANK_ = "";
+thin.editor.ShapeStructure.BLANK_ = '';
 
 
 /**
@@ -38,35 +38,38 @@ thin.editor.ShapeStructure.BLANK_ = "";
  * @return {string}
  */
 thin.editor.ShapeStructure.serialize = function(shape) {
-
-  var shapeClassId = shape.getAttribute("class");
+  var shapeClassId = shape.getAttribute('class');
   var json = {
-    "type": shapeClassId,
-    "id": shape.getAttribute("x-id"),
-    "display": shape.getAttribute("x-display") || "true"
+    'type': shapeClassId,
+    'id': shape.getAttribute('x-id'),
+    'display': shape.getAttribute('x-display') || 'true'
   };
   
-  if (shapeClassId == thin.editor.TblockShape.ClassId.PREFIX) {
-    json = thin.editor.ShapeStructure.serializeForTblock_(shape, json);
-  } else if (shapeClassId == thin.editor.ListShape.ClassId.PREFIX) {
-    json = thin.editor.ShapeStructure.serializeForList_(shape, json);
-  } else if (shapeClassId == thin.editor.TextShape.ClassId.PREFIX) {
-    json = thin.editor.ShapeStructure.serializeForText_(shape, json);
-  } else if (shapeClassId == thin.editor.ImageblockShape.ClassId.PREFIX) {
-    json = thin.editor.ShapeStructure.serializeForImageblock_(shape, json);
-  } else {
-    var svg = {};
-    var attrs = {};
-    var attrName;
-    goog.array.forEach(shape.attributes, function(attr) {
-      attrName = attr.name;
-      if (!/x-/.test(attrName) && attrName != "class" && attrName != "style") {
-        attrs[attrName] = attr.value;
-      }
-    });
-    svg["tag"] = shape.tagName;
-    svg["attrs"] = attrs;
-    json["svg"] = svg;
+  switch(shapeClassId) {
+    case thin.editor.TblockShape.ClassId.PREFIX:
+      json = thin.editor.ShapeStructure.serializeForTblock_(shape, json);
+      break;
+    case thin.editor.ListShape.ClassId.PREFIX:
+      json = thin.editor.ShapeStructure.serializeForList_(shape, json);
+      break;
+    case thin.editor.TextShape.ClassId.PREFIX:
+      json = thin.editor.ShapeStructure.serializeForText_(shape, json);
+      break;
+    case thin.editor.ImageblockShape.ClassId.PREFIX:
+      json = thin.editor.ShapeStructure.serializeForImageblock_(shape, json);
+      break;
+    default:
+      var attrs = {};
+      thin.editor.ShapeStructure.forEachShapeAttribute_(shape,
+        function(key, value) {
+          attrs[key] = value;
+        });
+      
+      json['svg'] = {
+        'tag':   shape.tagName,
+        'attrs': attrs
+      };
+      break;
   }
   
   return goog.json.serialize(json);
@@ -80,49 +83,36 @@ thin.editor.ShapeStructure.serialize = function(shape) {
  * @private
  */
 thin.editor.ShapeStructure.serializeForText_ = function(shape, json) {
-  var svg = {};
   var attrs = {};
-  var attrName;
-  var value;
   var blank = thin.editor.ShapeStructure.BLANK_;
-  var defaultKerning = thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING;
-  var defaultLetterSpacing = thin.editor.TextStyle.DEFAULT_LETTERSPACING;
 
   if (shape.hasAttribute('x-line-height')) {
-    json["line-height"] = Number(shape.getAttribute('x-line-height'));
+    json['line-height'] = Number(shape.getAttribute('x-line-height'));
   } else {
-    json["line-height"] = blank;
+    json['line-height'] = blank;
   }
 
-  json["valign"] = shape.getAttribute('x-valign') || blank;
-  json ["box"] = {
-    "x": Number(shape.getAttribute("x-left")),
-    "y": Number(shape.getAttribute("x-top")),
-    "width": Number(shape.getAttribute("x-width")),
-    "height": Number(shape.getAttribute("x-height"))
+  json['valign'] = shape.getAttribute('x-valign') || blank;
+  json['box'] = {
+    'x': Number(shape.getAttribute('x-left')),
+    'y': Number(shape.getAttribute('x-top')),
+    'width': Number(shape.getAttribute('x-width')),
+    'height': Number(shape.getAttribute('x-height'))
   };
-
-  goog.array.forEach(shape.attributes, function(attr) {
-    attrName = attr.name;
-    if (!/x-/.test(attrName) && attrName != "class" && attrName != "style") {
-      value = attr.value;
-      if ("kerning" == attrName) {
-        attrName = "letter-spacing";
-        if(thin.isExactlyEqual(value, defaultKerning)) {
-          value = defaultLetterSpacing;
-        }
+  
+  thin.editor.ShapeStructure.forEachShapeAttribute_(shape,
+    function(key, value) {
+      if (key == 'space') {
+        key = 'xml:space'
       }
-      if ("space" == attrName) {
-        attrName = "xml:space"
-      }
-      attrs[attrName] = value;
-    }
-  });
+      attrs[key] = value;
+    });
   
   var textLineShapes = [];
   var textLineContainer = [];
+  
   goog.array.forEach(shape.childNodes, function(textlineElement) {
-    if (textlineElement.tagName == "text") {
+    if (textlineElement.tagName == 'text') {
       goog.array.insertAt(textLineShapes, 
             textlineElement, textLineShapes.length);
       goog.array.insertAt(textLineContainer, 
@@ -130,11 +120,12 @@ thin.editor.ShapeStructure.serializeForText_ = function(shape, json) {
     }
   });
 
-  svg["tag"] = shape.tagName;
-  svg["attrs"] = attrs;
-  svg["content"] = thin.editor.ShapeStructure.serializeToContent(textLineShapes);
-  json["text"] = textLineContainer;
-  json["svg"] = svg;
+  json['text'] = textLineContainer;
+  json['svg'] = {
+    'tag':     shape.tagName,
+    'attrs':   attrs,
+    'content': thin.editor.ShapeStructure.serializeToContent(textLineShapes)
+  };
   return json;
 };
 
@@ -146,30 +137,31 @@ thin.editor.ShapeStructure.serializeForText_ = function(shape, json) {
  * @private
  */
 thin.editor.ShapeStructure.serializeForImageblock_ = function(shape, json) {
-  var svg = {};
-  var left = Number(shape.getAttribute("x-left"));
-  var top = Number(shape.getAttribute("x-top"));
-  var width = Number(shape.getAttribute("x-width"));
-  var height = Number(shape.getAttribute("x-height"));
+  var left = Number(shape.getAttribute('x-left'));
+  var top = Number(shape.getAttribute('x-top'));
+  var width = Number(shape.getAttribute('x-width'));
+  var height = Number(shape.getAttribute('x-height'));
   
-  json["box"] = {
-    "x": left,
-    "y": top,
-    "width": width,
-    "height": height
-  };
-  json['position-x'] = shape.getAttribute('x-position-x')
-    || thin.editor.ImageblockShape.PositionX.DEFAULT;
-  json['position-y'] = shape.getAttribute('x-position-y')
-    || thin.editor.ImageblockShape.PositionY.DEFAULT;
-  json['svg'] = svg;
-  
-  svg['tag'] = 'image';
-  svg['attrs'] = {
+  json['box'] = {
     'x': left,
     'y': top,
     'width': width,
     'height': height
+  };
+  
+  json['position-x'] = shape.getAttribute('x-position-x')
+    || thin.editor.ImageblockShape.PositionX.DEFAULT;
+  json['position-y'] = shape.getAttribute('x-position-y')
+    || thin.editor.ImageblockShape.PositionY.DEFAULT;
+  
+  json['svg'] = {
+    'tag': 'image',
+    'attrs': {
+      'x': left,
+      'y': top,
+      'width': width,
+      'height': height
+    }
   };
   return json;
 };
@@ -183,44 +175,44 @@ thin.editor.ShapeStructure.serializeForImageblock_ = function(shape, json) {
  * @private
  */
 thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
-  var svg = {};
   var blank = thin.editor.ShapeStructure.BLANK_;
-  var mutliple = shape.getAttribute("x-multiple") || "false";
-  var isMultiMode = mutliple == "true";
-  var anchor = shape.getAttribute("text-anchor");
-  var tag = isMultiMode ? "textArea" : "text";
-  var formatType = isMultiMode ? blank : shape.getAttribute("x-format-type") || blank;
-  json["multiple"] = mutliple;
-  json["valign"] = shape.getAttribute('x-valign') || blank;
+  var mutliple = shape.getAttribute('x-multiple') || 'false';
+  var isMultiMode = mutliple == 'true';
+  var anchor = shape.getAttribute('text-anchor');
+  var tag = isMultiMode ? 'textArea' : 'text';
+  var formatType = isMultiMode ? blank : shape.getAttribute('x-format-type') || blank;
+  
+  json['multiple'] = mutliple;
+  json['valign'] = shape.getAttribute('x-valign') || blank;
   
   if (shape.hasAttribute('x-line-height')) {
-    json["line-height"] = Number(shape.getAttribute('x-line-height'));
+    json['line-height'] = Number(shape.getAttribute('x-line-height'));
   } else {
-    json["line-height"] = blank;
+    json['line-height'] = blank;
   }
 
   var format = {
-    "base": shape.getAttribute("x-format-base") || blank,
-    "type": formatType
+    'base': shape.getAttribute('x-format-base') || blank,
+    'type': formatType
   };
   if (formatType != blank) {
     switch (formatType) {
-      case "datetime":
+      case 'datetime':
         goog.object.set(format, formatType, {
-          "format": shape.getAttribute("x-format-datetime-format") || blank
+          'format': shape.getAttribute('x-format-datetime-format') || blank
         });
         break;
-      case "number":
+      case 'number':
         goog.object.set(format, formatType, {
-          "delimiter": shape.getAttribute("x-format-number-delimiter") || blank,
-          "precision": Number(shape.getAttribute("x-format-number-precision")) || 0
+          'delimiter': shape.getAttribute('x-format-number-delimiter') || blank,
+          'precision': Number(shape.getAttribute('x-format-number-precision')) || 0
         });        
         break;
-      case "padding":
+      case 'padding':
         goog.object.set(format, formatType, {
-          "length": Number(shape.getAttribute("x-format-padding-length")) || 0,
-          "char": shape.getAttribute("x-format-padding-char") || '0',
-          "direction": shape.getAttribute("x-format-padding-direction") || "L"
+          'length': Number(shape.getAttribute('x-format-padding-length')) || 0,
+          'char': shape.getAttribute('x-format-padding-char') || '0',
+          'direction': shape.getAttribute('x-format-padding-direction') || 'L'
         });        
         break;
     }
@@ -228,68 +220,59 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
   
   var attrs = {};
   
-  var left = Number(shape.getAttribute("x-left"));
-  var top = Number(shape.getAttribute("x-top"));
-  var width = Number(shape.getAttribute("x-width"));
-  var height = Number(shape.getAttribute("x-height"));
+  var left = Number(shape.getAttribute('x-left'));
+  var top = Number(shape.getAttribute('x-top'));
+  var width = Number(shape.getAttribute('x-width'));
+  var height = Number(shape.getAttribute('x-height'));
   
-  var family = shape.getAttribute("font-family");
-  var fontSize = Number(shape.getAttribute("font-size"));
-  var isBold = shape.getAttribute("font-weight") == 'bold';
+  var family = shape.getAttribute('font-family');
+  var fontSize = Number(shape.getAttribute('font-size'));
+  var isBold = shape.getAttribute('font-weight') == 'bold';
 
-  json["box"] = {
-    "x": left,
-    "y": top,
-    "width": width,
-    "height": height
+  json['box'] = {
+    'x': left,
+    'y': top,
+    'width': width,
+    'height': height
   };
 
-  if (tag == "text") {
-    if (anchor == thin.editor.TextStyle.HorizonAlignType.MIDDLE) {
-      left = thin.editor.numberWithPrecision(left + (width / 2));
-    }
-    if (anchor == thin.editor.TextStyle.HorizonAlignType.END) {
-      left = thin.editor.numberWithPrecision(left + width);
+  if (tag == 'text') {
+    switch(anchor) {
+      case thin.editor.TextStyle.HorizonAlignType.MIDDLE:
+        left = thin.editor.numberWithPrecision(left + (width / 2));
+        break;
+      case thin.editor.TextStyle.HorizonAlignType.END:
+        left = thin.editor.numberWithPrecision(left + width);
+        break;
     }
     
-    var ascent = thin.core.Font.getAscent(family, fontSize, isBold);    
-    attrs["x"] = left;
-    attrs["y"] = thin.editor.numberWithPrecision(top + ascent);
+    var ascent = thin.core.Font.getAscent(family, fontSize, isBold);
+    
+    attrs['x'] = left;
+    attrs['y'] = thin.editor.numberWithPrecision(top + ascent);
   } else {
     var heightAt = thin.core.Font.getHeight(family, fontSize);
     var lineHeight = thin.core.Font.getLineHeight(family, fontSize, isBold);
-    attrs["x"] = left;
-    attrs["y"] = thin.editor.numberWithPrecision(top - (heightAt - lineHeight));
-    attrs["width"] = width;
-    attrs["height"] = height;
+    
+    attrs['x'] = left;
+    attrs['y'] = thin.editor.numberWithPrecision(top - (heightAt - lineHeight));
+    attrs['width'] = width;
+    attrs['height'] = height;
   }
-  attrs["xml:space"] = "preserve";
+  attrs['xml:space'] = 'preserve';
 
-  var attrName;
-  var value;
-  var defaultKerning = thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING;
-  var defaultLetterSpacing = thin.editor.TextStyle.DEFAULT_LETTERSPACING;
-  goog.array.forEach(shape.attributes, function(attr) {
-    attrName = attr.name;
-    if (!/x-/.test(attrName) && attrName != "class" && attrName != "style") {
-      value = attr.value;
-      if ("kerning" == attrName) {
-        attrName = "letter-spacing";
-        if(thin.isExactlyEqual(value, defaultKerning)) {
-          value = defaultLetterSpacing;
-        }
-      }
-      attrs[attrName] = value;
-    }
-  });
+  thin.editor.ShapeStructure.forEachShapeAttribute_(shape,
+    function(key, value) {
+      attrs[key] = value;
+    });
   
-  json["format"] = format;
-  json["value"] = shape.getAttribute("x-value") || blank;
-  json["ref-id"] = shape.getAttribute("x-ref-id") || blank;
-  
-  svg["tag"] = tag;
-  svg["attrs"] = attrs;
-  json["svg"] = svg;
+  json['format'] = format;
+  json['value'] = shape.getAttribute('x-value') || blank;
+  json['ref-id'] = shape.getAttribute('x-ref-id') || blank;
+  json['svg'] = {
+    'tag': tag,
+    'attrs': attrs
+  };
   return json;
 };
 
@@ -311,7 +294,7 @@ thin.editor.ShapeStructure.getSectionName = function(columnClassid) {
 thin.editor.ShapeStructure.getEnabledOfSection = function(element, parentElement) {
   var columnClassid = element.getAttribute('class');
   var sectionName = thin.editor.ShapeStructure.getSectionName(columnClassid);
-  return parentElement.getAttribute('x-' + sectionName + '-enabled') || "true";
+  return parentElement.getAttribute('x-' + sectionName + '-enabled') || 'true';
 };
 
 
@@ -342,7 +325,7 @@ thin.editor.ShapeStructure.serializeForList_ = function(shape, json) {
       sectionName = thin.editor.ShapeStructure.getSectionName(childGroupClassId);
       isDetailSection = childGroupClassId == detailClassId;
       json[sectionName] = thin.editor.ShapeStructure.serializeForListForColumn_(
-                              childShape, enabledForColumn == "true", 
+                              childShape, enabledForColumn == 'true', 
                               (childGroupClassId == headerClassId || 
                                isDetailSection) ? null : detailTop);
       if (!isDetailSection) {
@@ -350,18 +333,18 @@ thin.editor.ShapeStructure.serializeForList_ = function(shape, json) {
       }
     }
   });
-  json["svg"] = {
-    "tag": shape.tagName,
-    "attrs": {}
+  json['svg'] = {
+    'tag': shape.tagName,
+    'attrs': {}
   };
   
   var headerStruct = json[thin.editor.ShapeStructure.getSectionName(headerClassId)];
   var headerHeight = 0;
-  if (goog.isDef(headerStruct["height"])) {
-    headerHeight = Number(headerStruct["height"]);
+  if (goog.isDef(headerStruct['height'])) {
+    headerHeight = Number(headerStruct['height']);
   }
-  json["content-height"] = Number(shape.getAttribute('height')) - headerHeight;
-  json["page-break"] = shape.getAttribute('x-changing-page') || "false";
+  json['content-height'] = Number(shape.getAttribute('height')) - headerHeight;
+  json['page-break'] = shape.getAttribute('x-changing-page') || 'false';
   
   return json;
 };
@@ -382,10 +365,10 @@ thin.editor.ShapeStructure.serializeForListForColumn_ = function(
     return {};
   }
   var json = {
-    "height": Number(columnGroup.getAttribute("x-height")),
-    "svg": {
-      "tag": columnGroup.tagName,
-      "content": thin.editor.ShapeStructure.serializeToContent(
+    'height': Number(columnGroup.getAttribute('x-height')),
+    'svg': {
+      'tag': columnGroup.tagName,
+      'content': thin.editor.ShapeStructure.serializeToContent(
                     thin.editor.LayoutUtil.serializeFromChildNodes(
                         columnGroup.cloneNode(true).childNodes, 1))
     }
@@ -397,9 +380,9 @@ thin.editor.ShapeStructure.serializeForListForColumn_ = function(
     var diffY = Number(columnGroup.getAttribute('x-top')) - opt_detailTop;
   }
   
-  goog.object.set(json, "translate", {
-    "x": translate.x,
-    "y": isCalculateDiff ? translate.y - diffY : translate.y
+  goog.object.set(json, 'translate', {
+    'x': translate.x,
+    'y': isCalculateDiff ? translate.y - diffY : translate.y
   });
 
   return json;
@@ -438,10 +421,25 @@ thin.editor.ShapeStructure.serializeToContent = function(childNodes) {
   goog.array.forEach(childNodes, function(element) {
     xml = thin.editor.serializeToXML(element);
     xml = thin.editor.LayoutUtil.fixSerializationXmlSpace(xml);
-    xml = thin.editor.LayoutUtil.fixSerializationKerningToLetterSpacing(xml);
     xml = thin.editor.LayoutUtil.fixSerializationHref(xml);
     content += xml;
   });
   
   return content;
+};
+
+
+/**
+ * @param {Element} shape
+ * @param {Function} f
+ * @private
+ */
+thin.editor.ShapeStructure.forEachShapeAttribute_ = function(shape, f) {
+  var attrName;
+  goog.array.forEach(shape.attributes, function(attr) {
+    attrName = attr.name;
+    if (!/^x-/.test(attrName) && attrName != 'class' && attrName != 'style') {
+      f.call(this, attrName, attr.value);
+    }
+  });
 };

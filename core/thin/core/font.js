@@ -91,20 +91,18 @@ thin.core.Font.getLineHeight = function(family, fontSize, isBold) {
 
 
 /**
- * @type {Array.<String>}
+ * @type {Array.<Array>}
  * @private
  */
 thin.core.Font.BUILTIN_FONTS_ = [
-  'Helvetica', 'Courier New', 'Times New Roman',
-  'IPAMincho', 'IPAPMincho', 'IPAGothic', 'IPAPGothic'
+  ['Helvetica', 'Helvetica'],
+  ['Courier New', 'Courier New'],
+  ['Times New Roman', 'Times New Roman'],
+  ['IPA 明朝', 'IPAMincho'],
+  ['IPA P明朝', 'IPAPMincho'],
+  ['IPA ゴシック', 'IPAGothic'],
+  ['IPA Pゴシック', 'IPAPGothic']
 ];
-
-
-/**
- * @type {Array.<String>}
- * @private
- */
-thin.core.Font.SYSTEM_FONTS_ = [];
 
 
 /**
@@ -116,21 +114,10 @@ thin.core.Font.getDefaultFont = function() {
 
 
 /**
- * @return {Array.<String>}
+ * @return {Array.<Array>}
  */
 thin.core.Font.getBuiltinFonts = function() {
   return thin.core.Font.BUILTIN_FONTS_;
-};
-
-
-/**
- * @return {Array.<String>}
- */
-thin.core.Font.getSystemFonts = function() {
-  if (goog.array.isEmpty(thin.core.Font.SYSTEM_FONTS_)) {
-    thin.core.Font.initSystemFonts_();
-  }
-  return thin.core.Font.SYSTEM_FONTS_;
 };
 
 
@@ -139,29 +126,7 @@ thin.core.Font.getSystemFonts = function() {
  * @return {boolean}
  */
 thin.core.Font.isBuiltinFont = function(font) {
-  return goog.array.contains(thin.core.Font.BUILTIN_FONTS_, font);
-};
-
-
-/**
- * @private
- */
-thin.core.Font.initSystemFonts_ = function() {
-  if (!thin.core.platform.isUsable()) {
-    return;
-  }
-  
-  var fonts = goog.array.clone(thin.core.platform.Font.getFamilies());
-  var removes = goog.array.clone(thin.core.Font.BUILTIN_FONTS_);
-  
-  goog.array.extend(removes, 'IPA明朝',
-                             'IPA P明朝',
-                             'IPAゴシック',
-                             'IPA Pゴシック');
-  // Remove the Built-in fonts from System Fonts.
-  goog.array.forEach(removes, function(name) {
-    goog.array.remove(fonts, name);
-  });
-  
-  thin.core.Font.SYSTEM_FONTS_ = fonts;
+  return goog.array.findIndex(thin.core.Font.BUILTIN_FONTS_, function(f) {
+    return f[1] == font;
+  }) != -1;
 };

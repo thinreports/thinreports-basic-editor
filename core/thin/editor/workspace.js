@@ -120,7 +120,7 @@ thin.editor.Workspace.prototype.zoomValue_ = 100;
  * @type {number}
  * @private
  */
-thin.editor.Workspace.prototype.fontSize_ = 12;
+thin.editor.Workspace.prototype.fontSize_ = 18;
 
 
 /**
@@ -284,9 +284,15 @@ thin.editor.Workspace.create = function(file) {
   try {
     var format = thin.layout.Format.parse(file.getContent());
     var xmlString = thin.editor.LayoutUtil.restoreStructure(format.getSvg());
+    
+    thin.Compatibility.applyIf(format.getVersion(), '=', '0.6.0.pre3',
+      function() {
+        xmlString = thin.editor.LayoutUtil.restoreKerningFromLetterSpacing(xmlString);
+      });
+    
     var doc = new DOMParser().parseFromString(xmlString, "application/xml");
     var canvasNode = goog.dom.getLastElementChild(doc.documentElement);
-  
+    
     var workspace = new thin.editor.Workspace(format, file);
     workspace.createDom();
     var layout = workspace.getLayout();
@@ -328,7 +334,6 @@ thin.editor.Workspace.create = function(file) {
             activeWorkspace.focusElement(e);
           }
         });
-    
     if (workspace) {
       workspace.dispose();
     } else {

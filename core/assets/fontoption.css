@@ -32,7 +32,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  text-shadow: #eee 1px 1px 1px;
+  text-shadow: 1px 1px 2px #dfdfdf;
   padding-left: 20px;
   background-color: transparent;
   background-position: left center;
@@ -40,13 +40,8 @@
 }
 
 .thin-font-option.builtin-font .thin-font-option-content {
-  font-size: 11px !important;
   color: #555 !important;
   background-image: url(icons/x-font-safe.png);
-}
-
-.thin-font-option.system-font .thin-font-option-content {
-  background-image: url(icons/x-font-notsafe.png);  
 }
 
 /*
@@ -75,7 +70,7 @@
  */
 .thin-font-optionmenu-body > .goog-menuseparator {
   padding: 0;
-  margin: 6px 0;
+  margin: 3px 0;
   border-width: 1px 0 0 0;
   border-color: rgb(220, 220, 220);
   border-style: solid;

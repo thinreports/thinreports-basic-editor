@@ -47,7 +47,7 @@ thin.editor.toolaction.TblockAction.prototype.compareFn_ = function(startX, star
 /** @inheritDoc */
 thin.editor.toolaction.TblockAction.prototype.handleStartAction = function(e, outline) {
   var workspace = this.workspace;
-  workspace.setUiStatusForFontSize(12);
+  workspace.setUiStatusForFontSize(18);
   thin.ui.adjustUiStatusToFontSize(workspace);
   thin.editor.toolaction.TblockAction.superClass_.handleStartAction.call(this, e, outline);
 };

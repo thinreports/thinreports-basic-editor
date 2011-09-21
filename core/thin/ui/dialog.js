@@ -457,16 +457,23 @@ thin.ui.Dialog.ButtonSet.prototype.getWrapper = function() {
 
 /**
  * @param {string} key
- * @param {string|Element} caption
+ * @param {string} caption
  * @param {thin.ui.Icon=} opt_icon
  * @param {boolean=} opt_isDefault
  * @param {boolean=} opt_isCancel
- * @return {goog.ui.Dialog.ButtonSet}
+ * @return {thin.ui.Dialog.ButtonSet}
  */
 thin.ui.Dialog.ButtonSet.prototype.set = function(key, caption, 
     opt_icon, opt_isDefault, opt_isCancel) {
-  return thin.ui.Dialog.ButtonSet.superClass_.set.call(this, key, 
-      {'caption': caption, 'icon': opt_icon}, opt_isDefault, opt_isCancel);
+  goog.structs.Map.prototype.set.call(this, key, {'caption': caption, 'icon': opt_icon});
+
+  if (opt_isDefault) {
+    this.defaultButton_ = key;
+  }
+  if (opt_isCancel) {
+    this.cancelButton_ = key;
+  }
+  return this;
 };
 
 

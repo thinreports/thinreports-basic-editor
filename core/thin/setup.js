@@ -130,7 +130,7 @@ thin.setup = function() {
     toolbar.getChild('redo').setEnabled(false);
     toolbar.getChild('zoom-rate').setInternalValue('100');
     toolFamily_.setValue(null);
-    toolSize_.setInternalValue('12');
+    toolSize_.setInternalValue('18');
     
     toolBold_.setEnabled(false);
     toolItalic_.setEnabled(false);
@@ -817,7 +817,7 @@ thin.setup = function() {
             combobox.addItem(comboboxItem);
           });
           combobox.setWidth(50);
-          combobox.setInternalValue('12');
+          combobox.setInternalValue('18');
           
           var fontSizeInputValidation = new thin.ui.Input.NumberValidator(this);
           fontSizeInputValidation.setInputRange(5);

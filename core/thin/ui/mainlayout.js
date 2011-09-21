@@ -202,9 +202,6 @@ thin.ui.MainLayout.prototype.enterDocument = function() {
  */
 thin.ui.MainLayout.prototype.separatorDragStart_ = function(e) { 
   var limit = goog.style.getBounds(this.getElement());
-// TODO: Which Dragging limits are CSS(min-width) or by scripts such like follow?
-//  limit.left = (goog.style.getPosition(this.main_.getElement()).x + mainMinWidth);
-//  limit.width -= (limit.left + rightMinWidth);
   limit.height = 0;
   
   e.dragger.setLimits(limit);
