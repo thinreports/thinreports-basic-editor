@@ -337,3 +337,27 @@
 .thin-proppane-prop-checkable-ctl > .thin-input:disabled {
   background-color: transparent !important;
 }
+
+/**
+ * NumberInputProperty (via InputUnitChanger)
+ */
+.thin-proppane-propvalue .thin-input-unit-changer {
+  display: block !important;
+  height: inherit;
+  line-height: inherit;
+  width: auto;
+  background-color: transparent;
+}
+
+.thin-proppane-propvalue .thin-input-unit-changer-body {
+  border: 0 !important;
+}
+
+.thin-proppane-propvalue .thin-input-unit-changer .thin-input {
+  padding: 0 3px;
+  background-color: transparent;
+}
+
+.thin-proppane-propvalue .thin-input-unit-changer-focus {
+  background-color: #fff !important;
+}

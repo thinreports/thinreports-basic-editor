@@ -219,7 +219,7 @@ thin.editor.ModuleElement.prototype.setUpperPosition = function(coord) {
  * @return {number}
  */
 thin.editor.ModuleElement.prototype.getLeft = function() {
-  return thin.editor.numberWithPrecision(this.left_ + this.getParentTransLateX());
+  return thin.numberWithPrecision(this.left_ + this.getParentTransLateX());
 };
 
 
@@ -228,7 +228,7 @@ thin.editor.ModuleElement.prototype.getLeft = function() {
  * @return {number}
  */
 thin.editor.ModuleElement.prototype.getTop = function() {
-  return thin.editor.numberWithPrecision(this.top_ + this.getParentTransLateY());
+  return thin.numberWithPrecision(this.top_ + this.getParentTransLateY());
 };
 
 
@@ -554,7 +554,7 @@ thin.editor.ModuleElement.prototype.getAllowLeft = function(left) {
   if (limitedLeft > left) {
     return limitedLeft;
   } else {
-    var allowRight = thin.editor.numberWithPrecision(
+    var allowRight = thin.numberWithPrecision(
                         boxSize.right - this.getWidth());
     return left > allowRight ? allowRight : left;
   }
@@ -573,7 +573,7 @@ thin.editor.ModuleElement.prototype.getAllowTop = function(top) {
   if (limitedTop > top) {
     return limitedTop;
   } else {
-    var allowBottom = thin.editor.numberWithPrecision(
+    var allowBottom = thin.numberWithPrecision(
                           boxSize.bottom - this.getHeight());
     return top > allowBottom ? allowBottom : top;
   }
@@ -593,7 +593,7 @@ thin.editor.ModuleElement.prototype.getAllowWidth = function(width, opt_left) {
     return this.instanceOfTextShape() ? this.getMinWidth() : 1;
   } else {
     var left = goog.isNumber(opt_left) ? opt_left : this.getLeft();
-    var allowWidth = thin.editor.numberWithPrecision(boxSize.right - left);
+    var allowWidth = thin.numberWithPrecision(boxSize.right - left);
     var returnWidth = width > allowWidth ? allowWidth : width;
     
     if (this.instanceOfTextShape()) {
@@ -621,7 +621,7 @@ thin.editor.ModuleElement.prototype.getAllowHeight = function(height, opt_top) {
     return this.instanceOfTextShape() ? this.getMinHeight() : 1;
   } else {
     var top = goog.isNumber(opt_top) ? opt_top : this.getTop();
-    var allowHeight = thin.editor.numberWithPrecision(boxSize.bottom - top);
+    var allowHeight = thin.numberWithPrecision(boxSize.bottom - top);
     var returnHeight = height > allowHeight ? allowHeight : height;
     
     if (this.instanceOfTextShape()) {

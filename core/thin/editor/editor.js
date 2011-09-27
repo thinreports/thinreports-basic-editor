@@ -20,17 +20,6 @@ goog.require('thin.editor.Workspace');
 
 
 /**
- * @param {number} orig_val
- * @param {number=} opt_precision
- * @return {number}
- */
-thin.editor.numberWithPrecision = function(orig_val, opt_precision) {
-  var ex = Math.pow(10, goog.isNumber(opt_precision) ? opt_precision : 1);
-  return Math.round(orig_val * ex) / ex;
-};
-
-
-/**
  * @param {string} str
  * @return {number}
  */

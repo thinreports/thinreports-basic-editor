@@ -477,8 +477,8 @@ thin.editor.AbstractDragger.prototype.calculateUnlimitedPosition_ = function() {
   var clientY = this.clientY_ - bounds.top;
 
   return new goog.math.Coordinate(
-                thin.editor.numberWithPrecision(clientX / this.rate_),
-                thin.editor.numberWithPrecision(clientY / this.rate_));
+                thin.numberWithPrecision(clientX / this.rate_),
+                thin.numberWithPrecision(clientY / this.rate_));
 };
 
 
@@ -495,8 +495,8 @@ thin.editor.AbstractDragger.prototype.calculatePosition_ = function(e) {
 
   var cancelAbsorption = e.altKey;
   return new goog.math.Coordinate(
-           thin.editor.numberWithPrecision(this.limitX(coordinate.x + deltaPos.x, cancelAbsorption)),
-           thin.editor.numberWithPrecision(this.limitY(coordinate.y + deltaPos.y, cancelAbsorption)));
+           thin.numberWithPrecision(this.limitX(coordinate.x + deltaPos.x, cancelAbsorption)),
+           thin.numberWithPrecision(this.limitY(coordinate.y + deltaPos.y, cancelAbsorption)));
 };
 
 

@@ -171,12 +171,10 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   var baseGroup = proppane.addGroup('基本');
   
   
-  var leftInputProperty = new thin.ui.PropertyPane.InputProperty('左位置');
+  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty('左位置');
   var leftInput = leftInputProperty.getValueControl();
+  leftInput.getNumberValidator().setAllowDecimal(true, 1);
   
-  var leftInputValidation = new thin.ui.Input.NumberValidator(this);
-  leftInputValidation.setAllowDecimal(true, 1);
-  leftInput.setValidator(leftInputValidation);
   leftInputProperty.addEventListener(propEventType.CHANGE, function(e) {
   
     var captureProperties = this.getCloneProperties();
@@ -216,12 +214,10 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
   
   
-  var topInputProperty = new thin.ui.PropertyPane.InputProperty('上位置');
+  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty('上位置');
   var topInput = topInputProperty.getValueControl();
+  topInput.getNumberValidator().setAllowDecimal(true, 1);
   
-  var topInputValidation = new thin.ui.Input.NumberValidator(this);
-  topInputValidation.setAllowDecimal(true, 1);
-  topInput.setValidator(topInputValidation);
   topInputProperty.addEventListener(propEventType.CHANGE, function(e) {
   
     var captureProperties = scope.getCloneProperties();
@@ -262,12 +258,10 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   proppane.addProperty(topInputProperty, baseGroup, 'top');
   
   
-  var widthInputProperty = new thin.ui.PropertyPane.InputProperty('幅');
+  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty('幅');
   var widthInput = widthInputProperty.getValueControl();
+  widthInput.getNumberValidator().setAllowDecimal(true, 1);
   
-  var widthInputValidation = new thin.ui.Input.NumberValidator(this);
-  widthInputValidation.setAllowDecimal(true, 1);
-  widthInput.setValidator(widthInputValidation);
   widthInputProperty.addEventListener(propEventType.CHANGE, function(e) {
   
     var unlimitedWidth = Number(e.target.getValue());
@@ -328,12 +322,10 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
   
 
-  var heightInputProperty = new thin.ui.PropertyPane.InputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
   var heightInput = heightInputProperty.getValueControl();
+  heightInput.getNumberValidator().setAllowDecimal(true, 1);
   
-  var heightInputValidation = new thin.ui.Input.NumberValidator(this);
-  heightInputValidation.setAllowDecimal(true, 1);
-  heightInput.setValidator(heightInputValidation);
   heightInputProperty.addEventListener(propEventType.CHANGE, function(e) {
   
     var unlimitedHeight = Number(e.target.getValue());
@@ -774,13 +766,12 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   proppane.addProperty(lineHeightCombProperty, textGroup, 'line-height');
   
   
-  var kerningInputProperty = new thin.ui.PropertyPane.InputProperty('文字間隔');
+  var kerningInputProperty = new thin.ui.PropertyPane.NumberInputProperty('文字間隔', 'auto');
   var kerningInput = kerningInputProperty.getValueControl();
-  kerningInput.setLabel('auto');
-  var kerningInputValidation = new thin.ui.Input.NumberValidator(this);
+  var kerningInputValidation = kerningInput.getNumberValidator();
   kerningInputValidation.setAllowDecimal(true, 1);
   kerningInputValidation.setAllowBlank(true);
-  kerningInput.setValidator(kerningInputValidation);
+  
   kerningInputProperty.addEventListener(propEventType.CHANGE, function(e) {
     var kerning = e.target.getValue();
     if (!thin.isExactlyEqual(kerning, 
@@ -1490,7 +1481,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   proppane.addProperty(directionSelectProperty, formatGroup, 'format-padding-direction');
 
   
-  var positionGroup = proppane.addGroup('配置');
+  var positionGroup = proppane.addGroup('画像位置');
   
   
   var positionX = thin.editor.ImageblockShape.PositionX;

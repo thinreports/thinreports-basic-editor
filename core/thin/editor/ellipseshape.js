@@ -142,48 +142,40 @@ thin.editor.EllipseShape.prototype.createPropertyComponent_ = function() {
   var baseGroup = proppane.addGroup('基本');
   
   
-  var leftInputProperty = new thin.ui.PropertyPane.InputProperty('左位置');
+  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty('左位置');
   var leftInput = leftInputProperty.getValueControl();
+  leftInput.getNumberValidator().setAllowDecimal(true, 1);
   
-  var leftInputValidation = new thin.ui.Input.NumberValidator(this);
-  leftInputValidation.setAllowDecimal(true, 1);
-  leftInput.setValidator(leftInputValidation);
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
   
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
-  var topInputProperty = new thin.ui.PropertyPane.InputProperty('上位置');
+  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty('上位置');
   var topInput = topInputProperty.getValueControl();
+  topInput.getNumberValidator().setAllowDecimal(true, 1);
 
-  var topInputValidation = new thin.ui.Input.NumberValidator(this);
-  topInputValidation.setAllowDecimal(true, 1);
-  topInput.setValidator(topInputValidation);
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
   
   proppane.addProperty(topInputProperty, baseGroup, 'top');
   
   
-  var widthInputProperty = new thin.ui.PropertyPane.InputProperty('幅');
+  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty('幅');
   var widthInput = widthInputProperty.getValueControl();
+  widthInput.getNumberValidator().setAllowDecimal(true, 1);
   
-  var widthInputValidation = new thin.ui.Input.NumberValidator(this);
-  widthInputValidation.setAllowDecimal(true, 1);
-  widthInput.setValidator(widthInputValidation);
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
   
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
   
   
-  var heightInputProperty = new thin.ui.PropertyPane.InputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
   var heightInput = heightInputProperty.getValueControl();
-
-  var heightInputValidation = new thin.ui.Input.NumberValidator(this);
-  heightInputValidation.setAllowDecimal(true, 1);
-  heightInput.setValidator(heightInputValidation);
+  heightInput.getNumberValidator().setAllowDecimal(true, 1);
+  
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
   

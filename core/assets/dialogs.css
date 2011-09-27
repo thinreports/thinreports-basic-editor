@@ -28,22 +28,10 @@
   outline: none;
 }
 
-.thin-dialogs .thin-dialog-content input[type="text"] {
-  padding: 2px;
-  font-size: 12px;
-  border: 1px solid #aaa;
-  margin: 1px;
-  -webkit-border-radius: 2px;
-}
-
 .thin-dialogs .thin-dialog-content textarea {
   border : 1px solid #aaa;
   padding: 5px !important;
   font-size: 12px;
-}
-
-.thin-dialogs .thin-dialog-content input[type="text"]:disabled {
-  background-color: #eee !important;
 }
 
 .thin-dialogs .thin-dialog-content fieldset {
@@ -70,7 +58,7 @@
 }
 
 .thin-dialogs .thin-dialogs-setting-control {
-  -webkit-box-flex: 1;
+  padding: 1px;
 }
 
 .thin-dialogs .thin-dialogs-caption, 
@@ -111,6 +99,32 @@
 .thin-dialog-report-config .thin-menu-button-button {
   padding-top: 1px !important;
   padding-bottom: 1px !important;
+}
+
+/* thin.ui.InputUnitChanger */
+.thin-dialog-report-config .thin-input-unit-changer {
+  margin: 1px;
+}
+
+.thin-dialog-report-config .thin-input-unit-changer .thin-input {
+  font-size: 12px;
+}
+
+.thin-dialog-report-config .thin-input-unit-changer-body {
+  padding: 1px;
+}
+
+/* thin.ui.Input */
+.thin-dialogs .thin-dialogs-setting-control > .thin-input {
+  padding: 2px;
+  font-size: 12px;
+  border: 1px solid #aaa;
+  margin: 1px;
+  -webkit-border-radius: 2px;
+}
+
+.thin-dialogs .thin-dialogs-setting-control > .thin-input:disabled {
+  background-color: #eee !important;
 }
 
 /**

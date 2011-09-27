@@ -149,7 +149,7 @@ thin.editor.MultiOutlineHelper.prototype.init = function() {
  * @param {number} left
  */
 thin.editor.MultiOutlineHelper.prototype.setLeft = function(left) {
-  this.left_ = thin.editor.numberWithPrecision(
+  this.left_ = thin.numberWithPrecision(
                  left - this.getParentTransLateX());
 };
 
@@ -158,7 +158,7 @@ thin.editor.MultiOutlineHelper.prototype.setLeft = function(left) {
  * @param {number} top
  */
 thin.editor.MultiOutlineHelper.prototype.setTop = function(top) {
-  this.top_ = thin.editor.numberWithPrecision(
+  this.top_ = thin.numberWithPrecision(
                 top - this.getParentTransLateY());
 };
 
@@ -167,7 +167,7 @@ thin.editor.MultiOutlineHelper.prototype.setTop = function(top) {
  * @param {number} width
  */
 thin.editor.MultiOutlineHelper.prototype.setWidth = function(width) {
-  this.width_ = thin.editor.numberWithPrecision(width);
+  this.width_ = thin.numberWithPrecision(width);
 };
 
 
@@ -175,7 +175,7 @@ thin.editor.MultiOutlineHelper.prototype.setWidth = function(width) {
  * @param {number} height
  */
 thin.editor.MultiOutlineHelper.prototype.setHeight = function(height) {
-  this.height_ = thin.editor.numberWithPrecision(height);
+  this.height_ = thin.numberWithPrecision(height);
 };
 
 
@@ -190,8 +190,8 @@ thin.editor.MultiOutlineHelper.prototype.setTransLate = function(transLateX, tra
   var top;
   goog.array.forEach(shapes, function(shape) {
     outline = shape.getTargetOutline();
-    left = thin.editor.numberWithPrecision(shape.getLeft() + transLateX);
-    top = thin.editor.numberWithPrecision(shape.getTop() + transLateY);
+    left = thin.numberWithPrecision(shape.getLeft() + transLateX);
+    top = thin.numberWithPrecision(shape.getTop() + transLateY);
     outline.setLeft(left);
     outline.setTop(top);
     shape.setLeft(left);

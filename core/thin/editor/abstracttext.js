@@ -81,7 +81,7 @@ thin.editor.AbstractText.prototype.getText = function() {
  * @param {number} left
  */
 thin.editor.AbstractText.prototype.setLeft = function(left) {
-  left = thin.editor.numberWithPrecision(left - this.getParentTransLateX());
+  left = thin.numberWithPrecision(left - this.getParentTransLateX());
   this.left_ = left;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x': left
@@ -93,7 +93,7 @@ thin.editor.AbstractText.prototype.setLeft = function(left) {
  * @param {number} top
  */
 thin.editor.AbstractText.prototype.setTop = function(top) {
-  top = thin.editor.numberWithPrecision(top - this.getParentTransLateY());
+  top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
   this.getLayout().setElementAttributes(this.getElement(), {
     'y': top

@@ -196,7 +196,7 @@ thin.editor.TextShape.prototype.setup = function() {
 thin.editor.TextShape.prototype.setLeft = function(left) {
   thin.editor.TextShape.superClass_.setLeft.call(this, left);
   
-  var xLeft = thin.editor.numberWithPrecision(this.left_ + this.getShiftValueByTextAnchor());
+  var xLeft = thin.numberWithPrecision(this.left_ + this.getShiftValueByTextAnchor());
   goog.array.forEach(this.getTextLineShapes(), function(textline) {
     textline.setLeft(xLeft);
   });
@@ -209,7 +209,7 @@ thin.editor.TextShape.prototype.setLeft = function(left) {
 thin.editor.TextShape.prototype.setTop = function(top) {
   thin.editor.TextShape.superClass_.setTop.call(this, top);
 
-  var xTop = thin.editor.numberWithPrecision(this.top_ + this.getShiftValueByVerticalAlign());
+  var xTop = thin.numberWithPrecision(this.top_ + this.getShiftValueByVerticalAlign());
   var ratio = this.getTextLineHeightRatio();
 
   if (thin.isExactlyEqual(ratio, thin.editor.TextStyle.DEFAULT_LINEHEIGHT)) {
@@ -223,7 +223,7 @@ thin.editor.TextShape.prototype.setTop = function(top) {
   
   var ascent = thin.core.Font.getAscent(family, fontSize, isBold);
   var heightAt = thin.core.Font.getHeight(family, fontSize);
-  var translateY = thin.editor.numberWithPrecision(heightAt * ratio, 2);
+  var translateY = thin.numberWithPrecision(heightAt * ratio, 2);
   var finalLineGap = 0;
 
   if (this.isVerticalBottom()) {
@@ -236,7 +236,7 @@ thin.editor.TextShape.prototype.setTop = function(top) {
     var height = thin.core.Font.getHeight(family, fontSize);
     finalLineGap = (height - lineHeight) / 2;
   }
-  var y = thin.editor.numberWithPrecision(xTop + ascent + finalLineGap, 2);
+  var y = thin.numberWithPrecision(xTop + ascent + finalLineGap, 2);
 
   goog.array.forEach(this.getTextLineShapes(), function(textline, index) {
     if (index > 0) {
@@ -293,13 +293,13 @@ thin.editor.TextShape.prototype.getHeightInternal = function() {
   var lineCount = this.getTextLineShapes().length;
 
   if (ratio >= 1) {
-    var height = thin.editor.numberWithPrecision((heightAt * ratio) * lineCount);
-    var diff = thin.editor.numberWithPrecision(heightAt * (ratio - 1), 2);
-    height = thin.editor.numberWithPrecision(height - diff);
+    var height = thin.numberWithPrecision((heightAt * ratio) * lineCount);
+    var diff = thin.numberWithPrecision(heightAt * (ratio - 1), 2);
+    height = thin.numberWithPrecision(height - diff);
   } else {
-    var height = thin.editor.numberWithPrecision(heightAt * lineCount);
-    var diff = thin.editor.numberWithPrecision(heightAt * (1 - ratio) * (lineCount - 1), 2);
-    height = thin.editor.numberWithPrecision(height - diff);
+    var height = thin.numberWithPrecision(heightAt * lineCount);
+    var diff = thin.numberWithPrecision(heightAt * (1 - ratio) * (lineCount - 1), 2);
+    height = thin.numberWithPrecision(height - diff);
   }
 
   if (!captureVisibled) {
@@ -669,47 +669,39 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   
   var baseGroup = proppane.addGroup('基本');
   
-  var leftInputProperty = new thin.ui.PropertyPane.InputProperty('左位置');
+  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty('左位置');
   var leftInput = leftInputProperty.getValueControl();
-
-  var leftInputValidation = new thin.ui.Input.NumberValidator(this);
-  leftInputValidation.setAllowDecimal(true, 1);
-  leftInput.setValidator(leftInputValidation);
+  leftInput.getNumberValidator().setAllowDecimal(true, 1);
+  
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
   
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
-  var topInputProperty = new thin.ui.PropertyPane.InputProperty('上位置');
+  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty('上位置');
   var topInput = topInputProperty.getValueControl();
+  topInput.getNumberValidator().setAllowDecimal(true, 1);
   
-  var topInputValidation = new thin.ui.Input.NumberValidator(this);
-  topInputValidation.setAllowDecimal(true, 1);
-  topInput.setValidator(topInputValidation);
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
   
   proppane.addProperty(topInputProperty, baseGroup, 'top');
   
   
-  var widthInputProperty = new thin.ui.PropertyPane.InputProperty('幅');
+  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty('幅');
   var widthInput = widthInputProperty.getValueControl();
-
-  var widthInputValidation = new thin.ui.Input.NumberValidator(this);
-  widthInputValidation.setAllowDecimal(true, 1);
-  widthInput.setValidator(widthInputValidation);
+  widthInput.getNumberValidator().setAllowDecimal(true, 1);
+  
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
   
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
   
   
-  var heightInputProperty = new thin.ui.PropertyPane.InputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
   var heightInput = heightInputProperty.getValueControl();
-
-  var heightInputValidation = new thin.ui.Input.NumberValidator(this);
-  heightInputValidation.setAllowDecimal(true, 1);
-  heightInput.setValidator(heightInputValidation);
+  heightInput.getNumberValidator().setAllowDecimal(true, 1);
+  
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
   
@@ -875,13 +867,13 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(lineHeightCombProperty , textGroup, 'line-height');
 
-  var kerningInputProperty = new thin.ui.PropertyPane.InputProperty('文字間隔');
+  var kerningInputProperty = new thin.ui.PropertyPane.NumberInputProperty('文字間隔', 'auto');
   var kerningInput = kerningInputProperty.getValueControl();
-  kerningInput.setLabel('auto');
-  var kerningInputValidation = new thin.ui.Input.NumberValidator(this);
+  
+  var kerningInputValidation = kerningInput.getNumberValidator();
   kerningInputValidation.setAllowDecimal(true, 1);
   kerningInputValidation.setAllowBlank(true);
-  kerningInput.setValidator(kerningInputValidation);
+  
   kerningInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var kerning = e.target.getValue();

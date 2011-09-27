@@ -192,12 +192,10 @@ thin.editor.DraggableLine.prototype.createPropertyComponent_ = function() {
   var baseGroup = proppane.addGroup('基本');
   
   
-  var positionInputProperty = new thin.ui.PropertyPane.InputProperty('位置');
+  var positionInputProperty = new thin.ui.PropertyPane.NumberInputProperty('位置');
   var positionInput = positionInputProperty.getValueControl();
+  positionInput.getNumberValidator().setAllowDecimal(true, 1);
   
-  var positionInputValidation = new thin.ui.Input.NumberValidator(this);
-  positionInputValidation.setAllowDecimal(true, 1);
-  positionInput.setValidator(positionInputValidation);
   positionInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var position = Number(e.target.getValue());

@@ -190,7 +190,7 @@ thin.editor.LayoutGuideHelper.prototype.createHorizonLayoutGuide = function() {
     var size = this.getLayout().getNormalLayoutSize();
     goog.array.insert(this.hlines_,
       this.createLayoutGuide_(thin.editor.DraggableLine.Direction.HORIZONTAL,
-          new goog.math.Rect(0, thin.editor.numberWithPrecision(size.height * 0.1, 0), size.width, 1),
+          new goog.math.Rect(0, thin.numberWithPrecision(size.height * 0.1, 0), size.width, 1),
           thin.editor.Cursor.Type['BCENTER']));
   }
 };
@@ -201,7 +201,7 @@ thin.editor.LayoutGuideHelper.prototype.createVerticalLayoutGuide = function() {
     var size = this.getLayout().getNormalLayoutSize();
     goog.array.insert(this.vlines_,
       this.createLayoutGuide_(thin.editor.DraggableLine.Direction.VERTICAL,
-          new goog.math.Rect(thin.editor.numberWithPrecision(size.width * 0.1), 0, 1, size.height),
+          new goog.math.Rect(thin.numberWithPrecision(size.width * 0.1), 0, 1, size.height),
           thin.editor.Cursor.Type['MRIGHT']));
   }
 };

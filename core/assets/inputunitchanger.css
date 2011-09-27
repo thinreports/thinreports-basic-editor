@@ -1,0 +1,86 @@
+/**
+ * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.thin-input-unit-changer {
+  display: inline-block;
+  height: auto;
+  line-height: auto;
+  width: 10em;
+  background-color: #fff;
+}
+
+.thin-input-unit-changer-disabled {
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+}
+
+.thin-input-unit-changer-body {
+  display: -webkit-box;
+  white-space: nowrap;
+  -webkit-border-top-left-radius: 2px;
+  -webkit-border-top-right-radius: 2px;
+  border: 1px solid rgb(180, 180, 180);
+  height: inherit;
+  line-height: inherit;
+}
+
+.thin-input-unit-changer .thin-input {
+  display: block;
+  -webkit-box-sizing: border-box;
+  -webkit-box-flex: 1;
+  border: 0;
+  margin: 0 !important;
+  width: 100% !important;
+  font-size: 11px;
+  height: inherit;
+}
+
+.thin-input-unit-changer-button {
+  width: 24px;
+  height: inherit;
+  line-height: inherit;
+  cursor: default;
+}
+
+.thin-input-unit-changer-button-body {
+  text-align: center;
+  line-height: inherit;
+  height: inherit;
+}
+
+.thin-input-unit-changer-button-label {
+  display: inline-block;
+  width: 22px;
+  font-size: 10px !important;
+  font-family: Helvetica, Arial sans-serif !important;
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+  color: rgb(80, 80, 80) !important;
+  -webkit-border-radius: 2px;
+  background: rgb(220, 220, 220);
+  padding: 1px 0;
+  line-height: normal;
+}
+
+.thin-input-unit-changer-button-hover .thin-input-unit-changer-button-label {
+  -webkit-box-shadow: inset 0 0 0 1px rgba(200, 200, 200, .7);
+  background: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(235, 235, 235)), to(rgb(190, 190, 190)));
+}
+
+.thin-input-unit-changer-button-hover.thin-input-unit-changer-button-active .thin-input-unit-changer-button-label {
+  background: rgb(220, 220, 220);  
+}

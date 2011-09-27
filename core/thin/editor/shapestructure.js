@@ -239,23 +239,23 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
   if (tag == 'text') {
     switch(anchor) {
       case thin.editor.TextStyle.HorizonAlignType.MIDDLE:
-        left = thin.editor.numberWithPrecision(left + (width / 2));
+        left = thin.numberWithPrecision(left + (width / 2));
         break;
       case thin.editor.TextStyle.HorizonAlignType.END:
-        left = thin.editor.numberWithPrecision(left + width);
+        left = thin.numberWithPrecision(left + width);
         break;
     }
     
     var ascent = thin.core.Font.getAscent(family, fontSize, isBold);
     
     attrs['x'] = left;
-    attrs['y'] = thin.editor.numberWithPrecision(top + ascent);
+    attrs['y'] = thin.numberWithPrecision(top + ascent);
   } else {
     var heightAt = thin.core.Font.getHeight(family, fontSize);
     var lineHeight = thin.core.Font.getLineHeight(family, fontSize, isBold);
     
     attrs['x'] = left;
-    attrs['y'] = thin.editor.numberWithPrecision(top - (heightAt - lineHeight));
+    attrs['y'] = thin.numberWithPrecision(top - (heightAt - lineHeight));
     attrs['width'] = width;
     attrs['height'] = height;
   }

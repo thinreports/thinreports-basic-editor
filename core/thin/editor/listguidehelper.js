@@ -414,10 +414,10 @@ thin.editor.ListGuideHelper.prototype.init = function() {
         height = 1;
       }
       return new goog.math.Rect(
-                thin.editor.numberWithPrecision(left), 
-                thin.editor.numberWithPrecision(top),
-                thin.editor.numberWithPrecision(width),
-                thin.editor.numberWithPrecision(height));
+                thin.numberWithPrecision(left), 
+                thin.numberWithPrecision(top),
+                thin.numberWithPrecision(width),
+                thin.numberWithPrecision(height));
     });
   };
   

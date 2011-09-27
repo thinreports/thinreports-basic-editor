@@ -89,8 +89,8 @@ thin.editor.toolaction.ZoomAction.prototype.handleMouseDownAction_ = function(e)
   var workspace = this.workspace;
   workspace.focusElement(e);
   var zoom = workspace.getUiStatusForZoom();
-  zoom = e.altKey ? thin.editor.numberWithPrecision(zoom - 10, 0) : 
-                    thin.editor.numberWithPrecision(zoom + 10, 0);
+  zoom = e.altKey ? thin.numberWithPrecision(zoom - 10, 0) : 
+                    thin.numberWithPrecision(zoom + 10, 0);
   workspace.getAction().actionSetZoom(zoom, this.calculatePosition_(e));
   e.preventDefault();
 };
@@ -106,8 +106,8 @@ thin.editor.toolaction.ZoomAction.prototype.calculatePosition_ = function(e) {
   var bounds = layout.getOffsetTarget().getBoundingClientRect();
   var rate = layout.getPixelScale();
   return new goog.math.Coordinate(
-           thin.editor.numberWithPrecision((e.clientX - bounds.left) / rate), 
-           thin.editor.numberWithPrecision((e.clientY - bounds.top) / rate));
+           thin.numberWithPrecision((e.clientX - bounds.left) / rate), 
+           thin.numberWithPrecision((e.clientY - bounds.top) / rate));
 };
 
 

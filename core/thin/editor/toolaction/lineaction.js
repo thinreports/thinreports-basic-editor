@@ -40,15 +40,15 @@ thin.editor.toolaction.LineAction.prototype.shiftFn_ = function(e) {
   var oldX = e.oldX;
   var oldY = e.oldY;
   
-  var maxSize = new goog.math.Size(thin.editor.numberWithPrecision(Math.abs(startX - oldX)),
-                                   thin.editor.numberWithPrecision(Math.abs(startY - oldY))).getLongest();
-  var radius = thin.editor.numberWithPrecision(new goog.math.Size(
-                 thin.editor.numberWithPrecision(Math.abs(startX - endX)), 
-                 thin.editor.numberWithPrecision(Math.abs(startY - endY))).getLongest() / 2, 2);
+  var maxSize = new goog.math.Size(thin.numberWithPrecision(Math.abs(startX - oldX)),
+                                   thin.numberWithPrecision(Math.abs(startY - oldY))).getLongest();
+  var radius = thin.numberWithPrecision(new goog.math.Size(
+                 thin.numberWithPrecision(Math.abs(startX - endX)), 
+                 thin.numberWithPrecision(Math.abs(startY - endY))).getLongest() / 2, 2);
   var capturePos = new goog.math.Coordinate(endX, endY);
   
-  if (thin.editor.numberWithPrecision((startX - radius)) < oldX &&
-      oldX < thin.editor.numberWithPrecision((startX + radius))) {
+  if (thin.numberWithPrecision((startX - radius)) < oldX &&
+      oldX < thin.numberWithPrecision((startX + radius))) {
     endX = startX;
     if (startY <= oldY) {
       endY = startY + maxSize;
@@ -56,8 +56,8 @@ thin.editor.toolaction.LineAction.prototype.shiftFn_ = function(e) {
       endY = startY - maxSize;
     }
   }
-  if (thin.editor.numberWithPrecision((startY - radius)) < oldY &&
-      oldY < thin.editor.numberWithPrecision((startY + radius))) {
+  if (thin.numberWithPrecision((startY - radius)) < oldY &&
+      oldY < thin.numberWithPrecision((startY + radius))) {
     endY = startY;
     if (startX <= oldX) {
       endX = startX + maxSize;

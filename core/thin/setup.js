@@ -65,6 +65,7 @@ goog.require('thin.ui.Option');
 goog.require('thin.ui.Checkbox');
 goog.require('thin.ui.ComboBox');
 goog.require('thin.ui.ComboBoxItem');
+goog.require('thin.ui.InputUnitChanger');
 
 goog.require('thin.editor');
 goog.require('thin.editor.Component');
@@ -310,7 +311,7 @@ thin.setup = function() {
       dialog.setWidth(400);
       dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOkCancel());
       
-      var pageTitleInput = new thin.ui.Input('page title');
+      var pageTitleInput = new thin.ui.Input('Page Title');
       dialog.addChild(pageTitleInput, false);
       pageTitleInput.render(goog.dom.getElement('new-config-page-title'));
       
@@ -329,20 +330,22 @@ thin.setup = function() {
         pageHeightInput.setEnabled(enabled);
       });
       
-      var pageWidthInput = new thin.ui.Input();
+      var pageWidthInput = new thin.ui.InputUnitChanger();
+      var pageWidthInputValidator = pageWidthInput.getNumberValidator();
+      pageWidthInput.setWidth(150);
+      pageWidthInputValidator.setInputRange(10);
+      pageWidthInputValidator.setAllowDecimal(true, 1);
       dialog.addChild(pageWidthInput, false);
       
-      var pageWidthInputValidation = new thin.ui.Input.NumberValidator();
-      pageWidthInputValidation.setInputRange(1);
-      pageWidthInput.setValidator(pageWidthInputValidation);
       pageWidthInput.render(goog.dom.getElement('new-config-page-width'));
       
-      var pageHeightInput = new thin.ui.Input();
+      var pageHeightInput = new thin.ui.InputUnitChanger();
+      var pageHeightInputValidator = pageHeightInput.getNumberValidator();
+      pageHeightInput.setWidth(150);
+      pageHeightInputValidator.setInputRange(10);
+      pageHeightInputValidator.setAllowDecimal(true, 1);
       dialog.addChild(pageHeightInput, false);
       
-      var pageHeightInputValidation = new thin.ui.Input.NumberValidator();
-      pageHeightInputValidation.setInputRange(1);
-      pageHeightInput.setValidator(pageHeightInputValidation);
       pageHeightInput.render(goog.dom.getElement('new-config-page-height'));
       
       var pageDirectionPr = goog.dom.getElement('new-config-page-direction-pr');
@@ -351,28 +354,32 @@ thin.setup = function() {
       var pageDirectionLs = goog.dom.getElement('new-config-page-direction-ls');
       dialog.setControl('page-direction-ls', pageDirectionLs);
       
-      var pageMarginTop = new thin.ui.Input('page margin top');
+      var pageMarginTop = new thin.ui.InputUnitChanger();
+      pageMarginTop.setWidth(150);
+      pageMarginTop.getNumberValidator().setAllowDecimal(true, 1);
       dialog.addChild(pageMarginTop, false);
       
-      pageMarginTop.setValidator(new thin.ui.Input.NumberValidator());
       pageMarginTop.render(goog.dom.getElement('new-config-page-margin-top'));
       
-      var pageMarginBottom = new thin.ui.Input('page margin bottom');
+      var pageMarginBottom = new thin.ui.InputUnitChanger();
+      pageMarginBottom.setWidth(150);
+      pageMarginBottom.getNumberValidator().setAllowDecimal(true, 1);
       dialog.addChild(pageMarginBottom, false);
       
-      pageMarginBottom.setValidator(new thin.ui.Input.NumberValidator());
       pageMarginBottom.render(goog.dom.getElement('new-config-page-margin-bottom'));
       
-      var pageMarginLeft = new thin.ui.Input('page margin left');
+      var pageMarginLeft = new thin.ui.InputUnitChanger();
+      pageMarginLeft.setWidth(150);
+      pageMarginLeft.getNumberValidator().setAllowDecimal(true, 1);
       dialog.addChild(pageMarginLeft, false);
       
-      pageMarginLeft.setValidator(new thin.ui.Input.NumberValidator());
       pageMarginLeft.render(goog.dom.getElement('new-config-page-margin-left'));
       
-      var pageMarginRight = new thin.ui.Input('page margin right');
+      var pageMarginRight = new thin.ui.InputUnitChanger();
+      pageMarginRight.setWidth(150);
+      pageMarginRight.getNumberValidator().setAllowDecimal(true, 1);
       dialog.addChild(pageMarginRight, false);
       
-      pageMarginRight.setValidator(new thin.ui.Input.NumberValidator());
       pageMarginRight.render(goog.dom.getElement('new-config-page-margin-right'));
       
       dialog.decorate(goog.dom.getElement('new-dialog-report-config'));
@@ -568,13 +575,13 @@ thin.setup = function() {
         dialog.setWidth(400);
         dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOkCancel());
         
-        var pageTitleInput = new thin.ui.Input('page title');
+        var pageTitleInput = new thin.ui.Input('Page Title');
         dialog.addChild(pageTitleInput, false);
         pageTitleInput.render(goog.dom.getElement('edit-config-page-title'));
         
         var paperTypeSelectbox = new thin.ui.Select();
-        dialog.addChild(paperTypeSelectbox, false);
         paperTypeSelectbox.setTextAlignLeft();
+        dialog.addChild(paperTypeSelectbox, false);
         goog.array.forEach(goog.object.getValues(thin.layout.FormatPage.PaperType), function(typeName) {
           paperTypeSelectbox.addItem(new thin.ui.Option(typeName));
         });
@@ -586,18 +593,20 @@ thin.setup = function() {
           pageHeightInput.setEnabled(enabled);
         });
         
-        var pageWidthInput = new thin.ui.Input();
+        var pageWidthInput = new thin.ui.InputUnitChanger();
+        pageWidthInput.setWidth(150);
         dialog.addChild(pageWidthInput, false);
-        var pageWidthInputValidation = new thin.ui.Input.NumberValidator();
+        var pageWidthInputValidation = pageWidthInput.getNumberValidator();
         pageWidthInputValidation.setInputRange(1);
-        pageWidthInput.setValidator(pageWidthInputValidation);
+        pageWidthInputValidation.setAllowDecimal(true, 1);
         pageWidthInput.render(goog.dom.getElement('edit-config-page-width'));
         
-        var pageHeightInput = new thin.ui.Input();
+        var pageHeightInput = new thin.ui.InputUnitChanger();
+        pageHeightInput.setWidth(150);
         dialog.addChild(pageHeightInput, false);
-        var pageHeightInputValidation = new thin.ui.Input.NumberValidator();
+        var pageHeightInputValidation = pageHeightInput.getNumberValidator();
         pageHeightInputValidation.setInputRange(1);
-        pageHeightInput.setValidator(pageHeightInputValidation);
+        pageHeightInputValidation.setAllowDecimal(true, 1);
         pageHeightInput.render(goog.dom.getElement('edit-config-page-height'));
         
         var pageDirectionPr = goog.dom.getElement('edit-config-page-direction-pr');
@@ -605,24 +614,28 @@ thin.setup = function() {
         var pageDirectionLs = goog.dom.getElement('edit-config-page-direction-ls');
         dialog.setControl('page-direction-ls', pageDirectionLs);
         
-        var pageMarginTop = new thin.ui.Input('page margin top');
+        var pageMarginTop = new thin.ui.InputUnitChanger();
+        pageMarginTop.setWidth(150);
+        pageMarginTop.getNumberValidator().setAllowDecimal(true, 1);
         dialog.addChild(pageMarginTop, false);
-        pageMarginTop.setValidator(new thin.ui.Input.NumberValidator());
         pageMarginTop.render(goog.dom.getElement('edit-config-page-margin-top'));
         
-        var pageMarginBottom = new thin.ui.Input('page margin bottom');
+        var pageMarginBottom = new thin.ui.InputUnitChanger();
+        pageMarginBottom.setWidth(150);
+        pageMarginBottom.getNumberValidator().setAllowDecimal(true, 1);
         dialog.addChild(pageMarginBottom, false);
-        pageMarginBottom.setValidator(new thin.ui.Input.NumberValidator());
         pageMarginBottom.render(goog.dom.getElement('edit-config-page-margin-bottom'));
         
-        var pageMarginLeft = new thin.ui.Input('page margin left');
+        var pageMarginLeft = new thin.ui.InputUnitChanger();
+        pageMarginLeft.setWidth(150);
+        pageMarginLeft.getNumberValidator().setAllowDecimal(true, 1);
         dialog.addChild(pageMarginLeft, false);
-        pageMarginLeft.setValidator(new thin.ui.Input.NumberValidator());
         pageMarginLeft.render(goog.dom.getElement('edit-config-page-margin-left'));
         
-        var pageMarginRight = new thin.ui.Input('page margin right');
+        var pageMarginRight = new thin.ui.InputUnitChanger();
+        pageMarginRight.setWidth(150);
+        pageMarginRight.getNumberValidator().setAllowDecimal(true, 1);
         dialog.addChild(pageMarginRight, false);
-        pageMarginRight.setValidator(new thin.ui.Input.NumberValidator());
         pageMarginRight.render(goog.dom.getElement('edit-config-page-margin-right'));
         
         dialog.decorate(goog.dom.getElement('edit-dialog-report-config'));
@@ -1270,10 +1283,10 @@ thin.setup = function() {
     toolTblock.setTooltip('テキストブロックツール');
     
     // Imageblock
-    var toolTblock = toolbox.addItem(
+    var toolIblock = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.ImageblockAction(),
           new thin.ui.Icon('tool-iblock')), 'iblock');
-    toolTblock.setTooltip('画像ブロックツール');
+    toolIblock.setTooltip('画像ブロックツール');
     
     // Separator
     toolbox.addItem(new thin.ui.ToolboxSeparator());

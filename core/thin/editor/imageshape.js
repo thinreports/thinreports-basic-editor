@@ -160,22 +160,22 @@ thin.editor.ImageShape.prototype.getAllowSize = function(width, height, opt_left
   var naturalHeight = opt_naturalHeight || this.getNaturalHeight();
 
   if (naturalWidth > naturalHeight) {
-    var unlimitedHeight = thin.editor.numberWithPrecision(allowWidth *
-                            thin.editor.numberWithPrecision(naturalHeight / naturalWidth, 2));
+    var unlimitedHeight = thin.numberWithPrecision(allowWidth *
+                            thin.numberWithPrecision(naturalHeight / naturalWidth, 2));
 
     var limitedHeight = this.getAllowHeight(unlimitedHeight, opt_top);
     return new goog.math.Size(thin.isExactlyEqual(limitedHeight, unlimitedHeight) ? allowWidth : 
-             thin.editor.numberWithPrecision(limitedHeight *
-               thin.editor.numberWithPrecision(naturalWidth / naturalHeight, 2)), limitedHeight);
+             thin.numberWithPrecision(limitedHeight *
+               thin.numberWithPrecision(naturalWidth / naturalHeight, 2)), limitedHeight);
     
   } else {
-    var unlimitedWidth = thin.editor.numberWithPrecision(allowHeight *
-                           thin.editor.numberWithPrecision(naturalWidth / naturalHeight, 2));
+    var unlimitedWidth = thin.numberWithPrecision(allowHeight *
+                           thin.numberWithPrecision(naturalWidth / naturalHeight, 2));
 
     var limitedWidth = this.getAllowWidth(unlimitedWidth, opt_left);
     return new goog.math.Size(limitedWidth, thin.isExactlyEqual(limitedWidth, unlimitedWidth) ? allowHeight : 
-             thin.editor.numberWithPrecision(limitedWidth *
-               thin.editor.numberWithPrecision(naturalHeight / naturalWidth, 2)));
+             thin.numberWithPrecision(limitedWidth *
+               thin.numberWithPrecision(naturalHeight / naturalWidth, 2)));
   }
 };
 
@@ -206,7 +206,7 @@ thin.editor.ImageShape.prototype.setSource = function(src) {
  * @param {number} left
  */
 thin.editor.ImageShape.prototype.setLeft = function(left) {
-  left = thin.editor.numberWithPrecision(left - this.getParentTransLateX());
+  left = thin.numberWithPrecision(left - this.getParentTransLateX());
   this.left_ = left;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x': left
@@ -218,7 +218,7 @@ thin.editor.ImageShape.prototype.setLeft = function(left) {
  * @param {number} top
  */
 thin.editor.ImageShape.prototype.setTop = function(top) {
-  top = thin.editor.numberWithPrecision(top - this.getParentTransLateY());
+  top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
   this.getLayout().setElementAttributes(this.getElement(), {
     'y': top
@@ -230,7 +230,7 @@ thin.editor.ImageShape.prototype.setTop = function(top) {
  * @param {number} width
  */
 thin.editor.ImageShape.prototype.setWidth = function(width) {
-  width = thin.editor.numberWithPrecision(width);
+  width = thin.numberWithPrecision(width);
   this.width_ = width;
   this.getLayout().setElementAttributes(this.getElement(), {
     'width': width
@@ -242,7 +242,7 @@ thin.editor.ImageShape.prototype.setWidth = function(width) {
  * @param {number} height
  */
 thin.editor.ImageShape.prototype.setHeight = function(height) {
-  height = thin.editor.numberWithPrecision(height);
+  height = thin.numberWithPrecision(height);
   this.height_ = height;
   this.getLayout().setElementAttributes(this.getElement(), {
     'height': height
@@ -322,48 +322,40 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
   var baseGroup = proppane.addGroup('基本');
   
   
-  var leftInputProperty = new thin.ui.PropertyPane.InputProperty('左位置');
+  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty('左位置');
   var leftInput = leftInputProperty.getValueControl();
-
-  var leftInputValidation = new thin.ui.Input.NumberValidator(this);
-  leftInputValidation.setAllowDecimal(true, 1);
-  leftInput.setValidator(leftInputValidation);
+  leftInput.getNumberValidator().setAllowDecimal(true, 1);
+  
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
   
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
-  var topInputProperty = new thin.ui.PropertyPane.InputProperty('上位置');
+  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty('上位置');
   var topInput = topInputProperty.getValueControl();
-
-  var topInputValidation = new thin.ui.Input.NumberValidator(this);
-  topInputValidation.setAllowDecimal(true, 1);
-  topInput.setValidator(topInputValidation);
+  topInput.getNumberValidator().setAllowDecimal(true, 1);
+  
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
   
   proppane.addProperty(topInputProperty, baseGroup, 'top');
   
   
-  var widthInputProperty = new thin.ui.PropertyPane.InputProperty('幅');
+  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty('幅');
   var widthInput = widthInputProperty.getValueControl();
-
-  var widthInputValidation = new thin.ui.Input.NumberValidator(this);
-  widthInputValidation.setAllowDecimal(true, 1);
-  widthInput.setValidator(widthInputValidation);
+  widthInput.getNumberValidator().setAllowDecimal(true, 1);
+  
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
   
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
   
   
-  var heightInputProperty = new thin.ui.PropertyPane.InputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
   var heightInput = heightInputProperty.getValueControl();
-
-  var heightInputValidation = new thin.ui.Input.NumberValidator(this);
-  heightInputValidation.setAllowDecimal(true, 1);
-  heightInput.setValidator(heightInputValidation);
+  heightInput.getNumberValidator().setAllowDecimal(true, 1);
+  
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
   

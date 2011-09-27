@@ -64,8 +64,8 @@ thin.editor.ModuleOutline.prototype.getInitShapeProperties = goog.abstractMethod
 thin.editor.ModuleOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
   this.setBounds(new goog.math.Rect(
     Math.min(startPosX, clientPosX), Math.min(startPosY, clientPosY),
-    thin.editor.numberWithPrecision(Math.abs(startPosX - clientPosX)),
-    thin.editor.numberWithPrecision(Math.abs(startPosY - clientPosY))));
+    thin.numberWithPrecision(Math.abs(startPosX - clientPosX)),
+    thin.numberWithPrecision(Math.abs(startPosY - clientPosY))));
 };
 
 
@@ -82,10 +82,10 @@ thin.editor.ModuleOutline.prototype.setBoundsByScale = function(scale, transLate
   var deltaY = this.getTop() - transLate.y;
 
   this.setBounds(new goog.math.Rect(
-    thin.editor.numberWithPrecision(this.getLeft() + ((deltaX * scaleX) - deltaX)),
-    thin.editor.numberWithPrecision(this.getTop() + ((deltaY * scaleY) - deltaY)),
-    thin.editor.numberWithPrecision(this.getWidth() * scaleX),
-    thin.editor.numberWithPrecision(this.getHeight() * scaleY)));
+    thin.numberWithPrecision(this.getLeft() + ((deltaX * scaleX) - deltaX)),
+    thin.numberWithPrecision(this.getTop() + ((deltaY * scaleY) - deltaY)),
+    thin.numberWithPrecision(this.getWidth() * scaleX),
+    thin.numberWithPrecision(this.getHeight() * scaleY)));
 };
 
 

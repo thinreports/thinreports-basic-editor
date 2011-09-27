@@ -48,10 +48,10 @@ thin.editor.TextOutline.prototype.setBoundsByScale = function(scale, transLate, 
   var shape = this.getTargetShape();
   
   this.setBounds(new goog.math.Rect(
-    thin.editor.numberWithPrecision(this.getLeft() + ((deltaX * scaleX) - deltaX)),
-    thin.editor.numberWithPrecision(this.getTop() + ((deltaY * scaleY) - deltaY)),
-    thin.editor.numberWithPrecision(shape.getAllowWidth(this.getWidth() * scaleX)),
-    thin.editor.numberWithPrecision(shape.getAllowHeight(this.getHeight() * scaleY))));
+    thin.numberWithPrecision(this.getLeft() + ((deltaX * scaleX) - deltaX)),
+    thin.numberWithPrecision(this.getTop() + ((deltaY * scaleY) - deltaY)),
+    thin.numberWithPrecision(shape.getAllowWidth(this.getWidth() * scaleX)),
+    thin.numberWithPrecision(shape.getAllowHeight(this.getHeight() * scaleY))));
 };
 
 

@@ -53,13 +53,13 @@ thin.editor.Line = function(element, layout, stroke) {
    * @type {number}
    * @private
    */
-  this.width_ = thin.editor.numberWithPrecision(Math.abs(x1 - x2));
+  this.width_ = thin.numberWithPrecision(Math.abs(x1 - x2));
   
   /**
    * @type {number}
    * @private
    */  
-  this.height_ = thin.editor.numberWithPrecision(Math.abs(y1 - y2));
+  this.height_ = thin.numberWithPrecision(Math.abs(y1 - y2));
   
   /**
    * @type {number}
@@ -110,7 +110,7 @@ thin.editor.Line.prototype.direction_;
  * @param {number} x1
  */
 thin.editor.Line.prototype.setX1 = function(x1) {
-  x1 = thin.editor.numberWithPrecision(x1);
+  x1 = thin.numberWithPrecision(x1);
   this.x1_ = x1;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x1': x1
@@ -122,7 +122,7 @@ thin.editor.Line.prototype.setX1 = function(x1) {
  * @param {number} x2
  */
 thin.editor.Line.prototype.setX2 = function(x2) {
-  x2 = thin.editor.numberWithPrecision(x2);
+  x2 = thin.numberWithPrecision(x2);
   this.x2_ = x2;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x2': x2
@@ -134,7 +134,7 @@ thin.editor.Line.prototype.setX2 = function(x2) {
  * @param {number} y1
  */
 thin.editor.Line.prototype.setY1 = function(y1) {
-  y1 = thin.editor.numberWithPrecision(y1);
+  y1 = thin.numberWithPrecision(y1);
   this.y1_ = y1;
   this.getLayout().setElementAttributes(this.getElement(), {
     'y1': y1
@@ -146,7 +146,7 @@ thin.editor.Line.prototype.setY1 = function(y1) {
  * @param {number} y2
  */
 thin.editor.Line.prototype.setY2 = function(y2) {
-  y2 = thin.editor.numberWithPrecision(y2);
+  y2 = thin.numberWithPrecision(y2);
   this.y2_ = y2;
   this.getLayout().setElementAttributes(this.getElement(), {
     'y2': y2
@@ -172,7 +172,7 @@ thin.editor.Line.prototype.getCoordinate = function() {
  * @param {number} left
  */
 thin.editor.Line.prototype.setLeft = function(left) {
-  left = thin.editor.numberWithPrecision(left - this.getParentTransLateX());
+  left = thin.numberWithPrecision(left - this.getParentTransLateX());
   this.left_ = left;
   this.setX1(left);
   this.setX2(left + this.getWidth());
@@ -183,7 +183,7 @@ thin.editor.Line.prototype.setLeft = function(left) {
  * @param {number} top
  */
 thin.editor.Line.prototype.setTop = function(top) {
-  top = thin.editor.numberWithPrecision(top - this.getParentTransLateY());
+  top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
   
   var directionType = thin.editor.Line.DIRECTION_;
@@ -205,7 +205,7 @@ thin.editor.Line.prototype.setTop = function(top) {
  * @param {number} width
  */
 thin.editor.Line.prototype.setWidth = function(width) {
-  width = thin.editor.numberWithPrecision(width);
+  width = thin.numberWithPrecision(width);
   this.width_ = width;
   this.setX2(this.getLeft() + width);
 };
@@ -215,7 +215,7 @@ thin.editor.Line.prototype.setWidth = function(width) {
  * @param {number} height
  */
 thin.editor.Line.prototype.setHeight = function(height) {
-  this.height_ = thin.editor.numberWithPrecision(height);
+  this.height_ = thin.numberWithPrecision(height);
   this.setTop(this.getTop());
 };
 

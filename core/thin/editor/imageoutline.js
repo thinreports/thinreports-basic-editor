@@ -43,7 +43,7 @@ goog.mixin(thin.editor.ImageOutline.prototype, thin.editor.ModuleOutline.prototy
  */
 thin.editor.ImageOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
   this.setLeft(clientPosX);
-  this.setTop(thin.editor.numberWithPrecision(clientPosY - this.getHeight()));
+  this.setTop(thin.numberWithPrecision(clientPosY - this.getHeight()));
 };
 
 
@@ -61,10 +61,10 @@ thin.editor.ImageOutline.prototype.setBoundsByScale = function(scale, transLate,
   var lateX = (deltaX * scaleX) - deltaX;
   var lateY = (deltaY * scaleY) - deltaY;
   
-  var left = thin.editor.numberWithPrecision(this.getLeft() + lateX);
-  var top = thin.editor.numberWithPrecision(this.getTop() + lateY);
-  var width = thin.editor.numberWithPrecision(this.getWidth() * scaleX);
-  var height = thin.editor.numberWithPrecision(this.getHeight() * scaleY);
+  var left = thin.numberWithPrecision(this.getLeft() + lateX);
+  var top = thin.numberWithPrecision(this.getTop() + lateY);
+  var width = thin.numberWithPrecision(this.getWidth() * scaleX);
+  var height = thin.numberWithPrecision(this.getHeight() * scaleY);
   
   this.setLeft(left);
   this.setTop(top);

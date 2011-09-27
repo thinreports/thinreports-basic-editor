@@ -158,12 +158,12 @@ thin.editor.SvgDrawer.prototype.onShiftKeyPress_ = function(e, x, y) {
                          Math.abs(startPosX - newClientPos.x),
                          Math.abs(startPosY - newClientPos.y)).getShortest();
       
-      x = thin.editor.numberWithPrecision(isLongStartX ? startPosX - newMaxSize : startPosX + newMaxSize);
-      y = thin.editor.numberWithPrecision(isLongStartY ? startPosY - newMaxSize : startPosY + newMaxSize);
+      x = thin.numberWithPrecision(isLongStartX ? startPosX - newMaxSize : startPosX + newMaxSize);
+      y = thin.numberWithPrecision(isLongStartY ? startPosY - newMaxSize : startPosY + newMaxSize);
       
     } else {
-      x = thin.editor.numberWithPrecision(newClientPos.x);
-      y = thin.editor.numberWithPrecision(newClientPos.y);
+      x = thin.numberWithPrecision(newClientPos.x);
+      y = thin.numberWithPrecision(newClientPos.y);
     }
 
     this.dispatchEvent(new thin.editor.DragEvent(
@@ -171,9 +171,9 @@ thin.editor.SvgDrawer.prototype.onShiftKeyPress_ = function(e, x, y) {
                          this, e.clientX, e.clientY, e, x, y, oldX, oldY));
     
     if (this.revision_ == true) {
-      x = thin.editor.numberWithPrecision(
+      x = thin.numberWithPrecision(
             this.limitX(this.revisionX_, cancelAbsorption));
-      y = thin.editor.numberWithPrecision(
+      y = thin.numberWithPrecision(
             this.limitY(this.revisionY_, cancelAbsorption));
       this.setRevisionCurrentPosition(null);
     };

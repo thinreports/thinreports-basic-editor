@@ -40,25 +40,25 @@ thin.editor.Ellipse = function(element, layout, stroke, fill) {
    * @type {number}
    * @private
    */
-  this.left_ = thin.editor.numberWithPrecision(cx - rx);
+  this.left_ = thin.numberWithPrecision(cx - rx);
   
   /**
    * @type {number}
    * @private
    */
-  this.top_ = thin.editor.numberWithPrecision(cy - ry);
+  this.top_ = thin.numberWithPrecision(cy - ry);
 
   /**
    * @type {number}
    * @private
    */
-  this.width_ = thin.editor.numberWithPrecision(rx * 2);
+  this.width_ = thin.numberWithPrecision(rx * 2);
 
   /**
    * @type {number}
    * @private
    */
-  this.height_ = thin.editor.numberWithPrecision(ry * 2);
+  this.height_ = thin.numberWithPrecision(ry * 2);
   
   /**
    * @type {number}
@@ -92,9 +92,9 @@ goog.mixin(thin.editor.Ellipse.prototype, thin.editor.ModuleElement.prototype);
  * @param {number} left
  */
 thin.editor.Ellipse.prototype.setLeft = function(left) {
-  left = thin.editor.numberWithPrecision(left - this.getParentTransLateX());
+  left = thin.numberWithPrecision(left - this.getParentTransLateX());
   this.left_ = left;
-  var cx = thin.editor.numberWithPrecision(left + this.rx_, 2);
+  var cx = thin.numberWithPrecision(left + this.rx_, 2);
   this.cx_ = cx;
   this.getLayout().setElementAttributes(this.getElement(), {
     'cx': cx
@@ -106,9 +106,9 @@ thin.editor.Ellipse.prototype.setLeft = function(left) {
  * @param {number} top
  */
 thin.editor.Ellipse.prototype.setTop = function(top) {
-  top = thin.editor.numberWithPrecision(top - this.getParentTransLateY());
+  top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
-  var cy = thin.editor.numberWithPrecision(top + this.ry_, 2);
+  var cy = thin.numberWithPrecision(top + this.ry_, 2);
   this.cy_ = cy;
   this.getLayout().setElementAttributes(this.getElement(), {
     'cy': cy
@@ -120,9 +120,9 @@ thin.editor.Ellipse.prototype.setTop = function(top) {
  * @param {number} width
  */
 thin.editor.Ellipse.prototype.setWidth = function(width) {
-  width = thin.editor.numberWithPrecision(width);
+  width = thin.numberWithPrecision(width);
   this.width_ = width;
-  var rx = thin.editor.numberWithPrecision(width / 2, 2);
+  var rx = thin.numberWithPrecision(width / 2, 2);
   this.rx_ = rx;
   this.getLayout().setElementAttributes(this.getElement(), {
     'rx': rx
@@ -134,9 +134,9 @@ thin.editor.Ellipse.prototype.setWidth = function(width) {
  * @param {number} height
  */
 thin.editor.Ellipse.prototype.setHeight = function(height) {
-  height = thin.editor.numberWithPrecision(height);
+  height = thin.numberWithPrecision(height);
   this.height_ = height;
-  var ry = thin.editor.numberWithPrecision(height / 2, 2);
+  var ry = thin.numberWithPrecision(height / 2, 2);
   this.ry_ = ry;
   this.getLayout().setElementAttributes(this.getElement(), {
     'ry': ry

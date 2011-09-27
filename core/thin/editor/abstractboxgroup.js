@@ -86,7 +86,7 @@ thin.editor.AbstractBoxGroup.prototype.createBox_ = function(
  * @param {number} left
  */
 thin.editor.AbstractBoxGroup.prototype.setLeft = function(left) {
-  left = thin.editor.numberWithPrecision(left - this.getParentTransLateX());
+  left = thin.numberWithPrecision(left - this.getParentTransLateX());
   this.left_ = left;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-left': left
@@ -99,7 +99,7 @@ thin.editor.AbstractBoxGroup.prototype.setLeft = function(left) {
  * @param {number} top
  */
 thin.editor.AbstractBoxGroup.prototype.setTop = function(top) {
-  top = thin.editor.numberWithPrecision(top - this.getParentTransLateY());
+  top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-top': top
@@ -112,7 +112,7 @@ thin.editor.AbstractBoxGroup.prototype.setTop = function(top) {
  * @param {number} width
  */
 thin.editor.AbstractBoxGroup.prototype.setWidth = function(width) {
-  width = thin.editor.numberWithPrecision(width);
+  width = thin.numberWithPrecision(width);
   this.width_ = width;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-width': width
@@ -125,7 +125,7 @@ thin.editor.AbstractBoxGroup.prototype.setWidth = function(width) {
  * @param {number} height
  */
 thin.editor.AbstractBoxGroup.prototype.setHeight = function(height) {
-  height = thin.editor.numberWithPrecision(height);
+  height = thin.numberWithPrecision(height);
   this.height_ = height;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-height': height

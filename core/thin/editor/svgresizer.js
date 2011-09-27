@@ -421,7 +421,7 @@ thin.editor.SvgResizer.prototype.onShiftKeyPress_ = function(e, x, y) {
         var limitedHeight = limitedWidth * rateHeight;
         y = isTop ? limitBottom - limitedHeight :
                     limitTop + limitedHeight;
-        y = thin.editor.numberWithPrecision(y);
+        y = thin.numberWithPrecision(y);
       }
       
       if (delta.y != 0) {
@@ -431,7 +431,7 @@ thin.editor.SvgResizer.prototype.onShiftKeyPress_ = function(e, x, y) {
         var limitedWidth = limitedHeight * this.rateWidth_;
         x = isLeft ? limitRight - limitedWidth :
                      limitLeft + limitedWidth;
-        x = thin.editor.numberWithPrecision(x);
+        x = thin.numberWithPrecision(x);
       }
     }
     
@@ -614,10 +614,10 @@ thin.editor.SvgResizer.prototype.initSizeLimitFunction = function() {
 thin.editor.SvgResizer.prototype.defaultSizeLimit_ = function(nowBounds) {
   var width = nowBounds.width;
   var height = nowBounds.height;
-  return new goog.math.Rect(thin.editor.numberWithPrecision(nowBounds.left),
-                            thin.editor.numberWithPrecision(nowBounds.top),
-                            width == 0 ? 1 : thin.editor.numberWithPrecision(width),
-                            height == 0 ? 1 : thin.editor.numberWithPrecision(height));
+  return new goog.math.Rect(thin.numberWithPrecision(nowBounds.left),
+                            thin.numberWithPrecision(nowBounds.top),
+                            width == 0 ? 1 : thin.numberWithPrecision(width),
+                            height == 0 ? 1 : thin.numberWithPrecision(height));
 };
 
 

@@ -69,8 +69,8 @@ thin.editor.LineOutline.prototype.setBoundsByCoordinate = function(startPosX, st
   this.calculateDirection(y1, y2);
   this.setBounds(new goog.math.Rect(
     x1, Math.min(y1, y2), 
-    thin.editor.numberWithPrecision(Math.abs(x1 - x2)),
-    thin.editor.numberWithPrecision(Math.abs(y1 - y2))));
+    thin.numberWithPrecision(Math.abs(x1 - x2)),
+    thin.numberWithPrecision(Math.abs(y1 - y2))));
 };
 
 

@@ -46,7 +46,7 @@ thin.editor.TblockOutline.prototype.setBoundsByCoordinate = function(startPosX, 
   var workspace = this.getLayout().getWorkspace();
   this.setBounds(new goog.math.Rect(
     Math.min(startPosX, clientPosX), startPosY,
-    thin.editor.numberWithPrecision(Math.abs(startPosX - clientPosX)),
+    thin.numberWithPrecision(Math.abs(startPosX - clientPosX)),
     thin.core.Font.getHeight(
       workspace.getUiStatusForFontFamily(), 
       workspace.getUiStatusForFontSize())));
@@ -68,10 +68,10 @@ thin.editor.TblockOutline.prototype.setBoundsByScale = function(scale, transLate
 
   this.setBounds(
     new goog.math.Rect(
-      thin.editor.numberWithPrecision(this.getLeft() + ((deltaX * scaleX) - deltaX)),
-      thin.editor.numberWithPrecision(this.getTop() + ((deltaY * scaleY) - deltaY)),
-      thin.editor.numberWithPrecision(this.getWidth() * scaleX),
-      this.getTargetShape().isMultiMode() ? thin.editor.numberWithPrecision(height * scaleY) : height));
+      thin.numberWithPrecision(this.getLeft() + ((deltaX * scaleX) - deltaX)),
+      thin.numberWithPrecision(this.getTop() + ((deltaY * scaleY) - deltaY)),
+      thin.numberWithPrecision(this.getWidth() * scaleX),
+      this.getTargetShape().isMultiMode() ? thin.numberWithPrecision(height * scaleY) : height));
 };
 
 

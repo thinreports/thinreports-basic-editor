@@ -131,9 +131,8 @@ thin.ui.Input.prototype.editing_ = false;
 
 /**
  * @return {boolean}
- * @private
  */
-thin.ui.Input.prototype.nowEditing_ = function() {
+thin.ui.Input.prototype.isEditing = function() {
   return this.editing_;
 };
 
@@ -143,7 +142,11 @@ thin.ui.Input.prototype.nowEditing_ = function() {
  * @private
  */
 thin.ui.Input.prototype.setEditing_ = function(editing) {
-  this.editing_ = editing;
+  if (editing) {
+    this.editing_ = true;
+  } else {
+    this.editing_ = this.isFocused();
+  }
 };
 
 
@@ -175,6 +178,7 @@ thin.ui.Input.prototype.hasValidator = function() {
   return !goog.array.isEmpty(this.validators_);
 };
 
+
 /**
  * @param {string} value
  * @return {boolean}
@@ -187,6 +191,14 @@ thin.ui.Input.prototype.validate_ = function(value) {
   return goog.array.every(this.validators_, function(validator) {
     return validator.validate(value);
   });
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.ui.Input.prototype.validate = function() {
+  return this.validate_(this.element_.value);
 };
 
 
@@ -263,14 +275,11 @@ thin.ui.Input.prototype.getInternalValue = function() {
 
 
 /**
- * @return {string?}
+ * @return {string}
  */
 thin.ui.Input.prototype.getValue = function() {
   var element = this.getElement();
-  if(element) {
-    return element.value;
-  }
-  return null;
+  return element ? element.value : '';
 };
 
 
@@ -443,12 +452,12 @@ thin.ui.Input.prototype.cancelEditing_ = function() {
 thin.ui.Input.prototype.endEditing_ = function () {
   var element = this.getElement();
   
-  if (!this.nowEditing_()) {
+  if (!this.isEditing()) {
     return;
   }
   
   if (element.value != this.value_) {
-    if (!this.validate_(element.value)) {
+    if (!this.validate()) {
       if (this.hasValidator()) {
         this.dispatchEvent(new thin.ui.InputEvent(
           thin.ui.Input.EventType.INVALID, element.value));
@@ -705,6 +714,14 @@ thin.ui.Input.ValidatorEvent = function(type, value, opt_target) {
 goog.inherits(thin.ui.Input.ValidatorEvent, goog.events.Event);
 
 
+/** @inheritDoc */
+thin.ui.Input.ValidatorEvent.prototype.disposeInternal = function() {
+  goog.base(this, 'disposeInternal');
+  
+  delete this.value_;
+};
+
+
 /**
  * @param {Object=} opt_target
  * @constructor
@@ -715,13 +732,6 @@ thin.ui.Input.NumberValidator = function(opt_target) {
   this.setMethod(this.validate_);
 };
 goog.inherits(thin.ui.Input.NumberValidator, thin.ui.Input.Validator);
-
-
-/**
- * @type {boolean}
- * @private
- */
-thin.ui.Input.NumberValidator.prototype.onlyInteger_ = true;
 
 
 /**
@@ -840,14 +850,6 @@ thin.ui.Input.NumberValidator.prototype.validate_ = function(value) {
 
 /**
  * @param {boolean} allow
- */
-thin.ui.Input.NumberValidator.prototype.setOnlyInteger = function(allow) {
-  this.onlyInteger_ = allow;
-};
-
-
-/**
- * @param {boolean} allow
  * @param {number=} opt_precision
  */
 thin.ui.Input.NumberValidator.prototype.setAllowDecimal = function(allow, opt_precision) {
@@ -859,6 +861,14 @@ thin.ui.Input.NumberValidator.prototype.setAllowDecimal = function(allow, opt_pr
   } else {
     delete this.precision_;
   }
+};
+
+
+/**
+ * @return {number}
+ */
+thin.ui.Input.NumberValidator.prototype.getPrecision = function() {
+  return this.precision_;
 };
 
 
@@ -881,4 +891,14 @@ thin.ui.Input.NumberValidator.prototype.setInputRange = function(opt_minValue, o
  */
 thin.ui.Input.NumberValidator.prototype.setAllowMinus = function(allow) {
   this.allowMinus_ = allow;
+};
+
+
+/** @inheritDoc */
+thin.ui.Input.NumberValidator.prototype.disposeInternal = function() {
+  goog.base(this, 'disposeInternal');
+  
+  delete this.precision_;
+  delete this.minValue_;
+  delete this.maxValue_;
 };

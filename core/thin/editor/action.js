@@ -1457,7 +1457,7 @@ thin.editor.Action.prototype.calculateShift_ = function(
     shiftValue += currentPos % 1;
   }
   
-  return thin.editor.numberWithPrecision(shiftValue);
+  return thin.numberWithPrecision(shiftValue);
 };
 
 
@@ -1481,7 +1481,7 @@ thin.editor.Action.prototype.calculateUnShift_ = function(
     shiftValue -= coordinate % 1;
   }
   
-  return thin.editor.numberWithPrecision(shiftValue);
+  return thin.numberWithPrecision(shiftValue);
 };
 
 
@@ -1919,7 +1919,7 @@ thin.editor.Action.prototype.actionAdjustToCenter = function() {
   if (isSingle) {
     var singleShape = activeShapeManager.getIfSingle();
     var bounds = singleShape.getAffiliationRegionBounds();
-    var basisCenter = thin.editor.numberWithPrecision(
+    var basisCenter = thin.numberWithPrecision(
                             bounds.left + (bounds.width / 2));
     var isTransLate = !isActived && singleShape.instanceOfListShape();
     if (isTransLate) {
@@ -2195,7 +2195,7 @@ thin.editor.Action.prototype.actionAdjustToMiddle = function() {
   if (isSingle) {
     var singleShape = activeShapeManager.getIfSingle();
     var bounds = singleShape.getAffiliationRegionBounds();
-    var basisCenter = thin.editor.numberWithPrecision(
+    var basisCenter = thin.numberWithPrecision(
                           bounds.top + (bounds.height / 2));
     var isTransLate = !isActived && singleShape.instanceOfListShape();
     if (isTransLate) {

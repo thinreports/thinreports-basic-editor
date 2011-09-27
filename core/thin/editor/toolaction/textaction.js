@@ -81,8 +81,8 @@ thin.editor.toolaction.TextAction.prototype.handleEndAction = function(
                         listHelper.getColumnNameByDrawLayer(handler))).getBounds().toBox();
     }
     
-    var allowWidth = thin.editor.numberWithPrecision(boxSize.right - outline.getLeft());
-    var allowHeight = thin.editor.numberWithPrecision(boxSize.bottom - outline.getTop());
+    var allowWidth = thin.numberWithPrecision(boxSize.right - outline.getLeft());
+    var allowHeight = thin.numberWithPrecision(boxSize.bottom - outline.getTop());
     outline.setWidth(width > allowWidth ? allowWidth : width);
     outline.setHeight(height > allowHeight ? allowHeight : height);
     guide.adjustToTargetShapeBounds();

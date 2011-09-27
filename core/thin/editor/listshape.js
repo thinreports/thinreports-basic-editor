@@ -412,7 +412,7 @@ thin.editor.ListShape.prototype.setEnabledForColumn = function(enabled, columnNa
     var blankRangeHeight = listHelper.getBlankRangeBounds().height;
     var boxSizeByShapes = layout.calculateActiveShapeBounds(
           columnShapeForScope.getManager().getShapesManager().get()).toBox();
-    var columnContentHeight = thin.editor.numberWithPrecision(
+    var columnContentHeight = thin.numberWithPrecision(
                                   boxSizeByShapes.bottom - columnShapeForScope.getTop());
     if (isNaN(columnContentHeight)) {
       columnContentHeight = 0;
@@ -422,7 +422,7 @@ thin.editor.ListShape.prototype.setEnabledForColumn = function(enabled, columnNa
       newColumnHeight = columnContentHeight;
 
       if (blankRangeHeight < columnContentHeight) {
-        var newListShapeHeight = thin.editor.numberWithPrecision(
+        var newListShapeHeight = thin.numberWithPrecision(
               captureListShapeHeight + (columnContentHeight - blankRangeHeight));
         this.setHeight(newListShapeHeight);
       }
@@ -463,7 +463,7 @@ thin.editor.ListShape.prototype.setEnabledForColumn = function(enabled, columnNa
  * @param {number} left
  */
 thin.editor.ListShape.prototype.setLeft = function(left) {
-  left = thin.editor.numberWithPrecision(left);
+  left = thin.numberWithPrecision(left);
   this.left_ = left;
   this.id_.setLeft(left + thin.editor.ListShape.DELTAX_);
   this.face_.setLeft(left);
@@ -478,7 +478,7 @@ thin.editor.ListShape.prototype.setLeft = function(left) {
  */
 thin.editor.ListShape.prototype.setTop = function(top) {
   var listShape = thin.editor.ListShape;
-  top = thin.editor.numberWithPrecision(top);
+  top = thin.numberWithPrecision(top);
   this.top_ = top;
   this.id_.setTop(top + ((listShape.IDSHAPEFONT_.size * 0.8) + listShape.DELTAX_));
   this.face_.setTop(top);
@@ -492,7 +492,7 @@ thin.editor.ListShape.prototype.setTop = function(top) {
  * @param {number} width
  */
 thin.editor.ListShape.prototype.setWidth = function(width) {
-  width = thin.editor.numberWithPrecision(width);
+  width = thin.numberWithPrecision(width);
   this.width_ = width;
   this.face_.setWidth(width);
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -505,7 +505,7 @@ thin.editor.ListShape.prototype.setWidth = function(width) {
  * @param {number} height
  */
 thin.editor.ListShape.prototype.setHeight = function(height) {
-  height = thin.editor.numberWithPrecision(height);
+  height = thin.numberWithPrecision(height);
   this.height_ = height;
   this.face_.setHeight(height);
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -607,12 +607,10 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   var baseGroup = proppane.addGroup('基本');
   
   
-  var leftInputProperty = new thin.ui.PropertyPane.InputProperty('左位置');
+  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty('左位置');
   var leftInput = leftInputProperty.getValueControl();
-
-  var leftInputValidation = new thin.ui.Input.NumberValidator(this);
-  leftInputValidation.setAllowDecimal(true, 1);
-  leftInput.setValidator(leftInputValidation);
+  leftInput.getNumberValidator().setAllowDecimal(true, 1);
+  
   leftInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var captureLeft = scope.getLeft();
@@ -640,12 +638,10 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
-  var topInputProperty = new thin.ui.PropertyPane.InputProperty('上位置');
+  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty('上位置');
   var topInput = topInputProperty.getValueControl();
+  topInput.getNumberValidator().setAllowDecimal(true, 1);
   
-  var topInputValidation = new thin.ui.Input.NumberValidator(this);
-  topInputValidation.setAllowDecimal(true, 1);
-  topInput.setValidator(topInputValidation);
   topInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var captureTop = scope.getTop();
@@ -673,12 +669,10 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(topInputProperty, baseGroup, 'top');
   
   
-  var widthInputProperty = new thin.ui.PropertyPane.InputProperty('幅');
+  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty('幅');
   var widthInput = widthInputProperty.getValueControl();
-
-  var widthInputValidation = new thin.ui.Input.NumberValidator(this);
-  widthInputValidation.setAllowDecimal(true, 1);
-  widthInput.setValidator(widthInputValidation);
+  widthInput.getNumberValidator().setAllowDecimal(true, 1);
+  
   widthInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var captureWidth = scope.getWidth();
@@ -729,12 +723,10 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
   
   
-  var heightInputProperty = new thin.ui.PropertyPane.InputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
   var heightInput = heightInputProperty.getValueControl();
-
-  var heightInputValidation = new thin.ui.Input.NumberValidator(this);
-  heightInputValidation.setAllowDecimal(true, 1);
-  heightInput.setValidator(heightInputValidation);
+  heightInput.getNumberValidator().setAllowDecimal(true, 1);
+  
   heightInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var captureHeight = scope.getHeight();

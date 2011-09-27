@@ -12,6 +12,7 @@ css:
     - dialogs.css
     - icon.css
     - inputcolorpicker.css
+    - inputunitchanger.css
     - layout.css
     - menu.css
     - menubutton.css

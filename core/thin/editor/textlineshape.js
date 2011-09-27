@@ -127,7 +127,7 @@ thin.editor.TextLineShape.prototype.getLeft = function() {
   if (!goog.isDef(this.left_)) {
     this.left_ = Number(this.getLayout().getElementAttribute(this.getElement(), 'x'));
   }
-  return thin.editor.numberWithPrecision(this.left_ + this.getParentTransLateX());
+  return thin.numberWithPrecision(this.left_ + this.getParentTransLateX());
 };
 
 
@@ -138,5 +138,5 @@ thin.editor.TextLineShape.prototype.getTop = function() {
   if (!goog.isDef(this.top_)) {
     this.top_ = Number(this.getLayout().getElementAttribute(this.getElement(), 'y'));
   }
-  return thin.editor.numberWithPrecision(this.top_ + this.getParentTransLateY());
+  return thin.numberWithPrecision(this.top_ + this.getParentTransLateY());
 };

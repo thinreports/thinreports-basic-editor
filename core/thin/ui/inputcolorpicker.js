@@ -308,9 +308,14 @@ thin.ui.InputColorPicker.prototype.setEnabled = function(enabled) {
 thin.ui.InputColorPicker.prototype.disposeInternal = function() {
   thin.ui.InputColorPicker.superClass_.disposeInternal.call(this);
   
+  this.indicator_.dispose();
+  this.input_.dispose();
+  this.button_.dispose();
+  
   delete this.indicator_;
-  delete this.labelInput_;
+  delete this.input_;
   delete this.button_;
+  delete this.value_;
   
   this.disposeInternalForStylableControl();
 };

@@ -114,8 +114,8 @@ thin.editor.toolaction.ImageAction.prototype.calculatePosition_ = function(e) {
   var rate = layout.getPixelScale();
 
   return new goog.math.Coordinate(
-           thin.editor.numberWithPrecision((e.clientX - bounds.left) / rate),
-           thin.editor.numberWithPrecision((e.clientY - bounds.top) / rate));
+           thin.numberWithPrecision((e.clientX - bounds.left) / rate),
+           thin.numberWithPrecision((e.clientY - bounds.top) / rate));
 };
 
 

@@ -21,6 +21,7 @@ goog.provide('thin.ui.PropertyPane.ComboBoxProperty');
 goog.provide('thin.ui.PropertyPane.CheckboxProperty');
 goog.provide('thin.ui.PropertyPane.ColorProperty');
 goog.provide('thin.ui.PropertyPane.InputProperty');
+goog.provide('thin.ui.PropertyPane.NumberInputProperty');
 goog.provide('thin.ui.PropertyPane.IdInputProperty');
 goog.provide('thin.ui.PropertyPane.CheckableInputProperty');
 goog.provide('thin.ui.PropertyPane.PropertyRenderer');
@@ -51,6 +52,7 @@ goog.require('thin.ui.Input.Validator');
 goog.require('thin.ui.InputColorPicker');
 goog.require('thin.ui.InputColorPickerRenderer');
 goog.require('thin.ui.FontSelect');
+goog.require('thin.ui.InputUnitChanger');
 
 
 /**
@@ -1206,9 +1208,52 @@ thin.ui.PropertyPane.InputProperty.prototype.enterDocument = function() {
   goog.events.listen(control, 
       [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING], 
       this.handleInactivate, false, this);
+};
+
+
+/**
+ * @param {string} label
+ * @param {string=} opt_label
+ * @constructor
+ * @extends {thin.ui.PropertyPane.Property}
+ */
+thin.ui.PropertyPane.NumberInputProperty = function(label, opt_label) {
+  goog.base(this, label, new thin.ui.InputUnitChanger(opt_label));
+};
+goog.inherits(thin.ui.PropertyPane.NumberInputProperty, thin.ui.PropertyPane.Property);
+
+
+/**
+ * @param {goog.events.Event} e
+ */
+thin.ui.PropertyPane.NumberInputProperty.prototype.handleInactivate = function(e){
+  this.inactivateControl();
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.ui.PropertyPane.NumberInputProperty.prototype.activateControlInternal = function() {
+  goog.dom.forms.focusAndSelect(this.getValueControl().getInput().getElement());
+  return true;
+};
+
+
+/** @inheritDoc */
+thin.ui.PropertyPane.NumberInputProperty.prototype.enterDocument = function() {
+  goog.base(this, 'enterDocument');
   
-  //goog.events.listen(control,
-  //    thin.ui.Input.EventType.INVALID, this.handleInactivate, false, this);
+  var control = this.getValueControl().getInput();
+  
+  // For Common-Change
+  control.addEventListener(
+      goog.ui.Component.EventType.CHANGE, this.dispatchPropertyChangeEvent, false, this);
+  
+  // For Active/Inactive
+  goog.events.listen(control, 
+      [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING], 
+      this.handleInactivate, false, this);
 };
 
 

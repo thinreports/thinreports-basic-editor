@@ -53,6 +53,17 @@ thin.isExactlyEqual = function(a, b) {
 
 
 /**
+ * @param {number} value
+ * @param {number=} opt_precision
+ * @return {number}
+ */
+thin.numberWithPrecision = function(value, opt_precision) {
+  var ex = Math.pow(10, goog.isNumber(opt_precision) ? opt_precision : 1);
+  return Math.round(value * ex) / ex;
+};
+
+
+/**
  * @param {string=} opt_msg
  * @constructor
  * @extends {Error}
