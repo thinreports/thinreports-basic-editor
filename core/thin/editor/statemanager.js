@@ -111,6 +111,30 @@ thin.editor.StateManager.prototype.getActiveShape = function() {
 
 
 /**
+ * @return {Array}
+ */
+thin.editor.StateManager.prototype.getAllShapesWithId = function() {
+  var shapes = this.shapeIds_.getAll();
+  var compare = goog.array.defaultCompare;
+  goog.array.sort(shapes, function(a, b) {
+    return compare(a.getShapeId(), b.getShapeId());
+  });
+  return shapes;
+};
+
+
+/**
+ * @param {Function} fn
+ * @param {Object=} opt_obj
+ */
+thin.editor.StateManager.prototype.forEachShapeWithId = function(fn, opt_obj) {
+  goog.array.forEach(this.getAllShapesWithId(), function(shape) {
+    fn.call(opt_obj, shape.getShapeId(), shape);
+  });
+};
+
+
+/**
  * @return {thin.editor.ActiveShapeManager}
  */
 thin.editor.StateManager.prototype.getActiveShapeByIncludeList = function() {

@@ -85,8 +85,9 @@ thin.ui.Message.alert = function(message, opt_title, opt_callback) {
  * @param {string=} opt_title
  * @param {Function=} opt_callback
  * @param {thin.ui.Dialog.ButtonSet=} opt_buttonSet
+ * @param {Object=} opt_callbackScope
  */
-thin.ui.Message.confirm = function(message, opt_title, opt_callback, opt_buttonSet) {
+thin.ui.Message.confirm = function(message, opt_title, opt_callback, opt_buttonSet, opt_callbackScope) {
   var msg = new thin.ui.Message(thin.ui.getCssName('thin-confirm'));
   
   msg.setButtonSet(opt_buttonSet || thin.ui.Dialog.ButtonSet.typeOkCancel());
@@ -95,7 +96,7 @@ thin.ui.Message.confirm = function(message, opt_title, opt_callback, opt_buttonS
   
   if (goog.isFunction(opt_callback)) {
     msg.addEventListener(goog.ui.Dialog.EventType.SELECT, 
-        opt_callback, false, goog.global);
+        opt_callback, false, opt_callbackScope);
   }
   msg.setVisible(true);
   return msg;

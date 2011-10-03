@@ -106,3 +106,23 @@ thin.editor.formatstyles.NumberFormat.prototype.getDelimiter = function() {
 thin.editor.formatstyles.NumberFormat.prototype.getPrecision = function() {
   return this.precision_;
 };
+
+
+/**
+ * @return {string}
+ */
+thin.editor.formatstyles.NumberFormat.prototype.inspect = function() {
+  return [
+    '桁区切り=' + (this.enabled_ ? '[' + this.delimiter_ + ']' : 'none'),
+    '小数点=' + this.precision_
+  ].join('/');
+};
+
+
+/** @inheritDoc */
+thin.editor.formatstyles.NumberFormat.prototype.disposeInternal = function() {
+  goog.base(this, 'disposeInternal');
+  
+  delete this.delimiter_;
+  delete this.precision_;
+};

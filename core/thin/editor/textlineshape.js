@@ -28,9 +28,9 @@ goog.require('thin.editor.AbstractText');
 thin.editor.TextLineShape = function(element, layout, opt_lineCount) {
 
   if (goog.isNumber(opt_lineCount)) {
-    var classId = thin.editor.TextShape.ClassId;
+    var classId = thin.editor.TextShape.ClassIds;
     layout.setElementAttributes(element, {
-      'class': classId.PREFIX + classId.LINE + opt_lineCount
+      'class': thin.editor.TextShape.CLASSID + classId.LINE + opt_lineCount
     });
   }
   

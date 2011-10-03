@@ -15,8 +15,16 @@
 
 goog.provide('thin.editor.formatstyles.AbstractFormat');
 
+goog.require('goog.Disposable');
+
 
 /**
  * @constructor
+ * @extends {goog.Disposable}
  */
-thin.editor.formatstyles.AbstractFormat = function() {};
+thin.editor.formatstyles.AbstractFormat = function() {
+  goog.base(this);
+};
+goog.inherits(thin.editor.formatstyles.AbstractFormat, goog.Disposable);
+
+thin.editor.formatstyles.AbstractFormat.prototype.inspect = goog.abstractMethod;

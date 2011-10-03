@@ -247,23 +247,13 @@
 .thin-toolbar-split-button-handle {
   border: 1px solid transparent;  
   text-align: center;
-  overflow: hidden; 
-}
-/* FIXME */
-.thin-toolbar-split-button-handle::before {
-  content: url(icons/x-trigger-small.png);
-  display: inline-block;
-}
-.thin-toolbar-split-button-handle-hover {
-/*
-  background: -webkit-gradient(linear, left top, left bottom, 
-      from(rgb(240, 240, 240)), to(rgb(250, 250, 250)));
-*/      
+  overflow: hidden;
+  background: transparent url(icons/x-trigger-small.png) center center no-repeat;
 }
 .thin-toolbar-split-button-handle-active, 
 .thin-toolbar-split-button-handle-open {
   border-color: rgb(140, 140, 140);
-  background: rgb(240, 240, 240) !important;
+  background-color: rgb(240, 240, 240) !important;
   -webkit-box-shadow: inset 0 0 0 1px rgba(100, 100, 100, .1);
 }
 
@@ -284,9 +274,6 @@
   border-left: 0 !important;
   vertical-align: top;
 }
-.thin-toolbar-split-button-horizontal .thin-toolbar-split-button-handle::before {
-  /* Nothing */
-}
 
 .thin-toolbar-split-button-vertical .thin-toolbar-split-button-button-body {
   -webkit-border-top-left-radius: 2px;
@@ -297,10 +284,6 @@
   -webkit-border-bottom-right-radius: 2px;
   height: 11px;
   border-top: 0 !important;
-  line-height: 11px;
-}
-.thin-toolbar-split-button-vertical .thin-toolbar-split-button-handle::before {
-  /* Nothing */
 }
 
 /**

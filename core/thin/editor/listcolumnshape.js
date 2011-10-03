@@ -124,11 +124,11 @@ thin.editor.ListColumnShape.prototype.getColumnName = function() {
  */
 thin.editor.ListColumnShape.prototype.setup = function(opt_element) {
   var layout = this.layout_;
-  var classId = thin.editor.ListShape.ClassId;
+  var classId = thin.editor.ListShape.ClassIds;
 
   var group = new goog.graphics.SvgGroupElement(opt_element ||
                       layout.createSvgElement('g', {
-                        'class': classId['PREFIX'] + classId[this.columnName_]
+                        'class': thin.editor.ListShape.CLASSID + classId[this.columnName_]
                       }), layout);
   group.setTransformation(0, 0, 0, 0, 0);
   

@@ -281,21 +281,6 @@ thin.ui.Dialog.prototype.enterDocument = function() {
 };
 
 
-/**
- * Override.
- * @param {Element} parent
- * @param {boolean=} opt_renderBefore
- * @private
- */
-thin.ui.Dialog.prototype.renderBackground_ = function(parent, opt_renderBefore) {
-  if (opt_renderBefore) {
-    goog.dom.insertSiblingBefore(this.bgEl_, this.getElement());    
-  } else {
-    thin.ui.Dialog.superClass_.renderBackground_.call(this, parent);
-  }
-};
-
-
 /** @inheritDoc */
 thin.ui.Dialog.prototype.exitDocument = function() {
   thin.ui.Dialog.superClass_.exitDocument.call(this);
@@ -398,7 +383,7 @@ thin.ui.Dialog.prototype.decorateInternal = function(element) {
       {'class': tabCatcherClass, 'tabIndex': 0}));
   }
   this.manageBackgroundDom_();
-  this.renderBackground_(element, true);
+  this.renderBackground_();
   
   goog.style.showElement(this.getElement(), false);
 };

@@ -14,7 +14,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.editor.ListShape');
-goog.provide('thin.editor.ListShape.ClassId');
+goog.provide('thin.editor.ListShape.ClassIds');
 
 goog.require('goog.dom');
 goog.require('goog.object');
@@ -54,7 +54,7 @@ thin.editor.ListShape = function(layout, opt_element, opt_referenceElement) {
    */
   this.columns_ = {};
   thin.editor.Component.call(this, layout, opt_element);
-  this.setCss(thin.editor.ListShape.ClassId['PREFIX']);
+  this.setCss(thin.editor.ListShape.CLASSID);
   this.setup_(opt_referenceElement);
 };
 goog.inherits(thin.editor.ListShape, thin.editor.Component);
@@ -62,10 +62,15 @@ goog.mixin(thin.editor.ListShape.prototype, thin.editor.ModuleShape.prototype);
 
 
 /**
+ * @type {string}
+ */
+thin.editor.ListShape.CLASSID = 's-list';
+
+
+/**
  * @enum {string}
  */
-thin.editor.ListShape.ClassId = {
-  'PREFIX': 's-list',
+thin.editor.ListShape.ClassIds = {
   'HEADER': '-header',
   'DETAIL': '-detail',
   'FOOTER': '-footer',
@@ -125,6 +130,14 @@ thin.editor.ListShape.prototype.activeshapes_;
 
 
 /**
+ * @return {string}
+ */
+thin.editor.ListShape.prototype.getClassId = function() {
+  return thin.editor.ListShape.CLASSID;
+};
+
+
+/**
  * @param {Element} groupElement
  * @param {thin.editor.Layout} layout
  * @return {thin.editor.ListShape}
@@ -132,10 +145,10 @@ thin.editor.ListShape.prototype.activeshapes_;
 thin.editor.ListShape.createFromElement = function(groupElement, layout) {
   var shape = new thin.editor.ListShape(layout,
                     /** @type {Element} */(groupElement.cloneNode(false)), groupElement);
-  var classId = thin.editor.ListShape.ClassId;
+  var classId = thin.editor.ListShape.ClassIds;
 
   shape.setIdShape(layout.getElementAttribute(groupElement, 'x-id'),
-    thin.editor.getElementByClassNameForChildNodes(classId['PREFIX'] + classId['ID'], 
+    thin.editor.getElementByClassNameForChildNodes(thin.editor.ListShape.CLASSID + classId['ID'], 
     shape.getElement().childNodes));
   shape.setBounds(new goog.math.Rect(
       Number(layout.getElementAttribute(groupElement, 'x')),
@@ -144,6 +157,7 @@ thin.editor.ListShape.createFromElement = function(groupElement, layout) {
       Number(layout.getElementAttribute(groupElement, 'height'))));
 
   shape.setDisplay(layout.getElementAttribute(groupElement, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(groupElement, 'x-desc'));
   if (layout.getElementAttribute(groupElement, 'x-changing-page') == 'true') {
     shape.setChangingPage(true);
     layout.getHelpers().getListHelper().setChangingPageSetShape(shape);
@@ -184,13 +198,13 @@ thin.editor.ListShape.createFromElement = function(groupElement, layout) {
  */
 thin.editor.ListShape.prototype.setup_ = function(opt_referenceElement) {
   var layout = this.getLayout();
-  var classId = thin.editor.ListShape.ClassId;
+  var classId = thin.editor.ListShape.ClassIds;
   var columnNameForTemp = thin.editor.ListHelper.ColumnName;
   var columnNameForHeader = columnNameForTemp.HEADER;
   var columnNameForDetail = columnNameForTemp.DETAIL;
   var columnNameForPageFooter = columnNameForTemp.PAGEFOOTER;
   var columnNameForFooter = columnNameForTemp.FOOTER;
-  var listShapeFaceClassId = classId['PREFIX'] + classId['FACE'];
+  var listShapeFaceClassId = thin.editor.ListShape.CLASSID + classId['FACE'];
   var stroke = new goog.graphics.Stroke(1, '#BBBBBB');
   var fill = new goog.graphics.SolidFill('#FFFFFF');
   
@@ -325,12 +339,12 @@ thin.editor.ListShape.prototype.getIdShape = function() {
  */
 thin.editor.ListShape.prototype.setIdShape = function(varId, opt_element) {
   var listShape = thin.editor.ListShape;
-  var classId = listShape.ClassId;
+  var classId = listShape.ClassIds;
   var font = listShape.IDSHAPEFONT_;
   var layout = this.getLayout();
 
   var element = opt_element || layout.createSvgElement('text', {
-    'class': classId['PREFIX'] + classId['ID'],
+    'class': thin.editor.ListShape.CLASSID + classId['ID'],
     'font-size': font.size,
     'font-family': font.family,
     'font-weight': 'normal',
@@ -401,7 +415,7 @@ thin.editor.ListShape.prototype.setEnabledForColumn = function(enabled, columnNa
   columnShapeForScope.setEnabledForColumn(enabled);
   layout.setVisibled(columnShapeForScope.getGroup(), enabled);
   this.setEnabledForColumnInternal(enabled, 
-      thin.editor.ListShape.ClassId[columnNameForScope]);
+      thin.editor.ListShape.ClassIds[columnNameForScope]);
 
   if (enabled) {
     var newColumnHeight = columnShapeForScope.getHeightForLastActive();
@@ -853,6 +867,12 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
       }, false, this);
   
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
+  
+  var descProperty = new thin.ui.PropertyPane.InputProperty('説明');
+  descProperty.addEventListener(propEventType.CHANGE,
+      this.setDescPropertyUpdate, false, this);
+  
+  proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
 
@@ -883,6 +903,7 @@ thin.editor.ListShape.prototype.updateProperties = function() {
       proppane.getPropertyControl('list-changing-page').setChecked(this.isChangingPage());
       
       proppane.getPropertyControl('shape-id').setValue(this.getShapeId());
+      proppane.getPropertyControl('desc').setValue(this.getDesc());
       proppane.getChild('list-changing-page').setEnabled(listHelper.isEnableChangingPage(this));
     }
   }, this);

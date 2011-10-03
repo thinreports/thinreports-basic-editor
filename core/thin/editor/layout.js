@@ -37,7 +37,7 @@ goog.require('thin.editor.Helpers');
 goog.require('thin.editor.StateManager');
 goog.require('thin.editor.ShapeIdManager');
 goog.require('thin.editor.ShapeIdManager.DefaultPrefix');
-goog.require('thin.editor.LayoutUtil');
+goog.require('thin.editor.LayoutStructure');
 goog.require('thin.editor.ClipboardShapeManager');
 
 
@@ -136,11 +136,11 @@ thin.editor.Layout.prototype.drawBasicShapeFromElement = function(element, opt_c
       shape = thin.editor.LineShape.createFromElement(element, this, opt_shapeIdManager);
       break;
       
-    case thin.editor.TblockShape.ClassId.PREFIX:
+    case thin.editor.TblockShape.CLASSID:
       shape = thin.editor.TblockShape.createFromElement(element, this, opt_shapeIdManager);
       break;
       
-    case thin.editor.TextShape.ClassId.PREFIX:
+    case thin.editor.TextShape.CLASSID:
       shape = thin.editor.TextShape.createFromElement(element, this, opt_shapeIdManager);
       break;
     
@@ -148,7 +148,7 @@ thin.editor.Layout.prototype.drawBasicShapeFromElement = function(element, opt_c
       shape = thin.editor.ImageShape.createFromElement(element, this, opt_shapeIdManager);
       break;
     
-    case thin.editor.ImageblockShape.ClassId.PREFIX:
+    case thin.editor.ImageblockShape.CLASSID:
       shape = thin.editor.ImageblockShape.createFromElement(element, this, opt_shapeIdManager);
       break;
     
@@ -169,7 +169,7 @@ thin.editor.Layout.prototype.drawBasicShapeFromElement = function(element, opt_c
  */
 thin.editor.Layout.prototype.drawShapeFromElements = function(elements, opt_columnShape) {
   var layout = this;
-  var listClassId = thin.editor.ListShape.ClassId['PREFIX'];
+  var listClassId = thin.editor.ListShape.CLASSID;
 
   goog.array.forEach(elements, function(element) {
     if (layout.getElementAttribute(element, 'class') == listClassId) {
@@ -365,7 +365,7 @@ thin.editor.Layout.prototype.createHelpersElement = function(tagName, attrs) {
  * @return {string}
  */
 thin.editor.Layout.prototype.toXML = function(isOutput) {
-  return thin.editor.LayoutUtil.serialize(this, isOutput);
+  return thin.editor.LayoutStructure.serialize(this, isOutput);
 };
 
 
@@ -1213,7 +1213,7 @@ thin.editor.Layout.prototype.createRectShape = function() {
  */
 thin.editor.Layout.prototype.createListShape = function() {
   var shape = new thin.editor.ListShape(this);
-  var listClassId = thin.editor.ListShape.ClassId;
+  var listClassId = thin.editor.ListShape.ClassIds;
   shape.setIdShape(
       this.getNextShapeId(thin.editor.ShapeIdManager.DefaultPrefix.LIST));
   shape.setEnabledForColumnInternal(thin.editor.HeaderColumnShape.DEFAULT_ENABLED, listClassId['HEADER']);

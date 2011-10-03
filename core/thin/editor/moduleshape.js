@@ -88,6 +88,9 @@ thin.editor.ModuleShape.prototype.display_;
 thin.editor.ModuleShape.prototype.dragger_;
 
 
+thin.editor.ModuleShape.prototype.getClassId = goog.abstractMethod;
+
+
 thin.editor.ModuleShape.prototype.setDefaultOutline = goog.abstractMethod;
 
 
@@ -197,6 +200,29 @@ thin.editor.ModuleShape.prototype.setShapeId = function(newShapeId, opt_shapeIdM
 thin.editor.ModuleShape.prototype.getShapeId = function() {
   return /** @type {string} */(thin.getValIfNotDef(this.shapeId_,
              thin.editor.ModuleShape.DEFAULT_SHAPEID));
+};
+
+
+/**
+ * @this {goog.graphics.Element}
+ * @param {string} desc
+ */
+thin.editor.ModuleShape.prototype.setDesc = function(desc) {
+  if (desc) {
+    this.getLayout().
+      setElementAttributes(this.getElement(), {'x-desc': desc});
+  } else {
+    this.getElement().removeAttribute('x-desc');
+  }
+};
+
+
+/**
+ * @this {goog.graphics.Element}
+ * @return {string}
+ */
+thin.editor.ModuleShape.prototype.getDesc = function() {
+  return this.getLayout().getElementAttribute(this.getElement(), 'x-desc') || '';
 };
 
 
@@ -337,9 +363,9 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
   var multiOutlineHelper = helpers.getMultiOutlineHelper();
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var guide = helpers.getGuideHelper();
-  var listShapeClassIdTemp = thin.editor.ListShape.ClassId;
+  var listShapeClassIdTemp = thin.editor.ListShape.ClassIds;
   var isListShapeFace = layout.getElementAttribute(this.getElement(), 'class') ==
-  goog.object.get(listShapeClassIdTemp, 'PREFIX') + goog.object.get(listShapeClassIdTemp, 'FACE');
+        thin.editor.ListShape.CLASSID + goog.object.get(listShapeClassIdTemp, 'FACE');
   var isAffiliationListShape = this.isAffiliationListShape();
   var affiliationColumnName = this.getAffiliationColumnName();
   
@@ -1078,6 +1104,30 @@ thin.editor.ModuleShape.prototype.setShapeIdForPropertyUpdate = function(e) {
     version.downHandler(function() {
       this.setShapeId(captureShapeId);
       proppane.getPropertyControl('shape-id').setValue(captureShapeId);
+    }, scope);
+  });
+};
+
+
+/**
+ * @this {goog.graphics.Element}
+ * @param {e} thin.ui.PropertyPane.PropertyEvent
+ */
+thin.editor.ModuleShape.prototype.setDescPropertyUpdate = function(e) {
+  var scope = this;
+  var proppane = thin.ui.getComponent('proppane');
+  var desc = e.target.getValue();
+  var captureDesc = this.getDesc();
+  
+  this.getLayout().getWorkspace().normalVersioning(function(version) {
+    version.upHandler(function() {
+      this.setDesc(desc);
+      proppane.getPropertyControl('desc').setValue(desc);
+    }, scope);
+    
+    version.downHandler(function() {
+      this.setDesc(captureDesc);
+      proppane.getPropertyControl('desc').setValue(captureDesc);
     }, scope);
   });
 };

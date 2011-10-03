@@ -1,0 +1,330 @@
+{namespace thin.layout.document.HTMLRenderer}
+
+/**
+ * @param meta
+ * @param paper
+ * @param shapeGroups
+ */
+{template .render}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>{$meta.title} | ThinReports Layout Definition</title>
+    <style>{literal}
+      body {
+        margin: 1em;
+        color: #000;
+        font-size: 12px;
+        font-family: Helvetica, Arial, freesans, Meiryo, "Hiragino Kaku Gothic Pro", "MS PGothic", sans-serif;
+      }
+      #header, #footer {
+        color: #aaa;
+        font-size: 16px;
+      }
+      #header {
+        border-bottom: 1px solid #ccc;
+        padding: 0 0 5px 0;
+        margin: 0 0 20px 0;
+        text-align: right;
+      }
+      #footer {
+        border-top: 1px solid #ccc;
+        padding: 10px 0 0 0;
+        margin: 25px 0 15px 0;
+        text-align: center;
+      }
+      #footer a, #header a {
+        color: inherit;
+        text-decoration: none;
+      }
+      h1 {
+        border-bottom: 5px solid #000;
+        font-size: 36px;
+        margin: 0;
+        padding: 0 0 5px 0;
+      }
+      h2 {
+        margin: 20px 0;
+        padding: 0 0 3px 0;
+        font-size: 22px;
+        border-bottom: 3px solid #555;
+      }
+      h3 {
+        font-size: 18px;
+        border-bottom: 1px solid #888;
+        padding: 0 0 3px 0;
+        margin: 10px 0;
+      }
+      h4 {
+        font-size: 16px;
+        border-bottom: 1px dotted #888;
+        padding: 0 0 3px 0;
+        margin: 10px 0;
+      }
+      h5 {
+        font-size: 16px;
+        padding: 0;
+        margin: 5px 0;
+      }
+      #meta-filename {
+        font-size: 16px;
+        font-style: italic;
+        text-align: right;
+        margin: 0.7em 0 0 0;
+      }
+      .noshapes {
+        margin: 0;
+        padding: 0.7em;
+        background-color: #eee;
+        border: 1px solid #ddd;
+        color: #666;
+        text-align: center;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-raidus: 4px;
+      }
+      .section-shapes {
+        padding-left: 1.5em;
+      }
+      table {
+        width: 100%;
+      }
+      table, table td, table th {
+        border: 1px solid #bbb;
+        border-collapse: collapse;
+      }
+      table th {
+        background-color: #eee;
+        padding: 2px 3px;
+      }
+      table td {
+        padding: 2px 3px;
+      }
+      table tbody tr:hover {
+        background-color: #EDF7FC;
+      }
+      @media print {
+        table, table td, table th {border-color: #555 !important}
+      }
+    {/literal}</style>
+  </head>
+  <body>
+    <div id="header">
+      <a href="http://www.thinreports.org/">ThinReports Layout Difinition</a>
+    </div>
+    <h1>{$meta.title}</h1>
+    <p id="meta-filename">{$meta.fileName}</p>
+    <h2>用紙設定</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>用紙</th>
+        <th>幅</th>
+        <th>高さ</th>
+        <th>向き</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>{$paper.type}</td>
+        <td>{$paper.width}</td>
+        <td>{$paper.height}</td>
+        <td>{$paper.orientation}</td>
+      </tr>
+      </tbody>
+    </table>
+    <h2>オブジェクト</h2>
+    {call .renderShapes}
+      {param shapeGroups: $shapeGroups /}
+    {/call}
+    <div id="footer">
+      <a href="http://www.thinreports.org">http://www.thinreports.org/</a>
+    </div>
+  </body>
+</html>
+{/template}
+
+/**
+ * @param shapeGroups
+ * @param? inList
+ */
+{template .renderShapes private="true"}
+{foreach $shapeGroup in $shapeGroups}
+{switch $shapeGroup.type}
+  {case thin.editor.TblockShape.CLASSID}
+    {call .renderTblockShapes}
+      {param shapeGroup: $shapeGroup /}
+      {param inList: $inList /}
+    {/call}
+  {case thin.editor.ImageblockShape.CLASSID}
+    {call .renderImageblockShapes}
+      {param shapeGroup: $shapeGroup /}
+      {param inList: $inList /}
+    {/call}
+  {case thin.editor.ListShape.CLASSID}
+    {call .renderListShapes}
+      {param shapeGroup: $shapeGroup /}
+    {/call}
+  {default}
+    {call .renderBasicShapes}
+      {param shapeGroup: $shapeGroup /}
+      {param inList: $inList /}
+    {/call}
+{/switch}
+{ifempty}
+  <p class="noshapes">オブジェクトはありません</p>
+{/foreach}
+{/template}
+
+/**
+ * @param shapeName
+ * @param? inList
+ */
+{template .renderShapeTitle private="true"}
+{if $inList}<h5>{else}<h3>{/if}{$shapeName}{if $inList}</h5>{else}</h3>{/if}
+{/template}
+
+/**
+ * @param shapeGroup
+ * @param? inList
+ */
+{template .renderTblockShapes private="true"}
+{call .renderShapeTitle}
+  {param shapeName: $shapeGroup.name /}
+  {param inList: $inList /}
+{/call}
+<table>
+  <thead>
+  <tr>
+    <th rowspan="2">ID</th>
+    <th rowspan="2">参照先ID</th>
+    <th rowspan="2">表示</th>
+    <th rowspan="2">初期値</th>
+    <th colspan="3">書式</th>
+    <th rowspan="2">説明</th>
+  </tr>
+  <tr>
+    <th>基本</th>
+    <th>種別</th>
+    <th>値</th>
+  </tr>
+  </thead>
+  <tbody>
+  {foreach $shape in $shapeGroup.shapes}
+  <tr>
+    <td>{$shape.id}</td>
+    <td>{$shape.refId}</td>
+    <td>{$shape.display}</td>
+    <td>{$shape.value}</td>
+    <td>{$shape.formatBase}</td>
+    <td>{$shape.formatType}</td>
+    <td>{$shape.formatStyle}</td>
+    <td>{$shape.desc}</td>
+  </tr>
+  {/foreach}
+  </tbody>
+</table>
+{/template}
+
+/**
+ * @param shapeGroup
+ * @param? inList
+ */
+{template .renderImageblockShapes private="true"}
+{call .renderShapeTitle}
+  {param shapeName: $shapeGroup.name /}
+  {param inList: $inList /}
+{/call}
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>表示</th>
+    <th>説明</th>
+  </tr>
+  </thead>
+  <tbody>
+  {foreach $shape in $shapeGroup.shapes}
+  <tr>
+    <td>{$shape.id}</td>
+    <td>{$shape.display}</td>
+    <td>{$shape.desc}</td>
+  </tr>
+  {/foreach}
+  </tbody>
+</table>
+{/template}
+
+/**
+ * @param shapeGroup
+ * @param? inList
+ */
+{template .renderBasicShapes private="true"}
+{call .renderShapeTitle}
+  {param shapeName: $shapeGroup.name /}
+  {param inList: $inList /}
+{/call}
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>種別</th>
+    <th>表示</th>
+    <th>説明</th>
+  </tr>
+  </thead>
+  <tbody>
+  {foreach $shape in $shapeGroup.shapes}
+  <tr>
+    <td>{$shape.id}</td>
+    <td>{$shape.typeName}</td>
+    <td>{$shape.display}</td>
+    <td>{$shape.desc}</td>
+  </tr>
+  {/foreach}
+  </tbody>
+</table>
+{/template}
+
+/**
+ * @param shapeGroup
+ */
+{template .renderListShapes private="true"}
+{foreach $list in $shapeGroup.shapes}
+<h3>{$shapeGroup.name}</h3>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>表示</th>
+    <th>自動改頁</th>
+    <th>ヘッダー</th>
+    <th>ページフッター</th>
+    <th>フッター</th>
+    <th>説明</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>{$list.id}</td>
+    <td>{$list.display}</td>
+    <td>{$list.pageBreak}</td>
+    <td>{$list.header}</td>
+    <td>{$list.pageFooter}</td>
+    <td>{$list.footer}</td>
+    <td>{$list.desc}</td>
+  </tr>
+  </tbody>
+</table>
+{foreach $section in $list.sections}
+<h4>{$section.name}</h4>
+<div class="section-shapes">
+{call .renderShapes}
+  {param shapeGroups: $section.shapes /}
+  {param inList: true /}
+{/call}
+</div>
+{/foreach}
+{/foreach}
+{/template}

@@ -153,3 +153,25 @@ thin.editor.formatstyles.PaddingFormat.prototype.getLength = function() {
 thin.editor.formatstyles.PaddingFormat.prototype.getChar = function() {
   return this.char_;
 };
+
+
+/**
+ * @return {string}
+ */
+thin.editor.formatstyles.PaddingFormat.prototype.inspect = function() {
+  return [
+    '長さ=' + this.len_, 
+    '文字=[' + this.char_ + ']', 
+    '方向=' + thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(this.direction_)
+  ].join('/');
+};
+
+
+/** @inheritDoc */
+thin.editor.formatstyles.PaddingFormat.prototype.disposeInternal = function() {
+  goog.base(this, 'disposeInternal');
+  
+  delete this.direction_;
+  delete this.len_;
+  delete this.char_;
+};

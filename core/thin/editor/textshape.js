@@ -14,7 +14,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.editor.TextShape');
-goog.provide('thin.editor.TextShape.ClassId');
+goog.provide('thin.editor.TextShape.ClassIds');
 
 goog.require('goog.array');
 goog.require('goog.string');
@@ -35,7 +35,7 @@ goog.require('thin.editor.TextStyle.VerticalAlignType');
  */
 thin.editor.TextShape = function(element, layout) {
   thin.editor.AbstractTextGroup.call(this, element, layout);
-  this.setCss(thin.editor.TextShape.ClassId.PREFIX);
+  this.setCss(thin.editor.TextShape.CLASSID);
   layout.setElementAttributes(element, {
     'stroke-width': 0
   });
@@ -53,10 +53,15 @@ goog.mixin(thin.editor.TextShape.prototype, thin.editor.ModuleShape.prototype);
 
 
 /**
+ * @type {string}
+ */
+thin.editor.TextShape.CLASSID = 's-text';
+
+
+/**
  * @enum {string}
  */
-thin.editor.TextShape.ClassId = {
-  PREFIX: 's-text',
+thin.editor.TextShape.ClassIds = {
   LINE: '-l',
   BOX: '-box'
 };
@@ -111,6 +116,14 @@ thin.editor.TextShape.prototype.textContent_;
 
 
 /**
+ * @return {string}
+ */
+thin.editor.TextShape.prototype.getClassId = function() {
+  return thin.editor.TextShape.CLASSID;
+};
+
+
+/**
  * @param {Element} element
  * @param {thin.editor.Layout} layout
  * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
@@ -125,6 +138,7 @@ thin.editor.TextShape.createFromElement = function(element, layout, opt_shapeIdM
 
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
   shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
   shape.createTextContentFromElement(element.childNodes);
   shape.setFontItalic(layout.getElementAttribute(element, 'font-style') == 'italic');
@@ -159,8 +173,8 @@ thin.editor.TextShape.createFromElement = function(element, layout, opt_shapeIdM
 thin.editor.TextShape.prototype.createBox_ = function(opt_element) {
   var opt_classId;
   if (!opt_element) {
-    var classId = thin.editor.TextShape.ClassId;
-    opt_classId = classId.PREFIX + classId.BOX;
+    var classId = thin.editor.TextShape.ClassIds;
+    opt_classId = thin.editor.TextShape.CLASSID + classId.BOX;
   }
 
   var box = thin.editor.TblockShape.superClass_.
@@ -178,8 +192,8 @@ thin.editor.TextShape.prototype.createBox_ = function(opt_element) {
 /** @inheritDoc */
 thin.editor.TextShape.prototype.setup = function() {
   var element = this.getElement();
-  var classId = thin.editor.TextShape.ClassId;
-  var boxClassId = classId.PREFIX + classId.BOX;
+  var classId = thin.editor.TextShape.ClassIds;
+  var boxClassId = thin.editor.TextShape.CLASSID + classId.BOX;
   var opt_rectElement = thin.editor.getElementByClassNameForChildNodes(
                                         boxClassId, element.childNodes);
   this.box_ = this.createBox_(opt_rectElement);
@@ -877,16 +891,16 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   kerningInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var kerning = e.target.getValue();
-        if (!thin.isExactlyEqual(kerning, 
-                thin.editor.TextStyle.DEFAULT_KERNING)) {
+        
+        if (kerning === thin.editor.TextStyle.DEFAULT_KERNING) {
           kerning = goog.string.padNumber(Number(kerning), 0);
         }
+        
         var captureSpacing = scope.getKerning();
         var captureWidth = scope.getWidth();
         var captureLeft = scope.getLeft();
         
         workspace.normalVersioning(function(version) {
-        
           version.upHandler(function() {
             this.setKerning(kerning);
             this.setLeft(captureLeft);
@@ -894,7 +908,6 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
             proppane.getPropertyControl('kerning').setValue(kerning);
             proppane.getPropertyControl('width').setValue(this.getWidth());
           }, scope);
-          
           version.downHandler(function() {
             this.setKerning(captureSpacing);
             this.setWidth(captureWidth);
@@ -916,6 +929,12 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
       this.setShapeIdForPropertyUpdate, false, this);
   
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
+  
+  var descProperty = new thin.ui.PropertyPane.InputProperty('説明');
+  descProperty.addEventListener(propEventType.CHANGE,
+      this.setDescPropertyUpdate, false, this);
+  
+  proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
 
@@ -941,7 +960,8 @@ thin.editor.TextShape.prototype.getProperties = function() {
     'text-halign': this.getTextAnchor(),
     'text-valign': valign,
     'kerning': this.getKerning(),
-    'shape-id': this.getShapeId()
+    'shape-id': this.getShapeId(),
+    'desc': this.getDesc()
   };
 };
 
@@ -978,6 +998,7 @@ thin.editor.TextShape.prototype.updateProperties = function() {
           thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
     proppane.getPropertyControl('kerning').setValue(properties['kerning']);
     proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
+    proppane.getPropertyControl('desc').setValue(properties['desc']);
   }, this);
 };
 

@@ -144,6 +144,14 @@ thin.editor.ShapeIdManager.prototype.changePrefix = function(shape, oldPrefix, n
 
 
 /**
+ * @return {Array.<Object>}
+ */
+thin.editor.ShapeIdManager.prototype.getAll = function() {
+  return goog.array.flatten(goog.object.getValues(this.indexes_));
+};
+
+
+/**
  * @param {string} prefix
  * @return {Array}
  */

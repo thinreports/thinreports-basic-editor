@@ -23,7 +23,7 @@ goog.require('thin.ui.StylableControl');
 /**
  * @param {goog.ui.ControlContent} content
  * @param {thin.ui.Icon=} opt_icon
- * @param {thin.ui.ButtonRenderer=} opt_renderer
+ * @param {goog.ui.ButtonRenderer=} opt_renderer
  * @constructor
  * @extends {goog.ui.Button}
  */
@@ -41,6 +41,7 @@ goog.inherits(thin.ui.Button, goog.ui.Button);
 goog.mixin(thin.ui.Button.prototype, thin.ui.StylableControl.prototype);
 
 
+/** @inheritDoc */
 thin.ui.Button.prototype.disposeInternal = function() {
   thin.ui.Button.superClass_.disposeInternal.call(this);
   this.disposeInternalForStylableControl();

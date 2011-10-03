@@ -56,6 +56,14 @@ thin.editor.EllipseShape.DEFAULT_STROKE = new goog.graphics.Stroke(1, '#000000')
 
 
 /**
+ * @return {string}
+ */
+thin.editor.EllipseShape.prototype.getClassId = function() {
+  return thin.editor.EllipseShape.CLASSID;
+};
+
+
+/**
  * @param {Element} element
  * @param {thin.editor.Layout} layout
  * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
@@ -69,6 +77,7 @@ thin.editor.EllipseShape.createFromElement = function(element, layout, opt_shape
                 new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
   shape.setStrokeDashFromType(layout.getElementAttribute(element, 'x-stroke-type'));
   return shape;
 };
@@ -250,6 +259,12 @@ thin.editor.EllipseShape.prototype.createPropertyComponent_ = function() {
       this.setShapeIdForPropertyUpdate, false, this);
   
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
+  
+  var descProperty = new thin.ui.PropertyPane.InputProperty('説明');
+  descProperty.addEventListener(propEventType.CHANGE,
+      this.setDescPropertyUpdate, false, this);
+  
+  proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
 
@@ -268,7 +283,8 @@ thin.editor.EllipseShape.prototype.getProperties = function() {
     'stroke': this.getStroke().getColor(),
     'stroke-width': this.getStrokeWidth(),
     'stroke-dash-type': this.getStrokeDashType(),
-    'shape-id': this.getShapeId()
+    'shape-id': this.getShapeId(),
+    'desc': this.getDesc()
   };
 };
 
@@ -309,6 +325,7 @@ thin.editor.EllipseShape.prototype.updateProperties = function() {
     
     proppane.getPropertyControl('stroke-dash-type').setValue(thin.editor.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
     proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
+    proppane.getPropertyControl('desc').setValue(properties['desc']);
   }, this);
 };
 

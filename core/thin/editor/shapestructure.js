@@ -42,20 +42,21 @@ thin.editor.ShapeStructure.serialize = function(shape) {
   var json = {
     'type': shapeClassId,
     'id': shape.getAttribute('x-id'),
-    'display': shape.getAttribute('x-display') || 'true'
+    'display': shape.getAttribute('x-display') || 'true',
+    'desc': shape.getAttribute('x-desc')
   };
   
   switch(shapeClassId) {
-    case thin.editor.TblockShape.ClassId.PREFIX:
+    case thin.editor.TblockShape.CLASSID:
       json = thin.editor.ShapeStructure.serializeForTblock_(shape, json);
       break;
-    case thin.editor.ListShape.ClassId.PREFIX:
+    case thin.editor.ListShape.CLASSID:
       json = thin.editor.ShapeStructure.serializeForList_(shape, json);
       break;
-    case thin.editor.TextShape.ClassId.PREFIX:
+    case thin.editor.TextShape.CLASSID:
       json = thin.editor.ShapeStructure.serializeForText_(shape, json);
       break;
-    case thin.editor.ImageblockShape.ClassId.PREFIX:
+    case thin.editor.ImageblockShape.CLASSID:
       json = thin.editor.ShapeStructure.serializeForImageblock_(shape, json);
       break;
     default:
@@ -305,8 +306,8 @@ thin.editor.ShapeStructure.getEnabledOfSection = function(element, parentElement
  * @private
  */
 thin.editor.ShapeStructure.serializeForList_ = function(shape, json) {
-  var listShapeClassId = thin.editor.ListShape.ClassId;
-  var classIdPrefix = listShapeClassId['PREFIX'];
+  var listShapeClassId = thin.editor.ListShape.ClassIds;
+  var classIdPrefix = thin.editor.ListShape.CLASSID;
   var headerClassId = classIdPrefix + listShapeClassId['HEADER'];
   var detailClassId = classIdPrefix + listShapeClassId['DETAIL'];
   var listGroupChildNodes = shape.childNodes;
@@ -369,7 +370,7 @@ thin.editor.ShapeStructure.serializeForListForColumn_ = function(
     'svg': {
       'tag': columnGroup.tagName,
       'content': thin.editor.ShapeStructure.serializeToContent(
-                    thin.editor.LayoutUtil.serializeFromChildNodes(
+                    thin.editor.LayoutStructure.serializeFromChildNodes(
                         columnGroup.cloneNode(true).childNodes, 1))
     }
   };
@@ -420,8 +421,8 @@ thin.editor.ShapeStructure.serializeToContent = function(childNodes) {
   var xml;
   goog.array.forEach(childNodes, function(element) {
     xml = thin.editor.serializeToXML(element);
-    xml = thin.editor.LayoutUtil.fixSerializationXmlSpace(xml);
-    xml = thin.editor.LayoutUtil.fixSerializationHref(xml);
+    xml = thin.editor.LayoutStructure.fixSerializationXmlSpace(xml);
+    xml = thin.editor.LayoutStructure.fixSerializationHref(xml);
     content += xml;
   });
   

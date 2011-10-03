@@ -103,10 +103,10 @@ thin.ui.InputUnitChanger.prototype.numberValidator_;
 
 
 /**
- * @type {number}
+ * @type {string|number}
  * @private
  */
-thin.ui.InputUnitChanger.prototype.pixelValue_ = 0;
+thin.ui.InputUnitChanger.prototype.pixelValue_ = '';
 
 
 /**
@@ -127,7 +127,7 @@ thin.ui.InputUnitChanger.prototype.initControls_ = function(opt_label) {
         thin.ui.ButtonRenderer, thin.ui.getCssName(cssClass, 'button'));
   
   this.button_ = new thin.ui.Button(this.getUnit(), null,
-      /** @type {thin.ui.ButtonRenderer} */ (buttonRenderer));
+      /** @type {goog.ui.ButtonRenderer} */ (buttonRenderer));
   this.button_.setSupportedState(goog.ui.Component.State.FOCUSED, false);
   
   this.input_ = new thin.ui.Input(opt_label);
@@ -172,7 +172,7 @@ thin.ui.InputUnitChanger.prototype.getUnit = function() {
 
 
 /**
- * @param {thin.ui.InputUnitChanger.Unit} unit
+ * @param {thin.ui.InputUnitChanger.Unit|string} unit
  */
 thin.ui.InputUnitChanger.prototype.setUnit = function(unit) {
   if (!this.isCurrentUnit(unit)) {
@@ -233,7 +233,6 @@ thin.ui.InputUnitChanger.prototype.enterDocument = function() {
 
 /**
  * @param {goog.events.Event} e
- * @protected
  */
 thin.ui.InputUnitChanger.prototype.handleFocusState = function(e) {
   goog.dom.classes.enable(
@@ -288,13 +287,14 @@ thin.ui.InputUnitChanger.prototype.getNextUnit_ = function() {
  * @private
  */
 thin.ui.InputUnitChanger.prototype.onChange_ = function(e) {
+  var value = e.target.getValue();
   this.setPixelValue_(
-      this.convertToPixelValue_(Number(e.target.getValue()), this.unit_));
+      value !== '' ? this.convertToPixelValue_(Number(value), this.unit_) : '');
 };
 
 
 /**
- * @param {thin.ui.InputUnitChanger.Unit} unit
+ * @param {thin.ui.InputUnitChanger.Unit|string} unit
  * @return {boolean}
  */
 thin.ui.InputUnitChanger.prototype.isCurrentUnit = function(unit) {
@@ -320,6 +320,7 @@ thin.ui.InputUnitChanger.prototype.setEnabled = function(enabled) {
   
   this.input_.setEnabled(enabled);
   this.button_.setEnabled(enabled);
+  
 };
 
 
@@ -372,7 +373,7 @@ thin.ui.InputUnitChanger.prototype.setInputValue_ = function(value) {
  * @private
  */
 thin.ui.InputUnitChanger.prototype.setPixelValue_ = function(value) {
-  this.pixelValue_ = /** @type {number} */ (Number(value));
+  this.pixelValue_ = (value !== '' ? Number(value) : '');
 };
 
 

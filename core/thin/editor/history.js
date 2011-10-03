@@ -502,7 +502,7 @@ thin.editor.HistoryManager.VersionBuffer.prototype.add = function(item) {
   if (this.getCount() == this.maxSize_) {
     var shifted = this.buff_.shift();
     shifted.dispose();
-    delete shifted;
+    shifted = null;
   }
   
   this.buff_[this.getCount()] = item;

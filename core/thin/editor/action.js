@@ -2504,18 +2504,20 @@ thin.editor.Action.prototype.restfulF2Action = function() {
   } else {
     actionTargetShape = singleShapeByGlobal;
   }
-
-  switch (true) {
-    case actionTargetShape.instanceOfTextShape():
-      this.actionTextEdit();
-      break;
-    case actionTargetShape.instanceOfImageShape():
-      this.actionImageEdit();
-      break;
-    case actionTargetShape.instanceOfBlockShape():
-      var proppane = thin.ui.getComponent('proppane');
-      proppane.getChild('shape-id').activateControl();
-      break;
+  
+  if (actionTargetShape) {
+    switch (true) {
+      case actionTargetShape.instanceOfTextShape():
+        this.actionTextEdit();
+        break;
+      case actionTargetShape.instanceOfImageShape():
+        this.actionImageEdit();
+        break;
+      case actionTargetShape.instanceOfBlockShape():
+        var proppane = thin.ui.getComponent('proppane');
+        proppane.getChild('shape-id').activateControl();
+        break;
+    }
   }
 };
 

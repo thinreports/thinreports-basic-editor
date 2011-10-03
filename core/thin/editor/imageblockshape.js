@@ -16,7 +16,7 @@
 goog.provide('thin.editor.ImageblockShape');
 goog.provide('thin.editor.ImageblockShape.PositionX');
 goog.provide('thin.editor.ImageblockShape.PositionY');
-goog.provide('thin.editor.ImageblockShape.ClassId');
+goog.provide('thin.editor.ImageblockShape.ClassIds');
 
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
@@ -38,17 +38,22 @@ goog.require('thin.editor.TextStyle.VerticalAlignType');
 thin.editor.ImageblockShape = function(element, layout) {
   goog.base(this, element, layout);
   
-  this.setCss(thin.editor.ImageblockShape.ClassId.PREFIX);
+  this.setCss(thin.editor.ImageblockShape.CLASSID);
 };
 goog.inherits(thin.editor.ImageblockShape, thin.editor.AbstractBoxGroup);
 goog.mixin(thin.editor.ImageblockShape.prototype, thin.editor.ModuleShape.prototype);
 
 
 /**
+ * @type {string}
+ */
+thin.editor.ImageblockShape.CLASSID = 's-iblock';
+
+
+/**
  * @enum {string}
  */
-thin.editor.ImageblockShape.ClassId = {
-  PREFIX: 's-iblock',
+thin.editor.ImageblockShape.ClassIds = {
   BOX: '-box',
   ID: '-id',
   MARK: '-mark'
@@ -146,6 +151,14 @@ thin.editor.ImageblockShape.prototype.positionY_ =
 
 
 /**
+ * @return {string}
+ */
+thin.editor.ImageblockShape.prototype.getClassId = function() {
+  return thin.editor.ImageblockShape.CLASSID;
+};
+
+
+/**
  * @param {string|thin.editor.ImageblockShape.PositionX} position
  */
 thin.editor.ImageblockShape.prototype.setPositionX = function(position) {
@@ -226,6 +239,7 @@ thin.editor.ImageblockShape.createFromElement = function(element, layout, opt_sh
   
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
   shape.setPositionX(layout.getElementAttribute(element, 'x-position-x'));
   shape.setPositionY(layout.getElementAttribute(element, 'x-position-y'));
 
@@ -324,8 +338,8 @@ thin.editor.ImageblockShape.prototype.updateMarkStyle_ = function() {
  * @private
  */
 thin.editor.ImageblockShape.prototype.getBoxClassId_ = function() {
-  return thin.editor.ImageblockShape.ClassId.PREFIX +
-         thin.editor.ImageblockShape.ClassId.BOX;
+  return thin.editor.ImageblockShape.CLASSID +
+         thin.editor.ImageblockShape.ClassIds.BOX;
 };
 
 
@@ -334,8 +348,8 @@ thin.editor.ImageblockShape.prototype.getBoxClassId_ = function() {
  * @private
  */
 thin.editor.ImageblockShape.prototype.getMarkClassId_ = function() {
-  return thin.editor.ImageblockShape.ClassId.PREFIX +
-         thin.editor.ImageblockShape.ClassId.MARK;
+  return thin.editor.ImageblockShape.CLASSID +
+         thin.editor.ImageblockShape.ClassIds.MARK;
 };
 
 
@@ -344,8 +358,8 @@ thin.editor.ImageblockShape.prototype.getMarkClassId_ = function() {
  * @private
  */
 thin.editor.ImageblockShape.prototype.getIdClassId_ = function() {
-  return thin.editor.ImageblockShape.ClassId.PREFIX +
-         thin.editor.ImageblockShape.ClassId.ID;  
+  return thin.editor.ImageblockShape.CLASSID +
+         thin.editor.ImageblockShape.ClassIds.ID;  
 };
 
 
@@ -587,6 +601,12 @@ thin.editor.ImageblockShape.prototype.createPropertyComponent_ = function() {
       this.setShapeIdForPropertyUpdate, false, this);
   
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
+  
+  var descProperty = new thin.ui.PropertyPane.InputProperty('説明');
+  descProperty.addEventListener(propEventType.CHANGE,
+      this.setDescPropertyUpdate, false, this);
+  
+  proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
 
@@ -602,7 +622,8 @@ thin.editor.ImageblockShape.prototype.getProperties = function() {
     'display': this.getDisplay(),
     'shape-id': this.getShapeId(),
     'position-x': this.getPositionX(),
-    'position-y': this.getPositionY()
+    'position-y': this.getPositionY(),
+    'desc': this.getDesc()
   };
 };
 
@@ -627,6 +648,7 @@ thin.editor.ImageblockShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('position-x').setValue(properties['position-x']);
     proppane.getPropertyControl('position-y').setValue(properties['position-y']);
     proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
+    proppane.getPropertyControl('desc').setValue(properties['desc']);
   }, this);
 };
 

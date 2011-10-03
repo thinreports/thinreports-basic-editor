@@ -66,6 +66,9 @@
 .thin-icon-report-open {
   background-image: url(icons/folder-horizontal-open.png);
 }
+.thin-icon-export-layout-doc {
+  background-image: url(icons/document-export.png);
+}
 .thin-icon-undo {
   background-image: url(icons/arrow-curve-180-left.png);
 }

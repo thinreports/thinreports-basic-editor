@@ -80,7 +80,7 @@ goog.require('thin.editor.toolaction.TblockAction');
 goog.require('thin.editor.toolaction.ListAction');
 goog.require('thin.editor.toolaction.ImageAction');
 goog.require('thin.editor.toolaction.ImageblockAction');
-goog.require('thin.editor.LayoutUtil');
+goog.require('thin.editor.LayoutStructure');
 goog.require('thin.editor.ListHelper');
 goog.require('thin.editor.ListHelper.ColumnName');
 goog.require('thin.editor.TextStyle');
@@ -261,7 +261,7 @@ thin.setup = function() {
       var removeWorkspace = removePage.getContent();
       
       if(removeWorkspace.isChanged()) {
-        var confirmDialogFromTab = new thin.ui.Message.confirm(
+        var confirmDialogFromTab = thin.ui.Message.confirm(
           '内容が変更されています。<br/>保存しますか ？', '確認',
           function(e) {
 
@@ -444,20 +444,46 @@ thin.setup = function() {
     
     // Save report
     var toolSave = toolbar.setupChild('report-save', 
-        new thin.ui.ToolbarButton('保存', new thin.ui.Icon('report-save', iconAlign.TOP)), 
+        new thin.ui.ToolbarSplitButton('保存', new thin.ui.Icon('report-save', iconAlign.TOP)), 
         dom.getElement('tbar-report-save'));
 
-    toolSave.addEventListener(componentEventType.ACTION, function(e) {
+    toolSave.getButton().addEventListener(componentEventType.ACTION, function(e) {
       var workspace = thin.editor.getActiveWorkspace();
       if (workspace) {
         workspace.save();
+        focusWorkspace(e);
+      }
+    }, false);
+    
+    // SaveAs report
+    var toolSaveAs = new thin.ui.MenuItem('名前を付けて保存',
+          new thin.ui.Icon('report-saveas'));
+    toolSave.addItem(toolSaveAs);
+    toolSaveAs.addEventListener(componentEventType.ACTION, function(e) {
+      var workspace = thin.editor.getActiveWorkspace();
+      if (workspace) {
+        workspace.saveAs();
+        focusWorkspace(e);
+      }
+    });
+    
+    toolSave.addItem(new thin.ui.MenuSeparator());
+    
+    // Export ID-Structure
+    var toolExportIds = new thin.ui.MenuItem('レイアウト定義をエクスポート',
+          new thin.ui.Icon('export-layout-doc'));
+    toolSave.addItem(toolExportIds);
+    toolExportIds.addEventListener(componentEventType.ACTION, function(e) {
+      var workspace = thin.editor.getActiveWorkspace();
+      if (workspace) {
+        workspace.generateLayoutDocument();
         focusWorkspace(e);
       }
     });
     
     // Open report file
     var toolOpen = toolbar.setupChild('report-open', 
-        new thin.ui.ToolbarButton('開く', new thin.ui.Icon('report-open')), 
+        new thin.ui.ToolbarButton('開く', new thin.ui.Icon('report-open', iconAlign.TOP)), 
         dom.getElement('tbar-report-open'));
 
     toolOpen.addEventListener(componentEventType.ACTION, function(e) {
@@ -477,7 +503,7 @@ thin.setup = function() {
             tabpane.setSelectedPage(page);
             // Skip Open report file
             file.dispose();
-            delete file;
+            file = null;
             focusWorkspace(e);
             return;
           }
@@ -518,18 +544,6 @@ thin.setup = function() {
           }
         }
       } else {
-        focusWorkspace(e);
-      }
-    });
-    // SaveAs report
-    var toolSaveAs = toolbar.setupChild('report-saveas', 
-        new thin.ui.ToolbarButton('名前を付けて保存', new thin.ui.Icon('report-saveas')), 
-        dom.getElement('tbar-report-saveas'));
-
-    toolSaveAs.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
-      if (workspace) {
-        workspace.saveAs();
         focusWorkspace(e);
       }
     });
@@ -1334,7 +1348,7 @@ thin.setup = function() {
       })();
 
       if (isChanged) {
-        var confirmDialogFromWindow = new thin.ui.Message.confirm(
+        var confirmDialogFromWindow = thin.ui.Message.confirm(
               '保存されていないファイルがあります。<br />保存しますか ？', '確認',
               function(e) {
                 if (e.isYes()) {

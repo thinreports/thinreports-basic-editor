@@ -21,8 +21,7 @@ goog.require('goog.json');
 goog.require('goog.events');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.events.EventType');
-goog.require('goog.ui.Dialog');
-goog.require('goog.ui.Dialog.EventType');
+goog.require('thin.ui.Message');
 goog.require('thin.editor.HistoryManager');
 goog.require('thin.editor.HistoryManager.Mode');
 goog.require('thin.editor.Action');
@@ -33,6 +32,7 @@ goog.require('thin.editor.TextStyle.VerticalAlignType');
 goog.require('thin.layout.File');
 goog.require('thin.layout.FormatPage.PaperType');
 goog.require('thin.layout.FormatPage.DirectionType');
+goog.require('thin.layout.document');
 goog.require('thin.core.Font');
 
 
@@ -283,11 +283,11 @@ thin.editor.Workspace.prototype.workspaceKeyEventListenerByUp_ = function(e) {
 thin.editor.Workspace.create = function(file) {
   try {
     var format = thin.layout.Format.parse(file.getContent());
-    var xmlString = thin.editor.LayoutUtil.restoreStructure(format.getSvg());
+    var xmlString = thin.editor.LayoutStructure.restoreStructure(format.getSvg());
     
     thin.Compatibility.applyIf(format.getVersion(), '=', '0.6.0.pre3',
       function() {
-        xmlString = thin.editor.LayoutUtil.restoreKerningFromLetterSpacing(xmlString);
+        xmlString = thin.editor.LayoutStructure.restoreKerningFromLetterSpacing(xmlString);
       });
     
     var doc = new DOMParser().parseFromString(xmlString, "application/xml");
@@ -537,6 +537,20 @@ thin.editor.Workspace.prototype.saveAs = function() {
   }
   // return saved?
   return this.saveAs_(opt_path);
+};
+
+
+thin.editor.Workspace.prototype.generateLayoutDocument = function() {
+  if (this.isNew()) {
+    var msg = 'エクスポートするには、レイアウトを保存する必要があります。<br/>保存しますか？';
+    thin.ui.Message.confirm(msg, '確認', function(e) {
+      if (e.isYes() && this.saveAs_()) {
+        thin.layout.document.generate(this.getLayout());
+      }
+    }, thin.ui.Dialog.ButtonSet.typeYesNoCancel(), this);
+  } else {
+    thin.layout.document.generate(this.getLayout());
+  }
 };
 
 

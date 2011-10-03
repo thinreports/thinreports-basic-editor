@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.LayoutUtil');
+goog.provide('thin.editor.LayoutStructure');
 
 goog.require('goog.array');
 goog.require('goog.dom');
@@ -25,7 +25,7 @@ goog.require('thin.editor.ShapeStructure');
  * @enum {string}
  * @private
  */
-thin.editor.LayoutUtil.Template_ = {
+thin.editor.LayoutStructure.Template_ = {
   CONNECT: '-',
   SHAPE: 'SHAPE',
   LAYOUT: 'LAYOUT'
@@ -36,7 +36,7 @@ thin.editor.LayoutUtil.Template_ = {
  * @enum {RegExp}
  * @private
  */
-thin.editor.LayoutUtil.Regexp_ = {
+thin.editor.LayoutStructure.Regexp_ = {
   RESTORE: /<!--LAYOUT([\s\S]+?)LAYOUT-->/g,
   CLEAN: /<!--SHAPE.+?SHAPE-->/g
 };
@@ -47,7 +47,7 @@ thin.editor.LayoutUtil.Regexp_ = {
  * @param {boolean} isOutput
  * @return {string}
  */
-thin.editor.LayoutUtil.serialize = function(layout, isOutput) {
+thin.editor.LayoutStructure.serialize = function(layout, isOutput) {
   var listHelper = layout.getHelpers().getListHelper();
   var isActive = !listHelper.isActived();
   
@@ -60,9 +60,9 @@ thin.editor.LayoutUtil.serialize = function(layout, isOutput) {
   }
 
   if (isOutput) {
-    var resultXml = thin.editor.LayoutUtil.serializeToSvgSection(layout);
+    var resultXml = thin.editor.LayoutStructure.serializeToSvgSection_(layout);
   } else {
-    var resultXml = thin.editor.LayoutUtil.serializeToFingerPrint(layout);
+    var resultXml = thin.editor.LayoutStructure.serializeToFingerPrint_(layout);
   }
   
   if (isActive) {
@@ -82,10 +82,106 @@ thin.editor.LayoutUtil.serialize = function(layout, isOutput) {
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {string} svg
  * @return {string}
  */
-thin.editor.LayoutUtil.serializeToSvgSection = function(layout) {
+thin.editor.LayoutStructure.restoreStructure = function(svg) {
+  var reg = thin.editor.LayoutStructure.Regexp_;
+  return svg.replace(reg.RESTORE, '$1').replace(reg.CLEAN, '');
+};
+
+
+/**
+ * @param {string} xml
+ * @return {string}
+ * @deprecated Will be removed in 0.7.0.
+ */
+thin.editor.LayoutStructure.restoreKerningFromLetterSpacing = function(xml) {
+  return xml.replace(/(<[^>]*?)(letter-spacing="(.+?)")([^<]*?>)/g, function(str, prefix, attr, spacing, suffix) {
+    if (spacing == 'normal') {
+      spacing = thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING;
+    }
+    return prefix + 'kerning="' + spacing + '"' + suffix;
+  });
+};
+
+
+/**
+ * @param {string} xml
+ * @return {string}
+ */
+thin.editor.LayoutStructure.fixSerializationXmlSpace = function(xml) {
+  return xml.replace(/(<[^>]*?)(space="preserve")([^<]*?>)/g, "$1" + 'xml:space="preserve"' + "$3");
+};
+
+
+/**
+ * @param {string} xml
+ * @return {string}
+ */
+thin.editor.LayoutStructure.fixSerializationHref = function(xml) {
+  return xml.replace(/(<[^>]*?)(href="(.+?)")([^<]*?>)/g, function(str, prefix, attr, dataUrl, suffix) {
+    return prefix + 'xlink:href="' + dataUrl + '"' + suffix;
+  });
+};
+
+
+/**
+ * @param {NodeList} shapes
+ * @param {number=} opt_sectionDepth
+ * @return {NodeList}
+ */
+thin.editor.LayoutStructure.serializeFromChildNodes = function(shapes, opt_sectionDepth) {
+  var layoutUtilTemplate = thin.editor.LayoutStructure.Template_;
+  
+  var shapeTemplateFactor = layoutUtilTemplate.SHAPE;
+  var layoutTemplateFactor = layoutUtilTemplate.LAYOUT;
+
+  var layoutTemplate = goog.array.repeat(layoutTemplateFactor, 2);
+  var shapeTemplate = goog.array.repeat(shapeTemplateFactor, 2);  
+  
+  if (goog.isNumber(opt_sectionDepth)) {
+    var depth = goog.string.repeat(layoutUtilTemplate.CONNECT, opt_sectionDepth);
+    
+    shapeTemplate[0] = depth + shapeTemplate[0];
+    shapeTemplate[1] += depth;
+    layoutTemplate[0] = depth + layoutTemplate[0];
+    layoutTemplate[1] += depth;
+    
+    goog.array.forEachRight(shapes, function(shape, i) {
+      if (thin.editor.LayoutStructure.isSerializableShape_(shape)) {
+        goog.dom.replaceNode(thin.editor.LayoutStructure.formatStructure_(
+          thin.editor.ShapeStructure.serialize(shape), shapeTemplate), shape);
+      // When visibility of shape is hidden and shape has not id.
+      } else if (thin.editor.LayoutStructure.isHiddenShape_(shape)) {
+        goog.dom.replaceNode(thin.editor.LayoutStructure.formatStructure_(
+          thin.editor.serializeToXML(shape), layoutTemplate), shape);
+      }
+    });
+  } else {
+    goog.array.forEachRight(shapes, function(shape, i) {
+      if (thin.editor.LayoutStructure.isSerializableShape_(shape)) {
+        goog.dom.insertSiblingBefore(thin.editor.LayoutStructure.formatStructure_(
+          thin.editor.ShapeStructure.serialize(shape), shapeTemplate), shape);
+        goog.dom.replaceNode(thin.editor.LayoutStructure.formatStructure_(
+          thin.editor.serializeToXML(shape), layoutTemplate), shape);
+      // When visibility of shape is hidden and shape has not id.
+      } else if (thin.editor.LayoutStructure.isHiddenShape_(shape)) {
+        goog.dom.replaceNode(thin.editor.LayoutStructure.formatStructure_(
+          thin.editor.serializeToXML(shape), layoutTemplate), shape);        
+      }
+    });
+  }
+  return shapes;
+};
+
+
+/**
+ * @param {thin.editor.Layout} layout
+ * @return {string}
+ * @private
+ */
+thin.editor.LayoutStructure.serializeToSvgSection_ = function(layout) {
   var canvasClassId = thin.editor.Layout.CANVAS_CLASS_ID;
   var shapes = layout.getManager().getShapesManager().get();
 
@@ -130,12 +226,12 @@ thin.editor.LayoutUtil.serializeToSvgSection = function(layout) {
   clone.removeAttribute('style');
   clone.removeAttribute('class');
 
-  thin.editor.LayoutUtil.serializeFromChildNodes(
+  thin.editor.LayoutStructure.serializeFromChildNodes(
       goog.dom.getElementsByTagNameAndClass('g', canvasClassId, 
       /** @type {Element} */(clone))[0].childNodes);
   var xml = thin.editor.serializeToXML(/** @type {Element} */(clone));
-  xml = thin.editor.LayoutUtil.fixSerializationXmlSpace(xml);
-  xml = thin.editor.LayoutUtil.fixSerializationHref(xml);
+  xml = thin.editor.LayoutStructure.fixSerializationXmlSpace(xml);
+  xml = thin.editor.LayoutStructure.fixSerializationHref(xml);
   return xml;
 };
 
@@ -143,10 +239,11 @@ thin.editor.LayoutUtil.serializeToSvgSection = function(layout) {
 /**
  * @param {thin.editor.Layout} layout
  * @return {string}
+ * @private
  */
-thin.editor.LayoutUtil.serializeToFingerPrint = function(layout) {
-  var listShapeClassId = thin.editor.ListShape.ClassId;
-  var classIdPrefix = listShapeClassId['PREFIX'];
+thin.editor.LayoutStructure.serializeToFingerPrint_ = function(layout) {
+  var listShapeClassId = thin.editor.ListShape.ClassIds;
+  var classIdPrefix = thin.editor.ListShape.CLASSID;
   var detailClassId = classIdPrefix + listShapeClassId['DETAIL'];
 
   var canvasElement = goog.dom.getElementsByTagNameAndClass('g', 
@@ -172,95 +269,11 @@ thin.editor.LayoutUtil.serializeToFingerPrint = function(layout) {
 
 
 /**
- * @param {string} xml
- * @return {string}
- */
-thin.editor.LayoutUtil.fixSerializationXmlSpace = function(xml) {
-  return xml.replace(/(<[^>]*?)(space="preserve")([^<]*?>)/g, "$1" + 'xml:space="preserve"' + "$3");
-};
-
-
-/**
- * @param {string} xml
- * @return {string}
- */
-thin.editor.LayoutUtil.fixSerializationHref = function(xml) {
-  return xml.replace(/(<[^>]*?)(href="(.+?)")([^<]*?>)/g, function(str, prefix, attr, dataUrl, suffix) {
-    return prefix + 'xlink:href="' + dataUrl + '"' + suffix;
-  });
-};
-
-
-/**
- * @param {string} xml
- * @return {string}
- * @deprecated Will be removed in 0.7.0.
- */
-thin.editor.LayoutUtil.restoreKerningFromLetterSpacing = function(xml) {
-  return xml.replace(/(<[^>]*?)(letter-spacing="(.+?)")([^<]*?>)/g, function(str, prefix, attr, spacing, suffix) {
-    if (spacing == 'normal') {
-      spacing = thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING;
-    }
-    return prefix + 'kerning="' + spacing + '"' + suffix;
-  });
-};
-
-
-/**
- * @param {NodeList} shapes
- * @param {number=} opt_sectionDepth
- * @return {NodeList}
- */
-thin.editor.LayoutUtil.serializeFromChildNodes = function(shapes, opt_sectionDepth) {
-  var layoutUtilTemplate = thin.editor.LayoutUtil.Template_;
-  
-  var shapeTemplateFactor = layoutUtilTemplate.SHAPE;
-  var layoutTemplateFactor = layoutUtilTemplate.LAYOUT;
-
-  var layoutTemplate = goog.array.repeat(layoutTemplateFactor, 2);
-  var shapeTemplate = goog.array.repeat(shapeTemplateFactor, 2);  
-  
-  if (goog.isNumber(opt_sectionDepth)) {
-    var depth = goog.string.repeat(layoutUtilTemplate.CONNECT, opt_sectionDepth);
-    
-    shapeTemplate[0] = depth + shapeTemplate[0];
-    shapeTemplate[1] += depth;
-    layoutTemplate[0] = depth + layoutTemplate[0];
-    layoutTemplate[1] += depth;
-    
-    goog.array.forEachRight(shapes, function(shape, i) {
-      if (thin.editor.LayoutUtil.isSerializableShape(shape)) {
-        goog.dom.replaceNode(thin.editor.LayoutUtil.formatStructure_(
-          thin.editor.ShapeStructure.serialize(shape), shapeTemplate), shape);
-      // When visibility of shape is hidden and shape has not id.
-      } else if (thin.editor.LayoutUtil.isHiddenShape(shape)) {
-        goog.dom.replaceNode(thin.editor.LayoutUtil.formatStructure_(
-          thin.editor.serializeToXML(shape), layoutTemplate), shape);
-      }
-    });
-  } else {
-    goog.array.forEachRight(shapes, function(shape, i) {
-      if (thin.editor.LayoutUtil.isSerializableShape(shape)) {
-        goog.dom.insertSiblingBefore(thin.editor.LayoutUtil.formatStructure_(
-          thin.editor.ShapeStructure.serialize(shape), shapeTemplate), shape);
-        goog.dom.replaceNode(thin.editor.LayoutUtil.formatStructure_(
-          thin.editor.serializeToXML(shape), layoutTemplate), shape);
-      // When visibility of shape is hidden and shape has not id.
-      } else if (thin.editor.LayoutUtil.isHiddenShape(shape)) {
-        goog.dom.replaceNode(thin.editor.LayoutUtil.formatStructure_(
-          thin.editor.serializeToXML(shape), layoutTemplate), shape);        
-      }
-    });
-  }
-  return shapes;
-};
-
-
-/**
  * @param {Element} element
  * @return {boolean}
+ * @private
  */
-thin.editor.LayoutUtil.isSerializableShape = function(element) {
+thin.editor.LayoutStructure.isSerializableShape_ = function(element) {
   var id = element.getAttribute('x-id');
   return goog.isString(id) && 
          thin.editor.ModuleShape.DEFAULT_SHAPEID != id;
@@ -270,9 +283,10 @@ thin.editor.LayoutUtil.isSerializableShape = function(element) {
 /**
  * @param {Element} element
  * @return {boolean}
+ * @private
  */
-thin.editor.LayoutUtil.isHiddenShape = function(element) {
-  return !thin.editor.LayoutUtil.isSerializableShape(element) &&
+thin.editor.LayoutStructure.isHiddenShape_ = function(element) {
+  return !thin.editor.LayoutStructure.isSerializableShape_(element) &&
       element.getAttribute('x-display') == 'false';
 };
 
@@ -283,16 +297,6 @@ thin.editor.LayoutUtil.isHiddenShape = function(element) {
  * @return {Comment}
  * @private
  */
-thin.editor.LayoutUtil.formatStructure_ = function(content, template) {
+thin.editor.LayoutStructure.formatStructure_ = function(content, template) {
   return goog.dom.getDocument().createComment(template[0] + content + template[1]);
-};
-
-
-/**
- * @param {string} svg
- * @return {string}
- */
-thin.editor.LayoutUtil.restoreStructure = function(svg) {
-  var reg = thin.editor.LayoutUtil.Regexp_;
-  return svg.replace(reg.RESTORE, '$1').replace(reg.CLEAN, '');
 };

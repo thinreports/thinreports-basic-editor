@@ -14,8 +14,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.editor.ImageShape');
-goog.provide('thin.editor.ImageShape.horizonPosition');
-goog.provide('thin.editor.ImageShape.verticalPosition');
 
 goog.require('goog.graphics.SvgImageElement');
 goog.require('thin.core.File.Mode');
@@ -92,6 +90,14 @@ thin.editor.ImageShape.prototype.file_;
 
 
 /**
+ * @return {string}
+ */
+thin.editor.ImageShape.prototype.getClassId = function() {
+  return thin.editor.ImageShape.CLASSID;
+};
+
+
+/**
  * @param {Element} element
  * @param {thin.editor.Layout} layout
  * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
@@ -101,6 +107,7 @@ thin.editor.ImageShape.createFromElement = function(element, layout, opt_shapeId
   var shape = new thin.editor.ImageShape(element, layout);
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
   shape.setNaturalSize(Number(layout.getElementAttribute(element, 'x-natural-width')), 
                        Number(layout.getElementAttribute(element, 'x-natural-height')));
   
@@ -376,6 +383,12 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
       this.setShapeIdForPropertyUpdate, false, this);
   
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
+  
+  var descProperty = new thin.ui.PropertyPane.InputProperty('説明');
+  descProperty.addEventListener(propEventType.CHANGE,
+      this.setDescPropertyUpdate, false, this);
+  
+  proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
 
@@ -390,7 +403,8 @@ thin.editor.ImageShape.prototype.getProperties = function() {
     'width': this.getWidth(),
     'height': this.getHeight(),
     'display': this.getDisplay(),
-    'shape-id': this.getShapeId()
+    'shape-id': this.getShapeId(),
+    'desc': this.getDesc()
   };
 };
 
@@ -411,6 +425,7 @@ thin.editor.ImageShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('height').setValue(properties['height']);
     proppane.getPropertyControl('display').setChecked(properties['display']);
     proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
+    proppane.getPropertyControl('desc').setValue(properties['desc']);
   }, this);
 };
 

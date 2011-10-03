@@ -52,3 +52,19 @@ thin.editor.formatstyles.DatetimeFormat.DEFAULT_FORMAT = '';
 thin.editor.formatstyles.DatetimeFormat.prototype.getFormat = function() {
   return this.format_;
 };
+
+
+/**
+ * @return {string}
+ */
+thin.editor.formatstyles.DatetimeFormat.prototype.inspect = function() {
+  return this.format_;
+};
+
+
+/** @inheritDoc */
+thin.editor.formatstyles.DatetimeFormat.prototype.disposeInternal = function() {
+  goog.base(this, 'disposeInternal');
+  
+  delete this.format_;
+};

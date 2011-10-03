@@ -246,7 +246,7 @@ thin.ui.Input.prototype.setLabel = function(label) {
  * @param {string|number} value
  */
 thin.ui.Input.prototype.setValue = function(value) {
-  value = goog.isDef(value) ? String(value) : null;
+  value = goog.isDef(value) ? String(value) : '';
   if (goog.isFunction(this.formatHandler_)) {
     value = this.formatHandler_(value);
   }  

@@ -94,7 +94,6 @@ thin.ui.Checkbox.prototype.canDecorate = function() {
 };
 
 
-/** @inheritDoc */
 thin.ui.Checkbox.prototype.updateView = function() {
   var el = this.getElement();
   if (el) {
