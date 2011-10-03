@@ -62,6 +62,7 @@ QString JsExtFile::getTextFileContent(const QString &fileName)
         }
 
         QTextStream out(&file);
+        out.setCodec("UTF-8");
         return out.readAll();
     }
     return "";
@@ -77,6 +78,7 @@ bool JsExtFile::saveFile(const QString &fileName,
     }
 
     QTextStream in(&file);
+    in.setCodec("UTF-8");
     in << content;
 
     return true;
