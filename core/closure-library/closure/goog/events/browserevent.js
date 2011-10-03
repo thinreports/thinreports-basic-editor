@@ -253,10 +253,7 @@ goog.events.BrowserEvent.prototype.init = function(e, opt_currentTarget) {
     // denied exception. See:
     // https://bugzilla.mozilla.org/show_bug.cgi?id=497780
     if (goog.userAgent.GECKO) {
-      /** @preserveTry */
-      try {
-        goog.reflect.sinkValue(relatedTarget.nodeName);
-      } catch (err) {
+      if (!goog.reflect.canAccessProperty(relatedTarget, 'nodeName')) {
         relatedTarget = null;
       }
     }
@@ -340,7 +337,7 @@ goog.events.BrowserEvent.prototype.isMouseActionButton = function() {
 
 
 /**
- * @inheritDoc
+ * @override
  */
 goog.events.BrowserEvent.prototype.stopPropagation = function() {
   goog.events.BrowserEvent.superClass_.stopPropagation.call(this);
@@ -353,7 +350,7 @@ goog.events.BrowserEvent.prototype.stopPropagation = function() {
 
 
 /**
- * @inheritDoc
+ * @override
  */
 goog.events.BrowserEvent.prototype.preventDefault = function() {
   goog.events.BrowserEvent.superClass_.preventDefault.call(this);
@@ -400,9 +397,7 @@ goog.events.BrowserEvent.prototype.getBrowserEvent = function() {
 };
 
 
-/**
- * @inheritDoc
- */
+/** @override */
 goog.events.BrowserEvent.prototype.disposeInternal = function() {
   goog.events.BrowserEvent.superClass_.disposeInternal.call(this);
   this.event_ = null;

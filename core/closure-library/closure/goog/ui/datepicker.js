@@ -98,13 +98,6 @@ goog.ui.DatePicker = function(opt_date, opt_dateTimeSymbols, opt_domHelper) {
    * @private
    */
   this.keyHandlers_ = {};
-
-  /**
-   * Dom helper.
-   * @type {goog.dom.DomHelper}
-   * @private
-   */
-  this.dom_ = opt_domHelper || goog.dom.getDomHelper();
 };
 goog.inherits(goog.ui.DatePicker, goog.ui.Component);
 
@@ -547,10 +540,10 @@ goog.ui.DatePicker.prototype.selectNone = function() {
 
 
 /**
- * @return {goog.date.Date} The selected date.
+ * @return {goog.date.Date} The selected date or null if nothing is selected.
  */
 goog.ui.DatePicker.prototype.getDate = function() {
-  return this.date_;
+  return this.date_ && this.date_.clone();
 };
 
 
@@ -702,7 +695,7 @@ goog.ui.DatePicker.prototype.updateFooterRow_ = function() {
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.DatePicker.prototype.decorateInternal = function(el) {
   goog.ui.DatePicker.superClass_.decorateInternal.call(this, el);
 
@@ -768,14 +761,14 @@ goog.ui.DatePicker.prototype.decorateInternal = function(el) {
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.DatePicker.prototype.createDom = function() {
   goog.ui.DatePicker.superClass_.createDom.call(this);
   this.decorateInternal(this.getElement());
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.DatePicker.prototype.enterDocument = function() {
   goog.ui.DatePicker.superClass_.enterDocument.call(this);
 
@@ -787,7 +780,7 @@ goog.ui.DatePicker.prototype.enterDocument = function() {
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.DatePicker.prototype.exitDocument = function() {
   goog.ui.DatePicker.superClass_.exitDocument.call(this);
   this.destroyMenu_();
@@ -805,7 +798,7 @@ goog.ui.DatePicker.prototype.create =
     goog.ui.DatePicker.prototype.decorate;
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.DatePicker.prototype.disposeInternal = function() {
   goog.ui.DatePicker.superClass_.disposeInternal.call(this);
 

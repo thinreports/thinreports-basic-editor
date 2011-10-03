@@ -41,6 +41,7 @@ goog.locale.setLocale = function(localeName) {
 /**
  * Retrieve the currnet locale
  * @return {string} Current locale name string.
+ * @deprecated Use goog.LOCALE and goog.i18n instead.
  */
 goog.locale.getLocale = function() {
   if (!goog.locale.activeLocale_) {
@@ -174,8 +175,8 @@ goog.locale.getLocalizedCountryName = function(languageCode,
         goog.locale.getLocale());
   }
   var code = goog.locale.getRegionSubTag(languageCode);
-  return code in opt_localeSymbols.COUNTRY ?
-      opt_localeSymbols.COUNTRY[code] : languageCode;
+  return code in opt_localeSymbols['COUNTRY'] ?
+      opt_localeSymbols['COUNTRY'][code] : languageCode;
 };
 
 
@@ -217,8 +218,8 @@ goog.locale.getLocalizedLanguageName = function(languageCode,
         goog.locale.getLocale());
   }
   var code = goog.locale.getLanguageSubTag(languageCode);
-  return code in opt_localeSymbols.LANGUAGE ?
-      opt_localeSymbols.LANGUAGE[code] : languageCode;
+  return code in opt_localeSymbols['LANGUAGE'] ?
+      opt_localeSymbols['LANGUAGE'][code] : languageCode;
 };
 
 

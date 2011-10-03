@@ -32,6 +32,12 @@ goog.require('goog.userAgent.jscript');
 
 
 /**
+ * @define {boolean} Whether to always assume the garbage collector is good.
+ */
+goog.events.ASSUME_GOOD_GC = false;
+
+
+/**
  * Helper function for returning an object that is used for the lookup trees.
  * This might use an object pool depending on the script engine.
  * @return { {count_: number, remaining_: number} } A new or reused object.
@@ -76,7 +82,7 @@ goog.events.pools.getProxy;
 
 /**
  * Sets the callback function to use in the proxy.
- * @param {Function} cb The callback function to use.
+ * @param {function(string, (Event|undefined))} cb The callback function to use.
  */
 goog.events.pools.setProxyCallbackFunction;
 
@@ -127,7 +133,8 @@ goog.events.pools.releaseEvent;
 
 
 (function() {
-  var BAD_GC = goog.userAgent.jscript.HAS_JSCRIPT &&
+  var BAD_GC = !goog.events.ASSUME_GOOD_GC &&
+      goog.userAgent.jscript.HAS_JSCRIPT &&
       !goog.userAgent.jscript.isVersion('5.7');
 
   // These functions are shared between the pools' createObject functions and
@@ -154,7 +161,14 @@ goog.events.pools.releaseEvent;
   function getProxy() {
     // Use a local var f to prevent one allocation.
     var f = function(eventObject) {
-      return proxyCallbackFunction.call(f.src, f.key, eventObject);
+      var v = proxyCallbackFunction.call(f.src, f.key, eventObject);
+      // NOTE(user): In IE, we hack in a capture phase. However, if
+      // there is inline event handler which tries to prevent default (for
+      // example <a href="..." onclick="return false">...</a>) in a
+      // descendant element, the prevent default will be overridden
+      // by this listener if this listener were to return true. Hence, we
+      // return undefined.
+      if (!v) return v;
     };
     return f;
   }
@@ -220,7 +234,7 @@ goog.events.pools.releaseEvent;
     };
 
     goog.events.pools.getEvent = function() {
-      return /** @type {goog.events.BrowserEvent} */ (eventPool.getObject());
+      return /** @type {!goog.events.BrowserEvent} */ (eventPool.getObject());
     };
 
     goog.events.pools.releaseEvent = function(obj) {

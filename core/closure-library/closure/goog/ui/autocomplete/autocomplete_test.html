@@ -17,8 +17,11 @@ See the COPYING file for details.
   goog.require('goog.dom.a11y.Role');
   goog.require('goog.dom.a11y.State');
   goog.require('goog.events.EventTarget');
+  goog.require('goog.events.EventHandler');
+  goog.require('goog.testing.events');
   goog.require('goog.testing.jsunit');
   goog.require('goog.ui.AutoComplete');
+  goog.require('goog.ui.AutoComplete.EventType');
   goog.require('goog.ui.AutoComplete.Renderer');
   goog.require('goog.string');
 </script>
@@ -87,6 +90,20 @@ TestRend.prototype.getHilitedRowDiv = function() {
   return this.rowDivs_[this.hilitedRow_];
 };
 
+TestRend.prototype.getRowDiv = function(index) {
+  return this.rowDivs_[index];
+};
+
+var handler;
+
+function setUp() {
+  handler = new goog.events.EventHandler();
+}
+
+function tearDown() {
+  handler.dispose();
+}
+
 /**
  * Make sure results are truncated (or not) by setMaxMatches.
  */
@@ -110,6 +127,60 @@ function testMaxMatches() {
   ac.setToken('the');
   assertEquals(4, rend.getRenderedRows().length);
   ac.setToken('');
+}
+
+function testHiliteViaMouse() {
+  var ds = new MockDS();
+  var rend = new TestRend();
+  var select = new MockSelect();
+  var updates = 0;
+  var row = null;
+  var rowNode = null;
+  handler.listen(rend,
+      goog.ui.AutoComplete.EventType.ROW_HILITE,
+      function(evt) {
+        updates++;
+        rowNode = evt.rowNode;
+      });
+  var ac = new goog.ui.AutoComplete(ds, rend, select);
+  ac.setMaxMatches(4);
+  ac.setToken('the');
+  // Need to set the startRenderingRows_ time to something long ago, otherwise
+  // the mouse event will not be fired.  (The autocomplete logic waits for some
+  // time to pass after rendering before firing mouseover events.)
+  rend.startRenderingRows_ = -1;
+  var hilitedRowDiv = rend.getRowDiv(3);
+  goog.testing.events.fireMouseOverEvent(hilitedRowDiv);
+  assertEquals(2, updates);
+  assertTrue(goog.string.contains(rowNode.innerHTML, 'mice@myotherdomain.com'));
+}
+
+function testSuggestionsUpdateEvent() {
+  var ds = new MockDS();
+  var rend = new TestRend();
+  var select = new MockSelect();
+  var ac = new goog.ui.AutoComplete(ds, rend, select);
+  var updates = 0;
+  handler.listen(ac,
+      goog.ui.AutoComplete.EventType.SUGGESTIONS_UPDATE,
+      function() {
+        updates++;
+      });
+
+  ac.setToken('the');
+  assertEquals(1, updates);
+
+  ac.setToken('beeb');
+  assertEquals(2, updates);
+
+  ac.setToken('ford');
+  assertEquals(3, updates);
+
+  ac.dismiss();
+  assertEquals(4, updates);
+
+  ac.setToken('dent');
+  assertEquals(5, updates);
 }
 
 function checkHilitedIndex(renderer, index) {
@@ -140,6 +211,13 @@ function testHiliteNextPrev_default() {
   var rend = new TestRend();
   var select = new MockSelect();
   var ac = new goog.ui.AutoComplete(ds, rend, select);
+
+  var updates = 0;
+  handler.listen(rend,
+      goog.ui.AutoComplete.EventType.ROW_HILITE,
+      function() {
+        updates++;
+      });
 
   // make sure 'next' and 'prev' don't explode before any token is set
   ac.hiliteNext();
@@ -174,6 +252,8 @@ function testHiliteNextPrev_default() {
     ac.hilitePrev();
     checkHilitedIndex(rend, 0);
   }
+  // 21 changes in the loop above (3 * 7)
+  assertEquals(21, updates);
 }
 
 /**
@@ -481,6 +561,36 @@ function testDismiss() {
   ac = new goog.ui.AutoComplete(ds, rend, select);
   ac.setToken('t');
   ac.dismiss();
+}
+
+function testTriggerSuggestionsOnUpdate() {
+  var ds = new MockDS();
+  var rend = new TestRend();
+  var select = new MockSelect();
+  var ac = new goog.ui.AutoComplete(ds, rend, select);
+
+  var dismissCalled = 0;
+  rend.dismiss = function() {
+    dismissCalled++;
+  };
+
+  var updateCalled = 0;
+  select.update = function(opt_force) {
+    updateCalled++;
+  };
+
+  // Normally, menu is dismissed after selecting row (without updating).
+  ac.setToken('the');
+  ac.selectHilited();
+  assertEquals(1, dismissCalled);
+  assertEquals(0, updateCalled);
+
+  // But not if we re-trigger on update.
+  ac.setTriggerSuggestionsOnUpdate(true);
+  ac.setToken('the');
+  ac.selectHilited();
+  assertEquals(1, dismissCalled);
+  assertEquals(1, updateCalled);
 }
 
 function testDispose() {

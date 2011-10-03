@@ -33,7 +33,7 @@ goog.color.parse = function(str) {
   var result = {};
   str = String(str);
 
-  var maybeHex = goog.color.prependPoundIfNecessary_(str);
+  var maybeHex = goog.color.prependHashIfNecessaryHelper(str);
   if (goog.color.isValidHexColor_(maybeHex)) {
     result.hex = goog.color.normalizeHex(maybeHex);
     result.type = 'hex';
@@ -54,6 +54,20 @@ goog.color.parse = function(str) {
     }
   }
   throw Error(str + ' is not a valid color string');
+};
+
+
+/**
+ * Determines if the given string can be parsed as a color.
+ *     {@see goog.color.parse}.
+ * @param {string} str Potential color string.
+ * @return {boolean} True if str is in a format that can be parsed to a color.
+ */
+goog.color.isValidColor = function(str) {
+  var maybeHex = goog.color.prependHashIfNecessaryHelper(str);
+  return !!(goog.color.isValidHexColor_(maybeHex) ||
+            goog.color.isValidRgbColor_(str).length ||
+            goog.color.names && goog.color.names[str.toLowerCase()]);
 };
 
 
@@ -140,9 +154,9 @@ goog.color.rgbToHex = function(r, g, b) {
       isNaN(b) || b < 0 || b > 255) {
     throw Error('"(' + r + ',' + g + ',' + b + '") is not a valid RGB color');
   }
-  var hexR = goog.color.prependZeroIfNecessary_(r.toString(16));
-  var hexG = goog.color.prependZeroIfNecessary_(g.toString(16));
-  var hexB = goog.color.prependZeroIfNecessary_(b.toString(16));
+  var hexR = goog.color.prependZeroIfNecessaryHelper(r.toString(16));
+  var hexG = goog.color.prependZeroIfNecessaryHelper(g.toString(16));
+  var hexB = goog.color.prependZeroIfNecessaryHelper(b.toString(16));
   return '#' + hexR + hexG + hexB;
 };
 
@@ -366,24 +380,24 @@ goog.color.isValidRgbColor_ = function(str) {
 
 /**
  * Takes a hex value and prepends a zero if it's a single digit.
+ * Small helper method for use by goog.color and friends.
  * @param {string} hex Hex value to prepend if single digit.
  * @return {string} hex value prepended with zero if it was single digit,
  *    otherwise the same value that was passed in.
- * @private
  */
-goog.color.prependZeroIfNecessary_ = function(hex) {
+goog.color.prependZeroIfNecessaryHelper = function(hex) {
   return hex.length == 1 ? '0' + hex : hex;
 };
 
 
 /**
  * Takes a string a prepends a '#' sign if one doesn't exist.
+ * Small helper method for use by goog.color and friends.
  * @param {string} str String to check.
  * @return {string} The value passed in, prepended with a '#' if it didn't
  *    already have one.
- * @private
  */
-goog.color.prependPoundIfNecessary_ = function(str) {
+goog.color.prependHashIfNecessaryHelper = function(str) {
   return str.charAt(0) == '#' ? str : '#' + str;
 };
 
@@ -403,7 +417,7 @@ goog.color.rgbStyle_ = function(rgb) {
 /**
  * Converts an HSV triplet to an RGB array.  V is brightness because b is
  *   reserved for blue in RGB.
- * @param {number} h Hue value in [0, 1].
+ * @param {number} h Hue value in [0, 360].
  * @param {number} s Saturation value in [0, 1].
  * @param {number} brightness brightness in [0, 255].
  * @return {!Array.<number>} Array of r,g,b values.
@@ -569,7 +583,7 @@ goog.color.hexToHsv = function(hex) {
 
 /**
  * Converts from h,s,v values to a hex string
- * @param {number} h Hue, in [0, 1].
+ * @param {number} h Hue, in [0, 360].
  * @param {number} s Saturation, in [0, 1].
  * @param {number} v Value, in [0, 255].
  * @return {string} hex representation of the color.
@@ -581,7 +595,7 @@ goog.color.hsvToHex = function(h, s, v) {
 
 /**
  * Converts from an HSV array to a hex string
- * @param {Array} hsv Array of [h, s, v] in [[0, 1], [0, 1], [0, 255]].
+ * @param {Array} hsv Array of [h, s, v] in [[0, 360], [0, 1], [0, 255]].
  * @return {string} hex representation of the color.
  */
 goog.color.hsvArrayToHex = function(hsv) {

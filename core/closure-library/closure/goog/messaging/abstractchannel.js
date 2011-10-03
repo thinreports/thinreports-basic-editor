@@ -44,7 +44,7 @@ goog.messaging.AbstractChannel = function() {
   /**
    * The services registered for this channel.
    * @type {Object.<string, {callback: function((string|!Object)),
-                             jsonEncoded: boolean}>}
+                             objectPayload: boolean}>}
    * @private
    */
   this.services_ = {};
@@ -74,7 +74,7 @@ goog.messaging.AbstractChannel.prototype.logger =
  * Immediately calls opt_connectCb if given, and is otherwise a no-op. If
  * subclasses have configuration that needs to happen before the channel is
  * connected, they should override this and {@link #isConnected}.
- * @inheritDoc
+ * @override
  */
 goog.messaging.AbstractChannel.prototype.connect = function(opt_connectCb) {
   if (opt_connectCb) {
@@ -87,31 +87,31 @@ goog.messaging.AbstractChannel.prototype.connect = function(opt_connectCb) {
  * Always returns true. If subclasses have configuration that needs to happen
  * before the channel is connected, they should override this and
  * {@link #connect}.
- * @inheritDoc
+ * @override
  */
 goog.messaging.AbstractChannel.prototype.isConnected = function() {
   return true;
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.messaging.AbstractChannel.prototype.registerService =
-    function(serviceName, callback, opt_jsonEncoded) {
+    function(serviceName, callback, opt_objectPayload) {
   this.services_[serviceName] = {
     callback: callback,
-    jsonEncoded: !!opt_jsonEncoded
+    objectPayload: !!opt_objectPayload
   };
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.messaging.AbstractChannel.prototype.registerDefaultService =
     function(callback) {
   this.defaultService_ = callback;
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.messaging.AbstractChannel.prototype.send = goog.abstractMethod;
 
 
@@ -136,9 +136,10 @@ goog.messaging.AbstractChannel.prototype.deliver = function(
     return;
   }
 
-  payload = this.decodePayload(serviceName, payload, service.jsonEncoded);
-  if (goog.isDefAndNotNull(payload)) {
-    service.callback(payload);
+  var decodedPayload =
+      this.decodePayload(serviceName, payload, service.objectPayload);
+  if (goog.isDefAndNotNull(decodedPayload)) {
+    service.callback(decodedPayload);
   }
 };
 
@@ -150,7 +151,7 @@ goog.messaging.AbstractChannel.prototype.deliver = function(
  *
  * @param {string} serviceName The name of the service receiving the message.
  * @param {string|!Object} payload The contents of the message.
- * @return {?{callback: function((string|!Object)), jsonEncoded: boolean}} The
+ * @return {?{callback: function((string|!Object)), objectPayload: boolean}} The
  *     service object for the given service, or null if none was found.
  * @protected
  */
@@ -161,8 +162,8 @@ goog.messaging.AbstractChannel.prototype.getService = function(
     return service;
   } else if (this.defaultService_) {
     var callback = goog.partial(this.defaultService_, serviceName);
-    var jsonEncoded = goog.isObject(payload);
-    return {callback: callback, jsonEncoded: jsonEncoded};
+    var objectPayload = goog.isObject(payload);
+    return {callback: callback, objectPayload: objectPayload};
   }
 
   this.logger.warning('Unknown service name "' + serviceName + '"');
@@ -176,15 +177,15 @@ goog.messaging.AbstractChannel.prototype.getService = function(
  *
  * @param {string} serviceName The name of the service receiving the message.
  * @param {string|!Object} payload The contents of the message.
- * @param {boolean} jsonEncoded Whether the service expects JSON or a plain
- *     string.
+ * @param {boolean} objectPayload Whether the service expects an object or a
+ *     plain string.
  * @return {string|Object} The payload in the format expected by the service, or
  *     null if something went wrong.
  * @protected
  */
 goog.messaging.AbstractChannel.prototype.decodePayload = function(
-    serviceName, payload, jsonEncoded) {
-  if (jsonEncoded && goog.isString(payload)) {
+    serviceName, payload, objectPayload) {
+  if (objectPayload && goog.isString(payload)) {
     try {
       return goog.json.parse(payload);
     } catch (err) {
@@ -192,14 +193,14 @@ goog.messaging.AbstractChannel.prototype.decodePayload = function(
                           ', was "' + payload + '"');
       return null;
     }
-  } else if (!jsonEncoded && !goog.isString(payload)) {
+  } else if (!objectPayload && !goog.isString(payload)) {
     return goog.json.serialize(payload);
   }
   return payload;
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.messaging.AbstractChannel.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   goog.dispose(this.logger);

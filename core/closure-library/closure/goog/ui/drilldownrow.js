@@ -173,7 +173,7 @@ goog.ui.DrilldownRow.prototype.enterDocument = function() {
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.DrilldownRow.prototype.createDom = function() {
   this.setElementInternal(goog.ui.DrilldownRow.createRowNode_(
       this.html_, this.getDomHelper().getDocument()));
@@ -207,14 +207,14 @@ goog.ui.DrilldownRow.prototype.addChildAt = function(child, index, opt_render) {
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.DrilldownRow.prototype.removeChild = function(child) {
   goog.dom.removeNode(child.getElement());
-  goog.ui.DrilldownRow.superClass_.removeChild.call(this, child);
+  return goog.ui.DrilldownRow.superClass_.removeChild.call(this, child);
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.DrilldownRow.prototype.disposeInternal = function() {
   delete this.html_;
   this.children_ = null;
@@ -275,11 +275,7 @@ goog.ui.DrilldownRow.prototype.findIndex = function() {
   if (!parent) {
     throw Error('Component has no parent');
   }
-  for (var i = 0; i < parent.getChildCount(); i++) {
-    if (parent.getChildAt(i) == this) {
-      return i;
-    }
-  }
+  return parent.indexOfChild(this);
 };
 
 

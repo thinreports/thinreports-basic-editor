@@ -15,18 +15,17 @@
 
 goog.provide('thin.ui.CheckboxRenderer');
 
-goog.require('goog.ui.ControlRenderer');
-goog.require('thin.ui');
+goog.require('goog.ui.CheckboxRenderer');
 
 
 /**
  * @constructor
- * @extends {goog.ui.ControlRenderer}
+ * @extends {goog.ui.CheckboxRenderer}
  */
 thin.ui.CheckboxRenderer = function() {
-  goog.ui.ControlRenderer.call(this);
+  goog.base(this);
 };
-goog.inherits(thin.ui.CheckboxRenderer, goog.ui.ControlRenderer);
+goog.inherits(thin.ui.CheckboxRenderer, goog.ui.CheckboxRenderer);
 goog.addSingletonGetter(thin.ui.CheckboxRenderer);
 
 
@@ -36,10 +35,7 @@ goog.addSingletonGetter(thin.ui.CheckboxRenderer);
 thin.ui.CheckboxRenderer.CSS_CLASS = thin.ui.getCssName('thin-checkbox');
 
 
-/**
- * @param {goog.ui.Control} ctrl
- * @return {Element}
- */
+/** @inheritDoc */
 thin.ui.CheckboxRenderer.prototype.createDom = function(ctrl) {
   var cssClass = this.getCssClass();
   var dom = ctrl.getDomHelper();
@@ -50,18 +46,13 @@ thin.ui.CheckboxRenderer.prototype.createDom = function(ctrl) {
 };
 
 
-/**
- * @return {string}
- */
+/** @inheritDoc */
 thin.ui.CheckboxRenderer.prototype.getCssClass = function() {
   return thin.ui.CheckboxRenderer.CSS_CLASS;
 };
 
 
-/**
- * @param {Element} element
- * @return {Element}
- */
+/** @inheritDoc */
 thin.ui.CheckboxRenderer.prototype.getContentElement = function(element) {
   return element;
 };

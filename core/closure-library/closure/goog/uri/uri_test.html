@@ -504,6 +504,9 @@ function testQueryDataIsEmpty() {
   qd = new goog.Uri.QueryData('a=A&b=B&a=A2&b=B2&c=C');
   qd.clear();
   assertTrue(qd.isEmpty());
+
+  qd = new goog.Uri.QueryData('');
+  assertTrue(qd.isEmpty());
 }
 
 function testQueryDataContainsKey() {
@@ -822,6 +825,20 @@ function testQueryNotModified() {
   assertEquals('?foo=', new goog.Uri('?foo=').toString());
   assertEquals('?foo=bar', new goog.Uri('?foo=bar').toString());
   assertEquals('?&=&=&', new goog.Uri('?&=&=&').toString());
+}
+
+function testRelativePathNotUnescapedWithColon() {
+  assertEquals('javascript%3aalert(1)',
+               new goog.Uri('javascript%3aalert(1)').toString());
+}
+
+function testAbsolutePathUnescapedWithColon() {
+  assertEquals('/javascript:alert(1)',
+               new goog.Uri('/javascript%3aalert(1)').toString());
+  assertEquals('http://www.foo.bar/path:with:colon/x',
+               new goog.Uri('http://www.foo.bar/path:with:colon/x').toString());
+  assertEquals('//www.foo.bar/path:with:colon/x',
+               new goog.Uri('//www.foo.bar/path:with:colon/x').toString());
 }
 
 function assertDotRemovedEquals(expected, path) {

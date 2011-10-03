@@ -13,6 +13,7 @@ See the COPYING file for details.
 <script>
   goog.require('goog.debug.EntryPointMonitor');
   goog.require('goog.debug.ErrorHandler');
+  goog.require('goog.debug.ErrorHandler.ProtectedFunctionError');
   goog.require('goog.events');
   goog.require('goog.events.EventTarget');
   goog.require('goog.events.EventType');
@@ -41,6 +42,18 @@ See the COPYING file for details.
 
     goog.events.protectBrowserEventEntryPoint(errorHandler);
 
+    var protectedHandleBrowserEvent_ = goog.events.handleBrowserEvent_;
+    goog.events.handleBrowserEvent_ = function(evt) {
+      try {
+        protectedHandleBrowserEvent_(evt);
+      } catch (e) {
+        assertTrue(
+            e instanceof goog.debug.ErrorHandler.ProtectedFunctionError);
+      }
+    };
+    goog.events.pools.setProxyCallbackFunction(
+        goog.events.handleBrowserEvent_);
+
     var bodyEl = document.body;
     goog.events.listen(bodyEl, goog.events.EventType.CLICK, function(e){
       throw Error;
@@ -61,6 +74,21 @@ See the COPYING file for details.
     } else {
       element.fireEvent('onclick', element.ownerDocument.createEventObject());
     }
+  }
+
+  function testSelfRemove() {
+    var et1 = new goog.events.EventTarget();
+    var callback = function() {
+      // This listener removes itself during event dispatching, so it
+      // is marked as 'removed' but not actually removed until after event
+      // dispatching ends.
+      goog.events.removeAll(et1, 'click');
+
+      // Test that goog.events.getListener ignores events marked as 'removed'.
+      assertNull(goog.events.getListener(et1, 'click', callback));
+    };
+    var key = goog.events.listen(et1, 'click', callback);
+    goog.events.dispatchEvent(et1, 'click');
   }
 
   function testHasListener() {

@@ -38,6 +38,7 @@ goog.provide('goog.testing.events.Event');
 goog.require('goog.events');
 goog.require('goog.events.BrowserEvent');
 goog.require('goog.events.BrowserEvent.MouseButton');
+goog.require('goog.events.BrowserFeature');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventType');
 goog.require('goog.events.KeyCodes');
@@ -319,7 +320,7 @@ goog.testing.events.fireMouseDownEvent =
     function(target, opt_button, opt_coords, opt_eventProperties) {
 
   var button = opt_button || goog.events.BrowserEvent.MouseButton.LEFT;
-  button = goog.userAgent.IE ?
+  button = !goog.events.BrowserFeature.HAS_W3C_BUTTON ?
       goog.events.BrowserEvent.IEButtonMap[button] : button;
   return goog.testing.events.fireMouseButtonEvent_(
       goog.events.EventType.MOUSEDOWN, target, button, opt_coords,
@@ -342,7 +343,7 @@ goog.testing.events.fireMouseDownEvent =
 goog.testing.events.fireMouseUpEvent =
     function(target, opt_button, opt_coords, opt_eventProperties) {
   var button = opt_button || goog.events.BrowserEvent.MouseButton.LEFT;
-  button = goog.userAgent.IE ?
+  button = !goog.events.BrowserFeature.HAS_W3C_BUTTON ?
       goog.events.BrowserEvent.IEButtonMap[button] : button;
   return goog.testing.events.fireMouseButtonEvent_(
       goog.events.EventType.MOUSEUP, target, button, opt_coords,
@@ -434,7 +435,7 @@ goog.testing.events.fireContextMenuEvent = function(target, opt_coords) {
       goog.events.BrowserEvent.MouseButton.RIGHT;
   var contextmenu =
       new goog.testing.events.Event(goog.events.EventType.CONTEXTMENU, target);
-  contextmenu.button = goog.userAgent.IE ?
+  contextmenu.button = !goog.events.BrowserFeature.HAS_W3C_BUTTON ?
       goog.events.BrowserEvent.IEButtonMap[button] : button;
   contextmenu.ctrlKey = goog.userAgent.MAC;
   goog.testing.events.setEventClientXY_(contextmenu, opt_coords);
@@ -499,6 +500,19 @@ goog.testing.events.fireContextMenuSequence = function(target, opt_coords) {
 goog.testing.events.firePopStateEvent = function(target, state) {
   var e = new goog.testing.events.Event(goog.events.EventType.POPSTATE, target);
   e.state = state;
+  return goog.testing.events.fireBrowserEvent(e);
+};
+
+
+/**
+ * Simulate a focus event on the given target.
+ * @param {EventTarget} target The target for the event.
+ * @return {boolean} The value returned by firing the focus browser event,
+ *     which returns false iff 'preventDefault' was invoked.
+ */
+goog.testing.events.fireFocusEvent = function(target) {
+  var e = new goog.testing.events.Event(
+      goog.events.EventType.FOCUS, target);
   return goog.testing.events.fireBrowserEvent(e);
 };
 

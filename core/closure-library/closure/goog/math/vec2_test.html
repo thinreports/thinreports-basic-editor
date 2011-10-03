@@ -25,17 +25,9 @@ function assertVectorEquals(a, b) {
 
 
 function testVec2() {
-  var a = new goog.math.Vec2();
-  assertEquals(0, a.x);
-  assertEquals(0, a.y);
-
-  var b = new goog.math.Vec2(4);
-  assertEquals(4, b.x);
-  assertEquals(0, b.y);
-
-  var c = new goog.math.Vec2(3.14, 2.78);
-  assertEquals(3.14, c.x);
-  assertEquals(2.78, c.y);
+  var v = new goog.math.Vec2(3.14, 2.78);
+  assertEquals(3.14, v.x);
+  assertEquals(2.78, v.y);
 }
 
 
@@ -111,6 +103,25 @@ function testSubtract() {
   var a = new goog.math.Vec2(1, -1);
   a.subtract(new goog.math.Vec2(3, 3));
   assertVectorEquals(new goog.math.Vec2(-2, -4), a);
+}
+
+
+function testRotate() {
+  var a = new goog.math.Vec2(1, -1);
+  a.rotate(Math.PI / 2);
+  assertRoughlyEquals(1, a.x, 0.000001);
+  assertRoughlyEquals(1, a.y, 0.000001);
+  a.rotate(-Math.PI);
+  assertRoughlyEquals(-1, a.x, 0.000001);
+  assertRoughlyEquals(-1, a.y, 0.000001);
+}
+
+
+function testRotateAroundPoint() {
+  var a = goog.math.Vec2.rotateAroundPoint(
+      new goog.math.Vec2(1, -1), new goog.math.Vec2(1, 0), Math.PI / 2);
+  assertRoughlyEquals(2, a.x, 0.000001);
+  assertRoughlyEquals(0, a.y, 0.000001);
 }
 
 

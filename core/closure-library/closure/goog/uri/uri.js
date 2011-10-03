@@ -146,7 +146,7 @@ goog.Uri.prototype.path_ = '';
 
 /**
  * Object representing query data.
- * @type {goog.Uri.QueryData}
+ * @type {!goog.Uri.QueryData}
  * @private
  */
 goog.Uri.prototype.queryData_;
@@ -211,7 +211,10 @@ goog.Uri.prototype.toString = function() {
       out.push('/');
     }
     out.push(goog.Uri.encodeSpecialChars_(
-        this.path_, goog.Uri.reDisallowedInPath_));
+        this.path_,
+        this.path_.charAt(0) == '/' ?
+            goog.Uri.reDisallowedInAbsolutePath_ :
+            goog.Uri.reDisallowedInRelativePath_));
   }
 
   var query = String(this.queryData_);
@@ -241,7 +244,7 @@ goog.Uri.prototype.toString = function() {
  * segments will be resolved, as described in RFC 3986.
  *
  * @param {goog.Uri} relativeUri The relative url to resolve.
- * @return {goog.Uri} The resolved URI.
+ * @return {!goog.Uri} The resolved URI.
  */
 goog.Uri.prototype.resolve = function(relativeUri) {
 
@@ -337,7 +340,7 @@ goog.Uri.prototype.getScheme = function() {
  * Sets the scheme/protocol.
  * @param {string} newScheme New scheme value.
  * @param {boolean=} opt_decode Optional param for whether to decode new value.
- * @return {goog.Uri} Reference to this URI object.
+ * @return {!goog.Uri} Reference to this URI object.
  */
 goog.Uri.prototype.setScheme = function(newScheme, opt_decode) {
   this.enforceReadOnly();
@@ -373,7 +376,7 @@ goog.Uri.prototype.getUserInfo = function() {
  * Sets the userInfo.
  * @param {string} newUserInfo New userInfo value.
  * @param {boolean=} opt_decode Optional param for whether to decode new value.
- * @return {goog.Uri} Reference to this URI object.
+ * @return {!goog.Uri} Reference to this URI object.
  */
 goog.Uri.prototype.setUserInfo = function(newUserInfo, opt_decode) {
   this.enforceReadOnly();
@@ -404,7 +407,7 @@ goog.Uri.prototype.getDomain = function() {
  * Sets the domain.
  * @param {string} newDomain New domain value.
  * @param {boolean=} opt_decode Optional param for whether to decode new value.
- * @return {goog.Uri} Reference to this URI object.
+ * @return {!goog.Uri} Reference to this URI object.
  */
 goog.Uri.prototype.setDomain = function(newDomain, opt_decode) {
   this.enforceReadOnly();
@@ -433,7 +436,7 @@ goog.Uri.prototype.getPort = function() {
 /**
  * Sets the port number.
  * @param {*} newPort Port number. Will be explicitly casted to a number.
- * @return {goog.Uri} Reference to this URI object.
+ * @return {!goog.Uri} Reference to this URI object.
  */
 goog.Uri.prototype.setPort = function(newPort) {
   this.enforceReadOnly();
@@ -473,7 +476,7 @@ goog.Uri.prototype.getPath = function() {
  * Sets the path.
  * @param {string} newPath New path value.
  * @param {boolean=} opt_decode Optional param for whether to decode new value.
- * @return {goog.Uri} Reference to this URI object.
+ * @return {!goog.Uri} Reference to this URI object.
  */
 goog.Uri.prototype.setPath = function(newPath, opt_decode) {
   this.enforceReadOnly();
@@ -504,7 +507,7 @@ goog.Uri.prototype.hasQuery = function() {
  * @param {goog.Uri.QueryData|string|undefined} queryData QueryData object.
  * @param {boolean=} opt_decode Optional param for whether to decode new value.
  *     Applies only if queryData is a string.
- * @return {goog.Uri} Reference to this URI object.
+ * @return {!goog.Uri} Reference to this URI object.
  */
 goog.Uri.prototype.setQueryData = function(queryData, opt_decode) {
   this.enforceReadOnly();
@@ -533,7 +536,7 @@ goog.Uri.prototype.setQueryData = function(queryData, opt_decode) {
  * Sets the URI query.
  * @param {string} newQuery New query value.
  * @param {boolean=} opt_decode Optional param for whether to decode new value.
- * @return {goog.Uri} Reference to this URI object.
+ * @return {!goog.Uri} Reference to this URI object.
  */
 goog.Uri.prototype.setQuery = function(newQuery, opt_decode) {
   return this.setQueryData(newQuery, opt_decode);
@@ -582,7 +585,7 @@ goog.Uri.prototype.getQuery = function() {
  *
  * @param {string} key The parameter to set.
  * @param {*} value The new value.
- * @return {goog.Uri} Reference to this URI object.
+ * @return {!goog.Uri} Reference to this URI object.
  */
 goog.Uri.prototype.setParameterValue = function(key, value) {
   this.enforceReadOnly();
@@ -604,7 +607,7 @@ goog.Uri.prototype.setParameterValue = function(key, value) {
  * @param {string} key The parameter to set.
  * @param {*} values The new values. If values is a single
  *     string then it will be treated as the sole value.
- * @return {goog.Uri} Reference to this URI object.
+ * @return {!goog.Uri} Reference to this URI object.
  */
 goog.Uri.prototype.setParameterValues = function(key, values) {
   this.enforceReadOnly();
@@ -658,7 +661,7 @@ goog.Uri.prototype.getFragment = function() {
  * Sets the URI fragment.
  * @param {string} newFragment New fragment value.
  * @param {boolean=} opt_decode Optional param for whether to decode new value.
- * @return {goog.Uri} Reference to this URI object.
+ * @return {!goog.Uri} Reference to this URI object.
  */
 goog.Uri.prototype.setFragment = function(newFragment, opt_decode) {
   this.enforceReadOnly();
@@ -692,7 +695,7 @@ goog.Uri.prototype.hasSameDomainAs = function(uri2) {
 
 /**
  * Adds a random parameter to the Uri.
- * @return {goog.Uri} Reference to this Uri object.
+ * @return {!goog.Uri} Reference to this Uri object.
  */
 goog.Uri.prototype.makeUnique = function() {
   this.enforceReadOnly();
@@ -706,7 +709,7 @@ goog.Uri.prototype.makeUnique = function() {
  * Removes the named query parameter.
  *
  * @param {string} key The parameter to remove.
- * @return {goog.Uri} Reference to this URI object.
+ * @return {!goog.Uri} Reference to this URI object.
  */
 goog.Uri.prototype.removeParameter = function(key) {
   this.enforceReadOnly();
@@ -720,7 +723,7 @@ goog.Uri.prototype.removeParameter = function(key) {
  * enforceReadOnly_ will be called at the start of any function that may modify
  * this Uri.
  * @param {boolean} isReadOnly whether this goog.Uri should be read only.
- * @return {goog.Uri} Reference to this Uri object.
+ * @return {!goog.Uri} Reference to this Uri object.
  */
 goog.Uri.prototype.setReadOnly = function(isReadOnly) {
   this.isReadOnly_ = isReadOnly;
@@ -752,7 +755,7 @@ goog.Uri.prototype.enforceReadOnly = function() {
  * NOTE: If there are already key/value pairs in the QueryData, and
  * ignoreCase_ is set to false, the keys will all be lower-cased.
  * @param {boolean} ignoreCase whether this goog.Uri should ignore case.
- * @return {goog.Uri} Reference to this Uri object.
+ * @return {!goog.Uri} Reference to this Uri object.
  */
 goog.Uri.prototype.setIgnoreCase = function(ignoreCase) {
   this.ignoreCase_ = ignoreCase;
@@ -784,7 +787,7 @@ goog.Uri.prototype.getIgnoreCase = function() {
  *     object.
  * @param {boolean=} opt_ignoreCase Whether to ignore the case of parameter
  * names in #getParameterValue.
- * @return {goog.Uri} The new URI object.
+ * @return {!goog.Uri} The new URI object.
  */
 goog.Uri.parse = function(uri, opt_ignoreCase) {
   return uri instanceof goog.Uri ?
@@ -831,7 +834,7 @@ goog.Uri.create = function(opt_scheme, opt_userInfo, opt_domain, opt_port,
  *
  * @param {*} base Base Uri.
  * @param {*} rel Relative Uri.
- * @return {goog.Uri} Resolved uri.
+ * @return {!goog.Uri} Resolved uri.
  */
 goog.Uri.resolve = function(base, rel) {
   if (!(base instanceof goog.Uri)) {
@@ -978,11 +981,19 @@ goog.Uri.reDisallowedInSchemeOrUserInfo_ = /[#\/\?@]/g;
 
 
 /**
- * Regular expression for characters that are disallowed in the path.
+ * Regular expression for characters that are disallowed in a relative path.
  * @type {RegExp}
  * @private
  */
-goog.Uri.reDisallowedInPath_ = /[\#\?]/g;
+goog.Uri.reDisallowedInRelativePath_ = /[\#\?:]/g;
+
+
+/**
+ * Regular expression for characters that are disallowed in an absolute path.
+ * @type {RegExp}
+ * @private
+ */
+goog.Uri.reDisallowedInAbsolutePath_ = /[\#\?]/g;
 
 
 /**
@@ -1067,6 +1078,7 @@ goog.Uri.QueryData = function(opt_query, opt_uri, opt_ignoreCase) {
 goog.Uri.QueryData.prototype.ensureKeyMapInitialized_ = function() {
   if (!this.keyMap_) {
     this.keyMap_ = new goog.structs.Map();
+    this.count_ = 0;
 
     if (this.encodedQuery_) {
       var pairs = this.encodedQuery_.split('&');
@@ -1181,7 +1193,7 @@ goog.Uri.QueryData.prototype.getCount = function() {
  * Adds a key value pair.
  * @param {string} key Name.
  * @param {*} value Value.
- * @return {goog.Uri.QueryData} Instance of this object.
+ * @return {!goog.Uri.QueryData} Instance of this object.
  */
 goog.Uri.QueryData.prototype.add = function(key, value) {
   this.ensureKeyMapInitialized_();
@@ -1347,7 +1359,7 @@ goog.Uri.QueryData.prototype.getValues = function(opt_key) {
  *
  * @param {string} key Name.
  * @param {*} value Value.
- * @return {goog.Uri.QueryData} Instance of this object.
+ * @return {!goog.Uri.QueryData} Instance of this object.
  */
 goog.Uri.QueryData.prototype.set = function(key, value) {
   this.ensureKeyMapInitialized_();
@@ -1501,7 +1513,7 @@ goog.Uri.QueryData.prototype.invalidateCache_ = function() {
 /**
  * Removes all keys that are not in the provided list. (Modifies this object.)
  * @param {Array.<string>} keys The desired keys.
- * @return {goog.Uri.QueryData} a reference to this object.
+ * @return {!goog.Uri.QueryData} a reference to this object.
  */
 goog.Uri.QueryData.prototype.filterKeys = function(keys) {
   this.ensureKeyMapInitialized_();
@@ -1518,7 +1530,7 @@ goog.Uri.QueryData.prototype.filterKeys = function(keys) {
 
 /**
  * Clone the query data instance.
- * @return {goog.Uri.QueryData} New instance of the QueryData object.
+ * @return {!goog.Uri.QueryData} New instance of the QueryData object.
  */
 goog.Uri.QueryData.prototype.clone = function() {
   var rv = new goog.Uri.QueryData();

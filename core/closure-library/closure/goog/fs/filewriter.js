@@ -15,10 +15,14 @@
 /**
  * @fileoverview A wrapper for the HTML5 FileWriter object.
  *
+ * When adding or modifying functionality in this namespace, be sure to update
+ * the mock counterparts in goog.testing.fs.
+ *
  */
 
 goog.provide('goog.fs.FileWriter');
 
+goog.require('goog.fs.Error');
 goog.require('goog.fs.FileSaver');
 
 

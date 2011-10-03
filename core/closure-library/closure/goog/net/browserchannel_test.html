@@ -15,8 +15,8 @@ See the COPYING file for details.
 <script type="text/javascript">
   goog.require('goog.Timer');
   goog.require('goog.dom');
+  goog.require('goog.functions');
   goog.require('goog.json');
-  goog.require('goog.net.ChannelRequest');
   goog.require('goog.net.BrowserChannel');
   goog.require('goog.net.ChannelRequest');
   goog.require('goog.net.tmpnetwork');
@@ -53,7 +53,6 @@ var numTimingEvents;
 var lastPostSize;
 var lastPostRtt;
 var lastPostRetryCount;
-var defaultAllowEarlyNonBuffered;
 
 // Set to true to see the channel debug output in the browser window.
 var debug = false;
@@ -175,9 +174,6 @@ function setUpPage() {
 
 
 function setUp() {
-  defaultAllowEarlyNonBuffered =
-      goog.net.BrowserTestChannel.ALLOW_EARLY_NON_BUFFERED_DETECTION;
-
   numTimingEvents = 0;
   lastPostSize = null;
   lastPostRtt = null;
@@ -227,8 +223,6 @@ function setUp() {
 function tearDown() {
   mockClock.dispose();
   debugToWindow('<hr>');
-  goog.net.BrowserTestChannel.ALLOW_EARLY_NO_BUFFER_DETECTION =
-      defaultAllowEarlyNonBuffered;
 }
 
 
@@ -276,8 +270,9 @@ function testFormatArrayOfMaps() {
 }
 
 
-function connect(opt_serverVersion, opt_hostPrefix) {
-  browserChannel.connect('/test', '/bind', null);
+function connect(opt_serverVersion, opt_hostPrefix, opt_uriPrefix) {
+  var uriPrefix = opt_uriPrefix || '';
+  browserChannel.connect(uriPrefix + '/test', uriPrefix + '/bind', null);
   mockClock.tick(0);
   completeTestConnection();
   completeForwardChannel(opt_serverVersion, opt_hostPrefix);
@@ -313,14 +308,6 @@ function completeBackTestConnection() {
   browserChannel.connectionTest_.onRequestData(
       browserChannel.connectionTest_,
       '11111');
-  if (!goog.net.BrowserTestChannel.ALLOW_EARLY_NON_BUFFERED_DETECTION) {
-    mockClock.tick(201);
-    browserChannel.connectionTest_.onRequestData(
-        browserChannel.connectionTest_,
-        '2');
-    browserChannel.connectionTest_.onRequestComplete(
-        browserChannel.connectionTest_);
-  }
   mockClock.tick(0);
 }
 
@@ -466,7 +453,6 @@ function testConnect() {
   assertFalse(browserChannel.isBuffered());
 }
 
-
 function testConnect_backChannelEstablished() {
   connect();
   assertHasBackChannel();
@@ -496,6 +482,24 @@ function testConnect_overrideServerHostPrefix() {
 function testConnect_withServerVersion() {
   connect(8);
   assertEquals(8, browserChannel.channelVersion_);
+}
+
+function testConnect_notOkToMakeRequestForTest() {
+  handler.okToMakeRequest =
+      goog.functions.constant(goog.net.BrowserChannel.Error.NETWORK);
+  browserChannel.connect('/test', '/bind', null);
+  mockClock.tick(0);
+  assertEquals(goog.net.BrowserChannel.State.CLOSED, browserChannel.getState());
+}
+
+function testConnect_notOkToMakeRequestForBind() {
+  browserChannel.connect('/test', '/bind', null);
+  mockClock.tick(0);
+  completeTestConnection();
+  handler.okToMakeRequest =
+      goog.functions.constant(goog.net.BrowserChannel.Error.NETWORK);
+  completeForwardChannel();
+  assertEquals(goog.net.BrowserChannel.State.CLOSED, browserChannel.getState());
 }
 
 
@@ -637,7 +641,7 @@ function testSetFailFastWhileWaitingForRetry() {
   // Simulate that timing out. We should get a network error in addition to the
   // initial failure.
   gotError = false;
-  mockClock.tick(goog.net.GOOGLECOM_TIMEOUT);
+  mockClock.tick(goog.net.tmpnetwork.GOOGLECOM_TIMEOUT);
   assertTrue(gotError);
 
   // Make sure no more retry timers are firing.
@@ -697,7 +701,7 @@ function testSetFailFastWhileRetryXhrIsInFlight() {
   // We get the error immediately before starting to ping google.com.
   // Simulate that timing out. We should get a network error in addition to the
   gotError = false;
-  mockClock.tick(goog.net.GOOGLECOM_TIMEOUT);
+  mockClock.tick(goog.net.tmpnetwork.GOOGLECOM_TIMEOUT);
   assertTrue(gotError);
 
   // Make sure no more retry timers are firing.
@@ -739,7 +743,7 @@ function testSetFailFastAtRetryCount() {
   // Simulate that timing out. We should get a network error in addition to the
   // initial failure.
   gotError = false;
-  mockClock.tick(goog.net.GOOGLECOM_TIMEOUT);
+  mockClock.tick(goog.net.tmpnetwork.GOOGLECOM_TIMEOUT);
   assertTrue(gotError);
 
   // Make sure no more retry timers are firing.
@@ -761,7 +765,7 @@ function testRequestFailedClosesChannel() {
   assertEquals('Should be closed immediately after request failed.',
       goog.net.BrowserChannel.State.CLOSED, browserChannel.getState());
 
-  mockClock.tick(goog.net.GOOGLECOM_TIMEOUT);
+  mockClock.tick(goog.net.tmpnetwork.GOOGLECOM_TIMEOUT);
 
   assertEquals('Should remain closed after the ping timeout.',
       goog.net.BrowserChannel.State.CLOSED, browserChannel.getState());
@@ -780,7 +784,7 @@ function testStatEventReportedOnlyOnce() {
   assertEquals(goog.net.BrowserChannel.Stat.ERROR_OTHER, lastStatEvent);
 
   numStatEvents = 0;
-  mockClock.tick(goog.net.GOOGLECOM_TIMEOUT);
+  mockClock.tick(goog.net.tmpnetwork.GOOGLECOM_TIMEOUT);
   assertEquals('No new stat events should be reported.', 0, numStatEvents);
 }
 
@@ -796,7 +800,7 @@ function testStatEventReportedOnlyOnce_onNetworkUp() {
       0, numStatEvents);
 
   // Let the ping time out.
-  mockClock.tick(goog.net.GOOGLECOM_TIMEOUT);
+  mockClock.tick(goog.net.tmpnetwork.GOOGLECOM_TIMEOUT);
 
   // Assert we report the correct stat event.
   assertEquals(1, numStatEvents);
@@ -815,7 +819,7 @@ function testStatEventReportedOnlyOnce_onNetworkDown() {
       0, numStatEvents);
 
   // Wait half the ping timeout period, and then fake the network being up.
-  mockClock.tick(goog.net.GOOGLECOM_TIMEOUT / 2);
+  mockClock.tick(goog.net.tmpnetwork.GOOGLECOM_TIMEOUT / 2);
   browserChannel.testGoogleComCallback_(true);
 
   // Assert we report the correct stat event.
@@ -942,7 +946,7 @@ function testUndeliveredMaps_onPingTimeout() {
   responseRequestFailed();
 
   // Let the ping time out, unsuccessfully.
-  mockClock.tick(goog.net.GOOGLECOM_TIMEOUT);
+  mockClock.tick(goog.net.tmpnetwork.GOOGLECOM_TIMEOUT);
 
   // Assert channel is closed.
   assertEquals(goog.net.BrowserChannel.State.CLOSED,
@@ -1163,11 +1167,31 @@ function testResponseWithEvilData() {
       browserChannel.getState());
 }
 
-function testAllowEarlyNoBuffering() {
-  goog.net.BrowserTestChannel.ALLOW_EARLY_NON_BUFFERED_DETECTION = true;
-  browserChannel.connect('/test', '/bind', null);
-  mockClock.tick(0);
-  completeTestConnection();
+
+function testPathAbsolute() {
+  connect(8, undefined, '/talkgadget');
+  assertEquals(browserChannel.backChannelUri_.getDomain(),
+      window.location.hostname);
+  assertEquals(browserChannel.forwardChannelUri_.getDomain(),
+      window.location.hostname);
+}
+
+
+function testPathRelative() {
+  connect(8, undefined, 'talkgadget');
+  assertEquals(browserChannel.backChannelUri_.getDomain(),
+      window.location.hostname);
+  assertEquals(browserChannel.forwardChannelUri_.getDomain(),
+      window.location.hostname);
+}
+
+
+function testPathWithHost() {
+  connect(8, undefined, 'https://example.com');
+  assertEquals(browserChannel.backChannelUri_.getScheme(), 'https');
+  assertEquals(browserChannel.backChannelUri_.getDomain(), 'example.com');
+  assertEquals(browserChannel.forwardChannelUri_.getScheme(), 'https');
+  assertEquals(browserChannel.forwardChannelUri_.getDomain(), 'example.com');
 }
 
 </script>

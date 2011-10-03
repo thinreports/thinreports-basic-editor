@@ -153,6 +153,7 @@ goog.require('goog.structs');
 goog.require('goog.userAgent');
 
 
+
 /**
  * Class for managing requests via iFrames.
  * @constructor
@@ -346,7 +347,7 @@ goog.net.IframeIo.getForm_ = function() {
 goog.net.IframeIo.addFormInputs_ = function(form, data) {
   goog.structs.forEach(data, function(value, key) {
     var inp = goog.dom.createDom('input',
-       {'type': 'hidden', 'name': key, 'value': value});
+        {'type': 'hidden', 'name': key, 'value': value});
     form.appendChild(inp);
   });
 };
@@ -568,7 +569,7 @@ goog.net.IframeIo.prototype.send = function(
  *     caching.
  */
 goog.net.IframeIo.prototype.sendFromForm = function(form, opt_uri,
-     opt_noCache) {
+    opt_noCache) {
   if (this.active_) {
     throw Error('[goog.net.IframeIo] Unable to send, already active.');
   }
@@ -608,10 +609,7 @@ goog.net.IframeIo.prototype.abort = function(opt_failureCode) {
 };
 
 
-/**
- * Disposes of the IframeIo object, nullifies all handlers and removes any DOM
- * nodes.
- */
+/** @override */
 goog.net.IframeIo.prototype.disposeInternal = function() {
   this.logger_.fine('Disposing iframeIo instance');
 
@@ -682,7 +680,7 @@ goog.net.IframeIo.prototype.getResponseText = function() {
  * @return {?string} Result from the server.
  */
 goog.net.IframeIo.prototype.getResponseHtml = function() {
- return this.lastContentHtml_;
+  return this.lastContentHtml_;
 };
 
 
@@ -887,8 +885,10 @@ goog.net.IframeIo.prototype.sendFormInternal_ = function() {
       // The childnodes represent the initial child nodes for the text area
       // appending a text node essentially resets the initial value ready for
       // it to be clones - while maintaining HTML escaping.
-      if (goog.dom.getTextContent(textareas[i]) != textareas[i].value) {
-        goog.dom.setTextContent(textareas[i], textareas[i].value);
+      var value = textareas[i].value;
+      if (goog.dom.getRawTextContent(textareas[i]) != value) {
+        goog.dom.setTextContent(textareas[i], value);
+        textareas[i].value = value;
       }
     }
 
@@ -903,7 +903,11 @@ goog.net.IframeIo.prototype.sendFormInternal_ = function() {
     var selects = this.form_.getElementsByTagName('select');
     var clones = clone.getElementsByTagName('select');
     for (var i = 0, n = selects.length; i < n; i++) {
-      clones[i].selectedIndex = selects[i].selectedIndex;
+      var selectsOptions = selects[i].getElementsByTagName('option');
+      var clonesOptions = clones[i].getElementsByTagName('option');
+      for (var j = 0, m = selectsOptions.length; j < m; j++) {
+        clonesOptions[j].selected = selectsOptions[j].selected;
+      }
     }
 
     // Some versions of Firefox (1.5 - 1.5.07?) fail to clone the value
@@ -1292,30 +1296,23 @@ goog.net.IframeIo.prototype.getRequestIframe_ = function() {
 goog.net.IframeIo.prototype.testForFirefoxSilentError_ = function() {
   if (this.active_) {
     var doc = this.getContentDocument_();
-    if (doc) {
-      /** @preserveTry */
-      try {
-        // This is a hack to test of the document has loaded with a page that
-        // we can't access, such as a network error, that won't report onload
-        // or onerror events.
-        goog.reflect.sinkValue(doc['documentUri']);
 
-        // TODO: Is there a situation when this won't error?
+    // This is a hack to test of the document has loaded with a page that
+    // we can't access, such as a network error, that won't report onload
+    // or onerror events.
+    if (doc && !goog.reflect.canAccessProperty(doc, 'documentUri')) {
+      goog.events.unlisten(this.getRequestIframe_(),
+          goog.events.EventType.LOAD, this.onIframeLoaded_, false, this);
 
-      } catch (e) {
-        goog.events.unlisten(this.getRequestIframe_(),
-            goog.events.EventType.LOAD, this.onIframeLoaded_, false, this);
-
-        if (navigator.onLine) {
-          this.logger_.warning('Silent Firefox error detected');
-          this.handleError_(goog.net.ErrorCode.FF_SILENT_ERROR);
-        } else {
-          this.logger_.warning('Firefox is offline so report offline error ' +
-                               'instead of silent error');
-          this.handleError_(goog.net.ErrorCode.OFFLINE);
-        }
-        return;
+      if (navigator.onLine) {
+        this.logger_.warning('Silent Firefox error detected');
+        this.handleError_(goog.net.ErrorCode.FF_SILENT_ERROR);
+      } else {
+        this.logger_.warning('Firefox is offline so report offline error ' +
+                             'instead of silent error');
+        this.handleError_(goog.net.ErrorCode.OFFLINE);
       }
+      return;
     }
     this.firefoxSilentErrorTimeout_ =
         goog.Timer.callOnce(this.testForFirefoxSilentError_, 250, this);

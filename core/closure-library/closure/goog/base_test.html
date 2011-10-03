@@ -14,8 +14,9 @@ See the COPYING file for details.
 goog.require('goog.functions');
 // Used to test dynamic loading works, see testRequire*
 goog.require('goog.Timer');
-goog.require('goog.testing.jsunit');
 goog.require('goog.testing.PropertyReplacer');
+goog.require('goog.testing.jsunit');
+goog.require('goog.testing.recordFunction');
 goog.require('goog.userAgent');
 </script>
 </head>
@@ -98,6 +99,9 @@ function testProvideStrictness() {
   goog.provide('goog.xy');
   assertProvideFails('goog.xy');
 
+  goog.provide('goog.xy.z');
+  assertProvideFails('goog.xy');
+
   window['goog']['xyz'] = 'Bob';
   assertProvideFails('goog.xyz');
 
@@ -108,6 +112,14 @@ function testProvideStrictness() {
 function assertProvideFails(namespace) {
   assertThrows('goog.provide(' + namespace + ') should have failed',
       goog.partial(goog.provide, namespace));
+}
+
+function testIsProvided() {
+  goog.provide('goog.explicit');
+  assertTrue(goog.isProvided_('goog.explicit'));
+  goog.provide('goog.implicit.explicit');
+  assertFalse(goog.isProvided_('goog.implicit'));
+  assertTrue(goog.isProvided_('goog.implicit.explicit'));
 }
 
 function testGlobalize() {
@@ -177,6 +189,32 @@ function testRequireClosure() {
   assertNotUndefined('goog.events.EventTarget should be available', goog.events.EventTarget);
 }
 
+function testRequireWithExternalDuplicate() {
+  // Do a provide without going via goog.require. Then goog.require it
+  // indirectly and ensure it doesn't cause a duplicate script.
+  goog.addDependency('dup.js', ['dup.base'], []);
+  goog.addDependency('dup-child.js', ['dup.base.child'], ['dup.base']);
+  goog.provide('dup.base');
+  try {
+    goog.global.CLOSURE_IMPORT_SCRIPT = function(src) {
+      if (src == goog.basePath + 'dup.js') {
+        fail('Duplicate script written!');
+      } else if (src == goog.basePath + 'dup-child.js') {
+        // Allow expected script.
+        return true;
+      } else {
+        // Avoid affecting other state.
+        return false;
+      }
+    };
+
+    // To differentiate this call from the real one.
+    var require = goog.require;
+    require('dup.base.child');
+  } finally {
+    goog.global.CLOSURE_IMPORT_SCRIPT = undefined;
+  }
+}
 
 //=== tests for language enhancements ===
 
@@ -1038,7 +1076,7 @@ function testGetCssName() {
   assertEquals('a', g);
   assertEquals('a-b', goog.getCssName(g, 'disabled'));
   assertEquals('a-b', goog.getCssName('goog-disabled'));
-  assertEquals('goog-button', goog.getCssName('goog-button'));
+  assertEquals('a-button', goog.getCssName('goog-button'));
 
   goog.setCssNameMapping({
     'goog-button': 'a',
@@ -1061,8 +1099,11 @@ function testAddDependency() {
 
   goog.provide('testDep.bar');
 
+  // To differentiate this call from the real one.
+  var require = goog.require;
+
   // this used to throw an exception
-  goog.require('testDep.foo');
+  require('testDep.foo');
 
   assertTrue(goog.isObject(testDep.bar));
 
@@ -1159,6 +1200,34 @@ function testBaseClass() {
   assertEquals(16, (new D(2, 0)).foo);
   assertEquals(7, (new C(1, 0)).foo);
   assertEquals(3, (new B(1, 0)).foo);
+}
+
+function testGoogRequireCheck() {
+  stubs.set(goog, 'ENABLE_DEBUG_LOADER', false);
+  stubs.set(goog, 'useStrictRequires', true);
+  stubs.set(goog, 'implicitNamespaces_', {});
+
+  // Aliased so that build tools do not mistake this for an actual call.
+  var require = goog.require;
+  assertThrows('Requiring non-required namespace should fail',
+    function() {
+      require('far.out');
+    });
+
+  assertUndefined(goog.global.far );
+  assertEvaluatesToFalse(goog.getObjectByName('far.out'));
+  assertObjectEquals({}, goog.implicitNamespaces_);
+  assertFalse(goog.isProvided_('far.out'));
+
+  goog.provide('far.out');
+
+  assertNotUndefined(far.out);
+  assertEvaluatesToTrue(goog.getObjectByName('far.out'));
+  assertObjectEquals({'far': true}, goog.implicitNamespaces_);
+  assertTrue(goog.isProvided_('far.out'));
+
+  stubs.reset();
+  delete far;
 }
 
 </script>

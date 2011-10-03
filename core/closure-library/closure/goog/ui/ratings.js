@@ -152,7 +152,7 @@ goog.ui.Ratings.prototype.decorateInternal = function(el) {
 goog.ui.Ratings.prototype.enterDocument = function() {
   var el = this.getElement();
   el.tabIndex = 0;
-  goog.dom.classes.add(el, goog.getCssName('goog-ratings'));
+  goog.dom.classes.add(el, this.getCssClass());
   goog.dom.a11y.setRole(el, 'slider');
   goog.dom.a11y.setState(el, 'valuemin', 0);
   var max = this.ratings_.length - 1;
@@ -192,7 +192,7 @@ goog.ui.Ratings.prototype.exitDocument = function() {
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.Ratings.prototype.disposeInternal = function() {
   goog.ui.Ratings.superClass_.disposeInternal.call(this);
   this.ratings_.length = 0;

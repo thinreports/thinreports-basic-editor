@@ -23,6 +23,8 @@ goog.provide('goog.ui.AnimatedZippy');
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.fx.Animation');
+goog.require('goog.fx.Animation.EventType');
+goog.require('goog.fx.Transition.EventType');
 goog.require('goog.fx.easing');
 goog.require('goog.ui.Zippy');
 goog.require('goog.ui.ZippyEvent');
@@ -50,7 +52,7 @@ goog.ui.AnimatedZippy = function(header, content, opt_expanded) {
   elWrapper.appendChild(elContent);
 
   /**
-   * Contant wrapper, used for animation.
+   * Content wrapper, used for animation.
    * @type {Element}
    * @private
    */
@@ -69,9 +71,9 @@ goog.ui.AnimatedZippy = function(header, content, opt_expanded) {
   // Set initial state.
   // NOTE: Set the class names as well otherwise animated zippys
   // start with empty class names.
-  var expanded = this.expanded_;
+  var expanded = this.isExpanded();
   this.elWrapper_.style.display = expanded ? '' : 'none';
-  this.updateHeaderClassName_(expanded);
+  this.updateHeaderClassName(expanded);
 };
 goog.inherits(goog.ui.AnimatedZippy, goog.ui.Zippy);
 
@@ -94,7 +96,7 @@ goog.ui.AnimatedZippy.prototype.animationAcceleration = goog.fx.easing.easeOut;
  * @return {boolean} Whether the zippy is in the process of being expanded or
  *     collapsed.
  */
-goog.ui.Zippy.prototype.isBusy = function() {
+goog.ui.AnimatedZippy.prototype.isBusy = function() {
   return this.anim_ != null;
 };
 
@@ -105,7 +107,7 @@ goog.ui.Zippy.prototype.isBusy = function() {
  * @param {boolean} expanded Expanded/visibility state.
  */
 goog.ui.AnimatedZippy.prototype.setExpanded = function(expanded) {
-  if (this.expanded_ == expanded && !this.anim_) {
+  if (this.isExpanded() == expanded && !this.anim_) {
     return;
   }
 
@@ -116,22 +118,23 @@ goog.ui.AnimatedZippy.prototype.setExpanded = function(expanded) {
   }
 
   // Measure content element.
-  var h = this.elContent_.offsetHeight;
+  var h = this.getContentElement().offsetHeight;
 
   // Stop active animation (if any) and determine starting height.
   var startH = 0;
   if (this.anim_) {
-    expanded = this.expanded_;
+    expanded = this.isExpanded();
     goog.events.removeAll(this.anim_);
     this.anim_.stop(false);
 
-    startH = h - Math.abs(parseInt(this.elContent_.style.marginTop, 10));
+    var marginTop = parseInt(this.getContentElement().style.marginTop, 10);
+    startH = h - Math.abs(marginTop);
   } else {
     startH = expanded ? 0 : h;
   }
 
   // Updates header class name after the animation has been stopped.
-  this.updateHeaderClassName_(expanded);
+  this.updateHeaderClassName(expanded);
 
   // Set up expand/collapse animation.
   this.anim_ = new goog.fx.Animation([0, startH],
@@ -139,12 +142,12 @@ goog.ui.AnimatedZippy.prototype.setExpanded = function(expanded) {
                                      this.animationDuration,
                                      this.animationAcceleration);
 
-  var events = [goog.fx.Animation.EventType.BEGIN,
+  var events = [goog.fx.Transition.EventType.BEGIN,
                 goog.fx.Animation.EventType.ANIMATE,
-                goog.fx.Animation.EventType.END];
+                goog.fx.Transition.EventType.END];
   goog.events.listen(this.anim_, events, this.onAnimate_, false, this);
   goog.events.listen(this.anim_,
-                     goog.fx.Animation.EventType.END,
+                     goog.fx.Transition.EventType.END,
                      goog.bind(this.onAnimationCompleted_, this, expanded));
 
   // Start animation.
@@ -159,8 +162,9 @@ goog.ui.AnimatedZippy.prototype.setExpanded = function(expanded) {
  * @private
  */
 goog.ui.AnimatedZippy.prototype.onAnimate_ = function(e) {
-  var h = this.elContent_.offsetHeight;
-  this.elContent_.style.marginTop = (e.y - h) + 'px';
+  var contentElement = this.getContentElement();
+  var h = contentElement.offsetHeight;
+  contentElement.style.marginTop = (e.y - h) + 'px';
 };
 
 
@@ -173,11 +177,11 @@ goog.ui.AnimatedZippy.prototype.onAnimate_ = function(e) {
 goog.ui.AnimatedZippy.prototype.onAnimationCompleted_ = function(expanded) {
   // Fix wrong end position if the content has changed during the animation.
   if (expanded) {
-    this.elContent_.style.marginTop = '0';
+    this.getContentElement().style.marginTop = '0';
   }
 
   goog.events.removeAll(this.anim_);
-  this.expanded_ = expanded;
+  this.setExpandedInternal(expanded);
   this.anim_ = null;
 
   if (!expanded) {

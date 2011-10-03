@@ -39,6 +39,8 @@ goog.require('goog.ui.ControlContent');
 goog.require('goog.ui.Menu');
 goog.require('goog.ui.MenuButtonRenderer');
 goog.require('goog.ui.registry');
+goog.require('goog.userAgent');
+goog.require('goog.userAgent.product');
 
 
 
@@ -67,6 +69,16 @@ goog.ui.MenuButton = function(content, opt_menu, opt_renderer, opt_domHelper) {
     this.setMenu(opt_menu);
   }
   this.timer_ = new goog.Timer(500);  // 0.5 sec
+
+  // Phones running iOS prior to version 4.2.
+  if ((goog.userAgent.product.IPHONE || goog.userAgent.product.IPAD) &&
+      // Check the webkit version against the version for iOS 4.2.1.
+      !goog.userAgent.isVersion('533.17.9')) {
+    // @bug 4322060 This is required so that the menu works correctly on
+    // iOS prior to version 4.2. Otherwise, the blur action closes the menu
+    // before the menu button click can be processed.
+    this.setFocusablePopupMenu(true);
+  }
 };
 goog.inherits(goog.ui.MenuButton, goog.ui.Button);
 
@@ -154,7 +166,7 @@ goog.ui.MenuButton.prototype.originalSize_;
 /**
  * Do we render the drop down menu as a sibling to the label, or at the end
  * of the current dom?
- * @type {!boolean}
+ * @type {boolean}
  * @private
  */
 goog.ui.MenuButton.prototype.renderMenuAsSibling_ = false;
@@ -194,7 +206,7 @@ goog.ui.MenuButton.prototype.exitDocument = function() {
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.MenuButton.prototype.disposeInternal = function() {
   goog.ui.MenuButton.superClass_.disposeInternal.call(this);
   if (this.menu_) {
@@ -289,7 +301,7 @@ goog.ui.MenuButton.prototype.containsElement = function(element) {
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.MenuButton.prototype.handleKeyEventInternal = function(e) {
   // Handle SPACE on keyup and all other keys on keypress.
   if (e.keyCode == goog.events.KeyCodes.SPACE) {
@@ -638,7 +650,7 @@ goog.ui.MenuButton.prototype.setOpen = function(open, opt_e) {
     if (open) {
       if (!this.menu_.isInDocument()) {
         if (this.renderMenuAsSibling_) {
-          this.menu_.render(/** @type {?Element} */ (
+          this.menu_.render(/** @type {Element} */ (
               this.getElement().parentNode));
         } else {
           this.menu_.render();
@@ -653,6 +665,12 @@ goog.ui.MenuButton.prototype.setOpen = function(open, opt_e) {
       this.setActive(false);
       this.menu_.setMouseButtonPressed(false);
 
+      // Clear any remaining a11y state.
+      if (this.getElement()) {
+        goog.dom.a11y.setState(this.getElement(),
+            goog.dom.a11y.State.ACTIVEDESCENDANT, '');
+      }
+
       // Clear any sizes that might have been stored.
       if (goog.isDefAndNotNull(this.originalSize_)) {
         this.originalSize_ = undefined;
@@ -663,7 +681,12 @@ goog.ui.MenuButton.prototype.setOpen = function(open, opt_e) {
       }
     }
     this.menu_.setVisible(open, false, opt_e);
-    this.attachPopupListeners_(open);
+    // In Pivot Tables the menu button somehow gets disposed of during the
+    // setVisible call, causing attachPopupListeners_ to fail.
+    // TODO(user): Debug what happens.
+    if (!this.isDisposed()) {
+      this.attachPopupListeners_(open);
+    }
   }
 };
 

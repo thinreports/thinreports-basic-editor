@@ -87,7 +87,7 @@ goog.events.InputHandler = function(element) {
    * @type {goog.events.EventHandler}
    * @private
    */
-  this.eventHandler_ = new goog.events.EventHandler();
+  this.eventHandler_ = new goog.events.EventHandler(this);
   this.eventHandler_.listen(
       this.element_,
       this.inputEventEmulation_ ? ['keydown', 'paste', 'cut', 'drop'] : 'input',
@@ -207,9 +207,7 @@ goog.events.InputHandler.prototype.dispatchAndDisposeEvent_ = function(event) {
 };
 
 
-/**
- * Disposes of the input handler.
- */
+/** @override */
 goog.events.InputHandler.prototype.disposeInternal = function() {
   goog.events.InputHandler.superClass_.disposeInternal.call(this);
   this.eventHandler_.dispose();

@@ -19,9 +19,11 @@
  */
 
 goog.provide('goog.ui.Zippy');
+goog.provide('goog.ui.Zippy.Events');
 goog.provide('goog.ui.ZippyEvent');
 
 goog.require('goog.dom');
+goog.require('goog.dom.a11y');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.events.Event');
@@ -130,9 +132,7 @@ goog.ui.Zippy.Events = {
 };
 
 
-/**
- * Destroys widget and removes all event listeners.
- */
+/** @override */
 goog.ui.Zippy.prototype.disposeInternal = function() {
   if (this.elHeader_) {
     goog.events.removeAll(this.elHeader_);
@@ -141,6 +141,15 @@ goog.ui.Zippy.prototype.disposeInternal = function() {
     goog.events.removeAll(this.elExpandedHeader_);
   }
   goog.ui.Zippy.superClass_.disposeInternal.call(this);
+};
+
+
+/**
+ * @return {Element} The content element.
+ * @protected
+ */
+goog.ui.Zippy.prototype.getContentElement = function() {
+  return this.elContent_;
 };
 
 
@@ -188,14 +197,29 @@ goog.ui.Zippy.prototype.setExpanded = function(expanded) {
     goog.style.showElement(this.elExpandedHeader_, expanded);
   } else {
     // Update header image, if any.
-    this.updateHeaderClassName_(expanded);
+    this.updateHeaderClassName(expanded);
+    if (this.elHeader_) {
+      goog.dom.a11y.setState(
+          this.elHeader_, goog.dom.a11y.State.EXPANDED, expanded);
+    }
   }
 
-  this.expanded_ = expanded;
+  this.setExpandedInternal(expanded);
 
   // Fire toggle event
   this.dispatchEvent(new goog.ui.ZippyEvent(goog.ui.Zippy.Events.TOGGLE,
                                             this, this.expanded_));
+};
+
+
+/**
+ * Sets expanded internal state.
+ *
+ * @param {boolean} expanded Expanded/visibility state.
+ * @protected
+ */
+goog.ui.Zippy.prototype.setExpandedInternal = function(expanded) {
+  this.expanded_ = expanded;
 };
 
 
@@ -211,9 +235,9 @@ goog.ui.Zippy.prototype.isExpanded = function() {
  * Updates the header element's className
  *
  * @param {boolean} expanded Expanded/visibility state.
- * @private
+ * @protected
  */
-goog.ui.Zippy.prototype.updateHeaderClassName_ = function(expanded) {
+goog.ui.Zippy.prototype.updateHeaderClassName = function(expanded) {
   if (this.elHeader_) {
     goog.dom.classes.enable(this.elHeader_,
         goog.getCssName('goog-zippy-expanded'), expanded);

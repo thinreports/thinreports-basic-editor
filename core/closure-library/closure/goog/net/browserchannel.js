@@ -35,14 +35,18 @@
 
 goog.provide('goog.net.BrowserChannel');
 goog.provide('goog.net.BrowserChannel.Error');
+goog.provide('goog.net.BrowserChannel.Event');
 goog.provide('goog.net.BrowserChannel.Handler');
 goog.provide('goog.net.BrowserChannel.LogSaver');
 goog.provide('goog.net.BrowserChannel.QueuedMap');
+goog.provide('goog.net.BrowserChannel.Stat');
 goog.provide('goog.net.BrowserChannel.StatEvent');
+goog.provide('goog.net.BrowserChannel.State');
 goog.provide('goog.net.BrowserChannel.TimingEvent');
 
 goog.require('goog.Uri');
 goog.require('goog.array');
+goog.require('goog.debug.Logger');
 goog.require('goog.debug.TextFormatter');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
@@ -50,8 +54,11 @@ goog.require('goog.json');
 goog.require('goog.net.BrowserTestChannel');
 goog.require('goog.net.ChannelDebug');
 goog.require('goog.net.ChannelRequest');
+goog.require('goog.net.ChannelRequest.Error');
 goog.require('goog.net.XhrIo');
+goog.require('goog.net.tmpnetwork');
 goog.require('goog.string');
+goog.require('goog.structs');
 goog.require('goog.structs.CircularBuffer');
 goog.require('goog.userAgent');
 
@@ -847,6 +854,9 @@ goog.net.BrowserChannel.prototype.getSessionId = function() {
  */
 goog.net.BrowserChannel.prototype.connectTest_ = function(testPath) {
   this.channelDebug_.debug('connectTest_()');
+  if (!this.okToMakeRequest_()) {
+    return; // channel is cancelled
+  }
   this.connectionTest_ = new goog.net.BrowserTestChannel(
       this, this.channelDebug_);
   this.connectionTest_.setExtraHeaders(this.extraHeaders_);
@@ -1215,8 +1225,9 @@ goog.net.BrowserChannel.prototype.onStartForwardChannelTimer_ = function(
 goog.net.BrowserChannel.prototype.startForwardChannel_ = function(
     opt_retryRequest) {
   this.channelDebug_.debug('startForwardChannel_');
-
-  if (this.state_ == goog.net.BrowserChannel.State.INIT) {
+  if (!this.okToMakeRequest_()) {
+    return; // channel is cancelled
+  } else if (this.state_ == goog.net.BrowserChannel.State.INIT) {
     if (opt_retryRequest) {
       this.channelDebug_.severe('Not supposed to retry the open');
       return;
@@ -1224,11 +1235,6 @@ goog.net.BrowserChannel.prototype.startForwardChannel_ = function(
     this.open_();
     this.state_ = goog.net.BrowserChannel.State.OPENING;
   } else if (this.state_ == goog.net.BrowserChannel.State.OPENED) {
-    if (!this.okToMakeRequest_()) {
-      // channel is cancelled
-      return;
-    }
-
     if (opt_retryRequest) {
       this.makeForwardChannelRequest_(opt_retryRequest);
       return;
@@ -1236,7 +1242,7 @@ goog.net.BrowserChannel.prototype.startForwardChannel_ = function(
 
     if (this.outgoingMaps_.length == 0) {
       this.channelDebug_.debug('startForwardChannel_ returned: ' +
-                                  'nothing to send');
+                                   'nothing to send');
       // no need to start a new forward channel request
       return;
     }
@@ -1270,7 +1276,7 @@ goog.net.BrowserChannel.prototype.open_ = function() {
   var uri = this.forwardChannelUri_.clone();
   uri.setParameterValue('RID', rid);
   if (this.clientVersion_) {
-   uri.setParameterValue('CVER', this.clientVersion_);
+    uri.setParameterValue('CVER', this.clientVersion_);
   }
 
   // Add the reconnect parameters.
@@ -1520,7 +1526,7 @@ goog.net.BrowserChannel.prototype.okToMakeRequest_ = function() {
     var result = this.handler_.okToMakeRequest(this);
     if (result != goog.net.BrowserChannel.Error.OK) {
       this.channelDebug_.debug('Handler returned error code from ' +
-                                  'okToMakeRequest');
+                                   'okToMakeRequest');
       this.signalError_(result);
       return false;
     }
@@ -1602,7 +1608,7 @@ goog.net.BrowserChannel.prototype.onRequestData =
       }
     } else if (responseText != goog.net.BrowserChannel.MAGIC_RESPONSE_COOKIE) {
       this.channelDebug_.debug('Bad data returned - missing/invald ' +
-                                  'magic cookie');
+                                   'magic cookie');
       this.signalError_(goog.net.BrowserChannel.Error.BAD_RESPONSE);
     }
   } else {
@@ -1633,15 +1639,15 @@ goog.net.BrowserChannel.prototype.handlePostResponse_ = function(
   if (0 < outstandingArrays) {
     var numOutstandingBackchannelBytes = responseValues[2];
     this.channelDebug_.debug(numOutstandingBackchannelBytes + ' bytes (in ' +
-         outstandingArrays + ' arrays) are outstanding on the BackChannel');
+        outstandingArrays + ' arrays) are outstanding on the BackChannel');
     if (!this.shouldRetryBackChannel_(numOutstandingBackchannelBytes)) {
       return;
     }
     if (!this.deadBackChannelTimerId_) {
       // We expect to receive data within 2 RTTs or we retry the backchannel.
       this.deadBackChannelTimerId_ = goog.net.BrowserChannel.setTimeout(
-        goog.bind(this.onBackChannelDead_, this),
-        2 * goog.net.BrowserChannel.RTT_ESTIMATE);
+          goog.bind(this.onBackChannelDead_, this),
+          2 * goog.net.BrowserChannel.RTT_ESTIMATE);
     }
   }
 };
@@ -1674,7 +1680,7 @@ goog.net.BrowserChannel.prototype.handleBackchannelMissing_ = function() {
   }
   this.maybeRetryBackChannel_();
   goog.net.BrowserChannel.notifyStatEvent(
-        goog.net.BrowserChannel.Stat.BACKCHANNEL_MISSING);
+      goog.net.BrowserChannel.Stat.BACKCHANNEL_MISSING);
 };
 
 
@@ -1963,7 +1969,7 @@ goog.net.BrowserChannel.prototype.signalError_ = function(error) {
     if (this.handler_) {
       imageUri = this.handler_.getNetworkTestImageUri(this);
     }
-    goog.net.testGoogleCom(
+    goog.net.tmpnetwork.testGoogleCom(
         goog.bind(this.testGoogleComCallback_, this), imageUri);
   } else {
     goog.net.BrowserChannel.notifyStatEvent(
@@ -2072,23 +2078,34 @@ goog.net.BrowserChannel.prototype.getBackChannelUri =
  * Creates a data Uri applying logic for secondary hostprefix, port
  * overrides, and versioning.
  * @param {?string} hostPrefix The host prefix.
- * @param {string} path The path on the host.
+ * @param {string} path The path on the host (may be absolute or relative).
  * @param {number=} opt_overridePort Optional override port.
  * @return {goog.Uri} The data URI.
  */
 goog.net.BrowserChannel.prototype.createDataUri =
     function(hostPrefix, path, opt_overridePort) {
-  var locationPage = window.location;
-  var hostName;
-  if (hostPrefix) {
-    hostName = hostPrefix + '.' + locationPage.hostname;
+  var uri = goog.Uri.parse(path);
+  var uriAbsolute = (uri.getDomain() != '');
+  if (uriAbsolute) {
+    if (hostPrefix) {
+      uri.setDomain(hostPrefix + '.' + uri.getDomain());
+    }
+
+    uri.setPort(opt_overridePort || uri.getPort());
   } else {
-    hostName = locationPage.hostname;
+    var locationPage = window.location;
+    var hostName;
+    if (hostPrefix) {
+      hostName = hostPrefix + '.' + locationPage.hostname;
+    } else {
+      hostName = locationPage.hostname;
+    }
+
+    var port = opt_overridePort || locationPage.port;
+
+    uri = goog.Uri.create(locationPage.protocol, null, hostName, port, path);
   }
 
-  var port = opt_overridePort || locationPage.port;
-
-  var uri = goog.Uri.create(locationPage.protocol, null, hostName, port, path);
   if (this.extraParams_) {
     goog.structs.forEach(this.extraParams_, function(value, key, coll) {
       uri.setParameterValue(key, value);

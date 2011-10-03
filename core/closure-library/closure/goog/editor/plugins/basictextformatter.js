@@ -51,7 +51,7 @@ goog.editor.plugins.BasicTextFormatter = function() {
 goog.inherits(goog.editor.plugins.BasicTextFormatter, goog.editor.Plugin);
 
 
-/** @inheritDoc */
+/** @override */
 goog.editor.plugins.BasicTextFormatter.prototype.getTrogClassId = function() {
   return 'BTF';
 };
@@ -413,7 +413,7 @@ goog.editor.plugins.BasicTextFormatter.prototype.queryCommandValue = function(
 
 
 /**
- * @inheritDoc
+ * @override
  */
 goog.editor.plugins.BasicTextFormatter.prototype.prepareContentsHtml =
     function(html) {
@@ -436,7 +436,7 @@ goog.editor.plugins.BasicTextFormatter.prototype.prepareContentsHtml =
 
 
 /**
- * @inheritDoc
+ * @override
  */
 goog.editor.plugins.BasicTextFormatter.prototype.cleanContentsDom =
     function(fieldCopy) {
@@ -465,7 +465,7 @@ goog.editor.plugins.BasicTextFormatter.prototype.cleanContentsDom =
 
 
 /**
- * @inheritDoc
+ * @override
  */
 goog.editor.plugins.BasicTextFormatter.prototype.cleanContentsHtml =
     function(html) {
@@ -493,7 +493,7 @@ goog.editor.plugins.BasicTextFormatter.prototype.cleanContentsHtml =
 
 
 /**
- * @inheritDoc
+ * @override
  */
 goog.editor.plugins.BasicTextFormatter.prototype.handleKeyboardShortcut =
     function(e, key, isModifierPressed) {
@@ -1459,8 +1459,6 @@ goog.editor.plugins.BasicTextFormatter.prototype.applyExecCommandGeckoFixes_ =
  * Workaround for Opera bug CORE-23903. Opera sometimes fails to invalidate
  * serialized CSS or innerHTML for the DOM after certain execCommands when
  * styleWithCSS is on. Toggling an inline style on the elements fixes it.
- * TODO(user): Opera says they're going to prioritize a fix for this. Remove
- *              this code once that fix is released.
  * @private
  */
 goog.editor.plugins.BasicTextFormatter.prototype.invalidateInlineCss_ =

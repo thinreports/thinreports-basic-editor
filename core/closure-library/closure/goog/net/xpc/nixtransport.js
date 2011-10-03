@@ -34,8 +34,9 @@
 goog.provide('goog.net.xpc.NixTransport');
 
 goog.require('goog.net.xpc');
+goog.require('goog.net.xpc.CrossPageChannelRole');
 goog.require('goog.net.xpc.Transport');
-
+goog.require('goog.reflect');
 
 
 /**
@@ -135,6 +136,26 @@ goog.net.xpc.NixTransport.NIX_CREATE_CHANNEL = 'GCXPC____NIXJS_create_channel';
  * @type {string}
  */
 goog.net.xpc.NixTransport.NIX_ID_FIELD = 'GCXPC____NIXVBS_container';
+
+
+/**
+ * Determines if the installed version of IE supports accessing window.opener
+ * after it has been set to a non-Window/null value. NIX relies on this being
+ * possible.
+ * @return {boolean} Whether window.opener behavior is compatible with NIX.
+ */
+goog.net.xpc.NixTransport.isNixSupported = function() {
+  var isSupported = false;
+  try {
+    var oldOpener = window.opener;
+    // The compiler complains (as it should!) if we set window.opener to
+    // something other than a window or null.
+    window.opener = /** @type {Window} */ ({});
+    isSupported = goog.reflect.canAccessProperty(window, 'opener');
+    window.opener = oldOpener;
+  } catch(e) { }
+  return isSupported;
+};
 
 
 /**
@@ -273,7 +294,7 @@ goog.net.xpc.NixTransport.prototype.nixChannel_ = null;
  * Connect this transport.
  */
 goog.net.xpc.NixTransport.prototype.connect = function() {
-  if (this.channel_.getRole() == goog.net.xpc.CrossPageChannel.Role.OUTER) {
+  if (this.channel_.getRole() == goog.net.xpc.CrossPageChannelRole.OUTER) {
     this.attemptOuterSetup_();
   } else {
     this.attemptInnerSetup_();
@@ -445,9 +466,7 @@ goog.net.xpc.NixTransport.prototype.send = function(service, payload) {
 };
 
 
-/**
- * Disposes of the transport.
- */
+/** @override */
 goog.net.xpc.NixTransport.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   this.nixChannel_ = null;

@@ -27,6 +27,8 @@ goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.events.KeyCodes');
+goog.require('goog.fx.Transition');
+goog.require('goog.fx.Transition.EventType');
 goog.require('goog.style');
 goog.require('goog.userAgent');
 
@@ -43,6 +45,8 @@ goog.require('goog.userAgent');
  * @param {goog.ui.PopupBase.Type=} opt_type Type of popup.
  */
 goog.ui.PopupBase = function(opt_element, opt_type) {
+  goog.events.EventTarget.call(this);
+
   /**
    * An event handler to manage the events easily
    * @type {goog.events.EventHandler}
@@ -153,6 +157,22 @@ goog.ui.PopupBase.prototype.enableCrossIframeDismissal_ = true;
  * @private
  */
 goog.ui.PopupBase.prototype.type_ = goog.ui.PopupBase.Type.TOGGLE_DISPLAY;
+
+
+/**
+ * Transition to play on showing the popup.
+ * @type {goog.fx.Transition|undefined}
+ * @private
+ */
+goog.ui.PopupBase.prototype.showTransition_;
+
+
+/**
+ * Transition to play on hiding the popup.
+ * @type {goog.fx.Transition|undefined}
+ * @private
+ */
+goog.ui.PopupBase.prototype.hideTransition_;
 
 
 /**
@@ -323,6 +343,20 @@ goog.ui.PopupBase.prototype.setAutoHideRegion = function(element) {
 
 
 /**
+ * Sets transition animation on showing and hiding the popup.
+ * @param {goog.fx.Transition=} opt_showTransition Transition to play on
+ *     showing the popup.
+ * @param {goog.fx.Transition=} opt_hideTransition Transition to play on
+ *     hiding the popup.
+ */
+goog.ui.PopupBase.prototype.setTransition = function(
+    opt_showTransition, opt_hideTransition) {
+  this.showTransition_ = opt_showTransition;
+  this.hideTransition_ = opt_hideTransition;
+};
+
+
+/**
  * Returns the time when the popup was last shown.
  *
  * @return {number} time in ms since epoch when the popup was last shown, or
@@ -397,6 +431,10 @@ goog.ui.PopupBase.prototype.isOrWasRecentlyVisible = function() {
  * @param {boolean} visible Desired visibility state.
  */
 goog.ui.PopupBase.prototype.setVisible = function(visible) {
+  // Make sure that any currently running transition is stopped.
+  if (this.showTransition_) this.showTransition_.stop();
+  if (this.hideTransition_) this.hideTransition_.stop();
+
   if (visible) {
     this.show_();
   } else {
@@ -463,7 +501,15 @@ goog.ui.PopupBase.prototype.show_ = function() {
       // in an iframe and the deactivate fires within that iframe.
       // The active element in the top-level document will remain the iframe
       // itself.
-      var activeElement = doc.activeElement;
+      var activeElement;
+      /** @preserveTry */
+      try {
+        activeElement = doc.activeElement;
+      } catch (e) {
+        // There is an IE browser bug which can cause just the reading of
+        // document.activeElement to throw an Unspecified Error.  This
+        // may have to do with loading a popup within a hidden iframe.
+      }
       while (activeElement && activeElement.nodeName == 'IFRAME') {
         /** @preserveTry */
         try {
@@ -496,14 +542,23 @@ goog.ui.PopupBase.prototype.show_ = function() {
 
   // Make the popup visible.
   if (this.type_ == goog.ui.PopupBase.Type.TOGGLE_DISPLAY) {
-     this.showPopupElement();
+    this.showPopupElement();
   } else if (this.type_ == goog.ui.PopupBase.Type.MOVE_OFFSCREEN) {
     this.reposition();
   }
   this.isVisible_ = true;
 
-  // Notify derived classes and handlers.
-  this.onShow_();
+  // If there is transition to play, we play it and fire SHOW event after
+  // the transition is over.
+  if (this.showTransition_) {
+    goog.events.listenOnce(
+        /** @type {goog.events.EventTarget} */ (this.showTransition_),
+        goog.fx.Transition.EventType.END, this.onShow_, false, this);
+    this.showTransition_.play();
+  } else {
+    // Notify derived classes and handlers.
+    this.onShow_();
+  }
 };
 
 
@@ -525,6 +580,29 @@ goog.ui.PopupBase.prototype.hide_ = function(opt_target) {
     this.handler_.removeAll();
   }
 
+  // If there is transition to play, we play it and only hide the element
+  // (and fire HIDE event) after the transition is over.
+  if (this.hideTransition_) {
+    goog.events.listenOnce(
+        /** @type {goog.events.EventTarget} */ (this.hideTransition_),
+        goog.fx.Transition.EventType.END,
+        goog.partial(this.continueHidingPopup_, opt_target), false, this);
+    this.hideTransition_.play();
+  } else {
+    this.continueHidingPopup_(opt_target);
+  }
+
+  return true;
+};
+
+
+/**
+ * Continues hiding the popup. This is a continuation from hide_. It is
+ * a separate method so that we can add a transition before hiding.
+ * @param {Object=} opt_target Target of the event causing the hide.
+ * @private
+ */
+goog.ui.PopupBase.prototype.continueHidingPopup_ = function(opt_target) {
   // Hide the popup.
   if (this.type_ == goog.ui.PopupBase.Type.TOGGLE_DISPLAY) {
     if (this.shouldHideAsync_) {
@@ -539,8 +617,6 @@ goog.ui.PopupBase.prototype.hide_ = function(opt_target) {
 
   // Notify derived classes and handlers.
   this.onHide_(opt_target);
-
-  return true;
 };
 
 
@@ -680,11 +756,13 @@ goog.ui.PopupBase.prototype.onDocumentBlur_ = function(e) {
 
   var doc = goog.dom.getOwnerDocument(this.element_);
 
-  // Ignore blur events if the active element is still inside the popup.
+  // Ignore blur events if the active element is still inside the popup or if
+  // there is no longer an active element.  For example, a widget like a
+  // goog.ui.Button might programatically blur itself before losing tabIndex.
   if (goog.userAgent.IE || goog.userAgent.OPERA) {
     var activeElement = doc.activeElement;
-    if (activeElement && goog.dom.contains(this.element_,
-        activeElement)) {
+    if (!activeElement || goog.dom.contains(this.element_,
+        activeElement) || activeElement.tagName == 'BODY') {
       return;
     }
 
@@ -712,10 +790,12 @@ goog.ui.PopupBase.prototype.shouldDebounce_ = function() {
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.PopupBase.prototype.disposeInternal = function() {
-  goog.ui.PopupBase.superClass_.disposeInternal.call(this);
+  goog.base(this, 'disposeInternal');
   this.handler_.dispose();
+  goog.dispose(this.showTransition_);
+  goog.dispose(this.hideTransition_);
   delete this.element_;
   delete this.handler_;
 };

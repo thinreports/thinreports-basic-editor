@@ -162,7 +162,7 @@ goog.testing.TestCase.prototype.order = goog.testing.TestCase.Order.SORTED;
 /**
  * Save a reference to window.timeout, so any code that overrides the default
  * behavior (e.g. MockClock) doesn't affect our runner.
- * @type {function(this:Window, (Function|string), number, *=): number}
+ * @type {function((Function|string), number, *=): number}
  * @private
  */
 goog.testing.TestCase.protectedTimeout_ = window.setTimeout;
@@ -257,6 +257,26 @@ goog.testing.TestCase.prototype.testRunner_ = null;
  */
 goog.testing.TestCase.prototype.add = function(test) {
   this.tests_.push(test);
+};
+
+
+/**
+ * Sets the tests.
+ * @param {Array.<goog.testing.TestCase.Test>} tests A new test array.
+ * @protected
+ */
+goog.testing.TestCase.prototype.setTests = function(tests) {
+  this.tests_ = tests;
+};
+
+
+/**
+ * Gets the tests.
+ * @return {Array.<goog.testing.TestCase.Test>} The test array.
+ * @protected
+ */
+goog.testing.TestCase.prototype.getTests = function() {
+  return this.tests_;
 };
 
 
@@ -420,7 +440,17 @@ goog.testing.TestCase.prototype.log = function(val) {
     if (typeof val == 'string') {
       val = this.getTimeStamp_() + ' : ' + val;
     }
-    window.console.log(val);
+    if (val instanceof Error && val.stack) {
+      // Chrome does console.log asynchronously in a different process
+      // (http://code.google.com/p/chromium/issues/detail?id=50316).
+      // This is an acute problem for Errors, which almost never survive.
+      // Grab references to the immutable strings so they survive.
+      window.console.log(val, val.message, val.stack);
+      // TODO(user): Consider for Chrome cloning any object if we can ensure
+      // there are no circular references.
+    } else {
+      window.console.log(val);
+    }
   }
 };
 
@@ -655,16 +685,23 @@ goog.testing.TestCase.prototype.autoDiscoverTests = function() {
 
   this.log(this.getCount() + ' tests auto-discovered');
 
-  // One-lining for readability.
-  if (goog.global['setUp']) this.setUp = goog.global['setUp'];
-  if (goog.global['tearDown']) this.tearDown = goog.global['tearDown'];
-  if (goog.global['setUpPage']) this.setUpPage = goog.global['setUpPage'];
-  if (goog.global['tearDownPage']) {
-    this.tearDownPage = goog.global['tearDownPage'];
+  if (goog.global['setUp']) {
+    this.setUp = goog.bind(goog.global['setUp'], goog.global);
   }
-  if (goog.global['runTests']) this.runTests = goog.global['runTests'];
+  if (goog.global['tearDown']) {
+    this.tearDown = goog.bind(goog.global['tearDown'], goog.global);
+  }
+  if (goog.global['setUpPage']) {
+    this.setUpPage = goog.bind(goog.global['setUpPage'], goog.global);
+  }
+  if (goog.global['tearDownPage']) {
+    this.tearDownPage = goog.bind(goog.global['tearDownPage'], goog.global);
+  }
+  if (goog.global['runTests']) {
+    this.runTests = goog.bind(goog.global['runTests'], goog.global);
+  }
   if (goog.global['shouldRunTests']) {
-      this.shouldRunTests = goog.global['shouldRunTests'];
+    this.shouldRunTests = goog.bind(goog.global['shouldRunTests'], goog.global);
   }
 };
 
@@ -815,7 +852,7 @@ goog.testing.TestCase.prototype.doSuccess = function(test) {
 /**
  * Handles a test that failed.
  * @param {goog.testing.TestCase.Test} test The test that failed.
- * @param {string|Error=} opt_e The exception object associated with the
+ * @param {*=} opt_e The exception object associated with the
  *     failure or a string.
  * @protected
  */
@@ -830,7 +867,7 @@ goog.testing.TestCase.prototype.doError = function(test, opt_e) {
 
 /**
  * @param {string} name Failed test name.
- * @param {string|Error=} opt_e The exception object associated with the
+ * @param {*=} opt_e The exception object associated with the
  *     failure or a string.
  * @return {goog.testing.TestCase.Error} Error object.
  */
@@ -1002,6 +1039,22 @@ goog.testing.TestCase.Result.prototype.getSummary = function() {
   }
 
   return summary;
+};
+
+
+/**
+ * Initializes the given test case with the global test runner 'G_testRunner'.
+ * @param {goog.testing.TestCase} testCase The test case to install.
+ */
+goog.testing.TestCase.initializeTestRunner = function(testCase) {
+  testCase.autoDiscoverTests();
+  var gTestRunner = goog.global['G_testRunner'];
+  if (gTestRunner) {
+    gTestRunner['initialize'](testCase);
+  } else {
+    throw Error('G_testRunner is undefined. Please ensure goog.testing.jsunit' +
+        'is included.');
+  }
 };
 
 

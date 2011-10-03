@@ -175,7 +175,17 @@ goog.editor.Field = function(id, opt_doc) {
   this.loadState_ = goog.editor.Field.LoadState_.UNEDITABLE;
 
   var doc = opt_doc || document;
+
+  /**
+   * @type {!goog.dom.DomHelper}
+   * @protected
+   */
   this.originalDomHelper = goog.dom.getDomHelper(doc);
+
+  /**
+   * @type {Element}
+   * @protected
+   */
   this.originalElement = this.originalDomHelper.getElement(this.id);
 
   // Default to the same window as the field is in.
@@ -421,13 +431,6 @@ goog.editor.Field.prototype.getOriginalElement = function() {
 goog.editor.Field.prototype.addListener = function(type, listener, opt_capture,
                                                    opt_handler) {
   var elem = this.getElement();
-  // Opera won't fire events on <body> in whitebox mode because we make
-  // <html> contentEditable to work around some visual issues.
-  // So, if the parent node is contentEditable, listen to events on it instead.
-  if (!goog.editor.BrowserFeature.FOCUSES_EDITABLE_BODY_ON_HTML_CLICK &&
-      elem.parentNode.contentEditable) {
-    elem = elem.parentNode;
-  }
   // On Gecko, keyboard events only reliably fire on the document element.
   if (elem && goog.editor.BrowserFeature.USE_DOCUMENT_FOR_KEY_EVENTS) {
     elem = elem.ownerDocument;
@@ -742,14 +745,18 @@ goog.editor.Field.prototype.tearDownFieldObject_ = function() {
  */
 goog.editor.Field.prototype.setupChangeListeners_ = function() {
   if (goog.userAgent.OPERA && this.usesIframe()) {
-    // We can't use addListener here because we need to listen on
-    // the document, not the editable element.
-    this.eventRegister.listen(this.getEditableDomHelper().getDocument(),
-                              goog.events.EventType.FOCUS,
-                              this.dispatchFocusAndBeforeFocus_);
-    this.eventRegister.listen(this.getEditableDomHelper().getDocument(),
-                              goog.events.EventType.BLUR,
-                              this.dispatchBlur);
+    // We can't use addListener here because we need to listen on the window,
+    // and removing listeners on window objects from the event register throws
+    // an exception if the window is closed.
+    this.boundFocusListenerOpera_ =
+        goog.bind(this.dispatchFocusAndBeforeFocus_, this);
+    this.boundBlurListenerOpera_ =
+        goog.bind(this.dispatchBlur, this);
+    var editWindow = this.getEditableDomHelper().getWindow();
+    editWindow.addEventListener(goog.events.EventType.FOCUS,
+        this.boundFocusListenerOpera_, false);
+    editWindow.addEventListener(goog.events.EventType.BLUR,
+        this.boundBlurListenerOpera_, false);
   } else {
     if (goog.editor.BrowserFeature.SUPPORTS_FOCUSIN) {
       this.addListener(goog.events.EventType.FOCUS, this.dispatchFocus_);
@@ -845,6 +852,22 @@ goog.editor.Field.prototype.clearListeners_ = function() {
     this.eventRegister.removeAll();
   }
 
+  if (goog.userAgent.OPERA && this.usesIframe()) {
+    try {
+      var editWindow = this.getEditableDomHelper().getWindow();
+      editWindow.removeEventListener(goog.events.EventType.FOCUS,
+          this.boundFocusListenerOpera_, false);
+      editWindow.removeEventListener(goog.events.EventType.BLUR,
+          this.boundBlurListenerOpera_, false);
+    } catch (e) {
+      // The editWindow no longer exists, or has been navigated to a different-
+      // origin URL. Either way, the event listeners have already been removed
+      // for us.
+    }
+    delete this.boundFocusListenerOpera_;
+    delete this.boundBlurListenerOpera_;
+  }
+
   if (this.changeTimerGecko_) {
     this.changeTimerGecko_.stop();
   }
@@ -852,10 +875,7 @@ goog.editor.Field.prototype.clearListeners_ = function() {
 };
 
 
-/**
- * Removes all listeners and destroys the eventhandler object.
- * @override
- */
+/** @override */
 goog.editor.Field.prototype.disposeInternal = function() {
   if (this.isLoading() || this.isLoaded()) {
     this.logger.warning('Disposing a field that is in use.');
@@ -1347,15 +1367,16 @@ goog.editor.Field.prototype.queryCommandValueInternal_ = function(command,
  * state change)
  * @param {Function} handler The function to call if this is not an internal
  *     browser event.
- * @param {goog.events.BrowserEvent} e The browser event.
+ * @param {goog.events.BrowserEvent} browserEvent The browser event.
  * @protected
  */
-goog.editor.Field.prototype.handleDomAttrChange = function(handler, e) {
+goog.editor.Field.prototype.handleDomAttrChange =
+    function(handler, browserEvent) {
   if (this.isEventStopped(goog.editor.Field.EventType.CHANGE)) {
     return;
   }
 
-  e = e.getBrowserEvent();
+  var e = browserEvent.getBrowserEvent();
 
   // For XUL elements, since we don't care what they are doing
   try {
@@ -1869,7 +1890,7 @@ goog.editor.Field.prototype.isSelectionEditable = function() {
  */
 goog.editor.Field.cancelLinkClick_ = function(e) {
   if (goog.dom.getAncestorByTagNameAndClass(
-          /** @type {Node} */ (e.target), goog.dom.TagName.A)) {
+      /** @type {Node} */ (e.target), goog.dom.TagName.A)) {
     e.preventDefault();
   }
 };
@@ -2166,16 +2187,7 @@ goog.editor.Field.prototype.focus = function() {
       var scrollX = this.appWindow_.pageXOffset;
       var scrollY = this.appWindow_.pageYOffset;
     }
-    var element = this.getElement();
-    // Opera won't focus <body> in whitebox mode because we actually make
-    // <html> contentEditable instead to work around some visual issues.
-    // So we must focus <html> instead if <html> is the contentEditable
-    // element.
-    if (!goog.editor.BrowserFeature.FOCUSES_EDITABLE_BODY_ON_HTML_CLICK &&
-        element.parentNode.contentEditable) {
-      element = element.parentNode;
-    }
-    element.focus();
+    this.getElement().focus();
     if (goog.userAgent.OPERA) {
       this.appWindow_.scrollTo(
           /** @type {number} */ (scrollX), /** @type {number} */ (scrollY));
@@ -2265,10 +2277,11 @@ goog.editor.Field.prototype.makeEditableInternal = function(opt_iframeSrc) {
  */
 goog.editor.Field.prototype.handleFieldLoad = function() {
   if (goog.userAgent.IE) {
-    // This must happen AFTER the browser has realized contentEditable is
-    // on.  This does not work if it directly follows the setting of the
-    // contentEditable attribute.  It seems that doing the getElemById
-    // above is enough to force IE to update its state.
+    // This sometimes fails if the selection is invalid. This can happen, for
+    // example, if you attach a CLICK handler to the field that causes the
+    // field to be removed from the DOM and replaced with an editor
+    // -- however, listening to another event like MOUSEDOWN does not have this
+    // issue since no mouse selection has happened at that time.
     goog.dom.Range.clearSelection(this.editableDomHelper.getWindow());
   }
 
@@ -2471,7 +2484,6 @@ goog.editor.Field.prototype.makeIframeField_ = function(opt_iframeSrc) {
  *
  * @param {HTMLIFrameElement} iframe The iframe element.
  * @protected
- * @notypecheck
  */
 goog.editor.Field.prototype.attachIframe = function(iframe) {
   var field = this.getOriginalElement();
@@ -2487,7 +2499,6 @@ goog.editor.Field.prototype.attachIframe = function(iframe) {
  * @return {goog.editor.icontent.FieldFormatInfo} The FieldFormatInfo object for
  *     this field's configuration.
  * @protected
- * @notypecheck
  */
 goog.editor.Field.prototype.getFieldFormatInfo = function(extraStyles) {
   var originalElement = this.getOriginalElement();

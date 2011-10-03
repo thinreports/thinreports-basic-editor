@@ -18,6 +18,7 @@
  */
 
 goog.provide('goog.module.ModuleManager');
+goog.provide('goog.module.ModuleManager.CallbackType');
 goog.provide('goog.module.ModuleManager.FailureType');
 
 goog.require('goog.Disposable');
@@ -247,14 +248,17 @@ goog.module.ModuleManager.prototype.setAllModuleInfo = function(infoMap) {
 
 
 /**
- * Sets the module info for all modules. Should only be called once.
+ * Sets the module info for all modules. Should only be called once. Also
+ * marks modules that are currently being loaded.
  *
  * @param {string=} opt_info A string representation of the module dependency
  *      graph, in the form: module1:dep1,dep2/module2:dep1,dep2 etc.
  *     Where depX is the base-36 encoded position of the dep in the module list.
+ * @param {Array.<string>=} opt_loadingModuleIds A list of moduleIds that
+ *     are currently being loaded.
  */
 goog.module.ModuleManager.prototype.setAllModuleInfoString = function(
-    opt_info) {
+    opt_info, opt_loadingModuleIds) {
   if (!goog.isString(opt_info)) {
     // The call to this method is generated in two steps, the argument is added
     // after some of the compilation passes.  This means that the initial code
@@ -284,6 +288,9 @@ goog.module.ModuleManager.prototype.setAllModuleInfoString = function(
     }
     moduleIds.push(id);
     this.moduleInfoMap_[id] = new goog.module.ModuleInfo(deps, id);
+  }
+  if (opt_loadingModuleIds) {
+    goog.array.extend(this.loadingModuleIds_, opt_loadingModuleIds);
   }
   this.maybeFinishBaseLoad_();
 };
@@ -468,6 +475,18 @@ goog.module.ModuleManager.prototype.loadModuleOrEnqueue_ = function(id) {
 
 
 /**
+ * Gets the amount of delay to wait before sending a request for more modules.
+ * If a certain module request fails, we backoff a little bit and try again.
+ * @return {number} Delay, in ms.
+ * @private
+ */
+goog.module.ModuleManager.prototype.getBackOff_ = function() {
+  // 5 seconds after one error, 20 seconds after 2.
+  return Math.pow(this.consecutiveFailures_, 2) * 5000;
+};
+
+
+/**
  * Loads a module and any of its not-yet-loaded prerequisites. If batch mode is
  * enabled, the prerequisites will be loaded together with the requested module.
  *
@@ -512,11 +531,20 @@ goog.module.ModuleManager.prototype.loadModule_ = function(
   // Dispatch an active/idle change if needed.
   this.dispatchActiveIdleChangeIfNeeded_();
 
-  this.loader_.loadModules(
-      goog.array.clone(ids), this.moduleInfoMap_, null,
-      goog.bind(this.handleLoadError_, this),
-      goog.bind(this.handleLoadTimeout_, this),
-      !!opt_forceReload);
+  function load() {
+    this.loader_.loadModules(
+        goog.array.clone(ids), this.moduleInfoMap_, null,
+        goog.bind(this.handleLoadError_, this),
+        goog.bind(this.handleLoadTimeout_, this),
+        !!opt_forceReload);
+  }
+
+  var delay = this.getBackOff_();
+  if (delay) {
+    window.setTimeout(goog.bind(load, this), delay);
+  } else {
+    load.call(this);
+  }
 };
 
 
@@ -570,6 +598,12 @@ goog.module.ModuleManager.prototype.maybeFinishBaseLoad_ = function() {
  * @param {string} id A module id.
  */
 goog.module.ModuleManager.prototype.setLoaded = function(id) {
+  if (this.isDisposed()) {
+    this.logger_.warning(
+        'Module loaded after module manager was disposed: ' + id);
+    return;
+  }
+
   this.logger_.info('Module loaded: ' + id);
 
   this.moduleInfoMap_[id].onLoad(goog.bind(this.getModuleContext, this));
@@ -992,9 +1026,7 @@ goog.module.ModuleManager.prototype.executeCallbacks_ = function(type) {
 };
 
 
-/**
- * Disposes of the module manager.
- */
+/** @override */
 goog.module.ModuleManager.prototype.disposeInternal = function() {
   goog.module.ModuleManager.superClass_.disposeInternal.call(this);
 
@@ -1006,3 +1038,4 @@ goog.module.ModuleManager.prototype.disposeInternal = function() {
   this.requestedModuleIdsQueue_ = null;
   this.callbackMap_ = null;
 };
+

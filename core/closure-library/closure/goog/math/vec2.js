@@ -33,23 +33,23 @@ goog.require('goog.math.Coordinate');
  * Class for a two-dimensional vector object and assorted functions useful for
  * manipulating points.
  *
- * @param {number=} opt_x The x coordinate for the vector.
- * @param {number=} opt_y The y coordinate for the vector.
+ * @param {number} x The x coordinate for the vector.
+ * @param {number} y The y coordinate for the vector.
  * @constructor
  * @extends {goog.math.Coordinate}
  */
-goog.math.Vec2 = function(opt_x, opt_y) {
+goog.math.Vec2 = function(x, y) {
   /**
    * X-value
    * @type {number}
    */
-  this.x = Number(opt_x) || 0;
+  this.x = x;
 
   /**
    * Y-value
    * @type {number}
    */
-  this.y = Number(opt_y) || 0;
+  this.y = y;
 };
 goog.inherits(goog.math.Vec2, goog.math.Coordinate);
 
@@ -167,6 +167,37 @@ goog.math.Vec2.prototype.subtract = function(b) {
   this.x -= b.x;
   this.y -= b.y;
   return this;
+};
+
+
+/**
+ * Rotates this vector in-place by a given angle, specified in radians.
+ * @param {number} angle The angle, in radians.
+ * @return {!goog.math.Vec2} This vector rotated {@code angle} radians.
+ */
+goog.math.Vec2.prototype.rotate = function(angle) {
+  var cos = Math.cos(angle);
+  var sin = Math.sin(angle);
+  var newX = this.x * cos - this.y * sin;
+  var newY = this.y * cos + this.x * sin;
+  this.x = newX;
+  this.y = newY;
+  return this;
+};
+
+
+/**
+ * Rotates a vector by a given angle, specified in radians, relative to a given
+ * axis rotation point. The returned vector is a newly created instance - no
+ * in-place changes are done.
+ * @param {!goog.math.Vec2} v A vector.
+ * @param {!goog.math.Vec2} axisPoint The rotation axis point.
+ * @param {number} angle The angle, in radians.
+ * @return {!goog.math.Vec2} The rotated vector in a newly created instance.
+ */
+goog.math.Vec2.rotateAroundPoint = function(v, axisPoint, angle) {
+  var res = v.clone();
+  return res.subtract(axisPoint).rotate(angle).add(axisPoint);
 };
 
 

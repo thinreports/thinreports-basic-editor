@@ -5,7 +5,8 @@ $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
 module TREDevelopment
   ROOT              = File.expand_path(File.dirname(__FILE__))
   PROJECT_ROOT      = '..'
-  CLOSURE_COMPILER  = File.join(ROOT, 'compiler-latest', 'compiler.jar')
+  CLOSURE_COMPILER  = File.join(ROOT, 'tools', 'closure-compiler-latest', 'compiler.jar')
+  TEMPLATE_COMPILER = File.join(ROOT, 'tools', 'template-compiler-latest', 'SoyToJsSrcCompiler.jar')
 
   class CommandBuilder
     attr_reader :commands
@@ -97,6 +98,10 @@ module TREDevelopment
         super(ROOT)
       end
       
+      def closure_templates_for(*paths)
+        path_from_root(*paths.unshift('closure-templates'))
+      end
+      
       def closure_library_for(*paths)
         path_from_root(*paths.unshift('closure-library'))
       end
@@ -111,6 +116,10 @@ module TREDevelopment
       
       def closure_compiler_jar(options = {})
         quote_path(CLOSURE_COMPILER, options)
+      end
+      
+      def template_compiler_jar(options = {})
+        quote_path(TEMPLATE_COMPILER, options)
       end
       
       def closure_depswriter_py

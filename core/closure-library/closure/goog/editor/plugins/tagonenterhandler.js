@@ -44,12 +44,7 @@ goog.require('goog.userAgent');
  * @extends {goog.editor.plugins.EnterHandler}
  */
 goog.editor.plugins.TagOnEnterHandler = function(tag) {
-  /**
-   * The type of block level tag to add on enter.
-   * @type {goog.dom.TagName}
-   * @private
-   */
-  this.tag_ = tag;
+  this.tag = tag;
 
   goog.editor.plugins.EnterHandler.call(this);
 };
@@ -57,18 +52,18 @@ goog.inherits(goog.editor.plugins.TagOnEnterHandler,
     goog.editor.plugins.EnterHandler);
 
 
-/** @inheritDoc */
+/** @override */
 goog.editor.plugins.TagOnEnterHandler.prototype.getTrogClassId = function() {
   return 'TagOnEnterHandler';
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.editor.plugins.TagOnEnterHandler.prototype.getNonCollapsingBlankHtml =
     function() {
-  if (this.tag_ == goog.dom.TagName.P) {
+  if (this.tag == goog.dom.TagName.P) {
     return '<p>&nbsp;</p>';
-  } else if (this.tag_ == goog.dom.TagName.DIV) {
+  } else if (this.tag == goog.dom.TagName.DIV) {
     return '<div><br></div>';
   }
   return '<br>';
@@ -84,21 +79,21 @@ goog.editor.plugins.TagOnEnterHandler.prototype.activeOnUneditableFields =
     goog.functions.TRUE;
 
 
-/** @inheritDoc */
+/** @override */
 goog.editor.plugins.TagOnEnterHandler.prototype.isSupportedCommand = function(
     command) {
   return command == goog.editor.Command.DEFAULT_TAG;
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.editor.plugins.TagOnEnterHandler.prototype.queryCommandValue = function(
     command) {
-  return command == goog.editor.Command.DEFAULT_TAG ? this.tag_ : null;
+  return command == goog.editor.Command.DEFAULT_TAG ? this.tag : null;
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.editor.plugins.TagOnEnterHandler.prototype.handleBackspaceInternal =
     function(e, range) {
   goog.editor.plugins.TagOnEnterHandler.superClass_.handleBackspaceInternal.
@@ -110,17 +105,17 @@ goog.editor.plugins.TagOnEnterHandler.prototype.handleBackspaceInternal =
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.editor.plugins.TagOnEnterHandler.prototype.processParagraphTagsInternal =
     function(e, split) {
   if ((goog.userAgent.OPERA || goog.userAgent.IE) &&
-      this.tag_ != goog.dom.TagName.P) {
-    this.ensureBlockIeOpera(this.tag_);
+      this.tag != goog.dom.TagName.P) {
+    this.ensureBlockIeOpera(this.tag);
   }
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.editor.plugins.TagOnEnterHandler.prototype.handleDeleteGecko = function(
     e) {
   var range = this.fieldObject.getRange();
@@ -144,7 +139,7 @@ goog.editor.plugins.TagOnEnterHandler.prototype.handleDeleteGecko = function(
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.editor.plugins.TagOnEnterHandler.prototype.handleKeyUpInternal = function(
     e) {
   if (goog.userAgent.GECKO) {
@@ -155,7 +150,7 @@ goog.editor.plugins.TagOnEnterHandler.prototype.handleKeyUpInternal = function(
     }
   } else if ((goog.userAgent.IE || goog.userAgent.OPERA) &&
              e.keyCode == goog.events.KeyCodes.ENTER) {
-    this.ensureBlockIeOpera(this.tag_, true);
+    this.ensureBlockIeOpera(this.tag, true);
   }
   // Safari uses DIVs by default.
 };
@@ -217,16 +212,16 @@ goog.editor.plugins.TagOnEnterHandler.prototype.ensureNodeIsWrappedW3c_ =
       return container == child.parentNode; };
     var nodeToWrap = goog.dom.getAncestor(node, isChildOfFn, true);
     container = goog.editor.plugins.TagOnEnterHandler.wrapInContainerW3c_(
-        this.tag_, {node: nodeToWrap, offset: 0}, container);
+        this.tag, {node: nodeToWrap, offset: 0}, container);
   }
   return container;
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.editor.plugins.TagOnEnterHandler.prototype.handleEnterWebkitInternal =
     function(e) {
-  if (this.tag_ == goog.dom.TagName.DIV) {
+  if (this.tag == goog.dom.TagName.DIV) {
     var range = this.fieldObject.getRange();
     var container =
         goog.editor.style.getContainer(range.getContainerElement());
@@ -238,7 +233,7 @@ goog.editor.plugins.TagOnEnterHandler.prototype.handleEnterWebkitInternal =
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.editor.plugins.TagOnEnterHandler.prototype.
     handleEnterAtCursorGeckoInternal = function(e, wasCollapsed, range) {
   // We use this because there are a few cases where FF default
@@ -316,7 +311,7 @@ goog.editor.plugins.TagOnEnterHandler.prototype.breakOutOfEmptyListItemGecko_ =
 
   // TODO(robbyw): Should we apply the list or list item styles to the new node?
   var newNode = goog.dom.getDomHelper(li).createElement(
-      inSubList ? goog.dom.TagName.LI : this.tag_);
+      inSubList ? goog.dom.TagName.LI : this.tag);
 
   if (!li.previousSibling) {
     goog.dom.insertSiblingBefore(newNode, listNode);
@@ -553,8 +548,9 @@ goog.editor.plugins.TagOnEnterHandler.prototype.scrollCursorIntoViewGecko_ =
   // element to be in view.
   var bottomOfNode = elementY + element.offsetHeight;
 
+  var dom = this.getFieldDomHelper();
   var win = this.getFieldDomHelper().getWindow();
-  var scrollY = goog.dom.getPageScroll(win).y;
+  var scrollY = dom.getDocumentScroll().y;
   var viewportHeight = goog.dom.getViewportSize(win).height;
 
   // If the botom of the element is outside the viewport, move it into view

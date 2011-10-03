@@ -39,12 +39,39 @@ goog.reflect.object = function(type, object) {
 
 
 /**
- * To assert to the compiler that an operation is needed when it would other
- * wise be stripped. For example:
+ * To assert to the compiler that an operation is needed when it would
+ * otherwise be stripped. For example:
  * <code>
  *     // Force a layout
  *     goog.reflect.sinkValue(dialog.offsetHeight);
  * </code>
- * @type {Function}
+ * @type {!Function}
  */
-goog.reflect.sinkValue = new Function('a', 'return a');
+goog.reflect.sinkValue = function(x) {
+  goog.reflect.sinkValue[' '](x);
+  return x;
+};
+
+
+/**
+ * The compiler should optimize this function away iff no one ever uses
+ * goog.reflect.sinkValue.
+ */
+goog.reflect.sinkValue[' '] = goog.nullFunction;
+
+
+/**
+ * Check if a property can be accessed without throwing an exception.
+ * @param {Object} obj The owner of the property.
+ * @param {string} prop The property name.
+ * @return {boolean} Whether the property is accessible. Will also return true
+ *     if obj is null.
+ */
+goog.reflect.canAccessProperty = function(obj, prop) {
+  /** @preserveTry */
+  try {
+    goog.reflect.sinkValue(obj[prop]);
+    return true;
+  } catch (e) {}
+  return false;
+};

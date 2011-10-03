@@ -186,6 +186,13 @@ i {
 }
 
 #test-visible {
+  background: yellow;
+  position: absolute;
+  overflow: hidden;
+}
+
+#test-visible2 {
+  background: #ebebeb;
   position: absolute;
   overflow: hidden;
 }
@@ -439,18 +446,25 @@ xxxxxxxx x</div>
   <div id="item8" class="scrollable-container-item">8</div>
 </div>
 
-<div id="test-visible" style="background-color:yellow;">
+<div id="test-visible">
 Test-visible
 <div id="test-visible-el" style="height:200px;">Test-visible</div>
 Test-visible
 </div>
 
+<div id="test-visible2"></div>
+
 <div id="msFilter" style="-ms-filter:'alpha(opacity=0)'">
   A div</div>
 <div id="filter" style="filter:alpha(opacity=0)">
   Another div</div>
+
+<div id="offset-parent" style="position:relative">
+  <div id="offset-child">child</div>
+</div>
 <script>
 
+var EPSILON = 2;
 var expectedFailures = new goog.testing.ExpectedFailures();
 
 function setUpPage() {
@@ -472,6 +486,9 @@ function setUp() {
 
 function tearDown() {
   expectedFailures.handleTearDown();
+  var testVisibleDiv2 = goog.dom.getElement('test-visible2');
+  testVisibleDiv2.setAttribute('style', '');
+  testVisibleDiv2.innerHTML = '';
 }
 
 function testSetStyle() {
@@ -555,7 +572,7 @@ function testGetComputedStyleMsFilter() {
     // IE always returns empty string for computed styles.
     assertEquals('', goog.style.getComputedStyle(e, 'filter'));
   } else {
-    // Non IE returns 'none' for filter as it is a SVG property
+    // Non IE returns 'none' for filter as it is an SVG property
     assertEquals('none', goog.style.getComputedStyle(e, 'filter'));
   }
 }
@@ -568,7 +585,7 @@ function testGetComputedStyleFilter() {
     // IE always returns empty string for computed styles.
     assertEquals('', goog.style.getComputedStyle(e, 'filter'));
   } else {
-    // Non IE returns 'none' for filter as it is a SVG property
+    // Non IE returns 'none' for filter as it is an SVG property
     assertEquals('none', goog.style.getComputedStyle(e, 'filter'));
   }
 }
@@ -1003,6 +1020,57 @@ function testGetSize() {
   assertNotEquals(0, dims.height);
 }
 
+function testGetSizeSvgElements() {
+  var svgEl = document.createElementNS &&
+       document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  if (!svgEl || svgEl.getAttribute('transform') == '' ||
+      (goog.userAgent.WEBKIT && !goog.userAgent.isVersion(534.8))) {
+    // SVG not supported, or getBoundingClientRect not supported on SVG
+    // elements.
+    return;
+  }
+
+  document.body.appendChild(svgEl);
+  el = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  el.setAttribute('x', 10);
+  el.setAttribute('y', 10);
+  el.setAttribute('width', 32);
+  el.setAttribute('height', 21);
+  el.setAttribute('fill', '#000');
+
+  svgEl.appendChild(el);
+
+  dims = goog.style.getSize(el);
+  assertEquals(32, dims.width);
+  assertEquals(21, dims.height);
+
+  dims = goog.style.getSize(svgEl);
+  if (goog.userAgent.WEBKIT) {
+    // The size of the <svg> will be the viewport size on WebKit browsers.
+    assertTrue(dims.width >= 32);
+    assertTrue(dims.height >= 21);
+  } else {
+    assertEquals(32, dims.width);
+    assertEquals(21, dims.height);
+  }
+
+  el.style.visibility = 'none';
+
+  dims = goog.style.getSize(el);
+  assertEquals(32, dims.width);
+  assertEquals(21, dims.height);
+
+  dims = goog.style.getSize(svgEl);
+  if (goog.userAgent.WEBKIT) {
+    // The size of the <svg> will be the viewport size on WebKit browsers.
+    assertTrue(dims.width >= 32);
+    assertTrue(dims.height >= 21);
+  } else {
+    assertEquals(32, dims.width);
+    assertEquals(21, dims.height);
+  }
+}
+
 function testGetSizeInlineBlock() {
   var el = goog.dom.getElement('height-test-inner');
   var dims = goog.style.getSize(el);
@@ -1210,9 +1278,9 @@ function testSetBorderBoxSize() {
     assertEquals('border-box', el.style.MozBoxSizing);
   } else if (goog.userAgent.WEBKIT) {
     assertEquals('border-box', el.style.WebkitBoxSizing);
-  } else if (goog.userAgent.OPERA) {
-    // opera doesnt expose this as a DOM property.
-    assertEquals('border-box', el.style.getPropertyValue('box-sizing'));
+  } else if (goog.userAgent.OPERA ||
+             goog.userAgent.IE && goog.userAgent.isVersion('8')) {
+    assertEquals('border-box', el.style.boxSizing);
   }
 }
 
@@ -1256,9 +1324,9 @@ function testSetContentBoxSize() {
     assertEquals('content-box', el.style.MozBoxSizing);
   } else if (goog.userAgent.WEBKIT) {
     assertEquals('content-box', el.style.WebkitBoxSizing);
-  } else if (goog.userAgent.OPERA) {
-    // opera doesnt expose this as a DOM property.
-    assertEquals('content-box', el.style.getPropertyValue('box-sizing'));
+  } else if (goog.userAgent.OPERA ||
+             goog.userAgent.IE && goog.userAgent.isVersion('8')) {
+    assertEquals('content-box', el.style.boxSizing);
   }
 }
 
@@ -1839,9 +1907,215 @@ function testGetVisibleRectForElement() {
   var iframeDoc = goog.dom.getFrameContentDocument(iframe);
   el = iframeDoc.getElementById('test-visible');
   visible = goog.style.getVisibleRectForElement(el);
-  // Just check whether it is not null, which means non-zero height
+
+  var iframeViewportSize = goog.dom.getDomHelper(el).getViewportSize();
+  // NOTE(user): For iframe, the clipping viewport is always the iframe
+  // viewport, and not the actual browser viewport.
   assertNotNull(visible);
+  assertEquals(0, visible.top);
+  assertEquals(iframeViewportSize.height, visible.bottom);
+  assertEquals(0, visible.left);
+  assertEquals(iframeViewportSize.width, visible.right);
 };
+
+function testGetVisibleRectForElementWithBodyScrolled() {
+  var container = goog.dom.getElement('test-visible2');
+  var dom = goog.dom.getDomHelper(container);
+  var el = dom.createDom('div', undefined, 'Test');
+  el.style.position = 'absolute';
+  dom.append(container, el);
+
+  container.style.position = 'absolute';
+  goog.style.setPosition(container, 20, 500);
+  goog.style.setSize(container, 100, 150);
+
+  // Scroll body container such that container is exactly at top.
+  window.scrollTo(0, 500);
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(500, visibleRect.top, EPSILON);
+  assertRoughlyEquals(20, visibleRect.left, EPSILON);
+  assertRoughlyEquals(650, visibleRect.bottom, EPSILON);
+  assertRoughlyEquals(120, visibleRect.right, EPSILON);
+
+  // Top 100px is clipped by window viewport.
+  window.scrollTo(0, 600);
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(600, visibleRect.top, EPSILON);
+  assertRoughlyEquals(20, visibleRect.left, EPSILON);
+  assertRoughlyEquals(650, visibleRect.bottom, EPSILON);
+  assertRoughlyEquals(120, visibleRect.right, EPSILON);
+
+  var winSize = dom.getViewportSize();
+
+  // Left 50px is clipped by window viewport.
+  // Right part is clipped by window viewport.
+  goog.style.setSize(container, 10000, 150);
+  window.scrollTo(70, 500);
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(500, visibleRect.top, EPSILON);
+  assertRoughlyEquals(70, visibleRect.left, EPSILON);
+  assertRoughlyEquals(650, visibleRect.bottom, EPSILON);
+  assertRoughlyEquals(70 + winSize.width, visibleRect.right, EPSILON);
+
+  // Bottom part is clipped by window viewport.
+  goog.style.setSize(container, 100, 2000);
+  window.scrollTo(0, 500);
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(500, visibleRect.top, EPSILON);
+  assertRoughlyEquals(20, visibleRect.left, EPSILON);
+  assertRoughlyEquals(120, visibleRect.right, EPSILON);
+  assertRoughlyEquals(500 + winSize.height, visibleRect.bottom, EPSILON);
+
+  goog.style.setPosition(container, 10000, 10000);
+  assertNull(goog.style.getVisibleRectForElement(el));
+}
+
+function testGetVisibleRectForElementWithNestedAreaAndNonOffsetAncestor() {
+  // IE7 quirks mode somehow consider container2 below as offset parent
+  // of the element, which is incorrect.
+  if (goog.userAgent.IE && !goog.userAgent.isVersion('8')) {
+    return;
+  }
+
+  var container = goog.dom.getElement('test-visible2');
+  var dom = goog.dom.getDomHelper(container);
+  var container2 = dom.createDom('div');
+  var el = dom.createDom('div', undefined, 'Test');
+  el.style.position = 'absolute';
+  dom.append(container, container2);
+  dom.append(container2, el);
+
+  container.style.position = 'absolute';
+  goog.style.setPosition(container, 20, 500);
+  goog.style.setSize(container, 100, 150);
+
+  // container2 is a scrollable container but is not an offsetParent of
+  // the element. It is ignored in the computation.
+  container2.style.overflow = 'hidden';
+  container2.style.marginTop = '50px';
+  container2.style.marginLeft = '100px';
+  goog.style.setSize(container2, 150, 100);
+
+  // Scroll body container such that container is exactly at top.
+  window.scrollTo(0, 500);
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(500, visibleRect.top, EPSILON);
+  assertRoughlyEquals(20, visibleRect.left, EPSILON);
+  assertRoughlyEquals(650, visibleRect.bottom, EPSILON);
+  assertRoughlyEquals(120, visibleRect.right, EPSILON);
+
+  // Top 100px is clipped by window viewport.
+  window.scrollTo(0, 600);
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(600, visibleRect.top, EPSILON);
+  assertRoughlyEquals(20, visibleRect.left, EPSILON);
+  assertRoughlyEquals(650, visibleRect.bottom, EPSILON);
+  assertRoughlyEquals(120, visibleRect.right, EPSILON);
+
+  var winSize = dom.getViewportSize();
+
+  // Left 50px is clipped by window viewport.
+  // Right part is clipped by window viewport.
+  goog.style.setSize(container, 10000, 150);
+  window.scrollTo(70, 500);
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(500, visibleRect.top, EPSILON);
+  assertRoughlyEquals(70, visibleRect.left, EPSILON);
+  assertRoughlyEquals(650, visibleRect.bottom, EPSILON);
+  assertRoughlyEquals(70 + winSize.width, visibleRect.right, EPSILON);
+
+  // Bottom part is clipped by window viewport.
+  goog.style.setSize(container, 100, 2000);
+  window.scrollTo(0, 500);
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(500, visibleRect.top, EPSILON);
+  assertRoughlyEquals(20, visibleRect.left, EPSILON);
+  assertRoughlyEquals(120, visibleRect.right, EPSILON);
+  assertRoughlyEquals(500 + winSize.height, visibleRect.bottom, EPSILON);
+
+  goog.style.setPosition(container, 10000, 10000);
+  assertNull(goog.style.getVisibleRectForElement(el));
+}
+
+function testGetVisibleRectForElementInsideNestedScrollableArea() {
+  var container = goog.dom.getElement('test-visible2');
+  var dom = goog.dom.getDomHelper(container);
+  var container2 = dom.createDom('div');
+  var el = dom.createDom('div', undefined, 'Test');
+  el.style.position = 'absolute';
+  dom.append(container, container2);
+  dom.append(container2, el);
+
+  container.style.position = 'absolute';
+  goog.style.setPosition(container, 100 /* left */, 500 /* top */);
+  goog.style.setSize(container, 300 /* width */, 300 /* height */);
+
+  container2.style.overflow = 'hidden';
+  container2.style.position = 'relative';
+  goog.style.setPosition(container2, 100, 50);
+  goog.style.setSize(container2, 150, 100);
+
+  // Scroll body container such that container is exactly at top.
+  window.scrollTo(0, 500);
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(550, visibleRect.top, EPSILON);
+  assertRoughlyEquals(200, visibleRect.left, EPSILON);
+  assertRoughlyEquals(650, visibleRect.bottom, EPSILON);
+  assertRoughlyEquals(350, visibleRect.right, EPSILON);
+
+  // Left 50px is clipped by container.
+  goog.style.setPosition(container2, -50, 50);
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(550, visibleRect.top, EPSILON);
+  assertRoughlyEquals(100, visibleRect.left, EPSILON);
+  assertRoughlyEquals(650, visibleRect.bottom, EPSILON);
+  assertRoughlyEquals(200, visibleRect.right, EPSILON);
+
+  // Right part is clipped by container.
+  goog.style.setPosition(container2, 100, 50);
+  goog.style.setWidth(container2, 1000, 100);
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(550, visibleRect.top, EPSILON);
+  assertRoughlyEquals(200, visibleRect.left, EPSILON);
+  assertRoughlyEquals(650, visibleRect.bottom, EPSILON);
+  assertRoughlyEquals(400, visibleRect.right, EPSILON);
+
+  // Top 50px is clipped by container.
+  goog.style.setStyle(container2, 'width', '150px');
+  goog.style.setStyle(container2, 'top', '-50px');
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(500, visibleRect.top, EPSILON);
+  assertRoughlyEquals(200, visibleRect.left, EPSILON);
+  assertRoughlyEquals(550, visibleRect.bottom, EPSILON);
+  assertRoughlyEquals(350, visibleRect.right, EPSILON);
+
+  // Bottom part is clipped by container.
+  goog.style.setStyle(container2, 'top', '50px');
+  goog.style.setStyle(container2, 'height', '1000px');
+  var visibleRect = goog.style.getVisibleRectForElement(el);
+  assertNotNull(visibleRect);
+  assertRoughlyEquals(550, visibleRect.top, EPSILON);
+  assertRoughlyEquals(200, visibleRect.left, EPSILON);
+  assertRoughlyEquals(800, visibleRect.bottom, EPSILON);
+  assertRoughlyEquals(350, visibleRect.right, EPSILON);
+
+  // Outside viewport.
+  goog.style.setStyle(container2, 'top', '10000px');
+  goog.style.setStyle(container2, 'left', '10000px');
+  assertNull(goog.style.getVisibleRectForElement(el));
+}
 
 function testScrollIntoContainerView() {
   var container = goog.dom.getElement('scrollable-container');
@@ -1908,6 +2182,13 @@ function testScrollBarWidth() {
       (innerAbsoluteWidth + width - 1) + 'px');
   assertTrue('should have a scroll bar', hasVerticalScroll(outer));
   assertTrue('should have a scroll bar', hasHorizontalScroll(outer));
+}
+
+function testOffsetParent() {
+  var $ = goog.dom.getElement;
+  var parent = $('offset-parent');
+  var child = $('offset-child');
+  assertEquals(parent, goog.style.getOffsetParent(child));
 }
 
 function hasVerticalScroll(el) {

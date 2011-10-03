@@ -237,6 +237,14 @@ goog.ui.Control.prototype.handleMouseEvents_ = true;
 goog.ui.Control.prototype.allowTextSelection_ = false;
 
 
+/**
+ * The control's preferred ARIA role.
+ * @type {?goog.dom.a11y.Role}
+ * @private
+ */
+goog.ui.Control.prototype.preferredAriaRole_ = null;
+
+
 // Event handler and renderer management.
 
 
@@ -406,7 +414,7 @@ goog.ui.Control.prototype.createDom = function() {
   this.setElementInternal(element);
 
   // Initialize ARIA role.
-  this.renderer_.setAriaRole(element);
+  this.renderer_.setAriaRole(element, this.getPreferredAriaRole());
 
   // Initialize text selection.
   if (!this.isAllowTextSelection()) {
@@ -421,6 +429,33 @@ goog.ui.Control.prototype.createDom = function() {
     // elements can be expensive, only do it if needed (bug 1037105).
     this.renderer_.setVisible(element, false);
   }
+};
+
+
+/**
+ * Returns the control's preferred ARIA role. This can be used by a control to
+ * override the role that would be assigned by the renderer.  This is useful in
+ * cases where a different ARIA role is appropriate for a control because of the
+ * context in which it's used.  E.g., a {@link goog.ui.MenuButton} added to a
+ * {@link goog.ui.Select} should have an ARIA role of LISTBOX and not MENUITEM.
+ * @return {?goog.dom.a11y.Role} This control's preferred ARIA role or null if
+ *     no preferred ARIA role is set.
+ */
+goog.ui.Control.prototype.getPreferredAriaRole = function() {
+  return this.preferredAriaRole_;
+};
+
+
+/**
+ * Sets the control's preferred ARIA role. This can be used to override the role
+ * that would be assigned by the renderer.  This is useful in cases where a
+ * different ARIA role is appropriate for a control because of the
+ * context in which it's used.  E.g., a {@link goog.ui.MenuButton} added to a
+ * {@link goog.ui.Select} should have an ARIA role of LISTBOX and not MENUITEM.
+ * @param {goog.dom.a11y.Role} role This control's preferred ARIA role.
+ */
+goog.ui.Control.prototype.setPreferredAriaRole = function(role) {
+  this.preferredAriaRole_ = role;
 };
 
 
@@ -461,7 +496,7 @@ goog.ui.Control.prototype.decorateInternal = function(element) {
   this.setElementInternal(element);
 
   // Initialize ARIA role.
-  this.renderer_.setAriaRole(element);
+  this.renderer_.setAriaRole(element, this.getPreferredAriaRole());
 
   // Initialize text selection.
   if (!this.isAllowTextSelection()) {
@@ -570,7 +605,7 @@ goog.ui.Control.prototype.exitDocument = function() {
 };
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.Control.prototype.disposeInternal = function() {
   goog.ui.Control.superClass_.disposeInternal.call(this);
   if (this.keyHandler_) {
@@ -628,37 +663,25 @@ goog.ui.Control.prototype.setContentInternal = function(content) {
 
 
 /**
- * Returns the text caption of the component.
- * @param {function(Node): string} getChildElementContent Function that takes an
- *     element and returns a string.
- * @return {?string} Text caption of the component (null if none).
- */
-goog.ui.Control.prototype.getCaptionInternal =
-    function(getChildElementContent) {
-  var content = this.getContent();
-  if (!content || goog.isString(content)) {
-    return content;
-  }
-
-  var caption = goog.isArray(content) ?
-      goog.array.map(content, getChildElementContent).join('') :
-      goog.dom.getTextContent(/** @type {!Node} */ (content));
-  return caption && goog.string.trim(caption);
-};
-
-
-/**
- * Returns the text caption of the component.
- * @return {?string} Text caption of the component (null if none).
+ * @return {string} Text caption of the control or empty string if none.
  */
 goog.ui.Control.prototype.getCaption = function() {
-  return this.getCaptionInternal(goog.dom.getTextContent);
+  var content = this.getContent();
+  if (!content) {
+    return '';
+  }
+  var caption =
+      goog.isString(content) ? content :
+      goog.isArray(content) ? goog.array.map(content,
+          goog.dom.getRawTextContent).join('') :
+      goog.dom.getTextContent(/** @type {!Node} */ (content));
+  return goog.string.collapseBreakingSpaces(caption);
 };
 
 
 /**
  * Sets the text caption of the component.
- * @param {string} caption Text caption of the component (null to clear).
+ * @param {string} caption Text caption of the component.
  */
 goog.ui.Control.prototype.setCaption = function(caption) {
   this.setContent(caption);
@@ -668,7 +691,7 @@ goog.ui.Control.prototype.setCaption = function(caption) {
 // Component state management.
 
 
-/** @inheritDoc */
+/** @override */
 goog.ui.Control.prototype.setRightToLeft = function(rightToLeft) {
   // The superclass implementation ensures the control isn't in the document.
   goog.ui.Control.superClass_.setRightToLeft.call(this, rightToLeft);

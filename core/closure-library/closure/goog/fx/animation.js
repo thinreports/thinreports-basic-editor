@@ -28,6 +28,8 @@ goog.require('goog.Timer');
 goog.require('goog.array');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
+goog.require('goog.fx.Transition');  // Unreferenced: interface
+goog.require('goog.fx.Transition.EventType');
 goog.require('goog.object');
 
 
@@ -39,6 +41,7 @@ goog.require('goog.object');
  * @param {number} duration Length of animation in milliseconds.
  * @param {Function=} opt_acc Acceleration function, returns 0-1 for inputs 0-1.
  * @constructor
+ * @implements {goog.fx.Transition}
  * @extends {goog.events.EventTarget}
  */
 goog.fx.Animation = function(start, end, duration, opt_acc) {
@@ -98,39 +101,46 @@ goog.inherits(goog.fx.Animation, goog.events.EventTarget);
 goog.fx.Animation.EventType = {
   /**
    * Dispatched when played for the first time OR when it is resumed.
+   * @deprecated Use goog.fx.Transition.EventType.PLAY.
    */
-  PLAY: 'play',
+  PLAY: goog.fx.Transition.EventType.PLAY,
 
   /**
    * Dispatched only when the animation starts from the beginning.
+   * @deprecated Use goog.fx.Transition.EventType.BEGIN.
    */
-  BEGIN: 'begin',
+  BEGIN: goog.fx.Transition.EventType.BEGIN,
 
   /**
    * Dispatched only when animation is restarted after a pause.
+   * @deprecated Use goog.fx.Transition.EventType.RESUME.
    */
-  RESUME: 'resume',
+  RESUME: goog.fx.Transition.EventType.RESUME,
 
   /**
    * Dispatched when animation comes to the end of its duration OR stop
    * is called.
+   * @deprecated Use goog.fx.Transition.EventType.END.
    */
-  END: 'end',
+  END: goog.fx.Transition.EventType.END,
 
   /**
    * Dispatched only when stop is called.
+   * @deprecated Use goog.fx.Transition.EventType.STOP.
    */
-  STOP: 'stop',
+  STOP: goog.fx.Transition.EventType.STOP,
 
   /**
    * Dispatched only when animation comes to its end naturally.
+   * @deprecated Use goog.fx.Transition.EventType.FINISH.
    */
-  FINISH: 'finish',
+  FINISH: goog.fx.Transition.EventType.FINISH,
 
   /**
    * Dispatched when an animation is paused.
+   * @deprecated Use goog.fx.Transition.EventType.PAUSE.
    */
-  PAUSE: 'pause',
+  PAUSE: goog.fx.Transition.EventType.PAUSE,
 
   /**
    * Dispatched each frame of the animation.  This is where the actual animator
@@ -180,11 +190,35 @@ goog.fx.Animation.globalTimer_ = null;
 
 
 /**
+ * An optional animation window.
+ * @type {Window}
+ * @private
+ */
+goog.fx.Animation.animationWindow_ = null;
+
+
+/**
+ * A timing control function.
+ * @type {?function(function(number))}
+ * @private
+ */
+goog.fx.Animation.requestAnimationFrameFn_ = null;
+
+
+/**
+ * Cancel function for timing control.
+ * @type {?function(number)}
+ * @private
+ */
+goog.fx.Animation.cancelRequestAnimationFrameFn_ = null;
+
+
+/**
  * Cycle all registered animations.
  * @private
  */
 goog.fx.Animation.cycleAnimations_ = function() {
-  goog.Timer.defaultTimerObject.clearTimeout(goog.fx.Animation.globalTimer_);
+  goog.fx.Animation.resetTimer_();
 
   // Cycle all animations at the "same time".
   var now = goog.now();
@@ -196,8 +230,42 @@ goog.fx.Animation.cycleAnimations_ = function() {
   goog.fx.Animation.globalTimer_ =
       goog.object.isEmpty(goog.fx.Animation.activeAnimations_) ?
           null :
-          goog.Timer.defaultTimerObject.setTimeout(
-              goog.fx.Animation.cycleAnimations_, goog.fx.Animation.TIMEOUT);
+          goog.fx.Animation.startTimer_();
+};
+
+
+/**
+ * Resets the animation timer.
+ * @private
+ */
+goog.fx.Animation.resetTimer_ = function() {
+  if (goog.fx.Animation.globalTimer_) {
+    if (goog.fx.Animation.requestAnimationFrameFn_) {
+      goog.fx.Animation.cancelRequestAnimationFrameFn_.call(
+          goog.fx.Animation.animationWindow_,
+          goog.fx.Animation.globalTimer_);
+    } else {
+      goog.Timer.defaultTimerObject.clearTimeout(
+          goog.fx.Animation.globalTimer_);
+    }
+    goog.fx.Animation.globalTimer_ = null;
+  }
+};
+
+
+/**
+ * Starts the animation timer.
+ * @return {number} A unique ID for the timer, that can be used to clear it.
+ * @private
+ */
+goog.fx.Animation.startTimer_ = function() {
+  if (goog.fx.Animation.requestAnimationFrameFn_) {
+    return goog.fx.Animation.requestAnimationFrameFn_.call(
+        goog.fx.Animation.animationWindow_,
+        goog.fx.Animation.cycleAnimations_);
+  }
+  return goog.Timer.defaultTimerObject.setTimeout(
+      goog.fx.Animation.cycleAnimations_, goog.fx.Animation.TIMEOUT);
 };
 
 
@@ -213,8 +281,7 @@ goog.fx.Animation.registerAnimation = function(animation) {
 
   // If the timer is not already started, start it now.
   if (!goog.fx.Animation.globalTimer_) {
-    goog.fx.Animation.globalTimer_ = goog.Timer.defaultTimerObject.setTimeout(
-        goog.fx.Animation.cycleAnimations_, goog.fx.Animation.TIMEOUT);
+    goog.fx.Animation.globalTimer_ = goog.fx.Animation.startTimer_();
   }
 };
 
@@ -230,11 +297,43 @@ goog.fx.Animation.unregisterAnimation = function(animation) {
 
   // If a timer is running and we no longer have any active timers we stop the
   // timers.
-  if (goog.fx.Animation.globalTimer_ &&
-      goog.object.isEmpty(goog.fx.Animation.activeAnimations_)) {
-    goog.Timer.defaultTimerObject.clearTimeout(goog.fx.Animation.globalTimer_);
-    goog.fx.Animation.globalTimer_ = null;
+  if (goog.object.isEmpty(goog.fx.Animation.activeAnimations_)) {
+    goog.fx.Animation.resetTimer_();
   }
+};
+
+
+/**
+ * Registers an animation window. This allows usage of the timing control API
+ * for animations. Note that this window must be visible, as non-visible
+ * windows can potentially stop animating. This window does not necessarily
+ * need to be the window inside which animation occurs, but must remain visible.
+ * See: https://developer.mozilla.org/en/DOM/window.mozRequestAnimationFrame.
+ *
+ * @param {Window} animationWindow The window in which to animate elements.
+ */
+goog.fx.Animation.setAnimationWindow = function(animationWindow) {
+  goog.fx.Animation.animationWindow_ = animationWindow;
+
+  if (!animationWindow) {
+    goog.fx.Animation.requestAnimationFrameFn_ = null;
+    goog.fx.Animation.cancelRequestAnimationFrameFn_ = null;
+    return;
+  }
+
+  goog.fx.Animation.requestAnimationFrameFn_ =
+      animationWindow['requestAnimationFrame'] ||
+      animationWindow['webkitRequestAnimationFrame'] ||
+      animationWindow['mozRequestAnimationFrame'] ||
+      animationWindow['oRequestAnimationFrame'] ||
+      animationWindow['msRequestAnimationFrame'];
+
+  goog.fx.Animation.cancelRequestAnimationFrameFn_ =
+      animationWindow['cancelRequestAnimationFrame'] ||
+      animationWindow['webkitCancelRequestAnimationFrame'] ||
+      animationWindow['mozCancelRequestAnimationFrame'] ||
+      animationWindow['oCancelRequestAnimationFrame'] ||
+      animationWindow['msCancelRequestAnimationFrame'];
 };
 
 
@@ -312,8 +411,9 @@ goog.fx.Animation.prototype.play = function(opt_restart) {
 
   goog.fx.Animation.unregisterAnimation(this);
 
-  this.startTime = /** @type {number} */ (goog.now());
+  var now = /** @type {number} */ (goog.now());
 
+  this.startTime = now;
   if (this.state_ == goog.fx.Animation.State.PAUSED) {
     this.startTime -= this.duration * this.progress;
   }
@@ -334,7 +434,7 @@ goog.fx.Animation.prototype.play = function(opt_restart) {
   this.state_ = goog.fx.Animation.State.PLAYING;
 
   goog.fx.Animation.registerAnimation(this);
-  this.cycle(this.startTime);
+  this.cycle(now);
 
   return true;
 };
@@ -372,8 +472,27 @@ goog.fx.Animation.prototype.pause = function() {
 
 
 /**
+ * Sets the progress of the animation.
+ * @param {number} progress The new progress of the animation.
+ */
+goog.fx.Animation.prototype.setProgress = function(progress) {
+  this.progress = progress;
+  if (this.state_ == goog.fx.Animation.State.PLAYING) {
+    var now = goog.now();
+    // If the animation is already playing, we recompute startTime and endTime
+    // such that the animation plays consistently, that is:
+    // now = startTime + progress * duration.
+    this.startTime = now - this.duration * this.progress;
+    this.endTime = this.startTime + this.duration;
+  }
+};
+
+
+/**
  * Disposes of the animation.  Stops an animation, fires a 'destroy' event and
  * then removes all the event handlers to clean up memory.
+ * @override
+ * @protected
  */
 goog.fx.Animation.prototype.disposeInternal = function() {
   if (this.state_ != goog.fx.Animation.State.STOPPED) {
@@ -408,11 +527,7 @@ goog.fx.Animation.prototype.cycle = function(now) {
   this.fps_ = 1000 / (now - this.lastFrame);
   this.lastFrame = now;
 
-  if (goog.isFunction(this.accel_)) {
-    this.updateCoords_(this.accel_(this.progress));
-  } else {
-    this.updateCoords_(this.progress);
-  }
+  this.updateCoords_(this.progress);
 
   // Animation has finished.
   if (this.progress == 1) {
@@ -430,11 +545,15 @@ goog.fx.Animation.prototype.cycle = function(now) {
 
 
 /**
- * Calculates current coordinates, based on the current state.
+ * Calculates current coordinates, based on the current state.  Applies
+ * the accelleration function if it exists.
  * @param {number} t Percentage of the way through the animation as a decimal.
  * @private
  */
 goog.fx.Animation.prototype.updateCoords_ = function(t) {
+  if (goog.isFunction(this.accel_)) {
+    t = this.accel_(t);
+  }
   this.coords = new Array(this.startPoint.length);
   for (var i = 0; i < this.startPoint.length; i++) {
     this.coords[i] = (this.endPoint[i] - this.startPoint[i]) * t +
@@ -459,7 +578,7 @@ goog.fx.Animation.prototype.onAnimate = function() {
  * @protected
  */
 goog.fx.Animation.prototype.onBegin = function() {
-  this.dispatchAnimationEvent_(goog.fx.Animation.EventType.BEGIN);
+  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.BEGIN);
 };
 
 
@@ -479,7 +598,7 @@ goog.fx.Animation.prototype.onDestroy = function() {
  * @protected
  */
 goog.fx.Animation.prototype.onEnd = function() {
-  this.dispatchAnimationEvent_(goog.fx.Animation.EventType.END);
+  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.END);
 };
 
 
@@ -489,7 +608,7 @@ goog.fx.Animation.prototype.onEnd = function() {
  * @protected
  */
 goog.fx.Animation.prototype.onFinish = function() {
-  this.dispatchAnimationEvent_(goog.fx.Animation.EventType.FINISH);
+  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.FINISH);
 };
 
 
@@ -499,7 +618,7 @@ goog.fx.Animation.prototype.onFinish = function() {
  * @protected
  */
 goog.fx.Animation.prototype.onPause = function() {
-  this.dispatchAnimationEvent_(goog.fx.Animation.EventType.PAUSE);
+  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.PAUSE);
 };
 
 
@@ -509,7 +628,7 @@ goog.fx.Animation.prototype.onPause = function() {
  * @protected
  */
 goog.fx.Animation.prototype.onPlay = function() {
-  this.dispatchAnimationEvent_(goog.fx.Animation.EventType.PLAY);
+  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.PLAY);
 };
 
 
@@ -519,7 +638,7 @@ goog.fx.Animation.prototype.onPlay = function() {
  * @protected
  */
 goog.fx.Animation.prototype.onResume = function() {
-  this.dispatchAnimationEvent_(goog.fx.Animation.EventType.RESUME);
+  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.RESUME);
 };
 
 
@@ -529,7 +648,7 @@ goog.fx.Animation.prototype.onResume = function() {
  * @protected
  */
 goog.fx.Animation.prototype.onStop = function() {
-  this.dispatchAnimationEvent_(goog.fx.Animation.EventType.STOP);
+  this.dispatchAnimationEvent_(goog.fx.Transition.EventType.STOP);
 };
 
 

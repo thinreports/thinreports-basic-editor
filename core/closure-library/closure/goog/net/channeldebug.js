@@ -210,8 +210,8 @@ goog.net.ChannelDebug.prototype.redactResponse_ = function(responseText) {
       responseText == goog.net.BrowserChannel.MAGIC_RESPONSE_COOKIE) {
     return responseText;
   }
+  /** @preserveTry */
   try {
-    /** @preserveTry */
     var responseArray = goog.json.unsafeParse(responseText);
 
     for (var i = 0; i < responseArray.length; i++) {
@@ -222,8 +222,7 @@ goog.net.ChannelDebug.prototype.redactResponse_ = function(responseText) {
 
     return goog.json.serialize(responseArray);
   } catch (e) {
-    this.debug('Exception parsing expected JS array - ' +
-                                'probably was not JS');
+    this.debug('Exception parsing expected JS array - probably was not JS');
     return responseText;
   }
 };
@@ -247,7 +246,7 @@ goog.net.ChannelDebug.prototype.maybeRedactArray_ = function(array) {
   }
 
   var type = dataPart[0];
-  if (type != 'c' && type != 'noop' && type != 'stop') {
+  if (type != 'noop' && type != 'stop') {
     // redact all fields in the array
     for (var i = 1; i < dataPart.length; i++) {
       dataPart[i] = '';
