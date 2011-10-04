@@ -26,6 +26,11 @@ body {
   color: #333;
 }
 
+a {
+  color: #333;
+  text-decoration: none;
+}
+
 body, textarea {
   font-family: Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGothic", sans-serif;
 }

@@ -15,6 +15,7 @@
 
 goog.provide('thin.ui.Menu');
 goog.provide('thin.ui.MenuItem');
+goog.provide('thin.ui.MenuLinkItem');
 goog.provide('thin.ui.MenuSeparator');
 
 goog.require('goog.ui.Menu');
@@ -24,6 +25,7 @@ goog.require('goog.ui.MenuItem');
 goog.require('thin.ui.MenuItemRenderer');
 goog.require('thin.ui.MenuSeparatorRenderer');
 goog.require('thin.ui.StylableControl');
+goog.require('thin.ui.Icon');
 
 
 /**
@@ -54,10 +56,10 @@ thin.ui.MenuItem = function(content, opt_icon, opt_accessLabel, opt_renderer) {
           opt_renderer || thin.ui.MenuItemRenderer.getInstance()));
 
   /**
-   * @type {thin.ui.Icon|undefined}
+   * @type {thin.ui.Icon}
    * @private
    */
-  this.icon_ = opt_icon;
+  this.icon_ = opt_icon || new thin.ui.Icon('dummy');
 
   /**
    * @type {string}
@@ -99,6 +101,36 @@ thin.ui.MenuItem.prototype.setAccessLabel = function(label) {
 thin.ui.MenuItem.prototype.disposeInternal = function() {
   thin.ui.MenuItem.superClass_.disposeInternal.call(this);
   this.disposeInternalForStylableControl();
+};
+
+
+/**
+ * @param {goog.ui.ControlContent} content
+ * @param {string} target
+ * @param {thin.ui.Icon=} opt_icon
+ * @param {string=} opt_accessLabel
+ * @constructor
+ * @extends {thin.ui.MenuItem}
+ */
+thin.ui.MenuLinkItem = function(content, target, opt_icon, opt_accessLabel) {
+  goog.base(this, content, opt_icon, opt_accessLabel);
+  
+  /**
+   * @type {string}
+   * @private
+   */
+  this.target_ = target;
+  
+  this.addClassName('link-item');
+};
+goog.inherits(thin.ui.MenuLinkItem, thin.ui.MenuItem);
+
+
+/**
+ * @return {string}
+ */
+thin.ui.MenuLinkItem.prototype.getTarget = function() {
+  return this.target_;
 };
 
 

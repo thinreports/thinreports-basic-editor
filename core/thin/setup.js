@@ -43,6 +43,7 @@ goog.require('thin.ui.ToolbarSelect');
 goog.require('thin.ui.ToolbarFontSelect');
 goog.require('thin.ui.ToggleGroup');
 goog.require('thin.ui.MenuItem');
+goog.require('thin.ui.MenuLinkItem');
 goog.require('thin.ui.MenuSeparator');
 goog.require('thin.ui.Message.confirm');
 goog.require('thin.ui.SplitButton');
@@ -1215,10 +1216,13 @@ thin.setup = function() {
     
     // Help and Information
     var toolHelp = toolbar.setupChild('help', 
-        new thin.ui.ToolbarButton('ヘルプ', new thin.ui.Icon('help', iconAlign.TOP)), 
+        new thin.ui.ToolbarMenuButton('ヘルプ', new thin.ui.Icon('help', iconAlign.TOP)), 
         dom.getElement('tbar-help'));
     
-    toolHelp.addEventListener(componentEventType.ACTION, function(e) {
+    // About ThinReports
+    var toolHelpAbout = new thin.ui.MenuItem('ThinReportsについて', new thin.ui.Icon('information'));
+    toolHelp.addItem(toolHelpAbout);
+    toolHelpAbout.addEventListener(componentEventType.ACTION, function(e) {
       var helpDialog = new thin.ui.Dialog();
       helpDialog.setDisposeOnHide(true);
       helpDialog.setTitle('ヘルプ');
@@ -1231,7 +1235,40 @@ thin.setup = function() {
       
       helpDialog.setVisible(true);
     });
-
+    
+    toolHelp.addItem(new thin.ui.MenuSeparator());
+    
+    // Doc Getting Started
+    var toolHelpGettingStarted = new thin.ui.MenuLinkItem(
+          'Getting Started', 'http://osc.matsukei.net/projects/thinreports/wiki/Getting_Started');
+    toolHelp.addItem(toolHelpGettingStarted);
+    
+    // Doc Examples
+    var toolHelpExamples = new thin.ui.MenuLinkItem(
+          'Examples', 'http://osc.matsukei.net/projects/thinreports/wiki/Examples');
+    toolHelp.addItem(toolHelpExamples);
+    
+    // Doc Howtos
+    var toolHelpHowTos = new thin.ui.MenuLinkItem(
+          'HowTos', 'http://osc.matsukei.net/projects/thinreports/wiki/HowTos');
+    toolHelp.addItem(toolHelpHowTos);
+    
+    toolHelp.addItem(new thin.ui.MenuSeparator());
+    
+    // Forum
+    var toolForum = new thin.ui.MenuLinkItem(
+        'フォーラム', 'http://osc.matsukei.net/projects/thinreports/boards',
+        new thin.ui.Icon('forum'));
+    toolHelp.addItem(toolForum);
+    
+    toolHelp.addItem(new thin.ui.MenuSeparator());
+    
+    // Report Bug
+    var toolHelpFeedBack = new thin.ui.MenuLinkItem(
+          '問題の報告', 'http://osc.matsukei.net/projects/thinreports/issues/new',
+          new thin.ui.Icon('report-bug'));
+    toolHelp.addItem(toolHelpFeedBack);
+    
     toolbar.decorate(goog.dom.getElement('thin-toolbar'));
     thin.ui.registerComponent('toolbar', toolbar);
   })();

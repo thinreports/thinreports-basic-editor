@@ -25,6 +25,10 @@
   -webkit-border-radius: 2px;
 }
 
+.thin-menuitem.link-item .thin-menuitem-body {
+  cursor: default;
+}
+
 .thin-menuitem-body > div {
   padding-top: 2px;
   padding-bottom: 2px;

@@ -54,6 +54,9 @@
 /**
  * Icon lists.
  */
+.thin-icon-dummy {
+  background-image: url(icons/x-dummy.png);
+}
 .thin-icon-report-add {
   background-image: url(icons/document--plus.png);
 }
@@ -68,6 +71,15 @@
 }
 .thin-icon-export-layout-doc {
   background-image: url(icons/document-export.png);
+}
+.thin-icon-information {
+  background-image: url(icons/information.png);
+}
+.thin-icon-forum {
+  background-image: url(icons/balloons-white.png);
+}
+.thin-icon-report-bug {
+  background-image: url(icons/x-balloon-white-exclamation.png);
 }
 .thin-icon-undo {
   background-image: url(icons/arrow-curve-180-left.png);

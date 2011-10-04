@@ -52,14 +52,23 @@ thin.ui.MenuItemRenderer.prototype.createDom = function(item) {
   var cssClass = this.getCssClass();
   var domHelper = item.getDomHelper();
   var iconCss = item.getIcon() ? ' ' + item.getIcon().getCssNames() : '';
+  var body;
   
-  return domHelper.createDom('div', this.getClassNames(item).join(' '), 
-      domHelper.createDom('div', thin.ui.getCssName(cssClass, 'body'), 
-        domHelper.createDom('div', thin.ui.getCssName(cssClass, 'content'), 
-            item.getContent()), 
-        domHelper.createDom('div', thin.ui.getCssName(cssClass, 'symbol') + iconCss), 
-        domHelper.createDom('div', thin.ui.getCssName(cssClass, 'accel'), 
-            item.getAccessLabel())));
+  if (goog.isFunction(item.getTarget)) {
+    body = domHelper.createDom('a', {
+      'class': thin.ui.getCssName(cssClass, 'body'),
+      'href': item.getTarget()
+    });
+  } else {
+    body = domHelper.createDom('div', thin.ui.getCssName(cssClass, 'body'));
+  }
+  
+  domHelper.append(body,
+    domHelper.createDom('div', thin.ui.getCssName(cssClass, 'content'), item.getContent()), 
+    domHelper.createDom('div', thin.ui.getCssName(cssClass, 'symbol') + iconCss), 
+    domHelper.createDom('div', thin.ui.getCssName(cssClass, 'accel'), item.getAccessLabel()));
+  
+  return domHelper.createDom('div', this.getClassNames(item).join(' '), body);
 };
 
 
