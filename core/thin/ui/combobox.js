@@ -245,8 +245,13 @@ thin.ui.ComboBox.prototype.enterDocument = function() {
   var handler = this.getHandler();
   var input = this.labelInput_;
   
+  // Unlisten mousedown event listened by {goog.ui.Combobox}.
   handler.unlisten(this.getDomHelper().getDocument(),
       goog.events.EventType.MOUSEDOWN, this.onDocClicked_);
+  // Unlisten input event listened by {goog.ui.Combobox}.
+  handler.unlisten(this.inputHandler_,
+      goog.events.InputHandler.EventType.INPUT, this.onInputEvent_);
+  this.inputHandler_.dispose();
   
   handler.listen(input, goog.ui.Component.EventType.CHANGE, 
       function(e) {

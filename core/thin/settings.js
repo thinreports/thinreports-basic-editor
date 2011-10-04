@@ -18,6 +18,7 @@ goog.provide('thin.Settings');
 goog.require('goog.uri.utils');
 goog.require('goog.storage.mechanism.HTML5LocalStorage');
 
+
 /**
  * @constructor
  * @extends {goog.storage.mechanism.HTML5LocalStorage}
@@ -38,32 +39,26 @@ goog.addSingletonGetter(thin.Settings);
  * @param {string} value
  */
 thin.Settings.prototype.setGlobal = function(key, value) {
-  goog.base(this, 'set', key, value);
+  thin.Settings.superClass_.set.call(this, key, value);
 };
 
 
 /**
  * @param {string} key
- * @return {string}
+ * @return {string?}
  */
 thin.Settings.prototype.getGlobal = function(key) {
-  return goog.base(this, 'get', key);
+  return thin.Settings.superClass_.get.call(this, key);
 };
 
 
-/**
- * @param {string} key
- * @param {string} value
- */
+/** @inheritDoc */
 thin.Settings.prototype.set = function(key, value) {
   goog.base(this, 'set', this.getPrivateKey_(key), value);
 };
 
 
-/**
- * @param {string} key
- * @return {string}
- */
+/** @inheritDoc */
 thin.Settings.prototype.get = function(key) {
   return goog.base(this, 'get', this.getPrivateKey_(key));
 };

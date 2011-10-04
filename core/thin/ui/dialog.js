@@ -38,7 +38,7 @@ goog.require('thin.ui.StylableControl');
  * @extends {goog.ui.Dialog}
  */
 thin.ui.Dialog = function(opt_class) {
-  goog.ui.Dialog.call(this, opt_class || this.getCssClass());
+  goog.base(this, opt_class || this.getCssClass());
   
   /**
    * @type {thin.ui.Dialog.ButtonSet}
@@ -74,30 +74,10 @@ thin.ui.Dialog.EventType = {
 thin.ui.Dialog.prototype.backgroundElementOpacity_ = 0;
 
 
-/**
- * @type {boolean}
- * @private
- */
-thin.ui.Dialog.prototype.autoRepositioning_ = true;
-
-
-/**
- * @return {string}
- */
+/** @override */
 thin.ui.Dialog.prototype.getCssClass = function() {
   return thin.ui.Dialog.CSS_CLASS;
 };
-
-
-/**
- * @param {boolean} enable
- */
-thin.ui.Dialog.prototype.setAutoRepositioning = function(enable) {
-  this.autoRepositioning_ = enable;
-};
-
-
-thin.ui.Dialog.prototype.setBackgroundElementOpacity = goog.nullFunction;
 
 
 /**
@@ -118,9 +98,7 @@ thin.ui.Dialog.prototype.getControl = function(key) {
 };
 
 
-/**
- * Override.
- */
+/** @override */
 thin.ui.Dialog.prototype.focus = function() {
   var buttonSet = this.getButtonSet();
   if (buttonSet) {
@@ -133,73 +111,37 @@ thin.ui.Dialog.prototype.focus = function() {
 };
 
 
-/**
- * Override.
- * @param {boolean} visible
- */
-thin.ui.Dialog.prototype.setVisible = function(visible) {
-  if (visible == this.visible_) {
+/** @override */
+thin.ui.Dialog.prototype.setVisibleInternal_ = function(e) {
+  if (e.target != this) {
     return;
   }
-
-  var doc = this.getDomHelper().getDocument();
-  var win = goog.dom.getWindow(doc) || window;
-
-  if (!this.isInDocument()) {
-    this.render(doc.body);
-  }
+  
+  var visible = this.isVisible();
 
   if (visible) {
-    this.resizeBackground_();
-    this.reposition();
     this.getHandler().
-        listen(this.getElement(), goog.events.EventType.KEYDOWN, 
-            this.onKey_, false).
-        listen(this.getBackgroundElement(), goog.events.EventType.KEYDOWN, 
-            this.onKeyAtBackground_, true).
-        listen(win, goog.events.EventType.RESIZE,
-            this.onResize_, true);
+        listen(this.getElement(), goog.events.EventType.KEYDOWN, this.onKey_).
+        listen(this.getElement(), goog.events.EventType.KEYPRESS, this.onKey_);
+    
+    this.enableButtonSetActionHandling_(true);
+    this.enableBackgroundActionHandling_(true);
   } else {
     this.getHandler().
-        unlisten(this.getElement(), goog.events.EventType.KEYDOWN, 
-            this.onKey_, false).
-        unlisten(this.getBackgroundElement(), goog.events.EventType.KEYDOWN, 
-            this.onKeyAtBackground_, true).            
-        unlisten(win, goog.events.EventType.RESIZE,
-            this.onResize_, true);
-  }
-
-  if (this.bgIframeEl_) {
-    goog.style.showElement(this.bgIframeEl_, visible);
-  }
-  if (this.bgEl_) {
-    goog.style.showElement(this.bgEl_, visible);
-  }
-  this.dispatchEvent(thin.ui.Dialog.EventType.BEFORE_SHOW);
-  goog.style.showElement(this.getElement(), visible);
-
-  if (visible) {
-    this.focus();
-  }
-
-  this.visible_ = visible;
-
-  if (!visible) {
+        unlisten(this.getElement(), goog.events.EventType.KEYDOWN, this.onKey_).
+        unlisten(this.getElement(), goog.events.EventType.KEYPRESS, this.onKey_);
+        
     this.enableButtonSetActionHandling_(false);
-    this.dispatchEvent(goog.ui.Dialog.EventType.AFTER_HIDE);
+    this.enableBackgroundActionHandling_(false);
+    
     if (this.disposeOnHide_) {
       this.dispose();
     }
-  } else {
-    this.enableButtonSetActionHandling_(true);
   }
 };
 
 
-/**
- * @param {goog.events.BrowserEvent} e
- * @private
- */
+/** @override */
 thin.ui.Dialog.prototype.onButtonClick_ = function(e) {
   var button = e.target;
   if (button.isEnabled()) {
@@ -234,15 +176,30 @@ thin.ui.Dialog.prototype.enableButtonSetActionHandling_ = function(enabled) {
 
 
 /**
+ * @param {boolean} enabled
+ * @private
+ */
+thin.ui.Dialog.prototype.enableBackgroundActionHandling_ = function(enabled) {
+  if (enabled) {
+    this.getHandler().
+        listen(this.getBackgroundElement(), goog.events.EventType.CLICK,
+        this.handleBackgroundAction_);
+  } else {
+    this.getHandler().
+        unlisten(this.getBackgroundElement(), goog.events.EventType.CLICK,
+        this.handleBackgroundAction_); 
+  }
+};
+
+
+/**
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.ui.Dialog.prototype.onResize_ = function(e) {
-  thin.ui.Dialog.superClass_.onResize_.call(this, e);
-  
-  if (this.autoRepositioning_) {
-    this.reposition();
-  }
+thin.ui.Dialog.prototype.handleBackgroundAction_ = function(e) {
+  this.focus();
+  e.stopPropagation();
+  e.preventDefault();
 };
 
 
@@ -275,7 +232,7 @@ thin.ui.Dialog.prototype.getButtonSetWrapper = function() {
 
 /** @inheritDoc */
 thin.ui.Dialog.prototype.enterDocument = function() {
-  thin.ui.Dialog.superClass_.enterDocument.call(this);
+  goog.base(this, 'enterDocument');
   
   this.setWidth(this.getWidth());
 };
@@ -283,7 +240,7 @@ thin.ui.Dialog.prototype.enterDocument = function() {
 
 /** @inheritDoc */
 thin.ui.Dialog.prototype.exitDocument = function() {
-  thin.ui.Dialog.superClass_.exitDocument.call(this);
+  goog.base(this, 'exitDocument');
   
   goog.object.forEach(this.controls_, function(control) {
     if (control instanceof goog.ui.Component) {
@@ -297,7 +254,7 @@ thin.ui.Dialog.prototype.exitDocument = function() {
 
 /** @inheritDoc */
 thin.ui.Dialog.prototype.disposeInternal = function() {
-  thin.ui.Dialog.superClass_.disposeInternal.call(this);
+  goog.base(this, 'disposeInternal');
   this.disposeInternalForStylableControl();
 
   goog.object.forEach(this.controls_, function(control) {
@@ -318,91 +275,77 @@ thin.ui.Dialog.prototype.disposeInternal = function() {
 thin.ui.Dialog.prototype.decorateInternal = function(element) {
   goog.ui.Dialog.superClass_.decorateInternal.call(this, element);
   
-  var cssClass = this.class_;
-  var domHelper = this.getDomHelper();
+  //- Begin via {goog.ui.Dialog#decorateInternal}
   
-  goog.dom.classes.add(element, cssClass);
-  goog.dom.setFocusableTabIndex(element, true);
-
-  var contentClass = thin.ui.getCssName(cssClass, 'content');
+  // Decorate or create the content element.
+  var contentClass = goog.getCssName(this.class_, 'content');
   this.contentEl_ = goog.dom.getElementsByTagNameAndClass(
       null, contentClass, this.getElement())[0];
   if (this.contentEl_) {
     this.content_ = this.contentEl_.innerHTML;
   } else {
-    this.contentEl_ = domHelper.createDom('div', contentClass);
+    this.contentEl_ = this.getDomHelper().createDom('div', contentClass);
     if (this.content_) {
       this.contentEl_.innerHTML = this.content_;
     }
     this.getElement().appendChild(this.contentEl_);
   }
 
-  var titleClass = thin.ui.getCssName(cssClass, 'title');
-  var titleTextClass = thin.ui.getCssName(cssClass, 'title-text');
-  var titleCloseClass = thin.ui.getCssName(cssClass, 'title-close');
+  // Decorate or create the title bar element.
+  var titleClass = goog.getCssName(this.class_, 'title');
+  var titleTextClass = goog.getCssName(this.class_, 'title-text');
+  var titleCloseClass = goog.getCssName(this.class_, 'title-close');
   this.titleEl_ = goog.dom.getElementsByTagNameAndClass(
       null, titleClass, this.getElement())[0];
   if (this.titleEl_) {
+    // Only look for title text & title close elements if a title bar element
+    // was found.  Otherwise assume that the entire title bar has to be
+    // created from scratch.
     this.titleTextEl_ = goog.dom.getElementsByTagNameAndClass(
         null, titleTextClass, this.titleEl_)[0];
     this.titleCloseEl_ = goog.dom.getElementsByTagNameAndClass(
         null, titleCloseClass, this.titleEl_)[0];
   } else {
-    this.titleEl_ = domHelper.createDom('div', titleClass);
+    // Create the title bar element and insert it before the content area.
+    // This is useful if the element to decorate only includes a content area.
+    this.titleEl_ = this.getDomHelper().createDom('div', titleClass);
     this.getElement().insertBefore(this.titleEl_, this.contentEl_);
   }
 
+  // Decorate or create the title text element.
   if (this.titleTextEl_) {
     this.title_ = goog.dom.getTextContent(this.titleTextEl_);
   } else {
-    this.titleTextEl_ = domHelper.createDom('span', titleTextClass,
+    this.titleTextEl_ = this.getDomHelper().createDom('span', titleTextClass,
         this.title_);
     this.titleEl_.appendChild(this.titleTextEl_);
   }
   goog.dom.a11y.setState(this.getElement(), 'labelledby', this.titleId_ || '');
+  // Decorate or create the title close element.
   if (!this.titleCloseEl_) {
-    this.titleCloseEl_ = domHelper.createDom('span', titleCloseClass);
+    this.titleCloseEl_ = this.getDomHelper().createDom('span', titleCloseClass);
     this.titleEl_.appendChild(this.titleCloseEl_);
   }
   goog.style.showElement(this.titleCloseEl_, this.hasTitleCloseButton_);
+  
+  //- End via {goog.ui.Dialog#decorateInternal}
 
-  var buttonsClass = thin.ui.getCssName(cssClass, 'buttons');
+  var buttonsClass = thin.ui.getCssName(this.class_, 'buttons');
   this.buttonEl_ = goog.dom.getElementsByTagNameAndClass(
       null, buttonsClass, this.getElement())[0];
   if (!this.buttonEl_) {
-    this.buttonEl_ = domHelper.createDom('div', buttonsClass);
+    this.buttonEl_ = this.getDomHelper().createDom('div', buttonsClass);
     this.getElement().appendChild(this.buttonEl_);
   }
   this.buttons_.attachToElement(this.buttonEl_);
   
-  var tabCatcherClass = thin.ui.getCssName(cssClass, 'tc');
-  this.tabCatcherEl_ = goog.dom.getElementsByTagNameAndClass(
-      null, tabCatcherClass, this.getElement())[0];
-  if (!this.tabCatcherEl_) {
-    element.appendChild(this.tabCatcherEl_ = domHelper.createDom('span', 
-      {'class': tabCatcherClass, 'tabIndex': 0}));
-  }
-  this.manageBackgroundDom_();
-  this.renderBackground_();
-  
-  goog.style.showElement(this.getElement(), false);
+  goog.dom.setFocusableTabIndex(element, true);
 };
 
-
-/**
- * @param {goog.events.BrowserEvent} e
- */
-thin.ui.Dialog.prototype.onKeyAtBackground_ = function(e) {
-  if (e.keyCode == goog.events.KeyCodes.TAB) {
-    e.stopPropagation();
-    e.preventDefault();
-  }
-};
 
 /** @inheritDoc */
 thin.ui.Dialog.prototype.manageBackgroundDom_ = function() {
-  thin.ui.Dialog.superClass_.manageBackgroundDom_.call(this);
-  
+  goog.base(this, 'manageBackgroundDom_');
   if (this.bgEl_) {
     goog.dom.setFocusableTabIndex(this.bgEl_, true);
   }
