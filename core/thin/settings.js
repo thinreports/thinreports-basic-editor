@@ -16,19 +16,21 @@
 goog.provide('thin.Settings');
 
 goog.require('goog.uri.utils');
-goog.require('goog.Disposable');
+goog.require('goog.storage.mechanism.HTML5LocalStorage');
 
 /**
  * @constructor
- * @extends {goog.Disposable}
+ * @extends {goog.storage.mechanism.HTML5LocalStorage}
  */
 thin.Settings = function() {
+  goog.base(this);
   /**
    * @type {string?}
    */
   this.uid_ = goog.uri.utils.getParamValue(goog.global.document.URL, 'uid');
 };
-goog.inherits(thin.Settings, goog.Disposable);
+goog.inherits(thin.Settings, goog.storage.mechanism.HTML5LocalStorage);
+goog.addSingletonGetter(thin.Settings);
 
 
 /**
@@ -36,7 +38,7 @@ goog.inherits(thin.Settings, goog.Disposable);
  * @param {string} value
  */
 thin.Settings.prototype.setGlobal = function(key, value) {
-  this.set_(key, value);
+  goog.base(this, 'set', key, value);
 };
 
 
@@ -45,7 +47,7 @@ thin.Settings.prototype.setGlobal = function(key, value) {
  * @return {string}
  */
 thin.Settings.prototype.getGlobal = function(key) {
-  return this.get_(key);
+  return goog.base(this, 'get', key);
 };
 
 
@@ -54,7 +56,7 @@ thin.Settings.prototype.getGlobal = function(key) {
  * @param {string} value
  */
 thin.Settings.prototype.set = function(key, value) {
-  this.set_(this.getPrivateKey_(key), value);
+  goog.base(this, 'set', this.getPrivateKey_(key), value);
 };
 
 
@@ -63,27 +65,7 @@ thin.Settings.prototype.set = function(key, value) {
  * @return {string}
  */
 thin.Settings.prototype.get = function(key) {
-  return this.get_(this.getPrivateKey_(key));
-};
-
-
-/**
- * @param {string} key
- * @param {string} value
- * @private
- */
-thin.Settings.prototype.set_ = function(key, value) {
-  goog.global.localStorage[key] = value;
-};
-
-
-/**
- * @param {string} key
- * @return {string}
- * @private
- */
-thin.Settings.prototype.get_ = function(key) {
-  return goog.global.localStorage[key];
+  return goog.base(this, 'get', this.getPrivateKey_(key));
 };
 
 
@@ -96,4 +78,5 @@ thin.Settings.prototype.getPrivateKey_ = function(key) {
   return this.uid_ + '_' + key;
 };
 
-thin.settings = new thin.Settings();
+
+thin.settings = thin.Settings.getInstance();
