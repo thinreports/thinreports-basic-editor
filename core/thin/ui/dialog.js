@@ -134,6 +134,7 @@ thin.ui.Dialog.prototype.setVisibleInternal_ = function(e) {
     this.enableButtonSetActionHandling_(false);
     this.enableBackgroundActionHandling_(false);
     
+    this.dispatchEvent(goog.ui.Dialog.EventType.AFTER_HIDE);
     if (this.disposeOnHide_) {
       this.dispose();
     }

@@ -547,6 +547,7 @@ thin.editor.Workspace.prototype.generateLayoutDocument = function() {
       if (e.isYes() && this.saveAs_()) {
         thin.layout.document.generate(this.getLayout());
       }
+      this.focusElement(e);
     }, thin.ui.Dialog.ButtonSet.typeYesNoCancel(), this);
   } else {
     thin.layout.document.generate(this.getLayout());
