@@ -11,6 +11,7 @@ goog.addDependency('../../../thin/core/platform/file.js', ['thin.core.platform.F
 goog.addDependency('../../../thin/core/platform/font.js', ['thin.core.platform.Font', 'thin.core.platform.Font.AscentText_'], []);
 goog.addDependency('../../../thin/core/platform/image.js', ['thin.core.platform.Image'], []);
 goog.addDependency('../../../thin/core/platform/platform.js', ['thin.core.platform'], []);
+goog.addDependency('../../../thin/core/platform/string.js', ['thin.core.platform.String'], []);
 goog.addDependency('../../../thin/editor/abstractboxgroup.js', ['thin.editor.AbstractBoxGroup'], ['thin.editor.Component']);
 goog.addDependency('../../../thin/editor/abstractdragger.js', ['thin.editor.AbstractDragger', 'thin.editor.AbstractDragger.EventType', 'thin.editor.DragEvent'], ['goog.array', 'goog.dom', 'goog.events', 'goog.events.BrowserEvent', 'goog.events.BrowserEvent.MouseButton', 'goog.events.EventHandler', 'goog.events.EventType', 'goog.fx.DragEvent', 'goog.fx.Dragger', 'goog.fx.Dragger.EventType', 'goog.math.Coordinate', 'goog.math.Rect']);
 goog.addDependency('../../../thin/editor/abstractmanager.js', ['thin.editor.AbstractManager'], ['goog.Disposable', 'goog.array']);
@@ -49,7 +50,7 @@ goog.addDependency('../../../thin/editor/imageshape.js', ['thin.editor.ImageShap
 goog.addDependency('../../../thin/editor/layer.js', ['thin.editor.Layer'], ['thin.editor.Rect', 'thin.editor.SvgDrawer']);
 goog.addDependency('../../../thin/editor/layout.js', ['thin.editor.Layout'], ['goog.array', 'goog.dom', 'goog.graphics.SolidFill', 'goog.graphics.SvgGraphics', 'goog.graphics.SvgGroupElement', 'goog.math.Box', 'goog.math.Coordinate', 'goog.math.Rect', 'goog.object', 'thin.editor.ClipPath', 'thin.editor.ClipboardShapeManager', 'thin.editor.EllipseShape', 'thin.editor.Helpers', 'thin.editor.ImageShape', 'thin.editor.ImageblockShape', 'thin.editor.LayoutStructure', 'thin.editor.LineShape', 'thin.editor.ListShape', 'thin.editor.RectShape', 'thin.editor.ShapeIdManager', 'thin.editor.ShapeIdManager.DefaultPrefix', 'thin.editor.StateManager', 'thin.editor.TblockShape', 'thin.editor.TextShape']);
 goog.addDependency('../../../thin/editor/layoutguidehelper.js', ['thin.editor.LayoutGuideHelper'], ['goog.array', 'goog.events', 'thin.editor.Component', 'thin.editor.Cursor', 'thin.editor.Cursor.Type', 'thin.editor.DraggableLine', 'thin.editor.DraggableLine.Direction', 'thin.editor.Layer']);
-goog.addDependency('../../../thin/editor/layoutstructure.js', ['thin.editor.LayoutStructure'], ['goog.array', 'goog.dom', 'goog.string', 'thin.editor.ShapeStructure']);
+goog.addDependency('../../../thin/editor/layoutstructure.js', ['thin.editor.LayoutStructure'], ['goog.array', 'goog.dom', 'goog.string', 'thin.core.platform.String', 'thin.editor.ShapeStructure']);
 goog.addDependency('../../../thin/editor/line.js', ['thin.editor.Line', 'thin.editor.Line.DIRECTION_'], ['goog.graphics.StrokeAndFillElement', 'goog.math.Line', 'thin.editor.ModuleElement']);
 goog.addDependency('../../../thin/editor/lineoutline.js', ['thin.editor.LineOutline'], ['goog.math.Rect', 'thin.editor.Line', 'thin.editor.ModuleOutline']);
 goog.addDependency('../../../thin/editor/lineshape.js', ['thin.editor.LineShape'], ['goog.math.Coordinate', 'goog.math.Rect', 'goog.string', 'thin.editor.Line', 'thin.editor.ModuleShape']);
@@ -103,7 +104,7 @@ goog.addDependency('../../../thin/layout/document/base.js', ['thin.layout.docume
 goog.addDependency('../../../thin/layout/document/csv.js', ['thin.layout.document.CSV'], ['goog.array', 'goog.string.StringBuffer', 'thin.layout.document.Base']);
 goog.addDependency('../../../thin/layout/document/document.js', ['thin.layout.document', 'thin.layout.document.Type'], ['thin.layout.document.CSV', 'thin.layout.document.File', 'thin.layout.document.HTML']);
 goog.addDependency('../../../thin/layout/document/file.js', ['thin.layout.document.File'], ['thin.core.platform.File', 'thin.layout.File']);
-goog.addDependency('../../../thin/layout/document/html.js', ['thin.layout.document.HTML'], ['thin.layout.document.Base', 'thin.layout.document.HTMLRenderer']);
+goog.addDependency('../../../thin/layout/document/html.js', ['thin.layout.document.HTML'], ['thin.editor.LayoutStructure', 'thin.layout.document.Base', 'thin.layout.document.HTMLRenderer']);
 goog.addDependency('../../../thin/layout/document/templates/html.soy.js', ['thin.layout.document.HTMLRenderer'], ['soy', 'soy.StringBuilder']);
 goog.addDependency('../../../thin/layout/file.js', ['thin.layout.File'], ['goog.Disposable', 'thin.core.File', 'thin.core.File.Mode', 'thin.core.platform', 'thin.core.platform.File']);
 goog.addDependency('../../../thin/layout/format.js', ['thin.layout.Format'], ['goog.Disposable', 'goog.json', 'thin.Compatibility', 'thin.Version', 'thin.layout.FormatPage']);

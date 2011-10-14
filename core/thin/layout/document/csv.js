@@ -189,13 +189,14 @@ thin.layout.document.CSV.prototype.appendTblockShape_ = function(data) {
   this.appendBlankLineIfNotIndented_();
   
   this.appendLine_(data.name);
-  this.appendLine_('ID', '参照先ID', '表示', '初期値', '基本書式', '書式種別', '書式設定', '説明');
+  this.appendLine_('ID', '参照先ID', '表示', '複数行', '初期値', '基本書式', '書式種別', '書式設定', '説明');
   
   goog.array.forEach(data.shapes, function(shape) {
     this.appendLine_(
       shape.id,
       shape.refId,
       shape.display,
+      shape.multiple,
       shape.value,
       shape.formatBase,
       shape.formatType,

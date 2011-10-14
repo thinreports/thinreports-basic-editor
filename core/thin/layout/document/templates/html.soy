@@ -3,6 +3,7 @@
 /**
  * @param meta
  * @param paper
+ * @param screenShot
  * @param shapeGroups
  */
 {template .render}
@@ -104,8 +105,21 @@
       table tbody tr:hover {
         background-color: #EDF7FC;
       }
+      #paper-info img {
+        float: left;
+        width: 40%;
+        margin: 0 1.5em 0 1em;
+        box-shadow: 0px 0px 0.8em #333;
+      }
+      #paper-info table {
+        width: 55%;
+      }
+      #paper-info table th {
+        width: 20%;
+      }
       @media print {
         table, table td, table th {border-color: #555 !important}
+        #paper-info img {border: 1px solid #aaa; box-shadow: none !important}
       }
     {/literal}</style>
   </head>
@@ -115,25 +129,47 @@
     </div>
     <h1>{$meta.title}</h1>
     <p id="meta-filename">{$meta.fileName}</p>
-    <h2>用紙設定</h2>
-    <table>
-      <thead>
-      <tr>
-        <th>用紙</th>
-        <th>幅</th>
-        <th>高さ</th>
-        <th>向き</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>{$paper.type}</td>
-        <td>{$paper.width}</td>
-        <td>{$paper.height}</td>
-        <td>{$paper.orientation}</td>
-      </tr>
-      </tbody>
-    </table>
+    <div id="paper-info">
+      <h2>レイアウト</h2>
+      <img src="data:image/svg+xml;base64,{$screenShot}" alt="Screen Shot">
+      <table>
+        <tbody>
+        <tr>
+          <th>用紙</th>
+          <td>{$paper.type}</td>
+        </tr>
+        <tr>
+          <th>幅</th>
+          <td>{$paper.width}</td>
+        </tr>
+        <tr>
+          <th>高さ</th>
+          <td>{$paper.height}</td>
+        </tr>
+        <tr>
+          <th>向き</th>
+          <td>{$paper.orientation}</td>
+        </tr>
+        <tr>
+          <th>上余白</th>
+          <td>{$paper.margin.top}</td>
+        </tr>
+        <tr>
+          <th>下余白</th>
+          <td>{$paper.margin.bottom}</td>
+        </tr>
+        <tr>
+          <th>左余白</th>
+          <td>{$paper.margin.left}</td>
+        </tr>
+        <tr>
+          <th>右余白</th>
+          <td>{$paper.margin.right}</td>
+        </tr>
+        </tbody>
+      </table>
+      <div style="clear:both;height:1px;"></div>
+    </div>
     <h2>オブジェクト</h2>
     {call .renderShapes}
       {param shapeGroups: $shapeGroups /}
@@ -200,6 +236,7 @@
     <th rowspan="2">ID</th>
     <th rowspan="2">参照先ID</th>
     <th rowspan="2">表示</th>
+    <th rowspan="2">複数行</th>
     <th rowspan="2">初期値</th>
     <th colspan="3">書式</th>
     <th rowspan="2">説明</th>
@@ -216,6 +253,7 @@
     <td>{$shape.id}</td>
     <td>{$shape.refId}</td>
     <td>{$shape.display}</td>
+    <td>{$shape.multiple}</td>
     <td>{$shape.value}</td>
     <td>{$shape.formatBase}</td>
     <td>{$shape.formatType}</td>

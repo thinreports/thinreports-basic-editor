@@ -17,39 +17,21 @@
 **
 ****************************************************************************/
 
-#ifndef PLATFORM_H
-#define PLATFORM_H
+#ifndef JSEXTSTRING_H
+#define JSEXTSTRING_H
 
-#include <QtGui/QMainWindow>
-#include <QtWebKit/QWebView>
-#include "jsextfile.h"
-#include "jsextfont.h"
-#include "jsextimage.h"
-#include "jsextstring.h"
+#include <QWidget>
 
-class Platform : public QMainWindow
+class JsExtString : public QWidget
 {
     Q_OBJECT
-
-private:
-    QWebView *view;
-    bool isDebugMode();
-    void loadFonts();
-
 public:
-    Platform(QWidget *parent = 0);
+    explicit JsExtString(QWidget *parent = 0);
 
-protected:
-    void setting();
-    void closeEvent(QCloseEvent *evClose);
-
-protected slots:
-    void init();
-    void populateJavaScript();
-    void openUrl(QUrl url);
+signals:
 
 public slots:
-    void windowCloseRequested();
+    QString toBase64(const QString data);
 };
 
-#endif // PLATFORM_H
+#endif // JSEXTSTRING_H

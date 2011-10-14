@@ -17,6 +17,7 @@ goog.provide('thin.layout.document.HTML');
 
 goog.require('thin.layout.document.HTMLRenderer');
 goog.require('thin.layout.document.Base');
+goog.require('thin.editor.LayoutStructure');
 
 
 /**
@@ -35,6 +36,15 @@ thin.layout.document.HTML.prototype.generate = function() {
   return thin.layout.document.HTMLRenderer.render({
     meta: this.getMetaInfo_(),
     paper: this.getPaperInfo_(),
+    screenShot: this.getScreenShot_(),
     shapeGroups: this.data_
   });
+};
+
+
+/**
+ * @return {string}
+ */
+thin.layout.document.HTML.prototype.getScreenShot_ = function() {
+  return thin.editor.LayoutStructure.createScreenShot(this.layout);
 };

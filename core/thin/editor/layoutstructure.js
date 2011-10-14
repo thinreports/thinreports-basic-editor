@@ -19,6 +19,7 @@ goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.string');
 goog.require('thin.editor.ShapeStructure');
+goog.require('thin.core.platform.String');
 
 
 /**
@@ -175,6 +176,17 @@ thin.editor.LayoutStructure.serializeFromChildNodes = function(shapes, opt_secti
   return shapes;
 };
 
+
+/**
+ * @param {thin.editor.Layout} layout
+ * @return {string} The base64 encoded string.
+ */
+thin.editor.LayoutStructure.createScreenShot = function(layout) {
+  var svg = layout.getElement().cloneNode(true);
+  svg = thin.editor.serializeToXML(/** @type {Element} */ (svg));
+  
+  return thin.core.platform.String.toBase64(svg);
+};
 
 /**
  * @param {thin.editor.Layout} layout

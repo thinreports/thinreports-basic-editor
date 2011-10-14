@@ -110,7 +110,13 @@ thin.layout.document.Base.prototype.getPaperInfo_ = function() {
     type: page.getPaperType(),
     orientation: orientation,
     width: (page.isUserType() ? page.getWidth() : ''),
-    height: (page.isUserType() ? page.getHeight() : '')
+    height: (page.isUserType() ? page.getHeight() : ''),
+    margin: {
+      top: page.getMarginTop(),
+      bottom: page.getMarginBottom(),
+      left: page.getMarginLeft(),
+      right: page.getMarginRight()
+    }
   };
 };
 
@@ -216,6 +222,7 @@ thin.layout.document.Base.prototype.createTblockData_ = function(shapes, data) {
       type: shapeType,
       name: shapeName,
       display: this.formatFlag_(shape.getDisplay()),
+      multiple: this.formatFlag_(shape.isMultiMode()),
       refId: shape.getRefId(),
       value: shape.getDefaultValueOfLink(),
       formatBase: shape.getBaseFormat(),
