@@ -183,10 +183,9 @@ thin.editor.LayoutStructure.serializeFromChildNodes = function(shapes, opt_secti
  */
 thin.editor.LayoutStructure.createScreenShot = function(layout) {
   var workspace = layout.getWorkspace();
-  var canvas = thin.editor.Layout.CANVAS_CLASS_ID;
   var zoom = workspace.getUiStatusForZoom();
   
-  // Set zoom-rate to 100.
+  // Set zoom-rate to 100%.
   workspace.getAction().actionSetZoom(100);
   
   try {
@@ -198,14 +197,10 @@ thin.editor.LayoutStructure.createScreenShot = function(layout) {
     workspace.getAction().actionSetZoom(zoom);
   }
   
-  goog.array.forEachRight(svg.childNodes, function(node, i, nodes) {
-    if (node.getAttribute('class') != canvas) {
-      svg.removeChild(nodes[i]);
-    }
-  });
+  thin.editor.LayoutStructure.finalizeLayoutElement_(svg);
   
-  svg = thin.editor.serializeToXML(/** @type {Element} */ (svg));
-  return thin.core.platform.String.toBase64(svg);
+  return thin.core.platform.String.toBase64(
+      thin.editor.serializeToXML(/** @type {Element} */ (svg)));
 };
 
 
@@ -215,57 +210,42 @@ thin.editor.LayoutStructure.createScreenShot = function(layout) {
  * @private
  */
 thin.editor.LayoutStructure.serializeToSvgSection_ = function(layout) {
-  var canvasClassId = thin.editor.Layout.CANVAS_CLASS_ID;
-  var shapes = layout.getManager().getShapesManager().get();
-
-  var setClipPath = function(shape) {
-    if (shape.instanceOfListShape()) {
-      shape.forEachColumnShape(function(columnShape) {
-        if (columnShape.isEnabledForColumn()) {
-          goog.array.forEach(columnShape.getManager().getShapesManager().get(), setClipPath);
-        }
-      });
-    } else if (shape.instanceOfTblockShape() && !shape.isMultiMode()) {
-      shape.createClipPath();
-    }
-  };
-  goog.array.forEach(shapes, setClipPath);
-
-  var clone = layout.getElement().cloneNode(true);
-
-  var removeClipPath = function(shape) {
-    if (shape.instanceOfListShape()) {
-      shape.forEachColumnShape(function(columnShape) {
-        if (columnShape.isEnabledForColumn()) {
-          goog.array.forEach(columnShape.getManager().getShapesManager().get(), removeClipPath);
-        }
-      });
-    } else if (shape.instanceOfTblockShape() && !shape.isMultiMode()) {
-      shape.removeClipPath();
-    }
-  };
-  goog.array.forEach(shapes, removeClipPath);
-
-  goog.array.forEachRight(clone.childNodes, function(child, i, children) {
-    if (canvasClassId != child.getAttribute('class') && child.tagName != 'defs') {
-      clone.removeChild(children[i]);
-    }
-  });
-  
   var layoutSize = layout.getNormalLayoutSize();
-  clone.setAttribute('width', layoutSize.width);
-  clone.setAttribute('height', layoutSize.height);
-  clone.removeAttribute('id');
-  clone.removeAttribute('style');
-  clone.removeAttribute('class');
-
+  var svg = layout.getElement().cloneNode(true);
+  
+  thin.editor.LayoutStructure.finalizeLayoutElement_(svg);
+  
+  svg.setAttribute('width', layoutSize.width);
+  svg.setAttribute('height', layoutSize.height);
+  svg.removeAttribute('id');
+  svg.removeAttribute('style');
+  svg.removeAttribute('class');
+  
   thin.editor.LayoutStructure.serializeFromChildNodes(
-      goog.dom.getElementsByTagNameAndClass('g', canvasClassId, 
-      /** @type {Element} */(clone))[0].childNodes);
-  var xml = thin.editor.serializeToXML(/** @type {Element} */(clone));
+      goog.dom.getElementsByTagNameAndClass('g', thin.editor.Layout.CANVAS_CLASS_ID, 
+      /** @type {Element} */(svg))[0].childNodes);
+  
+  var xml = thin.editor.serializeToXML(/** @type {Element} */(svg));
+  
   xml = thin.editor.LayoutStructure.fixSerializationXmlSpace(xml);
   xml = thin.editor.LayoutStructure.fixSerializationHref(xml);
+  
   return xml;
+};
+
+
+/**
+ * @param {Element} layoutElement
+ * @private
+ */
+thin.editor.LayoutStructure.finalizeLayoutElement_ = function(layoutElement) {
+  var canvasId = thin.editor.Layout.CANVAS_CLASS_ID;
+  
+  goog.array.forEachRight(layoutElement.childNodes, function(node, i, nodes) {
+    if (canvasId != node.getAttribute('class')) {
+      layoutElement.removeChild(nodes[i]);
+    }
+  });
 };
 
 
