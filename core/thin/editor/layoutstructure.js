@@ -182,11 +182,32 @@ thin.editor.LayoutStructure.serializeFromChildNodes = function(shapes, opt_secti
  * @return {string} The base64 encoded string.
  */
 thin.editor.LayoutStructure.createScreenShot = function(layout) {
-  var svg = layout.getElement().cloneNode(true);
-  svg = thin.editor.serializeToXML(/** @type {Element} */ (svg));
+  var workspace = layout.getWorkspace();
+  var canvas = thin.editor.Layout.CANVAS_CLASS_ID;
+  var zoom = workspace.getUiStatusForZoom();
   
+  // Set zoom-rate to 100.
+  workspace.getAction().actionSetZoom(100);
+  
+  try {
+    var svg = layout.getElement().cloneNode(true);
+  } catch(e) {
+    throw e;
+  } finally {
+    // Restore original zoom-rate.
+    workspace.getAction().actionSetZoom(zoom);
+  }
+  
+  goog.array.forEachRight(svg.childNodes, function(node, i, nodes) {
+    if (node.getAttribute('class') != canvas) {
+      svg.removeChild(nodes[i]);
+    }
+  });
+  
+  svg = thin.editor.serializeToXML(/** @type {Element} */ (svg));
   return thin.core.platform.String.toBase64(svg);
 };
+
 
 /**
  * @param {thin.editor.Layout} layout

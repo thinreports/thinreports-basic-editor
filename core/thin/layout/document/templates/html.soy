@@ -13,6 +13,20 @@
     <meta charset="UTF-8">
     <title>{$meta.title} | ThinReports Layout Definition</title>
     <style>{literal}
+      .clearfix:after {
+        content: ".";
+        display: block;
+        clear: both;
+        height: 0;
+        font-size: 1px;
+        visibility: hidden;
+      }
+      .clearfix {
+        min-height: 1px;
+      }
+      * html .clearfix {
+        height: 1%;
+      }
       body {
         margin: 1em;
         color: #000;
@@ -23,21 +37,40 @@
         color: #aaa;
         font-size: 16px;
       }
+      #footer a, #header a {
+        color: inherit;
+        text-decoration: none;
+      }
       #header {
         border-bottom: 1px solid #ccc;
         padding: 0 0 5px 0;
         margin: 0 0 20px 0;
         text-align: right;
       }
+      #header button {
+        float: left;
+        width: 80px;
+        margin: 0;
+        border: 1px solid #ddd;
+        background: #eee;
+        color: #888;
+        font-size: 14px;
+        font-family: Helvetica;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+      }
+      #header button:hover {
+        border-color: #bbb !important;
+      }
+      #header a {
+        float: right;
+      }
       #footer {
         border-top: 1px solid #ccc;
         padding: 10px 0 0 0;
         margin: 25px 0 15px 0;
         text-align: center;
-      }
-      #footer a, #header a {
-        color: inherit;
-        text-decoration: none;
       }
       h1 {
         border-bottom: 5px solid #000;
@@ -105,71 +138,60 @@
       table tbody tr:hover {
         background-color: #EDF7FC;
       }
-      #paper-info img {
-        float: left;
-        width: 40%;
-        margin: 0 1.5em 0 1em;
+      #layout {
+        text-align: center;
+        page-break-after: always;
+      }
+      #layout img {
+        width: 80%;
         box-shadow: 0px 0px 0.8em #333;
       }
-      #paper-info table {
-        width: 55%;
-      }
-      #paper-info table th {
-        width: 20%;
-      }
       @media print {
+        body {margin: 0 !important}
         table, table td, table th {border-color: #555 !important}
-        #paper-info img {border: 1px solid #aaa; box-shadow: none !important}
+        #header button {display: none}
+        #layout img {border: 1px solid #aaa; box-shadow: none !important}
       }
     {/literal}</style>
   </head>
   <body>
-    <div id="header">
+    <div id="header" class="clearfix">
+      <button onclick="window.print()">Print</button>
       <a href="http://www.thinreports.org/">ThinReports Layout Difinition</a>
     </div>
     <h1>{$meta.title}</h1>
     <p id="meta-filename">{$meta.fileName}</p>
-    <div id="paper-info">
-      <h2>レイアウト</h2>
+    <h2>レイアウト</h2>
+    <div id="layout">
       <img src="data:image/svg+xml;base64,{$screenShot}" alt="Screen Shot">
-      <table>
-        <tbody>
-        <tr>
-          <th>用紙</th>
-          <td>{$paper.type}</td>
-        </tr>
-        <tr>
-          <th>幅</th>
-          <td>{$paper.width}</td>
-        </tr>
-        <tr>
-          <th>高さ</th>
-          <td>{$paper.height}</td>
-        </tr>
-        <tr>
-          <th>向き</th>
-          <td>{$paper.orientation}</td>
-        </tr>
-        <tr>
-          <th>上余白</th>
-          <td>{$paper.margin.top}</td>
-        </tr>
-        <tr>
-          <th>下余白</th>
-          <td>{$paper.margin.bottom}</td>
-        </tr>
-        <tr>
-          <th>左余白</th>
-          <td>{$paper.margin.left}</td>
-        </tr>
-        <tr>
-          <th>右余白</th>
-          <td>{$paper.margin.right}</td>
-        </tr>
-        </tbody>
-      </table>
-      <div style="clear:both;height:1px;"></div>
     </div>
+    <h2>用紙設定</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>用紙</th>
+        <th>幅</th>
+        <th>高さ</th>
+        <th>向き</th>
+        <th>上余白</th>
+        <th>下余白</th>
+        <th>左余白</th>
+        <th>右余白</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>{$paper.type}</td>
+        <td>{$paper.width}</td>
+        <td>{$paper.height}</td>
+        <td>{$paper.orientation}</td>
+        <td>{$paper.margin.top}</td>
+        <td>{$paper.margin.bottom}</td>
+        <td>{$paper.margin.left}</td>
+        <td>{$paper.margin.right}</td>
+      </tr>
+      </tbody>
+    </table>
     <h2>オブジェクト</h2>
     {call .renderShapes}
       {param shapeGroups: $shapeGroups /}

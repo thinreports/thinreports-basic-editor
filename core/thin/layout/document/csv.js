@@ -86,12 +86,16 @@ thin.layout.document.CSV.prototype.appendMetaInfo_ = function() {
 thin.layout.document.CSV.prototype.appendPaperInfo_ = function() {
   var paper = this.getPaperInfo_();
   
-  this.appendLine_('用紙サイズ', '向き', '幅', '高さ');
+  this.appendLine_('用紙サイズ', '幅', '高さ', '向き', '上余白', '下余白', '左余白', '右余白');
   this.appendLine_(
     paper.type,
-    paper.orientation,
     paper.width,
-    paper.height
+    paper.height,
+    paper.orientation,
+    paper.margin.top,
+    paper.margin.bottom,
+    paper.margin.left,
+    paper.margin.right
   );
 };
 
