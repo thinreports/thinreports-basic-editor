@@ -84,23 +84,20 @@
   -webkit-box-flex: 1;
 }
 .thin-tabpane-tab-button-trigger-body {
-  line-height: 25px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding-right: 5px;
 }
-.thin-tabpane-tab-button-trigger-body .thin-icon.thin-icon-left {
-  float: left;
-  height: 25px;
-}
 
 .thin-tabpane-tab-button-trigger-label {
   line-height: 25px;
+  height: 25px;
+  vertical-align: middle;
 }
 
-.thin-tabpane-tab-button-close-body {
-  line-height: 25px;
+.thin-tabpane-tab-button-close-body .thin-icon {
+  height: 25px;
 }
 
 .thin-tabpane-tab-button-close-label {

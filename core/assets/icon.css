@@ -33,6 +33,7 @@
 .thin-icon-left {
   display: inline-block;
   margin-right: 2px;
+  vertical-align: middle;
 }
 
 .thin-icon-top {

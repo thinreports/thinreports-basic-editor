@@ -78,12 +78,14 @@
  */
 #edit-config-page-direction label, 
 #new-config-page-direction label {
-  padding-right: 20px; 
+  vertical-align: middle;
+  padding-right: 2em;
 }
 
 #edit-config-page-direction input[type="radio"], 
 #new-config-page-direction input[type="radio"] {
   margin-right: 4px;
+  vertical-align: middle;
 }
 
 #edit-config-page-title input, 

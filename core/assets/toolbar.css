@@ -67,13 +67,14 @@
  * thin.ui.ToolbarSeparator
  */
 .thin-toolbar-separator {
-  height: 70%;
+  height: 16px;
   width: 1px;
   overflow: hidden;
   display: inline-block;
   background-color: rgb(210, 210, 210);
   border-right: 1px solid rgb(255, 255, 255);
   margin: 0 3px;
+  vertical-align: middle;
 }
 
 /**
@@ -91,27 +92,23 @@
 .thin-toolbar-button-body {
   text-align: center;
   -webkit-border-radius: 2px;
-  padding: .2em 4px;
+  padding: 0.2em 4px;
   border: 1px solid transparent;
-  clear: both;
 }
 
 .thin-toolbar-button-label {
   color: rgb(90, 90, 90);
   text-shadow: 1px 1px 0 rgb(250, 250, 250);
   display: inline-block;
+  height: 16px;
   line-height: 16px;
+  vertical-align: middle;
 }
 
 .thin-toolbar-button-hover .thin-toolbar-button-body {
   border-color: rgb(200, 200, 200);
   -webkit-box-shadow: 0 0 1px rgba(200, 200, 200, 0.8),
       inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-  clear: both;
-}
-
-.thin-toolbar-button-body .thin-icon.thin-icon-left {
-  float: left;
 }
 
 .thin-toolbar-button-active .thin-toolbar-button-body, 
@@ -268,13 +265,12 @@
   -webkit-box-flex: 1;
   -webkit-border-top-left-radius: 2px;
   -webkit-border-bottom-left-radius: 2px;
-  clear: both;
 }
 .thin-toolbar-split-button-horizontal .thin-toolbar-split-button-button-label {
   line-height: 16px;
-}
-.thin-toolbar-split-button-horizontal .thin-icon.thin-icon-left {
-  float: left;
+  height: 16px;
+  line-height: 16px;
+  vertical-align: middle;
 }
 .thin-toolbar-split-button-horizontal .thin-toolbar-split-button-handle {
   -webkit-border-top-right-radius: 2px;
@@ -293,11 +289,10 @@
   height: 11px;
   border-top: 0 !important;
 }
-.thin-toolbar-split-button-vertical .thin-icon.thin-icon-left {
-  float: left;
-}
 .thin-toolbar-split-button-vertical .thin-toolbar-split-button-button-label {
   line-height: 20px;
+  height: 20px;
+  vertical-align: middle;
 }
 
 
