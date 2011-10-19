@@ -46,7 +46,7 @@
   text-align: center;
   color: rgb(80, 80, 80);
   text-shadow: 1px 1px 0 rgb(250, 250, 250);
-  line-height: 110%;
+  line-height: 1.1em;
   position: relative;
   bottom: 0px;
 }
@@ -73,7 +73,6 @@
   display: inline-block;
   background-color: rgb(210, 210, 210);
   border-right: 1px solid rgb(255, 255, 255);
-  vertical-align: text-bottom;
   margin: 0 3px;
 }
 
@@ -94,29 +93,36 @@
   -webkit-border-radius: 2px;
   padding: .2em 4px;
   border: 1px solid transparent;
+  clear: both;
 }
 
 .thin-toolbar-button-label {
   color: rgb(90, 90, 90);
   text-shadow: 1px 1px 0 rgb(250, 250, 250);
   display: inline-block;
-  vertical-align: text-bottom;
+  line-height: 16px;
 }
 
 .thin-toolbar-button-hover .thin-toolbar-button-body {
   border-color: rgb(200, 200, 200);
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  -webkit-box-shadow: 0 0 1px rgba(200, 200, 200, 0.8),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  clear: both;
+}
+
+.thin-toolbar-button-body .thin-icon.thin-icon-left {
+  float: left;
 }
 
 .thin-toolbar-button-active .thin-toolbar-button-body, 
 .thin-toolbar-button-checked .thin-toolbar-button-body {
   border-color: rgb(160, 160, 160);
-  -webkit-box-shadow: inset 0 0 0 1px rgba(90, 90, 90, .1);
+  -webkit-box-shadow: 0 0 1px rgba(160, 160, 160, 0.8),
+      inset 0 0 0 1px rgba(90, 90, 90, .1);
 }
 
 .thin-toolbar-button-disabled {
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  opacity: 0.4
 }
 
 /**
@@ -144,23 +150,23 @@
 .thin-toolbar-menu-button-button > span {
   color: rgb(90, 90, 90);
   text-shadow: 1px 1px 0 rgb(250, 250, 250);
-  vertical-align: text-bottom;
 }
 
 .thin-toolbar-menu-button-hover .thin-toolbar-menu-button-body {
   border-color: rgb(200, 200, 200);
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  -webkit-box-shadow: 0 0 1px rgba(200, 200, 200, 0.8),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.8);
 }
 
 .thin-toolbar-menu-button-active .thin-toolbar-menu-button-body, 
 .thin-toolbar-menu-button-open .thin-toolbar-menu-button-body {
   border-color: rgb(160, 160, 160);
-  -webkit-box-shadow: inset 0 0 0 1px rgba(90, 90, 90, .1);
+  -webkit-box-shadow: 0 0 1px rgba(160, 160, 160, 0.8),
+      inset 0 0 0 1px rgba(90, 90, 90, .1);
 }
 
 .thin-toolbar-menu-button-disabled {
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  opacity: 0.4;
 }
 
 .thin-toolbar-menu-button-arrow-none .thin-toolbar-menu-button-handle {
@@ -170,7 +176,6 @@
 .thin-toolbar-menu-button-arrow-auto .thin-toolbar-menu-button-button:after {
   content: url(icons/x-trigger-small.png);
   padding-left: 3px;
-  vertical-align: text-bottom;
   margin: 0;
 }
 
@@ -207,18 +212,17 @@
 }
 
 .thin-toolbar-split-button-disabled {
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  opacity: 0.4;
 }
 
 .thin-toolbar-split-button-hover .thin-toolbar-split-button-button-body, 
 .thin-toolbar-split-button-hover .thin-toolbar-split-button-handle, 
 .thin-toolbar-split-button-open .thin-toolbar-split-button-button-body, 
 .thin-toolbar-split-button-open .thin-toolbar-split-button-handle,
-.thin-toolbar-split-button-checked .thin-toolbar-split-button-button-body, 
 .thin-toolbar-split-button-checked .thin-toolbar-split-button-handle {
   border-color: rgb(200, 200, 200);
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+  -webkit-box-shadow: 0 0 1px rgba(200, 200, 200, 0.8),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.7);
 }
 
 
@@ -234,14 +238,14 @@
   color: rgb(90, 90, 90);
   text-shadow: 1px 1px 0 rgb(250, 250, 250);
   display: inline-block;
-  vertical-align: text-bottom;
 }
 
 .thin-toolbar-split-button-button-active .thin-toolbar-split-button-button-body, 
 .thin-toolbar-split-button-button-checked .thin-toolbar-split-button-button-body {
   border-color: rgb(140, 140, 140);
   background: rgb(240, 240, 240) !important;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(100, 100, 100, .1);
+  -webkit-box-shadow: 0 0 1px rgba(140, 140, 140, 0.8),
+      inset 0 0 0 1px rgba(100, 100, 100, .1);
 }
 
 .thin-toolbar-split-button-handle {
@@ -262,17 +266,21 @@
 }
 .thin-toolbar-split-button-horizontal .thin-toolbar-split-button-button-body {
   -webkit-box-flex: 1;
-}
-.thin-toolbar-split-button-horizontal .thin-toolbar-split-button-button-body {
   -webkit-border-top-left-radius: 2px;
   -webkit-border-bottom-left-radius: 2px;
+  clear: both;
+}
+.thin-toolbar-split-button-horizontal .thin-toolbar-split-button-button-label {
+  line-height: 16px;
+}
+.thin-toolbar-split-button-horizontal .thin-icon.thin-icon-left {
+  float: left;
 }
 .thin-toolbar-split-button-horizontal .thin-toolbar-split-button-handle {
   -webkit-border-top-right-radius: 2px;
   -webkit-border-bottom-right-radius: 2px;
   width: 13px;
   border-left: 0 !important;
-  vertical-align: top;
 }
 
 .thin-toolbar-split-button-vertical .thin-toolbar-split-button-button-body {
@@ -285,6 +293,13 @@
   height: 11px;
   border-top: 0 !important;
 }
+.thin-toolbar-split-button-vertical .thin-icon.thin-icon-left {
+  float: left;
+}
+.thin-toolbar-split-button-vertical .thin-toolbar-split-button-button-label {
+  line-height: 20px;
+}
+
 
 /**
  * thin.ui.ToolbarSelect

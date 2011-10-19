@@ -23,8 +23,7 @@
 }
 
 .thin-input-color-picker-disabled {
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  opacity: 0.4;
 }
 
 .thin-input-color-picker-body {
@@ -64,7 +63,6 @@
   width: 10px;
   height: 10px;
   border: 1px solid transparent;
-  vertical-align: text-bottom;
 }
 
 .thin-input-color-picker-indicator-none {

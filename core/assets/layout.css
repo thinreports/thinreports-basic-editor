@@ -25,7 +25,7 @@
 }
 
 .thin-layout-left {
-  width: 45px;
+  width: 40px;
   border-right: 1px solid #444;
   background-color: #666;
   -webkit-box-shadow: inset -1px 0 0 #888;

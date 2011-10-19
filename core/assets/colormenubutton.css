@@ -23,7 +23,8 @@
 
 .thin-color-menu-button-body {
   -webkit-border-radius: 2px;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7),
+      0 0 1px rgba(180, 180, 180, 0.8)
   background-image: -webkit-gradient(linear, left top, left bottom, 
       from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
   border: 1px solid rgb(180, 180, 180);
@@ -71,8 +72,7 @@
 }
 
 .thin-color-menu-button-disabled {
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  opacity: 0.4;
 }
 
 .thin-color-menu-button-arrow-none .thin-color-menu-button-handle {

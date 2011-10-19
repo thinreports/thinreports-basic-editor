@@ -27,19 +27,21 @@
       from(rgb(250, 250, 250)), to(rgb(220, 220, 220)));  
   -webkit-border-top-left-radius: 2px;
   -webkit-border-top-right-radius: 2px;
+  -webkit-box-shadow: 0 0 1px rgba(180, 180, 180, 0.8);
   border: 1px solid rgb(180, 180, 180);
 }
 
-.thin-combobox input {
+.thin-combobox .thin-input {
   display: block;
   -webkit-box-flex: 1;
   border-width: 0 1px 0 0;
   border-color: rgb(180, 180, 180);
   border-style: solid;
   margin: 0;
-  padding: .3em 3px !important;
+  padding: 0.2em 3px !important;
   width: auto !important;
   font-size: 1.0em;
+  line-height: 1.6em;
 }
 
 .thin-combobox-handle {
@@ -54,6 +56,5 @@
 }
 
 .thin-combobox-disabled {
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  opacity: 0.4;
 }

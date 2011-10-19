@@ -21,7 +21,7 @@
   background: #f0f0f0;
   border: 1px solid #444;
   -webkit-border-radius: 2px;
-  -webkit-box-shadow: 2px 2px 0 rgba(160, 160, 160, 0.3);
+  -webkit-box-shadow: 2px 2px 0 rgba(160, 160, 160, 0.3), 0 0 1px #444;
   position: absolute;
   z-index: 200;
 }
@@ -65,7 +65,7 @@
   display: block !important;
   width: 22px;
   background: transparent url(icons/x-cross-small-gray.png) center center no-repeat;
-  -webkit-border-radius: 5px;
+  -webkit-border-radius: 2px;
   -webkit-box-sizing: border-box;
   margin: 4px;
 }
@@ -91,8 +91,4 @@
 .thin-dialog-buttons-wrapper > div {
   margin-right: 2px;
   margin-left: 2px;
-}
-
-.thin-buttonset-default {
-  /* Nothing */
 }

@@ -24,7 +24,8 @@
   background: -webkit-gradient(linear, left top, left bottom, 
       from(rgba(125, 162, 206, 0.1)), 
       to(rgba(125, 162, 206, 0.3)));
-  -webkit-box-shadow: inset 0 0 0 1px rgba(125, 162, 206, 0.4);
+  -webkit-box-shadow: 0 0 1px rgba(125, 162, 206, 0.6),
+      inset 0 0 0 1px rgba(125, 162, 206, 0.4);
 }
 
 .thin-font-option-content {
@@ -37,6 +38,7 @@
   background-color: transparent;
   background-position: left center;
   background-repeat: no-repeat;
+  line-height: 1.6em;
 }
 
 .thin-font-option.builtin-font .thin-font-option-content {

@@ -23,7 +23,8 @@
 
 .thin-menu-button-body {
   -webkit-border-radius: 2px;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  -webkit-box-shadow: 0 0 1px rgba(180, 180, 180, 0.8),
+      inset 0 0 0 1px rgba(255, 255, 255, .7);
   background-image: -webkit-gradient(linear, left top, left bottom, 
       from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
   border: 1px solid rgb(180, 180, 180);
@@ -37,10 +38,7 @@
   padding: 0.2em 7px;
   white-space: normal !important;
   margin: 0;
-}
-
-.thin-menu-button-button > span {
-  vertical-align: text-bottom;
+  line-height: 1.6em;
 }
 
 .thin-menu-button-button > span:empty:before {
@@ -60,8 +58,7 @@
 }
 
 .thin-menu-button-disabled {
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  opacity: 0.4;
 }
 
 .thin-menu-button-arrow-none .thin-menu-button-handle {
@@ -71,7 +68,6 @@
 .thin-menu-button-arrow-auto .thin-menu-button-button:after {
   content: url(icons/x-trigger-small.png);
   padding-left: 3px;
-  vertical-align: text-bottom;
   margin: 0;
 }
 

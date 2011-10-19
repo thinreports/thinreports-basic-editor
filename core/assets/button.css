@@ -26,7 +26,8 @@
 .thin-button-body {
   text-align: center;
   -webkit-border-radius: 2px;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7),
+      0 0 1px rgba(180, 180, 180, 0.8);
   background: -webkit-gradient(linear, left top, left bottom, 
       from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
   padding: .2em 4px;
@@ -38,6 +39,7 @@
   text-shadow: 1px 1px 0 rgb(250, 250, 250);
   vertical-align: text-bottom;
   font-size: inherit;
+  line-height: 1.6em;
 }
 
 .thin-button-hover .thin-button-body {
@@ -54,6 +56,5 @@
 }
 
 .thin-button-disabled {
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  opacity: 0.4;
 }

@@ -87,8 +87,7 @@
 
 .thin-proppane-prop-disabled .thin-proppane-propkey, 
 .thin-proppane-prop-disabled .thin-proppane-propvalue > * {
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  opacity: 0.4;
 }
 
 /**
@@ -115,6 +114,7 @@
   font-size: 1.1em;
   height: inherit;
   background-color: transparent;
+  line-height: inherit;
 }
 
 .thin-proppane-propvalue > .thin-input-focus {
@@ -136,7 +136,8 @@
   line-height: inherit;
   -webkit-box-sizing: border-box;
   -webkit-border-radius: 2px;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  -webkit-box-shadow: 0 0 1px rgba(180, 180, 180, 0.8),
+      inset 0 0 0 1px rgba(255, 255, 255, .7);
   background-image: -webkit-gradient(linear, left top, left bottom, 
       from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
   border: 1px solid rgb(180, 180, 180);
@@ -212,15 +213,15 @@
   padding: 0 3px;
   font-size: 1.1em;
   background-color: transparent;
+  line-height: inherit;
 }
 
 .thin-proppane-prop-combobox-handle {
   width: 16px;
   -webkit-border-radius: 2px;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  -webkit-box-shadow: 0 0 1px rgba(180, 180, 180, 0.8),
+      inset 0 0 0 1px rgba(255, 255, 255, .7);
   border: 1px solid rgb(180, 180, 180);
-  
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
   background: transparent url(icons/x-trigger-small.png) no-repeat center center;
   text-align: center;
 }
@@ -243,8 +244,7 @@
 }
 
 .thin-proppane-prop-color-disabled {
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  opacity: 0.4;
 }
 
 .thin-proppane-prop-color-body {
@@ -267,6 +267,7 @@
   padding: 0 3px !important;
   border: 0;
   background-color: transparent;
+  line-height: inherit;
 }
 
 .thin-proppane-prop-color .thin-input-focus {
@@ -275,16 +276,17 @@
 
 .thin-proppane-prop-color-indicator {
   width: 20px;
-  line-height: inherit;
   text-align: center;
+  height: inherit;
 }
 
 .thin-proppane-prop-color-indicator-body {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   border: 1px solid transparent;
-  vertical-align: text-bottom;
+  -webkit-box-sizing: border-box;
+  margin-top: 5px;
 }
 
 .thin-proppane-prop-color-indicator-none {
@@ -330,6 +332,7 @@
   padding: 0 3px !important;
   border: 0;
   background-color: transparent;
+  line-height: inherit;
 }
 .thin-proppane-prop-checkable-ctl > .thin-input-focus {
   background-color: #fff;
@@ -344,18 +347,22 @@
 .thin-proppane-propvalue .thin-input-unit-changer {
   display: block !important;
   height: inherit;
-  line-height: inherit;
+  line-height: inherit !important;
   width: auto;
   background-color: transparent;
 }
 
 .thin-proppane-propvalue .thin-input-unit-changer-body {
   border: 0 !important;
+  -webkit-border-radius: 0 !important;
+  -webkit-box-shadow: none !important;
 }
 
 .thin-proppane-propvalue .thin-input-unit-changer .thin-input {
   padding: 0 3px;
+  font-size: 1.1em;
   background-color: transparent;
+  line-height: inherit;
 }
 
 .thin-proppane-propvalue .thin-input-unit-changer-focus {

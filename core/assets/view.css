@@ -29,9 +29,8 @@
       color-stop(0.40, #777), 
       color-stop(1.00, #555));
   -webkit-box-shadow: inset 0 1px 0 rgb(170, 170, 170);
-  text-shadow: 1px 1px 0 rgb(80, 80, 80);
-  font: bold 11px/25px Tahoma, Arial;
-  font-weight: bold;
+  text-shadow: 1px 1px 0 rgb(70, 70, 70);
+  font: bold 11px/25px Arial,sans-serif;
   color: #bbb;
   text-align: center;
   padding: 0;

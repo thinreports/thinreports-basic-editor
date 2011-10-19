@@ -90,6 +90,7 @@
   vertical-align: middle;
   margin-right: 5px;
   -webkit-border-radius: 2px;
+  -webkit-box-shadow: 0 0 1px rgba(200, 200, 200, 0.8);
 }
 .thin-color-palette-none-hover .thin-color-palette-none-icon {
   -webkit-box-shadow: inset 0 0 0 1px #fff;

@@ -21,34 +21,16 @@
 }
 
 .thin-checkbox-box {
-  border: 1px solid rgb(150, 150, 150);
-  font-size: 1px;
-  height: 11px;
-  margin: 0;
+  -webkit-box-sizing: border-box;
+  border: 1px solid rgb(140, 140, 140);
+  width: 13px;
+  height: 13px;
+  margin: 4px 0 0 0;
   padding: 0;
   display: inline-block;
-  vertical-align: text-bottom;
-  background: -webkit-gradient(linear, left top, right bottom, 
-      from(rgb(200, 200, 200)), to(rgb(255, 255, 255)));
-  -webkit-box-shadow: inset 0 0 0 1px rgb(245, 245, 245), 
-      inset 1px 1px 0 1px rgb(180, 185, 189), 
-      inset -1px -1px 0 1px rgba(180, 185, 189, 0.2);
-  width: 11px;
-  overflow: hidden;
-  line-height: normal !important;
-}
-
-.thin-checkbox-box::before {
-  content: ".";
-  font-size: 1px;
-  color: rgba(0, 0, 0, 0.0);
-  display: inline-block;
-  width: 9px !important;
-  height: 9px !important;
-  padding: 1px;
   background-position: center center;
   background-repeat: no-repeat;
-  background-color: transparent;
+  background-color: #fff;
 }
 
 .thin-checkbox-label {
@@ -58,10 +40,10 @@
 }
 
 .thin-checkbox-label:empty {
-  padding-left: 0 !important;
+  display: none;
 }
 
-.thin-checkbox-checked .thin-checkbox-box::before {
+.thin-checkbox-checked .thin-checkbox-box {
   background-image: url(icons/x-check-sprite.png);
 }
 
@@ -71,8 +53,7 @@
 }
 
 .thin-checkbox-disabled {
-  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(200, 200, 200, .4)), to(rgba(200, 200, 200, .4)));
+  opacity: 0.4;
   cursor: default !important;
 }
 

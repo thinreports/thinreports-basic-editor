@@ -21,7 +21,7 @@
 /**
  * FIXME: Like a TabToolbar, but It's dummy...
  */
-.thin-tabpane-contents::before {
+.thin-tabpane-contents:before {
   display: block;
   height: 13px;
   content: ".";
@@ -73,27 +73,11 @@
 }
 .thin-tabpane-tab-button-selected {
   margin-bottom: -1px;
-/* TODO: ...? 
-  border-width: 0 1px;
-  border-color: #666;
-  border-style: solid;
-*/  
   color: #555 !important;
   text-shadow: 1px 1px 0 #fff;
   background: -webkit-gradient(linear, left top, left bottom, 
       from(rgb(245, 245, 245)), 
       to(rgb(235, 235, 235)));
-/* TODO: ...?
-  background-image: -webkit-gradient(linear, left top, right top, 
-      color-stop(0.01, rgba(200, 200, 200, 0.4)), 
-      color-stop(0.10, rgba(255, 255, 255, 0.0)), 
-      color-stop(0.90, rgba(255, 255, 255, 0.0)), 
-      color-stop(1.00, rgba(200, 200, 200, 0.4)));      
-*/
-}
-
-.thin-tabpane-tab-button-disabled {
-  /* TODO */
 }
 
 .thin-tabpane-tab-button-trigger {
@@ -106,18 +90,29 @@
   text-overflow: ellipsis;
   padding-right: 5px;
 }
+.thin-tabpane-tab-button-trigger-body .thin-icon.thin-icon-left {
+  float: left;
+  height: 25px;
+}
+
+.thin-tabpane-tab-button-trigger-label {
+  line-height: 25px;
+}
 
 .thin-tabpane-tab-button-close-body {
   line-height: 25px;
 }
-.thin-tabpane-tab-button-selected .thin-tabpane-tab-button-close .thin-icon:hover {
-  -webkit-border-radius: 3px !important;
-  -webkit-box-shadow: inset 1px 1px 3px rgb(180, 180, 180);
-  background-color: rgb(215, 215, 215);
+
+.thin-tabpane-tab-button-close-label {
+  display: none;
 }
+
 .thin-tabpane-tab-button-hover .thin-tabpane-tab-button-close .thin-icon {
   background-image: url(icons/x-cross-small-gray.png);
 }
 .thin-tabpane-tab-button-selected .thin-tabpane-tab-button-close .thin-icon {
-  background-image: url(icons/x-cross-small-black.png) !important;
+  background-image: url(icons/x-cross-small-black.png);
+}
+.thin-tabpane-tab-button-close .thin-icon:hover {
+  background-image: url(icons/x-cross-circle-small.png) !important;
 }

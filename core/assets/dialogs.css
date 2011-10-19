@@ -37,6 +37,7 @@
 .thin-dialogs .thin-dialog-content fieldset {
   border: 1px solid #ccc;
   -webkit-border-radius: 2px;
+  -webkit-box-shadow: 0 0 2px #ccc;
   padding-top: 7px;
   margin-bottom: 5px;
 }
@@ -55,16 +56,11 @@
   width: 30%;
   text-align: right;
   padding-right: 15px;
+  line-height: 22px;
 }
 
 .thin-dialogs .thin-dialogs-setting-control {
-  padding: 1px;
-}
-
-.thin-dialogs .thin-dialogs-caption, 
-.thin-dialogs .thin-dialogs-control {
-  line-height: 16px !important;
-  vertical-align: middle;
+  -webkit-box-flex: 1;
 }
 
 /**
@@ -104,10 +100,8 @@
 /* thin.ui.InputUnitChanger */
 .thin-dialog-report-config .thin-input-unit-changer {
   margin: 1px;
-}
-
-.thin-dialog-report-config .thin-input-unit-changer .thin-input {
   font-size: 12px;
+  line-height: 1.2em;
 }
 
 .thin-dialog-report-config .thin-input-unit-changer-body {
@@ -118,9 +112,11 @@
 .thin-dialogs .thin-dialogs-setting-control > .thin-input {
   padding: 2px;
   font-size: 12px;
+  line-height: 1.2em;
   border: 1px solid #aaa;
   margin: 1px;
   -webkit-border-radius: 2px;
+  -webkit-box-shadow: 0 0 1px rgba(180, 180, 180, 0.8);
 }
 
 .thin-dialogs .thin-dialogs-setting-control > .thin-input:disabled {
