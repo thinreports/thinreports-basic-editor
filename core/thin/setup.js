@@ -207,6 +207,8 @@ thin.setup = function() {
       var toolbar = thin.ui.getComponent('toolbar');
       var layout = selectedWorkspace.getLayout();
       
+      selectedWorkspace.focusElement(e);
+      
       initUiStatus();
       toolbox.setSelectedItem(toolbox.getChild(selectedAction));
       toolbar.getChild('guide').setChecked(layout.getHelpers().getLayoutGuideHelper().isEnable());
