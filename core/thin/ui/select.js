@@ -34,7 +34,6 @@ goog.require('thin.ui.MenuButtonRenderer');
 thin.ui.Select = function(opt_caption, opt_menu, opt_renderer) {
   goog.ui.Select.call(this, opt_caption || '', opt_menu || new thin.ui.OptionMenu(), 
       opt_renderer || thin.ui.MenuButtonRenderer.getInstance());
-  this.setAllowTextSelection(true);
 };
 goog.inherits(thin.ui.Select, goog.ui.Select);
 goog.mixin(thin.ui.Select.prototype, thin.ui.StylableControl.prototype);

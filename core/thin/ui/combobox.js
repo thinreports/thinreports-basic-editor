@@ -103,6 +103,8 @@ thin.ui.ComboBox.prototype.createDom = function() {
   this.setElementInternal(domHelper.createDom('div', 
       cssClass, wrapper));
   
+  goog.style.setUnselectable(this.getElement(), true, true);
+  
   this.setWidth(this.width_);
   this.setTextAlign(this.textAlign_);
   
@@ -167,8 +169,10 @@ thin.ui.ComboBox.prototype.hideMenu_ = function() {
 thin.ui.ComboBox.prototype.setEnabled = function(enabled) {
   this.enabled_ = enabled;
   this.labelInput_.setEnabled(enabled);
+  
   goog.dom.classes.enable(this.getElement(),
       thin.ui.getCssName(this.getCssClass(), 'disabled'), !enabled);
+  this.setFocusable(enabled);
 };
 
 

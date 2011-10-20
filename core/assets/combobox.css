@@ -47,7 +47,7 @@
 .thin-combobox-handle {
   width: 18px;
   -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
-  background: transparent url(icons/x-trigger.png) no-repeat center center;
+  background: transparent url(icons/x-trigger-small.png) no-repeat center center;
   text-align: center;
 }
 
