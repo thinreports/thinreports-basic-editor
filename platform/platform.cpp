@@ -117,6 +117,8 @@ void Platform::populateJavaScript()
             ->addToJavaScriptWindowObject("__treImageUtils__", new JsExtImage(this));
     view->page()->mainFrame()
             ->addToJavaScriptWindowObject("__treStringUtils__", new JsExtString(this));
+    view->page()->mainFrame()
+            ->addToJavaScriptWindowObject("__treWindowUtils__", new JsExtWindow(this));
 
     QStringList initScript;
     initScript
@@ -125,13 +127,15 @@ void Platform::populateJavaScript()
             << "    File: window.__treFileUtils__, "
             << "    Font: window.__treFontUtils__, "
             << "    Image: window.__treImageUtils__, "
-            << "    String: window.__treStringUtils__"
+            << "    String: window.__treStringUtils__, "
+            << "    Window: window.__treWindowUtils__"
             << "  };"
             << "  window.platform = utils;"
             << "  delete window.__treFileUtils__;"
             << "  delete window.__treFontUtils__;"
             << "  delete window.__treImageUtils__;"
             << "  delete window.__treStringUtils__;"
+            << "  delete window.__treWindowUtils__;"
             << "})();";
     view->page()->mainFrame()
             ->evaluateJavaScript(initScript.join(""));
@@ -153,7 +157,7 @@ void Platform::closeEvent(QCloseEvent *evClose)
     beforeScript
             << "(function(){"
             << "  if (typeof window.onbeforeclose == 'function') {"
-            << "    return window.onbeforeclose.call(this);"
+            << "    return window.onbeforeclose();"
             << "  } else {"
             << "    return true;"
             << "  }"

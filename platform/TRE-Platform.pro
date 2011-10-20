@@ -8,12 +8,16 @@ SOURCES += main.cpp\
            jsextfile.cpp \
            jsextfont.cpp \
            jsextimage.cpp \
-           jsextstring.cpp
+           jsextstring.cpp \
+           jsextwindow.cpp
 
 HEADERS += platform.h \
            jsextfile.h \
            jsextfont.h \
            jsextimage.h \
-           jsextstring.h
+           jsextstring.h \
+           jsextwindow.h
+
+
 
 

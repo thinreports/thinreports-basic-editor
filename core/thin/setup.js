@@ -1377,39 +1377,38 @@ thin.setup = function() {
     goog.global['onbeforeclose'] = function() {
       var pageCount = tabpane.getPageCount();
       var isChanged = false;
-      (function() {
-        for(var count = 0; count < pageCount; count++) {
-          if(tabpane.getPage(count).getContent().isChanged()) {
-            isChanged = true;
-            return;
-          }
+      
+      for(var count = 0; count < pageCount; count++) {
+        if(tabpane.getPage(count).getContent().isChanged()) {
+          isChanged = true;
+          break;
         }
-      })();
-
+      }
+      
       if (isChanged) {
-        var confirmDialogFromWindow = thin.ui.Message.confirm(
-              '保存されていないファイルがあります。<br />保存しますか ？', '確認',
-              function(e) {
-                if (e.isYes()) {
-                  confirmDialogFromWindow.setVisible(false);
-                  var removePage = tabpane.getSelectedPage();
-                  var removeWorkspace;
-                  while (removePage) {
-                    removeWorkspace = removePage.getContent();
-                    if (removeWorkspace.isChanged() && !removeWorkspace.save()) {
-                      return;
-                    }
-                    tabpane.destroyPage(removePage);
-                    removePage = tabpane.getSelectedPage();
-                  }
+        thin.ui.Message.confirm(
+          '保存されていないファイルがあります。<br />保存しますか ？', '確認',
+          function(e) {
+            if (e.isYes()) {
+              e.target.setVisible(false);
+              var removePage = tabpane.getSelectedPage();
+              var removeWorkspace;
+              while (removePage) {
+                removeWorkspace = removePage.getContent();
+                if (removeWorkspace.isChanged() && !removeWorkspace.save()) {
+                  return;
                 }
-                
-                if(!e.isCancel()) {
-                  goog.global['onbeforeclose'] = null;
-                  goog.global['close']();
-                }
-                
-              }, thin.ui.Dialog.ButtonSet.typeYesNoCancel());
+                tabpane.destroyPage(removePage);
+                removePage = tabpane.getSelectedPage();
+              }
+            }
+            
+            if(!e.isCancel()) {
+              goog.global['onbeforeclose'] = null;
+              thin.core.platform.callNativeFunction('platform', 'Window', 'forceClose', []);
+            }
+            
+          }, thin.ui.Dialog.ButtonSet.typeYesNoCancel());
         return false;
       } else {
         return true;
