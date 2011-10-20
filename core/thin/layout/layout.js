@@ -1,4 +1,4 @@
-//  Copyright (C) 2010 Matsukei Co.,Ltd.
+//  Copyright (C) 2011 Matsukei Co.,Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -14,3 +14,41 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.layout');
+
+goog.require('goog.array');
+goog.require('goog.string');
+goog.require('thin.Version');
+goog.require('thin.Compatibility');
+
+
+/**
+ * @type {Array.<Array>}
+ */
+thin.layout.REQUIRED_RULES = [
+  ['>=', '0.6.0.pre3'],
+  ['<',  thin.getNextMajorVersion()]
+];
+
+
+/**
+ * @return {string}
+ */
+thin.layout.inspectRequiredRules = function() {
+  var desc = [];
+  goog.array.forEach(thin.layout.REQUIRED_RULES, function(rule) {
+    desc[desc.length] = goog.string.buildString(
+        ' ', rule[1], ' ', thin.Version.humanizeOperator(rule[0]));
+  });
+  return desc.join('かつ');
+};
+
+
+/**
+ * @param {string} version
+ * @return {boolean}
+ */
+thin.layout.canOpen = function(version) {
+  return goog.array.every(thin.layout.REQUIRED_RULES, function(rule) {
+    return thin.Compatibility.check(version, rule[0], rule[1]);
+  });
+};

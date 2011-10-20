@@ -1,4 +1,4 @@
-//  Copyright (C) 2010 Matsukei Co.,Ltd.
+//  Copyright (C) 2011 Matsukei Co.,Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -136,10 +136,10 @@ thin.core.platform.File.createFilter = function(description, extNames, opt_allFi
   extNames = goog.array.map(extNames, function(ext) {
     return '*.' + ext;
   });
-  var filters = description + '(' + extNames.join(' ') + ')';
+  var filters = description + ' (' + extNames.join(' ') + ')';
   
   if (opt_allFiles) {
-    filters += ';;All Files(*)';
+    filters += ';;All Files (*)';
   }
   return filters;
 };

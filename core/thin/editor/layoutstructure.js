@@ -1,4 +1,4 @@
-//  Copyright (C) 2010 Matsukei Co.,Ltd.
+//  Copyright (C) 2011 Matsukei Co.,Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -95,7 +95,7 @@ thin.editor.LayoutStructure.restoreStructure = function(svg) {
 /**
  * @param {string} xml
  * @return {string}
- * @deprecated Will be removed in 0.7.0.
+ * @deprecated Will be removed in 0.8.0.
  */
 thin.editor.LayoutStructure.restoreKerningFromLetterSpacing = function(xml) {
   return xml.replace(/(<[^>]*?)(letter-spacing="(.+?)")([^<]*?>)/g, function(str, prefix, attr, spacing, suffix) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * Copyright (C) 2011 Matsukei Co.,Ltd.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -126,38 +126,38 @@
 }
 
 /**
- * Help
+ * About
  */
-.thin-dialog-help .thin-dialog-content {
+.thin-dialog-about .thin-dialog-content {
   background-color: #fff !important;
   padding: 13px !important;
 }
 
-.thin-dialog-help .thin-dialog-buttons {
+.thin-dialog-about .thin-dialog-buttons {
   border-top: 1px solid #ccc;
   -webkit-box-shadow: inset 0 1px 0 #fff;
 }
 
-.thin-dialog-help-appinfo {
-  font-family: Cambria, Georgia, 'Times New Roman', Times, serif;
+.thin-dialog-about-appinfo {
   margin: 12px 0 20px 0;
   color: #222 !important;
 }
 
-.thin-dialog-help-appinfo h1 {
+.thin-dialog-about-appinfo h1 {
+  font-family: Georgia, "Times New Roman", Times, serif;
   margin: 0;
   font-size: 24px;
   font-weight: normal;
   text-shadow: #eee 1px 1px 1px; 
 }
 
-#help-dialog-version {
+#about-dialog-version {
   padding-left: 2px;
   margin-top: 3px;
   font-size: 14px;
 }
 
-.thin-dialog-help-details {
+.thin-dialog-about-details {
   border-top: 1px solid #ccc;
   color: #666;
   font-size: 12px;
@@ -165,35 +165,40 @@
   margin: 15px 0 5px 0;
 }
 
-.thin-dialog-help-details p {
+.thin-dialog-about-details p {
   margin: 3px 0;
 }
 
-.thin-dialog-help-copyright {
-  font-family: Cambria, Georgia, 'Times New Roman', Times, serif;
+.thin-dialog-about-copyright {
+  font-family: Georgia, 'Times New Roman', Times, serif;
   margin-bottom: 15px !important;
   color: #444 !important;
 }
 
-.thin-dialog-help-help {
+.thin-dialog-about-resources {
   padding-left: 10px;
-  font-family: Cambria, Georgia, 'Times New Roman', Times, serif;
+  font-family: Helvetica, Arial, sans-serif;
 }
-.thin-dialog-help-help dl,
-.thin-dialog-help-help dt {
+.thin-dialog-about-resources dl,
+.thin-dialog-about-resources dt {
   margin: 0;
   padding: 0;
 }
-.thin-dialog-help-help dd {
+.thin-dialog-about-resources dd {
   margin: 3px 0 5px 20px;
 }
-.thin-dialog-help-help dt {
+.thin-dialog-about-resources dd strong {
+  display: inline-block;
+  min-width: 65px;
+}
+.thin-dialog-about-resources dt {
   font-weight: bold;
   color: #333 !important;
 }
 
-.thin-dialog-help-description {
+.thin-dialog-about-description {
   margin-bottom: 10px !important;
   font-size: 10px !important;
+  line-height: 1.4em;
 }
 

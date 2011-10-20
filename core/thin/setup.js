@@ -1,4 +1,4 @@
-//  Copyright (C) 2010 Matsukei Co.,Ltd.
+//  Copyright (C) 2011 Matsukei Co.,Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -517,9 +517,12 @@ thin.setup = function() {
           try {
             var targetVersion = workspace.getLayout().getFormat().getVersion();
             
-            if (!thin.Compatibility.check(thin.getVersion(), '=', targetVersion)) {
-              throw new thin.Error(goog.string.buildString(
-                      "このレイアウトは ", thin.getVersion(), "で作成されていないため開くことができません。"));
+            if (!thin.layout.canOpen(targetVersion)) {
+              throw new thin.Error(
+                  'レイアウトファイルのバージョンが' +
+                  '「' + thin.layout.inspectRequiredRules() + '」' +
+                  'を満たす場合のみ編集できます。' +
+                  "<br>※ 選択したレイアウトファイルのバージョンは「" + targetVersion + '」です。');
             }
 
             var newPage = new thin.ui.TabPane.TabPage(
@@ -1227,11 +1230,11 @@ thin.setup = function() {
     toolHelpAbout.addEventListener(componentEventType.ACTION, function(e) {
       var helpDialog = new thin.ui.Dialog();
       helpDialog.setDisposeOnHide(true);
-      helpDialog.setTitle('ヘルプ');
+      helpDialog.setTitle('About');
       helpDialog.setWidth(400);
       helpDialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOk());
-      helpDialog.decorate(goog.dom.getElement('help-dialog'));
-      goog.dom.setTextContent(goog.dom.getElement('help-dialog-version'), thin.getVersion());
+      helpDialog.decorate(goog.dom.getElement('about-dialog'));
+      goog.dom.setTextContent(goog.dom.getElement('about-dialog-version'), thin.getVersion());
       
       helpDialog.addEventListener(goog.ui.Dialog.EventType.AFTER_HIDE, focusWorkspace);
       

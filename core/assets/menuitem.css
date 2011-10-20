@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * Copyright (C) 2011 Matsukei Co.,Ltd.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
   -webkit-box-flex: 1;
   padding-left: 5px;
   white-space: nowrap;
-  line-height: 1.8em;
+  line-height: 2em;
 }
 
 .thin-menuitem-accel {
@@ -54,6 +54,9 @@
   border-right: 1px solid rgb(230, 230, 230);
   -webkit-box-shadow: 1px 0 0 rgb(255, 255, 255);
   text-align: center;
+  vertical-align: initial !important;
+  display: block !important;
+  height: auto !important;
 }
 
 .thin-menuitem-hover .thin-menuitem-body {

@@ -1,4 +1,4 @@
-//  Copyright (C) 2010 Matsukei Co.,Ltd.
+//  Copyright (C) 2011 Matsukei Co.,Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ thin.editor.ImageFile.EXT_NAME_ = ['jpg', 'png'];
  * @type {string}
  * @private
  */
-thin.editor.ImageFile.EXT_DESCRIPTION_ = 'image file';
+thin.editor.ImageFile.EXT_DESCRIPTION_ = 'Images';
 
 
 /**

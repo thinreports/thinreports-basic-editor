@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010 Matsukei Co.,Ltd.
+ * Copyright (C) 2011 Matsukei Co.,Ltd.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,6 @@
 }
 
 .thin-dialog-title-text {
-  /* FIXME For <span> tag, but will be <div>. */
   display: block !important;
   -webkit-box-flex: 1;
   padding: 0 5px 0 8px;
@@ -61,7 +60,6 @@
 }
 
 .thin-dialog-title-close {
-  /* FIXME For <span> tag, but will be <div>. */
   display: block !important;
   width: 22px;
   background: transparent url(icons/x-cross-small-gray.png) center center no-repeat;
@@ -77,6 +75,10 @@
 
 .thin-dialog-content {
   padding: 8px;
+}
+
+.thin-dialog-content a {
+  text-decoration: underline;
 }
 
 .thin-dialog-buttons-wrapper {

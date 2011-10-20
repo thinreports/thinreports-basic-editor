@@ -1,4 +1,4 @@
-//  Copyright (C) 2010 Matsukei Co.,Ltd.
+//  Copyright (C) 2011 Matsukei Co.,Ltd.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ thin.Version.MAJOR = 0;
 /**
  * @type {number}
  */
-thin.Version.MINOR = 6;
+thin.Version.MINOR = 7;
 
 
 /**
@@ -37,9 +37,9 @@ thin.Version.TINY = 0;
 
 
 /**
- * @type {string}
+ * @type {string?}
  */
-thin.Version.PRE = 'pre3'
+thin.Version.PRE = null;
 
 
 /**
@@ -65,6 +65,14 @@ thin.getVersion = function(opt_ignorePre) {
     res.push(thin.Version.PRE);
   }
   return res.join('.');
+};
+
+
+/**
+ * @return {string}
+ */
+thin.getNextMajorVersion = function() {
+  return String((thin.Version.MAJOR + (thin.Version.MINOR * 0.1)) + 0.1) + '.0';
 };
 
 
@@ -96,4 +104,31 @@ thin.Version.compare = function(base, operator, target) {
       break;
   }
   return false;
+};
+
+
+/**
+ * @param {string} operator
+ * @return {string}
+ */
+thin.Version.humanizeOperator = function(operator) {
+  var desc = '';
+  switch(operator) {
+    case '=':
+      desc = '等しい';
+      break;
+    case '>':
+      desc = 'より大きい';
+      break;
+    case '>=':
+      desc = '以上';
+      break;
+    case '<':
+      desc = 'より小さい';
+      break;
+    case '<=':
+      desc = '以下';
+      break;
+  }
+  return desc;
 };
