@@ -28,23 +28,22 @@
 Platform::Platform(QWidget *parent)
     : QMainWindow(parent)
 {
-    QByteArray uid = QCryptographicHash::hash(QDir::homePath().toLocal8Bit(),
-                                              QCryptographicHash::Md5);
-    QFileInfo app("../core/application.html?uid=" + uid.toHex());
+    view = new QWebView(this);
+}
 
-    if (!isDebugMode() && !app.exists()) {
-        QMessageBox::critical(this, tr("ThinReportsEditor Platform Booting Error"),
+void Platform::boot(const QString core)
+{
+    QString app = adjustPath(core);
+
+    if (!isDebugMode() && !QFile::exists(app)) {
+        QMessageBox::critical(this, tr("ThinReportsEditor Booting Error"),
                               "Unable to load application.");
         exit(0);
     }
 
-    // Load built-in fonts.
-    loadFonts();
+    view->load(app + "?uid=" + createUid());
 
-    view = new QWebView(this);
-    view->load(app.absoluteFilePath());
-
-    setting();
+    setup();
 
     connect(view, SIGNAL(loadFinished(bool)), this, SLOT(init()));
     connect(view->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()),
@@ -52,32 +51,21 @@ Platform::Platform(QWidget *parent)
     connect(view->page(), SIGNAL(windowCloseRequested()), this, SLOT(windowCloseRequested()));
     connect(view, SIGNAL(linkClicked(QUrl)), this, SLOT(openUrl(QUrl)));
 
-    setCentralWidget(view);
-    resize(1000, 700);
+    show();
 }
 
-void Platform::loadFonts()
+void Platform::setup()
 {
-    QDirIterator it("../resources/fonts");
+    // Load built-in fonts.
+    QDirIterator it(adjustPath(QLatin1String("fonts")));
     while (it.hasNext()) {
         it.next();
         if (it.fileInfo().completeSuffix().toLower() == "ttf") {
             QFontDatabase::addApplicationFont(it.filePath());
         }
     }
-}
 
-bool Platform::isDebugMode()
-{
-    if (QApplication::argc() > 1) {
-        QString arg = QApplication::argv()[1];
-        return arg == "-d";
-    }
-    return false;
-}
-
-void Platform::setting()
-{
+    // Setup of WebView.
     setAttribute(Qt::WA_InputMethodEnabled, true);
 
     view->setMinimumWidth(800);
@@ -92,13 +80,51 @@ void Platform::setting()
     view->page()->setLinkDelegationPolicy(QWebPage::DelegateExternalLinks);
 
     if (!isDebugMode()) {
-    // Production Only.
         view->setAcceptDrops(false);
         view->setContextMenuPolicy(Qt::PreventContextMenu);
     } else {
-    // Debug only
         settings->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
     }
+
+    // Setup of Widget.
+    setCentralWidget(view);
+    resize(1000, 700);
+}
+
+QString Platform::adjustPath(const QString &path)
+{
+#ifdef Q_OS_UNIX
+#ifdef Q_OS_MAC
+    if (!QDir::isAbsolutePath(path))
+        return QCoreApplication::applicationDirPath()
+                + QLatin1String("/../Resources/") + path;
+#else
+    const QString pathInInstallDir = QCoreApplication::applicationDirPath()
+        + QLatin1String("/../") + path;
+    if (pathInInstallDir.contains(QLatin1String("opt"))
+            && pathInInstallDir.contains(QLatin1String("bin"))
+            && QFileInfo(pathInInstallDir).exists()) {
+        return pathInInstallDir;
+    }
+#endif
+#endif
+    return path;
+}
+
+QByteArray Platform::createUid()
+{
+    QByteArray uid = QCryptographicHash::hash(QDir::homePath().toLocal8Bit(),
+                                              QCryptographicHash::Md5);
+    return uid.toHex();
+}
+
+bool Platform::isDebugMode()
+{
+    if (QApplication::argc() > 1) {
+        QString arg = QApplication::argv()[1];
+        return arg == "-d";
+    }
+    return false;
 }
 
 void Platform::init()

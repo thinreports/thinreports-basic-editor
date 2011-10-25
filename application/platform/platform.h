@@ -34,14 +34,17 @@ class Platform : public QMainWindow
 
 private:
     QWebView *view;
+
     bool isDebugMode();
-    void loadFonts();
+    void setup();
+    QByteArray createUid();
+    QString adjustPath(const QString &path);
 
 public:
     Platform(QWidget *parent = 0);
+    void boot(const QString core);
 
 protected:
-    void setting();
     void closeEvent(QCloseEvent *evClose);
 
 protected slots:

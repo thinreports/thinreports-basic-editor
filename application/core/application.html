@@ -1,0 +1,260 @@
+<!--
+  Copyright (C) 2011 Matsukei Co.,Ltd.
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html> 
+<html>
+  <head>
+    <title>ThinReports Editor</title>
+    <meta charset="UTF-8">
+    <script src="application-compiled.js"></script>
+    <link rel="stylesheet" href="assets/application-compiled.css">
+  </head>
+  <body onload="setup();">
+    <div class="thin-toolbar" id="thin-toolbar">
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td rowspan="2" id="tbar-report-add"></td>
+            <td rowspan="2" id="tbar-report-save"></td>
+            <td rowspan="2" id="tbar-report-open"></td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label">ファイル</div>
+      </div>
+      <div class="thin-toolbar-group-separator"></div>
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td id="tbar-undo"></td>
+            <td rowspan="2" id="tbar-report-config"></td>
+          </tr>
+          <tr>
+            <td id="tbar-redo"></td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label">編集</div>
+      </div>
+      <div class="thin-toolbar-group-separator"></div>
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td id="tbar-zoom-in"></td>
+            <td id="tbar-zoom-out"></td>              
+            <td rowspan="2" id="tbar-guide"></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              指定: <span id="tbar-zoom-rate"></span> %
+            </td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label">表示</div>
+      </div>      
+      <div class="thin-toolbar-group-separator"></div>
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td>
+              <span id="tbar-font-family"></span>
+              <span id="tbar-font-size"></span>
+            </td>
+          </tr>
+          <tr>
+            <td id="tbar-font-styles"></td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label">フォント</div>
+      </div>
+      <div class="thin-toolbar-group-separator"></div>
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td id="tbar-horizon-text-align"></td>
+            <td rowspan="2" id="tbar-shape-align"></td>
+            <td id="tbar-layer-front"></td>
+          </tr>
+          <tr>
+            <td id="tbar-vertical-text-align"></td>
+            <td id="tbar-layer-back"></td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label">配置</div>
+      </div>
+      <div class="thin-toolbar-group-separator"></div>
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td id="tbar-help"></td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label">&nbsp;</div>
+      </div>
+    </div>
+    
+    <div class="thin-layout" id="thin-main">
+      <div class="thin-layout-left"></div>
+      <div class="thin-layout-main"></div>
+      <div class="thin-layout-right"></div>
+    </div>
+    <!-- Dialog template for TextEditor. -->
+    <div id="dialog-text-editor" class="thin-dialogs thin-dialog-text-editor" style="display:none;">
+      <div class="thin-dialog-content">
+        <div id="dialog-texteditor-textarea"></div>
+      </div>
+    </div>
+    <!-- Dialog template for New ReportConfiguration. -->
+    <div id="new-dialog-report-config" class="thin-dialogs thin-dialog-report-config" style="display:none;">
+      <div class="thin-dialog-content">
+        <fieldset>
+          <legend>タイトル設定</legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">ページタイトル</div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-title"></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>用紙設定</legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">用紙</div>
+            <div class="thin-dialogs-setting-control" id="new-config-paper-type"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">幅</div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-width"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">高さ</div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-height"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">用紙の向き</div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-direction">
+              <input type="radio" id="new-config-page-direction-pr" name="page-direction-group" value="portrait">
+              <label for="new-config-page-direction-pr">縦</label>
+              <input type="radio" id="new-config-page-direction-ls" name="page-direction-group" value="landscape">
+              <label for="new-config-page-direction-ls">横</label>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>余白設定</legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">上</div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-margin-top"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">下</div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-margin-bottom"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">左</div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-margin-left"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">右</div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-margin-right"></div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <!-- Dialog template for Edit ReportConfiguration. -->
+    <div id="edit-dialog-report-config" class="thin-dialogs thin-dialog-report-config" style="display:none;">
+      <div class="thin-dialog-content">
+        <fieldset>
+          <legend>タイトル設定</legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">ページタイトル</div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-title"></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>用紙設定</legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">用紙</div>
+            <div class="thin-dialogs-setting-control" id="edit-config-paper-type"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">幅</div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-width"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">高さ</div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-height"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">用紙の向き</div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-direction">
+              <input type="radio" id="edit-config-page-direction-pr" name="page-direction-group" value="portrait">
+              <label for="edit-config-page-direction-pr">縦</label>
+              <input type="radio" id="edit-config-page-direction-ls" name="page-direction-group" value="landscape">
+              <label for="edit-config-page-direction-ls">横</label>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>余白設定</legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">上</div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-margin-top"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">下</div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-margin-bottom"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">左</div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-margin-left"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption">右</div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-margin-right"></div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <!-- Dialog template for About. -->
+    <div id="about-dialog" class="thin-dialogs thin-dialog-about" style="display:none;">
+      <div class="thin-dialog-content">
+        <div class="thin-dialog-about-appinfo">
+          <h1>ThinReports Editor</h1>
+          <div id="about-dialog-version"></div>
+        </div>
+        <div class="thin-dialog-about-details">
+          <p class="thin-dialog-about-copyright">
+            Copyright &copy; 2010-2011 <a href="http://www.matsukei.co.jp/">Matsukei</a> Co.,Ltd. All Rights Reserved.
+          </p>
+          <p class="thin-dialog-about-description">
+            ThinReports のライセンス、ヘルプ、及びリリース情報については、公式サイト又はプロジェクトサイトよりご確認下さい。
+          </p>
+          <div class="thin-dialog-about-resources">
+            <dl>
+              <dt>Official Site:</dt>
+              <dd><a href="http://www.thinreports.org/">http://www.thinreports.org/</a></dd>
+              <dt>Project Site (Matsukei Open Source Center):</dt>
+              <dd><a href="http://osc.matsukei.net/projects/thinreports/wiki">http://osc.matsukei.net/projects/thinreports/</a></dd>
+              <dt>GitHub:</dt>
+              <dd><a href="https://github.com/thinreports">https://github.com/thinreports/</a></dd>
+              <dt>Social:</dt>
+              <dd><strong>facebook:</strong> <a href="http://www.facebook.com/ThinReports.org">http://www.facebook.com/ThinReports.org</a></dd>
+              <dd><strong>Twitter:</strong> <a href="http://twitter.com/#!/thinreports_org">@thinreports_org</a></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

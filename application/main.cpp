@@ -24,9 +24,8 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    Platform pf;
-    pf.setWindowTitle("Booting...");
-    pf.show();
+    Platform platform;
+    platform.boot(QLatin1String("core/application.html"));
 
     return app.exec();
 }
