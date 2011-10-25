@@ -462,19 +462,19 @@ thin.ui.Input.prototype.endEditing_ = function () {
         this.dispatchEvent(new thin.ui.InputEvent(
           thin.ui.Input.EventType.INVALID, element.value));
       }
-      this.restoreValue();
+      this.cancelEditing_();
     } else {
       if (this.hasValidator()) {
         this.dispatchEvent(new thin.ui.InputEvent(
           thin.ui.Input.EventType.VALID, element.value));
       }
-    }
-    if (this.dispatchEvent(new thin.ui.InputEvent(
-      thin.ui.Input.EventType.END_EDITING, element.value))) {
-        this.setValue(element.value);
-        this.dispatchEvent(goog.ui.Component.EventType.CHANGE);
-    } else {
-      this.restoreValue();
+      if (this.dispatchEvent(new thin.ui.InputEvent(
+        thin.ui.Input.EventType.END_EDITING, element.value))) {
+          this.setValue(element.value);
+          this.dispatchEvent(goog.ui.Component.EventType.CHANGE);
+      } else {
+        this.restoreValue();
+      }
     }
     this.setEditing_(false);
   } else {
