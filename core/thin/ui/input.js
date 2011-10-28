@@ -420,7 +420,7 @@ thin.ui.Input.prototype.enableKeyEventsHandling_ = function(enable) {
 thin.ui.Input.prototype.handleKeyEventInternal = function(e) { 
   switch(e.keyCode) {
     case goog.events.KeyCodes.ENTER:
-      this.endEditing_();
+      this.getElement().blur();
       break;
     
     case goog.events.KeyCodes.ESC:
@@ -456,30 +456,33 @@ thin.ui.Input.prototype.endEditing_ = function () {
     return;
   }
   
-  if (element.value != this.value_) {
-    if (!this.validate()) {
-      if (this.hasValidator()) {
-        this.dispatchEvent(new thin.ui.InputEvent(
-          thin.ui.Input.EventType.INVALID, element.value));
-      }
-      this.cancelEditing_();
-    } else {
-      if (this.hasValidator()) {
-        this.dispatchEvent(new thin.ui.InputEvent(
-          thin.ui.Input.EventType.VALID, element.value));
-      }
-      if (this.dispatchEvent(new thin.ui.InputEvent(
-        thin.ui.Input.EventType.END_EDITING, element.value))) {
-          this.setValue(element.value);
-          this.dispatchEvent(goog.ui.Component.EventType.CHANGE);
-      } else {
-        this.restoreValue();
-      }
-    }
-    this.setEditing_(false);
-  } else {
-    this.cancelEditing_();
+  if (element.value == this.value_) {
+    this.dispatchEvent(new thin.ui.InputEvent(
+      thin.ui.Input.EventType.END_EDITING, element.value));
+    return;
   }
+
+  if (this.validate()) {
+    if (this.hasValidator()) {
+      this.dispatchEvent(new thin.ui.InputEvent(
+        thin.ui.Input.EventType.VALID, element.value));
+    }
+    if (this.dispatchEvent(new thin.ui.InputEvent(
+      thin.ui.Input.EventType.END_EDITING, element.value))) {
+        this.setValue(element.value);
+        this.dispatchEvent(goog.ui.Component.EventType.CHANGE);
+    } else {
+      this.restoreValue();
+    }
+  } else {
+    this.dispatchEvent(new thin.ui.InputEvent(
+      thin.ui.Input.EventType.INVALID, element.value));
+
+    this.dispatchEvent(new thin.ui.InputEvent(
+      thin.ui.Input.EventType.END_EDITING, element.value));
+    this.restoreValue();
+  }
+  this.setEditing_(false);
 };
 
 

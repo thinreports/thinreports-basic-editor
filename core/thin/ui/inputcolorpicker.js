@@ -194,8 +194,8 @@ thin.ui.InputColorPicker.prototype.enterDocument = function() {
           ], this.onColorMenuOpened_, false, this).
       listen(this.button_, goog.ui.Component.EventType.ACTION, 
           this.onColorMenuSelected_, false, this).
-      listen(this.input_, thin.ui.Input.EventType.END_EDITING, 
-          this.handleInputEndEditing, false, this);
+      listen(this.input_, goog.ui.Component.EventType.CHANGE, 
+          this.handleInputChange, false, this);
 };
 
 
@@ -219,13 +219,13 @@ thin.ui.InputColorPicker.prototype.handleInputFocus = function(e) {
 /**
  * @param {goog.events.Event} e
  */
-thin.ui.InputColorPicker.prototype.handleInputEndEditing = function(e) {
+thin.ui.InputColorPicker.prototype.handleInputChange = function(e) {
   var current = this.value_ ? goog.color.parse(this.value_).hex : '';
-  var input = e.value ? goog.color.parse(e.value).hex : '';
-  
+  var input = this.getInput().getValue();
+  input = input ? goog.color.parse(input).hex : '';
+
   if (current != input) {
     this.setValue(input);
-    this.dispatchEvent(goog.ui.Component.EventType.CHANGE);
   }
 };
 

@@ -145,6 +145,10 @@ thin.ui.ComboBox.prototype.getInputElement = function() {
  * @private
  */
 thin.ui.ComboBox.prototype.showMenu_ = function() {
+  goog.events.listen(this.menu_, 
+    goog.ui.Component.EventType.HIGHLIGHT, 
+      this.handleHighlightItem, false, this);
+
   this.menu_.setVisible(true);
   goog.dom.classes.add(this.getElement(),
       thin.ui.getCssName(this.getCssClass(), 'active'));
@@ -157,8 +161,32 @@ thin.ui.ComboBox.prototype.showMenu_ = function() {
  */
 thin.ui.ComboBox.prototype.hideMenu_ = function() {
   this.menu_.setVisible(false);
+
+  goog.events.unlisten(this.menu_, 
+    goog.ui.Component.EventType.HIGHLIGHT, 
+      this.handleHighlightItem, false, this);
+  
   goog.dom.classes.remove(this.getElement(),
       thin.ui.getCssName(this.getCssClass(), 'active'));
+};
+
+
+/** @override */
+thin.ui.ComboBox.prototype.onMenuSelected_ = function(e) {
+  this.logger_.info('onMenuSelected_()');
+  var item = /** @type {!goog.ui.MenuItem} */ (e.target);
+  // Stop propagation of the original event and redispatch to allow the menu
+  // select to be cancelled at this level. i.e. if a menu item should cause
+  // some behavior such as a user prompt instead of assigning the caption as
+  // the value.
+  if (this.dispatchEvent(new goog.ui.ItemEvent(
+      goog.ui.Component.EventType.ACTION, this, item))) {
+    var caption = item.getCaption();
+    this.logger_.fine('Menu selection: ' + caption + '. Dismissing menu');
+    this.labelInput_.getElement().blur();
+    this.dismiss();
+  }
+  e.stopPropagation();
 };
 
 
@@ -229,16 +257,30 @@ thin.ui.ComboBox.prototype.isActive = function() {
 };
 
 
+/** @override */
+thin.ui.ComboBox.prototype.handleInputChange_ = function() {
+  var token = this.getTokenText_();
+  this.setItemVisibilityFromToken_(token);
+  if (this.getDomHelper().getDocument().activeElement == this.input_) {
+    // Do not alter menu visibility unless the user focus is currently on the
+    // combobox (otherwise programmatic changes may cause the menu to become
+    // visible).
+    this.maybeShowMenu_(false);
+  }
+
+  this.setItemHighlightFromToken_(token);
+  this.lastToken_ = token;
+};
+
+
 /**
  * @param {goog.events.Event} e
  */
-thin.ui.ComboBox.prototype.onInputChange_ = function(e) {
-  this.logger_.fine('Key is modifying: ' + this.labelInput_.getValue());
-  var token = this.getToken();
-  this.setItemVisibilityFromToken_(token);
-  this.maybeShowMenu_(false);
-  this.setItemHighlightFromToken_('');
-  this.lastToken_ = token;
+thin.ui.ComboBox.prototype.handleHighlightItem = function(e) {
+  var caption = e.target.getCaption();
+  if (this.labelInput_.getValue() != caption) {
+    this.labelInput_.getElement().value = caption;
+  }
 };
 
 
@@ -252,10 +294,6 @@ thin.ui.ComboBox.prototype.enterDocument = function() {
   // Unlisten mousedown event listened by {goog.ui.Combobox}.
   handler.unlisten(this.getDomHelper().getDocument(),
       goog.events.EventType.MOUSEDOWN, this.onDocClicked_);
-  // Unlisten input event listened by {goog.ui.Combobox}.
-  handler.unlisten(this.inputHandler_,
-      goog.events.InputHandler.EventType.INPUT, this.onInputEvent_);
-  this.inputHandler_.dispose();
   
   handler.listen(input, goog.ui.Component.EventType.CHANGE, 
       function(e) {

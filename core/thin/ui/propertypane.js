@@ -1435,17 +1435,15 @@ thin.ui.PropertyPane.ComboBoxProperty.prototype.enterDocument = function() {
   thin.ui.PropertyPane.ComboBoxProperty.superClass_.enterDocument.call(this);
   
   var control = this.getValueControl();
-  
-  control.addEventListener(goog.ui.Component.EventType.CHANGE, 
-      function(e) {
-        this.dispatchPropertyChangeEvent();
-        this.handleInactivate(e);
-      }, false, this);
 
-  goog.events.listen(control.getInput(), thin.ui.Input.EventType.CANCEL_EDITING, 
-      function(e) {
-        this.handleInactivate(e);
-      }, false, this);
+  // For Common-Change
+  control.addEventListener(
+      goog.ui.Component.EventType.CHANGE, this.dispatchPropertyChangeEvent, false, this);
+
+  // For Active/Inactive
+  goog.events.listen(control.getInput(), 
+      [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING], 
+      this.handleInactivate, false, this);
 };
 
 
@@ -1544,29 +1542,9 @@ thin.ui.PropertyPane.ColorProperty.prototype.enterDocument = function() {
   // For Active/Inactive
   control.addEventListener(
       goog.ui.Component.EventType.ACTION, this.handleInactivate, false, this);
-  var input = control.getInput();
-  input.addEventListener(thin.ui.Input.EventType.CANCEL_EDITING, this.handleInactivate, false, this);
-  input.addEventListener(thin.ui.Input.EventType.END_EDITING,
-      function(e) {
-        if (input.isFocused()) {
-          input.getElement().blur();
-        } else {
-          this.handleInactivate(e);
-        }
-      }, false, this);
-  
-  var colorMenuButton = control.getButton();
-  var colorMenu = colorMenuButton.getMenu();
-  colorMenu.
-      addEventListener(goog.ui.Component.EventType.SHOW, 
-          function(e) {
-            if(!colorMenuButton.isFocused()) {
-              colorMenuButton.getElement().focus();
-            }
-          }, false, this);
-  colorMenu.
-      addEventListener(goog.ui.Component.EventType.HIDE, 
-          this.handleInactivate, false, this);
+  goog.events.listen(control, 
+      [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING], 
+      this.handleInactivate, false, this);
 };
 
 
