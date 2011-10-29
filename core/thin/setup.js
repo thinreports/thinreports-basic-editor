@@ -1248,6 +1248,11 @@ thin.setup = function() {
           'Getting Started', 'http://osc.matsukei.net/projects/thinreports/wiki/Getting_Started');
     toolHelp.addItem(toolHelpGettingStarted);
     
+    // Doc Guide
+    var toolHelpGuide = new thin.ui.MenuLinkItem(
+          'Guide', 'http://osc.matsukei.net/projects/thinreports/wiki/Guide');
+    toolHelp.addItem(toolHelpGuide);
+    
     // Doc Examples
     var toolHelpExamples = new thin.ui.MenuLinkItem(
           'Examples', 'http://osc.matsukei.net/projects/thinreports/wiki/Examples');
