@@ -227,6 +227,12 @@ thin.editor.Workspace.prototype.handleKeyEvent_ = function(e) {
     case keyCodes.DELETE:
       this.action_.actionDeleteShapes(thin.editor.HistoryManager.Mode.NORMAL);
       break;
+    default:
+      this.handleUndoRedoKeyEvent_(e);
+      if (!this.handlingOnceKeyEvent_) {
+        this.handleCopyPasteKeyEvent_(e);
+      }
+      break;
   }
 };
 
@@ -235,34 +241,20 @@ thin.editor.Workspace.prototype.handleKeyEvent_ = function(e) {
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.Workspace.prototype.handleOnceKeyEvent_ = function(e) {
+thin.editor.Workspace.prototype.handleUndoRedoKeyEvent_ = function(e) {
   var keyCode = e.keyCode;
   var keyCodes = goog.events.KeyCodes;
-
+  
   if (e.ctrlKey) {
-    if (!this.handlingOnceKeyEvent_) {
-      switch(keyCode) {
-        case keyCodes.Z:
-          this.undo();
-          this.handlingOnceKeyEvent_ = true;
-          break;
-        case keyCodes.Y:
-          this.redo();
-          this.handlingOnceKeyEvent_ = true;
-          break;
-        case keyCodes.C:
-          this.action_.actionCopyShapes();
-          this.handlingOnceKeyEvent_ = true;
-          break;
-        case keyCodes.X:
-          this.action_.actionCutShapes();
-          this.handlingOnceKeyEvent_ = true;
-          break;
-        case keyCodes.V:
-          this.action_.actionPasteShapes();
-          this.handlingOnceKeyEvent_ = true;
-          break;
-      }
+    switch(keyCode) {
+      case keyCodes.Z:
+        this.undo();
+        this.enablingOnceKeyEventHandling_(true);
+        break;
+      case keyCodes.Y:
+        this.redo();
+        this.enablingOnceKeyEventHandling_(true);
+        break;
     }
   }
 };
@@ -272,8 +264,44 @@ thin.editor.Workspace.prototype.handleOnceKeyEvent_ = function(e) {
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.Workspace.prototype.releaseHandlingOnceKeyEvent_ = function(e) {
-  this.handlingOnceKeyEvent_ = false;
+thin.editor.Workspace.prototype.handleCopyPasteKeyEvent_ = function(e) {
+  var keyCode = e.keyCode;
+  var keyCodes = goog.events.KeyCodes;
+  
+  if (e.ctrlKey) {
+    switch(keyCode) {
+      case keyCodes.C:
+        this.action_.actionCopyShapes();
+        this.enablingOnceKeyEventHandling_(true);
+        break;
+      case keyCodes.X:
+        this.action_.actionCutShapes();
+        this.enablingOnceKeyEventHandling_(true);
+        break;
+      case keyCodes.V:
+        this.action_.actionPasteShapes();
+        this.enablingOnceKeyEventHandling_(true);
+        break;
+    }
+  }
+};
+
+
+/**
+ * @param {goog.events.BrowserEvent} e
+ * @private
+ */
+thin.editor.Workspace.prototype.releaseOnceKeyEventHandling_ = function(e) {
+  this.enablingOnceKeyEventHandling_(false);
+};
+
+
+/**
+ * @param {boolean} enable
+ * @private
+ */
+thin.editor.Workspace.prototype.enablingOnceKeyEventHandling_ = function(enable) {
+  this.handlingOnceKeyEvent_ = enable;
 };
 
 
@@ -955,12 +983,9 @@ thin.editor.Workspace.prototype.enterDocument = function() {
   
   eventHandler.listen(this.element_, eventType.KEYDOWN, 
     this.handleKeyEvent_, false, this);
-
-  eventHandler.listen(this.element_, eventType.KEYDOWN, 
-    this.handleOnceKeyEvent_, false, this);
   
   eventHandler.listen(this.element_, eventType.KEYUP, 
-    this.releaseHandlingOnceKeyEvent_, false, this);
+    this.releaseOnceKeyEventHandling_, false, this);
 };
 
 
