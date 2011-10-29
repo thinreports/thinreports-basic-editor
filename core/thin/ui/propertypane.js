@@ -1545,6 +1545,19 @@ thin.ui.PropertyPane.ColorProperty.prototype.enterDocument = function() {
   goog.events.listen(control, 
       [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING], 
       this.handleInactivate, false, this);
+
+  var colorMenuButton = control.getButton();
+  var colorMenu = colorMenuButton.getMenu();
+  colorMenu.
+      addEventListener(goog.ui.Component.EventType.SHOW, 
+          function(e) {
+            if(!colorMenuButton.isFocused()) {
+              colorMenuButton.getElement().focus();
+            }
+          }, false, this);
+  colorMenu.
+      addEventListener(goog.ui.Component.EventType.HIDE, 
+          this.handleInactivate, false, this);
 };
 
 

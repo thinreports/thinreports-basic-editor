@@ -420,7 +420,7 @@ thin.ui.Input.prototype.enableKeyEventsHandling_ = function(enable) {
 thin.ui.Input.prototype.handleKeyEventInternal = function(e) { 
   switch(e.keyCode) {
     case goog.events.KeyCodes.ENTER:
-      this.getElement().blur();
+      this.endEditing_();
       break;
     
     case goog.events.KeyCodes.ESC:
@@ -467,21 +467,17 @@ thin.ui.Input.prototype.endEditing_ = function () {
       this.dispatchEvent(new thin.ui.InputEvent(
         thin.ui.Input.EventType.VALID, element.value));
     }
-    if (this.dispatchEvent(new thin.ui.InputEvent(
-      thin.ui.Input.EventType.END_EDITING, element.value))) {
-        this.setValue(element.value);
-        this.dispatchEvent(goog.ui.Component.EventType.CHANGE);
-    } else {
-      this.restoreValue();
-    }
+    this.setValue(element.value);
+    this.dispatchEvent(goog.ui.Component.EventType.CHANGE);
   } else {
     this.dispatchEvent(new thin.ui.InputEvent(
       thin.ui.Input.EventType.INVALID, element.value));
-
-    this.dispatchEvent(new thin.ui.InputEvent(
-      thin.ui.Input.EventType.END_EDITING, element.value));
     this.restoreValue();
   }
+
+  this.dispatchEvent(new thin.ui.InputEvent(
+    thin.ui.Input.EventType.END_EDITING, element.value));
+  
   this.setEditing_(false);
 };
 
