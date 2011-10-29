@@ -194,46 +194,39 @@ thin.editor.Workspace.prototype.isEnabledVerticalAlignTypeUi_ = false;
 
 
 /**
+ * @type {boolean}
+ * @private
+ */
+thin.editor.Workspace.prototype.handlingOnceKeyEvent_ = false;
+
+
+/**
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.Workspace.prototype.workspaceKeyEventListenerByDown_ = function(e) {
-
+thin.editor.Workspace.prototype.handleKeyEvent_ = function(e) {
   var keyCode = e.keyCode;
   var keyCodes = goog.events.KeyCodes;
-  
-  if (e.ctrlKey) {
-    
-    if (keyCode == keyCodes.Z) {
-      this.undo();
-      return;
-    }
-    
-    if (keyCode == keyCodes.Y) {
-      this.redo();
-      return;
-    }
-    return;
-  }
-  
-  if (keyCode == keyCodes.LEFT) {
-    this.action_.actionShiftLeft(e);
-    return;
-  }
-  
-  if (keyCode == keyCodes.UP) {
-    this.action_.actionShiftUp(e);
-    return;
-  }
-  
-  if (keyCode == keyCodes.RIGHT) {
-    this.action_.actionShiftRight(e);
-    return;
-  }
-  
-  if (keyCode == keyCodes.DOWN) {
-    this.action_.actionShiftDown(e);
-    return;
+
+  switch(keyCode) {
+    case keyCodes.LEFT:
+      this.action_.actionShiftLeft(e);
+      break;
+    case keyCodes.UP:
+      this.action_.actionShiftUp(e);
+      break;
+    case keyCodes.RIGHT:
+      this.action_.actionShiftRight(e);
+      break;
+    case keyCodes.DOWN:
+      this.action_.actionShiftDown(e);
+      break;
+    case keyCodes.F2:
+      this.action_.restfulF2Action();
+      break;
+    case keyCodes.DELETE:
+      this.action_.actionDeleteShapes(thin.editor.HistoryManager.Mode.NORMAL);
+      break;
   }
 };
 
@@ -242,37 +235,45 @@ thin.editor.Workspace.prototype.workspaceKeyEventListenerByDown_ = function(e) {
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.Workspace.prototype.workspaceKeyEventListenerByUp_ = function(e) {
-  
+thin.editor.Workspace.prototype.handleOnceKeyEvent_ = function(e) {
   var keyCode = e.keyCode;
   var keyCodes = goog.events.KeyCodes;
-  var action = this.action_;
-  
+
   if (e.ctrlKey) {
-    if (keyCode == keyCodes.C) {
-      action.actionCopyShapes();
-      return;
+    if (!this.handlingOnceKeyEvent_) {
+      switch(keyCode) {
+        case keyCodes.Z:
+          this.undo();
+          this.handlingOnceKeyEvent_ = true;
+          break;
+        case keyCodes.Y:
+          this.redo();
+          this.handlingOnceKeyEvent_ = true;
+          break;
+        case keyCodes.C:
+          this.action_.actionCopyShapes();
+          this.handlingOnceKeyEvent_ = true;
+          break;
+        case keyCodes.X:
+          this.action_.actionCutShapes();
+          this.handlingOnceKeyEvent_ = true;
+          break;
+        case keyCodes.V:
+          this.action_.actionPasteShapes();
+          this.handlingOnceKeyEvent_ = true;
+          break;
+      }
     }
-    if (keyCode == keyCodes.X) {
-      action.actionCutShapes();
-      return;
-    }
-    if (keyCode == keyCodes.V) {
-      action.actionPasteShapes();
-      return;
-    }
-    return;
   }
-  
-  if (keyCode == keyCodes.F2) {
-    action.restfulF2Action();
-    return;
-  }
-  
-  if (keyCode == keyCodes.DELETE) {
-    action.actionDeleteShapes(thin.editor.HistoryManager.Mode.NORMAL);
-    return;
-  }
+};
+
+
+/**
+ * @param {goog.events.BrowserEvent} e
+ * @private
+ */
+thin.editor.Workspace.prototype.releaseHandlingOnceKeyEvent_ = function(e) {
+  this.handlingOnceKeyEvent_ = false;
 };
 
 
@@ -953,10 +954,13 @@ thin.editor.Workspace.prototype.enterDocument = function() {
   var eventType = goog.events.EventType;
   
   eventHandler.listen(this.element_, eventType.KEYDOWN, 
-    this.workspaceKeyEventListenerByDown_, false, this);
+    this.handleKeyEvent_, false, this);
+
+  eventHandler.listen(this.element_, eventType.KEYDOWN, 
+    this.handleOnceKeyEvent_, false, this);
   
   eventHandler.listen(this.element_, eventType.KEYUP, 
-    this.workspaceKeyEventListenerByUp_, false, this);
+    this.releaseHandlingOnceKeyEvent_, false, this);
 };
 
 
