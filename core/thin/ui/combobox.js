@@ -18,6 +18,9 @@ goog.provide('thin.ui.ComboBoxItem');
 
 goog.require('goog.ui.ComboBox');
 goog.require('goog.ui.ComboBoxItem');
+goog.require('goog.events');
+goog.require('goog.events.EventType');
+goog.require('goog.events.InputHandler.EventType');
 goog.require('thin.ui.StylableControl');
 goog.require('thin.ui.Input');
 goog.require('thin.ui.Input.EventType');
@@ -291,9 +294,12 @@ thin.ui.ComboBox.prototype.enterDocument = function() {
   var handler = this.getHandler();
   var input = this.labelInput_;
   
-  // Unlisten mousedown event listened by {goog.ui.Combobox}.
+  // Unlisten mousedown event listened by {goog.ui.ComboBox}.
   handler.unlisten(this.getDomHelper().getDocument(),
       goog.events.EventType.MOUSEDOWN, this.onDocClicked_);
+  // Unlisten input change event listened by {goog.ui.ComboBox}.
+  handler.unlisten(this.inputHandler_,
+      goog.events.InputHandler.EventType.INPUT, this.onInputEvent_);
   
   handler.listen(input, goog.ui.Component.EventType.CHANGE, 
       function(e) {
