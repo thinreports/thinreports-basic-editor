@@ -75,7 +75,7 @@ void Platform::setup()
 
     settings->setDefaultTextEncoding("utf-8");
     settings->setAttribute(QWebSettings::LocalStorageEnabled, true);
-    settings->setLocalStoragePath(QDir::currentPath());
+    settings->setLocalStoragePath(adjustPath("."));
 
     view->page()->setLinkDelegationPolicy(QWebPage::DelegateExternalLinks);
 
