@@ -11,6 +11,8 @@ Version 3 license <http://www.gnu.org/licenses/gpl.html>.
     <http://osc.matsukei.net/projects/thinreports/wiki/Changelog>
   Getting Started
     <http://osc.matsukei.net/projects/thinreports/wiki/Getting_Started>
+  Guide
+    <http://osc.matsukei.net/projects/thinreports/wiki/Guide>
   Examples
     <http://osc.matsukei.net/projects/thinreports/wiki/Examples>
   Howtos
