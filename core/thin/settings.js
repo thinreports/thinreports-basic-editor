@@ -15,7 +15,7 @@
 
 goog.provide('thin.Settings');
 
-goog.require('goog.uri.utils');
+goog.require('goog.string');
 goog.require('goog.storage.mechanism.HTML5LocalStorage');
 
 
@@ -28,10 +28,24 @@ thin.Settings = function() {
   /**
    * @type {string?}
    */
-  this.uid_ = goog.uri.utils.getParamValue(goog.global.document.URL, 'uid');
+  this.uid_ = this.getUid_();
 };
 goog.inherits(thin.Settings, goog.storage.mechanism.HTML5LocalStorage);
 goog.addSingletonGetter(thin.Settings);
+
+
+/**
+ * @return {string}
+ * @private
+ */
+thin.Settings.prototype.getUid_ = function() {
+  var uid = String(goog.string.hashCode(goog.global.document.URL));
+  if (/^\-/.test(uid)) {
+    return uid.replace(/^\-/, '1');
+  } else {
+    return '0' + uid;
+  }
+};
 
 
 /**

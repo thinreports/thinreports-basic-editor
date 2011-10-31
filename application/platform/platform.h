@@ -37,7 +37,6 @@ private:
 
     bool isDebugMode();
     void setup();
-    QByteArray createUid();
     QString adjustPath(const QString &path);
 
 public:

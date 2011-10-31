@@ -22,7 +22,6 @@
 #include <QDir>
 #include <QFontDatabase>
 #include <QFileInfo>
-#include <QCryptographicHash>
 #include "platform.h"
 
 Platform::Platform(QWidget *parent)
@@ -33,15 +32,15 @@ Platform::Platform(QWidget *parent)
 
 void Platform::boot(const QString core)
 {
-    QString app = adjustPath(core);
+    QDir app(adjustPath(core));
 
-    if (!isDebugMode() && !QFile::exists(app)) {
+    if (!isDebugMode() && !app.exists()) {
         QMessageBox::critical(this, tr("ThinReportsEditor Booting Error"),
                               "Unable to load application.");
         exit(0);
     }
 
-    view->load(app + "?uid=" + createUid());
+    view->load(app.absolutePath());
 
     setup();
 
@@ -109,13 +108,6 @@ QString Platform::adjustPath(const QString &path)
 #endif
 #endif
     return path;
-}
-
-QByteArray Platform::createUid()
-{
-    QByteArray uid = QCryptographicHash::hash(QDir::homePath().toLocal8Bit(),
-                                              QCryptographicHash::Md5);
-    return uid.toHex();
 }
 
 bool Platform::isDebugMode()
