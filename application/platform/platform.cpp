@@ -32,15 +32,15 @@ Platform::Platform(QWidget *parent)
 
 void Platform::boot(const QString core)
 {
-    QDir app(adjustPath(core));
+    QString app = adjustPath(core);
 
-    if (!isDebugMode() && !app.exists()) {
+    if (!isDebugMode() && !QFile::exists(app)) {
         QMessageBox::critical(this, tr("ThinReportsEditor Booting Error"),
                               "Unable to load application.");
         exit(0);
     }
 
-    view->load(app.absolutePath());
+    view->load(app);
 
     setup();
 
