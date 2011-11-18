@@ -628,8 +628,10 @@ thin.editor.Workspace.prototype.setFormat = function(format) {
  * @private
  */
 thin.editor.Workspace.prototype.getSaveFormat_ = function() {
+  var layout = this.layout_;
   var format = this.format;
-  format.setSvg(this.layout_.toXML(true));
+  format.setSvg(layout.toXML(true));
+  format.setLayoutGuides(layout.getHelpers().getLayoutGuideHelper().getGuides());
   this.updateFingerPrint_();
   return format.toJSON();
 };
@@ -714,6 +716,7 @@ thin.editor.Workspace.prototype.setup = function() {
   helper.getMultiOutlineHelper().init();
   helper.getGuideHelper().init();
   helper.getListHelper().init();
+  helper.getLayoutGuideHelper().createFromHelperConfig();
   this.initFingerPrint_();
 };
 

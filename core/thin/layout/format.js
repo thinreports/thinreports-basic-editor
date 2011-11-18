@@ -29,6 +29,8 @@ goog.require('thin.Compatibility');
  */
 thin.layout.Format = function(opt_format) {
   goog.Disposable.call(this);
+
+  this.helper_ = {};
   var currentVersion = thin.getVersion();
   
   if (goog.isDefAndNotNull(opt_format) && goog.isObject(opt_format)) {
@@ -39,8 +41,17 @@ thin.layout.Format = function(opt_format) {
     var formatVersion = opt_format['version'];
     this.isOverWritableVersion_ = thin.Compatibility.check(currentVersion, '>', formatVersion);
     this.version_ = formatVersion;
+    var guides;
+    var helper = opt_format['helper'];
+    if (helper && (guides = helper['layout-guide'])) {
+      this.setLayoutGuides(guides);
+    }
   } else {
     this.version_ = currentVersion;
+  }
+  
+  if (!goog.isArray(this.getLayoutGuides())) {
+    this.setLayoutGuides([]);
   }
 };
 goog.inherits(thin.layout.Format, goog.Disposable);
@@ -81,6 +92,13 @@ thin.layout.Format.prototype.svg_;
 
 
 /**
+ * @type {Object}
+ * @private
+ */
+thin.layout.Format.prototype.helper_;
+
+
+/**
  * @param {string} content
  * @return {thin.layout.Format}
  */
@@ -101,7 +119,10 @@ thin.layout.Format.prototype.toJSON = function() {
     "version": this.version_,
     "finger-print": this.fingerPrint_,
     "config": this.page.toHash(),
-    "svg": this.svg_
+    "svg": this.svg_,
+    "helper": {
+      "layout-guide": this.getLayoutGuides()
+    }
   });
 };
 
@@ -131,6 +152,14 @@ thin.layout.Format.prototype.getSvg = function() {
 
 
 /**
+ * @return {Array}
+ */
+thin.layout.Format.prototype.getLayoutGuides = function() {
+  return this.helper_['layout-guide'];
+};
+
+
+/**
  * @param {string} version
  */
 thin.layout.Format.prototype.setVersion = function(version) {
@@ -143,6 +172,14 @@ thin.layout.Format.prototype.setVersion = function(version) {
  */
 thin.layout.Format.prototype.getVersion = function() {
   return this.version_;
+};
+
+
+/**
+ * @param {Array} pos
+ */
+thin.layout.Format.prototype.setLayoutGuides = function(pos) {
+  this.helper_['layout-guide'] = pos;
 };
 
 

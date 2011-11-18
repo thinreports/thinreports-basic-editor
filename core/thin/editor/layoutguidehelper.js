@@ -160,6 +160,28 @@ thin.editor.LayoutGuideHelper.prototype.disable = function(disabled) {
 /**
  * @return {Array}
  */
+thin.editor.LayoutGuideHelper.prototype.getGuides = function() {
+  var pos = [];
+  goog.array.forEach(this.getXPositions(), function(x) {
+    goog.array.insertAt(pos, {
+        'type': 'x',
+        'position': x
+      }, pos.length);
+  });
+  goog.array.forEach(this.getYPositions(), function(y) {
+    goog.array.insertAt(pos, {
+      'type': 'y',
+      'position': y
+    }, pos.length);
+  });
+  
+  return pos;
+};
+
+
+/**
+ * @return {Array}
+ */
 thin.editor.LayoutGuideHelper.prototype.getXPositions = function() {
   if (this.isEnable()) {
     return goog.array.map(this.vlines_, function(vline) {
@@ -185,25 +207,67 @@ thin.editor.LayoutGuideHelper.prototype.getYPositions = function() {
 };
 
 
-thin.editor.LayoutGuideHelper.prototype.createHorizonLayoutGuide = function() {
-  if (this.isEnable()) {
-    var size = this.getLayout().getNormalLayoutSize();
-    goog.array.insert(this.hlines_,
-      this.createLayoutGuide_(thin.editor.DraggableLine.Direction.HORIZONTAL,
-          new goog.math.Rect(0, thin.numberWithPrecision(size.height * 0.1, 0), size.width, 1),
-          thin.editor.Cursor.Type['BCENTER']));
+thin.editor.LayoutGuideHelper.prototype.createFromHelperConfig = function() {
+  var workspace = this.workspace_;
+  var positions = workspace.format.getLayoutGuides();
+  
+  if (goog.array.isEmpty(positions)) {
+    return;
   }
+  
+  if (!this.isEnable()) {
+    thin.ui.getComponent('toolbar').getChild('guide').setChecked(true);
+    this.disable_ = false;
+  }
+  
+  var scope = this;
+  var hline, vline;
+  goog.array.forEach(positions, function (pos) {
+    switch(pos['type']) {
+      case 'x':
+        vline = scope.createVerticalLayoutGuide();
+        vline.setLeft(pos['position']);
+        break;
+      case 'y':
+        hline = scope.createHorizonLayoutGuide();
+        hline.setTop(pos['position']);
+        break;
+    }
+  });
 };
 
 
-thin.editor.LayoutGuideHelper.prototype.createVerticalLayoutGuide = function() {
-  if (this.isEnable()) {
-    var size = this.getLayout().getNormalLayoutSize();
-    goog.array.insert(this.vlines_,
-      this.createLayoutGuide_(thin.editor.DraggableLine.Direction.VERTICAL,
-          new goog.math.Rect(thin.numberWithPrecision(size.width * 0.1), 0, 1, size.height),
-          thin.editor.Cursor.Type['MRIGHT']));
+/**
+ * @return {thin.editor.DraggableLine}
+ */
+thin.editor.LayoutGuideHelper.prototype.createHorizonLayoutGuide = function() {
+  if (!this.isEnable()) {
+    return;
   }
+  var size = this.getLayout().getNormalLayoutSize();
+  var hline = this.createLayoutGuide_(thin.editor.DraggableLine.Direction.HORIZONTAL,
+        new goog.math.Rect(0, thin.numberWithPrecision(size.height * 0.1, 0), size.width, 1),
+        thin.editor.Cursor.Type['BCENTER']);
+  goog.array.insert(this.hlines_, hline);
+  
+  return hline;
+};
+
+
+/**
+ * @return {thin.editor.DraggableLine}
+ */
+thin.editor.LayoutGuideHelper.prototype.createVerticalLayoutGuide = function() {
+  if (!this.isEnable()) {
+    return;
+  }
+  var size = this.getLayout().getNormalLayoutSize();
+  var vline = this.createLayoutGuide_(thin.editor.DraggableLine.Direction.VERTICAL,
+        new goog.math.Rect(thin.numberWithPrecision(size.width * 0.1), 0, 1, size.height),
+        thin.editor.Cursor.Type['MRIGHT']);
+  goog.array.insert(this.vlines_, vline);
+  
+  return vline;
 };
 
 
