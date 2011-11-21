@@ -237,13 +237,13 @@ thin.editor.Action.prototype.actionShowLayoutGuide = function(visibled) {
 };
 
 
-thin.editor.Action.prototype.actionAddHorizonLayoutGuide = function() {
-  this.layout_.getHelpers().getLayoutGuideHelper().createHorizonLayoutGuide();
+thin.editor.Action.prototype.actionAddYLayoutGuide = function() {
+  this.layout_.getHelpers().getLayoutGuideHelper().createYLayoutGuide();
 };
 
 
-thin.editor.Action.prototype.actionAddVerticalLayoutGuide = function() {
-  this.layout_.getHelpers().getLayoutGuideHelper().createVerticalLayoutGuide();
+thin.editor.Action.prototype.actionAddXLayoutGuide = function() {
+  this.layout_.getHelpers().getLayoutGuideHelper().createXLayoutGuide();
 };
 
 

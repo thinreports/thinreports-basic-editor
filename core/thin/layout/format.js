@@ -39,19 +39,17 @@ thin.layout.Format = function(opt_format) {
     this.page = this.setPage(opt_format['config']);
     
     var formatVersion = opt_format['version'];
+    var helper = opt_format['helper'];
+    var guides;
+
     this.isOverWritableVersion_ = thin.Compatibility.check(currentVersion, '>', formatVersion);
     this.version_ = formatVersion;
-    var guides;
-    var helper = opt_format['helper'];
+
     if (helper && (guides = helper['layout-guide'])) {
       this.setLayoutGuides(guides);
     }
   } else {
     this.version_ = currentVersion;
-  }
-  
-  if (!goog.isArray(this.getLayoutGuides())) {
-    this.setLayoutGuides([]);
   }
 };
 goog.inherits(thin.layout.Format, goog.Disposable);
@@ -155,7 +153,7 @@ thin.layout.Format.prototype.getSvg = function() {
  * @return {Array}
  */
 thin.layout.Format.prototype.getLayoutGuides = function() {
-  return this.helper_['layout-guide'];
+  return this.helper_['layout-guide'] || [];
 };
 
 
@@ -176,10 +174,10 @@ thin.layout.Format.prototype.getVersion = function() {
 
 
 /**
- * @param {Array} pos
+ * @param {Array} guides
  */
-thin.layout.Format.prototype.setLayoutGuides = function(pos) {
-  this.helper_['layout-guide'] = pos;
+thin.layout.Format.prototype.setLayoutGuides = function(guides) {
+  this.helper_['layout-guide'] = guides;
 };
 
 

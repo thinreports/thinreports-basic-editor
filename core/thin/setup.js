@@ -792,7 +792,7 @@ thin.setup = function() {
     toolGuideAddHorizontal.addEventListener(componentEventType.ACTION, function(e) {
       var workspace = thin.editor.getActiveWorkspace();
       if (workspace) {
-        workspace.getAction().actionAddHorizonLayoutGuide();
+        workspace.getAction().actionAddYLayoutGuide();
         focusWorkspace(e);
       }
     });
@@ -802,7 +802,7 @@ thin.setup = function() {
     toolGuideAddVertical.addEventListener(componentEventType.ACTION, function(e) {
       var workspace = thin.editor.getActiveWorkspace();
       if (workspace) {
-        workspace.getAction().actionAddVerticalLayoutGuide();
+        workspace.getAction().actionAddXLayoutGuide();
         focusWorkspace(e);
       }
     });

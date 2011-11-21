@@ -37,13 +37,13 @@ thin.editor.LayoutGuideHelper = function(layout) {
    * @type {Array.<thin.editor.DraggableLine>}
    * @private
    */
-  this.hlines_ = [];
+  this.ylines_ = [];
   
   /**
    * @type {Array.<thin.editor.DraggableLine>}
    * @private
    */
-  this.vlines_ = [];
+  this.xlines_ = [];
 };
 goog.inherits(thin.editor.LayoutGuideHelper, thin.editor.Component);
 
@@ -62,11 +62,11 @@ thin.editor.LayoutGuideHelper.prototype.disable_ = true;
 
 
 thin.editor.LayoutGuideHelper.prototype.reapplySizeAndStroke = function() {
-  goog.array.forEach(this.hlines_, function(hline) {
-    hline.reapplySizeAndStroke();
+  goog.array.forEach(this.ylines_, function(yline) {
+    yline.reapplySizeAndStroke();
   });
-  goog.array.forEach(this.vlines_, function(vline) {
-    vline.reapplySizeAndStroke();
+  goog.array.forEach(this.xlines_, function(xline) {
+    xline.reapplySizeAndStroke();
   });
 };
 
@@ -77,11 +77,11 @@ thin.editor.LayoutGuideHelper.prototype.reapplySizeAndStroke = function() {
  */
 thin.editor.LayoutGuideHelper.prototype.updateLayoutGuideSize = function(width, height) {
   if (this.isEnable()) {
-    goog.array.forEach(this.hlines_, function(hline) {
-      hline.setWidth(width);
+    goog.array.forEach(this.ylines_, function(yline) {
+      yline.setWidth(width);
     });
-    goog.array.forEach(this.vlines_, function(vline) {
-      vline.setHeight(height);
+    goog.array.forEach(this.xlines_, function(xline) {
+      xline.setHeight(height);
     });
   }
 };
@@ -103,15 +103,15 @@ thin.editor.LayoutGuideHelper.prototype.disable = function(disabled) {
   var isTarget = false;
   var target = thin.ui.getComponent('proppane').getTarget();
   
-  goog.array.forEach(this.hlines_, function(hline) {
-    hline.setVisibled(!disabled);
-    if (target == hline) {
+  goog.array.forEach(this.ylines_, function(yline) {
+    yline.setVisibled(!disabled);
+    if (target == yline) {
       isTarget = true;
     }
   });
-  goog.array.forEach(this.vlines_, function(vline) {
-    vline.setVisibled(!disabled);
-    if (target == vline) {
+  goog.array.forEach(this.xlines_, function(xline) {
+    xline.setVisibled(!disabled);
+    if (target == xline) {
       isTarget = true;
     }
   });
@@ -149,10 +149,10 @@ thin.editor.LayoutGuideHelper.prototype.disable = function(disabled) {
         }
       }
     }
-  } else if(!disabled && goog.array.isEmpty(this.hlines_) &&
-                         goog.array.isEmpty(this.vlines_)) {
-    this.createHorizonLayoutGuide();
-    this.createVerticalLayoutGuide();
+  } else if(!disabled && goog.array.isEmpty(this.ylines_) &&
+                         goog.array.isEmpty(this.xlines_)) {
+    this.createYLayoutGuide();
+    this.createXLayoutGuide();
   }
 };
 
@@ -161,21 +161,21 @@ thin.editor.LayoutGuideHelper.prototype.disable = function(disabled) {
  * @return {Array}
  */
 thin.editor.LayoutGuideHelper.prototype.getGuides = function() {
-  var pos = [];
+  var guides = [];
   goog.array.forEach(this.getXPositions(), function(x) {
-    goog.array.insertAt(pos, {
-        'type': 'x',
-        'position': x
-      }, pos.length);
+    goog.array.insertAt(guides, {
+      'type': 'x',
+      'position': x
+    }, guides.length);
   });
   goog.array.forEach(this.getYPositions(), function(y) {
-    goog.array.insertAt(pos, {
+    goog.array.insertAt(guides, {
       'type': 'y',
       'position': y
-    }, pos.length);
+    }, guides.length);
   });
   
-  return pos;
+  return guides;
 };
 
 
@@ -184,8 +184,8 @@ thin.editor.LayoutGuideHelper.prototype.getGuides = function() {
  */
 thin.editor.LayoutGuideHelper.prototype.getXPositions = function() {
   if (this.isEnable()) {
-    return goog.array.map(this.vlines_, function(vline) {
-      return vline.getLeft();
+    return goog.array.map(this.xlines_, function(xline) {
+      return xline.getLeft();
     });
   } else {
     return [];
@@ -198,8 +198,8 @@ thin.editor.LayoutGuideHelper.prototype.getXPositions = function() {
  */
 thin.editor.LayoutGuideHelper.prototype.getYPositions = function() {
   if (this.isEnable()) {
-    return goog.array.map(this.hlines_, function(hline) {
-      return hline.getTop();
+    return goog.array.map(this.ylines_, function(yline) {
+      return yline.getTop();
     });
   } else {
     return [];
@@ -209,9 +209,9 @@ thin.editor.LayoutGuideHelper.prototype.getYPositions = function() {
 
 thin.editor.LayoutGuideHelper.prototype.createFromHelperConfig = function() {
   var workspace = this.workspace_;
-  var positions = workspace.format.getLayoutGuides();
+  var guides = workspace.format.getLayoutGuides();
   
-  if (goog.array.isEmpty(positions)) {
+  if (goog.array.isEmpty(guides)) {
     return;
   }
   
@@ -221,16 +221,16 @@ thin.editor.LayoutGuideHelper.prototype.createFromHelperConfig = function() {
   }
   
   var scope = this;
-  var hline, vline;
-  goog.array.forEach(positions, function (pos) {
-    switch(pos['type']) {
+  var yline, xline;
+  goog.array.forEach(guides, function (guide) {
+    switch(guide['type']) {
       case 'x':
-        vline = scope.createVerticalLayoutGuide();
-        vline.setLeft(pos['position']);
+        xline = scope.createXLayoutGuide();
+        xline.setLeft(guide['position']);
         break;
       case 'y':
-        hline = scope.createHorizonLayoutGuide();
-        hline.setTop(pos['position']);
+        yline = scope.createYLayoutGuide();
+        yline.setTop(guide['position']);
         break;
     }
   });
@@ -240,34 +240,34 @@ thin.editor.LayoutGuideHelper.prototype.createFromHelperConfig = function() {
 /**
  * @return {thin.editor.DraggableLine}
  */
-thin.editor.LayoutGuideHelper.prototype.createHorizonLayoutGuide = function() {
+thin.editor.LayoutGuideHelper.prototype.createYLayoutGuide = function() {
   if (!this.isEnable()) {
     return;
   }
   var size = this.getLayout().getNormalLayoutSize();
-  var hline = this.createLayoutGuide_(thin.editor.DraggableLine.Direction.HORIZONTAL,
+  var yline = this.createLayoutGuide_(thin.editor.DraggableLine.Direction.HORIZONTAL,
         new goog.math.Rect(0, thin.numberWithPrecision(size.height * 0.1, 0), size.width, 1),
         thin.editor.Cursor.Type['BCENTER']);
-  goog.array.insert(this.hlines_, hline);
+  goog.array.insert(this.ylines_, yline);
   
-  return hline;
+  return yline;
 };
 
 
 /**
  * @return {thin.editor.DraggableLine}
  */
-thin.editor.LayoutGuideHelper.prototype.createVerticalLayoutGuide = function() {
+thin.editor.LayoutGuideHelper.prototype.createXLayoutGuide = function() {
   if (!this.isEnable()) {
     return;
   }
   var size = this.getLayout().getNormalLayoutSize();
-  var vline = this.createLayoutGuide_(thin.editor.DraggableLine.Direction.VERTICAL,
+  var xline = this.createLayoutGuide_(thin.editor.DraggableLine.Direction.VERTICAL,
         new goog.math.Rect(thin.numberWithPrecision(size.width * 0.1), 0, 1, size.height),
         thin.editor.Cursor.Type['MRIGHT']);
-  goog.array.insert(this.vlines_, vline);
+  goog.array.insert(this.xlines_, xline);
   
-  return vline;
+  return xline;
 };
 
 
@@ -312,9 +312,9 @@ thin.editor.LayoutGuideHelper.prototype.removeLayoutGuide = function() {
       removeLine.dispose();
       removeLine.remove();
       if (removeLine.isHorizontal()) {
-        goog.array.remove(this.hlines_, removeLine);
+        goog.array.remove(this.ylines_, removeLine);
       } else if (removeLine.isVertical()) {
-        goog.array.remove(this.vlines_, removeLine);
+        goog.array.remove(this.xlines_, removeLine);
       }
     }
   }
@@ -402,11 +402,11 @@ thin.editor.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
 
 /** @inheritDoc */
 thin.editor.LayoutGuideHelper.prototype.disposeInternal = function() {
-  goog.array.forEach(this.hlines_, function(hline) {
-    hline.dispose();
+  goog.array.forEach(this.ylines_, function(yline) {
+    yline.dispose();
   });
-  goog.array.forEach(this.vlines_, function(vline) {
-    vline.dispose();
+  goog.array.forEach(this.xlines_, function(xline) {
+    xline.dispose();
   });
   thin.editor.LayoutGuideHelper.superClass_.disposeInternal.call(this);
 };
