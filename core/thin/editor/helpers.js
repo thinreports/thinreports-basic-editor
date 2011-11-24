@@ -231,9 +231,9 @@ thin.editor.Helpers.prototype.reapplySizeAndStroke = function() {
     guide.adjustToTargetShapeBounds();
   }
   var listHelper = this.listHelper_;
-  listHelper.reapplySizeAndStroke();
   var listGuide = listHelper.getListGuideHelper();
   listGuide.reapplySizeAndStroke();
+  listHelper.reapplySizeAndStroke();
   if(!listHelper.isActived()) {
     listGuide.adjustToTargetShapeBounds();
   }

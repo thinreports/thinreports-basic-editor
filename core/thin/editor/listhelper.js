@@ -129,7 +129,7 @@ thin.editor.ListHelper.prototype.activeColumnName_;
 
 thin.editor.ListHelper.prototype.reapplySizeAndStroke = function() {
   this.forEachColumnBand(function(columnBandForScope, columnNameForScope) {
-    columnBandForScope.getDraggableLine().reapplySizeAndStroke();
+    columnBandForScope.getSeparator().reapplySizeAndStroke();
   });
 };
 
@@ -231,7 +231,7 @@ thin.editor.ListHelper.prototype.getBlankRangeBounds = function() {
   var listShapeBounds = listShape.getBounds();
   var footerColumnName = thin.editor.ListHelper.ColumnName.FOOTER;
   var columnShapeForScope = listShape.getColumnShape(footerColumnName);
-  var draggableLineHeight = this.getColumnBand(footerColumnName).getDraggableLine().getHeight();
+  var draggableLineHeight = this.getColumnBand(footerColumnName).getSeparator().getLine().getHeight();
   var listShapeBottom = listShapeBounds.toBox().bottom;
   var blankRangeHeight = (listShapeBottom - columnShapeForScope.getBounds().toBox().bottom) - draggableLineHeight;
   if(blankRangeHeight < 0) {

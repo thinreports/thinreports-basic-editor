@@ -111,7 +111,7 @@ thin.editor.ListGuideHelper.prototype.createResizers_ = function() {
  * @return {number}
  * @private
  */
-thin.editor.ListGuideHelper.prototype.getStrokeWidth_ = function() {
+thin.editor.ListGuideHelper.prototype.getStrokeWidth = function() {
   return Number(this.body_.getElement().getAttribute('stroke-width'));
 };
 
@@ -120,7 +120,7 @@ thin.editor.ListGuideHelper.prototype.getStrokeWidth_ = function() {
  * @param {goog.math.Rect} bounds
  */
 thin.editor.ListGuideHelper.prototype.setBounds = function(bounds) {
-  var strokeWidth = this.getStrokeWidth_();
+  var strokeWidth = this.getStrokeWidth();
   var delta = strokeWidth / 2;
   this.body_.setBounds(new goog.math.Rect(
     bounds.left - delta, bounds.top - delta,
@@ -137,7 +137,7 @@ thin.editor.ListGuideHelper.prototype.getBounds = function() {
     return this.normalBounds_;
   }
   var bounds = this.getBounds_();
-  var strokeWidth = this.getStrokeWidth_();
+  var strokeWidth = this.getStrokeWidth();
   var delta = strokeWidth / 2;
   return new goog.math.Rect(
     bounds.left + delta, bounds.top + delta,
@@ -169,7 +169,7 @@ thin.editor.ListGuideHelper.prototype.reapplySizeAndStroke = function() {
 thin.editor.ListGuideHelper.prototype.adjustToTargetShapeBounds = function() {
 
   var bounds = this.getBounds_();
-  var strokeWidth = this.getStrokeWidth_();
+  var strokeWidth = this.getStrokeWidth();
   var delta = strokeWidth / 2;
   var normalLeft = bounds.left;
   var normalTop = bounds.top;
