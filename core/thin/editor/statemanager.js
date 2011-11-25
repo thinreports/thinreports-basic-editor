@@ -76,11 +76,11 @@ thin.editor.StateManager.prototype.setup = function() {
 
 /**
  * @param {goog.graphics.Element} shape
- * @param {thin.editor.ListColumnShape=} opt_columnShapeForScope
+ * @param {thin.editor.ListSectionShape=} opt_sectionShapeForScope
  */
-thin.editor.StateManager.prototype.addShape = function(shape, opt_columnShapeForScope) {
-  if(opt_columnShapeForScope) {
-    shape.setAffiliationColumn(opt_columnShapeForScope);
+thin.editor.StateManager.prototype.addShape = function(shape, opt_sectionShapeForScope) {
+  if(opt_sectionShapeForScope) {
+    shape.setAffiliationSection(opt_sectionShapeForScope);
   }
   this.shapes_.add(shape);
 };

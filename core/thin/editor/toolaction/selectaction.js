@@ -84,10 +84,10 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var oldShapesByListShape = activeShapeManagerByListShape.getClone();
     var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
-    var captureActiveColumnName = listHelper.getActiveColumnName();
-    var newActiveColumnName = listHelper.getColumnNameBySelectorLayer(handle);
+    var captureActiveSectionName = listHelper.getActiveSectionName();
+    var newActiveSectionName = listHelper.getSectionNameBySelectorLayer(handle);
     if (!isActived) {
-      shapesManager = singleShapeByGlobal.getColumnShape(newActiveColumnName).getManager().getShapesManager();
+      shapesManager = singleShapeByGlobal.getSectionShape(newActiveSectionName).getManager().getShapesManager();
     }
   }
   var newShapes = layout.getActiveShapeFromSelectRange(outline.getBoxSize().clone(), shapesManager.get());
@@ -125,7 +125,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
       } else {
         activeShapeManagerByListShape.clear();
         activeShapeManagerByListShape.set(newShapes);
-        listHelper.setActiveColumnName(newActiveColumnName);
+        listHelper.setActiveSectionName(newActiveSectionName);
         if (activeShapeManagerByListShape.isEmpty()) {
           singleShapeByGlobal.updateProperties();
           thin.ui.setEnabledForFontUi(false);
@@ -178,7 +178,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
           }
         } else {
           listHelper.active(singleShapeByGlobal);
-          listHelper.setActiveColumnName(captureActiveColumnName);
+          listHelper.setActiveSectionName(captureActiveSectionName);
           
           activeShapeManagerByListShape.set(oldShapesByListShape);
           if (activeShapeManagerByListShape.isEmpty()) {
@@ -202,7 +202,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
         }
       } else {
         activeShapeManagerByListShape.set(oldShapesByListShape);
-        listHelper.setActiveColumnName(captureActiveColumnName);
+        listHelper.setActiveSectionName(captureActiveSectionName);
         if (activeShapeManagerByListShape.isEmpty()) {
           listHelper.getTarget().updateProperties();
           thin.ui.setEnabledForFontUi(false);
@@ -240,7 +240,7 @@ thin.editor.toolaction.SelectAction.prototype.handleActionInternal = function(e,
   this.selectorLayerSetupFn_(surface, outline);
   surface.setVisibled(true);
 
-  helpers.getListHelper().forEachColumnBand(function(columnBand, columnName) {
-    this.selectorLayerSetupFn_(columnBand.getSelectorLayer(), outline);
+  helpers.getListHelper().forEachSectionHelper(function(sectionHelper, sectionName) {
+    this.selectorLayerSetupFn_(sectionHelper.getSelectorLayer(), outline);
   }, this);
 };

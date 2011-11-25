@@ -131,17 +131,17 @@ thin.editor.ModuleElement.prototype.isAffiliationListShape_ = false;
 
 
 /**
- * @type {thin.editor.ListColumnShape}
+ * @type {thin.editor.ListSectionShape}
  * @private
  */
-thin.editor.ModuleElement.prototype.affiliationColumnShape_;
+thin.editor.ModuleElement.prototype.affiliationSectionShape_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.ModuleElement.prototype.affiliationColumnName_;
+thin.editor.ModuleElement.prototype.affiliationSectionName_;
 
 
 /**
@@ -496,8 +496,8 @@ thin.editor.ModuleElement.prototype.getCursorName = function() {
 thin.editor.ModuleElement.prototype.getAffiliationRegionBounds = function() {
   if (this.isAffiliationListShape()) {
     var listShape = this.getLayout().getHelpers().getListHelper().getTarget();
-    var columnShapeForScope = listShape.getColumnShape(this.getAffiliationColumnName());
-    return columnShapeForScope.getBounds();
+    var sectionShapeForScope = listShape.getSectionShape(this.getAffiliationSectionName());
+    return sectionShapeForScope.getBounds();
   } else {
     return this.getLayout().getBounds();
   }
@@ -506,11 +506,11 @@ thin.editor.ModuleElement.prototype.getAffiliationRegionBounds = function() {
 
 /**
  * @this {goog.graphics.Element}
- * @param {thin.editor.ListColumnShape} columnShape
+ * @param {thin.editor.ListSectionShape} sectionShape
  */
-thin.editor.ModuleElement.prototype.setAffiliationColumn = function(columnShape) {
-  this.affiliationColumnShape_ = columnShape;
-  this.affiliationColumnName_ = columnShape.getColumnName();
+thin.editor.ModuleElement.prototype.setAffiliationSection = function(sectionShape) {
+  this.affiliationSectionShape_ = sectionShape;
+  this.affiliationSectionName_ = sectionShape.getSectionName();
   this.isAffiliationListShape_ = true;
 };
 
@@ -519,17 +519,17 @@ thin.editor.ModuleElement.prototype.setAffiliationColumn = function(columnShape)
  * @this {goog.graphics.Element}
  * @return {string}
  */
-thin.editor.ModuleElement.prototype.getAffiliationColumnName = function() {
-  return this.affiliationColumnName_;
+thin.editor.ModuleElement.prototype.getAffiliationSectionName = function() {
+  return this.affiliationSectionName_;
 };
 
 
 /**
  * @this {goog.graphics.Element}
- * @return {thin.editor.ListColumnShape}
+ * @return {thin.editor.ListSectionShape}
  */
-thin.editor.ModuleElement.prototype.getAffiliationColumnShape = function() {
-  return this.affiliationColumnShape_;
+thin.editor.ModuleElement.prototype.getAffiliationSectionShape = function() {
+  return this.affiliationSectionShape_;
 };
 
 

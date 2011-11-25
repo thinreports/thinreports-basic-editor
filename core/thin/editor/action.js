@@ -76,8 +76,8 @@ thin.editor.Action.prototype.actionLayerInsertBefore = function() {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     if (!activeShapeManagerByListShape.isEmpty()) {
       shapes = activeShapeManagerByListShape.getClone();
-      var captureActiveColumnName = listHelper.getActiveColumnName();
-      parentGroup = listHelper.getTarget().getColumnShape(captureActiveColumnName).getGroup();
+      var captureActiveSectionName = listHelper.getActiveSectionName();
+      parentGroup = listHelper.getTarget().getSectionShape(captureActiveSectionName).getGroup();
     }
   } else if(activeShapeManager.isAllSelected()) {
     // Skip InsertBefore;
@@ -119,8 +119,8 @@ thin.editor.Action.prototype.actionLayerInsertAfter = function() {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     if (!activeShapeManagerByListShape.isEmpty()) {
       shapes = activeShapeManagerByListShape.getClone();
-      var captureActiveColumnName = listHelper.getActiveColumnName();
-      parentGroup = listHelper.getTarget().getColumnShape(captureActiveColumnName).getGroup();
+      var captureActiveSectionName = listHelper.getActiveSectionName();
+      parentGroup = listHelper.getTarget().getSectionShape(captureActiveSectionName).getGroup();
     }
   } else if(activeShapeManager.isAllSelected()) {
     // Skip InsertAfter;
@@ -162,8 +162,8 @@ thin.editor.Action.prototype.actionLayerInsertFront = function() {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     if (!activeShapeManagerByListShape.isEmpty()) {
       shapes = activeShapeManagerByListShape.getClone();
-      var captureActiveColumnName = listHelper.getActiveColumnName();
-      parentGroup = listHelper.getTarget().getColumnShape(captureActiveColumnName).getGroup();
+      var captureActiveSectionName = listHelper.getActiveSectionName();
+      parentGroup = listHelper.getTarget().getSectionShape(captureActiveSectionName).getGroup();
     }
   } else if(activeShapeManager.isAllSelected()) {
     // Skip InsertFront;
@@ -205,8 +205,8 @@ thin.editor.Action.prototype.actionLayerInsertBack = function() {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     if (!activeShapeManagerByListShape.isEmpty()) {
       shapes = activeShapeManagerByListShape.getClone();
-      var captureActiveColumnName = listHelper.getActiveColumnName();
-      parentGroup = listHelper.getTarget().getColumnShape(captureActiveColumnName).getGroup();
+      var captureActiveSectionName = listHelper.getActiveSectionName();
+      parentGroup = listHelper.getTarget().getSectionShape(captureActiveSectionName).getGroup();
     }
   } else if(activeShapeManager.isAllSelected()) {
     // Skip InsertBack;
@@ -238,12 +238,18 @@ thin.editor.Action.prototype.actionShowLayoutGuide = function(visibled) {
 
 
 thin.editor.Action.prototype.actionAddYLayoutGuide = function() {
-  this.layout_.getHelpers().getLayoutGuideHelper().createYLayoutGuide();
+  var layoutGuideHelper = this.layout_.getHelpers().getLayoutGuideHelper();
+  if (layoutGuideHelper.isEnable()) {
+    layoutGuideHelper.createYLayoutGuide();    
+  }
 };
 
 
 thin.editor.Action.prototype.actionAddXLayoutGuide = function() {
-  this.layout_.getHelpers().getLayoutGuideHelper().createXLayoutGuide();
+  var layoutGuideHelper = this.layout_.getHelpers().getLayoutGuideHelper();
+  if (layoutGuideHelper.isEnable()) {
+    layoutGuideHelper.createXLayoutGuide();    
+  }
 };
 
 
@@ -1223,12 +1229,12 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
   if (!isActived) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var isEmptyByListShape = activeShapeManagerByListShape.isEmpty();
-    var captureActiveColumnName = listHelper.getActiveColumnName();
+    var captureActiveSectionName = listHelper.getActiveSectionName();
     if (isEmptyByListShape) {
       var isChangingPage = singleShapeByGlobal.isChangingPage();
     } else {
       targetShapes = activeShapeManagerByListShape.getClone();
-      parentGroup = singleShapeByGlobal.getColumnShape(captureActiveColumnName).getGroup();
+      parentGroup = singleShapeByGlobal.getSectionShape(captureActiveSectionName).getGroup();
     }
   }
   
@@ -1339,18 +1345,18 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
           singleShapeByGlobal.setupEventHandlers();
           singleShapeByGlobal.setShapeId(captureShapeIdArray[0]);
           listHelper.active(singleShapeByGlobal);
-          listHelper.setActiveColumnName(captureActiveColumnName);
+          listHelper.setActiveSectionName(captureActiveSectionName);
           layout.setOutlineForSingle(singleShapeByGlobal);
           singleShapeByGlobal.updateProperties();
           thin.ui.setEnabledForFontUi(false);
         } else {
-          listHelper.setActiveColumnName(captureActiveColumnName);
+          listHelper.setActiveSectionName(captureActiveSectionName);
           activeShapeManagerByListShape.set(targetShapes);
           var shapes = activeShapeManagerByListShape.get();
           goog.array.forEach(shapes, function(shape, count) {
-            var affiliationColumnShape = singleShapeByGlobal.getColumnShape(shape.getAffiliationColumnName());
-            layout.appendChild(shape, affiliationColumnShape.getGroup());
-            affiliationColumnShape.getManager().addShape(shape, affiliationColumnShape);
+            var affiliationSectionShape = singleShapeByGlobal.getSectionShape(shape.getAffiliationSectionName());
+            layout.appendChild(shape, affiliationSectionShape.getGroup());
+            affiliationSectionShape.getManager().addShape(shape, affiliationSectionShape);
             layout.setOutlineForSingle(shape);
             shape.setupEventHandlers();
             shape.setShapeId(captureShapeIdArray[count]);
@@ -1688,8 +1694,8 @@ thin.editor.Action.prototype.actionShiftUp = function(e) {
     } else {
       isMultipleSelect = activeShapeManagerByListShape.isMultiple();
       shapes = activeShapeManagerByListShape.getClone();
-      limitTop = listHelper.getTarget().getColumnShape(
-                    listHelper.getActiveColumnName()).getTopForColumn();
+      limitTop = listHelper.getTarget().getSectionShape(
+                    listHelper.getActiveSectionName()).getTopForSection();
     }
   }
   
@@ -1762,11 +1768,11 @@ thin.editor.Action.prototype.actionShiftDown = function(e) {
       currentHeight = listShape.getHeight();
       currentBottom = currentTop + currentHeight;
     } else {
-      var columnShapeForActive = listHelper.getTarget().getColumnShape(
-            listHelper.getActiveColumnName());
+      var sectionShapeForActive = listHelper.getTarget().getSectionShape(
+            listHelper.getActiveSectionName());
       isMultipleSelect = activeShapeManagerByListShape.isMultiple();
       shapes = activeShapeManagerByListShape.getClone();
-      limitBottom = columnShapeForActive.getBounds().toBox().bottom;
+      limitBottom = sectionShapeForActive.getBounds().toBox().bottom;
     }
   }
   

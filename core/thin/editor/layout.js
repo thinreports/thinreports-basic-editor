@@ -107,18 +107,18 @@ thin.editor.Layout.prototype.drawListShapeFromElement = function(element) {
 
 /**
  * @param {Element} element
- * @param {thin.editor.ListColumnShape=} opt_columnShape
+ * @param {thin.editor.ListSectionShape=} opt_sectionShape
  */
-thin.editor.Layout.prototype.drawBasicShapeFromElement = function(element, opt_columnShape) {
+thin.editor.Layout.prototype.drawBasicShapeFromElement = function(element, opt_sectionShape) {
   element = /** @type {Element} */(goog.dom.getDocument().importNode(element, true));
   var opt_shapeIdManager;
   var opt_group;
   var shape;
   
-  if (opt_columnShape) {
-    var manager = opt_columnShape.getManager();
-    opt_shapeIdManager = opt_columnShape.getManager().getShapeIdManager();
-    opt_group = opt_columnShape.getGroup();
+  if (opt_sectionShape) {
+    var manager = opt_sectionShape.getManager();
+    opt_shapeIdManager = opt_sectionShape.getManager().getShapeIdManager();
+    opt_group = opt_sectionShape.getGroup();
   } else {
     var manager = this.manager_;
   }
@@ -158,16 +158,16 @@ thin.editor.Layout.prototype.drawBasicShapeFromElement = function(element, opt_c
   }
   
   this.setOutlineForSingle(shape);
-  manager.addShape(shape, opt_columnShape);
+  manager.addShape(shape, opt_sectionShape);
   this.appendChild(shape, opt_group);
 };
 
 
 /**
  * @param {NodeList} elements
- * @param {thin.editor.ListColumnShape=} opt_columnShape
+ * @param {thin.editor.ListSectionShape=} opt_sectionShape
  */
-thin.editor.Layout.prototype.drawShapeFromElements = function(elements, opt_columnShape) {
+thin.editor.Layout.prototype.drawShapeFromElements = function(elements, opt_sectionShape) {
   var layout = this;
   var listClassId = thin.editor.ListShape.CLASSID;
 
@@ -175,7 +175,7 @@ thin.editor.Layout.prototype.drawShapeFromElements = function(elements, opt_colu
     if (layout.getElementAttribute(element, 'class') == listClassId) {
       layout.drawListShapeFromElement(/** @type {Element} */(element));
     } else {
-      layout.drawBasicShapeFromElement(/** @type {Element} */(element), opt_columnShape);
+      layout.drawBasicShapeFromElement(/** @type {Element} */(element), opt_sectionShape);
     }
   });
 };
@@ -759,10 +759,10 @@ thin.editor.Layout.prototype.pasteShapes = function() {
   var isActived = listHelper.isActived();
   
   if (!isActived) {
-    var captureActiveColumnName = listHelper.getActiveColumnName() || listHelper.getDefaultActiveColumnName();
-    var captureColumnShapeForActive = activeShapeManager.getIfSingle().getColumnShape(captureActiveColumnName);
-    var captureRenderTo = captureColumnShapeForActive.getGroup();
-    var renderToLayerBounds = captureColumnShapeForActive.getBounds();
+    var captureActiveSectionName = listHelper.getActiveSectionName() || listHelper.getDefaultActiveSectionName();
+    var captureSectionShapeForActive = activeShapeManager.getIfSingle().getSectionShape(captureActiveSectionName);
+    var captureRenderTo = captureSectionShapeForActive.getGroup();
+    var renderToLayerBounds = captureSectionShapeForActive.getBounds();
     var layerWidth = renderToLayerBounds.width;
     var layerHeight = renderToLayerBounds.height;
     var clipBoardWidth = clipBoardShapesSize.width;
@@ -817,7 +817,7 @@ thin.editor.Layout.prototype.pasteShapes = function() {
   };
   
   if (isAllowRenderToListShape) {
-    var shapeIdManager = captureColumnShapeForActive.getManager().getShapeIdManager();
+    var shapeIdManager = captureSectionShapeForActive.getManager().getShapeIdManager();
     createCloneShapes(isAdaptDeltaForList, captureRenderTo, basisCoordinate, shapeIdManager);
   } else {
     createCloneShapes();
@@ -830,10 +830,10 @@ thin.editor.Layout.prototype.pasteShapes = function() {
       helpers.disableAll();
       if (isAllowRenderToListShape) {
         activeShapeManagerByListShape.clear();
-        listHelper.setActiveColumnName(captureActiveColumnName);
+        listHelper.setActiveSectionName(captureActiveSectionName);
         goog.array.forEach(pasteShapes, function(shape, count) {
           layout.appendChild(shape, captureRenderTo);
-          captureColumnShapeForActive.getManager().addShape(shape, captureColumnShapeForActive);
+          captureSectionShapeForActive.getManager().addShape(shape, captureSectionShapeForActive);
           listHelper.setActiveShape(shape);
           layout.setOutlineForSingle(shape);
           shape.setupEventHandlers();
@@ -919,7 +919,7 @@ thin.editor.Layout.prototype.pasteShapes = function() {
           activeShapeManager.set(oldShapesByGlobal);
           listHelper.active(activeShapeManager.getIfSingle());
           activeShapeManagerByListShape.set(oldShapesByListShape);
-          listHelper.setActiveColumnName(captureActiveColumnName);
+          listHelper.setActiveSectionName(captureActiveSectionName);
         }
         
         if (activeShapeManagerByListShape.isEmpty()) {
@@ -962,11 +962,11 @@ thin.editor.Layout.prototype.getCloneShapes = function(shapes) {
     clipBoardManager.initDeltaCoordinate();
   } else {
     var listShape = listHelper.getTarget();
-    var captureActiveColumnName = listHelper.getActiveColumnName();
-    var columnShapeForActive = listShape.getColumnShape(captureActiveColumnName);
-    parentGroup = columnShapeForActive.getGroup();
+    var captureActiveSectionName = listHelper.getActiveSectionName();
+    var sectionShapeForActive = listShape.getSectionShape(captureActiveSectionName);
+    parentGroup = sectionShapeForActive.getGroup();
     var guide = helper.getGuideHelper();
-    clipBoardManager.setDeltaCoordinate(new goog.math.Coordinate(guide.getLeft() - listShape.getLeft(), guide.getTop() - columnShapeForActive.getTopForColumn()).clone());
+    clipBoardManager.setDeltaCoordinate(new goog.math.Coordinate(guide.getLeft() - listShape.getLeft(), guide.getTop() - sectionShapeForActive.getTopForSection()).clone());
   }
   
   this.forEachByChildNodesIndex(shapes, this.getTargetIndexOfShapes(shapes, parentGroup), function(shape) {
@@ -1012,7 +1012,7 @@ thin.editor.Layout.prototype.removeShape = function(shape) {
   
   if (shape.isAffiliationListShape()) {
     var listShape = listHelper.getTarget();
-    var manager = listShape.getColumnShape(shape.getAffiliationColumnName()).getManager();
+    var manager = listShape.getSectionShape(shape.getAffiliationSectionName()).getManager();
     manager.getShapesManager().remove(shape);
     manager.getShapeIdManager().remove(shape);
     listShape.getActiveShape().remove(shape);
@@ -1136,7 +1136,7 @@ thin.editor.Layout.prototype.getNextShapeId = function(prefix, opt_shapeIdManage
 thin.editor.Layout.prototype.isUsableShapeId = function(id, target) {
   var manager;
   if (target.isAffiliationListShape()) {
-    manager = target.getAffiliationColumnShape().getManager().getShapeIdManager();
+    manager = target.getAffiliationSectionShape().getManager().getShapeIdManager();
   }
   return !goog.isDef(this.getShapeForShapeId(id, manager));
 };
@@ -1216,9 +1216,9 @@ thin.editor.Layout.prototype.createListShape = function() {
   var listClassId = thin.editor.ListShape.ClassIds;
   shape.setIdShape(
       this.getNextShapeId(thin.editor.ShapeIdManager.DefaultPrefix.LIST));
-  shape.setEnabledForColumnInternal(thin.editor.HeaderColumnShape.DEFAULT_ENABLED, listClassId['HEADER']);
-  shape.setEnabledForColumnInternal(thin.editor.PageFooterColumnShape.DEFAULT_ENABLED, listClassId['PAGEFOOTER']);
-  shape.setEnabledForColumnInternal(thin.editor.FooterColumnShape.DEFAULT_ENABLED, listClassId['FOOTER']);
+  shape.setEnabledForSectionInternal(thin.editor.HeaderSectionShape.DEFAULT_ENABLED, listClassId['HEADER']);
+  shape.setEnabledForSectionInternal(thin.editor.PageFooterSectionShape.DEFAULT_ENABLED, listClassId['PAGEFOOTER']);
+  shape.setEnabledForSectionInternal(thin.editor.FooterSectionShape.DEFAULT_ENABLED, listClassId['FOOTER']);
   var listHelper = this.helpers_.getListHelper();
   if (listHelper.isEnableChangingPage(shape)) {
     shape.setChangingPage(true);

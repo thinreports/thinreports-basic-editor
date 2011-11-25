@@ -199,7 +199,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
 
   var scope = this;
   this.reapplySizeAndStroke();
-  var columnNameForFooter = thin.editor.ListHelper.ColumnName.FOOTER;
+  var sectionNameForFooter = thin.editor.ListHelper.SectionName.FOOTER;
   var body = goog.dom.getDocument().body;
   var layout = this.getLayout();
   var workspace = layout.getWorkspace();
@@ -216,7 +216,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
   var vertical = thin.editor.SvgResizer.Vertical;
   var cursorType = thin.editor.Cursor.Type;
   var bodyDragger = new thin.editor.SvgDragger(listOutline, this.body_);
-  var captureActiveColumnName;
+  var captureActiveSectionName;
 
   goog.events.listen(bodyDragger, eventType.START, function(e) {
 
@@ -234,8 +234,8 @@ thin.editor.ListGuideHelper.prototype.init = function() {
     dragLayer.setVisibled(true);
     guide.setDisable();
     helpers.disableAll();
-    captureActiveColumnName = listHelper.getActiveColumnName();
-    listHelper.initActiveColumnName();
+    captureActiveSectionName = listHelper.getActiveSectionName();
+    listHelper.initActiveSectionName();
     listHelper.getTarget().updateProperties();
   }, false, this);
   
@@ -316,13 +316,13 @@ thin.editor.ListGuideHelper.prototype.init = function() {
         guide.setDisable();
         helpers.disableAll();
         activeShapeManagerByListShape.clear();
-        listHelper.initActiveColumnName();
+        listHelper.initActiveSectionName();
         bodyDragEndListener(outlineBounds, transLate);
       }, scope);
       
       version.downHandler(function() {
         activeShapeManagerByListShape.set(shapes);
-        listHelper.setActiveColumnName(captureActiveColumnName);
+        listHelper.setActiveSectionName(captureActiveSectionName);
         bodyDragEndListener(shapeBounds, reLocation);
       }, scope);
     });
@@ -347,13 +347,13 @@ thin.editor.ListGuideHelper.prototype.init = function() {
     var contentLeftArray = [];
     var contentRightArray = [];
     
-    listShape.forEachColumnShape(function(columnBandForEach, columnNameForEach) {
+    listShape.forEachSectionShape(function(sectionHelperForEach, sectionNameForEach) {
       var minLimitLeft = limitBox.right;
       var minLimitRight = limitBox.left;
-      if (columnBandForEach.isEnabledForColumn()) {
-        var shapesManagerByColumn = columnBandForEach.getManager().getShapesManager();
-        if (!shapesManagerByColumn.isEmpty()) {
-          var boxSizeByShapes = layout.calculateActiveShapeBounds(shapesManagerByColumn.get()).toBox();
+      if (sectionHelperForEach.isEnabledForSection()) {
+        var shapesManagerBySection = sectionHelperForEach.getManager().getShapesManager();
+        if (!shapesManagerBySection.isEmpty()) {
+          var boxSizeByShapes = layout.calculateActiveShapeBounds(shapesManagerBySection.get()).toBox();
           var contentLeft = boxSizeByShapes.left;
           if (goog.isNumber(contentLeft)) {
             minLimitLeft = contentLeft;
@@ -373,7 +373,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
     var minRight = contentRightArray[contentRightArray.length - 1];
     var listShapeBottom = listShape.getBounds().toBox().bottom;
     var movableHeight = listShapeBottom -
-          listShape.getColumnShape(columnNameForFooter).getBounds().toBox().bottom;
+          listShape.getSectionShape(sectionNameForFooter).getBounds().toBox().bottom;
     var minTop = listShape.getTop() + movableHeight;
     var minBottom = listShapeBottom - movableHeight;
     listOutline.enable();

@@ -521,13 +521,13 @@ thin.editor.SvgResizer.prototype.initializeLimits_ = function() {
   if (!listHelper.isActived()) {
     if (listHelper.getActiveShape().isMultiple()) {
 
-    var captureActiveColumnName = listHelper.getActiveColumnName();
-      canvasBox = listHelper.getTarget().getColumnShape(captureActiveColumnName).getBounds().toBox();
+    var captureActiveSectionName = listHelper.getActiveSectionName();
+      canvasBox = listHelper.getTarget().getSectionShape(captureActiveSectionName).getBounds().toBox();
     } else {
       if (!targetShape.instanceOfDraggableLine() && targetShape instanceof thin.editor.GuideHelper) {
-        var columnShapeForScope = listHelper.getTarget().getColumnShape(
-              targetShape.getTargetShape().getAffiliationColumnName());
-        canvasBox = columnShapeForScope.getBounds().toBox();
+        var sectionShapeForScope = listHelper.getTarget().getSectionShape(
+              targetShape.getTargetShape().getAffiliationSectionName());
+        canvasBox = sectionShapeForScope.getBounds().toBox();
       }
     }
   }

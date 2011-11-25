@@ -45,8 +45,8 @@ thin.editor.toolaction.ImageblockAction.prototype.handleActionInternal = functio
 
   if (!listHelper.isActived()) {
     var listDrawLayer;
-    listHelper.forEachColumnBand(function(columnBand, columnName) {
-      listDrawLayer = columnBand.getDrawLayer();
+    listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
+      listDrawLayer = sectionHelper.getDrawLayer();
       this.drawLayerSetup(listDrawLayer, outline, true);
       listDrawLayer.setVisibled(true);
     }, this);

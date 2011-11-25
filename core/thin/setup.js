@@ -83,7 +83,7 @@ goog.require('thin.editor.toolaction.ImageAction');
 goog.require('thin.editor.toolaction.ImageblockAction');
 goog.require('thin.editor.LayoutStructure');
 goog.require('thin.editor.ListHelper');
-goog.require('thin.editor.ListHelper.ColumnName');
+goog.require('thin.editor.ListHelper.SectionName');
 goog.require('thin.editor.TextStyle');
 goog.require('thin.editor.TextStyle.HorizonAlignType');
 goog.require('thin.editor.TextStyle.VerticalAlignType');

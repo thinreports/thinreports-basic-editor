@@ -18,7 +18,7 @@ goog.provide('thin.layout.document.Base');
 goog.require('goog.Disposable');
 goog.require('goog.string');
 goog.require('goog.array');
-goog.require('thin.editor.ListHelper.ColumnName');
+goog.require('thin.editor.ListHelper.SectionName');
 goog.require('thin.core.platform.File');
 goog.require('thin.layout.FormatPage.DirectionType');
 goog.require('thin.editor.formatstyles');
@@ -263,7 +263,7 @@ thin.layout.document.Base.prototype.createImageblockData_ = function(shapes, dat
 thin.layout.document.Base.prototype.createListData_ = function(shapes, data) {
   var shapeName = 'List';
   var shapeType = thin.editor.ListShape.CLASSID;
-  var listColumnName = thin.editor.ListHelper.ColumnName;
+  var listSectionName = thin.editor.ListHelper.SectionName;
   var listData, section;
   
   goog.array.forEach(shapes, function(shape) {
@@ -282,23 +282,23 @@ thin.layout.document.Base.prototype.createListData_ = function(shapes, data) {
     
     // Header section.
     if (!this.createListSectionData_(
-        shape.getColumnShape(listColumnName.HEADER), 'Header', listData)) {
+        shape.getSectionShape(listSectionName.HEADER), 'Header', listData)) {
       listData.header = this.formatFlag_(false);
     }
     
     // Detail section.
     this.createListSectionData_(
-        shape.getColumnShape(listColumnName.DETAIL), 'Detail', listData);
+        shape.getSectionShape(listSectionName.DETAIL), 'Detail', listData);
     
     // Page Footer section.
     if (!this.createListSectionData_(
-        shape.getColumnShape(listColumnName.PAGEFOOTER), 'Page Footer', listData)) {
+        shape.getSectionShape(listSectionName.PAGEFOOTER), 'Page Footer', listData)) {
       listData.pageFooter = this.formatFlag_(false);
     }
     
     // Footer section.
     if (!this.createListSectionData_(
-        shape.getColumnShape(listColumnName.FOOTER), 'Footer', listData)) {
+        shape.getSectionShape(listSectionName.FOOTER), 'Footer', listData)) {
       listData.footer = this.formatFlag_(false);
     }
     
@@ -308,14 +308,14 @@ thin.layout.document.Base.prototype.createListData_ = function(shapes, data) {
 
 
 /**
- * @param {thin.editor.ListColumnShape} section
+ * @param {thin.editor.ListSectionShape} section
  * @param {string} sectionName
  * @param {Object} listData
  * @return {boolean}
  * @private
  */
 thin.layout.document.Base.prototype.createListSectionData_ = function(section, sectionName, listData) {
-  if (section && section.isEnabledForColumn()) {
+  if (section && section.isEnabledForSection()) {
     var shapes = [];
     goog.array.insert(listData.sections, {
       name: sectionName,

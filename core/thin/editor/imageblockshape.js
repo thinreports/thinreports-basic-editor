@@ -659,7 +659,7 @@ thin.editor.ImageblockShape.prototype.updateProperties = function() {
 thin.editor.ImageblockShape.prototype.setInitShapeProperties = function(properties) {
   var opt_shapeIdManager;
   if (this.isAffiliationListShape()) {
-    opt_shapeIdManager = this.getAffiliationColumnShape().getManager().getShapeIdManager();
+    opt_shapeIdManager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
   }
   
   this.setShapeId(this.getLayout().getNextShapeId(

@@ -148,8 +148,8 @@ thin.editor.toolaction.ImageAction.prototype.handleActionInternal = function(e, 
 
   if (!listHelper.isActived()) {
     var listDrawLayer;
-    listHelper.forEachColumnBand(function(columnBand, columnName) {
-      listDrawLayer = columnBand.getDrawLayer();
+    listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
+      listDrawLayer = sectionHelper.getDrawLayer();
       listDrawLayer.setDisposed(false);
       listDrawLayer.setVisibled(true);
       listDrawLayer.addEventListener(eventType.MOUSEDOWN, 
@@ -157,9 +157,9 @@ thin.editor.toolaction.ImageAction.prototype.handleActionInternal = function(e, 
           if (e.isMouseActionButton()) {
             var layer;
             var element = e.target;
-            listHelper.forEachColumnBand(function(columnBand, columnName) {
-              if (columnBand.getDrawLayer().getElement() == element) {
-                layer = columnBand.getDrawLayer();
+            listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
+              if (sectionHelper.getDrawLayer().getElement() == element) {
+                layer = sectionHelper.getDrawLayer();
               }
             });
             this.handleMouseDownAction_(e, layer, outline, false);

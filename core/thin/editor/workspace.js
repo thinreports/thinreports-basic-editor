@@ -331,14 +331,14 @@ thin.editor.Workspace.create = function(file) {
     
     /**
      * @param {Array} shapes
-     * @param {thin.editor.ListColumnShape=} opt_shapeIdManager
+     * @param {thin.editor.ListSectionShape=} opt_shapeIdManager
      */
     var setupHandlers = function(shapes, opt_shapeIdManager) {
       goog.array.forEach(shapes, function(shape) {
         if (shape.instanceOfListShape()) {
           shape.setupEventHandlers();
-          shape.forEachColumnShape(function(columnShapeForEach, columnNameForEach) {
-            var managerForList = columnShapeForEach.getManager();
+          shape.forEachSectionShape(function(sectionShapeForEach, sectionNameForEach) {
+            var managerForList = sectionShapeForEach.getManager();
             setupHandlers(managerForList.getShapesManager().get(), managerForList.getShapeIdManager());
           });
         } else {
@@ -1010,9 +1010,9 @@ thin.editor.Workspace.prototype.exitDocument = function() {
   helpers.getDrawLayer().dispose();
   helpers.getSurface().dispose();
 
-  listHelper.forEachColumnBand(function(columnBand, columnName) {
-    columnBand.getDrawLayer().dispose();
-    columnBand.getSelectorLayer().dispose();
+  listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
+    sectionHelper.getDrawLayer().dispose();
+    sectionHelper.getSelectorLayer().dispose();
   }, this);
 };
 

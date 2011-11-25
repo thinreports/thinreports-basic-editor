@@ -54,7 +54,7 @@ thin.editor.LayoutStructure.serialize = function(layout, isOutput) {
   
   if (isActive) {
     var captureTarget = listHelper.getTarget();
-    var captureActiveColumnName = listHelper.getActiveColumnName();
+    var captureActiveSectionName = listHelper.getActiveSectionName();
     var activeShapeManager = listHelper.getActiveShape();
     var shapesForList = activeShapeManager.getClone();
     listHelper.inactive();
@@ -73,8 +73,8 @@ thin.editor.LayoutStructure.serialize = function(layout, isOutput) {
     if (goog.isDef(shapesForList)) {
       activeShapeManager.set(shapesForList);
     }
-    if (goog.isDef(captureActiveColumnName)) {
-      listHelper.setActiveColumnName(captureActiveColumnName);
+    if (goog.isDef(captureActiveSectionName)) {
+      listHelper.setActiveSectionName(captureActiveSectionName);
     }
   }
   

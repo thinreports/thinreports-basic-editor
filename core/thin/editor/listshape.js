@@ -30,12 +30,12 @@ goog.require('thin.editor.TextStyle.VerticalAlignType');
 goog.require('thin.editor.Component');
 goog.require('thin.editor.IdShape');
 goog.require('thin.editor.ListHelper');
-goog.require('thin.editor.ListHelper.ColumnName');
+goog.require('thin.editor.ListHelper.SectionName');
 goog.require('thin.editor.ActiveShapeManager');
-goog.require('thin.editor.HeaderColumnShape');
-goog.require('thin.editor.DetailColumnShape');
-goog.require('thin.editor.PageFooterColumnShape');
-goog.require('thin.editor.FooterColumnShape');
+goog.require('thin.editor.HeaderSectionShape');
+goog.require('thin.editor.DetailSectionShape');
+goog.require('thin.editor.PageFooterSectionShape');
+goog.require('thin.editor.FooterSectionShape');
 goog.require('thin.editor.ModuleShape');
 
 
@@ -49,10 +49,10 @@ goog.require('thin.editor.ModuleShape');
 thin.editor.ListShape = function(layout, opt_element, opt_referenceElement) {
   
   /**
-   * @type {Object.<thin.editor.ListColumnShape>}
+   * @type {Object.<thin.editor.ListSectionShape>}
    * @private
    */
-  this.columns_ = {};
+  this.sectionShapes_ = {};
   thin.editor.Component.call(this, layout, opt_element);
   this.setCss(thin.editor.ListShape.CLASSID);
   this.setup_(opt_referenceElement);
@@ -165,28 +165,28 @@ thin.editor.ListShape.createFromElement = function(groupElement, layout) {
     shape.setChangingPage(false);
   }
 
-  shape.forEachColumnShape(function(columnShapeForScope, columnNameForScope) {
-    var columnGroup = columnShapeForScope.getGroup();
-    var columnElement = thin.editor.getElementByClassNameForChildNodes(
-                          layout.getElementAttribute(columnGroup.getElement(), 'class'),
+  shape.forEachSectionShape(function(sectionShapeForScope, sectionNameForScope) {
+    var sectionGroup = sectionShapeForScope.getGroup();
+    var sectionElement = thin.editor.getElementByClassNameForChildNodes(
+                          layout.getElementAttribute(sectionGroup.getElement(), 'class'),
                           groupElement.childNodes);
-    var transLateCoordinate = thin.editor.ShapeStructure.getTransLateCoordinate(columnElement);
-    columnGroup.setTransformation(transLateCoordinate.x, transLateCoordinate.y, 0, 0, 0);
-    columnShapeForScope.setTopForColumn(Number(layout.getElementAttribute(columnElement, 'x-top')));
-    columnShapeForScope.setHeightForColumn(Number(layout.getElementAttribute(columnElement, 'x-height')));
+    var transLateCoordinate = thin.editor.ShapeStructure.getTransLateCoordinate(sectionElement);
+    sectionGroup.setTransformation(transLateCoordinate.x, transLateCoordinate.y, 0, 0, 0);
+    sectionShapeForScope.setTopForSection(Number(layout.getElementAttribute(sectionElement, 'x-top')));
+    sectionShapeForScope.setHeightForSection(Number(layout.getElementAttribute(sectionElement, 'x-height')));
     
-    goog.array.forEach(columnElement.childNodes, function(element) {
-      layout.drawBasicShapeFromElement(element, columnShapeForScope);
+    goog.array.forEach(sectionElement.childNodes, function(element) {
+      layout.drawBasicShapeFromElement(element, sectionShapeForScope);
     });
   });
   
   var shapeElement = shape.getElement();
-  shape.forEachColumnShape(function(columnShapeForScope, columnNameForScope) {
+  shape.forEachSectionShape(function(sectionShapeForScope, sectionNameForScope) {
     if (thin.editor.ShapeStructure.getEnabledOfSection(
-            columnShapeForScope.getGroup().getElement(), shapeElement) == "false") {
+            sectionShapeForScope.getGroup().getElement(), shapeElement) == "false") {
 
-      shape.setEnabledForColumn(false, columnNameForScope);
-      columnShapeForScope.initHeightForLastActive();
+      shape.setEnabledForSection(false, sectionNameForScope);
+      sectionShapeForScope.initHeightForLastActive();
     }
   });
   return shape;
@@ -199,11 +199,11 @@ thin.editor.ListShape.createFromElement = function(groupElement, layout) {
 thin.editor.ListShape.prototype.setup_ = function(opt_referenceElement) {
   var layout = this.getLayout();
   var classId = thin.editor.ListShape.ClassIds;
-  var columnNameForTemp = thin.editor.ListHelper.ColumnName;
-  var columnNameForHeader = columnNameForTemp.HEADER;
-  var columnNameForDetail = columnNameForTemp.DETAIL;
-  var columnNameForPageFooter = columnNameForTemp.PAGEFOOTER;
-  var columnNameForFooter = columnNameForTemp.FOOTER;
+  var sectionNameForTemp = thin.editor.ListHelper.SectionName;
+  var sectionNameForHeader = sectionNameForTemp.HEADER;
+  var sectionNameForDetail = sectionNameForTemp.DETAIL;
+  var sectionNameForPageFooter = sectionNameForTemp.PAGEFOOTER;
+  var sectionNameForFooter = sectionNameForTemp.FOOTER;
   var listShapeFaceClassId = thin.editor.ListShape.CLASSID + classId['FACE'];
   var stroke = new goog.graphics.Stroke(1, '#BBBBBB');
   var fill = new goog.graphics.SolidFill('#FFFFFF');
@@ -213,31 +213,31 @@ thin.editor.ListShape.prototype.setup_ = function(opt_referenceElement) {
                    listShapeFaceClassId, opt_referenceElement.childNodes);
     var face = new thin.editor.RectShape(rect, layout, stroke, fill);
 
-    var columnShapeForHeader = new thin.editor.HeaderColumnShape(layout, this, columnNameForHeader,
+    var sectionShapeForHeader = new thin.editor.HeaderSectionShape(layout, this, sectionNameForHeader,
                                        thin.editor.getElementByClassNameForChildNodes(
-                                         columnNameForHeader, opt_referenceElement.childNodes));
+                                         sectionNameForHeader, opt_referenceElement.childNodes));
                                          
-    var columnShapeForDetail = new thin.editor.DetailColumnShape(layout, this, columnNameForDetail,
+    var sectionShapeForDetail = new thin.editor.DetailSectionShape(layout, this, sectionNameForDetail,
                                        thin.editor.getElementByClassNameForChildNodes(
-                                         columnNameForDetail, opt_referenceElement.childNodes));
+                                         sectionNameForDetail, opt_referenceElement.childNodes));
                                          
-    var columnShapeForPageFooter = new thin.editor.PageFooterColumnShape(layout, this, columnNameForPageFooter,
+    var sectionShapeForPageFooter = new thin.editor.PageFooterSectionShape(layout, this, sectionNameForPageFooter,
                                            thin.editor.getElementByClassNameForChildNodes(
-                                             columnNameForPageFooter, opt_referenceElement.childNodes));
+                                             sectionNameForPageFooter, opt_referenceElement.childNodes));
                                              
-    var columnShapeForFooter = new thin.editor.FooterColumnShape(layout, this, columnNameForFooter, 
+    var sectionShapeForFooter = new thin.editor.FooterSectionShape(layout, this, sectionNameForFooter, 
                                        thin.editor.getElementByClassNameForChildNodes(
-                                         columnNameForFooter, opt_referenceElement.childNodes));
+                                         sectionNameForFooter, opt_referenceElement.childNodes));
   
   } else {
     var rect = layout.createSvgElement('rect', {
       'stroke-dasharray': 5
     });
     var face = new thin.editor.RectShape(rect, layout, stroke, fill);
-    var columnShapeForHeader = new thin.editor.HeaderColumnShape(layout, this, columnNameForHeader);
-    var columnShapeForDetail = new thin.editor.DetailColumnShape(layout, this, columnNameForDetail);
-    var columnShapeForPageFooter = new thin.editor.PageFooterColumnShape(layout, this, columnNameForPageFooter);
-    var columnShapeForFooter = new thin.editor.FooterColumnShape(layout, this, columnNameForFooter);
+    var sectionShapeForHeader = new thin.editor.HeaderSectionShape(layout, this, sectionNameForHeader);
+    var sectionShapeForDetail = new thin.editor.DetailSectionShape(layout, this, sectionNameForDetail);
+    var sectionShapeForPageFooter = new thin.editor.PageFooterSectionShape(layout, this, sectionNameForPageFooter);
+    var sectionShapeForFooter = new thin.editor.FooterSectionShape(layout, this, sectionNameForFooter);
   }
   
   layout.setElementAttributes(rect, {
@@ -248,17 +248,17 @@ thin.editor.ListShape.prototype.setup_ = function(opt_referenceElement) {
   this.face_ = face;
   layout.appendChild(face, this);
 
-  this.setColumnShape(columnShapeForHeader, columnNameForHeader);
-  this.setColumnShape(columnShapeForDetail, columnNameForDetail);
-  this.setColumnShape(columnShapeForPageFooter, columnNameForPageFooter);
-  this.setColumnShape(columnShapeForFooter, columnNameForFooter);
+  this.setSectionShape(sectionShapeForHeader, sectionNameForHeader);
+  this.setSectionShape(sectionShapeForDetail, sectionNameForDetail);
+  this.setSectionShape(sectionShapeForPageFooter, sectionNameForPageFooter);
+  this.setSectionShape(sectionShapeForFooter, sectionNameForFooter);
 
-  columnShapeForHeader.setNextColumnShape(columnShapeForDetail);
-  columnShapeForDetail.setPreviousColumnShape(columnShapeForHeader);
-  columnShapeForDetail.setNextColumnShape(columnShapeForPageFooter);
-  columnShapeForPageFooter.setPreviousColumnShape(columnShapeForDetail);
-  columnShapeForPageFooter.setNextColumnShape(columnShapeForFooter);
-  columnShapeForFooter.setPreviousColumnShape(columnShapeForPageFooter);
+  sectionShapeForHeader.setNextSectionShape(sectionShapeForDetail);
+  sectionShapeForDetail.setPreviousSectionShape(sectionShapeForHeader);
+  sectionShapeForDetail.setNextSectionShape(sectionShapeForPageFooter);
+  sectionShapeForPageFooter.setPreviousSectionShape(sectionShapeForDetail);
+  sectionShapeForPageFooter.setNextSectionShape(sectionShapeForFooter);
+  sectionShapeForFooter.setPreviousSectionShape(sectionShapeForPageFooter);
 
   this.activeshapes_ = new thin.editor.ActiveShapeManager(layout);
 };
@@ -271,10 +271,10 @@ thin.editor.ListShape.prototype.setupEventHandlers = function() {
 
 
 /**
- * @return {Object.<thin.editor.ListColumnShape>}
+ * @return {Object.<thin.editor.ListSectionShape>}
  */
-thin.editor.ListShape.prototype.getColumns = function() {
-  return this.columns_;
+thin.editor.ListShape.prototype.getSections = function() {
+  return this.sectionShapes_;
 };
 
 
@@ -282,30 +282,30 @@ thin.editor.ListShape.prototype.getColumns = function() {
  * @param {Function} fn
  * @param {Object=} opt_selfObj
  */
-thin.editor.ListShape.prototype.forEachColumnShape = function(fn, opt_selfObj) {
+thin.editor.ListShape.prototype.forEachSectionShape = function(fn, opt_selfObj) {
   var selfObj = opt_selfObj || this;
-  goog.object.forEach(this.columns_, goog.bind(function(columnShapeForEachObject, columnNameForEachObject) {
-    fn.call(selfObj, columnShapeForEachObject, columnNameForEachObject);
+  goog.object.forEach(this.sectionShapes_, goog.bind(function(sectionShapeForEachObject, sectionNameForEachObject) {
+    fn.call(selfObj, sectionShapeForEachObject, sectionNameForEachObject);
   }, selfObj));
 };
 
 
 /**
- * @param {thin.editor.ListColumnShape} columnShape
- * @param {string} columnName
+ * @param {thin.editor.ListSectionShape} sectionShape
+ * @param {string} sectionName
  */
-thin.editor.ListShape.prototype.setColumnShape = function(columnShape, columnName) {
-  this.columns_[columnName] = columnShape;
-  this.getLayout().appendChild(columnShape.getGroup(), this);
+thin.editor.ListShape.prototype.setSectionShape = function(sectionShape, sectionName) {
+  this.sectionShapes_[sectionName] = sectionShape;
+  this.getLayout().appendChild(sectionShape.getGroup(), this);
 };
 
 
 /**
- * @param {string} columnName
- * @return {thin.editor.ListColumnShape}
+ * @param {string} sectionName
+ * @return {thin.editor.ListSectionShape}
  */
-thin.editor.ListShape.prototype.getColumnShape = function(columnName) {
-  return this.columns_[columnName];
+thin.editor.ListShape.prototype.getSectionShape = function(sectionName) {
+  return this.sectionShapes_[sectionName];
 };
 
 
@@ -393,57 +393,57 @@ thin.editor.ListShape.prototype.setChangingPage = function(setting) {
 
 /**
  * @param {boolean} enabled
- * @param {string} columnName
+ * @param {string} sectionName
  */
-thin.editor.ListShape.prototype.setEnabledForColumnInternal = function(enabled, columnName) {
+thin.editor.ListShape.prototype.setEnabledForSectionInternal = function(enabled, sectionName) {
   var setting = {};
-  goog.object.set(setting, 'x' + columnName + '-enabled', enabled);
+  goog.object.set(setting, 'x' + sectionName + '-enabled', enabled);
   this.getLayout().setElementAttributes(this.getElement(), setting);
 };
 
 
 /**
  * @param {boolean} enabled
- * @param {string} columnNameForScope
+ * @param {string} sectionNameForScope
  */
-thin.editor.ListShape.prototype.setEnabledForColumn = function(enabled, columnNameForScope) {
+thin.editor.ListShape.prototype.setEnabledForSection = function(enabled, sectionNameForScope) {
   var layout = this.getLayout();
   var listHelper = layout.getHelpers().getListHelper();
   var captureListShapeHeight = this.getHeight();
-  var columnBandForScope = listHelper.getColumnBand(columnNameForScope);
-  var columnShapeForScope = this.getColumnShape(columnNameForScope);
-  columnShapeForScope.setEnabledForColumn(enabled);
-  layout.setVisibled(columnShapeForScope.getGroup(), enabled);
-  this.setEnabledForColumnInternal(enabled, 
-      thin.editor.ListShape.ClassIds[columnNameForScope]);
+  var sectionHelperForScope = listHelper.getSectionHelper(sectionNameForScope);
+  var sectionShapeForScope = this.getSectionShape(sectionNameForScope);
+  sectionShapeForScope.setEnabledForSection(enabled);
+  layout.setVisibled(sectionShapeForScope.getGroup(), enabled);
+  this.setEnabledForSectionInternal(enabled, 
+      thin.editor.ListShape.ClassIds[sectionNameForScope]);
 
   if (enabled) {
-    var newColumnHeight = columnShapeForScope.getHeightForLastActive();
-    if (!goog.isNumber(newColumnHeight)) {
-      newColumnHeight = columnShapeForScope.getHeightForDefault();
+    var newSectionHeight = sectionShapeForScope.getHeightForLastActive();
+    if (!goog.isNumber(newSectionHeight)) {
+      newSectionHeight = sectionShapeForScope.getHeightForDefault();
     }
 
     var blankRangeHeight = listHelper.getBlankRangeBounds().height;
     var boxSizeByShapes = layout.calculateActiveShapeBounds(
-          columnShapeForScope.getManager().getShapesManager().get()).toBox();
-    var columnContentHeight = thin.numberWithPrecision(
-                                  boxSizeByShapes.bottom - columnShapeForScope.getTop());
-    if (isNaN(columnContentHeight)) {
-      columnContentHeight = 0;
+          sectionShapeForScope.getManager().getShapesManager().get()).toBox();
+    var sectionContentHeight = thin.numberWithPrecision(
+                                  boxSizeByShapes.bottom - sectionShapeForScope.getTop());
+    if (isNaN(sectionContentHeight)) {
+      sectionContentHeight = 0;
     }
 
-    if (blankRangeHeight < newColumnHeight) {
-      newColumnHeight = columnContentHeight;
+    if (blankRangeHeight < newSectionHeight) {
+      newSectionHeight = sectionContentHeight;
 
-      if (blankRangeHeight < columnContentHeight) {
+      if (blankRangeHeight < sectionContentHeight) {
         var newListShapeHeight = thin.numberWithPrecision(
-              captureListShapeHeight + (columnContentHeight - blankRangeHeight));
+              captureListShapeHeight + (sectionContentHeight - blankRangeHeight));
         this.setHeight(newListShapeHeight);
       }
     }
 
-    columnShapeForScope.setHeightForColumn(newColumnHeight);
-    columnShapeForScope.initHeightForLastActive();
+    sectionShapeForScope.setHeightForSection(newSectionHeight);
+    sectionShapeForScope.initHeightForLastActive();
 
     var captureListShapeLeft = this.getLeft();
     var captureListShapeRight = this.getBounds().toBox().right;    
@@ -458,17 +458,17 @@ thin.editor.ListShape.prototype.setEnabledForColumn = function(enabled, columnNa
     if (targetContentRight > captureListShapeRight) {
       this.setWidth(targetContentRight - captureListShapeLeft);
     }
-    listHelper.setTransLateOfNextColumnShapes(
-        new goog.math.Coordinate(0, newColumnHeight), 
-        columnShapeForScope);
-    columnBandForScope.active(this);
+    listHelper.setTransLateOfNextSectionShapes(
+        new goog.math.Coordinate(0, newSectionHeight), 
+        sectionShapeForScope);
+    sectionHelperForScope.active(this);
   } else {
-    var captureColumnHeight = columnShapeForScope.getHeightForColumn();
-    columnShapeForScope.setHeightForLastActive(captureColumnHeight);
-    columnShapeForScope.setHeightForColumn(0);
-    listHelper.setTransLateOfNextColumnShapes(
-        new goog.math.Coordinate(0, -captureColumnHeight), columnShapeForScope);
-    columnBandForScope.inactive();
+    var captureSectionHeight = sectionShapeForScope.getHeightForSection();
+    sectionShapeForScope.setHeightForLastActive(captureSectionHeight);
+    sectionShapeForScope.setHeightForSection(0);
+    listHelper.setTransLateOfNextSectionShapes(
+        new goog.math.Coordinate(0, -captureSectionHeight), sectionShapeForScope);
+    sectionHelperForScope.inactive();
   }
 };
 
@@ -530,44 +530,44 @@ thin.editor.ListShape.prototype.setHeight = function(height) {
 
 /**
  * @param {number} unlimitedHeight
- * @param {string} columnNameForScope
+ * @param {string} sectionNameForScope
  */
-thin.editor.ListShape.prototype.setHeightForColumnShape = function(unlimitedHeight, columnNameForScope) {
+thin.editor.ListShape.prototype.setHeightForSectionShape = function(unlimitedHeight, sectionNameForScope) {
   var scope = this;
   var layout = this.getLayout();
   var helpers = layout.getHelpers();
   var guide = helpers.getGuideHelper();
   var listHelper = helpers.getListHelper();
-  var columnShapeForScope = this.getColumnShape(columnNameForScope);
-  var captureColumnHeight = columnShapeForScope.getHeightForColumn();
+  var sectionShapeForScope = this.getSectionShape(sectionNameForScope);
+  var captureSectionHeight = sectionShapeForScope.getHeightForSection();
   var allowHeight = this.getAllowHeight(unlimitedHeight);
 
-  if(captureColumnHeight > allowHeight) {
-    var columnBottomByShapes = layout.calculateActiveShapeBounds(
-          columnShapeForScope.getManager().getShapesManager().get()).toBox().bottom;
-    var columnContentHeight = columnBottomByShapes - columnShapeForScope.getTopForColumn();
-    var limitHeight = columnContentHeight || 0;
+  if(captureSectionHeight > allowHeight) {
+    var sectionBottomByShapes = layout.calculateActiveShapeBounds(
+          sectionShapeForScope.getManager().getShapesManager().get()).toBox().bottom;
+    var sectionContentHeight = sectionBottomByShapes - sectionShapeForScope.getTopForSection();
+    var limitHeight = sectionContentHeight || 0;
     if(allowHeight < limitHeight) {
       allowHeight = limitHeight;
     }
   } else {
-    var limitHeight = captureColumnHeight + listHelper.getBlankRangeBounds().height;
+    var limitHeight = captureSectionHeight + listHelper.getBlankRangeBounds().height;
     if(allowHeight > limitHeight) {
       allowHeight = limitHeight;
     }
   }
-  var transLateCoordinate = new goog.math.Coordinate(0, allowHeight - captureColumnHeight);
-  var retransLateCoordinate = new goog.math.Coordinate(0, captureColumnHeight - allowHeight);
+  var transLateCoordinate = new goog.math.Coordinate(0, allowHeight - captureSectionHeight);
+  var retransLateCoordinate = new goog.math.Coordinate(0, captureSectionHeight - allowHeight);
   var shapes = this.activeshapes_.getClone();
   
   
   /**
-   * @param {number} columnHeight
+   * @param {number} sectionHeight
    * @param {goog.math.Coordinate} transLate
    */
-  var updateListShape = function(columnHeight, transLate) {
-    columnShapeForScope.setHeightForColumn(columnHeight);
-    listHelper.setTransLateOfNextColumnShapes(transLate, columnShapeForScope);
+  var updateListShape = function(sectionHeight, transLate) {
+    sectionShapeForScope.setHeightForSection(sectionHeight);
+    listHelper.setTransLateOfNextSectionShapes(transLate, sectionShapeForScope);
     listHelper.update(scope);
     if (guide.isEnable()) {
       goog.array.forEach(shapes, function(shape) {
@@ -586,7 +586,7 @@ thin.editor.ListShape.prototype.setHeightForColumnShape = function(unlimitedHeig
     }, scope);
     
     version.downHandler(function() {
-      updateListShape(captureColumnHeight, retransLateCoordinate);
+      updateListShape(captureSectionHeight, retransLateCoordinate);
     }, scope);
   });
 };
@@ -613,7 +613,7 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   var layout = this.getLayout();
   var workspace = layout.getWorkspace();
   var listHelper = layout.getHelpers().getListHelper();
-  var columnName = thin.editor.ListHelper.ColumnName;
+  var sectionName = thin.editor.ListHelper.SectionName;
   
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
@@ -698,12 +698,12 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
           var allowRight = listShapeLeft + allowWidth;
           var contentRightArray = [];
     
-          scope.forEachColumnShape(function(columnShapeForEach, columnNameForEach) {
+          scope.forEachSectionShape(function(sectionShapeForEach, sectionNameForEach) {
             var minLimitRight = allowRight;
-            if (columnShapeForEach.isEnabledForColumn()) {
-              var shapesManagerByColumn = columnShapeForEach.getManager().getShapesManager();
-              if (!shapesManagerByColumn.isEmpty()) {
-                var contentRight = layout.calculateActiveShapeBounds(shapesManagerByColumn.get()).toBox().right;
+            if (sectionShapeForEach.isEnabledForSection()) {
+              var shapesManagerBySection = sectionShapeForEach.getManager().getShapesManager();
+              if (!shapesManagerBySection.isEmpty()) {
+                var contentRight = layout.calculateActiveShapeBounds(shapesManagerBySection.get()).toBox().right;
                 if (goog.isNumber(contentRight)) {
                   minLimitRight = contentRight;
                 }
@@ -747,8 +747,8 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
         var allowHeight = scope.getAllowHeight(Number(e.target.getValue()));
 
         if (captureHeight > allowHeight) {
-          var captureColumnShapeForScope = scope.getColumnShape(thin.editor.ListHelper.ColumnName.FOOTER);
-          var captureFooterBottom = captureColumnShapeForScope.getBounds().toBox().bottom;
+          var captureSectionShapeForScope = scope.getSectionShape(thin.editor.ListHelper.SectionName.FOOTER);
+          var captureFooterBottom = captureSectionShapeForScope.getBounds().toBox().bottom;
           var limitHeight = captureHeight - (scope.getBounds().toBox().bottom - captureFooterBottom);
           if (limitHeight > allowHeight) {
             allowHeight = limitHeight;
@@ -818,8 +818,8 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   var headerEnabledCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('ヘッダー');
   headerEnabledCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        this.setEnabledForColumnShapePropertyUpdate(
-            e.target.isChecked(), columnName.HEADER);
+        this.setEnabledForSectionShapePropertyUpdate(
+            e.target.isChecked(), sectionName.HEADER);
       }, false, this);
   
   proppane.addProperty(headerEnabledCheckProperty, listGroup, 'list-header-enable');
@@ -828,8 +828,8 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   var pageFooterEnabledCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('ページフッター');
   pageFooterEnabledCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        this.setEnabledForColumnShapePropertyUpdate(
-            e.target.isChecked(), columnName.PAGEFOOTER);
+        this.setEnabledForSectionShapePropertyUpdate(
+            e.target.isChecked(), sectionName.PAGEFOOTER);
       }, false, this);
   
   proppane.addProperty(pageFooterEnabledCheckProperty, listGroup, 'list-pagefooter-enable');
@@ -838,8 +838,8 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   var footerEnabledCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('フッター');
   footerEnabledCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        this.setEnabledForColumnShapePropertyUpdate(
-            e.target.isChecked(), columnName.FOOTER);
+        this.setEnabledForSectionShapePropertyUpdate(
+            e.target.isChecked(), sectionName.FOOTER);
       }, false, this);
   
   proppane.addProperty(footerEnabledCheckProperty, listGroup, 'list-footer-enable');
@@ -886,20 +886,20 @@ thin.editor.ListShape.prototype.updateProperties = function() {
     }
     
     var listHelper = this.getLayout().getHelpers().getListHelper();
-    var activeColumnName = listHelper.getActiveColumnName();
-    if (activeColumnName) {
-      this.getColumnShape(activeColumnName).updateProperties();
+    var activeSectionName = listHelper.getActiveSectionName();
+    if (activeSectionName) {
+      this.getSectionShape(activeSectionName).updateProperties();
     } else {
-      var columnName = thin.editor.ListHelper.ColumnName;
+      var sectionName = thin.editor.ListHelper.SectionName;
       proppane.getPropertyControl('left').setValue(this.getLeft());
       proppane.getPropertyControl('top').setValue(this.getTop());
       proppane.getPropertyControl('width').setValue(this.getWidth());
       proppane.getPropertyControl('height').setValue(this.getHeight());
       proppane.getPropertyControl('display').setChecked(this.getDisplay());
       
-      proppane.getPropertyControl('list-header-enable').setChecked(this.getColumnShape(columnName.HEADER).isEnabledForColumn());
-      proppane.getPropertyControl('list-pagefooter-enable').setChecked(this.getColumnShape(columnName.PAGEFOOTER).isEnabledForColumn());
-      proppane.getPropertyControl('list-footer-enable').setChecked(this.getColumnShape(columnName.FOOTER).isEnabledForColumn());
+      proppane.getPropertyControl('list-header-enable').setChecked(this.getSectionShape(sectionName.HEADER).isEnabledForSection());
+      proppane.getPropertyControl('list-pagefooter-enable').setChecked(this.getSectionShape(sectionName.PAGEFOOTER).isEnabledForSection());
+      proppane.getPropertyControl('list-footer-enable').setChecked(this.getSectionShape(sectionName.FOOTER).isEnabledForSection());
       proppane.getPropertyControl('list-changing-page').setChecked(this.isChangingPage());
       
       proppane.getPropertyControl('shape-id').setValue(this.getShapeId());
@@ -918,12 +918,12 @@ thin.editor.ListShape.prototype.disposeInternal = function() {
   this.id_.dispose();
   this.face_.dispose();
   this.activeshapes_.dispose();
-  goog.object.forEach(this.columns_, function(columnShape) {
-    columnShape.dispose();
+  goog.object.forEach(this.sectionShapes_, function(sectionShape) {
+    sectionShape.dispose();
   });
   
   delete this.id_;
   delete this.face_;
   delete this.activeshapes_;
-  delete this.columns_;
+  delete this.sectionShapes_;
 };

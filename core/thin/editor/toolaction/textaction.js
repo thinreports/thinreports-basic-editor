@@ -45,8 +45,8 @@ thin.editor.toolaction.TextAction.prototype.handleActionInternal = function(e, w
 
   if (!listHelper.isActived()) {
     var listDrawLayer;
-    listHelper.forEachColumnBand(function(columnBand, columnName) {
-      listDrawLayer = columnBand.getDrawLayer();
+    listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
+      listDrawLayer = sectionHelper.getDrawLayer();
       this.drawLayerSetup(listDrawLayer, outline, true);
       listDrawLayer.setVisibled(true);
     }, this);
@@ -77,8 +77,8 @@ thin.editor.toolaction.TextAction.prototype.handleEndAction = function(
     if (listHelper.isActived()) {
       var boxSize = layout.getBounds().toBox();
     } else {
-      var boxSize = listHelper.getTarget().getColumnShape(/** @type {string} */ (
-                        listHelper.getColumnNameByDrawLayer(handler))).getBounds().toBox();
+      var boxSize = listHelper.getTarget().getSectionShape(/** @type {string} */ (
+                        listHelper.getSectionNameByDrawLayer(handler))).getBounds().toBox();
     }
     
     var allowWidth = thin.numberWithPrecision(boxSize.right - outline.getLeft());

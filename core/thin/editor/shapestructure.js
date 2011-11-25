@@ -279,11 +279,11 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
 
 
 /**
- * @param {string} columnClassid
+ * @param {string} sectionClassId
  * @return {string}
  */
-thin.editor.ShapeStructure.getSectionName = function(columnClassid) {
-  return columnClassid.replace(/s\-list\-/, '');
+thin.editor.ShapeStructure.getSectionName = function(sectionClassId) {
+  return sectionClassId.replace(/s\-list\-/, '');
 };
 
 
@@ -293,8 +293,8 @@ thin.editor.ShapeStructure.getSectionName = function(columnClassid) {
  * @return {string}
  */
 thin.editor.ShapeStructure.getEnabledOfSection = function(element, parentElement) {
-  var columnClassid = element.getAttribute('class');
-  var sectionName = thin.editor.ShapeStructure.getSectionName(columnClassid);
+  var sectionClassId = element.getAttribute('class');
+  var sectionName = thin.editor.ShapeStructure.getSectionName(sectionClassId);
   return parentElement.getAttribute('x-' + sectionName + '-enabled') || 'true';
 };
 
@@ -314,7 +314,7 @@ thin.editor.ShapeStructure.serializeForList_ = function(shape, json) {
   var detailTop = Number(thin.editor.getElementByClassNameForChildNodes(
                       detailClassId, listGroupChildNodes).getAttribute('x-top'));
 
-  var enabledForColumn;
+  var enabledForSection;
   var sectionName;
   var childGroupClassId;
   var isDetailSection;
@@ -322,15 +322,15 @@ thin.editor.ShapeStructure.serializeForList_ = function(shape, json) {
   goog.array.forEachRight(listGroupChildNodes, function(childShape) {
     childGroupClassId = childShape.getAttribute('class');
     if (childShape.tagName == 'g') {
-      enabledForColumn = thin.editor.ShapeStructure.getEnabledOfSection(childShape, shape);
+      enabledForSection = thin.editor.ShapeStructure.getEnabledOfSection(childShape, shape);
       sectionName = thin.editor.ShapeStructure.getSectionName(childGroupClassId);
       isDetailSection = childGroupClassId == detailClassId;
-      json[sectionName] = thin.editor.ShapeStructure.serializeForListForColumn_(
-                              childShape, enabledForColumn == 'true', 
+      json[sectionName] = thin.editor.ShapeStructure.serializeForListForSection_(
+                              childShape, enabledForSection == 'true', 
                               (childGroupClassId == headerClassId || 
                                isDetailSection) ? null : detailTop);
       if (!isDetailSection) {
-        json[sectionName + '-enabled'] = enabledForColumn;        
+        json[sectionName + '-enabled'] = enabledForSection;        
       }
     }
   });
@@ -352,33 +352,33 @@ thin.editor.ShapeStructure.serializeForList_ = function(shape, json) {
 
 
 /**
- * @param {Node} columnGroup
+ * @param {Node} sectionGroup
  * @param {boolean} enabled
  * @param {number=} opt_detailTop
  * @return {Object}
  * @private
  */
-thin.editor.ShapeStructure.serializeForListForColumn_ = function(
-    columnGroup, enabled, opt_detailTop) {
+thin.editor.ShapeStructure.serializeForListForSection_ = function(
+    sectionGroup, enabled, opt_detailTop) {
 
   if (!enabled) {
-    goog.dom.removeChildren(columnGroup);
+    goog.dom.removeChildren(sectionGroup);
     return {};
   }
   var json = {
-    'height': Number(columnGroup.getAttribute('x-height')),
+    'height': Number(sectionGroup.getAttribute('x-height')),
     'svg': {
-      'tag': columnGroup.tagName,
+      'tag': sectionGroup.tagName,
       'content': thin.editor.ShapeStructure.serializeToContent(
                     thin.editor.LayoutStructure.serializeFromChildNodes(
-                        columnGroup.cloneNode(true).childNodes, 1))
+                        sectionGroup.cloneNode(true).childNodes, 1))
     }
   };
 
-  var translate = thin.editor.ShapeStructure.getTransLateCoordinate(columnGroup);
+  var translate = thin.editor.ShapeStructure.getTransLateCoordinate(sectionGroup);
   var isCalculateDiff = goog.isNumber(opt_detailTop);
   if (isCalculateDiff) {
-    var diffY = Number(columnGroup.getAttribute('x-top')) - opt_detailTop;
+    var diffY = Number(sectionGroup.getAttribute('x-top')) - opt_detailTop;
   }
   
   goog.object.set(json, 'translate', {

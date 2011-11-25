@@ -1495,7 +1495,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   refIdValidator.setMethod(function(value) {
     var opt_shapeIdManager;
     if (scope.isAffiliationListShape()) {
-      opt_shapeIdManager = scope.getAffiliationColumnShape().getManager().getShapeIdManager();
+      opt_shapeIdManager = scope.getAffiliationSectionShape().getManager().getShapeIdManager();
     }
     var referenceShape = layout.getShapeForShapeId(value, opt_shapeIdManager);
     var notice = null;
@@ -1535,7 +1535,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         if (!isDefaultValue) {
           var opt_shapeIdManager;
           if (scope.isAffiliationListShape()) {
-            opt_shapeIdManager = scope.getAffiliationColumnShape().getManager().getShapeIdManager();
+            opt_shapeIdManager = scope.getAffiliationSectionShape().getManager().getShapeIdManager();
           }
           var referenceShape = layout.getShapeForShapeId(refId, opt_shapeIdManager);
         }
@@ -1774,7 +1774,7 @@ thin.editor.TblockShape.prototype.setDisplayForPropPane = function(formatType) {
 thin.editor.TblockShape.prototype.setInitShapeProperties = function(properties) {
   var opt_shapeIdManager;
   if (this.isAffiliationListShape()) {
-    opt_shapeIdManager = this.getAffiliationColumnShape().getManager().getShapeIdManager();
+    opt_shapeIdManager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
   }
 
   this.setShapeId(this.getLayout().getNextShapeId(

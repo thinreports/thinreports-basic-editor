@@ -22,7 +22,7 @@ goog.require('goog.math.Coordinate');
 goog.require('goog.ui.Dialog');
 goog.require('goog.ui.Dialog.EventType');
 goog.require('thin.editor.ListHelper');
-goog.require('thin.editor.ListHelper.ColumnName');
+goog.require('thin.editor.ListHelper.SectionName');
 goog.require('thin.editor.AbstractDragger');
 goog.require('thin.editor.AbstractDragger.EventType');
 goog.require('thin.editor.HistoryManager');

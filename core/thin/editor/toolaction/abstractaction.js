@@ -97,8 +97,8 @@ thin.editor.toolaction.AbstractAction.prototype.disposeDrawLayer = function() {
   drawLayer.setVisibled(false);
 
   var listDrawLayer;
-  listHelper.forEachColumnBand(function(columnBand, columnName) {
-    listDrawLayer = columnBand.getDrawLayer();
+  listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
+    listDrawLayer = sectionHelper.getDrawLayer();
     listDrawLayer.dispose();
     listDrawLayer.setVisibled(false);
   }, this);
@@ -115,8 +115,8 @@ thin.editor.toolaction.AbstractAction.prototype.disposeSelectorLayer = function(
   surface.dispose();
   surface.setVisibled(false);
 
-  helpers.getListHelper().forEachColumnBand(function(columnBand, columnName) {
-    columnBand.getSelectorLayer().dispose();
+  helpers.getListHelper().forEachSectionHelper(function(sectionHelper, sectionName) {
+    sectionHelper.getSelectorLayer().dispose();
   }, this);
 };
 
@@ -170,8 +170,8 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
     var oldShapesByListShape = activeShapeManagerByListShape.getClone();
-    var captureActiveColumnName = listHelper.getActiveColumnName();
-    var newActiveColumnName = listHelper.getColumnNameByDrawLayer(handler);
+    var captureActiveSectionName = listHelper.getActiveSectionName();
+    var newActiveSectionName = listHelper.getSectionNameByDrawLayer(handler);
   }
 
   layout.getWorkspace().normalVersioning(function(version) {
@@ -186,7 +186,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
           activeShapeManager.clear();
         } else {
           activeShapeManagerByListShape.clear();
-          listHelper.setActiveColumnName(newActiveColumnName);
+          listHelper.setActiveSectionName(newActiveSectionName);
         }
         thin.ui.setEnabledForFontUi(false);
         thin.ui.getComponent('proppane').updateAsync(function() {
@@ -203,11 +203,11 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
           manager.setActiveShape(shape);
         } else {
           activeShapeManagerByListShape.clear();
-          var newActiveColumnShape = listHelper.getTarget().getColumnShape(newActiveColumnName);
-          layout.appendChild(shape, newActiveColumnShape.getGroup());
-          newActiveColumnShape.getManager().addShape(shape, newActiveColumnShape);
+          var newActiveSectionShape = listHelper.getTarget().getSectionShape(newActiveSectionName);
+          layout.appendChild(shape, newActiveSectionShape.getGroup());
+          newActiveSectionShape.getManager().addShape(shape, newActiveSectionShape);
           listHelper.setActiveShape(shape);
-          listHelper.setActiveColumnName(newActiveColumnName);
+          listHelper.setActiveSectionName(newActiveSectionName);
           
         }
         shape.setInitShapeProperties(shapeProperties);
@@ -261,7 +261,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
           listHelper.active(singleShapeByGlobal);
         }
         activeShapeManagerByListShape.set(oldShapesByListShape);
-        listHelper.setActiveColumnName(captureActiveColumnName);
+        listHelper.setActiveSectionName(captureActiveSectionName);
         
         if (activeShapeManagerByListShape.isEmpty()) {
           singleShapeByGlobal.updateProperties();
