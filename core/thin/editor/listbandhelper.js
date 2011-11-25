@@ -357,16 +357,16 @@ thin.editor.ListBandHelper.Separator = function(layout) {
   this.line_ = this.createLine_();
   
   /**
-   * @type {thin.editor.Ellipse}
+   * @type {thin.editor.Rect}
    * @private
    */
-  this.leftLever_ = this.createLever_();
+  this.leftHandle_ = this.createHandle_();
   
   /**
-   * @type {thin.editor.Ellipse}
+   * @type {thin.editor.Rect}
    * @private
    */
-  this.rightLever_ = this.createLever_();
+  this.rightHandle_ = this.createHandle_();
 
   goog.base(this, layout);
   this.setVisibled(false);
@@ -375,10 +375,21 @@ goog.inherits(thin.editor.ListBandHelper.Separator, thin.editor.Component);
 
 
 /**
- * @type {number}
+ * @enum {number}
  * @private
  */
-thin.editor.ListBandHelper.Separator.DEFAULT_LEVER_SIZE_ = 10;
+thin.editor.ListBandHelper.Separator.DefaultHandleSetting_ = {
+  WIDTH: 3,
+  HEIGHT: 13,
+  INTERVAL: 1.5
+};
+
+
+/**
+ * @type {goog.graphics.SolidFill}
+ * @private
+ */
+thin.editor.ListBandHelper.Separator.FILL_ = new goog.graphics.SolidFill('#AAAAAA', 0.6);
 
 
 /**
@@ -393,20 +404,13 @@ thin.editor.ListBandHelper.Separator.prototype.createLine_ = function() {
 
 
 /**
- * @return {thin.editor.Ellipse}
+ * @return {thin.editor.Rect}
  * @private
  */
-thin.editor.ListBandHelper.Separator.prototype.createLever_ = function() {
+thin.editor.ListBandHelper.Separator.prototype.createHandle_ = function() {
   var layout = this.layout_;
-  var lever = new thin.editor.Ellipse(
-                      layout.createSvgElement('ellipse'),
-                      layout, new goog.graphics.Stroke('1px', '#FFFFFF'), 
-                      thin.editor.ListBandHelper.FILL_);
-
-  var size = thin.editor.ListBandHelper.Separator.DEFAULT_LEVER_SIZE_;
-  lever.setWidth(size);
-  lever.setHeight(size);
-  return lever;
+  return new thin.editor.Rect(layout.createSvgElement('rect'),
+                layout, null, thin.editor.ListBandHelper.Separator.FILL_);
 };
 
 
@@ -427,8 +431,8 @@ thin.editor.ListBandHelper.Separator.prototype.setup = function() {
   this.setCursor(cursor);
   layout.setElementCursor(this.getElement(), cursor);
   layout.appendChild(this.line_, this);
-  layout.appendChild(this.leftLever_, this);
-  layout.appendChild(this.rightLever_, this);
+  layout.appendChild(this.leftHandle_, this);
+  layout.appendChild(this.rightHandle_, this);
 };
 
 
@@ -552,15 +556,8 @@ thin.editor.ListBandHelper.Separator.prototype.init = function(sectionName) {
  * @param {number} left
  */
 thin.editor.ListBandHelper.Separator.prototype.setLeft = function(left) {
-  var listGuideHelper = this.layout_.getHelpers().getListHelper().getListGuideHelper();
-  var strokeWidth = listGuideHelper.getStrokeWidth();
-  var line = this.line_;
-  var leftLever = this.leftLever_;
-  var rightLever = this.rightLever_;
-
-  line.setLeft(left);
-  leftLever.setLeft(left - (leftLever.getWidth() + strokeWidth));
-  rightLever.setLeft(left + line.getWidth() + strokeWidth);
+  this.line_.setLeft(left);
+  this.setLeftForHandle_(left);
 
   left = thin.numberWithPrecision(left - this.getParentTransLateX());
   this.left_ = left;
@@ -568,15 +565,32 @@ thin.editor.ListBandHelper.Separator.prototype.setLeft = function(left) {
 
 
 /**
+ * @param {number} left
+ * @private
+ */
+thin.editor.ListBandHelper.Separator.prototype.setLeftForHandle_ = function(left) {
+  var layout = this.layout_;
+  var listGuideHelper = layout.getHelpers().getListHelper().getListGuideHelper();
+  var strokeWidth = listGuideHelper.getStrokeWidth();
+  var setting = thin.editor.ListBandHelper.Separator.DefaultHandleSetting_;
+  var interval = setting.INTERVAL / layout.getPixelScale();
+  var leftHandle = this.leftHandle_;
+
+  leftHandle.setLeft(left - (leftHandle.getWidth() + strokeWidth) - interval);
+  this.rightHandle_.setLeft(left + this.line_.getWidth() + strokeWidth + interval);
+};
+
+
+/**
  * @param {number} top
  */
 thin.editor.ListBandHelper.Separator.prototype.setTop = function(top) {
-  var leftLever = this.leftLever_;
-  var rightLever = this.rightLever_;
+  var leftHandle = this.leftHandle_;
+  var rightHandle = this.rightHandle_;
 
   this.line_.setTop(top);
-  leftLever.setTop(top - leftLever.getRadius().y);
-  rightLever.setTop(top - rightLever.getRadius().y);
+  leftHandle.setTop(top - (leftHandle.getHeight() / 2));
+  rightHandle.setTop(top - (rightHandle.getHeight() / 2));
   
   top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
@@ -599,12 +613,13 @@ thin.editor.ListBandHelper.Separator.prototype.setWidth = function(width) {
  */
 thin.editor.ListBandHelper.Separator.prototype.reapplySizeAndStroke = function() {
   this.line_.reapplySizeAndStroke();
-  var size = thin.editor.ListBandHelper.Separator.DEFAULT_LEVER_SIZE_;
-  var sizeForScale = new goog.math.Size(size, size);
+  var setting = thin.editor.ListBandHelper.Separator.DefaultHandleSetting_;
+  var sizeForScale = new goog.math.Size(setting.WIDTH, setting.HEIGHT);
   var layout = this.layout_;
-  layout.setSizeByScale(this.leftLever_, sizeForScale);
-  layout.setSizeByScale(this.rightLever_, sizeForScale);
+  layout.setSizeByScale(this.leftHandle_, sizeForScale);
+  layout.setSizeByScale(this.rightHandle_, sizeForScale);
   this.setLeft(this.getLeft());
+  this.setTop(this.getTop());
 };
 
 
@@ -621,11 +636,11 @@ thin.editor.ListBandHelper.Separator.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   
   this.line_.dispose();
-  this.leftLever_.dispose();
-  this.rightLever_.dispose();
+  this.leftHandle_.dispose();
+  this.rightHandle_.dispose();
   
   delete this.layout_;
   delete this.line_;
-  delete this.leftLever_;
-  delete this.rightLever_;
+  delete this.leftHandle_;
+  delete this.rightHandle_;
 };
