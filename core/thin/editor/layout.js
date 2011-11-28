@@ -966,7 +966,7 @@ thin.editor.Layout.prototype.getCloneShapes = function(shapes) {
     var sectionShapeForActive = listShape.getSectionShape(captureActiveSectionName);
     parentGroup = sectionShapeForActive.getGroup();
     var guide = helper.getGuideHelper();
-    clipBoardManager.setDeltaCoordinate(new goog.math.Coordinate(guide.getLeft() - listShape.getLeft(), guide.getTop() - sectionShapeForActive.getTopForSection()).clone());
+    clipBoardManager.setDeltaCoordinate(new goog.math.Coordinate(guide.getLeft() - listShape.getLeft(), guide.getTop() - sectionShapeForActive.getTop()).clone());
   }
   
   this.forEachByChildNodesIndex(shapes, this.getTargetIndexOfShapes(shapes, parentGroup), function(shape) {

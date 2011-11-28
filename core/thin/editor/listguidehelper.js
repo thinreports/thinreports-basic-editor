@@ -350,7 +350,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
     listShape.forEachSectionShape(function(sectionHelperForEach, sectionNameForEach) {
       var minLimitLeft = limitBox.right;
       var minLimitRight = limitBox.left;
-      if (sectionHelperForEach.isEnabledForSection()) {
+      if (sectionHelperForEach.isEnabled()) {
         var shapesManagerBySection = sectionHelperForEach.getManager().getShapesManager();
         if (!shapesManagerBySection.isEmpty()) {
           var boxSizeByShapes = layout.calculateActiveShapeBounds(shapesManagerBySection.get()).toBox();

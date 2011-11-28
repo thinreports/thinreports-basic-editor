@@ -1160,11 +1160,11 @@ thin.editor.ModuleShape.prototype.setDisplayForPropertyUpdate = function(e) {
 
 /**
  * @this {goog.graphics.Element}
- * @param {boolean} settingEnabled
- * @param {string} sectionNameForScope
+ * @param {boolean} enabled
+ * @param {string} sectionName
  */
-thin.editor.ModuleShape.prototype.setEnabledForSectionShapePropertyUpdate = function(
-      settingEnabled, sectionNameForScope) {
+thin.editor.ModuleShape.prototype.setSectionEnabled = function(
+      enabled, sectionName) {
 
   var scope = this;
   var layout = this.getLayout();
@@ -1175,7 +1175,7 @@ thin.editor.ModuleShape.prototype.setEnabledForSectionShapePropertyUpdate = func
   
   layout.getWorkspace().normalVersioning(function(version) {
     version.upHandler(function() {
-      listShape.setEnabledForSection(settingEnabled, sectionNameForScope);
+      listShape.setEnabledForSection(enabled, sectionName);
       listHelper.update();
       listHelper.initActiveSectionName();
       listShape.updateProperties();
@@ -1183,7 +1183,7 @@ thin.editor.ModuleShape.prototype.setEnabledForSectionShapePropertyUpdate = func
     
     version.downHandler(function() {
       listShape.setBounds(captureBounds);
-      listShape.setEnabledForSection(!settingEnabled, sectionNameForScope);
+      listShape.setEnabledForSection(!enabled, sectionName);
       listHelper.update();
       listHelper.setActiveSectionName(captureActiveSectionName);
       listShape.updateProperties();

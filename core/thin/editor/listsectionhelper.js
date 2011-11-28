@@ -151,26 +151,26 @@ thin.editor.ListSectionHelper.prototype.getSeparator = function() {
 
 /**
  * @param {thin.editor.ListShape} target
- * @param {goog.math.Rect} sectionBounds
+ * @param {goog.math.Rect} bounds
  */
-thin.editor.ListSectionHelper.prototype.update = function(target, sectionBounds) {
-  var sectionTop = sectionBounds.top;
-  var sectionWidth = sectionBounds.width;
-  var sectionHeight = sectionBounds.height;
-  this.drawLayer_.setBounds(sectionBounds);
-  this.selectorLayer_.setBounds(sectionBounds);
+thin.editor.ListSectionHelper.prototype.update = function(target, bounds) {
+  var top = bounds.top;
+  var width = bounds.width;
+  var height = bounds.height;
+  this.drawLayer_.setBounds(bounds);
+  this.selectorLayer_.setBounds(bounds);
   var label = this.label_;
-  label.setBounds(sectionBounds);
-  label.setVisibled(label.getMinHeight() <= sectionHeight &&
-                    label.getMinWidth() <= sectionWidth);
+  label.setBounds(bounds);
+  label.setVisibled(label.getMinHeight() <= height &&
+                    label.getMinWidth() <= width);
 
   var separator = this.separator_;
-  separator.setWidth(sectionWidth);
-  separator.setLeft(sectionBounds.left);
-  separator.setTop(sectionTop + sectionHeight);
-  var sectionShapeForScope = target.getSectionShape(this.sectionName_);
-  sectionShapeForScope.setTopForSection(sectionTop);
-  sectionShapeForScope.setHeightForSection(sectionHeight);
+  separator.setWidth(width);
+  separator.setLeft(bounds.left);
+  separator.setTop(top + height);
+  var sectionShape = target.getSectionShape(this.sectionName_);
+  sectionShape.setTop(top);
+  sectionShape.setHeight(height);
 };
 
 
@@ -179,11 +179,11 @@ thin.editor.ListSectionHelper.prototype.update = function(target, sectionBounds)
  * @param {boolean=} opt_visibled
  */
 thin.editor.ListSectionHelper.prototype.active = function(target, opt_visibled) {
-  var sectionShapeForScope = target.getSectionShape(this.sectionName_);
-  var isEnabledForSection = sectionShapeForScope.isEnabledForSection();
+  var sectionShape = target.getSectionShape(this.sectionName_);
+  var isEnabled = sectionShape.isEnabled();
   var separator = this.separator_;
-  separator.setVisibled(isEnabledForSection);
-  separator.getDragger().setEnabled(isEnabledForSection);
+  separator.setVisibled(isEnabled);
+  separator.getDragger().setEnabled(isEnabled);
   if (goog.isBoolean(opt_visibled)) {
     this.drawLayer_.setVisibled(opt_visibled);
   } else {
@@ -191,10 +191,10 @@ thin.editor.ListSectionHelper.prototype.active = function(target, opt_visibled) 
       this.layout_.getWorkspace().getUiStatusForAction() != 'selector');
   }
   
-  if (isEnabledForSection) {
+  if (isEnabled) {
     var selectorLayer = this.selectorLayer_;
     var selectorElement = selectorLayer.getElement();
-    goog.dom.insertSiblingBefore(selectorElement, sectionShapeForScope.getGroup().getElement());
+    goog.dom.insertSiblingBefore(selectorElement, sectionShape.getGroup().getElement());
     selectorLayer.setVisibled(true);
     goog.dom.insertSiblingBefore(this.label_.getElement(), selectorElement);
   }
@@ -473,12 +473,12 @@ thin.editor.ListSectionHelper.Separator_.prototype.init = function(sectionName) 
   goog.events.listen(dragger, eventType.BEFORESTART, function(e) {
     var listShape = listHelper.getTarget();
     var listShapeBounds = listShape.getBounds();
-    var sectionShapeForScope = listShape.getSectionShape(sectionName);
+    var sectionShape = listShape.getSectionShape(sectionName);
     
     var blankRangeHeight = listHelper.getBlankRangeBounds().height;
     var sectionBoundsByShapes = layout.calculateActiveShapeBounds(
-          sectionShapeForScope.getManager().getShapesManager().get());
-    var sectionBounds = sectionShapeForScope.getBounds();
+          sectionShape.getManager().getShapesManager().get());
+    var sectionBounds = sectionShape.getBounds();
     var limitTop = sectionBoundsByShapes.toBox().bottom || sectionBounds.top;
     this.setLimits(new goog.math.Rect(listShapeBounds.left,
                    limitTop, listShapeBounds.width, (sectionBounds.toBox().bottom + blankRangeHeight) - limitTop));
@@ -487,8 +487,8 @@ thin.editor.ListSectionHelper.Separator_.prototype.init = function(sectionName) 
   goog.events.listen(dragger, fxEventType.END, function(e) {
     var captureProperties = multipleShapesHelper.getCloneProperties();
     var listShape = listHelper.getTarget();
-    var sectionShapeForScope = listShape.getSectionShape(sectionName);
-    var captureSectionBounds = sectionShapeForScope.getBounds();
+    var sectionShape = listShape.getSectionShape(sectionName);
+    var captureSectionBounds = sectionShape.getBounds();
     var captureSectionHeight = captureSectionBounds.height;
     var captureSectionBottom = captureSectionBounds.toBox().bottom;
     var newSectionBottom = line.getTop();
@@ -507,8 +507,8 @@ thin.editor.ListSectionHelper.Separator_.prototype.init = function(sectionName) 
      * @param {goog.math.Coordinate} transLate
      */
     var updateListShape = function(sectionHeight, transLate) {
-      sectionShapeForScope.setHeightForSection(sectionHeight);
-      listHelper.setTransLateOfNextSectionShapes(transLate, sectionShapeForScope);
+      sectionShape.setHeight(sectionHeight);
+      listHelper.setTransLateOfNextSectionShapes(transLate, sectionShape);
       listHelper.update(listShape);
       if (guide.isEnable()) {
         goog.array.forEach(shapes, function(shape) {

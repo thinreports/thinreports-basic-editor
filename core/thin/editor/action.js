@@ -1695,7 +1695,7 @@ thin.editor.Action.prototype.actionShiftUp = function(e) {
       isMultipleSelect = activeShapeManagerByListShape.isMultiple();
       shapes = activeShapeManagerByListShape.getClone();
       limitTop = listHelper.getTarget().getSectionShape(
-                    listHelper.getActiveSectionName()).getTopForSection();
+                    listHelper.getActiveSectionName()).getTop();
     }
   }
   

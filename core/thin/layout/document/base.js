@@ -315,7 +315,7 @@ thin.layout.document.Base.prototype.createListData_ = function(shapes, data) {
  * @private
  */
 thin.layout.document.Base.prototype.createListSectionData_ = function(section, sectionName, listData) {
-  if (section && section.isEnabledForSection()) {
+  if (section && section.isEnabled()) {
     var shapes = [];
     goog.array.insert(listData.sections, {
       name: sectionName,

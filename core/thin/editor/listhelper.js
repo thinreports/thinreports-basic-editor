@@ -311,7 +311,7 @@ thin.editor.ListHelper.prototype.setTransLate = function(translate) {
  * @param {thin.editor.ListSectionShape} startSectionShape
  */
 thin.editor.ListHelper.prototype.setTransLateOfNextSectionShapes = function(translate, startSectionShape) {
-  goog.array.forEach(startSectionShape.getNextSectionShapesForArray(), function(sectionShapeForEach) {
+  goog.array.forEach(startSectionShape.getNextSectionShapes(), function(sectionShapeForEach) {
     sectionShapeForEach.setTransLate(translate);
   });
 };
@@ -499,9 +499,9 @@ thin.editor.ListHelper.prototype.calculateSectionBoundsForUpdate = function(list
   var sectionBounds = {};
   var sectionNameForHeader = thin.editor.ListHelper.SectionName.HEADER;
   var sectionShapeForHeader = listShape.getSectionShape(sectionNameForHeader);
-  var sectionHeightForHeader = sectionShapeForHeader.getHeightForSection();
+  var sectionHeightForHeader = sectionShapeForHeader.getHeight();
   if(!goog.isNumber(sectionHeightForHeader)) {
-    sectionHeightForHeader = sectionShapeForHeader.getHeightForDefault();
+    sectionHeightForHeader = sectionShapeForHeader.getDefaultHeight();
   }
   sectionBounds[sectionNameForHeader] = new goog.math.Rect(
       listShapeLeft, listShapeBounds.top, 
@@ -510,13 +510,13 @@ thin.editor.ListHelper.prototype.calculateSectionBoundsForUpdate = function(list
   var sectionNamaForNext;
   var previousSectionBounds;
   var sectionHeightForScope;
-  goog.array.forEach(sectionShapeForHeader.getNextSectionShapesForArray(),
+  goog.array.forEach(sectionShapeForHeader.getNextSectionShapes(),
     function(sectionShapeForNext) {
       sectionNamaForNext = sectionShapeForNext.getSectionName();
       previousSectionBounds = sectionBounds[sectionShapeForNext.getPreviousSectionShape().getSectionName()];
-      sectionHeightForScope = sectionShapeForNext.getHeightForSection();
+      sectionHeightForScope = sectionShapeForNext.getHeight();
       if(!goog.isNumber(sectionHeightForScope)) {
-        sectionHeightForScope = sectionShapeForNext.getHeightForDefault();
+        sectionHeightForScope = sectionShapeForNext.getDefaultHeight();
       }
       sectionBounds[sectionNamaForNext] = new goog.math.Rect(
           listShapeLeft, previousSectionBounds.toBox().bottom,

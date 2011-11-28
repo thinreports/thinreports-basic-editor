@@ -172,8 +172,8 @@ thin.editor.ListShape.createFromElement = function(groupElement, layout) {
                           groupElement.childNodes);
     var transLateCoordinate = thin.editor.ShapeStructure.getTransLateCoordinate(sectionElement);
     sectionGroup.setTransformation(transLateCoordinate.x, transLateCoordinate.y, 0, 0, 0);
-    sectionShapeForScope.setTopForSection(Number(layout.getElementAttribute(sectionElement, 'x-top')));
-    sectionShapeForScope.setHeightForSection(Number(layout.getElementAttribute(sectionElement, 'x-height')));
+    sectionShapeForScope.setTop(Number(layout.getElementAttribute(sectionElement, 'x-top')));
+    sectionShapeForScope.setHeight(Number(layout.getElementAttribute(sectionElement, 'x-height')));
     
     goog.array.forEach(sectionElement.childNodes, function(element) {
       layout.drawBasicShapeFromElement(element, sectionShapeForScope);
@@ -412,7 +412,7 @@ thin.editor.ListShape.prototype.setEnabledForSection = function(enabled, section
   var captureListShapeHeight = this.getHeight();
   var sectionHelperForScope = listHelper.getSectionHelper(sectionNameForScope);
   var sectionShapeForScope = this.getSectionShape(sectionNameForScope);
-  sectionShapeForScope.setEnabledForSection(enabled);
+  sectionShapeForScope.setEnabled(enabled);
   layout.setVisibled(sectionShapeForScope.getGroup(), enabled);
   this.setEnabledForSectionInternal(enabled, 
       thin.editor.ListShape.ClassIds[sectionNameForScope]);
@@ -420,7 +420,7 @@ thin.editor.ListShape.prototype.setEnabledForSection = function(enabled, section
   if (enabled) {
     var newSectionHeight = sectionShapeForScope.getHeightForLastActive();
     if (!goog.isNumber(newSectionHeight)) {
-      newSectionHeight = sectionShapeForScope.getHeightForDefault();
+      newSectionHeight = sectionShapeForScope.getDefaultHeight();
     }
 
     var blankRangeHeight = listHelper.getBlankRangeBounds().height;
@@ -442,7 +442,7 @@ thin.editor.ListShape.prototype.setEnabledForSection = function(enabled, section
       }
     }
 
-    sectionShapeForScope.setHeightForSection(newSectionHeight);
+    sectionShapeForScope.setHeight(newSectionHeight);
     sectionShapeForScope.initHeightForLastActive();
 
     var captureListShapeLeft = this.getLeft();
@@ -463,9 +463,9 @@ thin.editor.ListShape.prototype.setEnabledForSection = function(enabled, section
         sectionShapeForScope);
     sectionHelperForScope.active(this);
   } else {
-    var captureSectionHeight = sectionShapeForScope.getHeightForSection();
+    var captureSectionHeight = sectionShapeForScope.getHeight();
     sectionShapeForScope.setHeightForLastActive(captureSectionHeight);
-    sectionShapeForScope.setHeightForSection(0);
+    sectionShapeForScope.setHeight(0);
     listHelper.setTransLateOfNextSectionShapes(
         new goog.math.Coordinate(0, -captureSectionHeight), sectionShapeForScope);
     sectionHelperForScope.inactive();
@@ -539,13 +539,13 @@ thin.editor.ListShape.prototype.setHeightForSectionShape = function(unlimitedHei
   var guide = helpers.getGuideHelper();
   var listHelper = helpers.getListHelper();
   var sectionShapeForScope = this.getSectionShape(sectionNameForScope);
-  var captureSectionHeight = sectionShapeForScope.getHeightForSection();
+  var captureSectionHeight = sectionShapeForScope.getHeight();
   var allowHeight = this.getAllowHeight(unlimitedHeight);
 
   if(captureSectionHeight > allowHeight) {
     var sectionBottomByShapes = layout.calculateActiveShapeBounds(
           sectionShapeForScope.getManager().getShapesManager().get()).toBox().bottom;
-    var sectionContentHeight = sectionBottomByShapes - sectionShapeForScope.getTopForSection();
+    var sectionContentHeight = sectionBottomByShapes - sectionShapeForScope.getTop();
     var limitHeight = sectionContentHeight || 0;
     if(allowHeight < limitHeight) {
       allowHeight = limitHeight;
@@ -566,7 +566,7 @@ thin.editor.ListShape.prototype.setHeightForSectionShape = function(unlimitedHei
    * @param {goog.math.Coordinate} transLate
    */
   var updateListShape = function(sectionHeight, transLate) {
-    sectionShapeForScope.setHeightForSection(sectionHeight);
+    sectionShapeForScope.setHeight(sectionHeight);
     listHelper.setTransLateOfNextSectionShapes(transLate, sectionShapeForScope);
     listHelper.update(scope);
     if (guide.isEnable()) {
@@ -700,7 +700,7 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
     
           scope.forEachSectionShape(function(sectionShapeForEach, sectionNameForEach) {
             var minLimitRight = allowRight;
-            if (sectionShapeForEach.isEnabledForSection()) {
+            if (sectionShapeForEach.isEnabled()) {
               var shapesManagerBySection = sectionShapeForEach.getManager().getShapesManager();
               if (!shapesManagerBySection.isEmpty()) {
                 var contentRight = layout.calculateActiveShapeBounds(shapesManagerBySection.get()).toBox().right;
@@ -818,8 +818,7 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   var headerEnabledCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('ヘッダー');
   headerEnabledCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        this.setEnabledForSectionShapePropertyUpdate(
-            e.target.isChecked(), sectionName.HEADER);
+        this.setSectionEnabled(e.target.isChecked(), sectionName.HEADER);
       }, false, this);
   
   proppane.addProperty(headerEnabledCheckProperty, listGroup, 'list-header-enable');
@@ -828,8 +827,7 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   var pageFooterEnabledCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('ページフッター');
   pageFooterEnabledCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        this.setEnabledForSectionShapePropertyUpdate(
-            e.target.isChecked(), sectionName.PAGEFOOTER);
+        this.setSectionEnabled(e.target.isChecked(), sectionName.PAGEFOOTER);
       }, false, this);
   
   proppane.addProperty(pageFooterEnabledCheckProperty, listGroup, 'list-pagefooter-enable');
@@ -838,8 +836,7 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
   var footerEnabledCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('フッター');
   footerEnabledCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        this.setEnabledForSectionShapePropertyUpdate(
-            e.target.isChecked(), sectionName.FOOTER);
+        this.setSectionEnabled(e.target.isChecked(), sectionName.FOOTER);
       }, false, this);
   
   proppane.addProperty(footerEnabledCheckProperty, listGroup, 'list-footer-enable');
@@ -897,9 +894,9 @@ thin.editor.ListShape.prototype.updateProperties = function() {
       proppane.getPropertyControl('height').setValue(this.getHeight());
       proppane.getPropertyControl('display').setChecked(this.getDisplay());
       
-      proppane.getPropertyControl('list-header-enable').setChecked(this.getSectionShape(sectionName.HEADER).isEnabledForSection());
-      proppane.getPropertyControl('list-pagefooter-enable').setChecked(this.getSectionShape(sectionName.PAGEFOOTER).isEnabledForSection());
-      proppane.getPropertyControl('list-footer-enable').setChecked(this.getSectionShape(sectionName.FOOTER).isEnabledForSection());
+      proppane.getPropertyControl('list-header-enable').setChecked(this.getSectionShape(sectionName.HEADER).isEnabled());
+      proppane.getPropertyControl('list-pagefooter-enable').setChecked(this.getSectionShape(sectionName.PAGEFOOTER).isEnabled());
+      proppane.getPropertyControl('list-footer-enable').setChecked(this.getSectionShape(sectionName.FOOTER).isEnabled());
       proppane.getPropertyControl('list-changing-page').setChecked(this.isChangingPage());
       
       proppane.getPropertyControl('shape-id').setValue(this.getShapeId());
