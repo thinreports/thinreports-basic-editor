@@ -671,7 +671,7 @@ thin.setup = function() {
               
               if (goog.string.isEmpty(userWidth) ||
                   goog.string.isEmpty(userHeight)) {              
-                new thin.ui.Message.alert('用紙設定が未入力です。', 'Error', function() {
+                thin.ui.Message.alert('用紙設定が未入力です。', 'Error', function() {
                   dialog.focus();
                 });
                 return false;

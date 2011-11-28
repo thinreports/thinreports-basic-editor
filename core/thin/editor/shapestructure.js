@@ -437,10 +437,10 @@ thin.editor.ShapeStructure.serializeToContent = function(childNodes) {
  */
 thin.editor.ShapeStructure.forEachShapeAttribute_ = function(shape, f) {
   var attrName;
-  goog.array.forEach(shape.attributes, function(attr) {
+  for(var i = 0, attr; attr = shape.attributes[i]; i++) {
     attrName = attr.name;
     if (!/^x-/.test(attrName) && attrName != 'class' && attrName != 'style') {
-      f.call(this, attrName, attr.value);
+      f(attrName, attr.value);
     }
-  });
+  }
 };

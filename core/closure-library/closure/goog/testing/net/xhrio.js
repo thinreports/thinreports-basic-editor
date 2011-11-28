@@ -65,7 +65,7 @@ goog.inherits(goog.testing.net.XhrIo, goog.events.EventTarget);
 /**
  * All non-disposed instances of goog.testing.net.XhrIo created
  * by {@link goog.testing.net.XhrIo.send} are in this Array.
- * @see goog.testing.net.XhrIo.cleanupAllPendingStaticSends
+ * @see goog.testing.net.XhrIo.cleanup
  * @type {Array.<goog.testing.net.XhrIo>}
  * @private
  */
@@ -79,6 +79,19 @@ goog.testing.net.XhrIo.sendInstances_ = [];
  */
 goog.testing.net.XhrIo.getSendInstances = function() {
   return goog.testing.net.XhrIo.sendInstances_;
+};
+
+
+/**
+ * Disposes all non-disposed instances of goog.testing.net.XhrIo created by
+ * {@link goog.testing.net.XhrIo.send}.
+ * @see goog.net.XhrIo.cleanup
+ */
+goog.testing.net.XhrIo.cleanup = function() {
+  var instances = goog.testing.net.XhrIo.sendInstances_;
+  while (instances.length) {
+    instances.pop().dispose();
+  }
 };
 
 
@@ -152,11 +165,19 @@ goog.testing.net.XhrIo.prototype.lastUri_ = '';
 
 
 /**
+ * Last HTTP method that was requested.
+ * @type {string|undefined}
+ * @private
+ */
+goog.testing.net.XhrIo.prototype.lastMethod_;
+
+
+/**
  * Last POST content that was requested.
  * @type {string|undefined}
  * @private
  */
-goog.testing.net.XhrIo.prototype.lastContent_ = undefined;
+goog.testing.net.XhrIo.prototype.lastContent_;
 
 
 /**
@@ -164,7 +185,7 @@ goog.testing.net.XhrIo.prototype.lastContent_ = undefined;
  * @type {Object|goog.structs.Map|undefined}
  * @private
  */
-goog.testing.net.XhrIo.prototype.lastHeaders_ = undefined;
+goog.testing.net.XhrIo.prototype.lastHeaders_;
 
 
 /**
@@ -362,6 +383,7 @@ goog.testing.net.XhrIo.prototype.send = function(url, opt_method, opt_content,
   }
 
   this.lastUri_ = url;
+  this.lastMethod_ = opt_method || 'GET';
   this.lastContent_ = opt_content;
   this.lastHeaders_ = opt_headers;
 
@@ -532,6 +554,15 @@ goog.testing.net.XhrIo.prototype.getLastError = function() {
  */
 goog.testing.net.XhrIo.prototype.getLastUri = function() {
   return this.lastUri_;
+};
+
+
+/**
+ * Gets the last HTTP method that was requested.
+ * @return {string|undefined} Last HTTP method used by send.
+ */
+goog.testing.net.XhrIo.prototype.getLastMethod = function() {
+  return this.lastMethod_;
 };
 
 

@@ -489,7 +489,7 @@ thin.ui.Dialog.ButtonSet.prototype.dispose = function() {
 thin.ui.Dialog.ButtonSet.typeOk = function() {
   var keys = goog.ui.Dialog.DefaultButtonKeys;
   return thin.ui.Dialog.ButtonSet.generate(
-      [keys.OK, goog.getMsg('OK'), null, true, true]);
+      [keys.OK, 'OK', null, true, true]);
 };
 
 
@@ -499,8 +499,8 @@ thin.ui.Dialog.ButtonSet.typeOk = function() {
 thin.ui.Dialog.ButtonSet.typeOkCancel = function() {
   var keys = goog.ui.Dialog.DefaultButtonKeys;
   return thin.ui.Dialog.ButtonSet.generate(
-      [keys.OK, goog.getMsg('OK'), null, true], 
-      [keys.CANCEL, goog.getMsg('Cancel'), null, false, true]);
+      [keys.OK, 'OK', null, true], 
+      [keys.CANCEL, 'Cancel', null, false, true]);
 };
 
 
@@ -510,8 +510,8 @@ thin.ui.Dialog.ButtonSet.typeOkCancel = function() {
 thin.ui.Dialog.ButtonSet.typeYesNo = function() {
   var keys = goog.ui.Dialog.DefaultButtonKeys;
   return thin.ui.Dialog.ButtonSet.generate(
-      [keys.YES, goog.getMsg('Yes'), null, true], 
-      [keys.NO, goog.getMsg('No'), null, false, true]);
+      [keys.YES, 'Yes', null, true], 
+      [keys.NO, 'No', null, false, true]);
 };
 
 
@@ -521,9 +521,9 @@ thin.ui.Dialog.ButtonSet.typeYesNo = function() {
 thin.ui.Dialog.ButtonSet.typeYesNoCancel = function() {
   var keys = goog.ui.Dialog.DefaultButtonKeys;
   return thin.ui.Dialog.ButtonSet.generate(
-      [keys.YES, goog.getMsg('Yes')], 
-      [keys.NO, goog.getMsg('No'), null, true], 
-      [keys.CANCEL, goog.getMsg('Cancel'), null, false, true]);
+      [keys.YES, 'Yes'], 
+      [keys.NO, 'No', null, true], 
+      [keys.CANCEL, 'Cancel', null, false, true]);
 };
 
 

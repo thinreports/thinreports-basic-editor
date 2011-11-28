@@ -1442,12 +1442,7 @@ goog.dom.getOwnerDocument = function(node) {
  * @return {!Document} The frame content document.
  */
 goog.dom.getFrameContentDocument = function(frame) {
-  var doc;
-  if (goog.userAgent.WEBKIT) {
-    doc = (frame.document || frame.contentWindow.document);
-  } else {
-    doc = (frame.contentDocument || frame.contentWindow.document);
-  }
+  var doc = frame.contentDocument || frame.contentWindow.document;
   return doc;
 };
 
@@ -1906,6 +1901,28 @@ goog.dom.getAncestor = function(
     steps++;
   }
   // Reached the root of the DOM without a match
+  return null;
+};
+
+
+/**
+ * Determines the active element in the given document.
+ * @param {Document} doc The document to look in.
+ * @return {Element} The active element.
+ */
+goog.dom.getActiveElement = function(doc) {
+  try {
+    return doc && doc.activeElement;
+  } catch (e) {
+    // NOTE(nicksantos): Sometimes, evaluating document.activeElement in IE
+    // throws an exception. I'm not 100% sure why, but I suspect it chokes
+    // on document.activeElement if the activeElement has been recently
+    // removed from the DOM by a JS operation.
+    //
+    // We assume that an exception here simply means
+    // "there is no active element."
+  }
+
   return null;
 };
 

@@ -69,7 +69,7 @@ thin.ui.Message.prototype.createDom = function() {
 thin.ui.Message.alert = function(message, opt_title, opt_callback) {
   var msg = new thin.ui.Message(thin.ui.getCssName('thin-alert'));
   
-  msg.setTitle(opt_title || goog.getMsg('Message'));
+  msg.setTitle(opt_title || 'Message');
   msg.setContent(message);
   
   if (goog.isFunction(opt_callback)) {
@@ -91,7 +91,7 @@ thin.ui.Message.confirm = function(message, opt_title, opt_callback, opt_buttonS
   var msg = new thin.ui.Message(thin.ui.getCssName('thin-confirm'));
   
   msg.setButtonSet(opt_buttonSet || thin.ui.Dialog.ButtonSet.typeOkCancel());
-  msg.setTitle(opt_title || goog.getMsg('Confirm'));
+  msg.setTitle(opt_title || 'Confirm');
   msg.setContent(message);
   
   if (goog.isFunction(opt_callback)) {
