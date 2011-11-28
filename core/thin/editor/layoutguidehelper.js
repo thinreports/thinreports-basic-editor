@@ -183,13 +183,9 @@ thin.editor.LayoutGuideHelper.prototype.getGuides = function() {
  * @return {Array}
  */
 thin.editor.LayoutGuideHelper.prototype.getXPositions = function() {
-  if (this.isEnable()) {
-    return goog.array.map(this.xlines_, function(xline) {
-      return xline.getLeft();
-    });
-  } else {
-    return [];
-  }
+  return goog.array.map(this.xlines_, function(xline) {
+    return xline.getLeft();
+  });
 };
 
 
@@ -197,13 +193,9 @@ thin.editor.LayoutGuideHelper.prototype.getXPositions = function() {
  * @return {Array}
  */
 thin.editor.LayoutGuideHelper.prototype.getYPositions = function() {
-  if (this.isEnable()) {
-    return goog.array.map(this.ylines_, function(yline) {
-      return yline.getTop();
-    });
-  } else {
-    return [];
-  }
+  return goog.array.map(this.ylines_, function(yline) {
+    return yline.getTop();
+  });
 };
 
 

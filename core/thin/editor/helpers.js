@@ -262,7 +262,11 @@ thin.editor.Helpers.prototype.appendBack = function(element) {
  * @return {Array}
  */
 thin.editor.Helpers.prototype.getAdsorptionX = function() {
-  return goog.array.concat(this.layoutGuideHelper_.getXPositions(),
+  var layoutGuideXPositions = [];
+  if (this.layoutGuideHelper_.isEnable()) {
+    layoutGuideXPositions = this.layoutGuideHelper_.getXPositions();
+  }
+  return goog.array.concat(layoutGuideXPositions,
                            this.marginGuideHelper_.getXPositions());
 };
 
@@ -271,7 +275,11 @@ thin.editor.Helpers.prototype.getAdsorptionX = function() {
  * @return {Array}
  */
 thin.editor.Helpers.prototype.getAdsorptionY = function() {
-  return goog.array.concat(this.layoutGuideHelper_.getYPositions(),
+  var layoutGuideYPositions = [];
+  if (this.layoutGuideHelper_.isEnable()) {
+    layoutGuideYPositions = this.layoutGuideHelper_.getYPositions();
+  }
+  return goog.array.concat(layoutGuideYPositions,
                            this.marginGuideHelper_.getYPositions());
 };
 

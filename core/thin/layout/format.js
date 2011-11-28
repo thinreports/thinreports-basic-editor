@@ -30,7 +30,7 @@ goog.require('thin.Compatibility');
 thin.layout.Format = function(opt_format) {
   goog.Disposable.call(this);
 
-  this.helper_ = {};
+  this.state_ = {};
   var currentVersion = thin.getVersion();
   
   if (goog.isDefAndNotNull(opt_format) && goog.isObject(opt_format)) {
@@ -39,13 +39,13 @@ thin.layout.Format = function(opt_format) {
     this.page = this.setPage(opt_format['config']);
     
     var formatVersion = opt_format['version'];
-    var helper = opt_format['helper'];
+    var state = opt_format['state'];
     var guides;
 
     this.isOverWritableVersion_ = thin.Compatibility.check(currentVersion, '>', formatVersion);
     this.version_ = formatVersion;
 
-    if (helper && (guides = helper['layout-guide'])) {
+    if (state && (guides = state['layout-guide'])) {
       this.setLayoutGuides(guides);
     }
   } else {
@@ -93,7 +93,7 @@ thin.layout.Format.prototype.svg_;
  * @type {Object}
  * @private
  */
-thin.layout.Format.prototype.helper_;
+thin.layout.Format.prototype.state_;
 
 
 /**
@@ -118,7 +118,7 @@ thin.layout.Format.prototype.toJSON = function() {
     "finger-print": this.fingerPrint_,
     "config": this.page.toHash(),
     "svg": this.svg_,
-    "helper": {
+    "state": {
       "layout-guide": this.getLayoutGuides()
     }
   });
@@ -153,7 +153,7 @@ thin.layout.Format.prototype.getSvg = function() {
  * @return {Array}
  */
 thin.layout.Format.prototype.getLayoutGuides = function() {
-  return this.helper_['layout-guide'] || [];
+  return this.state_['layout-guide'] || [];
 };
 
 
@@ -177,7 +177,7 @@ thin.layout.Format.prototype.getVersion = function() {
  * @param {Array} guides
  */
 thin.layout.Format.prototype.setLayoutGuides = function(guides) {
-  this.helper_['layout-guide'] = guides;
+  this.state_['layout-guide'] = guides;
 };
 
 
