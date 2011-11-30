@@ -184,12 +184,9 @@ thin.editor.Helpers.prototype.setup = function() {
   surface.setVisibled(true);
   this.surface_ = surface;
   
-  this.canvas_ = new thin.editor.Rect(layout.createSvgElement('rect', {
-    'x': canvasBounds.left,
-    'y': canvasBounds.top,
-    'width': canvasBounds.width,
-    'height': canvasBounds.height
-  }), layout, null, new goog.graphics.SolidFill('#FFFFFF'));
+  this.canvas_ = new thin.editor.Rect(layout.createSvgElement('rect'),
+                        layout, null, new goog.graphics.SolidFill('#FFFFFF'));
+  this.canvas_.setBounds(canvasBounds);
   
   var drawLayer = new thin.editor.Layer(layout);
   drawLayer.setCursor(new thin.editor.Cursor(cursorType['CROSSHAIR']));
@@ -452,114 +449,114 @@ thin.editor.Helpers.prototype.getSelectorOutline = function() {
 
 
 /**
- * @param {Object} attr
+ * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {Object=} opt_attr
  * @return {thin.editor.RectOutline}
  */
-thin.editor.Helpers.prototype.createRectOutline = function(attr, stroke, fill, helper) {
-  var layout = this.layout_;
+thin.editor.Helpers.prototype.createRectOutline = function(helper, stroke, fill, opt_attr) {
   var rectOutline = new thin.editor.RectOutline(
-               layout.createSvgElement('rect', attr), layout, stroke, fill);
+                           this.layout_.createSvgElement('rect', opt_attr),
+                           this.layout_, stroke, fill);
   rectOutline.setOutlineHelper(helper);
   return rectOutline;
 };
 
 
 /**
- * @param {Object} attr
+ * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {Object=} opt_attr
  * @return {thin.editor.EllipseOutline}
  */
-thin.editor.Helpers.prototype.createEllipseOutline = function(attr, stroke, fill, helper) { 
-  var layout = this.layout_;
+thin.editor.Helpers.prototype.createEllipseOutline = function(helper, stroke, fill, opt_attr) {
   var ellipseOutline = new thin.editor.EllipseOutline(
-                  layout.createSvgElement('ellipse', attr), layout, stroke, fill);
+                              this.layout_.createSvgElement('ellipse', opt_attr),
+                              this.layout_, stroke, fill);
   ellipseOutline.setOutlineHelper(helper);
   return ellipseOutline;
 };
 
 
 /**
- * @param {Object} attr
- * @param {goog.graphics.Stroke?} stroke
  * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {goog.graphics.Stroke?} stroke
+ * @param {Object=} opt_attr
  * @return {thin.editor.LineOutline}
  */
-thin.editor.Helpers.prototype.createLineOutline = function(attr, stroke, helper) {
-  var layout = this.layout_;
+thin.editor.Helpers.prototype.createLineOutline = function(helper, stroke, opt_attr) {
   var lineOutline = new thin.editor.LineOutline(
-               layout.createSvgElement('line', attr), layout, stroke);
+                          this.layout_.createSvgElement('line', opt_attr),
+                          this.layout_, stroke);
   lineOutline.setOutlineHelper(helper);
   return lineOutline;
 };
 
 
 /**
- * @param {Object} attr
+ * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {Object=} opt_attr
  * @return {thin.editor.TblockOutline}
  * @private
  */
-thin.editor.Helpers.prototype.createTblockOutline = function(attr, stroke, fill, helper) {
-  var layout = this.layout_;
+thin.editor.Helpers.prototype.createTblockOutline = function(helper, stroke, fill, opt_attr) {
   var tblockOutline = new thin.editor.TblockOutline(
-                 layout.createSvgElement('rect', attr), layout, stroke, fill);
+                            this.layout_.createSvgElement('rect', opt_attr), 
+                            this.layout_, stroke, fill);
   tblockOutline.setOutlineHelper(helper);
   return tblockOutline;
 };
 
 
 /**
- * @param {Object} attr
+ * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {Object=} opt_attr
  * @return {thin.editor.ImageblockOutline}
  * @private
  */
-thin.editor.Helpers.prototype.createImageblockOutline = function(attr, stroke, fill, helper) {
-  var layout = this.layout_;
+thin.editor.Helpers.prototype.createImageblockOutline = function(helper, stroke, fill, opt_attr) {
   var iblockOutline = new thin.editor.ImageblockOutline(
-                 layout.createSvgElement('rect', attr), layout, stroke, fill);
+                            this.layout_.createSvgElement('rect', opt_attr),
+                            this.layout_, stroke, fill);
   iblockOutline.setOutlineHelper(helper);
   return iblockOutline;
 };
 
 
 /**
- * @param {Object} attr
+ * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {Object=} opt_attr
  * @return {thin.editor.TextOutline}
  * @private
  */
-thin.editor.Helpers.prototype.createTextOutline = function(attr, stroke, fill, helper) {
-  var layout = this.layout_;
+thin.editor.Helpers.prototype.createTextOutline = function(helper, stroke, fill, opt_attr) {
   var textOutline = new thin.editor.TextOutline(
-               layout.createSvgElement('rect', attr), layout, stroke, fill);  
+                          this.layout_.createSvgElement('rect', opt_attr),
+                          this.layout_, stroke, fill);  
   textOutline.setOutlineHelper(helper);
   return textOutline;
 };
 
 
 /**
- * @param {Object} attr
+ * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {Object=} opt_attr
  * @return {thin.editor.ImageOutline}
  */
-thin.editor.Helpers.prototype.createImageOutline = function(attr, stroke, fill, helper) {
-  var layout = this.layout_;
+thin.editor.Helpers.prototype.createImageOutline = function(helper, stroke, fill, opt_attr) {
   var imageOutline = new thin.editor.ImageOutline(
-               layout.createSvgElement('rect', attr), layout, stroke, fill);
+                            this.layout_.createSvgElement('rect', opt_attr),
+                            this.layout_, stroke, fill);
   imageOutline.setOutlineHelper(helper);
   return imageOutline;
 };
@@ -585,16 +582,16 @@ thin.editor.Helpers.prototype.disableAll = function() {
 
 
 /**
- * @param {Object} attr
+ * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {Object=} opt_attr
  * @return {thin.editor.ListOutline}
  */
-thin.editor.Helpers.prototype.createListOutline = function(attr, stroke, fill, helper) {
-  var layout = this.layout_;
+thin.editor.Helpers.prototype.createListOutline = function(helper, stroke, fill, opt_attr) {
   var rect = new thin.editor.ListOutline(
-               layout.createSvgElement('rect', attr), layout, stroke, fill);
+                    this.layout_.createSvgElement('rect', opt_attr),
+                    this.layout_, stroke, fill);
   rect.setOutlineHelper(helper);
   return rect;
 };

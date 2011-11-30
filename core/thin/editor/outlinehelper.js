@@ -225,39 +225,19 @@ thin.editor.OutlineHelper.prototype.isMultiple = function() {
 thin.editor.OutlineHelper.prototype.setup = function() {
   var layout = this.getLayout();
   var helpers = layout.getHelpers();
-  var outlineHelper = thin.editor.OutlineHelper;
-  var fill = outlineHelper.FILL_;
-  var stroke = outlineHelper.STROKE_;
-  var rectAttr = {
-    'x': 0,
-    'y': 0,
-    'width': 0,
-    'height': 0
-  };
-  var list = helpers.createListOutline(rectAttr, stroke, fill, this);
-  var rect = helpers.createRectOutline(rectAttr, stroke, fill, this);
-  var tblock = helpers.createTblockOutline(rectAttr, stroke, fill, this);
-  var iblock = helpers.createImageblockOutline(rectAttr, stroke, fill, this);
-  var image = helpers.createImageOutline(rectAttr, stroke, fill, this);
+  var fill = thin.editor.OutlineHelper.FILL_;
+  var stroke = thin.editor.OutlineHelper.STROKE_;
 
-  var ellipse = helpers.createEllipseOutline({
-    'cx': 0,
-    'cy': 0,
-    'rx': 0,
-    'ry': 0
-  }, stroke, fill, this);
-
-  var line = helpers.createLineOutline({
-    'x1': 0,
-    'y1': 0,
-    'x2': 0,
-    'y2': 0
-  }, stroke, this);
-
-  var text = helpers.createTextOutline(rectAttr, stroke, fill, this);
-  var workspace = this.getLayout().getWorkspace();
+  var list = helpers.createListOutline(this, stroke, fill);
+  var rect = helpers.createRectOutline(this, stroke, fill);
+  var tblock = helpers.createTblockOutline(this, stroke, fill);
+  var iblock = helpers.createImageblockOutline(this, stroke, fill);
+  var image = helpers.createImageOutline(this, stroke, fill);
+  var ellipse = helpers.createEllipseOutline(this, stroke, fill);
+  var line = helpers.createLineOutline(this, stroke);
+  var text = helpers.createTextOutline(this, stroke, fill);
   var selector = new thin.editor.SelectorOutline(
-        layout.createSvgElement('rect', rectAttr), layout, stroke, null);
+        layout.createSvgElement('rect'), layout, stroke, null);
   selector.setOutlineHelper(this);
   
   list.disable();

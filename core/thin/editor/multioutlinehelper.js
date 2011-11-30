@@ -240,13 +240,11 @@ thin.editor.MultiOutlineHelper.prototype.setOutlineForMultiple = function(outlin
  * @param {thin.editor.Helpers} helpers
  */
 thin.editor.MultiOutlineHelper.prototype.toRectOutline = function(shape, helpers) {
-  var outline = helpers.createRectOutline({
-    'x': shape.getLeft(),
-    'y': shape.getTop(),
-    'width': shape.getWidth(),
-    'height': shape.getHeight(),
-    'stroke-opacity': 0
-  }, shape.getStroke(), thin.editor.MultiOutlineHelper.FILL_, this);
+  var outline = helpers.createRectOutline(this, shape.getStroke(),
+                    thin.editor.MultiOutlineHelper.FILL_, {
+                      'stroke-opacity': 0
+                    });
+  outline.setBounds(shape.getBounds());
   outline.setRounded(shape.getRounded());
   this.setOutlineForMultiple(outline, shape);
 };
@@ -257,17 +255,13 @@ thin.editor.MultiOutlineHelper.prototype.toRectOutline = function(shape, helpers
  * @param {thin.editor.Helpers} helpers
  */
 thin.editor.MultiOutlineHelper.prototype.toEllipseOutline = function(shape, helpers) {
-  
   var radius = shape.getRadius();
   var center = shape.getCenterCoordinate();
-  var outline = helpers.createEllipseOutline({
-    'cx': center.x,
-    'cy': center.y,
-    'rx': radius.x,
-    'ry': radius.y,
-    'stroke-opacity': 0
-  }, null, thin.editor.MultiOutlineHelper.FILL_, this);
-  
+  var outline = helpers.createEllipseOutline(this, null, 
+                    thin.editor.MultiOutlineHelper.FILL_, {
+                      'stroke-opacity': 0
+                    });
+  outline.setBounds(shape.getBounds());
   this.setOutlineForMultiple(outline, shape);
 };
 
@@ -277,16 +271,15 @@ thin.editor.MultiOutlineHelper.prototype.toEllipseOutline = function(shape, help
  * @param {thin.editor.Helpers} helpers
  */
 thin.editor.MultiOutlineHelper.prototype.toLineOutline = function(shape, helpers) {
-
   var coordinate = shape.getCoordinate();
   var stroke = new goog.graphics.Stroke(shape.getStroke().getWidth(), thin.editor.MultiOutlineHelper.COLOR_);
-  var outline = helpers.createLineOutline({
+  var outline = helpers.createLineOutline(this, stroke, {
     'x1': coordinate.x0,
     'y1': coordinate.y0,
     'x2': coordinate.x1,
     'y2': coordinate.y1,
     'stroke-opacity': 0.3
-  }, stroke, this);
+  });
   
   this.setOutlineForMultiple(outline, shape);
 };
@@ -297,15 +290,11 @@ thin.editor.MultiOutlineHelper.prototype.toLineOutline = function(shape, helpers
  * @param {thin.editor.Helpers} helpers
  */
 thin.editor.MultiOutlineHelper.prototype.toTextOutline = function(shape, helpers) {
-
-  var outline = helpers.createTextOutline({
-    'x': shape.getLeft(),
-    'y': shape.getTop(),
-    'width': shape.getWidth(),
-    'height': shape.getHeight(),
-    'stroke-opacity': 0
-  }, shape.getStroke(), thin.editor.MultiOutlineHelper.FILL_, this);
-  
+  var outline = helpers.createTextOutline(this, shape.getStroke(), 
+                    thin.editor.MultiOutlineHelper.FILL_, {
+                      'stroke-opacity': 0
+                    });
+  outline.setBounds(shape.getBounds());
   this.setOutlineForMultiple(outline, shape);
 };
 
@@ -315,15 +304,11 @@ thin.editor.MultiOutlineHelper.prototype.toTextOutline = function(shape, helpers
  * @param {thin.editor.Helpers} helpers
  */
 thin.editor.MultiOutlineHelper.prototype.toTblockOutline = function(shape, helpers) {
-
-  var outline = helpers.createTblockOutline({
-    'x': shape.getLeft(),
-    'y': shape.getTop(),
-    'width': shape.getWidth(),
-    'height': shape.getHeight(),
-    'stroke-opacity': 0
-  }, shape.getStroke(), thin.editor.MultiOutlineHelper.FILL_, this);
-
+  var outline = helpers.createTblockOutline(this, shape.getStroke(),
+                    thin.editor.MultiOutlineHelper.FILL_, {
+                      'stroke-opacity': 0
+                    });
+  outline.setBounds(shape.getBounds());
   this.setOutlineForMultiple(outline, shape);
 };
 
@@ -333,14 +318,11 @@ thin.editor.MultiOutlineHelper.prototype.toTblockOutline = function(shape, helpe
  * @param {thin.editor.Helpers} helpers
  */
 thin.editor.MultiOutlineHelper.prototype.toImageblockOutline = function(shape, helpers) {
-  var outline = helpers.createImageblockOutline({
-    'x': shape.getLeft(),
-    'y': shape.getTop(),
-    'width': shape.getWidth(),
-    'height': shape.getHeight(),
-    'stroke-opacity': 0
-  }, null, thin.editor.MultiOutlineHelper.FILL_, this);
-
+  var outline = helpers.createImageblockOutline(this, null, 
+                    thin.editor.MultiOutlineHelper.FILL_, {
+                      'stroke-opacity': 0
+                    });
+  outline.setBounds(shape.getBounds());
   this.setOutlineForMultiple(outline, shape);
 };
 
@@ -350,14 +332,10 @@ thin.editor.MultiOutlineHelper.prototype.toImageblockOutline = function(shape, h
  * @param {thin.editor.Helpers} helpers
  */
 thin.editor.MultiOutlineHelper.prototype.toImageOutline = function(shape, helpers) {
-
-  var outline = helpers.createImageOutline({
-    'x': shape.getLeft(),
-    'y': shape.getTop(),
-    'width': shape.getWidth(),
-    'height': shape.getHeight(),
-    'stroke-opacity': 0
-  }, null, thin.editor.MultiOutlineHelper.FILL_, this);
-  
+  var outline = helpers.createImageOutline(this, null,
+                    thin.editor.MultiOutlineHelper.FILL_, {
+                      'stroke-opacity': 0
+                    });
+  outline.setBounds(shape.getBounds());
   this.setOutlineForMultiple(outline, shape);
 };

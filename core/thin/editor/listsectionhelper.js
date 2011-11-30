@@ -378,6 +378,8 @@ thin.editor.ListSectionHelper.Separator_ = function(layout) {
 
   goog.base(this, layout);
   this.setVisibled(false);
+  this.left_ = 0;
+  this.top_ = 0;
 };
 goog.inherits(thin.editor.ListSectionHelper.Separator_, thin.editor.Component);
 

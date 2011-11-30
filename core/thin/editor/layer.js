@@ -25,13 +25,11 @@ goog.require('thin.editor.SvgDrawer');
  * @extends {thin.editor.Rect}
  */
 thin.editor.Layer = function(layout) {
+  thin.editor.Rect.call(this, layout.createSvgElement('rect'),
+      layout, null, new goog.graphics.SolidFill('#FFFFFF', 0.01));
+  
   var size = layout.getNormalLayoutSize();
-  thin.editor.Rect.call(this, layout.createSvgElement('rect', {
-    'x': 0,
-    'y': 0,
-    'height': size.height,
-    'width': size.width
-  }), layout, null, new goog.graphics.SolidFill('#FFFFFF', 0.01));
+  this.setBounds(new goog.math.Rect(0, 0, size.height, size.width));
   this.setVisibled(false);
 };
 goog.inherits(thin.editor.Layer, thin.editor.Rect);
