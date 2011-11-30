@@ -21,6 +21,7 @@ goog.require('goog.json');
 goog.require('goog.events');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.events.EventType');
+goog.require('goog.userAgent');
 goog.require('thin.ui.Message');
 goog.require('thin.editor.HistoryManager');
 goog.require('thin.editor.HistoryManager.Mode');
@@ -227,6 +228,13 @@ thin.editor.Workspace.prototype.handleKeyEvent_ = function(e) {
       break;
     case keyCodes.DELETE:
       this.action_.actionDeleteShapes(thin.editor.HistoryManager.Mode.NORMAL);
+      break;
+    // MAC platform only.
+    case keyCodes.BACKSPACE:
+      if (goog.userAgent.MAC) {
+        this.action_.actionDeleteShapes(thin.editor.HistoryManager.Mode.NORMAL);
+        e.preventDefault();
+      }
       break;
     default:
       this.handleUndoRedoKeyEvent_(e);
