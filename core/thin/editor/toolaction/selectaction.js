@@ -155,7 +155,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
       activeShapeManager.set(oldShapesByGlobal);
       
       if (!isActive) {
-        if (captureActiveForStart) {
+        if (!captureActiveForStart) {
           if (singleShapeByGlobal) {
             layout.setOutlineForSingle(singleShapeByGlobal);
             singleShapeByGlobal.adjustToUiStatusForAvailableShape();
