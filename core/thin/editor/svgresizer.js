@@ -310,7 +310,7 @@ thin.editor.SvgResizer.prototype.initializeDrag_ = function(e) {
   delete this.endShapeBounds_;
   var layout = this.getLayout();
   var listHelper = layout.getHelpers().getListHelper();
-  var activeShapeManager = listHelper.isActived() ? layout.getManager().getActiveShape() : listHelper.getActiveShape();
+  var activeShapeManager = !listHelper.isActive() ? layout.getManager().getActiveShape() : listHelper.getActiveShape();
   
   if (activeShapeManager.isSingle()) {
     this.setResizeModeByCoordinate(true);
@@ -518,7 +518,7 @@ thin.editor.SvgResizer.prototype.initializeLimits_ = function() {
   var targetShapeBounds = targetShape.getBounds();
   var canvasBox = layout.getBounds().toBox();
   
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     if (listHelper.getActiveShape().isMultiple()) {
 
     var captureActiveSectionName = listHelper.getActiveSectionName();

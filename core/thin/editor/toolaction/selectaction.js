@@ -43,11 +43,11 @@ thin.editor.toolaction.SelectAction.prototype.selectorLayerSetupFn_ = function(h
   var listHelper = helpers.getListHelper();
   var eventType = goog.fx.Dragger.EventType;
   var isGlobalSurface = handler == helpers.getSurface();
-  var captureActivedForStart = false;
+  var captureActiveForStart = true;
   
   drawer.addEventListener(thin.editor.AbstractDragger.EventType.BEFORESTART, function(e) {
-    captureActivedForStart = listHelper.isActived();
-    if (isGlobalSurface && !captureActivedForStart) {
+    captureActiveForStart = listHelper.isActive();
+    if (isGlobalSurface && captureActiveForStart) {
       helpers.disableAll();
       listHelper.inactive();
     }
@@ -56,14 +56,14 @@ thin.editor.toolaction.SelectAction.prototype.selectorLayerSetupFn_ = function(h
     this.handleStartAction(e, outline);
   }, false, this);
   drawer.addEventListener(eventType.END, function(e) {
-    this.handleEndAction(e, outline, handler, captureActivedForStart);
+    this.handleEndAction(e, outline, handler, captureActiveForStart);
   }, false, this);
 };
 
 
 /** @inheritDoc */
 thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
-    e, outline, handle, captureActivedForStart) {
+    e, outline, handle, captureActiveForStart) {
 
   outline.disable();
   var scope = this;
@@ -77,16 +77,16 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
   var shapesManager = layout.getManager().getShapesManager();
   var singleShapeByGlobal = activeShapeManager.getIfSingle();
   var isMultipleByGlobal = activeShapeManager.isMultiple();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
   var captureProperties = multipleShapesHelper.getCloneProperties();
 
-  if (!captureActivedForStart) {
+  if (captureActiveForStart) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var oldShapesByListShape = activeShapeManagerByListShape.getClone();
     var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
     var captureActiveSectionName = listHelper.getActiveSectionName();
     var newActiveSectionName = listHelper.getSectionNameBySelectorLayer(handle);
-    if (!isActived) {
+    if (isActive) {
       shapesManager = singleShapeByGlobal.getSectionShape(newActiveSectionName).getManager().getShapesManager();
     }
   }
@@ -97,7 +97,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
     version.upHandler(function() {
       guide.setDisable();
       helpers.disableAll();
-      if (isActived) {
+      if (!isActive) {
         listHelper.inactive();
         activeShapeManager.clear();
         activeShapeManager.set(newShapes);
@@ -154,8 +154,8 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
       
       activeShapeManager.set(oldShapesByGlobal);
       
-      if (isActived) {
-        if (captureActivedForStart) {
+      if (!isActive) {
+        if (captureActiveForStart) {
           if (singleShapeByGlobal) {
             layout.setOutlineForSingle(singleShapeByGlobal);
             singleShapeByGlobal.adjustToUiStatusForAvailableShape();

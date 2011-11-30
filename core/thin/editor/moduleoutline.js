@@ -213,7 +213,7 @@ thin.editor.ModuleOutline.prototype.setupMouseDownHandler = function() {
       var removeShape = this.getTargetShape();
       var listHelper = helpers.getListHelper();
       var captureProperties = multipleShapesHelper.getCloneProperties();
-      var manager = listHelper.isActived() ? layout.getManager() : listHelper;
+      var manager = !listHelper.isActive() ? layout.getManager() : listHelper;
       var activeShapeManager = manager.getActiveShape();
       var oldShapesByGlobal = activeShapeManager.getClone();
       var singleShapeForUp = (activeShapeManager.getCount() == 2) ? 

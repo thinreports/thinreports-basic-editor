@@ -104,7 +104,7 @@ thin.editor.toolaction.LineAction.prototype.handleActionInternal = function(e, w
   this.drawLayerSetup(drawLayer, outline, true, this.shiftFn_);
   drawLayer.setVisibled(true);
 
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     var listDrawLayer;
     listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
       listDrawLayer = sectionHelper.getDrawLayer();

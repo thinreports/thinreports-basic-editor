@@ -43,7 +43,7 @@ thin.editor.toolaction.TextAction.prototype.handleActionInternal = function(e, w
   this.drawLayerSetup(drawLayer, outline, true);
   drawLayer.setVisibled(true);
 
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     var listDrawLayer;
     listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
       listDrawLayer = sectionHelper.getDrawLayer();
@@ -59,12 +59,12 @@ thin.editor.toolaction.TextAction.prototype.handleActionInternal = function(e, w
  * @param {goog.events.BrowserEvent} e
  * @param {goog.graphics.Element} outline
  * @param {thin.editor.Layer} handler
- * @param {boolean} captureActivedForStart
+ * @param {boolean} captureActiveForStart
  * @param {boolean=} opt_isCancelDraw
  * @protected
  */
 thin.editor.toolaction.TextAction.prototype.handleEndAction = function(
-    e, outline, handler, captureActivedForStart, opt_isCancelDraw) {
+    e, outline, handler, captureActiveForStart, opt_isCancelDraw) {
 
   var layout = this.layout;
   var helpers = layout.getHelpers();
@@ -74,7 +74,7 @@ thin.editor.toolaction.TextAction.prototype.handleEndAction = function(
   if (opt_isCancelDraw) {
     var width = 200;
     var height = 100;
-    if (listHelper.isActived()) {
+    if (!listHelper.isActive()) {
       var boxSize = layout.getBounds().toBox();
     } else {
       var boxSize = listHelper.getTarget().getSectionShape(/** @type {string} */ (
@@ -89,7 +89,7 @@ thin.editor.toolaction.TextAction.prototype.handleEndAction = function(
   }
 
   thin.editor.toolaction.TextAction.superClass_.handleEndAction.call(this, 
-      e, outline, handler, captureActivedForStart);
+      e, outline, handler, captureActiveForStart);
   
   layout.getWorkspace().getAction().actionTextEdit(true);
 };

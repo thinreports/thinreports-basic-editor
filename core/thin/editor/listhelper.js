@@ -103,14 +103,7 @@ thin.editor.ListHelper.prototype.sectionHelpers_;
  * @type {boolean}
  * @private
  */
-thin.editor.ListHelper.prototype.actived_ = true;
-
-
-/**
- * @type {boolean}
- * @private
- */
-thin.editor.ListHelper.prototype.activedForListShapeProperty_ = false;
+thin.editor.ListHelper.prototype.active_ = false;
 
 
 /**
@@ -153,8 +146,8 @@ thin.editor.ListHelper.prototype.getActiveShape = function() {
 /**
  * @return {boolean}
  */
-thin.editor.ListHelper.prototype.isActived = function() {
-  return this.actived_;
+thin.editor.ListHelper.prototype.isActive = function() {
+  return this.active_;
 };
 
 
@@ -348,18 +341,21 @@ thin.editor.ListHelper.prototype.update = function() {
  * @param {thin.editor.ListShape} target
  */
 thin.editor.ListHelper.prototype.active = function(target) {
-
   var layout = this.getLayout();
+  
   this.target_ = target;
   layout.getHelpers().getListOutline().setTargetShape(target);
   this.getActiveShape().clear();
   this.update();
   target.getIdShape().setVisibled(false);
+  
   var isDrawLayerVisibled = layout.getWorkspace().getUiStatusForAction() != 'selector';
+  
   this.forEachSectionHelper(function(sectionHelper, sectionName) {
     sectionHelper.active(target, isDrawLayerVisibled);
   }, this);
   var blankRangeSelectorLayer = this.getBlankRangeSelectorLayer();
+  
   goog.dom.insertSiblingBefore(blankRangeSelectorLayer.getElement(),
     this.getSectionHelper(thin.editor.ListHelper.SectionName.HEADER).getSelectorLayer().getElement());
   blankRangeSelectorLayer.setVisibled(true);
@@ -367,24 +363,30 @@ thin.editor.ListHelper.prototype.active = function(target) {
   this.getListGuideHelper().setEnableAndTargetShape(target);
   target.getListFace().setVisibled(false);
   this.initActiveSectionName();
-  this.actived_ = false;
+  
+  this.active_ = true;
 };
 
 
 thin.editor.ListHelper.prototype.inactive = function() {
-  if (!this.isActived()) {
+  if (this.isActive()) {
     this.forEachSectionHelper(function(sectionHelper, sectionName) {
       sectionHelper.inactive(target);
     }, this);
+    
     var blankRangeSelectorLayer = this.getBlankRangeSelectorLayer();
+    
     this.getLayout().appendChild(blankRangeSelectorLayer, this);
     blankRangeSelectorLayer.setVisibled(false);
     this.getBlankRangeDrawLayer().setVisibled(false);
     this.getListGuideHelper().setDisable();
+    
     var target = this.target_;
+    
     target.getListFace().setVisibled(true);
     target.getIdShape().setVisibled(true);
-    this.actived_ = true;
+    
+    this.active_ = false;
   }
 };
 

@@ -97,7 +97,7 @@ thin.editor.ListSectionHelper.FILL_ = new goog.graphics.SolidFill('#AAAAAA');
  * @type {boolean}
  * @private
  */
-thin.editor.ListSectionHelper.prototype.actived_ = true;
+thin.editor.ListSectionHelper.prototype.active_ = false;
 
 
 /**
@@ -120,8 +120,8 @@ thin.editor.ListSectionHelper.prototype.init = function(opt_renderTo) {
 /**
  * @return {boolean}
  */
-thin.editor.ListSectionHelper.prototype.isActived = function() {
-  return this.actived_;
+thin.editor.ListSectionHelper.prototype.isActive = function() {
+  return this.active_;
 };
 
 
@@ -182,8 +182,10 @@ thin.editor.ListSectionHelper.prototype.active = function(target, opt_visibled) 
   var sectionShape = target.getSectionShape(this.sectionName_);
   var isEnabled = sectionShape.isEnabled();
   var separator = this.separator_;
+  
   separator.setVisibled(isEnabled);
   separator.getDragger().setEnabled(isEnabled);
+  
   if (goog.isBoolean(opt_visibled)) {
     this.drawLayer_.setVisibled(opt_visibled);
   } else {
@@ -194,28 +196,33 @@ thin.editor.ListSectionHelper.prototype.active = function(target, opt_visibled) 
   if (isEnabled) {
     var selectorLayer = this.selectorLayer_;
     var selectorElement = selectorLayer.getElement();
+    
     goog.dom.insertSiblingBefore(selectorElement, sectionShape.getGroup().getElement());
     selectorLayer.setVisibled(true);
     goog.dom.insertSiblingBefore(this.label_.getElement(), selectorElement);
   }
-  this.actived_ = false;
+  
+  this.active_ = true;
 };
 
 
 thin.editor.ListSectionHelper.prototype.inactive = function() {
-
-  if (!this.isActived()) {
+  if (this.isActive()) {
     var layout = this.layout_;
+    
     this.drawLayer_.setVisibled(false);
     this.separator_.setVisibled(false);
-    var selectorLayer = this.selectorLayer_;
-    selectorLayer.setVisibled(false);
+    this.selectorLayer_.setVisibled(false);
+    
     var listHelperGroup = layout.getHelpers().getListHelper();
-    layout.appendChild(selectorLayer, listHelperGroup);
+    
+    layout.appendChild(this.selectorLayer_, listHelperGroup);
+    
     var label = this.label_;
     layout.appendChild(label, listHelperGroup);
     label.setVisibled(false);
-    this.actived_ = true;
+    
+    this.active_ = false;
   }
 };
 

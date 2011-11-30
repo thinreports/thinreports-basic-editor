@@ -26,6 +26,7 @@ goog.require('thin.editor.HistoryManager');
 goog.require('thin.editor.HistoryManager.Mode');
 goog.require('thin.editor.Action');
 goog.require('thin.editor.Layout');
+goog.require('thin.editor.LayoutStructure');
 goog.require('thin.editor.TextStyle');
 goog.require('thin.editor.TextStyle.HorizonAlignType');
 goog.require('thin.editor.TextStyle.VerticalAlignType');
@@ -630,7 +631,7 @@ thin.editor.Workspace.prototype.setFormat = function(format) {
 thin.editor.Workspace.prototype.getSaveFormat_ = function() {
   var layout = this.layout_;
   var format = this.format;
-  format.setSvg(layout.toXML(true));
+  format.setSvg(layout.toXML());
   format.setLayoutGuides(layout.getHelpers().getLayoutGuideHelper().getGuides());
   this.updateFingerPrint_();
   return format.toJSON();
@@ -694,8 +695,10 @@ thin.editor.Workspace.prototype.updateFingerPrint_ = function() {
  */
 thin.editor.Workspace.prototype.getFingerPrint_ = function() {
   var layout = this.layout_;
-  return thin.editor.hash32(layout.toXML(false) + 
-            goog.json.serialize(layout.getFormatPage().toHash()));
+  
+  return thin.editor.hash32(
+    thin.editor.LayoutStructure.serializeForFingerPrint(layout) +
+    goog.json.serialize(this.format.page.toHash()));
 };
 
 

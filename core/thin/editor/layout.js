@@ -47,7 +47,6 @@ goog.require('thin.editor.ClipboardShapeManager');
  * @extends {goog.graphics.SvgGraphics}
  */
 thin.editor.Layout = function(workspace) {
-  
   /**
    * @type {thin.editor.Workspace}
    * @private
@@ -361,11 +360,10 @@ thin.editor.Layout.prototype.createHelpersElement = function(tagName, attrs) {
 
 
 /**
- * @param {boolean} isOutput
  * @return {string}
  */
-thin.editor.Layout.prototype.toXML = function(isOutput) {
-  return thin.editor.LayoutStructure.serialize(this, isOutput);
+thin.editor.Layout.prototype.toXML = function() {
+  return thin.editor.LayoutStructure.serialize(this);
 };
 
 
@@ -756,9 +754,9 @@ thin.editor.Layout.prototype.pasteShapes = function() {
   var isAdaptDeltaForList = false;
   
   var listHelper = helpers.getListHelper();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
   
-  if (!isActived) {
+  if (isActive) {
     var captureActiveSectionName = listHelper.getActiveSectionName() || listHelper.getDefaultActiveSectionName();
     var captureSectionShapeForActive = activeShapeManager.getIfSingle().getSectionShape(captureActiveSectionName);
     var captureRenderTo = captureSectionShapeForActive.getGroup();
@@ -887,7 +885,7 @@ thin.editor.Layout.prototype.pasteShapes = function() {
       guide.setDisable();
       helpers.disableAll();
       
-      if (isActived) {
+      if (!isActive) {
         this.removeShapes(activeShapeManager.get());
         activeShapeManager.set(oldShapesByGlobal);
         var singleShapeByGlobal = activeShapeManager.getIfSingle();
@@ -958,7 +956,7 @@ thin.editor.Layout.prototype.getCloneShapes = function(shapes) {
   var helper = this.helpers_;
   var listHelper = helper.getListHelper();
   var parentGroup = this.canvasElement;
-  if (listHelper.isActived()) {
+  if (!listHelper.isActive()) {
     clipBoardManager.initDeltaCoordinate();
   } else {
     var listShape = listHelper.getTarget();

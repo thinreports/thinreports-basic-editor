@@ -229,7 +229,7 @@ thin.editor.GuideHelper.prototype.init = function() {
     resizer.setAdsorptionX(helpers.getAdsorptionX());
     resizer.setAdsorptionY(helpers.getAdsorptionY());
     
-    if(listHelper.isActived()) {
+    if(!listHelper.isActive()) {
       var singleShape = activeShapeManager.getIfSingle();
     } else {
       var singleShape = listHelper.getActiveShape().getIfSingle();
@@ -297,7 +297,7 @@ thin.editor.GuideHelper.prototype.init = function() {
     var isSingle = resizer.isResizeModeByCoordinate();
     var target = this.getTargetShape();
     guideOutline.setVisibled(false);
-    var captureShapes = listHelper.isActived() ?
+    var captureShapes = !listHelper.isActive() ?
                              layout.getManager().getActiveShape().getClone() :
                              listHelper.getActiveShape().getClone();
 

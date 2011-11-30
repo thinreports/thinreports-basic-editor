@@ -71,14 +71,14 @@ thin.editor.toolaction.DrawAction.prototype.handleStartAction = function(e, outl
  * @param {goog.events.BrowserEvent} e
  * @param {goog.graphics.Element} outline
  * @param {thin.editor.Layer} handler
- * @param {boolean} captureActivedForStart
+ * @param {boolean} captureActiveForStart
  * @param {boolean=} opt_isCancelDraw
  * @protected
  */
 thin.editor.toolaction.DrawAction.prototype.handleEndAction = function(
-    e, outline, handler, captureActivedForStart, opt_isCancelDraw) {
+    e, outline, handler, captureActiveForStart, opt_isCancelDraw) {
 
-  this.commonEndAction(e, outline, handler, captureActivedForStart, opt_isCancelDraw);
+  this.commonEndAction(e, outline, handler, captureActiveForStart, opt_isCancelDraw);
 };
 
 
@@ -104,7 +104,7 @@ thin.editor.toolaction.DrawAction.prototype.drawLayerSetup = function(
   handler.setDisposed(false);
   
   var isGlobalDrawLayer = handler == helpers.getDrawLayer();
-  var captureActivedForStart = false;
+  var captureActiveForStart = true;
   
   if (goog.isFunction(opt_shiftFn)) {
     drawer.addEventListener(thin.editor.AbstractDragger.EventType.SHIFTKEYPRESS, opt_shiftFn, false, drawer);
@@ -118,8 +118,8 @@ thin.editor.toolaction.DrawAction.prototype.drawLayerSetup = function(
       return false;
     }
     
-    captureActivedForStart = listHelper.isActived();
-    if (isGlobalDrawLayer && !captureActivedForStart) {
+    captureActiveForStart = listHelper.isActive();
+    if (isGlobalDrawLayer && captureActiveForStart) {
       helpers.disableAll();
       listHelper.inactive();
     }
@@ -131,6 +131,6 @@ thin.editor.toolaction.DrawAction.prototype.drawLayerSetup = function(
   }, false, this);
   drawer.addEventListener(eventType.END, function(e) {
     var isCancelDraw = this.compareFn_(e.startX, e.startY, e.endX, e.endY);
-    this.handleEndAction(e, outline, handler, captureActivedForStart, isCancelDraw);
+    this.handleEndAction(e, outline, handler, captureActiveForStart, isCancelDraw);
   }, false, this);
 };

@@ -139,7 +139,7 @@ thin.editor.StateManager.prototype.forEachShapeWithId = function(fn, opt_obj) {
  */
 thin.editor.StateManager.prototype.getActiveShapeByIncludeList = function() {
   var listHelper = this.layout_.getHelpers().getListHelper();
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     var activeShapeManagerForList = listHelper.getActiveShape();
     if (!activeShapeManagerForList.isEmpty()) {
       return activeShapeManagerForList;

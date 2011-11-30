@@ -199,7 +199,7 @@ thin.editor.SvgDragger.prototype.initializeLimits_ = function() {
     var target = this.targetShape;
     var bounds = layout.getBounds();
     
-    if (!listHelper.isActived() && !target.instanceOfDraggableLine()) {
+    if (listHelper.isActive() && !target.instanceOfDraggableLine()) {
       if (listHelper.getActiveShape().isMultiple()) {
         bounds = listHelper.getTarget().getSectionShape(listHelper.getActiveSectionName()).getBounds();
       } else if (this.handleShape.isAffiliationListShape()) {

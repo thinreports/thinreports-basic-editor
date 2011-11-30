@@ -43,7 +43,7 @@ thin.editor.toolaction.ImageblockAction.prototype.handleActionInternal = functio
   this.drawLayerSetup(drawLayer, outline, true);
   drawLayer.setVisibled(true);
 
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     var listDrawLayer;
     listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
       listDrawLayer = sectionHelper.getDrawLayer();

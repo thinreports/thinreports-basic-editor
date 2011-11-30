@@ -45,40 +45,27 @@ thin.editor.LayoutStructure.Regexp_ = {
 
 /**
  * @param {thin.editor.Layout} layout
- * @param {boolean} isOutput
  * @return {string}
  */
-thin.editor.LayoutStructure.serialize = function(layout, isOutput) {
-  var listHelper = layout.getHelpers().getListHelper();
-  var isActive = !listHelper.isActived();
-  
-  if (isActive) {
-    var captureTarget = listHelper.getTarget();
-    var captureActiveSectionName = listHelper.getActiveSectionName();
-    var activeShapeManager = listHelper.getActiveShape();
-    var shapesForList = activeShapeManager.getClone();
-    listHelper.inactive();
-  }
+thin.editor.LayoutStructure.serialize = function(layout) {
+  var xml;
+  thin.editor.LayoutStructure.inRawLayout_(layout, function() {
+    xml = thin.editor.LayoutStructure.serializeForFormat_(layout);
+  });
+  return xml;
+};
 
-  if (isOutput) {
-    var resultXml = thin.editor.LayoutStructure.serializeToSvgSection_(layout);
-  } else {
-    var resultXml = thin.editor.LayoutStructure.serializeToFingerPrint_(layout);
-  }
-  
-  if (isActive) {
-    if (goog.isDef(captureTarget)) {
-      listHelper.active(captureTarget);
-    }
-    if (goog.isDef(shapesForList)) {
-      activeShapeManager.set(shapesForList);
-    }
-    if (goog.isDef(captureActiveSectionName)) {
-      listHelper.setActiveSectionName(captureActiveSectionName);
-    }
-  }
-  
-  return resultXml;
+
+/**
+ * @param {thin.editor.Layout} layout
+ * @return {string}
+ */
+thin.editor.LayoutStructure.serializeForFingerPrint = function(layout) {
+  var xml;
+  thin.editor.LayoutStructure.inRawLayout_(layout, function() {
+    xml = thin.editor.LayoutStructure.serializeForFingerPrint_(layout);
+  });
+  return xml;
 };
 
 
@@ -128,11 +115,127 @@ thin.editor.LayoutStructure.fixSerializationHref = function(xml) {
 
 
 /**
+ * @param {thin.editor.Layout} layout
+ * @return {string} The base64 encoded string.
+ */
+thin.editor.LayoutStructure.createScreenShot = function(layout) {
+  var svg;
+  
+  thin.editor.LayoutStructure.inRawLayout_(layout, function() {
+    svg = layout.getElement().cloneNode(true);
+  });
+  thin.editor.LayoutStructure.finalizeLayoutElement_(svg);
+  
+  return thin.core.platform.String.toBase64(
+      thin.editor.serializeToXML(/** @type {Element} */ (svg)));
+};
+
+
+/**
+ * @param {thin.editor.Layout} layout
+ * @return {string}
+ * @private
+ */
+thin.editor.LayoutStructure.serializeForFormat_ = function(layout) {
+  var layoutSize = layout.getNormalLayoutSize();
+  var svg = layout.getElement().cloneNode(true);
+  
+  thin.editor.LayoutStructure.finalizeLayoutElement_(svg);
+  
+  svg.setAttribute('width', layoutSize.width);
+  svg.setAttribute('height', layoutSize.height);
+  svg.removeAttribute('id');
+  svg.removeAttribute('style');
+  svg.removeAttribute('class');
+  
+  thin.editor.LayoutStructure.serializeShapes(
+      goog.dom.getElementsByTagNameAndClass('g', thin.editor.Layout.CANVAS_CLASS_ID, 
+      /** @type {Element} */(svg))[0].childNodes);
+  
+  var xml = thin.editor.serializeToXML(/** @type {Element} */(svg));
+  
+  xml = thin.editor.LayoutStructure.fixSerializationXmlSpace(xml);
+  xml = thin.editor.LayoutStructure.fixSerializationHref(xml);
+  
+  return xml;
+};
+
+
+/**
+ * @param {thin.editor.Layout} layout
+ * @return {string}
+ * @private
+ */
+thin.editor.LayoutStructure.serializeForFingerPrint_ = function(layout) {
+  var listShapeClassId = thin.editor.ListShape.ClassIds;
+  var classIdPrefix = thin.editor.ListShape.CLASSID;
+  var detailClassId = classIdPrefix + listShapeClassId['DETAIL'];
+
+  var canvasElement = goog.dom.getElementsByTagNameAndClass('g', 
+                        thin.editor.Layout.CANVAS_CLASS_ID,
+                        /** @type {Element} */(layout.getElement().cloneNode(true)))[0];
+
+  var elements = goog.dom.getElementsByTagNameAndClass('g', 
+                    classIdPrefix, canvasElement);
+
+  goog.array.forEach(elements, function(element) {
+    goog.array.forEach(element.childNodes, function(sectionElement) {
+      if (sectionElement.tagName == 'g' && 
+          sectionElement.getAttribute('class') != detailClassId) {
+        if (thin.editor.ShapeStructure.getEnabledOfSection(sectionElement, element) == 'false') {
+          goog.dom.removeChildren(sectionElement);
+        }
+      }
+    });
+  });
+  
+  return thin.editor.serializeToXML(canvasElement);
+};
+
+
+/**
+ * @param {thin.editor.Layout} layout
+ * @param {Function} f
+ * @private
+ */
+thin.editor.LayoutStructure.inRawLayout_ = function(layout, f) {
+  var workspace = layout.getWorkspace();
+  var zoomRate = workspace.getUiStatusForZoom();
+  var listHelper = layout.getHelpers().getListHelper();
+  
+  // Set zoom-rate to 100%.
+  workspace.getAction().actionSetZoom(100);
+  
+  if (!listHelper.isActive()) {
+    f();
+  } else {
+    // Save states of an active list.
+    var listStates = {
+      target: listHelper.getTarget(),
+      activeSection: listHelper.getActiveSectionName(),
+      shapes: listHelper.getActiveShape().getClone()
+    };
+    listHelper.inactive();
+    
+    f();
+    
+    // Activate list and restore states.
+    listHelper.active(listStates.target);
+    listHelper.getActiveShape().set(listStates.shapes);
+    listHelper.setActiveSectionName(listStates.activeSection);
+  }
+  
+  // Restore original zoom-rate.
+  workspace.getAction().actionSetZoom(zoomRate);
+};
+
+
+/**
  * @param {NodeList} shapes
  * @param {number=} opt_sectionDepth
  * @return {NodeList}
  */
-thin.editor.LayoutStructure.serializeFromChildNodes = function(shapes, opt_sectionDepth) {
+thin.editor.LayoutStructure.serializeShapes = function(shapes, opt_sectionDepth) {
   var layoutUtilTemplate = thin.editor.LayoutStructure.Template_;
   
   var shapeTemplateFactor = layoutUtilTemplate.SHAPE;
@@ -141,7 +244,7 @@ thin.editor.LayoutStructure.serializeFromChildNodes = function(shapes, opt_secti
   var layoutTemplate = goog.array.repeat(layoutTemplateFactor, 2);
   var shapeTemplate = goog.array.repeat(shapeTemplateFactor, 2);  
   
-  if (goog.isNumber(opt_sectionDepth)) {
+  if (opt_sectionDepth) {
     var depth = goog.string.repeat(layoutUtilTemplate.CONNECT, opt_sectionDepth);
     
     shapeTemplate[0] = depth + shapeTemplate[0];
@@ -178,63 +281,6 @@ thin.editor.LayoutStructure.serializeFromChildNodes = function(shapes, opt_secti
 
 
 /**
- * @param {thin.editor.Layout} layout
- * @return {string} The base64 encoded string.
- */
-thin.editor.LayoutStructure.createScreenShot = function(layout) {
-  var workspace = layout.getWorkspace();
-  var zoom = workspace.getUiStatusForZoom();
-  
-  // Set zoom-rate to 100%.
-  workspace.getAction().actionSetZoom(100);
-  
-  try {
-    var svg = layout.getElement().cloneNode(true);
-  } catch(e) {
-    throw e;
-  } finally {
-    // Restore original zoom-rate.
-    workspace.getAction().actionSetZoom(zoom);
-  }
-  
-  thin.editor.LayoutStructure.finalizeLayoutElement_(svg);
-  
-  return thin.core.platform.String.toBase64(
-      thin.editor.serializeToXML(/** @type {Element} */ (svg)));
-};
-
-
-/**
- * @param {thin.editor.Layout} layout
- * @return {string}
- * @private
- */
-thin.editor.LayoutStructure.serializeToSvgSection_ = function(layout) {
-  var layoutSize = layout.getNormalLayoutSize();
-  var svg = layout.getElement().cloneNode(true);
-  
-  thin.editor.LayoutStructure.finalizeLayoutElement_(svg);
-  
-  svg.setAttribute('width', layoutSize.width);
-  svg.setAttribute('height', layoutSize.height);
-  svg.removeAttribute('id');
-  svg.removeAttribute('style');
-  svg.removeAttribute('class');
-  
-  thin.editor.LayoutStructure.serializeFromChildNodes(
-      goog.dom.getElementsByTagNameAndClass('g', thin.editor.Layout.CANVAS_CLASS_ID, 
-      /** @type {Element} */(svg))[0].childNodes);
-  
-  var xml = thin.editor.serializeToXML(/** @type {Element} */(svg));
-  
-  xml = thin.editor.LayoutStructure.fixSerializationXmlSpace(xml);
-  xml = thin.editor.LayoutStructure.fixSerializationHref(xml);
-  
-  return xml;
-};
-
-
-/**
  * @param {Element} layoutElement
  * @private
  */
@@ -246,38 +292,6 @@ thin.editor.LayoutStructure.finalizeLayoutElement_ = function(layoutElement) {
       layoutElement.removeChild(nodes[i]);
     }
   });
-};
-
-
-/**
- * @param {thin.editor.Layout} layout
- * @return {string}
- * @private
- */
-thin.editor.LayoutStructure.serializeToFingerPrint_ = function(layout) {
-  var listShapeClassId = thin.editor.ListShape.ClassIds;
-  var classIdPrefix = thin.editor.ListShape.CLASSID;
-  var detailClassId = classIdPrefix + listShapeClassId['DETAIL'];
-
-  var canvasElement = goog.dom.getElementsByTagNameAndClass('g', 
-                        thin.editor.Layout.CANVAS_CLASS_ID,
-                        /** @type {Element} */(layout.getElement().cloneNode(true)))[0];
-
-  var elements = goog.dom.getElementsByTagNameAndClass('g', 
-                    classIdPrefix, canvasElement);
-
-  goog.array.forEach(elements, function(element) {
-    goog.array.forEach(element.childNodes, function(sectionElement) {
-      if (sectionElement.tagName == 'g' && 
-          sectionElement.getAttribute('class') != detailClassId) {
-        if (thin.editor.ShapeStructure.getEnabledOfSection(sectionElement, element) == "false") {
-          goog.dom.removeChildren(sectionElement);
-        }
-      }
-    });
-  });
-  
-  return thin.editor.serializeToXML(canvasElement);
 };
 
 

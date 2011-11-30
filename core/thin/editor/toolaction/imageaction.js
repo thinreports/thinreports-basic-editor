@@ -34,11 +34,11 @@ goog.inherits(thin.editor.toolaction.ImageAction, thin.editor.toolaction.Abstrac
  * @param {goog.events.BrowserEvent} e
  * @param {thin.editor.Layer} handler
  * @param {goog.graphics.Element} outline
- * @param {boolean} captureActivedForStart
+ * @param {boolean} captureActiveForStart
  * @private
  */
 thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
-    e, handler, outline, captureActivedForStart) {
+    e, handler, outline, captureActiveForStart) {
   
   var scope = this;
   var layout = this.layout;
@@ -62,7 +62,7 @@ thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
   var file = thin.editor.ImageFile.openDialog();
   var isFileExist = !!file;
   var isValid = isFileExist && file.isValid();
-  this.commonEndAction(e, outline, handler, captureActivedForStart, !isValid);
+  this.commonEndAction(e, outline, handler, captureActiveForStart, !isValid);
   
   if (isValid) {
     var singleShape = layout.getManager().getActiveShapeByIncludeList().getIfSingle();
@@ -77,7 +77,7 @@ thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
       } else {
         if (count > 5) {
           workspace.undo();
-          scope.commonEndAction(e, outline, handler, captureActivedForStart, true);
+          scope.commonEndAction(e, outline, handler, captureActiveForStart, true);
           delay.dispose();
           thin.ui.Message.alert('画像ファイルの読み込みに失敗しました。', 'Error', 
               function(e) {
@@ -137,16 +137,16 @@ thin.editor.toolaction.ImageAction.prototype.handleActionInternal = function(e, 
   drawLayer.addEventListener(eventType.MOUSEDOWN,
     function(e) {
       if (e.isMouseActionButton()) {
-        var captureActivedForStart = listHelper.isActived();
-        if (!captureActivedForStart) {
+        var captureActiveForStart = listHelper.isActive();
+        if (captureActiveForStart) {
           helpers.disableAll();
           listHelper.inactive();
         }
-        this.handleMouseDownAction_(e, drawLayer, outline, captureActivedForStart);
+        this.handleMouseDownAction_(e, drawLayer, outline, captureActiveForStart);
       }
     }, false, this);
 
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     var listDrawLayer;
     listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
       listDrawLayer = sectionHelper.getDrawLayer();

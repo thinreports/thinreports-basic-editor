@@ -119,7 +119,7 @@ thin.editor.MultiOutlineHelper.prototype.init = function() {
     dragLayer.setVisibled(false);
     guideOutline.setVisibled(false);
 
-    var activeShapeManager = listHelper.isActived() ? layout.getManager().getActiveShape() : listHelper.getActiveShape();
+    var activeShapeManager = !listHelper.isActive() ? layout.getManager().getActiveShape() : listHelper.getActiveShape();
 
     layout.getWorkspace().normalVersioning(function(version) {
     

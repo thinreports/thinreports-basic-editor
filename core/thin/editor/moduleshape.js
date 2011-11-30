@@ -352,7 +352,6 @@ thin.editor.ModuleShape.prototype.adjustToUiStatusForAvailableShape = function()
  * @this {goog.graphics.Element}
  */
 thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
-
   var proppane = thin.ui.getComponent('proppane');
   var scope = this;
   var layout = this.getLayout();
@@ -377,10 +376,10 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
     var isMultipleByGlobal = activeShapeManager.isMultiple();
     var oldShapesByGlobal = activeShapeManager.getClone();
     var captureProperties = multipleShapesHelper.getCloneProperties();
-    var captureActived = listHelper.isActived();
+    var captureActive = listHelper.isActive();
     var captureCtrlKey = e.ctrlKey;
     
-    if (!captureActived) {
+    if (captureActive) {
       var activeShapeManagerByListShape = listHelper.getActiveShape();
       var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
       isSelfMouseDown = singleShapeByListShape == this;
@@ -400,7 +399,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
         helpers.disableAll();
         if (isListShapeFace) {
           activeShapeManager.clear();
-          if (!captureActived) {
+          if (captureActive) {
             listHelper.inactive();
           }
           var listShape = this['parentGroup'];
@@ -454,7 +453,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                 }
               }
             } else {
-              if (captureActived) {
+              if (!captureActive) {
                 if (isEmptyByGlobal) {
                   this.dragger_.setEnabled(true);
                   activeShapeManager.clear();
@@ -512,7 +511,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
               guide.setEnableAndTargetShape(this);
               layout.setOutlineForSingle(this);
               this.updateProperties();
-              if (!captureActived) {
+              if (captureActive) {
                 listHelper.inactive();
               }
             }
@@ -526,7 +525,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
           activeShapeManager.set(oldShapesByGlobal);
           listHelper.inactive();
           
-          if (captureActived) {
+          if (!captureActive) {
             if (isEmptyByGlobal) {
               proppane.updateAsync(function() {
                 layout.updatePropertiesForEmpty();
@@ -576,7 +575,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
         } else {
           this.dragger_.setEnabled(true);
           if (captureCtrlKey) {
-            if (captureActived) {
+            if (!captureActive) {
               activeShapeManager.set(oldShapesByGlobal);
               if (isSelfMouseDown) {
                 singleShapeByGlobal.adjustToUiStatusForAvailableShape();
@@ -673,7 +672,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
               }
             }
           } else {
-            if (captureActived) {
+            if (!captureActive) {
               activeShapeManager.set(oldShapesByGlobal);
               if (isEmptyByGlobal) {
                 guide.setDisable();

@@ -130,7 +130,7 @@ thin.editor.LayoutGuideHelper.prototype.disable = function(disabled) {
       var listHelper = helpers.getListHelper();
       var singleShape = activeShapeManager.getIfSingle();
       
-      if (listHelper.isActived()) {
+      if (!listHelper.isActive()) {
         if (singleShape) {
           singleShape.updateProperties();
         } else {
@@ -275,7 +275,7 @@ thin.editor.LayoutGuideHelper.prototype.removeLayoutGuide = function() {
         var listHelper = helpers.getListHelper();
         var singleShape = activeShapeManager.getIfSingle();
         
-        if (listHelper.isActived()) {
+        if (!listHelper.isActive()) {
           if (singleShape) {
             singleShape.updateProperties();
           } else {
@@ -346,8 +346,8 @@ thin.editor.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
       var isEmpty = activeShapeManager.isEmpty();
       if (!isEmpty) {
         var singleShape = activeShapeManager.getIfSingle();
-        var isActived = listHelper.isActived();
-        if (!isActived) {
+        var isActive = listHelper.isActive();
+        if (isActive) {
           var activeShapeManagerByListShape = listHelper.getActiveShape();
         }
       }
@@ -360,7 +360,7 @@ thin.editor.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
             layout.updatePropertiesForEmpty();
           });
         } else {
-          if (isActived) {
+          if (!isActive) {
             if (singleShape) {
               singleShape.updateProperties();
             } else {

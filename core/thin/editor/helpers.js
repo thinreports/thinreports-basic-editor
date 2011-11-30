@@ -234,7 +234,7 @@ thin.editor.Helpers.prototype.reapplySizeAndStroke = function() {
   var listGuide = listHelper.getListGuideHelper();
   listGuide.reapplySizeAndStroke();
   listHelper.reapplySizeAndStroke();
-  if(!listHelper.isActived()) {
+  if(listHelper.isActive()) {
     listGuide.adjustToTargetShapeBounds();
   }
   this.layoutGuideHelper_.reapplySizeAndStroke();
@@ -568,7 +568,7 @@ thin.editor.Helpers.prototype.createImageOutline = function(attr, stroke, fill, 
 thin.editor.Helpers.prototype.disableAll = function() {
   var listHelper = this.listHelper_;
   var activeShapeManager = this.layout_.getManager().getActiveShape();
-  if(!listHelper.isActived()) {
+  if(listHelper.isActive()) {
     var activeShapeByList = listHelper.getActiveShape();
     if(!activeShapeByList.isEmpty()) {
       activeShapeManager = activeShapeByList;

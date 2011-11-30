@@ -138,12 +138,12 @@ thin.editor.toolaction.AbstractAction.prototype.commonStartAction = function(e, 
  * @param {goog.events.BrowserEvent} e
  * @param {goog.graphics.Element} outline
  * @param {thin.editor.Layer} handler
- * @param {boolean} captureActivedForStart
+ * @param {boolean} captureActiveForStart
  * @param {boolean=} opt_isCancelDraw
  * @protected
  */
 thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
-    e, outline, handler, captureActivedForStart, opt_isCancelDraw) {
+    e, outline, handler, captureActiveForStart, opt_isCancelDraw) {
 
   var scope = this;
   var layout = this.layout;
@@ -154,7 +154,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
   var multiOutlineHelper = helpers.getMultiOutlineHelper();
   var captureProperties = multipleShapesHelper.getCloneProperties();
   var listHelper = helpers.getListHelper();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
   var activeShapeManager = manager.getActiveShape();
   var oldShapesByGlobal = activeShapeManager.getClone();
   var singleShapeByGlobal = activeShapeManager.getIfSingle();
@@ -166,7 +166,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
     var captureShapeId = shape.getShapeId();
     var isListShape = shape.instanceOfListShape();
   }
-  if (!captureActivedForStart) {
+  if (captureActiveForStart) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
     var oldShapesByListShape = activeShapeManagerByListShape.getClone();
@@ -179,8 +179,8 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
       guide.setDisable();
       helpers.disableAll();
       if (opt_isCancelDraw) {
-        if (isActived) {
-          if (!captureActivedForStart) {
+        if (!isActive) {
+          if (captureActiveForStart) {
             listHelper.inactive();
           }
           activeShapeManager.clear();
@@ -193,8 +193,8 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
           layout.updatePropertiesForEmpty();
         });
       } else {
-        if (isActived) {
-          if (!captureActivedForStart) {
+        if (!isActive) {
+          if (captureActiveForStart) {
             listHelper.inactive();
           }
           activeShapeManager.clear();
@@ -236,7 +236,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
         layout.removeShape(shape);
       }
       activeShapeManager.set(oldShapesByGlobal);
-      if (captureActivedForStart) {
+      if (!captureActiveForStart) {
         if (isMultipleByGlobal) {
           var shapes = activeShapeManager.get();
           layout.setOutlineForMultiple(shapes);
@@ -257,7 +257,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
           thin.ui.setEnabledForFontUi(false);
         }
       } else {
-        if (isActived) {
+        if (!isActive) {
           listHelper.active(singleShapeByGlobal);
         }
         activeShapeManagerByListShape.set(oldShapesByListShape);

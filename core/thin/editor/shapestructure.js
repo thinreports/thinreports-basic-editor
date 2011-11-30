@@ -370,7 +370,7 @@ thin.editor.ShapeStructure.serializeForListForSection_ = function(
     'svg': {
       'tag': sectionGroup.tagName,
       'content': thin.editor.ShapeStructure.serializeToContent(
-                    thin.editor.LayoutStructure.serializeFromChildNodes(
+                    thin.editor.LayoutStructure.serializeShapes(
                         sectionGroup.cloneNode(true).childNodes, 1))
     }
   };

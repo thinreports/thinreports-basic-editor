@@ -72,7 +72,7 @@ thin.editor.Action.prototype.actionLayerInsertBefore = function() {
   var shapes = activeShapeManager.getClone();
   var parentGroup = layout.getCanvasElement();
 
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     if (!activeShapeManagerByListShape.isEmpty()) {
       shapes = activeShapeManagerByListShape.getClone();
@@ -115,7 +115,7 @@ thin.editor.Action.prototype.actionLayerInsertAfter = function() {
   var shapes = activeShapeManager.getClone();
   var parentGroup = layout.getCanvasElement();
 
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     if (!activeShapeManagerByListShape.isEmpty()) {
       shapes = activeShapeManagerByListShape.getClone();
@@ -158,7 +158,7 @@ thin.editor.Action.prototype.actionLayerInsertFront = function() {
   var shapes = activeShapeManager.getClone();
   var parentGroup = layout.getCanvasElement();
   
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     if (!activeShapeManagerByListShape.isEmpty()) {
       shapes = activeShapeManagerByListShape.getClone();
@@ -201,7 +201,7 @@ thin.editor.Action.prototype.actionLayerInsertBack = function() {
   var shapes = activeShapeManager.getClone();
   var parentGroup = layout.getCanvasElement();
 
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     if (!activeShapeManagerByListShape.isEmpty()) {
       shapes = activeShapeManagerByListShape.getClone();
@@ -337,7 +337,7 @@ thin.editor.Action.prototype.actionSetFontSize = function(newFontSize) {
   var captureProperties = multipleShapesHelper.getCloneProperties();
   var captureFontSize = workspace.getUiStatusForFontSize();
 
-  if (listHelper.isActived()) {
+  if (!listHelper.isActive()) {
     var activeShapeManager = layout.getManager().getActiveShape();
   } else {
     var activeShapeManager = listHelper.getActiveShape();
@@ -463,7 +463,7 @@ thin.editor.Action.prototype.actionSetFontFamily = function(newFontFamily) {
                               'PDF出力時に正しく表示されない可能性があります。');
   }
   
-  if (listHelper.isActived()) {
+  if (!listHelper.isActive()) {
     var activeShapeManager = layout.getManager().getActiveShape();
   } else {
     var activeShapeManager = listHelper.getActiveShape();
@@ -589,7 +589,7 @@ thin.editor.Action.prototype.actionSetTextAnchor = function(newTextAnchor) {
   var captureProperties = multipleShapesHelper.getCloneProperties();
   var captureTextAnchor = workspace.getUiStatusForHorizonAlignType();
   
-  if (listHelper.isActived()) {
+  if (!listHelper.isActive()) {
     var activeShapeManager = layout.getManager().getActiveShape();
   } else {
     var activeShapeManager = listHelper.getActiveShape();
@@ -697,7 +697,7 @@ thin.editor.Action.prototype.actionSetVerticalAlign = function(newValign) {
   var captureProperties = multipleShapesHelper.getCloneProperties();
   var captureVerticalAlign = workspace.getUiStatusForVerticalAlignType();
   
-  if (listHelper.isActived()) {
+  if (!listHelper.isActive()) {
     var activeShapeManager = layout.getManager().getActiveShape();
   } else {
     var activeShapeManager = listHelper.getActiveShape();
@@ -803,7 +803,7 @@ thin.editor.Action.prototype.actionSetFontBold = function(newBoldSetting) {
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var currentBoldSetting = workspace.getUiStatusForBold();
   
-  if (listHelper.isActived()) {
+  if (!listHelper.isActive()) {
     var activeShapeManager = layout.getManager().getActiveShape();
   } else {
     var activeShapeManager = listHelper.getActiveShape();
@@ -921,7 +921,7 @@ thin.editor.Action.prototype.actionSetFontItalic = function(newItalicSetting) {
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var currentItalicSetting = workspace.getUiStatusForItalic();
   
-  if (listHelper.isActived()) {
+  if (!listHelper.isActive()) {
     var activeShapeManager = layout.getManager().getActiveShape();
   } else {
     var activeShapeManager = listHelper.getActiveShape();
@@ -1025,7 +1025,7 @@ thin.editor.Action.prototype.actionSetFontUnderline = function(newUnderlineSetti
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var currentUnderlineSetting = workspace.getUiStatusForUnderlIne();
   
-  if (listHelper.isActived()) {
+  if (!listHelper.isActive()) {
     var activeShapeManager = layout.getManager().getActiveShape();
   } else {
     var activeShapeManager = listHelper.getActiveShape();
@@ -1119,7 +1119,7 @@ thin.editor.Action.prototype.actionSetFontLinethrough = function(newLinethrough)
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var currentnewLinethrough = workspace.getUiStatusForLineThrough();
   
-  if (listHelper.isActived()) {
+  if (!listHelper.isActive()) {
     var activeShapeManager = layout.getManager().getActiveShape();
   } else {
     var activeShapeManager = listHelper.getActiveShape();
@@ -1222,11 +1222,11 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
   var captureProperties = multipleShapesHelper.getCloneProperties();
   
   var listHelper = helpers.getListHelper();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
   var targetShapes = activeShapeManager.getClone();
   var parentGroup = layout.getCanvasElement();
   
-  if (!isActived) {
+  if (isActive) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var isEmptyByListShape = activeShapeManagerByListShape.isEmpty();
     var captureActiveSectionName = listHelper.getActiveSectionName();
@@ -1263,7 +1263,7 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
     version.upHandler(function() {
       layout.removeShapes(targetShapes);
       thin.ui.setEnabledForFontUi(false);
-      if (isActived) {
+      if (!isActive) {
         guide.setDisable();
         proppane.updateAsync(function() {
           layout.updatePropertiesForEmpty();
@@ -1283,7 +1283,7 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
     
     version.downHandler(function() {
     
-      if (isActived) {
+      if (!isActive) {
         activeShapeManager.set(targetShapes);
         var shapes = activeShapeManager.get();
         goog.array.forEach(shapes, function(shape, count) {
@@ -1411,7 +1411,7 @@ thin.editor.Action.prototype.actionCopyShapes = function() {
   
   var shapes = activeShapeManager.getClone();
   var listHelper = layout.getHelpers().getListHelper();
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     if (activeShapeManagerByListShape.isEmpty()) {
       // Skip CopyShapes;
@@ -1431,7 +1431,7 @@ thin.editor.Action.prototype.actionCutShapes = function() {
     return;
   }
   var listHelper = layout.getHelpers().getListHelper();
-  if(!listHelper.isActived() && listHelper.getActiveShape().isEmpty()) {
+  if(listHelper.isActive() && listHelper.getActiveShape().isEmpty()) {
     // Skip CutShapes;
     return;
   }
@@ -1535,13 +1535,13 @@ thin.editor.Action.prototype.actionShiftLeft = function(e) {
   var listHelper = layout.getHelpers().getListHelper();
   
   var isMultipleSelect = activeShapeManager.isMultiple();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
   
   var shapes = activeShapeManager.getClone();
   var currentLeft = guide.getBoxSize().left;
   var limitLeft = layout.getBoxSize().left;
   
-  if (!isActived) {
+  if (isActive) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var isEmptyByListShape = activeShapeManagerByListShape.isEmpty();
     if (isEmptyByListShape) {
@@ -1567,7 +1567,7 @@ thin.editor.Action.prototype.actionShiftLeft = function(e) {
         layout.calculateGuideBounds(shapes);
         guide.adjustToTargetShapeBounds();
       } else {
-        if (isActived || !isEmptyByListShape) {
+        if (!isActive || !isEmptyByListShape) {
           guide.adjustToTargetShapeBounds();
         } else {
           listHelper.update();
@@ -1606,14 +1606,14 @@ thin.editor.Action.prototype.actionShiftRight = function(e) {
   var guide = layout.getHelpers().getGuideHelper();
   var listHelper = layout.getHelpers().getListHelper();
   var isMultipleSelect = activeShapeManager.isMultiple();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
   var shapes = activeShapeManager.getClone();
   var currentLeft = guide.getLeft();
   var currentWidth = guide.getWidth();
   var currentRight = currentLeft + currentWidth;
   var limitRight = layout.getBoxSize().right;
   
-  if (!isActived) {
+  if (isActive) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var isEmptyByListShape = activeShapeManagerByListShape.isEmpty();
     if (isEmptyByListShape) {
@@ -1642,7 +1642,7 @@ thin.editor.Action.prototype.actionShiftRight = function(e) {
         layout.calculateGuideBounds(shapes);
         guide.adjustToTargetShapeBounds();
       } else {
-        if (isActived || !isEmptyByListShape) {
+        if (!isActive || !isEmptyByListShape) {
           guide.adjustToTargetShapeBounds();
         } else {
           listHelper.update();
@@ -1681,12 +1681,12 @@ thin.editor.Action.prototype.actionShiftUp = function(e) {
   var guide = layout.getHelpers().getGuideHelper();
   var listHelper = layout.getHelpers().getListHelper();
   var isMultipleSelect = activeShapeManager.isMultiple();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
   var shapes = activeShapeManager.getClone();
   var currentTop = guide.getBoxSize().top;
   var limitTop = layout.getBoxSize().top;
   
-  if (!isActived) {
+  if (isActive) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var isEmptyByListShape = activeShapeManagerByListShape.isEmpty();
     if (isEmptyByListShape) {
@@ -1713,7 +1713,7 @@ thin.editor.Action.prototype.actionShiftUp = function(e) {
         layout.calculateGuideBounds(shapes);
         guide.adjustToTargetShapeBounds();
       } else {
-        if (isActived || !isEmptyByListShape) {
+        if (!isActive || !isEmptyByListShape) {
           guide.adjustToTargetShapeBounds();
         } else {
           listHelper.update();
@@ -1752,14 +1752,14 @@ thin.editor.Action.prototype.actionShiftDown = function(e) {
   var guide = layout.getHelpers().getGuideHelper();
   var listHelper = layout.getHelpers().getListHelper();
   var isMultipleSelect = activeShapeManager.isMultiple();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
   var shapes = activeShapeManager.getClone();
   var currentTop = guide.getTop();
   var currentHeight = guide.getHeight();
   var currentBottom = currentTop + currentHeight;
   var limitBottom = layout.getBoxSize().bottom;
   
-  if (!isActived) {
+  if (isActive) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var isEmptyByListShape = activeShapeManagerByListShape.isEmpty();
     if (isEmptyByListShape) {
@@ -1790,7 +1790,7 @@ thin.editor.Action.prototype.actionShiftDown = function(e) {
         layout.calculateGuideBounds(shapes);
         guide.adjustToTargetShapeBounds();
       } else {
-        if (isActived || !isEmptyByListShape) {
+        if (!isActive || !isEmptyByListShape) {
           guide.adjustToTargetShapeBounds();
         } else {
           listHelper.update();
@@ -1827,12 +1827,12 @@ thin.editor.Action.prototype.actionAdjustToLeft = function() {
   var shapes = activeShapeManager.getClone();
   var isSingle = activeShapeManager.isSingle();
   var listHelper = layout.getHelpers().getListHelper();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
 
   if (isSingle) {
     var singleShape = activeShapeManager.getIfSingle();
     var basisLeft = layout.getLeft();
-    var isTransLate = !isActived && singleShape.instanceOfListShape();
+    var isTransLate = isActive && singleShape.instanceOfListShape();
     if (isTransLate) {
       var transLate = null;
       var retransLate = null;
@@ -1920,14 +1920,14 @@ thin.editor.Action.prototype.actionAdjustToCenter = function() {
   var shapes = activeShapeManager.getClone();
   var isSingle = activeShapeManager.isSingle();
   var listHelper = layout.getHelpers().getListHelper();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
   
   if (isSingle) {
     var singleShape = activeShapeManager.getIfSingle();
     var bounds = singleShape.getAffiliationRegionBounds();
     var basisCenter = thin.numberWithPrecision(
                             bounds.left + (bounds.width / 2));
-    var isTransLate = !isActived && singleShape.instanceOfListShape();
+    var isTransLate = isActive && singleShape.instanceOfListShape();
     if (isTransLate) {
       var transLate = null;
       var retransLate = null;
@@ -2013,12 +2013,12 @@ thin.editor.Action.prototype.actionAdjustToRight = function() {
   var shapes = activeShapeManager.getClone();
   var isSingle = activeShapeManager.isSingle();
   var listHelper = layout.getHelpers().getListHelper();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
   
   if (isSingle) {
     var singleShape = activeShapeManager.getIfSingle();
     var basisRight = layout.getBoxSize().right;
-    var isTransLate = !isActived && singleShape.instanceOfListShape();
+    var isTransLate = isActive && singleShape.instanceOfListShape();
     if (isTransLate) {
       var transLate = null;
       var retransLate = null;
@@ -2103,12 +2103,12 @@ thin.editor.Action.prototype.actionAdjustToTop = function() {
   var shapes = activeShapeManager.getClone();
   var isSingle = activeShapeManager.isSingle();
   var listHelper = layout.getHelpers().getListHelper();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
 
   if (isSingle) {
     var singleShape = activeShapeManager.getIfSingle();
     var basisTop = layout.getTop();
-    var isTransLate = !isActived && singleShape.instanceOfListShape();
+    var isTransLate = isActive && singleShape.instanceOfListShape();
     if (isTransLate) {
       var transLate = null;
       var retransLate = null;
@@ -2196,14 +2196,14 @@ thin.editor.Action.prototype.actionAdjustToMiddle = function() {
   var shapes = activeShapeManager.getClone();
   var isSingle = activeShapeManager.isSingle();
   var listHelper = layout.getHelpers().getListHelper();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
 
   if (isSingle) {
     var singleShape = activeShapeManager.getIfSingle();
     var bounds = singleShape.getAffiliationRegionBounds();
     var basisCenter = thin.numberWithPrecision(
                           bounds.top + (bounds.height / 2));
-    var isTransLate = !isActived && singleShape.instanceOfListShape();
+    var isTransLate = isActive && singleShape.instanceOfListShape();
     if (isTransLate) {
       var transLate = null;
       var retransLate = null;
@@ -2289,12 +2289,12 @@ thin.editor.Action.prototype.actionAdjustToBottom = function() {
   var shapes = activeShapeManager.getClone();
   var isSingle = activeShapeManager.isSingle();
   var listHelper = layout.getHelpers().getListHelper();
-  var isActived = listHelper.isActived();
+  var isActive = listHelper.isActive();
   
   if (isSingle) {
     var singleShape = activeShapeManager.getIfSingle();
     var basisBottom = layout.getBoxSize().bottom;
-    var isTransLate = !isActived && singleShape.instanceOfListShape();
+    var isTransLate = isActive && singleShape.instanceOfListShape();
     if (isTransLate) {
       var transLate = null;
       var retransLate = null;

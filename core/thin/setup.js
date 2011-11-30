@@ -186,7 +186,7 @@ thin.setup = function() {
           var multipleShapesHelper = helpers.getMultipleShapesHelper();
 
           if (!activeShapeManager.isEmpty()) {
-            if (listHelper.isActived()) {
+            if (!listHelper.isActive()) {
               if (activeShapeManager.isMultiple()) {
                 multipleShapesHelper.captureProperties();
               }
@@ -239,7 +239,7 @@ thin.setup = function() {
           var listHelper = helpers.getListHelper();
           var singleShape = activeShapeManager.getIfSingle();
           
-          if (listHelper.isActived()) {
+          if (!listHelper.isActive()) {
             if (singleShape) {
               singleShape.updateProperties();
             } else {

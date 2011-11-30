@@ -42,7 +42,7 @@ thin.editor.toolaction.EllipseAction.prototype.handleActionInternal = function(e
   this.drawLayerSetup(drawLayer, outline, true);
   drawLayer.setVisibled(true);
 
-  if (!listHelper.isActived()) {
+  if (listHelper.isActive()) {
     var listDrawLayer;
     listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
       listDrawLayer = sectionHelper.getDrawLayer();
