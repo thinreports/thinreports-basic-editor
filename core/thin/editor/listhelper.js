@@ -417,6 +417,11 @@ thin.editor.ListHelper.prototype.init = function() {
   var helpers = layout.getHelpers();
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var guide = helpers.getGuideHelper();
+  
+  var listGuide = this.getListGuideHelper();
+  listGuide.init();
+  layout.appendChild(listGuide, this);
+  
   this.forEachSectionHelper(function(sectionHelper) {
     sectionHelper.init();
   }, this);
@@ -481,9 +486,6 @@ thin.editor.ListHelper.prototype.init = function() {
 
   layout.appendChild(blankRangeSelectorLayer, this);
   layout.appendChild(blankRangeDrawLayer, this);
-  var listGuide = this.getListGuideHelper();
-  listGuide.init();
-  layout.appendChild(listGuide, this);
 };
 
 
