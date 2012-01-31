@@ -44,7 +44,7 @@ goog.inherits(thin.editor.ShapeIdManager, thin.editor.AbstractManager);
 thin.editor.ShapeIdManager.DefaultPrefix = {
   TEXT_BLOCK: 'text',
   IMAGE_BLOCK: 'image',
-  LIST: 'list'
+  LIST: 'default'
 };
 
 
