@@ -1,3 +1,6 @@
 *.pro.user
+*.pyc
+core/application.js
+core/application-compiled.log
 
 release/
