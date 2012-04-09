@@ -12,7 +12,7 @@ namespace :core do
       output_mode   = ENV['bopt_output_mode'] || 'compiled'
       
       # File for output STDERR
-      output_stderr = File.join(ROOT, 'application-compiled-error.log')
+      output_stderr = File.join(ROOT, 'application-compiled.log')
       
       run_command :output => output_stderr do
         add "python #{closure_builder_py}"
@@ -24,7 +24,7 @@ namespace :core do
         add "-c #{closure_compiler_jar}"
         add "-f \"--compilation_level=ADVANCED_OPTIMIZATIONS\""
         add "-f \"--warning_level=#{warning_level}\""
-        add "--output_file=#{path_from_root('application-compiled.js')}"
+        add "--output_file=#{path_from_root('application.js')}"
       end
     end
     
