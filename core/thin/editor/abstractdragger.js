@@ -100,9 +100,7 @@ thin.editor.AbstractDragger = function(target, opt_handle) {
   
   // Add listener. Do not use the event handler here since the event handler is
   // used for listeners added and removed during the drag operation.
-  goog.events.listen(handle, [goog.events.EventType.TOUCHSTART,
-                     goog.events.EventType.MOUSEDOWN], this.startDrag, false,
-                     this);
+  goog.events.listen(handle, goog.events.EventType.MOUSEDOWN, this.startDrag, false, this);
 };
 goog.inherits(thin.editor.AbstractDragger, goog.fx.Dragger);
 
@@ -434,7 +432,6 @@ thin.editor.AbstractDragger.prototype.startDrag = function(e) {
   if (this.enabled_ && !this.dragging_ &&
       (!isMouseDown || e.isMouseActionButton())) {
         
-    this.maybeReinitTouchEvent_(e);
     this.getWorkspace().focusElement(e);
 
     if (this.hysteresisDistanceSquared_ == 0) {
@@ -558,7 +555,6 @@ thin.editor.AbstractDragger.prototype.endDrag = function(e, opt_dragCanceled) {
   }
   
   if (this.dragging_) {
-    this.maybeReinitTouchEvent_(e);
     this.dragging_ = false;
     
     var clientX = this.clientX_ = e.clientX;
@@ -566,8 +562,7 @@ thin.editor.AbstractDragger.prototype.endDrag = function(e, opt_dragCanceled) {
     
     var pos = this.calculatePosition_(e);
         
-    var dragCancelled = opt_dragCanceled ||
-                        e.type == goog.events.EventType.TOUCHCANCEL;
+    var dragCancelled = opt_dragCanceled;
     
     this.dispatchEvent(new thin.editor.DragEvent(
         goog.fx.Dragger.EventType.END, this, clientX, clientY, e, pos.x, pos.y, 0, 0,
@@ -581,13 +576,6 @@ thin.editor.AbstractDragger.prototype.endDrag = function(e, opt_dragCanceled) {
     this.clientX_ = 0;
     this.clientY_ = 0;
   }
-
-  // Call preventDefault to prevent mouseup from being raised if this is a
-  // touchend event.
-  if (e.type == goog.events.EventType.TOUCHEND ||
-      e.type == goog.events.EventType.TOUCHCANCEL) {
-    e.preventDefault();
-  }
 };
 
 
@@ -599,7 +587,6 @@ thin.editor.AbstractDragger.prototype.endDrag = function(e, opt_dragCanceled) {
 thin.editor.AbstractDragger.prototype.handleMove_ = function(e) {
   if (this.enabled_) {
     
-    this.maybeReinitTouchEvent_(e);
     var dx = e.clientX - this.clientX;
     var dy = e.clientY - this.clientY;
     this.clientX = e.clientX;
