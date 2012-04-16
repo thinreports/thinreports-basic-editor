@@ -18,6 +18,8 @@ goog.provide('thin.editor.TextStyle.HorizonAlignType');
 goog.provide('thin.editor.TextStyle.VerticalAlignType');
 goog.provide('thin.editor.TextStyle.HorizonAlignTypeName');
 goog.provide('thin.editor.TextStyle.VerticalAlignTypeName');
+goog.provide('thin.editor.TextStyle.OverflowType');
+goog.provide('thin.editor.TextStyle.OverflowTypeName');
 
 
 /**
@@ -64,6 +66,32 @@ thin.editor.TextStyle.VerticalAlignTypeName = {
   CENTER: '中央揃',
   BOTTOM: '下揃'
 };
+
+
+/**
+ * @enum {string}
+ */
+thin.editor.TextStyle.OverflowType = {
+  TRUNCATE: 'truncate',
+  FIT: 'fit',
+  EXPAND: 'expand'
+};
+
+
+/**
+ * @enum {string}
+ */
+thin.editor.TextStyle.OverflowTypeName = {
+  TRUNCATE: '非表示',
+  FIT: '縮小',
+  EXPAND: '拡張'
+};
+
+
+/**
+ * @type {string}
+ */
+thin.editor.TextStyle.DEFAULT_OVERFLOWTYPE = 'truncate';
 
 
 /**

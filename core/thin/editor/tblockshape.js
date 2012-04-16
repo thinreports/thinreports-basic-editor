@@ -29,6 +29,8 @@ goog.require('thin.editor.IdShape');
 goog.require('thin.editor.TextStyle');
 goog.require('thin.editor.TextStyle.HorizonAlignType');
 goog.require('thin.editor.TextStyle.VerticalAlignType');
+goog.require('thin.editor.TextStyle.OverflowType');
+goog.require('thin.editor.TextStyle.OverflowTypeName');
 goog.require('thin.editor.AbstractTextGroup');
 goog.require('thin.editor.ModuleShape');
 goog.require('thin.editor.formatstyles');
@@ -795,6 +797,25 @@ thin.editor.TblockShape.prototype.setFontSize = function(size) {
 
 
 /**
+ * @param {string} type
+ */
+thin.editor.TblockShape.prototype.setOverflowType = function(type) {
+  this.getLayout().setElementAttributes(this.getElement(), {
+    'x-overflow': type
+  });
+};
+
+
+/**
+ * @return {string}
+ */
+thin.editor.TblockShape.prototype.getOverflowType = function() {
+  return this.getLayout().getElementAttribute(this.getElement(), 'x-overflow')
+    || thin.editor.TextStyle.DEFAULT_OVERFLOWTYPE;
+};
+
+
+/**
  * @param {thin.editor.Helpers} helpers
  * @param {thin.editor.MultiOutlineHelper} multiOutlineHelper
  */
@@ -1177,6 +1198,35 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(multipleCheckProperty, textGroup, 'multiple');
 
+  var textOverflowSelectProperty = new thin.ui.PropertyPane.SelectProperty('溢れたとき');
+  var textOverflowSelect = textOverflowSelectProperty.getValueControl();
+  textOverflowSelect.setTextAlignLeft();
+  
+  var overflowName = thin.editor.TextStyle.OverflowTypeName;
+  var overflowType = thin.editor.TextStyle.OverflowType;
+  
+  textOverflowSelect.addItem(new thin.ui.Option(overflowName.TRUNCATE, overflowType.TRUNCATE));
+  textOverflowSelect.addItem(new thin.ui.Option(overflowName.FIT, overflowType.FIT));
+  textOverflowSelect.addItem(new thin.ui.Option(overflowName.EXPAND, overflowType.EXPAND));
+  
+  textOverflowSelectProperty.addEventListener(propEventType.CHANGE,
+      function(e) {
+        var overflow = e.target.getValue();
+        var captureOverflow = scope.getOverflowType();
+
+        workspace.normalVersioning(function(version) {
+          version.upHandler(function() {
+            this.setOverflowType(overflow);
+            proppane.getPropertyControl('overflow').setValue(overflow);
+          }, scope);
+          version.downHandler(function() {
+            this.setOverflowType(captureOverflow);
+            proppane.getPropertyControl('overflow').setValue(captureOverflow);
+          }, scope);
+        });
+      }, false, this);
+  
+  proppane.addProperty(textOverflowSelectProperty , textGroup, 'overflow');
 
   var formatGroup = proppane.addGroup('簡易書式', 'format-group');
 
@@ -1620,6 +1670,7 @@ thin.editor.TblockShape.prototype.getProperties = function() {
     'text-valign': valign,
     'kerning': this.getKerning(),
     'multiple': this.isMultiMode(),
+    'overflow': this.getOverflowType(),
     'shape-id': this.getShapeId(),
     'ref-id': this.getRefId(),
     'default-value': this.getDefaultValueOfLink(),
@@ -1686,6 +1737,7 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
     proppane.getPropertyControl('kerning').setValue(properties['kerning']);
     proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
+    proppane.getPropertyControl('overflow').setValue(properties['overflow']);
     
     var formatType = properties['format-type'];
     proppane.getPropertyControl('format-type').setValue(thin.editor.formatstyles.getFormatNameFromType(formatType));
