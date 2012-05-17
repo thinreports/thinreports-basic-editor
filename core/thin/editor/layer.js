@@ -29,7 +29,7 @@ thin.editor.Layer = function(layout) {
       layout, null, new goog.graphics.SolidFill('#FFFFFF', 0.01));
   
   var size = layout.getNormalLayoutSize();
-  this.setBounds(new goog.math.Rect(0, 0, size.height, size.width));
+  this.setBounds(new goog.math.Rect(0, 0, size.width, size.height));
   this.setVisibled(false);
 };
 goog.inherits(thin.editor.Layer, thin.editor.Rect);
