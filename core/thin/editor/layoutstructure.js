@@ -204,8 +204,12 @@ thin.editor.LayoutStructure.inRawLayout_ = function(layout, f) {
   var listHelper = layout.getHelpers().getListHelper();
   
   // Set zoom-rate to 100%.
+  var scrollTarget = workspace.getParent().getParent().getContentElement();
+  var scrollLeft = Number(scrollTarget.scrollLeft);
+  var scrollTop = Number(scrollTarget.scrollTop);
+
   workspace.getAction().actionSetZoom(100);
-  
+
   if (!listHelper.isActive()) {
     f();
   } else {
@@ -227,6 +231,8 @@ thin.editor.LayoutStructure.inRawLayout_ = function(layout, f) {
   
   // Restore original zoom-rate.
   workspace.getAction().actionSetZoom(zoomRate);
+  scrollTarget.scrollLeft = scrollLeft;
+  scrollTarget.scrollTop = scrollTop;
 };
 
 
