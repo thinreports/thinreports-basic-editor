@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.setup');
+goog.provide('thin.boot');
 
 goog.require('goog.dom');
 goog.require('goog.ui.Component');
@@ -98,7 +98,7 @@ goog.require('thin.layout.FormatPage.DirectionType');
 goog.require('thin.layout.File');
 
 
-thin.setup = function() {
+thin.boot = function() {
 
   /**
    * @param {e} goog.events.Event
@@ -1453,4 +1453,4 @@ thin.setup = function() {
   initUiStatus();
 };
 
-goog.exportProperty(goog.global, 'setup', thin.setup);
+goog.exportProperty(goog.global, 'bootEditor', thin.boot);
