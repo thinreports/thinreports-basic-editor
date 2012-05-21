@@ -1,4 +1,4 @@
-.swp
+*.swp
 *.pro.user
 *.pyc
 core/application.js
