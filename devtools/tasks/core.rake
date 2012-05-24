@@ -12,19 +12,19 @@ namespace :core do
       output_mode   = ENV['bopt_output_mode'] || 'compiled'
       
       # File for output STDERR
-      output_stderr = File.join(ROOT, 'application-compiled.log')
+      output_stderr = File.join(ROOT, 'base-compile.log')
       
       run_command :output => output_stderr do
         add "python #{closure_builder_py}"
         add "--root=#{closure_library_for}"
         add "--root=#{closure_templates_for}"
         add "--root=#{path_from_root('thin')}"
-        add "-n thin.setup"
+        add "-n thin.boot"
         add "-o #{output_mode}"
         add "-c #{closure_compiler_jar}"
         add "-f \"--compilation_level=ADVANCED_OPTIMIZATIONS\""
         add "-f \"--warning_level=#{warning_level}\""
-        add "--output_file=#{path_from_root('application.js')}"
+        add "--output_file=#{path_from_root('base.js')}"
       end
     end
     
