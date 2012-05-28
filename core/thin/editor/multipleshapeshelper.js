@@ -25,6 +25,8 @@ goog.require('thin.editor.FontStyle');
 goog.require('thin.editor.TextStyle');
 goog.require('thin.editor.TextStyle.HorizonAlignType');
 goog.require('thin.editor.TextStyle.VerticalAlignType');
+goog.require('thin.editor.TextStyle.OverflowType');
+goog.require('thin.editor.TextStyle.OverflowTypeName');
 goog.require('thin.editor.HistoryManager');
 goog.require('thin.editor.HistoryManager.Mode');
 
@@ -895,9 +897,56 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   
   proppane.addProperty(multipleCheckProperty, textGroup, 'multiple');
   
+  var textOverflowSelectProperty = new thin.ui.PropertyPane.SelectProperty('溢れたとき');
+  var textOverflowSelect = textOverflowSelectProperty.getValueControl();
+  textOverflowSelect.setTextAlignLeft();
   
+  var overflowName = thin.editor.TextStyle.OverflowTypeName;
+  var overflowType = thin.editor.TextStyle.OverflowType;
+  
+  textOverflowSelect.addItem(new thin.ui.Option(overflowName.TRUNCATE, overflowType.TRUNCATE));
+  textOverflowSelect.addItem(new thin.ui.Option(overflowName.FIT, overflowType.FIT));
+  textOverflowSelect.addItem(new thin.ui.Option(overflowName.EXPAND, overflowType.EXPAND));
+  
+  textOverflowSelectProperty.addEventListener(propEventType.CHANGE,
+      function(e) {
+        var captureProperties = scope.getCloneProperties();
+        var overflow = e.target.getValue();
+        var originalOverflowTypes = [];
+        var shapes = manager.getActiveShapeByIncludeList().getClone();
+        var targetShapes = goog.array.filter(shapes, function(shape) {
+          if (shape.instanceOfTblockShape()) {
+            originalOverflowTypes[originalOverflowTypes.length] = shape.getOverflowType();
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+        workspace.normalVersioning(function(version) {
+          version.upHandler(function() {
+            goog.array.forEach(targetShapes, function(shape) {
+              shape.setOverflowType(overflow);
+            });
+            this.setPropertyForNonDestructive(captureProperties, 'overflow', overflow);
+            updateGuideAndProperties(shapes);
+          }, scope);
+
+          version.downHandler(function() {
+            goog.array.forEach(targetShapes, function(shape, i) {
+              shape.setOverflowType(originalOverflowTypes[i]);
+            });
+            this.setCloneProperties(captureProperties);
+            updateGuideAndProperties(shapes);
+          }, scope);
+        });
+      }, false, this);
+
+  proppane.addProperty(textOverflowSelectProperty , textGroup, 'overflow');
+
+
   var fontGroup = proppane.addGroup('フォント');
-  
+
 
   var fontSizeCombProperty = new thin.ui.PropertyPane.ComboBoxProperty('サイズ');
   var fontSizeComb = fontSizeCombProperty.getValueControl();
