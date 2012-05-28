@@ -100,8 +100,7 @@ thin.editor.AbstractDragger = function(target, opt_handle) {
   
   // Add listener. Do not use the event handler here since the event handler is
   // used for listeners added and removed during the drag operation.
-  goog.events.listen(handle, [goog.events.EventType.TOUCHSTART,
-                     goog.events.EventType.MOUSEDOWN], this.startDrag, false, this);
+  goog.events.listen(handle, goog.events.EventType.MOUSEDOWN, this.startDrag, false, this);
 };
 goog.inherits(thin.editor.AbstractDragger, goog.fx.Dragger);
 
