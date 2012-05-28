@@ -865,6 +865,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
   var shapeIdPrefix = thin.editor.ShapeIdManager.getShapeIdPrefix(this.getShapeId());
   var isAffiliationListShape = this.isAffiliationListShape();
   var deltaCoordinate = this.getDeltaCoordinateForList();
+  var overflow = this.getOverflowType();
 
   /**
    * @param {thin.editor.Layout} layout
@@ -903,6 +904,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
     shape.setDefaultValueOfLink(defvalue);
     shape.setBaseFormat(formatBase);
     shape.setFormatStyle(formatStyle);
+    shape.setOverflowType(overflow);
 
     return shape;
   };
