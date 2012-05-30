@@ -52,10 +52,11 @@ thin.i18n;
 /**
  * Shorthand for thin.i18n.translate.
  * @param {string} name
+ * @param {Object=} opt_values
  * @return {string}
  */
-thin.t = function(name) {
-  return thin.i18n.t(name);
+thin.t = function(name, opt_values) {
+  return thin.i18n.t(name, opt_values);
 };
 
 

@@ -37,10 +37,11 @@ goog.addSingletonGetter(thin.I18n);
 
 /**
  * @param {string} name
+ * @param {Object=} opt_values
  * @return {string}
  */
-thin.I18n.prototype.translate = function(name) {
-  return this.translations_[name] || name;
+thin.I18n.prototype.translate = function(name, opt_values) {
+  return goog.getMsg(this.translations_[name], opt_values) || name;
 };
 
 
