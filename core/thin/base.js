@@ -13,14 +13,50 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.base');
+goog.provide('thin');
 goog.provide('thin.Error');
+
+
+/**
+ * @param {string} path
+ * @param {...string} var_args
+ * @return {*}
+ */
+thin.$ = function(path, var_args) {
+  var reg = new RegExp(/\(\)$/);
+  var obj = goog.array.reduce(path.replace(reg, '').split('.'), 
+      function(r, o) { return r[o]; }, goog.global['Thin']);
+
+  if (reg.test(path)) {
+    return obj.apply(goog.global, 
+        goog.array.slice(arguments, 1));
+  } else {
+    return obj;
+  }
+};
 
 
 /**
  * @type {thin.Settings}
  */
 thin.settings;
+
+
+/**
+ * Defined at thin.I18n.
+ * @type {thin.I18n}
+ */
+thin.i18n;
+
+
+/**
+ * Shorthand for thin.i18n.translate.
+ * @param {string} name
+ * @return {string}
+ */
+thin.t = function(name) {
+  return thin.i18n.t(name);
+};
 
 
 /**
