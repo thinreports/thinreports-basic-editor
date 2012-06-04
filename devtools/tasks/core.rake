@@ -10,7 +10,8 @@ namespace :core do
       # Initialize arguments
       warning_level = ENV['bopt_verbose'] || 'VERBOSE'
       output_mode   = ENV['bopt_output_mode'] || 'compiled'
-      
+      debug_mode    = ENV['bopt_debug']
+
       # File for output STDERR
       output_stderr = File.join(ROOT, 'base-compile.log')
       
@@ -24,6 +25,7 @@ namespace :core do
         add "-c #{closure_compiler_jar}"
         add "-f \"--compilation_level=ADVANCED_OPTIMIZATIONS\""
         add "-f \"--warning_level=#{warning_level}\""
+        add "-f \"--debug=true\"" if debug_mode
         add "--output_file=#{path_from_root('base.js')}"
       end
     end
