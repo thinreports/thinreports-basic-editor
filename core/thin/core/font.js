@@ -98,10 +98,10 @@ thin.core.Font.BUILTIN_FONTS_ = [
   ['Helvetica', 'Helvetica'],
   ['Courier New', 'Courier New'],
   ['Times New Roman', 'Times New Roman'],
-  ['IPA 明朝', 'IPAMincho'],
-  ['IPA P明朝', 'IPAPMincho'],
-  ['IPA ゴシック', 'IPAGothic'],
-  ['IPA Pゴシック', 'IPAPGothic']
+  ['IPA ' + thin.t('font_mincho'), 'IPAMincho'],
+  ['IPA P' + thin.t('font_mincho'), 'IPAPMincho'],
+  ['IPA ' + thin.t('font_gothic'), 'IPAGothic'],
+  ['IPA P' + thin.t('font_gothic'), 'IPAPGothic']
 ];
 
 

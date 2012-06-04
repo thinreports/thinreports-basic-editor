@@ -196,5 +196,8 @@ Thin.translations = {
   shape_ellipse: '楕円形', 
   shape_line: '線形', 
   shape_text: 'テキスト', 
-  shape_image: '画像'
+  shape_image: '画像', 
+
+  font_gothic: 'ゴシック', 
+  font_mincho: '明朝'
 };
