@@ -46,9 +46,9 @@ thin.editor.ModuleElement.StrokeType = {
  * @enum {string}
  */
 thin.editor.ModuleElement.StrokeTypeName = {
-  SOLID: '実線',
-  DASHED: '点線',
-  DOTTED: '破線'
+  SOLID: thin.t('label_solid_line'),
+  DASHED: thin.t('label_dotted_line'),
+  DOTTED: thin.t('label_dashed_line')
 };
 
 

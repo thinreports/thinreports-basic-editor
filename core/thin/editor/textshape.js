@@ -681,9 +681,9 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
   
-  var baseGroup = proppane.addGroup('基本');
+  var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
   
-  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty('左位置');
+  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -692,7 +692,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
-  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty('上位置');
+  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -702,7 +702,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(topInputProperty, baseGroup, 'top');
   
   
-  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty('幅');
+  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -712,7 +712,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
   
   
-  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -722,16 +722,16 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
   
     
-  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('表示');
+  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
   
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
   
-  var fontGroup = proppane.addGroup('フォント');
+  var fontGroup = proppane.addGroup(thin.t('property_group_font'));
   
-  var colorInputProperty = new thin.ui.PropertyPane.ColorProperty('色');
+  var colorInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_font_color'));
   colorInputProperty.getValueControl().getInput().setLabel('none');
   colorInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
@@ -766,7 +766,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(colorInputProperty , fontGroup, 'font-color');
 
-  var fontSizeCombProperty = new thin.ui.PropertyPane.ComboBoxProperty('サイズ');
+  var fontSizeCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_font_size'));
   var fontSizeComb = fontSizeCombProperty.getValueControl();
   var fontSizeInput = fontSizeComb.getInput();
   var fontSizeInputValidation = new thin.ui.Input.NumberValidator(this);
@@ -799,9 +799,9 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(fontFamilySelectProperty , fontGroup, 'font-family');
   
 
-  var textGroup = proppane.addGroup('テキスト');
+  var textGroup = proppane.addGroup(thin.t('property_group_text'));
   
-  var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty('横位置');
+  var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
   textAlignSelect.setTextAlignLeft();
   var textAlignType = thin.editor.TextStyle.HorizonAlignTypeName;
@@ -819,7 +819,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
 
 
-  var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty('縦位置');
+  var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_vertical_align'));
   var textVerticalAlignSelect = textVerticalAlignSelectProperty.getValueControl();
   textVerticalAlignSelect.setTextAlignLeft();
   var verticalAlignType = thin.editor.TextStyle.VerticalAlignTypeName;
@@ -837,7 +837,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
   
   
-  var lineHeightCombProperty = new thin.ui.PropertyPane.ComboBoxProperty('行間');
+  var lineHeightCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_text_line_height'));
   var lineHeightComb = lineHeightCombProperty.getValueControl();
   var lineHeightInput = lineHeightComb.getInput();
   lineHeightInput.setLabel('auto');
@@ -881,7 +881,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(lineHeightCombProperty , textGroup, 'line-height');
 
-  var kerningInputProperty = new thin.ui.PropertyPane.NumberInputProperty('文字間隔', 'auto');
+  var kerningInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_text_kerning'), 'auto');
   var kerningInput = kerningInputProperty.getValueControl();
   
   var kerningInputValidation = kerningInput.getNumberValidator();
@@ -922,7 +922,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(kerningInputProperty, textGroup, 'kerning');
 
 
-  var cooperationGroup = proppane.addGroup('連携');
+  var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
   
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
@@ -930,10 +930,10 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
   
-  var descProperty = new thin.ui.PropertyPane.InputProperty('説明');
+  var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
-  
+
   proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 

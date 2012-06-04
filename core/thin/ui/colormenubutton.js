@@ -88,7 +88,7 @@ thin.ui.ColorMenuButton.newColorMenu = function(opt_isAllowNone) {
     (function(){
       var cssClass = thin.ui.getCssName('thin-color-palette-none'); 
       var elements = [goog.dom.createDom('div', thin.ui.getCssName(cssClass, 'icon')), 
-                      goog.dom.createDom('span', null, 'なし')];
+                      goog.dom.createDom('span', null, thin.t('label_color_none'))];
       var renderer = goog.ui.ControlRenderer.getCustomRenderer(
             goog.ui.ButtonRenderer, cssClass);
       noneButton = new goog.ui.Button(elements, 

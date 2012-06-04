@@ -38,9 +38,9 @@ thin.editor.formatstyles.FormatType = {
  */
 thin.editor.formatstyles.FormatTypeName = {
   NONE: '　',
-  DATETIME: '日付時刻書式',
-  NUMBER: '数値書式',
-  PADDING: '字詰め書式'
+  DATETIME: thin.t('label_datetime_format'),
+  NUMBER: thin.t('label_number_format'),
+  PADDING: thin.t('label_character_fill_format')
 };
 
 

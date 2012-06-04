@@ -373,9 +373,9 @@ thin.editor.HeaderSectionShape.prototype.createPropertyComponent_ = function() {
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
   
-  var containerGroup = proppane.addGroup('ヘッダー');
+  var containerGroup = proppane.addGroup(thin.t('property_group_list_header'));
   
-  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -388,7 +388,7 @@ thin.editor.HeaderSectionShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(heightInputProperty, containerGroup, 'section-header-height');
   
   
-  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('表示');
+  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         scope.setSectionEnabled(e.target.isChecked(), sectionName);
@@ -457,9 +457,9 @@ thin.editor.DetailSectionShape.prototype.createPropertyComponent_ = function() {
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
   
-  var containerGroup = proppane.addGroup('詳細');
+  var containerGroup = proppane.addGroup(thin.t('property_group_list_detail'));
   
-  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -531,9 +531,9 @@ thin.editor.PageFooterSectionShape.prototype.createPropertyComponent_ = function
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
   
-  var containerGroup = proppane.addGroup('ページフッター');
+  var containerGroup = proppane.addGroup(thin.t('property_group_list_page_footer'));
   
-  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -546,7 +546,7 @@ thin.editor.PageFooterSectionShape.prototype.createPropertyComponent_ = function
   proppane.addProperty(heightInputProperty, containerGroup, 'section-pagefooter-height');
   
   
-  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('表示');
+  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         scope.setSectionEnabled(e.target.isChecked(), sectionName);
@@ -615,9 +615,9 @@ thin.editor.FooterSectionShape.prototype.createPropertyComponent_ = function() {
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
   
-  var containerGroup = proppane.addGroup('フッター');
+  var containerGroup = proppane.addGroup(thin.t('property_group_list_footer'));
   
-  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -630,7 +630,7 @@ thin.editor.FooterSectionShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(heightInputProperty, containerGroup, 'section-footer-height');
   
   
-  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('表示');
+  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         scope.setSectionEnabled(e.target.isChecked(), sectionName);

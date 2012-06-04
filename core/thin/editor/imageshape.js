@@ -326,10 +326,10 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
   
-  var baseGroup = proppane.addGroup('基本');
+  var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
   
   
-  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty('左位置');
+  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -339,7 +339,7 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
-  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty('上位置');
+  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -349,7 +349,7 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(topInputProperty, baseGroup, 'top');
   
   
-  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty('幅');
+  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -359,7 +359,7 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
   
   
-  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -369,14 +369,14 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
   
 
-  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('表示');
+  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
   
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
   
 
-  var cooperationGroup = proppane.addGroup('連携');
+  var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
   
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
@@ -384,7 +384,7 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
   
-  var descProperty = new thin.ui.PropertyPane.InputProperty('説明');
+  var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
   

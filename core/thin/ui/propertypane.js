@@ -1009,7 +1009,7 @@ thin.ui.PropertyPane.FontSelectProperty = function(opt_label) {
   
   control.getMenu().setMaxHeight(250);
   
-  thin.ui.PropertyPane.Property.call(this, opt_label || 'フォンﾄ', control);
+  thin.ui.PropertyPane.Property.call(this, opt_label || thin.t('field_font_family'), control);
 };
 goog.inherits(thin.ui.PropertyPane.FontSelectProperty, thin.ui.PropertyPane.SelectProperty);
 
@@ -1369,17 +1369,17 @@ thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.setValidatePresence =
 thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.validate_ = function(value) {
   if (this.validatePresence_) {
     if (value == '') {
-      this.setMessage('IDは必須です。');
+      this.setMessage(thin.t('error_id_is_required'));
       return false;
     }
   }
   if (!/^[0-9a-zA-Z][\w]*(#\d+)?$/.test(value)) {
-    this.setMessage('IDに使用できる文字は、英数字とアンダースコア"_"のみです。');
+    this.setMessage(thin.t('error_id_contains_invalid_characters'));
     return false;
   }
   if (this.validateDuplication_) {
     if (!this.shape_.getLayout().isUsableShapeId(value, this.shape_)) {
-      this.setMessage('"' + value + '" は既に使用されています。');
+      this.setMessage(thin.t('error_id_is_already_used', {'id': value}));
       return false;
     }
   }

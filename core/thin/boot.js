@@ -20,11 +20,12 @@ goog.require('goog.ui.Component');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Textarea');
 
+goog.require('thin');
 goog.require('thin.Settings');
+goog.require('thin.i18n');
 goog.require('thin.core');
 goog.require('thin.core.platform');
 goog.require('thin.core.Font');
-goog.require('thin.base');
 goog.require('thin.Error');
 goog.require('thin.Compatibility');
 goog.require('thin.ui');
@@ -99,6 +100,17 @@ goog.require('thin.layout.File');
 
 
 thin.boot = function() {
+  (function() {
+    var i18n = thin.i18n;
+    Array.prototype.forEach.call(
+      goog.dom.getDocument().querySelectorAll('body *[data-i18n]'), 
+      function(elm) {
+        var msg = i18n.translate(elm.getAttribute('data-i18n'));
+        if (msg) {
+          elm.textContent = msg;
+        }
+      });
+  })();
 
   /**
    * @param {e} goog.events.Event
@@ -265,7 +277,7 @@ thin.boot = function() {
       
       if(removeWorkspace.isChanged()) {
         var confirmDialogFromTab = thin.ui.Message.confirm(
-          '内容が変更されています。<br/>保存しますか ？', '確認',
+          thin.t('text_layout_force_close_confirmation'), thin.t('label_confirmation'),
           function(e) {
 
             if (e.isYes()) {
@@ -303,14 +315,14 @@ thin.boot = function() {
 
     // Add report
     var reportAdd = toolbar.setupChild('report-add', 
-        new thin.ui.ToolbarButton('新規作成', new thin.ui.Icon('report-add', iconAlign.TOP)), 
+        new thin.ui.ToolbarButton(thin.t('button_new_report'), new thin.ui.Icon('report-add', iconAlign.TOP)), 
         dom.getElement('tbar-report-add'));
     
     reportAdd.addEventListener(componentEventType.ACTION, function(e) {
       // Create dialog.
       var dialog = new thin.ui.Dialog();
       dialog.setDisposeOnHide(true);
-      dialog.setTitle('新しいレイアウト');
+      dialog.setTitle(thin.t('label_new_report'));
       dialog.setWidth(400);
       dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOkCancel());
       
@@ -404,7 +416,7 @@ thin.boot = function() {
             
             if (goog.string.isEmpty(userWidth) ||
                 goog.string.isEmpty(userHeight)) {
-              thin.ui.Message.alert('用紙設定が未入力です。', 'Error', function() {
+              thin.ui.Message.alert(thin.t('error_paper_size_is_empty'), 'Error', function() {
                 dialog.focus();
               });
               return false;
@@ -447,7 +459,7 @@ thin.boot = function() {
     
     // Save report
     var toolSave = toolbar.setupChild('report-save', 
-        new thin.ui.ToolbarSplitButton('保存', new thin.ui.Icon('report-save', iconAlign.TOP)), 
+        new thin.ui.ToolbarSplitButton(thin.t('button_save'), new thin.ui.Icon('report-save', iconAlign.TOP)), 
         dom.getElement('tbar-report-save'));
 
     toolSave.getButton().addEventListener(componentEventType.ACTION, function(e) {
@@ -459,7 +471,7 @@ thin.boot = function() {
     }, false);
     
     // SaveAs report
-    var toolSaveAs = new thin.ui.MenuItem('名前を付けて保存',
+    var toolSaveAs = new thin.ui.MenuItem(thin.t('button_saveas'),
           new thin.ui.Icon('report-saveas'));
     toolSave.addItem(toolSaveAs);
     toolSaveAs.addEventListener(componentEventType.ACTION, function(e) {
@@ -473,7 +485,7 @@ thin.boot = function() {
     toolSave.addItem(new thin.ui.MenuSeparator());
     
     // Export ID-Structure
-    var toolExportIds = new thin.ui.MenuItem('レイアウト定義をエクスポート',
+    var toolExportIds = new thin.ui.MenuItem(thin.t('button_export_definition'),
           new thin.ui.Icon('export-layout-doc'));
     toolSave.addItem(toolExportIds);
     toolExportIds.addEventListener(componentEventType.ACTION, function(e) {
@@ -486,7 +498,7 @@ thin.boot = function() {
     
     // Open report file
     var toolOpen = toolbar.setupChild('report-open', 
-        new thin.ui.ToolbarButton('開く', new thin.ui.Icon('report-open', iconAlign.TOP)), 
+        new thin.ui.ToolbarButton(thin.t('button_open'), new thin.ui.Icon('report-open', iconAlign.TOP)), 
         dom.getElement('tbar-report-open'));
 
     toolOpen.addEventListener(componentEventType.ACTION, function(e) {
@@ -519,10 +531,10 @@ thin.boot = function() {
             
             if (!thin.layout.canOpen(targetVersion)) {
               throw new thin.Error(
-                  'レイアウトファイルのバージョンが' +
-                  '「' + thin.layout.inspectRequiredRules() + '」' +
-                  'を満たす場合のみ編集できます。' +
-                  "<br>※ 選択したレイアウトファイルのバージョンは「" + targetVersion + '」です。');
+                  thin.t('error_can_not_edit_layout_file', {
+                    'required': thin.layout.inspectRequiredRules(),
+                    'version': targetVersion
+                  }));
             }
 
             var newPage = new thin.ui.TabPane.TabPage(
@@ -537,7 +549,7 @@ thin.boot = function() {
             if (er instanceof thin.Error) {
               message = er.message;
             } else {
-              message = "予期しないエラーが発生しました。";
+              message = thin.t('error_unknown'); 
             }
             
             thin.ui.Message.alert(message, 'Error',
@@ -556,7 +568,7 @@ thin.boot = function() {
 
     // Undo
     var toolUndo = toolbar.setupChild('undo', 
-        new thin.ui.ToolbarButton('元に戻す', new thin.ui.Icon('undo')), 
+        new thin.ui.ToolbarButton(thin.t('button_undo'), new thin.ui.Icon('undo')), 
         dom.getElement('tbar-undo'));
 
     toolUndo.addEventListener(componentEventType.ACTION, function(e) {
@@ -568,7 +580,7 @@ thin.boot = function() {
     });
     // Redo
     var toolRedo = toolbar.setupChild('redo', 
-        new thin.ui.ToolbarButton('やり直す', new thin.ui.Icon('redo')), 
+        new thin.ui.ToolbarButton(thin.t('button_redo'), new thin.ui.Icon('redo')), 
         dom.getElement('tbar-redo'));
 
     toolRedo.addEventListener(componentEventType.ACTION, function(e) {
@@ -580,7 +592,7 @@ thin.boot = function() {
     });
 
     var toolConfig = toolbar.setupChild('report-config', 
-        new thin.ui.ToolbarButton('ページ設定', 
+        new thin.ui.ToolbarButton(thin.t('button_page_setting'), 
             new thin.ui.Icon('report-config', iconAlign.TOP)), 
         dom.getElement('tbar-report-config'));
 
@@ -591,7 +603,7 @@ thin.boot = function() {
         // Create dialog.
         var dialog = new thin.ui.Dialog();
         dialog.setDisposeOnHide(true);
-        dialog.setTitle('ページ印刷設定');
+        dialog.setTitle(thin.t('label_report_setting'));
         dialog.setWidth(400);
         dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOkCancel());
         
@@ -671,7 +683,7 @@ thin.boot = function() {
               
               if (goog.string.isEmpty(userWidth) ||
                   goog.string.isEmpty(userHeight)) {              
-                thin.ui.Message.alert('用紙設定が未入力です。', 'Error', function() {
+                thin.ui.Message.alert(thin.t('error_paper_type_is_empty'), 'Error', function() {
                   dialog.focus();
                 });
                 return false;
@@ -726,7 +738,7 @@ thin.boot = function() {
 
     // Zoom in
     var toolZoomIn = toolbar.setupChild('zoom-in', 
-        new thin.ui.ToolbarButton('拡大', new thin.ui.Icon('zoom-in')), 
+        new thin.ui.ToolbarButton(thin.t('button_zoom_in'), new thin.ui.Icon('zoom-in')), 
         dom.getElement('tbar-zoom-in'));
 
     toolZoomIn.addEventListener(componentEventType.ACTION, function(e) {
@@ -739,7 +751,7 @@ thin.boot = function() {
     
     // Zoom out
     var toolZoomOut = toolbar.setupChild('zoom-out', 
-        new thin.ui.ToolbarButton('縮小', new thin.ui.Icon('zoom-out')), 
+        new thin.ui.ToolbarButton(thin.t('button_zoom_out'), new thin.ui.Icon('zoom-out')), 
         dom.getElement('tbar-zoom-out'));
 
     toolZoomOut.addEventListener(componentEventType.ACTION, function(e) {
@@ -775,7 +787,7 @@ thin.boot = function() {
     
     // Guide
     var toolGuide = toolbar.setupChild('guide', 
-        new thin.ui.ToolbarSplitToggleButton('ガイド', 
+        new thin.ui.ToolbarSplitToggleButton(thin.t('button_guide'), 
             new thin.ui.Icon('guide'), thin.ui.SplitButton.Orientation.VERTICAL), 
         dom.getElement('tbar-guide'));
     
@@ -787,7 +799,7 @@ thin.boot = function() {
       }
     });
     
-    var toolGuideAddHorizontal = new thin.ui.MenuItem('ガイドラインの追加（水平）', new thin.ui.Icon('guide-add'));
+    var toolGuideAddHorizontal = new thin.ui.MenuItem(thin.t('button_add_horizontal_guide'), new thin.ui.Icon('guide-add'));
     toolGuide.addItem(toolGuideAddHorizontal);
     toolGuideAddHorizontal.addEventListener(componentEventType.ACTION, function(e) {
       var workspace = thin.editor.getActiveWorkspace();
@@ -797,7 +809,7 @@ thin.boot = function() {
       }
     });
     
-    var toolGuideAddVertical = new thin.ui.MenuItem('ガイドラインの追加（垂直）', new thin.ui.Icon('guide-add'));
+    var toolGuideAddVertical = new thin.ui.MenuItem(thin.t('button_add_vertical_guide'), new thin.ui.Icon('guide-add'));
     toolGuide.addItem(toolGuideAddVertical);
     toolGuideAddVertical.addEventListener(componentEventType.ACTION, function(e) {
       var workspace = thin.editor.getActiveWorkspace();
@@ -810,7 +822,7 @@ thin.boot = function() {
     // Separator    
     toolGuide.addItem(new thin.ui.MenuSeparator());
     
-    var toolGuideRemove = new thin.ui.MenuItem('ガイドラインの削除', new thin.ui.Icon('guide-delete'));
+    var toolGuideRemove = new thin.ui.MenuItem(thin.t('button_remove_guide'), new thin.ui.Icon('guide-delete'));
     toolGuide.addItem(toolGuideRemove);
     toolGuideRemove.addEventListener(componentEventType.ACTION, function(e) {
       var workspace = thin.editor.getActiveWorkspace();
@@ -930,7 +942,7 @@ thin.boot = function() {
     
     // Text Edit
     var toolTextEdit = toolbar.setupChild('text-edit', 
-        new thin.ui.ToolbarButton('テキスト編集', new thin.ui.Icon('text-edit')), 
+        new thin.ui.ToolbarButton(thin.t('button_edit_text'), new thin.ui.Icon('text-edit')), 
         styleElement);
 
     toolTextEdit.addEventListener(componentEventType.ACTION, function(e) {
@@ -1034,11 +1046,11 @@ thin.boot = function() {
 
     // Shape Alignments
     var toolAlignments = toolbar.setupChild('shape-align', 
-        new thin.ui.ToolbarMenuButton('整列', 
+        new thin.ui.ToolbarMenuButton(thin.t('button_align'), 
             new thin.ui.Icon('shape-align-left', iconAlign.TOP)), 
         dom.getElement('tbar-shape-align'));
     
-    var toolAlignmentsLeft = new thin.ui.MenuItem('左揃え',
+    var toolAlignmentsLeft = new thin.ui.MenuItem(thin.t('button_align_left'),
           new thin.ui.Icon('shape-align-left'));
     toolAlignments.addItem(toolAlignmentsLeft);
     toolAlignmentsLeft.addEventListener(componentEventType.ACTION, function(e) {
@@ -1049,7 +1061,7 @@ thin.boot = function() {
       }
     });
     
-    var toolAlignmentsCenter =  new thin.ui.MenuItem('中央揃え',
+    var toolAlignmentsCenter =  new thin.ui.MenuItem(thin.t('button_align_center'),
           new thin.ui.Icon('shape-align-center'));
     toolAlignments.addItem(toolAlignmentsCenter);
     toolAlignmentsCenter.addEventListener(componentEventType.ACTION, function(e) {
@@ -1060,7 +1072,7 @@ thin.boot = function() {
       }
     });
 
-    var toolAlignmentsRight = new thin.ui.MenuItem('右揃え',
+    var toolAlignmentsRight = new thin.ui.MenuItem(thin.t('button_align_right'),
           new thin.ui.Icon('shape-align-right'));
     toolAlignments.addItem(toolAlignmentsRight);
     toolAlignmentsRight.addEventListener(componentEventType.ACTION, function(e) {
@@ -1073,7 +1085,7 @@ thin.boot = function() {
 
     toolAlignments.addItem(new thin.ui.MenuSeparator());
     
-    var toolAlignmentsTop = new thin.ui.MenuItem('上揃え',
+    var toolAlignmentsTop = new thin.ui.MenuItem(thin.t('button_align_top'),
           new thin.ui.Icon('shape-align-top'));
     toolAlignments.addItem(toolAlignmentsTop);
     toolAlignmentsTop.addEventListener(componentEventType.ACTION, function(e) {
@@ -1084,7 +1096,7 @@ thin.boot = function() {
       }
     });
     
-    var toolAlignmentsMiddle = new thin.ui.MenuItem('上下中央揃え',
+    var toolAlignmentsMiddle = new thin.ui.MenuItem(thin.t('button_align_middle'),
           new thin.ui.Icon('shape-align-middle'));
     toolAlignments.addItem(toolAlignmentsMiddle);
     toolAlignmentsMiddle.addEventListener(componentEventType.ACTION, function(e) {
@@ -1095,7 +1107,7 @@ thin.boot = function() {
       }
     });
     
-    var toolAlignmentsBottom = new thin.ui.MenuItem('下揃え',
+    var toolAlignmentsBottom = new thin.ui.MenuItem(thin.t('button_align_bottom'),
           new thin.ui.Icon('shape-align-bottom'));
     toolAlignments.addItem(toolAlignmentsBottom);
     toolAlignmentsBottom.addEventListener(componentEventType.ACTION, function(e) {
@@ -1110,7 +1122,7 @@ thin.boot = function() {
 
     var versioningModeIsNormal = thin.editor.HistoryManager.Mode.NORMAL;
 
-    var toolAlignmentsWidth = new thin.ui.MenuItem('幅揃え',
+    var toolAlignmentsWidth = new thin.ui.MenuItem(thin.t('button_fit_same_width'),
           new thin.ui.Icon('shape-align-width'));
 
     toolAlignments.addItem(toolAlignmentsWidth);
@@ -1122,7 +1134,7 @@ thin.boot = function() {
       }
     });
     
-    var toolAlignmentsHeight = new thin.ui.MenuItem('高さ揃え',
+    var toolAlignmentsHeight = new thin.ui.MenuItem(thin.t('button_fit_same_height'),
           new thin.ui.Icon('shape-align-height'));
     
     toolAlignments.addItem(toolAlignmentsHeight);
@@ -1135,7 +1147,7 @@ thin.boot = function() {
     });
     
     
-    var toolAlignmentsSize = new thin.ui.MenuItem('サイズ揃え',  
+    var toolAlignmentsSize = new thin.ui.MenuItem(thin.t('button_fit_same_size'),  
           new thin.ui.Icon('shape-align-size'));
     toolAlignments.addItem(toolAlignmentsSize);
     toolAlignmentsSize.addEventListener(componentEventType.ACTION, function(e) {
@@ -1148,7 +1160,7 @@ thin.boot = function() {
     
     // Layer front
     var toolLayerFrontButton = toolbar.setupChild('layer-front', 
-        new thin.ui.ToolbarSplitButton('前面へ移動', 
+        new thin.ui.ToolbarSplitButton(thin.t('button_bring_forward'), 
             new thin.ui.Icon('shape-layer-front')), 
         dom.getElement('tbar-layer-front'));
 
@@ -1160,7 +1172,7 @@ thin.boot = function() {
       }
     });
 
-    var toolLayerBefore = new thin.ui.MenuItem('前面へ移動', 
+    var toolLayerBefore = new thin.ui.MenuItem(thin.t('button_bring_forward'), 
           new thin.ui.Icon('shape-layer-front'));
     toolLayerFrontButton.addItem(toolLayerBefore);
     toolLayerBefore.addEventListener(componentEventType.ACTION, function(e) {
@@ -1171,7 +1183,7 @@ thin.boot = function() {
       }
     });
 
-    var toolLayerFront = new thin.ui.MenuItem('最前面へ移動',
+    var toolLayerFront = new thin.ui.MenuItem(thin.t('button_bring_to_front'),
           new thin.ui.Icon('shape-layer-foreground'));
     toolLayerFrontButton.addItem(toolLayerFront);
     toolLayerFront.addEventListener(componentEventType.ACTION, function(e) {
@@ -1184,7 +1196,7 @@ thin.boot = function() {
     
     // Layer back
     var toolLayerBackButton = toolbar.setupChild('layer-back', 
-        new thin.ui.ToolbarSplitButton('背面へ移動', 
+        new thin.ui.ToolbarSplitButton(thin.t('button_send_backward'), 
             new thin.ui.Icon('shape-layer-back')), 
         dom.getElement('tbar-layer-back'));
     
@@ -1197,7 +1209,7 @@ thin.boot = function() {
     });
     
     
-    var toolLayerAfter = new thin.ui.MenuItem('背面へ移動',
+    var toolLayerAfter = new thin.ui.MenuItem(thin.t('button_send_backward'),
           new thin.ui.Icon('shape-layer-back'));
     toolLayerBackButton.addItem(toolLayerAfter);
     toolLayerAfter.addEventListener(componentEventType.ACTION, function(e) {
@@ -1208,7 +1220,7 @@ thin.boot = function() {
       }
     });
     
-    var toolLayerBack = new thin.ui.MenuItem('最背面へ移動',
+    var toolLayerBack = new thin.ui.MenuItem(thin.t('button_send_to_back'),
           new thin.ui.Icon('shape-layer-backtop'));
     toolLayerBackButton.addItem(toolLayerBack);
     toolLayerBack.addEventListener(componentEventType.ACTION, function(e) {
@@ -1221,11 +1233,11 @@ thin.boot = function() {
     
     // Help and Information
     var toolHelp = toolbar.setupChild('help', 
-        new thin.ui.ToolbarMenuButton('ヘルプ', new thin.ui.Icon('help', iconAlign.TOP)), 
+        new thin.ui.ToolbarMenuButton(thin.t('button_help'), new thin.ui.Icon('help', iconAlign.TOP)), 
         dom.getElement('tbar-help'));
     
     // About ThinReports
-    var toolHelpAbout = new thin.ui.MenuItem('ThinReportsについて', new thin.ui.Icon('information'));
+    var toolHelpAbout = new thin.ui.MenuItem(thin.t('button_about'), new thin.ui.Icon('information'));
     toolHelp.addItem(toolHelpAbout);
     toolHelpAbout.addEventListener(componentEventType.ACTION, function(e) {
       var helpDialog = new thin.ui.Dialog();
@@ -1267,7 +1279,7 @@ thin.boot = function() {
     
     // Forum
     var toolForum = new thin.ui.MenuLinkItem(
-        'フォーラム', 'http://osc.matsukei.net/projects/thinreports/boards',
+        thin.t('button_go_to_forum'), 'http://osc.matsukei.net/projects/thinreports/boards',
         new thin.ui.Icon('forum'));
     toolHelp.addItem(toolForum);
     
@@ -1275,7 +1287,7 @@ thin.boot = function() {
     
     // Report Bug
     var toolHelpFeedBack = new thin.ui.MenuLinkItem(
-          '問題の報告', 'http://osc.matsukei.net/projects/thinreports/issues/new',
+          thin.t('button_feedback'), 'http://osc.matsukei.net/projects/thinreports/issues/new',
           new thin.ui.Icon('report-bug'));
     toolHelp.addItem(toolHelpFeedBack);
     
@@ -1293,13 +1305,13 @@ thin.boot = function() {
     var toolSelect = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.SelectAction(),
           new thin.ui.Icon('tool-select')), 'selector');
-    toolSelect.setTooltip('選択ツール');
+    toolSelect.setTooltip(thin.t('button_selection_tool'));
         
     // Zoom
     var toolZoom = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.ZoomAction(),
           new thin.ui.Icon('tool-zoom')), 'zoom');
-    toolZoom.setTooltip('拡大縮小ツール');
+    toolZoom.setTooltip(thin.t('button_zoom_tool'));
     
     // Separator
     toolbox.addItem(new thin.ui.ToolboxSeparator());
@@ -1308,31 +1320,31 @@ thin.boot = function() {
     var toolRect = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.RectAction(),
           new thin.ui.Icon('tool-rect')), 'rect');
-    toolRect.setTooltip('四角形ツール');
+    toolRect.setTooltip(thin.t('button_rectangle_tool'));
 
     // Ellipse
     var toolEllipse = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.EllipseAction(),
           new thin.ui.Icon('tool-ellipse')), 'ellipse');
-    toolEllipse.setTooltip('楕円形ツール');
+    toolEllipse.setTooltip(thin.t('button_ellipse_tool'));
 
     // Line
     var toolLine = toolbox.addItem(
           new thin.ui.ToolboxButton(new thin.editor.toolaction.LineAction(),
             new thin.ui.Icon('tool-line')), 'line');
-    toolLine.setTooltip('線形ツール');
+    toolLine.setTooltip(thin.t('button_line_tool'));
     
     // Text
     var toolText = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.TextAction(),
           new thin.ui.Icon('tool-text')), 'text');
-    toolText.setTooltip('テキストツール');
+    toolText.setTooltip(thin.t('button_text_tool'));
 
     // Image
     var toolImage = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.ImageAction(),
           new thin.ui.Icon('tool-image')), 'image');
-    toolImage.setTooltip('画像ツール');
+    toolImage.setTooltip(thin.t('button_image_tool'));
     
     // Separator
     toolbox.addItem(new thin.ui.ToolboxSeparator());
@@ -1341,13 +1353,13 @@ thin.boot = function() {
     var toolTblock = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.TblockAction(),
           new thin.ui.Icon('tool-tblock')), 'tblock');
-    toolTblock.setTooltip('テキストブロックツール');
+    toolTblock.setTooltip(thin.t('button_text_block_tool'));
     
     // Imageblock
     var toolIblock = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.ImageblockAction(),
           new thin.ui.Icon('tool-iblock')), 'iblock');
-    toolIblock.setTooltip('画像ブロックツール');
+    toolIblock.setTooltip(thin.t('button_image_block_tool'));
     
     // Separator
     toolbox.addItem(new thin.ui.ToolboxSeparator());
@@ -1356,7 +1368,7 @@ thin.boot = function() {
     var toolList = toolbox.addItem(
         new thin.ui.ToolboxButton(new thin.editor.toolaction.ListAction(),
           new thin.ui.Icon('tool-list')), 'list');
-    toolList.setTooltip('一覧表ツール');
+    toolList.setTooltip(thin.t('button_list_tool'));
     
     thin.ui.registerComponent('toolbox', toolbox);
   })();
@@ -1368,7 +1380,7 @@ thin.boot = function() {
   })();
   (function() {
     var textEditorDialog = new thin.ui.Dialog();
-    textEditorDialog.setTitle('テキスト編集');
+    textEditorDialog.setTitle(thin.t('label_text_edit'));
     textEditorDialog.setWidth(316);
     textEditorDialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOkCancel());
     
@@ -1395,7 +1407,7 @@ thin.boot = function() {
       
       if (isChanged) {
         thin.ui.Message.confirm(
-          '保存されていないファイルがあります。<br />保存しますか ？', '確認',
+          thin.t('text_editor_force_close_confirmation'), thin.t('label_confirmation'),
           function(e) {
             if (e.isYes()) {
               e.target.setVisible(false);
@@ -1453,4 +1465,4 @@ thin.boot = function() {
   initUiStatus();
 };
 
-goog.exportProperty(goog.global, 'bootEditor', thin.boot);
+goog.exportProperty(goog.global['Thin'], 'boot', thin.boot);

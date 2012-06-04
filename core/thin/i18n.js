@@ -13,26 +13,14 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.I18n');
-
-goog.require('goog.Disposable');
+goog.provide('thin.i18n');
 
 
 /**
- * @constructor
- * @extends {goog.Disposable}
+ * @type {Object}
+ * @private
  */
-thin.I18n = function() {
-  goog.base(this);
-
-  /**
-   * @type {Object}
-   * @private
-   */
-  this.translations_ = /** @type {Object} */(thin.$('translations'));
-};
-goog.inherits(thin.I18n, goog.Disposable);
-goog.addSingletonGetter(thin.I18n);
+thin.i18n.translations_;
 
 
 /**
@@ -40,24 +28,32 @@ goog.addSingletonGetter(thin.I18n);
  * @param {Object=} opt_values
  * @return {string}
  */
-thin.I18n.prototype.translate = function(name, opt_values) {
-  return goog.getMsg(this.translations_[name], opt_values) || name;
+thin.i18n.translate = function(name, opt_values) {
+  return thin.i18n.getMsg_(
+      thin.i18n.getTranslations()[name], opt_values) || name;
 };
 
 
 /**
- * Shorthand of #translate
- * @see thin.I18n.translate
+ * @return {Object}
  */
-thin.I18n.prototype.t = thin.I18n.prototype.translate;
-
-
-/** @override */
-thin.I18n.prototype.disposeInternal = function() {
-  goog.base(this, 'disposeInternal');
-  
-  this.translations_ = null;
+thin.i18n.getTranslations = function() {
+  return thin.i18n.translations_
+    || (thin.i18n.translations_ = /** @type {Object} */(thin.$('translations')));
 };
 
 
-thin.i18n = thin.I18n.getInstance();
+/**
+ * @param {string} str
+ * @param {Object=} opt_values
+ * @return {string} message
+ * @private
+ */
+thin.i18n.getMsg_ = function(str, opt_values) {
+  var values = opt_values || {};
+  for (var key in values) {
+    var value = ('' + values[key]).replace(/\$/g, '$$$$');
+    str = str.replace(new RegExp('\\{\\$' + key + '\\}', 'gi'), value);
+  }
+  return str;
+};

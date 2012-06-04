@@ -365,7 +365,7 @@ thin.editor.Workspace.create = function(file) {
     return workspace;
     
   } catch (e) {
-    thin.ui.Message.alert('レイアウトファイル内容に異常が検出されたため開くことができません。', 'Error',
+    thin.ui.Message.alert(thin.t('error_invalid_layout_file'), 'Error',
         function(e) {
           var activeWorkspace = thin.editor.getActiveWorkspace();
           if (activeWorkspace) {
@@ -580,8 +580,8 @@ thin.editor.Workspace.prototype.saveAs = function() {
 
 thin.editor.Workspace.prototype.generateLayoutDocument = function() {
   if (this.isNew()) {
-    var msg = 'エクスポートするには、レイアウトを保存する必要があります。<br/>保存しますか？';
-    thin.ui.Message.confirm(msg, '確認', function(e) {
+    var msg = thin.t('text_layout_export_definition_confirmation');
+    thin.ui.Message.confirm(msg, thin.t('label_confirmation'), function(e) {
       if (e.isYes() && this.saveAs_()) {
         thin.layout.document.generate(this.getLayout());
       }

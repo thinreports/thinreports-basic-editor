@@ -52,9 +52,9 @@ thin.editor.TextStyle.VerticalAlignType = {
  * @enum {string}
  */
 thin.editor.TextStyle.HorizonAlignTypeName = {
-  START: '左寄',
-  MIDDLE: '中央寄',
-  END: '右寄'
+  START: thin.t('label_left_align'),
+  MIDDLE: thin.t('label_center_align'),
+  END: thin.t('label_right_align')
 };
 
 
@@ -62,9 +62,9 @@ thin.editor.TextStyle.HorizonAlignTypeName = {
  * @enum {string}
  */
 thin.editor.TextStyle.VerticalAlignTypeName = {
-  TOP: '上揃',
-  CENTER: '中央揃',
-  BOTTOM: '下揃'
+  TOP: thin.t('label_top_align'),
+  CENTER: thin.t('label_middle_align'),
+  BOTTOM: thin.t('label_bottom_align')
 };
 
 
@@ -82,9 +82,9 @@ thin.editor.TextStyle.OverflowType = {
  * @enum {string}
  */
 thin.editor.TextStyle.OverflowTypeName = {
-  TRUNCATE: '非表示',
-  FIT: '縮小',
-  EXPAND: '拡張'
+  TRUNCATE: thin.t('label_overflow_truncate'),
+  FIT: thin.t('label_overflow_fit'),
+  EXPAND: thin.t('label_overflow_expand')
 };
 
 

@@ -357,19 +357,19 @@ thin.layout.document.Base.prototype.formatTypeName_ = function(id) {
 thin.layout.document.Base.prototype.formatShapeClassIdName_ = function(classId) {
   switch(classId) {
     case thin.editor.LineShape.CLASSID:
-      return '線形';
+      return thin.t('shape_line');
       break;
     case thin.editor.RectShape.CLASSID:
-      return '四角形';
+      return thin.t('shape_rectangle');
       break;
     case thin.editor.EllipseShape.CLASSID:
-      return '楕円形';
+      return thin.t('shape_ellipse');
       break;
     case thin.editor.TextShape.CLASSID:
-      return 'テキスト';
+      return thin.t('shape_text');
       break;
     case thin.editor.ImageShape.CLASSID:
-      return '画像';
+      return thin.t('shape_image');
       break;
   }
   return '';

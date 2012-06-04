@@ -924,10 +924,10 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
   
-  var baseGroup = proppane.addGroup('基本');
+  var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
   
   
-  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty('左位置');
+  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -937,7 +937,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
-  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty('上位置');
+  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -947,7 +947,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(topInputProperty, baseGroup, 'top');
   
   
-  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty('幅');
+  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -957,7 +957,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
   
   
-  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -967,17 +967,17 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
   
   
-  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('表示');
+  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
   
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
 
-  var fontGroup = proppane.addGroup('フォント');
+  var fontGroup = proppane.addGroup(thin.t('property_group_font'));
   
 
-  var colorInputProperty = new thin.ui.PropertyPane.ColorProperty('色');
+  var colorInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_font_color'));
   colorInputProperty.getValueControl().getInput().setLabel('none');
   colorInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
@@ -1013,7 +1013,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(colorInputProperty , fontGroup, 'font-color');
 
 
-  var fontSizeCombProperty = new thin.ui.PropertyPane.ComboBoxProperty('サイズ');
+  var fontSizeCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_font_size'));
   var fontSizeComb = fontSizeCombProperty.getValueControl();
   var fontSizeInput = fontSizeComb.getInput();
   var fontSizeInputValidation = new thin.ui.Input.NumberValidator(this);
@@ -1047,10 +1047,10 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(fontFamilySelectProperty , fontGroup, 'font-family');
 
 
-  var textGroup = proppane.addGroup('テキスト');
+  var textGroup = proppane.addGroup(thin.t('property_group_text'));
   
 
-  var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty('横位置');
+  var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
   var textAlignType = thin.editor.TextStyle.HorizonAlignTypeName;
   
@@ -1068,7 +1068,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
   
   
-  var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty('縦位置');
+  var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_vertical_align'));
   var textVerticalAlignSelect = textVerticalAlignSelectProperty.getValueControl();
   textVerticalAlignSelect.setTextAlignLeft();
   var verticalAlignType = thin.editor.TextStyle.VerticalAlignTypeName;
@@ -1086,7 +1086,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
   
   
-  var lineHeightCombProperty = new thin.ui.PropertyPane.ComboBoxProperty('行間');
+  var lineHeightCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_text_line_height'));
   var lineHeightComb = lineHeightCombProperty.getValueControl();
   var lineHeightInput = lineHeightComb.getInput();
   lineHeightInput.setLabel('auto');
@@ -1123,7 +1123,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(lineHeightCombProperty , textGroup, 'line-height');
   
   
-  var kerningInputProperty = new thin.ui.PropertyPane.NumberInputProperty('文字間隔', 'auto');
+  var kerningInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_text_kerning'), 'auto');
   var kerningInput = kerningInputProperty.getValueControl();
   var kerningInputValidation = kerningInput.getNumberValidator();
   kerningInputValidation.setAllowDecimal(true, 1);
@@ -1153,7 +1153,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(kerningInputProperty, textGroup, 'kerning');
 
 
-  var multipleCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('複数行');
+  var multipleCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_multiple_line'));
   var multipleCheck = multipleCheckProperty.getValueControl();
   multipleCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
@@ -1200,7 +1200,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(multipleCheckProperty, textGroup, 'multiple');
 
-  var textOverflowSelectProperty = new thin.ui.PropertyPane.SelectProperty('溢れたとき');
+  var textOverflowSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_overflow'));
   var textOverflowSelect = textOverflowSelectProperty.getValueControl();
   textOverflowSelect.setTextAlignLeft();
   
@@ -1230,10 +1230,10 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(textOverflowSelectProperty , textGroup, 'overflow');
 
-  var formatGroup = proppane.addGroup('簡易書式', 'format-group');
+  var formatGroup = proppane.addGroup(thin.t('property_group_simple_format'), 'format-group');
 
 
-  var formatTypeSelectProperty = new thin.ui.PropertyPane.SelectProperty('書式種別');
+  var formatTypeSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_format_type'));
   var formatTypeSelect = formatTypeSelectProperty.getValueControl();
   formatTypeSelect.setTextAlignLeft();
   goog.object.forEach(thin.editor.formatstyles.FormatTypeName, function(formatName) {
@@ -1262,7 +1262,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(formatTypeSelectProperty , formatGroup, 'format-type');
     
   
-  var baseFormatInputProperty = new thin.ui.PropertyPane.InputProperty('基本書式');
+  var baseFormatInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_basic_format'));
   var baseFormatInput = baseFormatInputProperty.getValueControl();
   baseFormatInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
@@ -1286,7 +1286,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(baseFormatInputProperty, formatGroup, 'format-base');
 
 
-  var dateTimeCombProperty = new thin.ui.PropertyPane.ComboBoxProperty('日付時刻書式');
+  var dateTimeCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_datetime_format'));
   var dateTimeComb = dateTimeCombProperty.getValueControl();
   var dateTimeItem;
   goog.object.forEach(thin.editor.formatstyles.DatetimeFormat.DateFormatTemplate, function(dateTimeFormat) {
@@ -1317,7 +1317,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(dateTimeCombProperty , formatGroup, 'format-datetime-format');
   
   
-  var delimiterCheckableInputProperty = new thin.ui.PropertyPane.CheckableInputProperty('桁区切り');
+  var delimiterCheckableInputProperty = new thin.ui.PropertyPane.CheckableInputProperty(thin.t('field_thousand_separator'));
   var delimiterCheckBox = delimiterCheckableInputProperty.getValueControlCheckbox();
   var delimiterInput = delimiterCheckableInputProperty.getValueControlMain();
   
@@ -1381,7 +1381,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(delimiterCheckableInputProperty, formatGroup, 'format-number-delimiter');
   
   
-  var precisionInputProperty = new thin.ui.PropertyPane.InputProperty('小数点');
+  var precisionInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_decimal_place'));
   var precisionInput = precisionInputProperty.getValueControl();
   var precisionValidation = new thin.ui.Input.NumberValidator();
   precisionInput.setValidator(precisionValidation);
@@ -1410,7 +1410,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(precisionInputProperty, formatGroup, 'format-number-precision');
   
   
-  var lengthInputProperty = new thin.ui.PropertyPane.InputProperty('長さ');
+  var lengthInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_fill_length'));
   var lengthInput = lengthInputProperty.getValueControl();
   var lengthValidation = new thin.ui.Input.NumberValidator();
   lengthInput.setValidator(lengthValidation);
@@ -1439,7 +1439,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(lengthInputProperty, formatGroup, 'format-padding-length');
   
   
-  var charInputProperty = new thin.ui.PropertyPane.InputProperty('文字');
+  var charInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_fill_character'));
   var charInput = charInputProperty.getValueControl();
   charInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
@@ -1466,7 +1466,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(charInputProperty, formatGroup, 'format-padding-char');
   
   
-  var directionSelectProperty = new thin.ui.PropertyPane.SelectProperty('方向');
+  var directionSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_fill_direction'));
   var directionSelect = directionSelectProperty.getValueControl();
   directionSelect.setTextAlignLeft();
   goog.object.forEach(thin.editor.formatstyles.PaddingFormat.DirectionTypeName, function(directionTypeName) {
@@ -1499,7 +1499,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(directionSelectProperty , formatGroup, 'format-padding-direction');
   
   
-  var cooperationGroup = proppane.addGroup('連携');
+  var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
   
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.getIdValidator().setValidatePresence(true);
@@ -1538,7 +1538,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
 
 
-  var refIdInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, '参照ID');
+  var refIdInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, thin.t('field_reference_id'));
   refIdInputProperty.getIdValidator().setValidateDuplication(false);
   
   var refIdInput = refIdInputProperty.getValueControl();
@@ -1554,19 +1554,19 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
     
     switch(true) {
       case !goog.isDef(referenceShape):
-        notice = '"' + value + '" は存在しません。';
+        notice = thin.t('error_id_not_found', {'id': value});
         break;
       case !referenceShape.instanceOfTblockShape():
-        notice = '"' + value + '" はテキストブロックではありません。';
+        notice = thin.t('error_id_is_not_textblock', {'id': value});
         break;
       case scope == referenceShape:
-        notice = '自身は指定できません。';
+        notice = thin.t('error_can_not_specify_myself');
         break;
       case referenceShape.isReferring():
-        notice = '"' + value + '" は参照先を持っているため、指定できません。';
+        notice = thin.t('error_id_already_has_reference', {'id': value});
         break;
       case scope.isReferences():
-        notice = '他のテキストブロックから参照されているため、参照先を設定することはできません。';
+        notice = thin.t('error_can_not_set_the_reference');
         break;
     }
     if (notice) {
@@ -1615,7 +1615,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(refIdInputProperty, cooperationGroup, 'ref-id');
 
 
-  var defaultValueInputProperty = new thin.ui.PropertyPane.InputProperty('初期値');
+  var defaultValueInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_default_value'));
   var defaultValueInput = defaultValueInputProperty.getValueControl();
   var defaultValidation = new thin.ui.Input.Validator(this);
   defaultValidation.setAllowBlank(true);
@@ -1641,7 +1641,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(defaultValueInputProperty, cooperationGroup, 'default-value');
   
-  var descProperty = new thin.ui.PropertyPane.InputProperty('説明');
+  var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
   

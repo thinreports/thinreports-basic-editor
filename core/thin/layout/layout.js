@@ -39,7 +39,7 @@ thin.layout.inspectRequiredRules = function() {
     desc[desc.length] = goog.string.buildString(
         ' ', rule[1], ' ', thin.Version.humanizeOperator(rule[0]));
   });
-  return desc.join('かつ');
+  return desc.join(thin.t('label_condition_and'));
 };
 
 

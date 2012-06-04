@@ -159,10 +159,10 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
   
-  var baseGroup = proppane.addGroup('基本');
+  var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
   
   
-  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty('左位置');
+  var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -172,7 +172,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
-  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty('上位置');
+  var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -182,7 +182,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(topInputProperty, baseGroup, 'top');
   
   
-  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty('幅');
+  var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -192,7 +192,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
   
   
-  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty('高さ');
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
   
@@ -202,17 +202,17 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
   
   
-  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty('表示');
+  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
   
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
   
-  var shapeGroup = proppane.addGroup('図形');
+  var shapeGroup = proppane.addGroup(thin.t('property_group_shape'));
   
   
-  var fillInputProperty = new thin.ui.PropertyPane.ColorProperty('塗り');
+  var fillInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_fill_color'));
   fillInputProperty.getValueControl().getInput().setLabel('none');
   fillInputProperty.addEventListener(propEventType.CHANGE,
       this.setFillForPropertyUpdate, false, this);
@@ -220,7 +220,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(fillInputProperty , shapeGroup, 'fill');
   
   
-  var strokeInputProperty = new thin.ui.PropertyPane.ColorProperty('線の色');
+  var strokeInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_stroke_color'));
   strokeInputProperty.getValueControl().getInput().setLabel('none');
   strokeInputProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeForPropertyUpdate, false, this);
@@ -228,7 +228,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(strokeInputProperty , shapeGroup, 'stroke');
   
   
-  var strokeWidthCombProperty = new thin.ui.PropertyPane.ComboBoxProperty('線の幅');
+  var strokeWidthCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_stroke_width'));
   var strokeWidthComb = strokeWidthCombProperty.getValueControl();
   var strokeWidthInput = strokeWidthComb.getInput();
   strokeWidthInput.setLabel('none');
@@ -251,7 +251,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   
   
   var strokeDashTypeName = thin.editor.ModuleElement.StrokeTypeName;
-  var strokeDashSelectProperty = new thin.ui.PropertyPane.SelectProperty('線の種類');
+  var strokeDashSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_stroke_type'));
   var strokeDashSelect = strokeDashSelectProperty.getValueControl();
   strokeDashSelect.setTextAlignLeft();
   strokeDashSelect.addItem(new thin.ui.Option(strokeDashTypeName.SOLID));
@@ -264,7 +264,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(strokeDashSelectProperty , shapeGroup, 'stroke-dash-type');
 
 
-  var radiusInputProperty = new thin.ui.PropertyPane.InputProperty('角丸');
+  var radiusInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_rounded_corner'));
   radiusInputProperty.getValueControl().setValidator(new thin.ui.Input.NumberValidator(this));
   radiusInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
@@ -288,7 +288,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(radiusInputProperty, shapeGroup, 'radius');
 
 
-  var cooperationGroup = proppane.addGroup('連携');
+  var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
   
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
@@ -296,7 +296,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
   
-  var descProperty = new thin.ui.PropertyPane.InputProperty('説明');
+  var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
   

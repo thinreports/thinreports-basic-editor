@@ -115,7 +115,7 @@ thin.layout.File.getSaveAsDirPath = function(opt_path) {
  * @return {thin.layout.File?}
  */
 thin.layout.File.openDialog = function(opt_path) {
-  var path = thin.core.platform.File.getOpenFileName('ファイルを開く', 
+  var path = thin.core.platform.File.getOpenFileName(thin.t('label_open_file'), 
                  thin.layout.File.getOpenDirPath(opt_path),
                  thin.core.platform.File.createFilter(
                     thin.layout.File.EXT_DESCRIPTION_, 
@@ -166,7 +166,7 @@ thin.layout.File.prototype.getContent = function() {
  * @return {boolean}
  */
 thin.layout.File.prototype.saveAs = function(opt_path) {
-  var path = thin.core.platform.File.getSaveFileName('ファイルを保存', 
+  var path = thin.core.platform.File.getSaveFileName(thin.t('label_save_file'), 
                  thin.layout.File.getSaveAsDirPath(opt_path),
                  thin.core.platform.File.createFilter(
                     thin.layout.File.EXT_DESCRIPTION_, [thin.layout.File.EXT_NAME_]));
