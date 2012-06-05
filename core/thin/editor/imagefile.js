@@ -137,7 +137,7 @@ thin.editor.ImageFile.getOpenDirPath = function(opt_path) {
  * @return {thin.editor.ImageFile?}
  */
 thin.editor.ImageFile.openDialog = function(opt_path) {
-  var path = thin.core.platform.File.getOpenFileName('画像を開く', 
+  var path = thin.core.platform.File.getOpenFileName(thin.t('label_open_image'),
                  thin.editor.ImageFile.getOpenDirPath(opt_path),
                  thin.core.platform.File.createFilter(
                     thin.editor.ImageFile.EXT_DESCRIPTION_, 

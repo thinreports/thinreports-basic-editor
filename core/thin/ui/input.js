@@ -579,7 +579,7 @@ thin.ui.Input.Validator.prototype.method_;
  * @type {string}
  * @private
  */
-thin.ui.Input.Validator.prototype.message_ = '値が正しくありません。';
+thin.ui.Input.Validator.prototype.message_ = thin.t('error_invalid_value');
 
 
 /**

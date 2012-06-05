@@ -264,7 +264,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(strokeDashSelectProperty , shapeGroup, 'stroke-dash-type');
 
 
-  var radiusInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_rounded_corner'));
+  var radiusInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_corner_radius'));
   radiusInputProperty.getValueControl().setValidator(new thin.ui.Input.NumberValidator(this));
   radiusInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {

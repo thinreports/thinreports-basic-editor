@@ -189,10 +189,10 @@ thin.editor.DraggableLine.prototype.createPropertyComponent_ = function() {
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
   
-  var baseGroup = proppane.addGroup('基本');
+  var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
   
   
-  var positionInputProperty = new thin.ui.PropertyPane.NumberInputProperty('位置');
+  var positionInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_position'));
   var positionInput = positionInputProperty.getValueControl();
   positionInput.getNumberValidator().setAllowDecimal(true, 1);
   

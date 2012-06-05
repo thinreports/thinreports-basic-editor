@@ -1317,7 +1317,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(dateTimeCombProperty , formatGroup, 'format-datetime-format');
   
   
-  var delimiterCheckableInputProperty = new thin.ui.PropertyPane.CheckableInputProperty(thin.t('field_thousand_separator'));
+  var delimiterCheckableInputProperty = new thin.ui.PropertyPane.CheckableInputProperty(thin.t('field_delimiter'));
   var delimiterCheckBox = delimiterCheckableInputProperty.getValueControlCheckbox();
   var delimiterInput = delimiterCheckableInputProperty.getValueControlMain();
   

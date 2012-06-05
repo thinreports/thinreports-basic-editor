@@ -265,7 +265,7 @@ thin.ui.InputUnitChanger.prototype.handleButtonAction = function(e) {
  * @private
  */
 thin.ui.InputUnitChanger.prototype.setButtonTooltip_ = function(unit) {
-  this.button_.setTooltip('単位 ' + /** @type {string} */ (unit) + ' へ切り替える');
+  this.button_.setTooltip(thin.t('text_change_unit', {'unit': unit}));
 };
 
 

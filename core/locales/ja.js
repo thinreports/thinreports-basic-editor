@@ -33,6 +33,7 @@ Thin.translations = {
   property_group_list_detail: '詳細',
   property_group_list_footer: 'フッター',
   property_group_list_page_footer: 'ページフッター',
+  property_group_image: '画像位置',
 
   label_title_setting: 'タイトル設定',
   label_page_setting: '用紙設定',
@@ -69,6 +70,7 @@ Thin.translations = {
   label_color_none: 'なし',
   label_save_file: 'ファイルを保存',
   label_open_file: 'ファイルを開く',
+  label_open_image: '画像を開く', 
   label_confirmation: '確認',
   label_condition_and: 'かつ',
 
@@ -98,7 +100,7 @@ Thin.translations = {
   field_stroke_color: '線の色',
   field_stroke_width: '線の幅',
   field_stroke_type: '線の種類',
-  field_rounded_corner: '角丸',
+  field_corner_radius: '角丸',
   field_description: '説明',
   field_reference_id: '参照ID',
   field_default_value: '初期値',
@@ -113,7 +115,7 @@ Thin.translations = {
   field_text_overflow: '溢れたとき',
   field_format_type: '書式種別',
   field_datetime_format: '日付時刻書式',
-  field_thousand_separator: '桁区切り',
+  field_delimiter: '桁区切り',
   field_decimal_place: '小数点',
   field_fill_length: '長さ',
   field_fill_character: '文字',
@@ -125,6 +127,7 @@ Thin.translations = {
   field_list_header: 'ヘッダー',
   field_list_page_footer: 'ページフッター',
   field_list_footer: 'フッター',
+  field_position: '位置', 
 
   button_new_report: '新規作成',
   button_save: '保存',
@@ -170,8 +173,8 @@ Thin.translations = {
   button_image_block_tool: '画像ブロックツール',
   button_list_tool: '一覧表ツール',
 
-  error_id_is_already_used: '"{$id}" は既に使用されています',
-  error_invalid_value: '値が正しくありません',
+  error_id_is_already_used: '"{$id}" は既に使用されています。',
+  error_invalid_value: '値が正しくありません。',
   error_id_contains_invalid_characters: 'IDに使用できる文字は、英数字とアンダースコア"_"のみです。',
   error_id_is_required: 'IDは必須です。',
   error_id_not_found: '"{$id}" は存在しません。',
@@ -191,6 +194,7 @@ Thin.translations = {
   text_editor_force_close_confirmation: '保存されていないファイルがあります。<br>保存しますか？',
   text_layout_force_close_confirmation: '内容が変更されています。<br>保存しますか？',
   text_layout_export_definition_confirmation: 'エクスポートするには、レイアウトを保存する必要があります。保存しますか？',
+  text_change_unit: '単位 {$unit} へ切り替える',
 
   shape_rectangle: '四角形', 
   shape_ellipse: '楕円形', 

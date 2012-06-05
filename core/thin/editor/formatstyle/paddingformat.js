@@ -64,8 +64,8 @@ thin.editor.formatstyles.PaddingFormat.DirectionType = {
  * @enum {string}
  */
 thin.editor.formatstyles.PaddingFormat.DirectionTypeName = {
-  L: '左詰め',
-  R: '右詰め'
+  L: thin.t('label_fill_left'),
+  R: thin.t('label_fill_right')
 };
 
 
