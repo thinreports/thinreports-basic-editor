@@ -55,6 +55,15 @@ void Platform::boot(const QString core)
 
 void Platform::setup()
 {
+    QDir home = QDir::home();
+
+    // Create configuration directory if not exists
+    if (!home.exists(".thinreports")) {
+        home.mkdir(".thinreports");
+    }
+    // Change directory to .thinreports
+    home.cd(".thinreports");
+
     // Load built-in fonts.
     QDirIterator it(adjustPath(QLatin1String("fonts")));
     while (it.hasNext()) {
@@ -74,7 +83,7 @@ void Platform::setup()
 
     settings->setDefaultTextEncoding("utf-8");
     settings->setAttribute(QWebSettings::LocalStorageEnabled, true);
-    settings->setLocalStoragePath(adjustPath("."));
+    settings->setLocalStoragePath(home.absolutePath());
 
     view->page()->setLinkDelegationPolicy(QWebPage::DelegateExternalLinks);
 
