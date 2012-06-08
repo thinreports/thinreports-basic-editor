@@ -30,7 +30,7 @@ thin.i18n.translations_;
  */
 thin.i18n.translate = function(name, opt_values) {
   return thin.i18n.getMsg_(
-      thin.i18n.getTranslations()[name], opt_values) || name;
+      thin.i18n.getTranslations()[name], opt_values) || '';
 };
 
 

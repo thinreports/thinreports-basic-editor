@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-// en
+Thin.locale = 'en';
 Thin.translations = {
   toolbar_group_file: 'File',
   toolbar_group_edit: 'Edit',
@@ -43,7 +43,7 @@ Thin.translations = {
   label_text_edit: 'Edit Text',
   label_new_report: 'New Report',
   label_report_setting: 'Report Format',
-  label_specify_zoom_rate: 'Rate',
+  label_specify_zoom_rate: 'Zoom',
   label_solid_line: 'Solid',
   label_dotted_line: 'Dotted',
   label_dashed_line: 'Dashed',
@@ -73,6 +73,7 @@ Thin.translations = {
   label_open_image: 'Open Image', 
   label_confirmation: 'Confirmation',
   label_condition_and: 'and',
+  label_preference: 'Preference', 
 
   label_format: 'Format', 
   label_format_basic: 'Basic', 
@@ -128,6 +129,7 @@ Thin.translations = {
   field_list_page_footer: 'Page Footer',
   field_list_footer: 'Footer',
   field_position: 'Position', 
+  field_language: 'Locale', 
 
   button_new_report: 'New',
   button_save: 'Save',
@@ -137,8 +139,8 @@ Thin.translations = {
   button_undo: 'Undo',
   button_redo: 'Redo',
   button_page_setting: 'Report Format',
-  button_zoom_in: 'Zoom-in',
-  button_zoom_out: 'Zoom-out',
+  button_zoom_in: '+10%',
+  button_zoom_out: '-10%',
   button_guide: 'Guide',
   button_add_horizontal_guide: 'Add Horizontal Guide',
   button_add_vertical_guide: 'Add Vertical Guide',
@@ -159,6 +161,7 @@ Thin.translations = {
   button_send_backward: 'Send Backward',
   button_send_to_back: 'Send To Back',
   button_help: 'Help',
+  button_preference: 'Preference', 
   button_about: 'About',
   button_go_to_forum: 'Forum',
   button_feedback: 'Feedback',
@@ -189,12 +192,15 @@ Thin.translations = {
   error_invalid_layout_file: 'This layout file cannot be opened because has problem.',
 
   notice_no_shapes: 'No shapes',
+  warning_discard_changes: 'If you have unsaved files, the changes will be discarded. Please be sure to save.', 
+  warning_discard_changes_en: '', 
 
   text_about_description: 'Please see the official site or official project site about the license, help, release notes of ThinReports.',
   text_editor_force_close_confirmation: 'There is unsaved layout files.<br>Save these files before close?',
   text_layout_force_close_confirmation: 'This layout has been changed.<br>Save before close?',
   text_layout_export_definition_confirmation: 'Before export layout definition, it is necessary to save this layout file.<br>Save this layout?',
   text_change_unit: 'Change unit to {$unit}',
+  text_apply_locale_setting: 'After reloading the Editor, the setting will be applied.<br>Do you want to apply now?',
 
   shape_rectangle: 'Rectangle', 
   shape_ellipse: 'Ellipse', 

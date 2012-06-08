@@ -1230,10 +1230,72 @@ thin.boot = function() {
         focusWorkspace(e);
       }
     });
-    
+
+    // Show dialog for preference of Editor
+    var toolPreference = toolbar.setupChild('preference', 
+        new thin.ui.ToolbarButton(thin.t('button_preference'), new thin.ui.Icon('preference')), 
+        dom.getElement('tbar-preference'));
+
+    toolPreference.addEventListener(componentEventType.ACTION, function(e) {
+      // Create dialog.
+      var dialog = new thin.ui.Dialog();
+      dialog.setDisposeOnHide(true);
+      dialog.setTitle(thin.t('label_preference'));
+      dialog.setWidth(400);
+      dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOkCancel());
+
+      var languageSelectbox = new thin.ui.Select();
+      languageSelectbox.setTextAlignLeft();
+      dialog.addChild(languageSelectbox, false);
+
+      var langs = /** @type {Object} */ (thin.$('LOCALES'));
+      var langKeys = goog.object.getKeys(langs);
+
+      goog.array.sort(langKeys);
+      goog.array.forEach(langKeys, function(key) {
+        languageSelectbox.addItem(
+            new thin.ui.Option(goog.object.get(langs, key) + ' (' + key + ')', key));
+      });
+
+      languageSelectbox.setWidth(152);
+      languageSelectbox.render(goog.dom.getElement('dialog-preference-language'));
+
+      dialog.decorate(goog.dom.getElement('dialog-preference'));
+      dialog.addEventListener(goog.ui.Dialog.EventType.SELECT, function(e) {
+        if (e.isOk()) {
+          // update locale
+          var rawLocale = thin.settings.getGlobal('locale');
+          thin.settings.setGlobal('locale', languageSelectbox.getValue());
+
+          // when has been changed
+          if (thin.$('getCurrentInternalLocale()') != thin.settings.getGlobal('locale')) {
+            thin.ui.Message.confirm(thin.t('text_apply_locale_setting') +
+              '<div class="warnings">' +
+              '<div class="warnings-caption">WARNING</div>' +
+              '<p>' + thin.t('warning_discard_changes') + '</p>' + 
+              (thin.t('warning_discard_changes_en') ? '<p>' + thin.t('warning_discard_changes_en') + '</p>' : '') +
+              '</div>', 
+              thin.t('label_confirmation'), 
+              function(e) {
+                if (e.isYes()) {
+                  goog.global.location.reload();
+                }
+              }, 
+              thin.ui.Dialog.ButtonSet.typeYesNo());
+          }
+        }
+        return true;
+      });
+
+      languageSelectbox.setValue(thin.$('getCurrentLocale()'));
+
+      dialog.addEventListener(goog.ui.Dialog.EventType.AFTER_HIDE, focusWorkspace);
+      dialog.setVisible(true);
+    });
+
     // Help and Information
     var toolHelp = toolbar.setupChild('help', 
-        new thin.ui.ToolbarMenuButton(thin.t('button_help'), new thin.ui.Icon('help', iconAlign.TOP)), 
+        new thin.ui.ToolbarMenuButton(thin.t('button_help'), new thin.ui.Icon('help')), 
         dom.getElement('tbar-help'));
     
     // About ThinReports

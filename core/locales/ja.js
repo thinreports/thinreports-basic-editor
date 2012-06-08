@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-// ja
+Thin.locale = 'ja';
 Thin.translations = {
   toolbar_group_file: 'ファイル',
   toolbar_group_edit: '編集',
@@ -73,6 +73,7 @@ Thin.translations = {
   label_open_image: '画像を開く', 
   label_confirmation: '確認',
   label_condition_and: 'かつ',
+  label_preference: '環境設定', 
 
   label_format: '書式', 
   label_format_basic: '基本', 
@@ -128,6 +129,7 @@ Thin.translations = {
   field_list_page_footer: 'ページフッター',
   field_list_footer: 'フッター',
   field_position: '位置', 
+  field_language: '言語', 
 
   button_new_report: '新規作成',
   button_save: '保存',
@@ -159,6 +161,7 @@ Thin.translations = {
   button_send_backward: '背面へ移動',
   button_send_to_back: '最背面へ移動',
   button_help: 'ヘルプ',
+  button_preference: '設定', 
   button_about: 'ThinReportsについて',
   button_go_to_forum: 'フォーラム',
   button_feedback: '問題の報告',
@@ -189,12 +192,15 @@ Thin.translations = {
   error_invalid_layout_file: 'レイアウトファイルの内容に異常が検出されたため開くことができません。',
 
   notice_no_shapes: 'オブジェクトはありません',
+  warning_discard_changes: '保存していないレイアウトがある場合は必ず保存して下さい。', 
+  warning_discard_changes_en: 'If you have unsaved files, the changes will be discarded. Please be sure to save.', 
 
   text_about_description: 'ThinReports のライセンス、ヘルプ、及びリリース情報については、公式サイト又はプロジェクトサイトよりご確認下さい。',
   text_editor_force_close_confirmation: '保存されていないファイルがあります。<br>保存しますか？',
   text_layout_force_close_confirmation: '内容が変更されています。<br>保存しますか？',
   text_layout_export_definition_confirmation: 'エクスポートするには、レイアウトを保存する必要があります。保存しますか？',
   text_change_unit: '単位 {$unit} へ切り替える',
+  text_apply_locale_setting: '設定を反映するにはエディタの再読み込みが必要です。<br>今すぐ設定を反映しますか？',
 
   shape_rectangle: '四角形', 
   shape_ellipse: '楕円形', 

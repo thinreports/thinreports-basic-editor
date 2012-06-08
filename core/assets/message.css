@@ -26,3 +26,16 @@
 .thin-dialog-bg.thin-dialog-message {
   z-index: 30000 !important;
 }
+
+.thin-dialog-message .warnings {
+  margin-top: 1em;
+}
+
+.thin-dialog-message .warnings-caption {
+  font-weight: bold;
+  text-align: center;
+}
+
+.thin-dialog-message .warnings p {
+  margin: .5em 0 0 0;
+}

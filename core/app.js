@@ -18,24 +18,51 @@ var Thin = {};
 
 /**
  * Available locales
- * @type {enum}
  */
-Thin.Locale = {
-  JA: 'japanese', 
-  EN: 'english'
+Thin.LOCALES = {
+  'ja': '日本語', 
+  'en': 'English'
 };
 
 
 /**
  * Default locale
  */
-Thin.defaultLocale = 'ja';
+//Thin.defaultLocale = 'ja';
+Thin.defaultLocale = 'en';
+
+
+/**
+ * Internal current locale
+ */
+Thin.locale;
+
+
+/**
+ * Translations
+ */
+Thin.translations;
+
+
+/**
+ * Get current locale
+ */
+Thin.getCurrentLocale = function() {
+  return localStorage.locale || Thin.defaultLocale;
+};
+
+
+/**
+ * Get current INTERNAL locale
+ */
+Thin.getCurrentInternalLocale = function() {
+  return Thin.locale;
+};
 
 
 /**
  * Load current translation file
  */
 (function() {
-  var locale = localStorage.locale || Thin.defaultLocale;
-  document.writeln('<script src="locales/' + locale + '.js"></script>');
+  document.writeln('<script src="locales/' + Thin.getCurrentLocale() + '.js"></script>');
 })();
