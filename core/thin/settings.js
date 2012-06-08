@@ -15,7 +15,8 @@
 
 goog.provide('thin.Settings');
 
-goog.require('goog.string');
+goog.require('goog.array');
+goog.require('goog.object');
 goog.require('goog.storage.mechanism.HTML5LocalStorage');
 
 
@@ -25,67 +26,46 @@ goog.require('goog.storage.mechanism.HTML5LocalStorage');
  */
 thin.Settings = function() {
   goog.base(this);
-  /**
-   * @type {string?}
-   */
-  this.uid_ = this.getUid_();
 };
 goog.inherits(thin.Settings, goog.storage.mechanism.HTML5LocalStorage);
 goog.addSingletonGetter(thin.Settings);
 
 
 /**
- * @return {string}
+ * @type {Object}
+ * @const
+ */
+thin.Settings.DEFINITION = {
+  'locale': 'System locale', 
+  'last_image_path': 'The directory of path that accessed image file at the last', 
+  'last_layout_doc_path': 'The directory of path that saved the layout definition file at the last', 
+  'last_layout_path': 'The directory of path that accessed layout file at the last'
+};
+
+
+/** @override */
+thin.Settings.prototype.set = function(key, value) {
+  this.validateKey_(key);
+  goog.base(this, 'set', key, value);
+};
+
+
+/** @override */
+thin.Settings.prototype.get = function(key) {
+  this.validateKey_(key);
+  return goog.base(this, 'get', key);
+};
+
+
+/**
+ * @param {string} key
  * @private
  */
-thin.Settings.prototype.getUid_ = function() {
-  var uid = String(goog.string.hashCode(goog.global.document.URL));
-  if (/^\-/.test(uid)) {
-    return uid.replace(/^\-/, '1');
-  } else {
-    return '0' + uid;
+thin.Settings.prototype.validateKey_ = function(key) {
+  var definitions = goog.object.getKeys(thin.Settings.DEFINITION);
+  if (!goog.array.contains(definitions, key)) {
+    throw new Error('Invalid configuration key');
   }
 };
-
-
-/**
- * @param {string} key
- * @param {string} value
- */
-thin.Settings.prototype.setGlobal = function(key, value) {
-  thin.Settings.superClass_.set.call(this, key, value);
-};
-
-
-/**
- * @param {string} key
- * @return {string?}
- */
-thin.Settings.prototype.getGlobal = function(key) {
-  return thin.Settings.superClass_.get.call(this, key);
-};
-
-
-/** @inheritDoc */
-thin.Settings.prototype.set = function(key, value) {
-  goog.base(this, 'set', this.getPrivateKey_(key), value);
-};
-
-
-/** @inheritDoc */
-thin.Settings.prototype.get = function(key) {
-  return goog.base(this, 'get', this.getPrivateKey_(key));
-};
-
-
-/**
- * @param {string} key
- * @return {string}
- * @private
- */
-thin.Settings.prototype.getPrivateKey_ = function(key) {
-  return this.uid_ + '_' + key;
-};
-
 
 thin.settings = thin.Settings.getInstance();

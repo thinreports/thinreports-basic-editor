@@ -111,7 +111,7 @@ goog.addDependency('../../../thin/layout/file.js', ['thin.layout.File'], ['goog.
 goog.addDependency('../../../thin/layout/format.js', ['thin.layout.Format'], ['goog.Disposable', 'goog.json', 'thin.Compatibility', 'thin.Version', 'thin.layout.FormatPage']);
 goog.addDependency('../../../thin/layout/formatpage.js', ['thin.layout.FormatPage', 'thin.layout.FormatPage.DEFAULT_SETTINGS', 'thin.layout.FormatPage.DirectionType', 'thin.layout.FormatPage.PaperSize', 'thin.layout.FormatPage.PaperType'], ['goog.Disposable', 'goog.math.Size', 'goog.object']);
 goog.addDependency('../../../thin/layout/layout.js', ['thin.layout'], ['goog.array', 'goog.string', 'thin.Compatibility', 'thin.Version']);
-goog.addDependency('../../../thin/settings.js', ['thin.Settings'], ['goog.storage.mechanism.HTML5LocalStorage', 'goog.string']);
+goog.addDependency('../../../thin/settings.js', ['thin.Settings'], ['goog.array', 'goog.object', 'goog.storage.mechanism.HTML5LocalStorage']);
 goog.addDependency('../../../thin/ui/button.js', ['thin.ui.Button'], ['goog.ui.Button', 'thin.ui.ButtonRenderer', 'thin.ui.StylableControl']);
 goog.addDependency('../../../thin/ui/buttonrenderer.js', ['thin.ui.ButtonRenderer'], ['goog.ui.CustomButtonRenderer', 'thin.ui.ControlStyleUtils']);
 goog.addDependency('../../../thin/ui/checkbox.js', ['thin.ui.Checkbox'], ['goog.ui.Checkbox', 'goog.ui.Checkbox.State', 'goog.ui.Control', 'thin.ui.CheckboxRenderer']);

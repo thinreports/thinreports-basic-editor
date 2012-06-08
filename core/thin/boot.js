@@ -1264,11 +1264,11 @@ thin.boot = function() {
       dialog.addEventListener(goog.ui.Dialog.EventType.SELECT, function(e) {
         if (e.isOk()) {
           // update locale
-          var rawLocale = thin.settings.getGlobal('locale');
-          thin.settings.setGlobal('locale', languageSelectbox.getValue());
+          var rawLocale = thin.settings.get('locale');
+          thin.settings.set('locale', languageSelectbox.getValue());
 
           // when has been changed
-          if (thin.$('getCurrentInternalLocale()') != thin.settings.getGlobal('locale')) {
+          if (thin.$('getCurrentInternalLocale()') != thin.settings.get('locale')) {
             thin.ui.Message.confirm(thin.t('text_apply_locale_setting') +
               '<div class="warnings">' +
               '<div class="warnings-caption">WARNING</div>' +
