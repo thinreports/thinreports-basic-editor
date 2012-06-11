@@ -7,6 +7,8 @@ module TREDevelopment
   PROJECT_ROOT      = '..'
   CLOSURE_COMPILER  = File.join(ROOT, 'tools', 'closure-compiler-latest', 'compiler.jar')
   TEMPLATE_COMPILER = File.join(ROOT, 'tools', 'template-compiler-latest', 'SoyToJsSrcCompiler.jar')
+  
+  APPLICATION_ROOT  = File.expand_path(File.join(PROJECT_ROOT, 'application'))
 
   class CommandBuilder
     attr_reader :commands

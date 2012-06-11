@@ -20,10 +20,11 @@
   <head>
     <title>ThinReportsEditor</title>
     <meta charset="UTF-8">
-    <script src="application-compiled.js"></script>
-    <link rel="stylesheet" href="assets/application-compiled.css">
+    <script src="app.js"></script>
+    <script src="base.js"></script>
+    <link rel="stylesheet" href="assets/app.css">
   </head>
-  <body onload="setup();">
+  <body onload="Thin.boot();">
     <div class="thin-toolbar" id="thin-toolbar">
       <div class="thin-toolbar-group">
         <table>
@@ -33,7 +34,7 @@
             <td rowspan="2" id="tbar-report-open"></td>
           </tr>
         </table>
-        <div class="thin-toolbar-group-label">ファイル</div>
+        <div class="thin-toolbar-group-label" data-i18n="toolbar_group_file"></div>
       </div>
       <div class="thin-toolbar-group-separator"></div>
       <div class="thin-toolbar-group">
@@ -46,23 +47,23 @@
             <td id="tbar-redo"></td>
           </tr>
         </table>
-        <div class="thin-toolbar-group-label">編集</div>
+        <div class="thin-toolbar-group-label" data-i18n="toolbar_group_edit"></div>
       </div>
       <div class="thin-toolbar-group-separator"></div>
       <div class="thin-toolbar-group">
         <table>
           <tr>
             <td id="tbar-zoom-in"></td>
-            <td id="tbar-zoom-out"></td>              
+            <td id="tbar-zoom-out"></td> 
             <td rowspan="2" id="tbar-guide"></td>
           </tr>
           <tr>
             <td colspan="2">
-              指定: <span id="tbar-zoom-rate"></span> %
+              <span data-i18n="label_specify_zoom_rate"></span>: <span id="tbar-zoom-rate"></span> %
             </td>
           </tr>
         </table>
-        <div class="thin-toolbar-group-label">表示</div>
+        <div class="thin-toolbar-group-label" data-i18n="toolbar_group_view"></div>
       </div>      
       <div class="thin-toolbar-group-separator"></div>
       <div class="thin-toolbar-group">
@@ -77,7 +78,7 @@
             <td id="tbar-font-styles"></td>
           </tr>
         </table>
-        <div class="thin-toolbar-group-label">フォント</div>
+        <div class="thin-toolbar-group-label" data-i18n="toolbar_group_font"></div>
       </div>
       <div class="thin-toolbar-group-separator"></div>
       <div class="thin-toolbar-group">
@@ -92,11 +93,14 @@
             <td id="tbar-layer-back"></td>
           </tr>
         </table>
-        <div class="thin-toolbar-group-label">配置</div>
+        <div class="thin-toolbar-group-label" data-i18n="toolbar_group_position"></div>
       </div>
       <div class="thin-toolbar-group-separator"></div>
       <div class="thin-toolbar-group">
         <table>
+          <tr>
+            <td id="tbar-preference"></td>
+          </tr>
           <tr>
             <td id="tbar-help"></td>
           </tr>
@@ -120,52 +124,52 @@
     <div id="new-dialog-report-config" class="thin-dialogs thin-dialog-report-config" style="display:none;">
       <div class="thin-dialog-content">
         <fieldset>
-          <legend>タイトル設定</legend>
+          <legend data-i18n="label_title_setting"></legend>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">ページタイトル</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_page_title"></div>
             <div class="thin-dialogs-setting-control" id="new-config-page-title"></div>
           </div>
         </fieldset>
         <fieldset>
-          <legend>用紙設定</legend>
+          <legend data-i18n="label_page_setting"></legend>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">用紙</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_type"></div>
             <div class="thin-dialogs-setting-control" id="new-config-paper-type"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">幅</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_width"></div>
             <div class="thin-dialogs-setting-control" id="new-config-page-width"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">高さ</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_height"></div>
             <div class="thin-dialogs-setting-control" id="new-config-page-height"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">用紙の向き</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_direction"></div>
             <div class="thin-dialogs-setting-control" id="new-config-page-direction">
               <input type="radio" id="new-config-page-direction-pr" name="page-direction-group" value="portrait">
-              <label for="new-config-page-direction-pr">縦</label>
+              <label for="new-config-page-direction-pr" data-i18n="label_direction_portrait"></label>
               <input type="radio" id="new-config-page-direction-ls" name="page-direction-group" value="landscape">
-              <label for="new-config-page-direction-ls">横</label>
+              <label for="new-config-page-direction-ls" data-i18n="label_direction_landscape"></label>
             </div>
           </div>
         </fieldset>
         <fieldset>
-          <legend>余白設定</legend>
+          <legend data-i18n="label_margin_setting"></legend>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">上</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_top"></div>
             <div class="thin-dialogs-setting-control" id="new-config-page-margin-top"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">下</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_bottom"></div>
             <div class="thin-dialogs-setting-control" id="new-config-page-margin-bottom"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">左</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_left"></div>
             <div class="thin-dialogs-setting-control" id="new-config-page-margin-left"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">右</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_right"></div>
             <div class="thin-dialogs-setting-control" id="new-config-page-margin-right"></div>
           </div>
         </fieldset>
@@ -175,57 +179,67 @@
     <div id="edit-dialog-report-config" class="thin-dialogs thin-dialog-report-config" style="display:none;">
       <div class="thin-dialog-content">
         <fieldset>
-          <legend>タイトル設定</legend>
+          <legend data-i18n="label_title_setting"></legend>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">ページタイトル</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_page_title"></div>
             <div class="thin-dialogs-setting-control" id="edit-config-page-title"></div>
           </div>
         </fieldset>
         <fieldset>
-          <legend>用紙設定</legend>
+          <legend data-i18n="label_page_setting"></legend>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">用紙</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_type"></div>
             <div class="thin-dialogs-setting-control" id="edit-config-paper-type"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">幅</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_width"></div>
             <div class="thin-dialogs-setting-control" id="edit-config-page-width"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">高さ</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_height"></div>
             <div class="thin-dialogs-setting-control" id="edit-config-page-height"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">用紙の向き</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_direction"></div>
             <div class="thin-dialogs-setting-control" id="edit-config-page-direction">
               <input type="radio" id="edit-config-page-direction-pr" name="page-direction-group" value="portrait">
-              <label for="edit-config-page-direction-pr">縦</label>
+              <label for="edit-config-page-direction-pr" data-i18n="label_direction_portrait"></label>
               <input type="radio" id="edit-config-page-direction-ls" name="page-direction-group" value="landscape">
-              <label for="edit-config-page-direction-ls">横</label>
+              <label for="edit-config-page-direction-ls" data-i18n="label_direction_landscape"></label>
             </div>
           </div>
         </fieldset>
         <fieldset>
-          <legend>余白設定</legend>
+          <legend data-i18n="label_margin_setting"></legend>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">上</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_top"></div>
             <div class="thin-dialogs-setting-control" id="edit-config-page-margin-top"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">下</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_bottom"></div>
             <div class="thin-dialogs-setting-control" id="edit-config-page-margin-bottom"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">左</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_left"></div>
             <div class="thin-dialogs-setting-control" id="edit-config-page-margin-left"></div>
           </div>
           <div class="thin-dialogs-setting">
-            <div class="thin-dialogs-setting-caption">右</div>
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_right"></div>
             <div class="thin-dialogs-setting-control" id="edit-config-page-margin-right"></div>
           </div>
         </fieldset>
       </div>
     </div>
+
+    <!-- Dialog template for Preference -->
+    <div id="dialog-preference" class="thin-dialogs thin-dialog-preference" style="display:none;">
+      <div class="thin-dialog-content">
+        <div class="thin-dialogs-setting">
+          <div class="thin-dialogs-setting-caption" data-i18n="field_language"></div>
+          <div class="thin-dialogs-setting-control" id="dialog-preference-language"></div>
+      </div>
+    </div>
+
     <!-- Dialog template for About. -->
     <div id="about-dialog" class="thin-dialogs thin-dialog-about" style="display:none;">
       <div class="thin-dialog-content">
@@ -237,9 +251,7 @@
           <p class="thin-dialog-about-copyright">
             Copyright &copy; 2010-2011 <a href="http://www.matsukei.co.jp/">Matsukei</a> Co.,Ltd. All Rights Reserved.
           </p>
-          <p class="thin-dialog-about-description">
-            ThinReports のライセンス、ヘルプ、及びリリース情報については、公式サイト又はプロジェクトサイトよりご確認下さい。
-          </p>
+          <p class="thin-dialog-about-description" data-i18n="text_about_description"></p>
           <div class="thin-dialog-about-resources">
             <dl>
               <dt>Official Site:</dt>

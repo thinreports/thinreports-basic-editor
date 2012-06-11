@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     Platform platform;
-    platform.boot(QLatin1String("core/application.html"));
+    platform.boot(QLatin1String("core/app.html"));
 
     return app.exec();
 }

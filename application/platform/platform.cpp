@@ -101,22 +101,18 @@ void Platform::setup()
 
 QString Platform::adjustPath(const QString &path)
 {
-#ifdef Q_OS_UNIX
-#ifdef Q_OS_MAC
-    if (!QDir::isAbsolutePath(path))
-        return QCoreApplication::applicationDirPath()
-                + QLatin1String("/../Resources/") + path;
-#else
-    const QString pathInInstallDir = QCoreApplication::applicationDirPath()
-        + QLatin1String("/../") + path;
-    if (pathInInstallDir.contains(QLatin1String("opt"))
-            && pathInInstallDir.contains(QLatin1String("bin"))
-            && QFileInfo(pathInInstallDir).exists()) {
-        return pathInInstallDir;
+    if (QDir::isAbsolutePath(path)) {
+        return path;
     }
+// MacOSX
+#ifdef Q_OS_MAC
+    return QCoreApplication::applicationDirPath()
+            + QLatin1String("/../Resources/") + path;
+// Win32,Ubuntu(Linux)
+#else
+    return QCoreApplication::applicationDirPath()
+            + QLatin1String("/../resources/") + path;
 #endif
-#endif
-    return path;
 }
 
 bool Platform::isDebugMode()

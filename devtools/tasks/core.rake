@@ -3,14 +3,56 @@
 namespace :core do
   include TREDevelopment::Core
   
+  namespace :deploy do
+    desc 'Deploy core files'
+    task :update do
+      require 'fileutils'
+      
+      targetdir = File.join(TREDevelopment::APPLICATION_ROOT, 'resources')
+      sourcedir = File.join(ROOT)
+      
+      # Clear current files
+      # WARNING: Do not delete the fonts directory
+      FileUtils.rm_rf(Dir.glob("#{targetdir}/core/*") +
+                      Dir.glob("#{targetdir}/*.txt"))
+      
+      # Copy latest files to targetdir
+      coredir = File.join(targetdir, 'core')
+      
+      # Create assets dir
+      FileUtils.mkdir_p(File.join(coredir, 'assets'))
+      
+      # Copy application core files (app.html, app.js, base.js)
+      FileUtils.cp([File.join(sourcedir, 'app.html'),
+                    File.join(sourcedir, 'app.js'),
+                    File.join(sourcedir, 'base.js')],
+                   coredir)
+      # Copy locales directory
+      FileUtils.cp_r(File.join(sourcedir, 'locales'),
+                     coredir)
+      # Copy application assets files (app.css, icons/*)
+      FileUtils.cp_r([File.join(sourcedir, 'assets', 'app.css'),
+                      File.join(sourcedir, 'assets', 'icons')],
+                     File.join(coredir, 'assets'))
+      # Copy docs
+      FileUtils.cp([File.join(TREDevelopment::PROJECT_ROOT, 'LICENSE.txt'),
+                    File.join(TREDevelopment::PROJECT_ROOT, 'README.txt')],
+                   targetdir)
+    end
+    
+    desc 'Run all deployment process'
+    task :all => [:'core:js:deps', :'core:js:compile',
+                  :'core:css:compile', :'core:deploy:files']
+  end
+  
   # Tasks for JavaScript(Closure Library)
   namespace :js do
     desc 'Execute closurebuilder.py'
-    task :compile, [:bopt_verbose, :bopt_output_mode, :preview] do |t, args|
+    task :compile, [:verbose, :output_mode, :preview] do |t, args|
       # Initialize arguments
-      warning_level = ENV['bopt_verbose'] || 'VERBOSE'
-      output_mode   = ENV['bopt_output_mode'] || 'compiled'
-      debug_mode    = ENV['bopt_debug']
+      warning_level = ENV['verbose'] || 'VERBOSE'
+      output_mode   = ENV['output_mode'] || 'compiled'
+      debug_mode    = ENV['debug']
 
       # File for output STDERR
       output_stderr = File.join(ROOT, 'base-compile.log')
@@ -73,3 +115,9 @@ task :jd => [:'core:js:deps']
 
 desc 'Alias for core:js:template'
 task :jt => [:'core:js:template']
+
+desc 'Alias for core:deploy:update'
+task :update => [:'core:deploy:update']
+
+desc 'Alias for core:deploy:all'
+task :deploy => [:'core:deploy:all']
