@@ -48,9 +48,10 @@ defineTest(qtcAddDeployment) {
         }
     # Ubuntu (Desktop Linux)
     } else {
+        copyCommand =
         for(deploymentfolder, DEPLOYMENTFOLDERS) {
             source = $$MAINPROFILEPWD/$$eval($${deploymentfolder}.source)
-            target = $$resourceRoot/$$last($$split(source, /))
+            target = $$OUT_PWD
             !isEqual(source, $$target) {
                 !isEmpty(copyCommand):copyCommand += &&
                 copyCommand += $(MKDIR) \"$$target\"
