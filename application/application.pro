@@ -1,8 +1,6 @@
-coreApps.source = core
-coreApps.target = .
-fontFiles.source = fonts
-fontFiles.target = .
-DEPLOYMENTFOLDERS = coreApps fontFiles
+resources.source = resources
+resources.target = .
+DEPLOYMENTFOLDERS = resources
 
 TARGET   = ThinReportsEditor
 SOURCES += main.cpp
