@@ -30,4 +30,4 @@ css:
     - toolbox.css
     - view.css
     - workspace.css
-  output: application-compiled.css
+  output: app.css
