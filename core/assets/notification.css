@@ -26,7 +26,7 @@
   background-color: rgba(240, 240, 240, 0.9);
   -webkit-border-radius: 4px;
   -webkit-box-shadow: 0 0 0 6px rgba(180, 180, 180, 0.5);
-  -webit-user-select: none;
+  -webkit-user-select: none;
   padding-left: 20px;
   outline: none;
   cursor: pointer;
