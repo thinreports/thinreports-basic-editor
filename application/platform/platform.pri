@@ -38,8 +38,8 @@ defineTest(qtcAddDeployment) {
     } else:macx {
         copyCommand =
         for(deploymentfolder, DEPLOYMENTFOLDERS) {
-            source = $$MAINPROFILEPWD/$$eval($${deploymentfolder}.source)
-            target = $$OUT_PWD/$${TARGET}.app/Contents/Resources/$$last($$split(source, /))
+            source = $$MAINPROFILEPWD/$$eval($${deploymentfolder}.source)/
+            target = $$OUT_PWD/$${TARGET}.app/Contents/Resources/$$eval($${deploymentfolder}.target)
             !isEqual(source, $$target) {
                 !isEmpty(copyCommand):copyCommand += &&
                 copyCommand += $(MKDIR) \"$$target\"
