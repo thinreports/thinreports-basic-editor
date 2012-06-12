@@ -3,5 +3,6 @@
 *.pyc
 core/base.js
 core/base-compile.log
+core/assets/app.css
 
 release/

@@ -5,8 +5,10 @@ $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
 module TREDevelopment
   ROOT              = File.expand_path(File.dirname(__FILE__))
   PROJECT_ROOT      = '..'
-  CLOSURE_COMPILER  = File.join(ROOT, 'tools', 'closure-compiler-latest', 'compiler.jar')
-  TEMPLATE_COMPILER = File.join(ROOT, 'tools', 'template-compiler-latest', 'SoyToJsSrcCompiler.jar')
+
+  CLOSURE_COMPILER    = File.join(ROOT, 'tools', 'closure-compiler-latest', 'compiler.jar')
+  CLOSURE_STYLESHEETS = File.join(ROOT, 'tools', 'closure-stylesheets-latest', 'stylesheets.jar')
+  TEMPLATE_COMPILER   = File.join(ROOT, 'tools', 'template-compiler-latest', 'SoyToJsSrcCompiler.jar')
   
   APPLICATION_ROOT  = File.expand_path(File.join(PROJECT_ROOT, 'application'))
 
@@ -120,6 +122,10 @@ module TREDevelopment
         quote_path(CLOSURE_COMPILER, options)
       end
       
+      def closure_stylesheets_jar(options = {})
+        quote_path(CLOSURE_STYLESHEETS, options)
+      end
+
       def template_compiler_jar(options = {})
         quote_path(TEMPLATE_COMPILER, options)
       end
@@ -134,6 +140,10 @@ module TREDevelopment
       
       def css_config_yml
         path_from_root('assets', 'config.yml')
+      end
+
+      def css_file_path(filename)
+        path_from_root('assets', filename)
       end
     end
   end

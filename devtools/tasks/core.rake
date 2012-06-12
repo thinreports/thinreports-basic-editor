@@ -98,10 +98,20 @@ namespace :core do
   namespace :css do
     desc 'Compress and merge CSS files'
     task :compile, [:preview] do
-      run_command do
-        "yuicompress css #{css_config_yml}"
+      require 'yaml'
+
+      builder = CoreCommandBuilder.new
+      css_files = YAML.load_file(builder.css_config_yml)
+      css_files.map! do |f|
+        File.join(builder.css_file_path(f))
       end
-    end
+      run_command do
+        add "java -jar #{closure_stylesheets_jar} "
+        add "#{css_files.join(' ')} "
+        add "--output-file #{path_from_root('assets', 'app.css')}"
+        add "--allowed-non-standard-function color-stop"
+      end
+   end
   end
 end
 
