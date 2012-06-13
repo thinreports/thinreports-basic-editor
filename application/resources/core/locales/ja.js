@@ -186,7 +186,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   error_can_not_set_the_reference: '他のテキストブロックから参照されているため、参照先を設定することはできません。',
   error_can_not_save: '保存できませんでした。',
   error_paper_size_is_empty: '用紙サイズが未入力です。',
-  error_can_not_edit_layout_file: 'レイアウトファイルのバージョンが「{$required}」を満たす場合のみ編集できます。<br>※選択したレイアウトファイルのバージョンは「{$version}」です。',
+  error_can_not_edit_layout_file: 'レイアウトファイルのバージョンが「{$required}」を満たす場合のみ編集できます。\n※選択したレイアウトファイルのバージョンは「{$version}」です。',
   error_unknown: '予期しないエラーが発生しました。',
   error_invalid_layout_file: 'レイアウトファイルの内容に異常が検出されたため開くことができません。',
 
@@ -195,11 +195,11 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   warning_discard_changes_en: 'If you have unsaved files, the changes will be discarded. Please be sure to save.', 
 
   text_about_description: 'ThinReports のライセンス、ヘルプ、及びリリース情報については、公式サイト又はプロジェクトサイトよりご確認下さい。',
-  text_editor_force_close_confirmation: '保存されていないファイルがあります。<br>保存しますか？',
-  text_layout_force_close_confirmation: '内容が変更されています。<br>保存しますか？',
+  text_editor_force_close_confirmation: '保存されていないファイルがあります。\n保存しますか？',
+  text_layout_force_close_confirmation: '内容が変更されています。\n保存しますか？',
   text_layout_export_definition_confirmation: 'エクスポートするには、レイアウトを保存する必要があります。保存しますか？',
   text_change_unit: '単位 {$unit} へ切り替える',
-  text_apply_locale_setting: '設定を反映するにはエディタの再読み込みが必要です。<br>今すぐ設定を反映しますか？',
+  text_apply_locale_setting: '設定を反映するにはエディタの再読み込みが必要です。\n今すぐ設定を反映しますか？',
 
   shape_rectangle: '四角形', 
   shape_ellipse: '楕円形', 

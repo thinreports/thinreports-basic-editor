@@ -37,7 +37,7 @@ Thin.setLocale = function(locale, fontFamilies, translations) {
   current.translations = translations;
   
   document.writeln('<style type="text/css">');
-  document.writeln('  body, textarea { font-family: ' + fontFamilies + ', sans-serif; }');
+  document.writeln('  body, textarea { font-family: ' + Thin.escape_(fontFamilies) + ', sans-serif; }');
   document.writeln('</style>');
 };
 
@@ -94,7 +94,7 @@ Thin.getCurrentTranslations = function() {
  * @private
  */
 Thin.escape_ = function(value) {
-  return value.replace()
+  return value.replace(/[<>/]/g, '');
 };
 
 
@@ -102,5 +102,6 @@ Thin.escape_ = function(value) {
  * Load current translation file
  */
 (function() {
-  document.writeln('<script src="locales/' + Thin.getCurrentLocale() + '.js"></script>');
+  document.writeln(
+    '<script src="locales/' + Thin.escape_(Thin.getCurrentLocale()) + '.js"></script>');
 })();

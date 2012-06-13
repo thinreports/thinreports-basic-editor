@@ -186,7 +186,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   error_can_not_set_the_reference: 'Cannot set the reference, because has been already referenced from another shapes.',
   error_can_not_save: 'Could not be saved.',
   error_paper_size_is_empty: 'Paper size is empty.',
-  error_can_not_edit_layout_file: 'This layout file cannot be opened because it is incompatible.<br>Compatible versions: {$required}<br>Current version: {$version}',
+  error_can_not_edit_layout_file: 'This layout file cannot be opened because it is incompatible.\nCompatible versions: {$required}\nCurrent version: {$version}',
   error_unknown: 'The unexpected error occurred.',
   error_invalid_layout_file: 'This layout file cannot be opened because has problem.',
 
@@ -195,11 +195,11 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   warning_discard_changes_en: '', 
 
   text_about_description: 'Please see the official site or official project site about the license, help, release notes of ThinReports.',
-  text_editor_force_close_confirmation: 'There is unsaved layout files.<br>Save these files before close?',
-  text_layout_force_close_confirmation: 'This layout has been changed.<br>Save before close?',
-  text_layout_export_definition_confirmation: 'Before export layout definition, it is necessary to save this layout file.<br>Save this layout?',
+  text_editor_force_close_confirmation: 'There is unsaved layout files.\nSave these files before close?',
+  text_layout_force_close_confirmation: 'This layout has been changed.\nSave before close?',
+  text_layout_export_definition_confirmation: 'Before export layout definition, it is necessary to save this layout file.\nSave this layout?',
   text_change_unit: 'Change unit to {$unit}',
-  text_apply_locale_setting: 'After reloading the Editor, the setting will be applied.<br>Do you want to apply now?',
+  text_apply_locale_setting: 'After reloading the Editor, the setting will be applied.\nDo you want to apply now?',
 
   shape_rectangle: 'Rectangle', 
   shape_ellipse: 'Ellipse', 
