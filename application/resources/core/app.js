@@ -26,22 +26,42 @@ Thin.LOCALES = {
 
 
 /**
+ * Set configuration of locale
+ * @param {string} locale
+ * @param {string} fontFamilies Font names of CSS "font-family"
+ * @param {Object} translations
+ */
+Thin.setLocale = function(locale, fontFamilies, translations) {
+  var current = Thin.locale_;
+  current.name = locale;
+  current.translations = translations;
+  
+  document.writeln('<style type="text/css">');
+  document.writeln('  body, textarea { font-family: ' + fontFamilies + ', sans-serif; }');
+  document.writeln('</style>');
+};
+
+
+/**
  * Default locale
  */
-//Thin.defaultLocale = 'ja';
-Thin.defaultLocale = 'en';
+Thin.defaultLocale = 'ja';
 
 
 /**
- * Internal current locale
+ * Settings of locale
+ * @private
  */
-Thin.locale;
-
-
-/**
- * Translations
- */
-Thin.translations;
+Thin.locale_ = {
+  /**
+   * Locale name like 'ja', 'en'...
+   */
+  name: null,
+  /**
+   * Translation messages
+   */
+  translations: null,
+};
 
 
 /**
@@ -56,7 +76,25 @@ Thin.getCurrentLocale = function() {
  * Get current INTERNAL locale
  */
 Thin.getCurrentInternalLocale = function() {
-  return Thin.locale;
+  return Thin.locale_.name;
+};
+
+
+/**
+ * Get translations of current locale
+ */
+Thin.getCurrentTranslations = function() {
+  return Thin.locale_.translations;
+};
+
+
+/**
+ * @param {string} value
+ * @return {string}
+ * @private
+ */
+Thin.escape_ = function(value) {
+  return value.replace()
 };
 
 

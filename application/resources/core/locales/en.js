@@ -13,8 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Thin.locale = 'en';
-Thin.translations = {
+Thin.setLocale('en', 'Helvetica, Arial', {
   toolbar_group_file: 'File',
   toolbar_group_edit: 'Edit',
   toolbar_group_view: 'View',
@@ -210,4 +209,4 @@ Thin.translations = {
 
   font_gothic: 'Gothic', 
   font_mincho: 'Mincho'
-};
+});

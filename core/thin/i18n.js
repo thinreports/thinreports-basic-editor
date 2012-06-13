@@ -39,7 +39,7 @@ thin.i18n.translate = function(name, opt_values) {
  */
 thin.i18n.getTranslations = function() {
   return thin.i18n.translations_
-    || (thin.i18n.translations_ = /** @type {Object} */(thin.$('translations')));
+    || (thin.i18n.translations_ = /** @type {Object} */(thin.$('getCurrentTranslations()')));
 };
 
 

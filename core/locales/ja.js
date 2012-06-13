@@ -13,8 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Thin.locale = 'ja';
-Thin.translations = {
+Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGothic"', {
   toolbar_group_file: 'ファイル',
   toolbar_group_edit: '編集',
   toolbar_group_view: '表示',
@@ -210,4 +209,4 @@ Thin.translations = {
 
   font_gothic: 'ゴシック', 
   font_mincho: '明朝'
-};
+});

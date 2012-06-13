@@ -31,11 +31,8 @@ a {
   text-decoration: none;
 }
 
-body, textarea {
-  font-family: Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGothic", sans-serif;
-}
 input, select {
-  font-family: Helvetica, Arial, "MS PGothic", sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
 }
 *[lang="x-ascii"] {
   font-family: Helvetica, Arial, sans-serif !important;
