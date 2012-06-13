@@ -6,7 +6,7 @@ task :webview do
   include TREDevelopment::Core
   
   server = WEBrick::HTTPServer.new(:BindAddress => '0.0.0.0',
-                                   :Port => 80,
+                                   :Port => 3000,
                                    :DocumentRoot => File.expand_path(ROOT),
                                    :DirectoryIndex => ['application.html'],
                                    :AccessLog => [])
