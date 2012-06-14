@@ -14,7 +14,7 @@ namespace :core do
       # Clear current files
       # WARNING: Do not delete the fonts directory
       FileUtils.rm_rf(Dir.glob("#{targetdir}/core/*") +
-                      Dir.glob("#{targetdir}/*.txt"))
+                      Dir.glob("#{targetdir}/{GPLv3,LICENSE,*.txt}"))
       
       # Copy latest files to targetdir
       coredir = File.join(targetdir, 'core')
@@ -35,8 +35,8 @@ namespace :core do
                       File.join(sourcedir, 'assets', 'icons')],
                      File.join(coredir, 'assets'))
       # Copy docs
-      FileUtils.cp([File.join(TREDevelopment::PROJECT_ROOT, 'LICENSE.txt'),
-                    File.join(TREDevelopment::PROJECT_ROOT, 'README.txt')],
+      FileUtils.cp(Dir.glob(File.join(TREDevelopment::PROJECT_ROOT,
+                                      '{GPLv3,README.txt,LICENSE}')),
                    targetdir)
     end
     
