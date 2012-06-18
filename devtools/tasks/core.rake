@@ -67,7 +67,6 @@ namespace :core do
         add "-c #{closure_compiler_jar}"
         add "-f \"--compilation_level=ADVANCED_OPTIMIZATIONS\""
         add "-f \"--warning_level=#{warning_level}\""
-        add "-f \"--debug=true\"" if debug_mode
         add "--output_file=#{path_from_root('base.js')}"
       end
     end
