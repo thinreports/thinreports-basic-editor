@@ -1764,6 +1764,8 @@ thin.editor.MultipleShapesHelper.prototype.updateProperties = function() {
     proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
     
     proppane.getPropertyControl('kerning').setValue(properties['kerning']);
+    proppane.getPropertyControl('overflow').setValue(properties['overflow']);
+
     var formatType = properties['format-type'];
 
     proppane.getPropertyControl('format-type').setValue(thin.editor.formatstyles.getFormatNameFromType(formatType));
