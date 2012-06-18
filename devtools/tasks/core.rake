@@ -42,7 +42,7 @@ namespace :core do
     
     desc 'Run all deployment process'
     task :all => [:'core:js:deps', :'core:js:compile',
-                  :'core:css:compile', :'core:deploy:files']
+                  :'core:css:compile', :'core:deploy:update']
   end
   
   # Tasks for JavaScript(Closure Library)
