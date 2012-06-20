@@ -706,7 +706,8 @@ thin.editor.Workspace.prototype.getFingerPrint_ = function() {
   
   return thin.editor.hash32(
     thin.editor.LayoutStructure.serializeForFingerPrint(layout) +
-    goog.json.serialize(this.format.page.toHash()));
+    goog.json.serialize(this.format.page.toHash()) + 
+    goog.json.serialize(layout.getHelpers().getLayoutGuideHelper().getGuides()));
 };
 
 
