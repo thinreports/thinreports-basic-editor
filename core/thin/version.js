@@ -105,30 +105,3 @@ thin.Version.compare = function(base, operator, target) {
   }
   return false;
 };
-
-
-/**
- * @param {string} operator
- * @return {string}
- */
-thin.Version.humanizeOperator = function(operator) {
-  var desc = '';
-  switch(operator) {
-    case '=':
-      desc = '等しい';
-      break;
-    case '>':
-      desc = 'より大きい';
-      break;
-    case '>=':
-      desc = '以上';
-      break;
-    case '<':
-      desc = 'より小さい';
-      break;
-    case '<=':
-      desc = '以下';
-      break;
-  }
-  return desc;
-};

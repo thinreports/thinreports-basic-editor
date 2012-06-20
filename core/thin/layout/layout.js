@@ -34,12 +34,10 @@ thin.layout.REQUIRED_RULES = [
  * @return {string}
  */
 thin.layout.inspectRequiredRules = function() {
-  var desc = [];
-  goog.array.forEach(thin.layout.REQUIRED_RULES, function(rule) {
-    desc[desc.length] = goog.string.buildString(
-        ' ', rule[1], ' ', thin.Version.humanizeOperator(rule[0]));
+  var desc = goog.array.map(thin.layout.REQUIRED_RULES, function(rule) {
+    return rule.join(' ');
   });
-  return desc.join(thin.t('label_condition_and'));
+  return desc.join(' ' + thin.t('label_condition_and') + ' ');
 };
 
 
