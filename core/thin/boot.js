@@ -91,6 +91,7 @@ goog.require('thin.editor.TextStyle.VerticalAlignType');
 goog.require('thin.editor.HistoryManager');
 goog.require('thin.editor.HistoryManager.Mode');
 goog.require('thin.layout');
+goog.require('thin.layout.CompatibilityState');
 goog.require('thin.layout.Format');
 goog.require('thin.layout.FormatPage');
 goog.require('thin.layout.FormatPage.DEFAULT_SETTINGS');
@@ -528,22 +529,36 @@ thin.boot = function() {
         if (workspace) {
           try {
             var targetVersion = workspace.getLayout().getFormat().getVersion();
-            
-            if (!thin.layout.canOpen(targetVersion)) {
-              throw new thin.Error(
-                  thin.t('error_can_not_edit_layout_file', {
-                    'required': thin.layout.inspectRequiredRules(),
-                    'version': targetVersion
-                  }));
-            }
+            var compatibilityState = thin.layout.CompatibilityState;
 
-            var newPage = new thin.ui.TabPane.TabPage(
-                thin.core.platform.File.getPathBaseName(path), workspace);
-            
-            newPage.setTooltip(path); 
-            tabpane.addPage(newPage);
-            
-            focusWorkspace(e);
+            var addPageHandler = function() {
+              var newPage = new thin.ui.TabPane.TabPage(
+                  thin.core.platform.File.getPathBaseName(path), workspace);
+
+              newPage.setTooltip(path); 
+              tabpane.addPage(newPage); 
+              focusWorkspace(e);
+            };
+
+            switch(thin.layout.checkCompatibility(targetVersion)) {
+              case compatibilityState.WARNING:
+                thin.ui.Message.confirm(thin.t('text_layout_force_edit_confirmation'), 
+                    thin.t('label_confirmation'), 
+                    function(e) {
+                      if (e.isOk()) {
+                        addPageHandler();
+                      }
+                    });
+                break;
+              case compatibilityState.ERROR:
+                throw new thin.Error(thin.t('error_can_not_edit_layout_file', 
+                    {'required': thin.layout.inspectCompatibleRule(), 
+                     'version': targetVersion}));
+                break;
+              default:
+                addPageHandler();
+                break;
+            }
           } catch (er) {
             var message;
             if (er instanceof thin.Error) {

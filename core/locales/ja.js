@@ -186,7 +186,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   error_can_not_set_the_reference: '他のテキストブロックから参照されているため、参照先を設定することはできません。',
   error_can_not_save: '保存できませんでした。',
   error_paper_size_is_empty: '用紙サイズが未入力です。',
-  error_can_not_edit_layout_file: 'レイアウトファイルのバージョンが「{$required}」を満たす場合のみ編集できます。\n※選択したレイアウトファイルのバージョンは「{$version}」です。',
+  error_can_not_edit_layout_file: 'このレイアウトファイルは、互換性が無いため編集することができません。\n\n編集可能なバージョン: {$required}\nレイアウトファイルのバージョン: {$version}',
   error_unknown: '予期しないエラーが発生しました。',
   error_invalid_layout_file: 'レイアウトファイルの内容に異常が検出されたため開くことができません。',
 
@@ -200,6 +200,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   text_layout_export_definition_confirmation: 'エクスポートするには、レイアウトを保存する必要があります。保存しますか？',
   text_change_unit: '単位 {$unit} へ切り替える',
   text_apply_locale_setting: '設定を反映するにはエディタの再読み込みが必要です。\n今すぐ設定を反映しますか？',
+  text_layout_force_edit_confirmation: 'このレイアウトは新しいバージョンのエディタで作成されているため、\n編集すると一部の設定情報が消失する可能性があります。\nそれでも開きますか？',
 
   shape_rectangle: '四角形', 
   shape_ellipse: '楕円形', 

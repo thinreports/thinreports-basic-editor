@@ -186,7 +186,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   error_can_not_set_the_reference: 'Cannot set the reference, because has been already referenced from another shapes.',
   error_can_not_save: 'Could not be saved.',
   error_paper_size_is_empty: 'Paper size is empty.',
-  error_can_not_edit_layout_file: 'This layout file cannot be opened because it is incompatible.\nCompatible versions: {$required}\nCurrent version: {$version}',
+  error_can_not_edit_layout_file: 'This layout file cannot be opened because it is incompatible.\n\nCompatible versions: {$required}\nCurrent version: {$version}',
   error_unknown: 'The unexpected error occurred.',
   error_invalid_layout_file: 'This layout file cannot be opened because has problem.',
 
@@ -200,6 +200,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   text_layout_export_definition_confirmation: 'Before export layout definition, it is necessary to save this layout file.\nSave this layout?',
   text_change_unit: 'Change unit to {$unit}',
   text_apply_locale_setting: 'After reloading the Editor, the setting will be applied.\nDo you want to apply now?',
+  text_layout_force_edit_confirmation: 'Because this layout has been created with a newer version, there is a risk of some configurations are broken by editing.\nAre you sure you want to edit anyway?',
 
   shape_rectangle: 'Rectangle', 
   shape_ellipse: 'Ellipse', 
