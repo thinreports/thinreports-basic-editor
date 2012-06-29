@@ -160,9 +160,9 @@ thin.editor.formatstyles.PaddingFormat.prototype.getChar = function() {
  */
 thin.editor.formatstyles.PaddingFormat.prototype.inspect = function() {
   return [
-    '長さ=' + this.len_, 
-    '文字=[' + this.char_ + ']', 
-    '方向=' + thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(this.direction_)
+    thin.t('field_fill_length') + '=' + this.len_, 
+    thin.t('field_fill_character') + '=[' + this.char_ + ']', 
+    thin.t('field_fill_direction') + '=' + thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(this.direction_)
   ].join('/');
 };
 

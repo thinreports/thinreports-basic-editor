@@ -113,8 +113,8 @@ thin.editor.formatstyles.NumberFormat.prototype.getPrecision = function() {
  */
 thin.editor.formatstyles.NumberFormat.prototype.inspect = function() {
   return [
-    '桁区切り=' + (this.enabled_ ? '[' + this.delimiter_ + ']' : 'none'),
-    '小数点=' + this.precision_
+    thin.t('field_delimiter') + '=' + (this.enabled_ ? '[' + this.delimiter_ + ']' : 'none'),
+    thin.t('field_decimal_place') + '=' + this.precision_
   ].join('/');
 };
 
