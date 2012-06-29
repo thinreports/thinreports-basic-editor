@@ -99,10 +99,10 @@ thin.layout.document.Base.prototype.getPaperInfo_ = function() {
   
   switch (page.getOrientation()) {
     case thin.layout.FormatPage.DirectionType.LS:
-      orientation = '横';
+      orientation = thin.t('label_direction_landscape');
       break;
     case thin.layout.FormatPage.DirectionType.PR:
-      orientation = '縦';
+      orientation = thin.t('label_direction_portrait');
       break;
   }
   
