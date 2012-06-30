@@ -43,12 +43,6 @@ Thin.setLocale = function(locale, fontFamilies, translations) {
 
 
 /**
- * Default locale
- */
-Thin.defaultLocale = 'ja';
-
-
-/**
  * Settings of locale
  * @private
  */
@@ -65,10 +59,18 @@ Thin.locale_ = {
 
 
 /**
+ * Get browser locale
+ */
+Thin.getDefaultLocale = function() {
+  return (navigator.language || navigator.browserLanguage 
+      || navigator.userLanguage || 'en').substr(0, 2);
+};
+
+/**
  * Get current locale
  */
 Thin.getCurrentLocale = function() {
-  return localStorage.locale || Thin.defaultLocale;
+  return localStorage.locale || Thin.getDefaultLocale();
 };
 
 
