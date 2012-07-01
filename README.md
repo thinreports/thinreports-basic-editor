@@ -57,6 +57,10 @@ It can be generated automatically the specifications that contains the definitio
 * Pull request
 * Feedback from [here](http://osc.matsukei.net/projects/thinreports/issues/new)
 
+### How to translate in your own language
+
+See [TRANSLATION.md](./TRANSLATION.md).
+
 ## License
 
 Copyright (C) 2010-2012 Matsukei Co.,Ltd. All rights reserved. See [LICENSE](./LICENSE) for further details.
