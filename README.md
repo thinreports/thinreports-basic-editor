@@ -16,7 +16,7 @@ It works on Windows, Mac and Linux.
 ### Support i18n
 
 Currently releases are Japanese and English versions.  
-Please contribute to translate in your language! [Learn more](./TRANSLATION.md).
+Please contribute to translate in your language! See TRANSLATION.md.
 
 ### Auto generation of the specification
 
@@ -59,8 +59,8 @@ It can be generated automatically the specifications that contains the definitio
 
 ### How to translate in your own language
 
-See [TRANSLATION.md](./TRANSLATION.md).
+See TRANSLATION.md.
 
 ## License
 
-Copyright (C) 2010-2012 Matsukei Co.,Ltd. All rights reserved. See [LICENSE](./LICENSE) for further details.
+Copyright (C) 2010-2012 Matsukei Co.,Ltd. All rights reserved. See LICENSE for further details.
