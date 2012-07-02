@@ -164,6 +164,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   button_about: 'About',
   button_go_to_forum: 'Forum',
   button_feedback: 'Feedback',
+  button_translation: 'Contribut to the translation', 
   button_selection_tool: 'Selection',
   button_zoom_tool: 'Zoom',
   button_rectangle_tool: 'Rectangle',
