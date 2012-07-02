@@ -366,21 +366,19 @@ thin.editor.ListSectionHelper.Separator_ = function(layout) {
    */
   this.line_ = this.createLine_();
   
-  var position = thin.editor.ListSectionHelper.Separator_.Handle_.Position;
+  var position = thin.editor.ListSectionHelper.SeparatorHandle_.Position;
   
   /**
-   * @type {thin.editor.ListSectionHelper.Separator_.Handle_}
+   * @type {thin.editor.ListSectionHelper.SeparatorHandle_}
    * @private
    */
   this.leftHandle_ = this.createHandle_();
-  this.leftHandle_.setPosition(position.LEFT);
   
   /**
-   * @type {thin.editor.ListSectionHelper.Separator_.Handle_}
+   * @type {thin.editor.ListSectionHelper.SeparatorHandle_}
    * @private
    */
   this.rightHandle_ = this.createHandle_();
-  this.rightHandle_.setPosition(position.RIGHT);
 
   goog.base(this, layout);
   this.setVisibled(false);
@@ -388,23 +386,6 @@ thin.editor.ListSectionHelper.Separator_ = function(layout) {
   this.top_ = 0;
 };
 goog.inherits(thin.editor.ListSectionHelper.Separator_, thin.editor.Component);
-
-
-/**
- * @enum {number}
- * @private
- */
-thin.editor.ListSectionHelper.Separator_.HandleSetting_ = {
-  SIDE: 6,
-  MARGIN: 2
-};
-
-
-/**
- * @type {goog.graphics.SolidFill}
- * @private
- */
-thin.editor.ListSectionHelper.Separator_.FILL_ = new goog.graphics.SolidFill('#FFFFFF');
 
 
 /**
@@ -419,12 +400,11 @@ thin.editor.ListSectionHelper.Separator_.prototype.createLine_ = function() {
 
 
 /**
- * @return {thin.editor.ListSectionHelper.Separator_.Handle_}
  * @private
  */
 thin.editor.ListSectionHelper.Separator_.prototype.createHandle_ = function() {
-  return new thin.editor.ListSectionHelper.Separator_.Handle_(this.layout_.createSvgElement('polygon'),
-                this.layout_, null, thin.editor.ListSectionHelper.Separator_.FILL_);
+  return new thin.editor.ListSectionHelper.SeparatorHandle_(
+      this.layout_.createSvgElement('rect'), this.layout_);
 };
 
 
@@ -581,12 +561,9 @@ thin.editor.ListSectionHelper.Separator_.prototype.setLeft = function(left) {
  */
 thin.editor.ListSectionHelper.Separator_.prototype.setHandleLeft_ = function(left) {
   var listGuideHelper = this.layout_.getHelpers().getListHelper().getListGuideHelper();
-  var setting = thin.editor.ListSectionHelper.Separator_.HandleSetting_;
-  var margin = setting.MARGIN / this.layout_.getPixelScale();
 
   this.leftHandle_.setLeft(left - listGuideHelper.getStrokeWidth());
   this.rightHandle_.setLeft(left + this.line_.getWidth());
-  this.rightHandle_.setLeft(left + this.line_.getWidth() + margin);
 };
 
 
@@ -619,11 +596,10 @@ thin.editor.ListSectionHelper.Separator_.prototype.setWidth = function(width) {
  */
 thin.editor.ListSectionHelper.Separator_.prototype.reapplySizeAndStroke = function() {
   this.line_.reapplySizeAndStroke();
-  var setting = thin.editor.ListSectionHelper.Separator_.HandleSetting_;
-  var side = setting.SIDE / this.layout_.getPixelScale();
 
-  this.leftHandle_.setSize(side);
-  this.rightHandle_.setSize(side);
+  this.leftHandle_.reapplySizeAndStroke();
+  this.rightHandle_.reapplySizeAndStroke();
+
   this.setLeft(this.getLeft());
   this.setTop(this.getTop());
 };
@@ -655,98 +631,20 @@ thin.editor.ListSectionHelper.Separator_.prototype.disposeInternal = function() 
 /**
  * @param {Element} element
  * @param {thin.editor.Layout} layout
- * @param {goog.graphics.Stroke?} stroke
- * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {goog.graphics.StrokeAndFillElement}
- */
-thin.editor.ListSectionHelper.Separator_.Handle_ = function(element, layout, stroke, fill) {
-  goog.base(this, element, layout, stroke, fill);
-};
-goog.inherits(thin.editor.ListSectionHelper.Separator_.Handle_, goog.graphics.StrokeAndFillElement);
-goog.mixin(thin.editor.ListSectionHelper.Separator_.Handle_.prototype, thin.editor.ModuleElement.prototype);
-
-
-/**
- * @enum {number}
- */
-thin.editor.ListSectionHelper.Separator_.Handle_.Position = {
-  LEFT: 0x01,
-  RIGHT: 0x02
-};
-
-
-/**
- * @type {thin.editor.ListSectionHelper.Separator_.Handle_.Position}
+ * @extends {thin.editor.Rect}
  * @private
  */
-thin.editor.ListSectionHelper.Separator_.Handle_.prototype.position_;
-
-
-/**
- * @param {number} left
- */
-thin.editor.ListSectionHelper.Separator_.Handle_.prototype.setLeft = function(left) {
-  left = thin.numberWithPrecision(left - this.getParentTransLateX());
-  this.left_ = left;
-
-  this.setTransformation(left, this.getTransform().getTranslateY() || 0, 0, 0, 0);
+thin.editor.ListSectionHelper.SeparatorHandle_ = function(element, layout) {
+  goog.base(this, element, layout, 
+      null, new goog.graphics.SolidFill('ffffff'));
 };
+goog.inherits(thin.editor.ListSectionHelper.SeparatorHandle_, thin.editor.Rect);
 
 
-/**
- * @param {number} top
- */
-thin.editor.ListSectionHelper.Separator_.Handle_.prototype.setTop = function(top) {
-  top = thin.numberWithPrecision(top - this.getParentTransLateY());
-  this.top_ = top;
-  
-  this.setTransformation(this.getTransform().getTranslateX() || 0, top, 0, 0, 0);
-};
+thin.editor.ListSectionHelper.SeparatorHandle_.prototype.reapplySizeAndStroke = function() {
+  var scale = this.getLayout().getPixelScale();
 
-
-/**
- * @param {thin.editor.ListSectionHelper.Separator_.Handle_.Position} position
- */
-thin.editor.ListSectionHelper.Separator_.Handle_.prototype.setPosition = function(position) {
-  this.position_ = position;
-};
-
-
-/**
- * @param {...goog.math.Coordinate} var_args
- */
-thin.editor.ListSectionHelper.Separator_.Handle_.prototype.setPoints = function(var_args) {
-  var points = goog.array.map(arguments, function(point) {
-    return point.x + ',' + point.y;
-  });
-
-  this.getLayout().setElementAttributes(this.getElement(), {
-    'points': points.join(' ')
-  });
-};
-
-
-/**
- * @param {number} side
- */
-thin.editor.ListSectionHelper.Separator_.Handle_.prototype.setSize = function(side) {
-  var position = thin.editor.ListSectionHelper.Separator_.Handle_.Position;
-  this.width_ = thin.numberWithPrecision(side * Math.sqrt(3) / 2);
-  this.height_ = side;
-
-  switch (this.position_) {
-    case position.LEFT:
-      this.setPoints(
-          new goog.math.Coordinate(0, 0),
-          new goog.math.Coordinate(this.width_, thin.numberWithPrecision(this.height_ / 2, 2)),
-          new goog.math.Coordinate(0, this.height_));
-      break;
-    case position.RIGHT:
-      this.setPoints(
-          new goog.math.Coordinate(0, thin.numberWithPrecision(this.height_ / 2)),
-          new goog.math.Coordinate(this.width_, 0),
-          new goog.math.Coordinate(this.width_, this.height_));
-      break;
-  }
+  this.setWidth(8 / scale);
+  this.setHeight(2 / scale);
 };
