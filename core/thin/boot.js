@@ -698,7 +698,7 @@ thin.boot = function() {
               
               if (goog.string.isEmpty(userWidth) ||
                   goog.string.isEmpty(userHeight)) {              
-                thin.ui.Message.alert(thin.t('error_paper_type_is_empty'), 'Error', function() {
+                thin.ui.Message.alert(thin.t('error_paper_size_is_empty'), 'Error', function() {
                   dialog.focus();
                 });
                 return false;
