@@ -18,6 +18,9 @@ It works on Windows, Mac and Linux.
 Currently releases are Japanese and English versions.  
 Please contribute to translate in your language! See TRANSLATION.md.
 
+**English version**
+![English version](http://a2.sphotos.ak.fbcdn.net/hphotos-ak-ash4/289975_413479922037106_573851698_o.jpg?dl=1)
+
 ### Auto generation of the specification
 
 It can be generated automatically the specifications that contains the definitions of id and the image of layout.
