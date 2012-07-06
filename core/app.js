@@ -63,14 +63,15 @@ Thin.locale_ = {
  */
 Thin.getDefaultLocale = function() {
   return (navigator.language || navigator.browserLanguage 
-      || navigator.userLanguage || 'en').substr(0, 2);
+      || navigator.userLanguage || 'en').substr(0, 2).toLowerCase();
 };
 
 /**
  * Get current locale
  */
 Thin.getCurrentLocale = function() {
-  return localStorage.locale || Thin.getDefaultLocale();
+  var locale = localStorage.locale || Thin.getDefaultLocale();
+  return Thin.LOCALES[locale] ? locale : 'en';
 };
 
 
