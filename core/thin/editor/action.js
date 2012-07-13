@@ -1455,14 +1455,20 @@ thin.editor.Action.prototype.calculateShift_ = function(
     pressShiftKey, currentPos, limitPos) {
 
   var shiftValueTemplate = thin.editor.Action.ShiftValue;
-  var shiftValue = pressShiftKey ? shiftValueTemplate.PRESSSHIFTKEY : shiftValueTemplate.NORMAL;
+
+  if (pressShiftKey) {
+    var shiftValue = shiftValueTemplate.PRESSSHIFTKEY + (currentPos % 1);
+  } else {
+    var shiftValue = shiftValueTemplate.NORMAL
+    var remainder = currentPos % shiftValueTemplate.NORMAL;
+    if (remainder != 0) {
+      shiftValue = remainder
+    }
+  }
   
   if (limitPos > (currentPos - shiftValue)) {
     shiftValue = currentPos - limitPos;
-  } else {
-    shiftValue += currentPos % 1;
   }
-  
   return thin.numberWithPrecision(shiftValue);
 };
 
@@ -1478,13 +1484,20 @@ thin.editor.Action.prototype.calculateUnShift_ = function(
     pressShiftKey, coordinate, size, limitPos) {
 
   var shiftValueTemplate = thin.editor.Action.ShiftValue;
-  var shiftValue = pressShiftKey ? shiftValueTemplate.PRESSSHIFTKEY : shiftValueTemplate.NORMAL;
-
   var currentPos = coordinate + size;
+
+  if (pressShiftKey) {
+    var shiftValue = shiftValueTemplate.PRESSSHIFTKEY - (coordinate % 1);
+  } else {
+    var remainder = coordinate % shiftValueTemplate.NORMAL;
+    var shiftValue = shiftValueTemplate.NORMAL;
+    if (remainder != 0) {
+      shiftValue -= remainder
+    }
+  }
+
   if (limitPos < (currentPos + shiftValue)) {
     shiftValue = limitPos - currentPos;
-  } else {
-    shiftValue -= coordinate % 1;
   }
   
   return thin.numberWithPrecision(shiftValue);
