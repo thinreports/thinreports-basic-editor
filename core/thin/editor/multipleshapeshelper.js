@@ -266,7 +266,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   
   widthInputProperty.addEventListener(propEventType.CHANGE, function(e) {
   
-    var unlimitedWidth = Number(e.target.getValue());
+    var allowWidth = Number(e.target.getValue());
     var captureProperties = scope.getCloneProperties();
     var shapes = manager.getActiveShapeByIncludeList().getClone();
     var targetShapes = [];
@@ -285,7 +285,6 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       version.upHandler(function() {
       
         goog.array.forEach(targetShapes, function(shape) {
-          var allowWidth = shape.getAllowWidth(unlimitedWidth);
           var outline = shape.getTargetOutline();
           shape.setWidth(allowWidth);
           outline.setWidth(allowWidth);
@@ -298,7 +297,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
             shape.setLeft(shape.getLeft());
           }
         });
-        this.setPropertyForNonDestructive(captureProperties, 'width', unlimitedWidth);
+        this.setPropertyForNonDestructive(captureProperties, 'width', allowWidth);
         updateGuideAndProperties(shapes);
       }, scope);
       
@@ -330,7 +329,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   
   heightInputProperty.addEventListener(propEventType.CHANGE, function(e) {
   
-    var unlimitedHeight = Number(e.target.getValue());
+    var allowHeight = Number(e.target.getValue());
     var captureProperties = scope.getCloneProperties();
     var shapes = manager.getActiveShapeByIncludeList().getClone();
     var targetShapes = [];
@@ -350,7 +349,6 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       
         goog.array.forEach(targetShapes, function(shape) {
         
-          var allowHeight = shape.getAllowHeight(unlimitedHeight);
           var outline = shape.getTargetOutline();
           if (shape.instanceOfTblockShape()) {
             if (shape.isMultiMode()) {
@@ -370,7 +368,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
             shape.setTop(shape.getTop());
           }
         });
-        this.setPropertyForNonDestructive(captureProperties, 'height', unlimitedHeight);
+        this.setPropertyForNonDestructive(captureProperties, 'height', allowHeight);
         updateGuideAndProperties(shapes);
       }, scope);
       

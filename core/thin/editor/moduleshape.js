@@ -904,7 +904,7 @@ thin.editor.ModuleShape.prototype.setWidthForPropertyUpdate = function(e) {
   var proppane = thin.ui.getComponent('proppane');
   var captureWidth = this.getWidth();
   var captureLeft = this.getLeft();
-  var allowWidth = this.getAllowWidth(Number(e.target.getValue()));
+  var allowWidth = Number(e.target.getValue());
 
   layout.getWorkspace().normalVersioning(function(version) {
   
@@ -936,7 +936,7 @@ thin.editor.ModuleShape.prototype.setHeightForPropertyUpdate = function(e) {
   var proppane = thin.ui.getComponent('proppane');
   var captureHeight = this.getHeight();
   var captureTop = this.getTop();
-  var allowHeight = this.getAllowHeight(Number(e.target.getValue()));
+  var allowHeight = Number(e.target.getValue());
   
   layout.getWorkspace().normalVersioning(function(version) {
   
