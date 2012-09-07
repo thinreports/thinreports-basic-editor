@@ -31,6 +31,11 @@ It can be generated automatically the specifications that contains the definitio
 * Mac OS X 10.6+
 * Linux x86 (Ubuntu 11.04+)
 
+## Install
+
+Please download the files for your platform from [here](http://sourceforge.net/projects/thinreports/files/).
+Then, please see the [here](http://osc.matsukei.net/projects/thinreports/wiki/Installing_Editor_en) about how to install editor for each platform
+
 ## For more information
 
 ### Release information
