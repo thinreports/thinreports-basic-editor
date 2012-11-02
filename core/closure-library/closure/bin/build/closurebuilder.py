@@ -17,8 +17,8 @@
 """Utility for Closure Library dependency calculation.
 
 ClosureBuilder scans source files to build dependency info.  From the
-dependencies, the script can produce a deps.js file, a manifest in dependency
-order, a concatenated script, or compiled output from the Closure Compiler.
+dependencies, the script can produce a manifest in dependency order,
+a concatenated script, or compiled output from the Closure Compiler.
 
 Paths to files can be expressed as individual arguments to the tool (intended
 for use with find and xargs).  As a convenience, --root can be used to specify
@@ -27,7 +27,7 @@ all JS files below a directory.
 usage: %prog [options] [file1.js file2.js ...]
 """
 
-
+__author__ = 'nnaze@google.com (Nathan Naze)'
 
 
 import logging
@@ -93,7 +93,9 @@ def _GetOptionsParser():
                     dest='compiler_flags',
                     default=[],
                     action='append',
-                    help='Additional flags to pass to the Closure compiler.')
+                    help='Additional flags to pass to the Closure compiler. '
+                    'To pass multiple flags, --compiler_flags has to be '
+                    'specified multiple times.')
   parser.add_option('--output_file',
                     dest='output_file',
                     action='store',

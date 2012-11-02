@@ -2312,7 +2312,7 @@ proto2.TestAllTypes.prototype.clearRepeatedInt64String = function() {
  * @enum {number}
  */
 proto2.TestAllTypes.NestedEnum = {
-  FOO: 1,
+  FOO: 0,
   BAR: 2,
   BAZ: 3
 };
@@ -2386,6 +2386,57 @@ proto2.TestAllTypes.NestedMessage.prototype.bCount = function() {
  */
 proto2.TestAllTypes.NestedMessage.prototype.clearB = function() {
   this.clear$Field(1);
+};
+
+
+/**
+ * Gets the value of the c field.
+ * @return {?number} The value.
+ */
+proto2.TestAllTypes.NestedMessage.prototype.getC = function() {
+  return /** @type {?number} */ (this.get$Value(2));
+};
+
+
+/**
+ * Gets the value of the c field or the default value if not set.
+ * @return {number} The value.
+ */
+proto2.TestAllTypes.NestedMessage.prototype.getCOrDefault = function() {
+  return /** @type {number} */ (this.get$ValueOrDefault(2));
+};
+
+
+/**
+ * Sets the value of the c field.
+ * @param {number} value The value.
+ */
+proto2.TestAllTypes.NestedMessage.prototype.setC = function(value) {
+  this.set$Value(2, value);
+};
+
+
+/**
+ * @return {boolean} Whether the c field has a value.
+ */
+proto2.TestAllTypes.NestedMessage.prototype.hasC = function() {
+  return this.has$Value(2);
+};
+
+
+/**
+ * @return {number} The number of values in the c field.
+ */
+proto2.TestAllTypes.NestedMessage.prototype.cCount = function() {
+  return this.count$Values(2);
+};
+
+
+/**
+ * Clears the values in the c field.
+ */
+proto2.TestAllTypes.NestedMessage.prototype.clearC = function() {
+  this.clear$Field(2);
 };
 
 
@@ -2785,6 +2836,11 @@ goog.proto2.Message.set$Metadata(proto2.TestAllTypes.NestedMessage, {
   },
   1: {
     name: 'b',
+    fieldType: goog.proto2.Message.FieldType.INT32,
+    type: Number
+  },
+  2: {
+    name: 'c',
     fieldType: goog.proto2.Message.FieldType.INT32,
     type: Number
   }

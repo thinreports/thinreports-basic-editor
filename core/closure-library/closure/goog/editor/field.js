@@ -41,8 +41,8 @@ goog.require('goog.editor.icontent.FieldStyleInfo');
 goog.require('goog.editor.node');
 goog.require('goog.editor.range');
 goog.require('goog.events');
-goog.require('goog.events.BrowserEvent');
 goog.require('goog.events.EventHandler');
+goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.functions');
@@ -129,20 +129,6 @@ goog.editor.Field = function(id, opt_doc) {
    * @protected
    */
   this.cssStyles = '';
-
-  // Work around bug https://bugs.webkit.org/show_bug.cgi?id=19086 in affected
-  // versions of Webkit by specifying 1px right margin on all immediate children
-  // of the editable field. This works in most (but not all) cases.
-  // Note. The fix uses a CSS rule which may be quite expensive, especially
-  //       in BLENDED mode. Currently this is the only known wokraround.
-  // TODO(user): The bug was fixed in community Webkit but not included in
-  //       Safari yet. Verify that the next Safari release after 525.18 is
-  //       unaffected.
-  if (goog.userAgent.WEBKIT && goog.userAgent.isVersion('525.13') &&
-      goog.string.compareVersions(goog.userAgent.VERSION, '525.18') <= 0) {
-    this.workaroundClassName_ = goog.getCssName('tr-webkit-workaround');
-    this.cssStyles = '.' + this.workaroundClassName_ + '>*{padding-right:1}';
-  }
 
   // The field will not listen to change events until it has finished loading
   this.stoppedEvents_ = {};
@@ -808,7 +794,8 @@ goog.editor.Field.prototype.setupChangeListeners_ = function() {
     // handleDrop event for all browsers?
     this.addListener(['beforecut', 'beforepaste', 'drop', 'dragend'],
         this.dispatchBeforeChange);
-    this.addListener(['cut', 'paste'], this.dispatchChange);
+    this.addListener(['cut', 'paste'],
+        goog.functions.lock(this.dispatchChange));
     this.addListener('drop', this.handleDrop_);
   }
 
@@ -845,9 +832,9 @@ goog.editor.Field.SELECTION_CHANGE_FREQUENCY_ = 250;
 
 /**
  * Stops all listeners and timers.
- * @private
+ * @protected
  */
-goog.editor.Field.prototype.clearListeners_ = function() {
+goog.editor.Field.prototype.clearListeners = function() {
   if (this.eventRegister) {
     this.eventRegister.removeAll();
   }
@@ -886,7 +873,8 @@ goog.editor.Field.prototype.disposeInternal = function() {
   }
 
   this.tearDownFieldObject_();
-  this.clearListeners_();
+  this.clearListeners();
+  this.clearFieldLoadListener_();
   this.originalDomHelper = null;
 
   if (this.eventRegister) {
@@ -1001,7 +989,7 @@ goog.editor.Field.prototype.handleBeforeChangeKeyEvent_ = function(e) {
     // readable characters like a, b and c. However pressing ctrl+c and so on
     // also causes charCode to be set.
 
-    // TODO(user): Del at end of field or backspace at beginning should be
+    // TODO(arv): Del at end of field or backspace at beginning should be
     // ignored.
     this.gotGeneratingKey_ = e.charCode ||
         goog.editor.Field.isGeneratingKey_(e, goog.userAgent.GECKO);
@@ -2129,12 +2117,6 @@ goog.editor.Field.prototype.installStyles = function() {
 goog.editor.Field.prototype.dispatchLoadEvent_ = function() {
   var field = this.getElement();
 
-  // Apply workaround className if necessary, see goog.editor.Field constructor
-  // for more details.
-  if (this.workaroundClassName_) {
-    goog.dom.classes.add(field, this.workaroundClassName_);
-  }
-
   this.installStyles();
   this.startChangeEvents();
   this.logger.info('Dispatching load ' + this.id);
@@ -2170,12 +2152,7 @@ goog.editor.Field.prototype.isLoading = function() {
  * Gives the field focus.
  */
 goog.editor.Field.prototype.focus = function() {
-  // TODO(user): This is actually the wrong codepath for focusing in WebKit
-  // (WebKit doesn't focus when you do this), but putting WebKit on the "right"
-  // codepath seems to cause test failures. We should figure out what's going on
-  // so focus can work in WebKit and all the tests can pass.
-  if (!goog.editor.BrowserFeature.HAS_CONTENT_EDITABLE ||
-      goog.userAgent.WEBKIT) {
+  if (!goog.editor.BrowserFeature.HAS_CONTENT_EDITABLE) {
     this.getEditableDomHelper().getWindow().focus();
   } else {
     if (goog.userAgent.OPERA) {
@@ -2220,16 +2197,37 @@ goog.editor.Field.prototype.focusAndPlaceCursorAtStart = function() {
  * an existing selection in the field.
  */
 goog.editor.Field.prototype.placeCursorAtStart = function() {
+  this.placeCursorAtStartOrEnd_(true);
+};
+
+
+/**
+ * Place the cursor at the start of this field. It's recommended that you only
+ * use this method (and manipulate the selection in general) when there is not
+ * an existing selection in the field.
+ */
+goog.editor.Field.prototype.placeCursorAtEnd = function() {
+  this.placeCursorAtStartOrEnd_(false);
+};
+
+
+/**
+ * Helper method to place the cursor at the start or end of this field.
+ * @param {boolean} isStart True for start, false for end.
+ * @private
+ */
+goog.editor.Field.prototype.placeCursorAtStartOrEnd_ = function(isStart) {
   var field = this.getElement();
   if (field) {
-    var cursorPosition = goog.editor.node.getLeftMostLeaf(field);
+    var cursorPosition = isStart ? goog.editor.node.getLeftMostLeaf(field) :
+        goog.editor.node.getRightMostLeaf(field);
     if (field == cursorPosition) {
-      // The leftmost leaf we found was the field element itself (which likely
+      // The rightmost leaf we found was the field element itself (which likely
       // means the field element is empty). We can't place the cursor next to
       // the field element, so just place it at the beginning.
       goog.dom.Range.createCaret(field, 0).select();
     } else {
-      goog.editor.range.placeCursorNextTo(cursorPosition, true);
+      goog.editor.range.placeCursorNextTo(cursorPosition, isStart);
     }
     this.dispatchSelectionChangeEvent();
   }
@@ -2339,7 +2337,7 @@ goog.editor.Field.prototype.makeUneditable = function(opt_skipRestore) {
   // Clear all listeners before removing the nodes from the dom - if
   // there are listeners on the iframe window, Firefox throws errors trying
   // to unlisten once the iframe is no longer in the dom.
-  this.clearListeners_();
+  this.clearListeners();
 
   // For fields that have loaded, clean up anything that happened in
   // handleFieldOpen or later.

@@ -12,8 +12,10 @@ See the COPYING file for details.
 <script src="../base.js"></script>
 <script>
   goog.require('goog.vec.Float32Array');
-  goog.require('goog.vec.Matrix4');
+  goog.require('goog.vec.Mat4');
   goog.require('goog.vec.Quaternion');
+  goog.require('goog.vec.Vec3');
+  goog.require('goog.vec.Vec4');
   goog.require('goog.testing.jsunit');
 </script>
 </head>
@@ -21,8 +23,8 @@ See the COPYING file for details.
 <script>
 
   function testConjugate() {
-    var q0 = goog.vec.Quaternion.createFromValues(1, 2, 3, 4);
-    var q1 = goog.vec.Quaternion.create();
+    var q0 = goog.vec.Quaternion.createFloat32FromValues(1, 2, 3, 4);
+    var q1 = goog.vec.Quaternion.createFloat32();
 
     goog.vec.Quaternion.conjugate(q0, q1);
     assertElementsEquals([1, 2, 3, 4], q0);
@@ -33,9 +35,9 @@ See the COPYING file for details.
   }
 
   function testConcat() {
-    var q0 = goog.vec.Quaternion.createFromValues(1, 2, 3, 4);
-    var q1 = goog.vec.Quaternion.createFromValues(2, 3, 4, 5);
-    var q2 = goog.vec.Quaternion.create();
+    var q0 = goog.vec.Quaternion.createFloat32FromValues(1, 2, 3, 4);
+    var q1 = goog.vec.Quaternion.createFloat32FromValues(2, 3, 4, 5);
+    var q2 = goog.vec.Quaternion.createFloat32();
     goog.vec.Quaternion.concat(q0, q1, q2);
     assertElementsEquals([12, 24, 30, 0], q2);
 
@@ -44,9 +46,9 @@ See the COPYING file for details.
   }
 
   function testSlerp() {
-    var q0 = goog.vec.Quaternion.createFromValues(1, 2, 3, 4);
-    var q1 = goog.vec.Quaternion.createFromValues(5, -6, 7, -8);
-    var q2 = goog.vec.Quaternion.create();
+    var q0 = goog.vec.Quaternion.createFloat32FromValues(1, 2, 3, 4);
+    var q1 = goog.vec.Quaternion.createFloat32FromValues(5, -6, 7, -8);
+    var q2 = goog.vec.Quaternion.createFloat32();
 
     goog.vec.Quaternion.slerp(q0, q1, 0, q2);
     assertElementsEquals([5, -6, 7, -8], q2);
@@ -83,10 +85,10 @@ See the COPYING file for details.
   }
 
   function testToRotMatrix() {
-    var q0 = goog.vec.Quaternion.createFromValues(
+    var q0 = goog.vec.Quaternion.createFloat32FromValues(
         0.22094256606638, 0.53340203646030,
         0.64777022739548, 0.497051689967954);
-    var m0 = goog.vec.Matrix4.create();
+    var m0 = goog.vec.Mat4.createFloat32();
     goog.vec.Quaternion.toRotationMatrix4(q0, m0);
 
     assertElementsRoughlyEqual(
@@ -98,16 +100,94 @@ See the COPYING file for details.
   }
 
   function testFromRotMatrix() {
-    var m0 = goog.vec.Matrix4.createFromValues(
+    var m0 = goog.vec.Mat4.createFloat32FromValues(
         -0.408248, 0.8796528, -0.244016935, 0,
         -0.4082482, 0.06315623, 0.9106836, 0,
         0.8164965, 0.47140452, 0.3333333, 0,
         0, 0, 0, 1);
-    var q0 = goog.vec.Quaternion.create();
+    var q0 = goog.vec.Quaternion.createFloat32();
     goog.vec.Quaternion.fromRotationMatrix4(m0, q0);
     assertElementsRoughlyEqual(
         [0.22094256606638, 0.53340203646030,
          0.64777022739548, 0.497051689967954],
+        q0, goog.vec.EPSILON);
+  }
+
+  function testToAngleAxis() {
+    // Test the identity rotation.
+    var q0 = goog.vec.Quaternion.createFloat32FromValues(0, 0, 0, 1);
+    var axis = goog.vec.Vec3.createFloat32();
+    var angle = goog.vec.Quaternion.toAngleAxis(q0, axis);
+    assertRoughlyEquals(0.0, angle, goog.vec.EPSILON);
+    assertElementsRoughlyEqual([1, 0, 0], axis, goog.vec.EPSILON);
+
+    // Check equivalent representations of the same rotation.
+    goog.vec.Quaternion.setFromValues(
+        q0, -0.288675032, 0.622008682, -0.17254543, 0.70710678);
+    angle = goog.vec.Quaternion.toAngleAxis(q0, axis);
+    assertRoughlyEquals(Math.PI / 2, angle, goog.vec.EPSILON);
+    assertElementsRoughlyEqual([-0.408248, 0.8796528, -0.244016],
+                               axis, goog.vec.EPSILON);
+    // The polar opposite unit quaternion is the same rotation, so we
+    // check that the negated quaternion yields the negated angle and axis.
+    goog.vec.Quaternion.negate(q0, q0);
+    angle = goog.vec.Quaternion.toAngleAxis(q0, axis);
+    assertRoughlyEquals(-Math.PI / 2, angle, goog.vec.EPSILON);
+    assertElementsRoughlyEqual([0.408248, -0.8796528, 0.244016],
+                               axis, goog.vec.EPSILON);
+
+    // Verify that the inverse rotation yields the inverse axis.
+    goog.vec.Quaternion.conjugate(q0, q0);
+    angle = goog.vec.Quaternion.toAngleAxis(q0, axis);
+    assertRoughlyEquals(-Math.PI / 2, angle, goog.vec.EPSILON);
+    assertElementsRoughlyEqual([-0.408248, 0.8796528, -0.244016],
+                               axis, goog.vec.EPSILON);
+  }
+
+  function testFromAngleAxis() {
+    // Test identity rotation (zero angle or multiples of TWO_PI).
+    var angle = 0.0;
+    var axis = goog.vec.Vec3.createFloat32FromValues(-0.408248, 0.8796528,
+                                                     -0.244016);
+    var q0 = goog.vec.Quaternion.createFloat32();
+    goog.vec.Quaternion.fromAngleAxis(angle, axis, q0);
+    assertElementsRoughlyEqual([0, 0, 0, 1], q0, goog.vec.EPSILON);
+    angle = 4 * Math.PI;
+    goog.vec.Quaternion.fromAngleAxis(angle, axis, q0);
+    assertElementsRoughlyEqual([0, 0, 0, 1], q0, goog.vec.EPSILON);
+
+    // General test of various rotations around axes of different lengths.
+    angle = Math.PI / 2;
+    goog.vec.Quaternion.fromAngleAxis(angle, axis, q0);
+    assertElementsRoughlyEqual(
+        [-0.288675032, 0.622008682, -0.17254543, 0.70710678],
+        q0, goog.vec.EPSILON);
+    // Angle multiples of TWO_PI with a scaled axis should be the same.
+    angle += 4 * Math.PI;
+    goog.vec.Vec3.scale(axis, 7.0, axis);
+    goog.vec.Quaternion.fromAngleAxis(angle, axis, q0);
+    assertElementsRoughlyEqual(
+        [-0.288675032, 0.622008682, -0.17254543, 0.70710678],
+        q0, goog.vec.EPSILON);
+    goog.vec.Vec3.setFromValues(axis, 1, 5, 8);
+    goog.vec.Quaternion.fromAngleAxis(angle, axis, q0);
+    assertElementsRoughlyEqual(
+        [0.074535599, 0.372677996, 0.596284794, 0.70710678],
+        q0, goog.vec.EPSILON);
+
+    // Check equivalent representations of the same rotation.
+    angle = Math.PI / 5;
+    goog.vec.Vec3.setFromValues(axis, 5, -2, -10);
+    goog.vec.Quaternion.fromAngleAxis(angle, axis, q0);
+    assertElementsRoughlyEqual(
+        [0.136037146, -0.0544148586, -0.27207429, 0.951056516],
+        q0, goog.vec.EPSILON);
+    // The negated angle and axis should yield the same rotation.
+    angle = -Math.PI / 5;
+    goog.vec.Vec3.negate(axis, axis);
+    goog.vec.Quaternion.fromAngleAxis(angle, axis, q0);
+    assertElementsRoughlyEqual(
+        [0.136037146, -0.0544148586, -0.27207429, 0.951056516],
         q0, goog.vec.EPSILON);
   }
 

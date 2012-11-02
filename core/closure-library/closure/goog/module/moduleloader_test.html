@@ -1,13 +1,3 @@
-<!--
-
-  A regression test for goog.module.ModuleLoader.
-
-  Unlike the unit tests for goog.module.ModuleManager, this uses
-  asynchronous test cases and real XHRs.
-
-  Author: nicksantos@google.com (Nick Santos)
--->
-
 <html>
 <!--
 Copyright 2009 The Closure Library Authors. All Rights Reserved.
@@ -15,11 +5,19 @@ Copyright 2009 The Closure Library Authors. All Rights Reserved.
 Use of this source code is governed by the Apache License, Version 2.0.
 See the COPYING file for details.
 -->
+
+<!--
+  A regression test for goog.module.ModuleLoader.
+
+  Unlike the unit tests for goog.module.ModuleManager, this uses
+  asynchronous test cases and real XHRs.
+
+  Author: nicksantos@google.com (Nick Santos)
+-->
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>JsUnit tests for goog.module.ModuleLoader</title>
 <script src='../base.js'></script>
-<script src='../../../third_party/closure/goog/deps.js'></script>
 <script>
 
 goog.require('goog.array');
@@ -31,14 +29,15 @@ goog.require('goog.module.ModuleManager.CallbackType');
 goog.require('goog.object');
 goog.require('goog.testing.AsyncTestCase');
 goog.require('goog.testing.PropertyReplacer');
+goog.require('goog.testing.events.EventObserver');
 goog.require('goog.testing.jsunit');
-
+goog.require('goog.userAgent.product');
 
 </script>
 </head>
 <body>
 
-<b>Note:</b>: If you're running this test off local disk on Chrome, it
+<b>Note:</b>: If you are running this test off local disk on Chrome, it
 will fail unless you start Chrome with
 <code>--allow-file-access-from-files</code>.
 
@@ -51,10 +50,17 @@ var stubs = new goog.testing.PropertyReplacer();
 var testCase = goog.testing.AsyncTestCase.createAndInstall(document.title);
 testCase.stepTimeout = 5 * 1000; // 5 seconds
 
+var EventType = goog.module.ModuleLoader.EventType;
+var eventObserver;
+
 testCase.setUp = function() {
   goog.provide = goog.nullFunction;
   moduleManager = goog.module.ModuleManager.getInstance();
   moduleLoader = new goog.module.ModuleLoader();
+  eventObserver = new goog.testing.events.EventObserver();
+
+  goog.events.listen(
+      moduleLoader, goog.object.getValues(EventType), eventObserver);
 
   moduleManager.setLoader(moduleLoader);
   moduleManager.setAllModuleInfo({
@@ -98,6 +104,15 @@ function testLoadModuleA() {
     assertLoaded('modA');
     assertNotLoaded('modB');
     assertTrue(window.modA_1);
+
+    assertEquals('EVALUATE_CODE',
+        0, observer.getEvents(EventType.EVALUATE_CODE).length);
+    assertEquals('REQUEST_SUCCESS',
+        1, observer.getEvents(EventType.REQUEST_SUCCESS).length);
+    assertArrayEquals(
+        ['modA'], observer.getEvents(EventType.REQUEST_SUCCESS)[0].moduleIds);
+    assertEquals('REQUEST_ERROR',
+        0, observer.getEvents(EventType.REQUEST_FAILURE).length);
   });
 }
 
@@ -157,6 +172,30 @@ function testLoadDebugModuleAThenB() {
       } else if (uri.indexOf('modB') >= 0) {
         assertTrue(seenLastScriptOfModuleA);
       }
+    }
+  });
+}
+
+function testSourceInjection() {
+  testCase.waitForAsync('wait for module B load');
+  moduleLoader.setSourceUrlInjection(true);
+  moduleManager.execOnLoad('modB', function() {
+    testCase.continueTesting();
+
+    assertTrue(!!throwErrorInModuleB);
+    var ex = null;
+    try {
+      throwErrorInModuleB();
+    } catch (e) {
+      ex = e;
+    }
+
+    assertNotNull(ex);
+
+    // Chrome is currently the only browser that uses sourceURL
+    // when serializing stack traces.
+    if (goog.userAgent.product.CHROME) {
+      assertContains('modB_1.js', ex.stack.toString());
     }
   });
 }

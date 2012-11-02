@@ -113,6 +113,7 @@ goog.editor.plugins.BasicTextFormatter.SUPPORTED_COMMANDS_ =
  * @param {string} command Command string to check.
  * @return {boolean} Whether the string corresponds to a command
  *     this plugin handles.
+ * @override
  */
 goog.editor.plugins.BasicTextFormatter.prototype.isSupportedCommand = function(
     command) {
@@ -144,13 +145,13 @@ goog.editor.plugins.BasicTextFormatter.prototype.getDocument_ = function() {
 
 /**
  * Execute a user-initiated command.
- * @param {goog.editor.plugins.BasicTextFormatter.COMMAND} command Command
- *     to execute.
- * @param {...string|number|boolean|null} var_args For color commands, this
+ * @param {string} command Command to execute.
+ * @param {...*} var_args For color commands, this
  *     should be the hex color (with the #). For FORMAT_BLOCK, this should be
  *     the goog.editor.plugins.BasicTextFormatter.BLOCK_COMMAND.
  *     It will be unused for other commands.
  * @return {Object|undefined} The result of the command.
+ * @override
  */
 goog.editor.plugins.BasicTextFormatter.prototype.execCommandInternal = function(
     command, var_args) {
@@ -316,7 +317,7 @@ goog.editor.plugins.BasicTextFormatter.prototype.execCommandInternal = function(
        * goog.editor.plugins.BasicTextFormatter.COMMAND.FONT_SIZE:
        * goog.editor.plugins.BasicTextFormatter.COMMAND.FONT_FACE:
        */
-      this.execCommandHelper_(command, opt_arg, preserveDir, styleWithCss);
+      this.execCommandHelper_(command, opt_arg, preserveDir, !!styleWithCss);
 
       if (hasDummySelection) {
         this.getDocument_().execCommand('Delete', false, true);
@@ -352,6 +353,7 @@ goog.editor.plugins.BasicTextFormatter.prototype.focusField_ = function() {
  *     selection.  NOTE: This return type list is not documented in MSDN or MDC
  *     and has been constructed from experience.  Please update it
  *     if necessary.
+ * @override
  */
 goog.editor.plugins.BasicTextFormatter.prototype.queryCommandValue = function(
     command) {

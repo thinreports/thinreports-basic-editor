@@ -11,7 +11,6 @@ See the COPYING file for details.
 <head>
 <title>Closure Unit Tests - goog.testing.fs.DirectoryEntry</title>
 <script src="../../base.js"></script>
-<script src="../../../../third_party/closure/goog/deps.js"></script>
 <script>
 goog.require('goog.fs.DirectoryEntry.Behavior');
 goog.require('goog.fs.Error.ErrorCode');
@@ -79,7 +78,12 @@ function testGetFile() {
       }).
       addCallback(function(date) {
         assertEquals('Reading a file should not update the modification date.',
-               0, date.getTime());
+            0, date.getTime());
+        return dir.getMetadata();
+      }).
+      addCallback(function(metadata) {
+        assertEquals('Reading a file should not update the metadata.',
+            0, metadata.modificationTime.getTime());
       }).
       addBoth(continueTesting);
   waitForAsync('waiting for file');
@@ -135,6 +139,10 @@ function testCreateFile() {
       }).
       addCallback(function(date) {
         assertEquals(43, date.getTime());
+        return dir.getMetadata();
+      }).
+      addCallback(function(metadata) {
+        assertEquals(43, metadata.modificationTime.getTime());
       }).
       addBoth(continueTesting);
   waitForAsync('waiting for file creation');
@@ -156,6 +164,10 @@ function testCreateFileThatAlreadyExists() {
       }).
       addCallback(function(date) {
         assertEquals(47, date.getTime());
+        return dir.getMetadata();
+      }).
+      addCallback(function(metadata) {
+        assertEquals(47, metadata.modificationTime.getTime());
       }).
       addBoth(continueTesting);
   waitForAsync('waiting for file creation');

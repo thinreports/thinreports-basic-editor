@@ -7,6 +7,8 @@ Use of this source code is governed by the Apache License, Version 2.0.
 See the COPYING file for details.
 -->
 <!--
+  Author: eae@google.com (Emil A Eklund)
+  Author: dgajda@google.com (Damian Gajda)
 -->
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,6 +17,7 @@ See the COPYING file for details.
 <script>
   goog.require('goog.fx.AbstractDragDrop');
   goog.require('goog.math.Box');
+  goog.require('goog.style');
   goog.require('goog.testing.jsunit');
 </script>
 <style>
@@ -343,6 +346,70 @@ function testMaybeCreateDummyTargetForPosition4() {
   }
 }
 
+function testMaybeCreateDummyTargetForPosition_NegativePositions() {
+  var negTargets = [
+    { box_: new goog.math.Box(-20, 10,  -5, 1) },
+    { box_: new goog.math.Box(20, 10,  30, 1) }
+  ];
+
+  var testGroup = new goog.fx.AbstractDragDrop();
+  testGroup.targetList_ = negTargets;
+  testGroup.targetBox_ = new goog.math.Box(-20, 10, 30, 1);
+
+  var target = testGroup.maybeCreateDummyTargetForPosition_(1, 5);
+  assertFalse(boxOverlapsTargets(target.box_, testGroup.targetList_));
+  assertTrue(testGroup.isInside_(1, 5, target.box_));
+}
+
+function testMaybeCreateDummyTargetOutsideScrollableContainer() {
+  var targets = [
+    { box_: new goog.math.Box(0, 3,  10, 1) },
+    { box_: new goog.math.Box(20, 3,  30, 1) }
+  ];
+  var target = targets[0];
+
+  var testGroup = new goog.fx.AbstractDragDrop();
+  testGroup.targetList_ = targets;
+  testGroup.targetBox_ = new goog.math.Box(0, 3, 30, 1);
+
+  testGroup.addScrollableContainer(document.getElementById('container1'));
+  var container = testGroup.scrollableContainers_[0];
+  container.containedTargets_.push(target);
+  container.box_ = new goog.math.Box(0, 3, 5, 1); // shorter than target
+  target.scrollableContainer_ = container;
+
+  // mouse cursor is below scrollable target but not the actual target
+  var dummyTarget = testGroup.maybeCreateDummyTargetForPosition_(2, 7);
+  // dummy target should not overlap the scrollable container
+  assertFalse(boxOverlaps(dummyTarget.box_, container.box_));
+  // but should overlap the actual target, since not all of it is visible
+  assertTrue(boxOverlaps(dummyTarget.box_, target.box_));
+}
+
+function testMaybeCreateDummyTargetInsideScrollableContainer() {
+  var targets = [
+    { box_: new goog.math.Box(0, 3,  10, 1) },
+    { box_: new goog.math.Box(20, 3,  30, 1) }
+  ];
+  var target = targets[0];
+
+  var testGroup = new goog.fx.AbstractDragDrop();
+  testGroup.targetList_ = targets;
+  testGroup.targetBox_ = new goog.math.Box(0, 3, 30, 1);
+
+  testGroup.addScrollableContainer(document.getElementById('container1'));
+  var container = testGroup.scrollableContainers_[0];
+  container.containedTargets_.push(target);
+  container.box_ = new goog.math.Box(0, 3, 20, 1); // longer than target
+  target.scrollableContainer_ = container;
+
+  // mouse cursor is below both the scrollable and the actual target
+  var dummyTarget = testGroup.maybeCreateDummyTargetForPosition_(2, 15);
+  // dummy target should overlap the scrollable container
+  assertTrue(boxOverlaps(dummyTarget.box_, container.box_));
+  // but not overlap the actual target
+  assertFalse(boxOverlaps(dummyTarget.box_, target.box_));
+}
 
 function testCalculateTargetBox() {
   var testGroup = new goog.fx.AbstractDragDrop();
@@ -460,6 +527,40 @@ function testScrollableContainersCalculation() {
 }
 
 
+function testScrollBeforeMoveDrag() {
+  var group = new goog.fx.AbstractDragDrop();
+  var target = new goog.fx.AbstractDragDrop();
+
+  group.addTarget(target);
+  var container = document.getElementById('container1');
+  group.addScrollableContainer(container);
+
+  var childEl = document.getElementById('child1');
+  var item = new goog.fx.DragDropItem(childEl);
+  item.currentDragElement_ = childEl;
+
+  target.items_.push(item);
+  group.recalculateDragTargets();
+  group.recalculateScrollableContainers();
+
+  // Simulare starting a drag.
+  var moveEvent = {
+    'clientX': 8,
+    'clientY': 10,
+    'type': goog.events.EventType.MOUSEMOVE,
+    'relatedTarget': childEl,
+    'preventDefault': function() {}
+  };
+  group.startDrag(moveEvent, item);
+
+  // Simulate scrolling before the first move drag event.
+  var scrollEvent = {
+    'target': container
+  };
+  assertNotThrows(goog.bind(group.containerScrollHandler_, group, scrollEvent));
+}
+
+
 function testMouseMove_mouseOutBeforeThreshold() {
   // Setup dragdrop and item
   var itemEl = document.createElement('div');
@@ -481,16 +582,39 @@ function testMouseMove_mouseOutBeforeThreshold() {
   };
 
   var event = {'clientX': 8, 'clientY': 10, // Drag distance is only 2
-      'type': goog.events.EventType.MOUSEOUT, 'relatedTarget': childEl};
+      'type': goog.events.EventType.MOUSEOUT, 'target': childEl};
   item.mouseMove_(event);
   assertEquals("DragStart should not be fired for mouseout on child element.",
       null, draggedItem);
 
   var event = {'clientX': 8, 'clientY': 10, // Drag distance is only 2
-      'type': goog.events.EventType.MOUSEOUT, 'relatedTarget': itemEl};
+      'type': goog.events.EventType.MOUSEOUT, 'target': itemEl};
   item.mouseMove_(event);
   assertEquals("DragStart should be fired for mouseout on main element.",
       item, draggedItem);
+}
+
+
+function testGetDragElementPosition() {
+  var testGroup = new goog.fx.AbstractDragDrop();
+  var sourceEl = document.createElement('div');
+  document.body.appendChild(sourceEl);
+
+  var pageOffset = goog.style.getPageOffset(sourceEl);
+  var pos = testGroup.getDragElementPosition(sourceEl);
+  assertEquals('Drag element position should be source element page offset',
+      pageOffset.x, pos.x);
+  assertEquals('Drag element position should be source element page offset',
+      pageOffset.y, pos.y);
+
+  sourceEl.style.marginLeft = '5px';
+  sourceEl.style.marginTop = '7px';
+  pageOffset = goog.style.getPageOffset(sourceEl);
+  pos = testGroup.getDragElementPosition(sourceEl);
+  assertEquals('Drag element position should be adjusted for source element ' +
+      'margins', pageOffset.x - 10, pos.x);
+  assertEquals('Drag element position should be adjusted for source element ' +
+      'margins', pageOffset.y - 14, pos.y);
 }
 
 

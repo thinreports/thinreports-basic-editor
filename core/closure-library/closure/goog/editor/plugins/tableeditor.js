@@ -101,6 +101,7 @@ goog.editor.plugins.TableEditor.SUPPORTED_COMMANDS_ =
  * @param {string} command Command string to check.
  * @return {boolean} Whether the string corresponds to a command
  *     this plugin handles.
+ * @override
  */
 goog.editor.plugins.TableEditor.prototype.isSupportedCommand =
     function(command) {
@@ -293,7 +294,7 @@ goog.editor.plugins.TableEditor.prototype.isUserEditableTable_ =
 
   // Check for extra user-editable filters.
   return goog.array.every(this.isTableEditableFunctions_, function(func) {
-    return func(element);
+    return func(/** @type {Element} */ (element));
   });
 };
 

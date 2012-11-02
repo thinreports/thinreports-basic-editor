@@ -30,24 +30,28 @@
 
 goog.provide('goog.module.ModuleLoader');
 
+goog.require('goog.Disposable');
 goog.require('goog.array');
 goog.require('goog.debug.Logger');
 goog.require('goog.dom');
+goog.require('goog.events.Event');
 goog.require('goog.events.EventHandler');
-goog.require('goog.module.BaseModuleLoader');
+goog.require('goog.events.EventTarget');
+goog.require('goog.module.AbstractModuleLoader');
 goog.require('goog.net.BulkLoader');
 goog.require('goog.net.EventType');
-goog.require('goog.userAgent');
+goog.require('goog.net.jsloader');
 
 
 
 /**
  * A class that loads Javascript modules.
  * @constructor
- * @extends {goog.module.BaseModuleLoader}
+ * @extends {goog.events.EventTarget}
+ * @implements {goog.module.AbstractModuleLoader}
  */
 goog.module.ModuleLoader = function() {
-  goog.module.BaseModuleLoader.call(this);
+  goog.base(this);
 
   /**
    * Event handler for managing handling events.
@@ -55,15 +59,8 @@ goog.module.ModuleLoader = function() {
    * @private
    */
   this.eventHandler_ = new goog.events.EventHandler(this);
-
-  /**
-   * Scripts waiting to be loaded. Only used in debug mode.
-   * @type {Array.<string>}
-   * @private
-   */
-  this.scriptsToLoadDebugMode_ = [];
 };
-goog.inherits(goog.module.ModuleLoader, goog.module.BaseModuleLoader);
+goog.inherits(goog.module.ModuleLoader, goog.events.EventTarget);
 
 
 /**
@@ -75,8 +72,75 @@ goog.module.ModuleLoader.prototype.logger = goog.debug.Logger.getLogger(
     'goog.module.ModuleLoader');
 
 
+/**
+ * Whether debug mode is enabled.
+ * @type {boolean}
+ * @private
+ */
+goog.module.ModuleLoader.prototype.debugMode_ = false;
+
+
+/**
+ * Whether source url injection is enabled.
+ * @type {boolean}
+ * @private
+ */
+goog.module.ModuleLoader.prototype.sourceUrlInjection_ = false;
+
+
+/**
+ * Gets the debug mode for the loader.
+ * @return {boolean} debugMode Whether the debug mode is enabled.
+ */
+goog.module.ModuleLoader.prototype.getDebugMode = function() {
+  return this.debugMode_;
+};
+
+
+/**
+ * Sets the debug mode for the loader.
+ * @param {boolean} debugMode Whether the debug mode is enabled.
+ */
+goog.module.ModuleLoader.prototype.setDebugMode = function(debugMode) {
+  this.debugMode_ = debugMode;
+};
+
+
+/**
+ * When enabled, we will add a sourceURL comment to the end of all scripts
+ * to mark their origin.
+ *
+ * Notice that in most cases, this is far superior to debug mode, because
+ * the scripts will load faster on most browsers. (Debug mode is very slow,
+ * unless you're using Gecko < 1.9. See the comment at the top of this file.)
+ *
+ * On WebKit, stack traces will refect the sourceURL comment, so this is also
+ * useful for debugging webkit stack traces in production.
+ *
+ * There is some performance overhead to doing this.
+ *
+ * TODO(nicksantos): Measure the performance cost, and figure out a decision
+ * tree for when users should turn this on. I'm not sure if most users are
+ * sophisticated enough to know whether they want this or not, because
+ * there are a couple different trade-offs involved. We might want to make
+ * debug mode do this on browsers that support sourceURL.
+ *
+ * @param {boolean} enabled
+ * @see http://bugzilla.mozilla.org/show_bug.cgi?id=583083
+ */
+goog.module.ModuleLoader.prototype.setSourceUrlInjection = function(enabled) {
+  this.sourceUrlInjection_ = enabled;
+};
+
+
+/** @return {boolean} Whether we're using source url injection. */
+goog.module.ModuleLoader.prototype.usingSourceUrlInjection = function() {
+  return this.sourceUrlInjection_;
+};
+
+
 /** @override */
-goog.module.ModuleLoader.prototype.loadModulesInternal = function(
+goog.module.ModuleLoader.prototype.loadModules = function(
     ids, moduleInfoMap, opt_successFn, opt_errorFn, opt_timeoutFn,
     opt_forceReload) {
   var uris = [];
@@ -86,21 +150,25 @@ goog.module.ModuleLoader.prototype.loadModulesInternal = function(
   this.logger.info('loadModules ids:' + ids + ' uris:' + uris);
 
   if (this.getDebugMode()) {
-    this.loadModulesInDebugMode_(uris);
+    // In debug mode use <script> tags rather than XHRs to load the files.
+    // This makes it possible to debug and inspect stack traces more easily.
+    // It's also possible to use it to load JavaScript files that are hosted on
+    // another domain.
+    goog.net.jsloader.loadMany(uris);
   } else {
     var bulkLoader = new goog.net.BulkLoader(uris);
     var eventHandler = this.eventHandler_;
     eventHandler.listen(
         bulkLoader,
         goog.net.EventType.SUCCESS,
-        goog.bind(this.handleSuccess, this, bulkLoader, ids,
+        goog.bind(this.handleSuccess_, this, bulkLoader, ids,
             opt_successFn, opt_errorFn),
         false,
         null);
     eventHandler.listen(
         bulkLoader,
         goog.net.EventType.ERROR,
-        goog.bind(this.handleError, this, bulkLoader, ids, opt_errorFn),
+        goog.bind(this.handleError_, this, bulkLoader, ids, opt_errorFn),
         false,
         null);
     // TODO(user): Need to handle timeouts in the module loading code.
@@ -111,88 +179,37 @@ goog.module.ModuleLoader.prototype.loadModulesInternal = function(
 
 
 /**
- * Create a script tag.
- * @param {string} uri The uri of the script.
- * @return {Element} The new tag.
+ * Evaluate the JS code.
+ * @param {Array.<string>} moduleIds The module ids.
+ * @param {Array.<string>} uris The uris of the resources.
+ * @param {Array.<string>} texts The response texts of the resources..
+ * @return {boolean} Whether the JS code was evaluated successfully.
  * @private
  */
-goog.module.ModuleLoader.prototype.createScriptElement_ = function(uri) {
-  var scriptEl = goog.dom.createElement('script');
-  scriptEl.src = uri;
-  scriptEl.type = 'text/javascript';
-  return scriptEl;
-};
-
-
-/**
- * Loads and evaluates the JavaScript files at the specified URIs, in order.
- * This method uses &lt;script> tags rather than XHRs to load the files. This
- * makes it possible to debug and inspect stack traces more easily. It's also
- * possible to use it to load JavaScript files that are hosted on another
- * domain.
- * @param {Array.<string>} uris The URIs to load.
- * @private
- */
-goog.module.ModuleLoader.prototype.loadModulesInDebugMode_ = function(uris) {
-  // Loading the scripts in serial introduces asynchronosity into the module
-  // loading flow. In production mode, we can guarantee that scripts will
-  // be loaded synchronously one after another, but that doesn't hold true
-  // in debug mode. So in debug mode, there are race conditions where
-  // module A can kick off the load sequence for module B, even though
-  // module A's scripts haven't all been loaded yet.
-  //
-  // To work around this issue, all module loads share a queue.
-  if (!uris.length) {
-    return;
-  }
-
-  // If IE6 or 7 is still parsing the document, appending to the document
-  // element will lead to an operation aborted alert. If possible, try to find
-  // a head element to append on to make this a bit more idiot-proof.
-  var scriptParent = document.getElementsByTagName('head')[0] ||
-      document.documentElement;
-  if (goog.userAgent.GECKO && !goog.userAgent.isVersion(2)) {
-    // For <script> tags that are loaded in this manner, Gecko 1.9 and earlier
-    // ensures that tag order is consistent with evaluation order.
-    // Unfortunately, other browsers do not make that guarantee. So the other
-    // browsers need a slower and more complex implementation.
-    for (var i = 0; i < uris.length; i++) {
-      var scriptEl = this.createScriptElement_(uris[i]);
-      scriptParent.appendChild(scriptEl);
-    }
-  } else {
-    var isAnotherModuleLoading = this.scriptsToLoadDebugMode_.length;
-    goog.array.extend(this.scriptsToLoadDebugMode_, uris);
-    if (isAnotherModuleLoading) {
-      // The module loader is still loading some other module's code.
-      // In order to prevent the race condition noted above, we just add
-      // these URIs to the end of the other module's queue and return.
-      return;
-    }
-
-    var moduleLoader = this;
-    uris = this.scriptsToLoadDebugMode_;
-    var popAndLoadNextScript = function() {
-      var uri = uris.shift();
-      var scriptEl = moduleLoader.createScriptElement_(uri);
-      if (uris.length) {
-        if (goog.userAgent.IE) {
-          scriptEl.onreadystatechange = function() {
-            if (!this.readyState || this.readyState == 'loaded' ||
-                this.readyState == 'complete') {
-              // Guard against redundant state changes.
-              scriptEl.onreadystatechange = goog.nullFunction;
-              popAndLoadNextScript();
-            }
-          };
-        } else {
-          scriptEl.onload = popAndLoadNextScript;
-        }
+goog.module.ModuleLoader.prototype.evaluateCode_ = function(
+    moduleIds, uris, texts) {
+  var success = true;
+  try {
+    if (this.usingSourceUrlInjection()) {
+      for (var i = 0; i < uris.length; i++) {
+        var uri = uris[i];
+        goog.globalEval(texts[i] + ' //@ sourceURL=' + uri);
       }
-      scriptParent.appendChild(scriptEl);
-    };
-    popAndLoadNextScript();
+    } else {
+      goog.globalEval(texts.join('\n'));
+    }
+  } catch (e) {
+    success = false;
+    // TODO(user): Consider throwing an exception here.
+    this.logger.warning('Loaded incomplete code for module(s): ' +
+        moduleIds, e);
   }
+
+  this.dispatchEvent(
+      new goog.module.ModuleLoader.Event(
+          goog.module.ModuleLoader.EventType.EVALUATE_CODE, moduleIds));
+
+  return success;
 };
 
 
@@ -203,12 +220,22 @@ goog.module.ModuleLoader.prototype.loadModulesInDebugMode_ = function(uris) {
  * @param {Array.<string>} moduleIds The ids of the modules requested.
  * @param {function()} successFn The callback for success.
  * @param {function(?number)} errorFn The callback for error.
+ * @private
  */
-goog.module.ModuleLoader.prototype.handleSuccess = function(
+goog.module.ModuleLoader.prototype.handleSuccess_ = function(
     bulkLoader, moduleIds, successFn, errorFn) {
-  var jsCode = bulkLoader.getResponseTexts().join('\n');
+  this.logger.info('Code loaded for module(s): ' + moduleIds);
+  this.dispatchEvent(
+      new goog.module.ModuleLoader.Event(
+          goog.module.ModuleLoader.EventType.REQUEST_SUCCESS, moduleIds));
 
-  this.handleRequestSuccess(jsCode, moduleIds, successFn, errorFn);
+  var success = this.evaluateCode_(
+      moduleIds, bulkLoader.getRequestUris(), bulkLoader.getResponseTexts());
+  if (!success) {
+    this.handleErrorHelper_(moduleIds, errorFn, null);
+  } else if (success && successFn) {
+    successFn();
+  }
 
   // NOTE: A bulk loader instance is used for loading a set of module ids. Once
   // these modules have been loaded succesfully or in error the bulk loader
@@ -226,10 +253,11 @@ goog.module.ModuleLoader.prototype.handleSuccess = function(
  * @param {Array.<string>} moduleIds The ids of the modules requested.
  * @param {function(?number)} errorFn The function to call on failure.
  * @param {number} status The response status.
+ * @private
  */
-goog.module.ModuleLoader.prototype.handleError = function(
+goog.module.ModuleLoader.prototype.handleError_ = function(
     bulkLoader, moduleIds, errorFn, status) {
-  this.handleRequestError(moduleIds, errorFn, status);
+  this.handleErrorHelper_(moduleIds, errorFn, status);
 
   // NOTE: A bulk loader instance is used for loading a set of module ids. Once
   // these modules have been loaded succesfully or in error the bulk loader
@@ -241,6 +269,27 @@ goog.module.ModuleLoader.prototype.handleError = function(
 };
 
 
+/**
+ * Handles an error during a request for one or more modules.
+ * @param {Array.<string>} moduleIds The ids of the modules requested.
+ * @param {function(?number)} errorFn The function to call on failure.
+ * @param {?number} status The response status.
+ * @private
+ */
+goog.module.ModuleLoader.prototype.handleErrorHelper_ = function(
+    moduleIds, errorFn, status) {
+  this.dispatchEvent(
+      new goog.module.ModuleLoader.Event(
+          goog.module.ModuleLoader.EventType.REQUEST_ERROR, moduleIds));
+
+  this.logger.warning('Request failed for module(s): ' + moduleIds);
+
+  if (errorFn) {
+    errorFn(status);
+  }
+};
+
+
 /** @override */
 goog.module.ModuleLoader.prototype.disposeInternal = function() {
   goog.module.ModuleLoader.superClass_.disposeInternal.call(this);
@@ -248,3 +297,36 @@ goog.module.ModuleLoader.prototype.disposeInternal = function() {
   this.eventHandler_.dispose();
   this.eventHandler_ = null;
 };
+
+
+/**
+ * @enum {string}
+ */
+goog.module.ModuleLoader.EventType = {
+  /** Called after the code for a module is evaluated. */
+  EVALUATE_CODE: goog.events.getUniqueId('evaluateCode'),
+
+  /** Called when the BulkLoader finishes successfully. */
+  REQUEST_SUCCESS: goog.events.getUniqueId('requestSuccess'),
+
+  /** Called when the BulkLoader fails, or code loading fails. */
+  REQUEST_ERROR: goog.events.getUniqueId('requestError')
+};
+
+
+
+/**
+ * @param {goog.module.ModuleLoader.EventType} type The type.
+ * @param {Array.<string>} moduleIds The ids of the modules being evaluated.
+ * @constructor
+ * @extends {goog.events.Event}
+ */
+goog.module.ModuleLoader.Event = function(type, moduleIds) {
+  goog.base(this, type);
+
+  /**
+   * @type {Array.<string>}
+   */
+  this.moduleIds = moduleIds;
+};
+goog.inherits(goog.module.ModuleLoader.Event, goog.events.Event);

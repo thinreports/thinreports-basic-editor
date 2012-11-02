@@ -6,6 +6,7 @@ Copyright 2008 The Closure Library Authors. All Rights Reserved.
 Use of this source code is governed by the Apache License, Version 2.0.
 See the COPYING file for details.
 -->
+<!-- Author:  attila@google.com (Attila Bodis) -->
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Closure Unit Tests - goog.Disposable</title>
@@ -13,6 +14,7 @@ See the COPYING file for details.
   <script>
     goog.require('goog.Disposable');
     goog.require('goog.testing.jsunit');
+    goog.require('goog.testing.recordFunction');
   </script>
 </head>
 <body>
@@ -47,6 +49,7 @@ See the COPYING file for details.
     // Class which calls dispose recursively.
 
     function RecursiveDisposable() {
+      goog.Disposable.call(this);
       this.disposedCount = 0;
     }
     goog.inherits(RecursiveDisposable, goog.Disposable);
@@ -190,10 +193,6 @@ See the COPYING file for details.
       assertSameElements('no undisposed object in the registry', [],
           goog.Disposable.getUndisposedObjects());
 
-      assertThrows('disposal after clearUndisposedObjects()', function() {
-        d1.dispose();
-      });
-
       // d2 is already disposed of, the redisposal shouldn't throw error.
       d2.dispose();
     }
@@ -231,6 +230,45 @@ See the COPYING file for details.
       assertTrue('d3 should be disposed', d3.isDisposed());
       assertTrue('d4 should be disposed', d4.isDisposed());
     }
-    </script>
+
+    function testCreationStack() {
+      if (!new Error().stack)
+        return;
+      goog.Disposable.ENABLE_MONITORING = true;
+      var disposableStack = new DisposableTest().creationStack;
+      // Check that the name of this test function occurs in the stack trace.
+      assertNotEquals(-1, disposableStack.indexOf('testCreationStack'));
+    }
+
+    function testOnDisposeCallback() {
+      var callback = goog.testing.recordFunction();
+      d1.addOnDisposeCallback(callback);
+      assertEquals('callback called too early', 0, callback.getCallCount());
+      d1.dispose();
+      assertEquals('callback should be called once on dispose',
+          1, callback.getCallCount());
+    }
+
+    function testOnDisposeCallbackOrder() {
+      var invocations = [];
+      var callback = function(str) {
+        invocations.push(str);
+      };
+      d1.addOnDisposeCallback(goog.partial(callback, 'a'));
+      d1.addOnDisposeCallback(goog.partial(callback, 'b'));
+      goog.dispose(d1);
+      assertArrayEquals('callbacks should be called in chronological order',
+          ['a', 'b'], invocations);
+    }
+
+    function testMonitoringStartedOnTheFly() {
+      var d1 = new DisposableTest();
+      goog.Disposable.ENABLE_MONITORING = true;
+      var d2 = new DisposableTest();
+      // No errors should be thrown.
+      d1.dispose();
+      d2.dispose();
+    }
+  </script>
 </body>
 </html>

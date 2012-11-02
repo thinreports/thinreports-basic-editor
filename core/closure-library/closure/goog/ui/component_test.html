@@ -18,7 +18,6 @@ See the COPYING file for details.
     goog.require('goog.dom.NodeType');
     goog.require('goog.dom.TagName');
     goog.require('goog.events.EventTarget');
-    goog.require('goog.string.StringBuffer');
     goog.require('goog.testing.PropertyReplacer');
     goog.require('goog.testing.jsunit');
     goog.require('goog.ui.Component');
@@ -652,16 +651,12 @@ See the COPYING file for details.
       component.addChild(new goog.ui.Component());
       component.addChild(new goog.ui.Component());
       component.addChild(new goog.ui.Component());
-      var sb = new goog.string.StringBuffer();
+      var callCount = 0;
       component.forEachChild(function(child, index) {
-        // Note: This is just to test that 'this' is set correctly.
-        var count = this.getChildCount();
-        sb.append(index + 1).append(' of ').append(count);
-        if (index < count - 1) {
-          sb.append(', ');
-        }
+        assertEquals(component, this);
+        callCount++;
       }, component);
-      assertEquals('1 of 3, 2 of 3, 3 of 3', sb.toString());
+      assertEquals(3, callCount);
     }
 
     function testIndexOfChild() {
@@ -732,10 +727,10 @@ See the COPYING file for details.
       c.setId('c');
       d.setId('d');
 
-      component.addChild(a);
-      component.addChild(b);
-      component.addChild(c);
-      component.addChild(d);
+      component.addChild(a, true);
+      component.addChild(b, true);
+      component.addChild(c, true);
+      component.addChild(d, true);
 
       assertEquals('abcd', component.getChildIds().join(''));
       assertEquals(a, component.getChildAt(0));
@@ -758,6 +753,94 @@ See the COPYING file for details.
       assertEquals('adcb', component.getChildIds().join(''));
       assertEquals(a, component.getChildAt(0));
       assertEquals(a.getElement(), component.getElement().childNodes[0]);
+    }
+
+    function testAddChildAfterDomCreatedDoesNotEnterDocument() {
+      var parent = new goog.ui.Component();
+      var child = new goog.ui.Component();
+
+      var nestedDiv = goog.dom.createDom('div');
+      parent.setElementInternal(
+          goog.dom.createDom('div', undefined, nestedDiv));
+      parent.render();
+
+      // Now add a child, whose DOM already exists. This happens, for example,
+      // if the child itself performs an addChild(x, true).
+      child.createDom();
+      parent.addChild(child, false);
+      // The parent shouldn't call enterDocument on the child, since the child
+      // actually isn't in the document yet.
+      assertFalse(child.isInDocument());
+
+      // Now, actually render the child; it should be in the document.
+      child.render(nestedDiv);
+      assertTrue(child.isInDocument());
+      assertEquals('Child should be rendered in the expected div',
+          nestedDiv, child.getElement().parentNode);
+    }
+
+    function testAddChildAfterDomManuallyInserted() {
+      var parent = new goog.ui.Component();
+      var child = new goog.ui.Component();
+
+      var nestedDiv = goog.dom.createDom('div');
+      parent.setElementInternal(
+          goog.dom.createDom('div', undefined, nestedDiv));
+      parent.render();
+
+      // This sequence is weird, but some people do it instead of just manually
+      // doing render.  The addChild will detect that the child is in the DOM
+      // and call enterDocument.
+      child.createDom();
+      nestedDiv.appendChild(child.getElement());
+      parent.addChild(child, false);
+
+      assertTrue(child.isInDocument());
+      assertEquals('Child should be rendered in the expected div',
+          nestedDiv, child.getElement().parentNode);
+    }
+
+    function testRemoveChildren() {
+      var a = new goog.ui.Component();
+      var b = new goog.ui.Component();
+      var c = new goog.ui.Component();
+
+      component.addChild(a);
+      component.addChild(b);
+      component.addChild(c);
+
+      a.setId('a');
+      b.setId('b');
+      c.setId('c');
+
+      assertArrayEquals('Parent must remove and return children.', [a, b, c],
+          component.removeChildren());
+      assertNull('Parent must no longer contain this child',
+          component.getChild('a'));
+      assertNull('Parent must no longer contain this child',
+          component.getChild('b'));
+      assertNull('Parent must no longer contain this child',
+          component.getChild('c'));
+    }
+
+    function testRemoveChildren_Unrender() {
+      var a = new goog.ui.Component();
+      var b = new goog.ui.Component();
+
+      component.render(sandbox);
+      component.addChild(a);
+      component.addChild(b);
+
+      assertArrayEquals('Prent must remove and return children.', [a, b],
+          component.removeChildren(true));
+      assertNull('Parent must no longer contain this child',
+          component.getChild('a'));
+      assertFalse('Child must no longer be in the document.',
+          a.isInDocument());
+      assertNull('Parent must no longer contain this child',
+          component.getChild('b'));
+      assertFalse('Child must no longer be in the document.',
+          b.isInDocument());
     }
   </script>
 </body>

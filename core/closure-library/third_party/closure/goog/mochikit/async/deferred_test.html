@@ -2,11 +2,11 @@
 <html>
 <!--
   Copyright 2009 The Closure Library Authors. All Rights Reserved.
+  Author: arv@google.com (Erik Arvidsson)
 -->
 <head>
 <title>Closure Unit Tests - goog.async.Deferred</title>
 <script src="../../../../../closure/goog/base.js"></script>
-<script src="../../deps.js"></script>
 <script>
 
 goog.require('goog.array');
@@ -316,9 +316,9 @@ function testChainedDeferred2() {
     mockClock.tick();
     neverHappen();
   } catch (ex) {
-    assertTrue('In debug mode, should catch unhandled throw from d2. ' +
-               'Error message may include stack trace in some browsers.',
-               goog.string.startsWith(ex.message, 'x'));
+    assertTrue('Should catch unhandled throw from d2.',
+               ex instanceof goog.async.Deferred.UnhandledError &&
+               ex.cause.message == 'x');
   }
 }
 
@@ -366,8 +366,10 @@ function testUnhandledErrors() {
     mockClock.tick();
     neverHappen();
   } catch (ex) {
-    assertEquals('In debug mode, unhandled exceptions should hit the browser.',
-                 1, ex);
+    assertTrue('In debug mode, unhandled exceptions should hit the browser.',
+               ex instanceof goog.async.Deferred.UnhandledError);
+    assertEquals('UnhandledError should contain the original error as cause.',
+                 1, ex.cause);
   }
 
   try {
@@ -766,6 +768,63 @@ function testCancelWithSomeCompletedBranches() {
   assertFalse(branch1HadErrback);
   assertTrue('Cancelling the last active branch should cancel the parent.',
              rootHadErrback);
+}
+
+function testStaticCancelled() {
+  var callbackCalled = false;
+  var errbackResult = null;
+
+  var d = goog.async.Deferred.cancelled();
+  d.addCallback(function() { callbackCalled = true;} );
+  d.addErrback(function(err) { errbackResult = err;} );
+
+  assertTrue('Errback should have been called with a cancelled error',
+      errbackResult instanceof goog.async.Deferred.CancelledError);
+  assertFalse('Callback should not have been called', callbackCalled);
+}
+
+function testWhenWithValues() {
+  var called = false;
+  goog.async.Deferred.when(4, function(obj) {
+    called = true;
+    assertEquals(4, obj);
+  });
+  assertTrue('Fn should have been called', called);
+}
+
+function testWhenWithDeferred() {
+  var called = false;
+
+  var d = new goog.async.Deferred();
+  goog.async.Deferred.when(d, function(obj) {
+    called = true;
+    assertEquals(6, obj);
+  });
+  assertFalse('Fn should not have been called yet', called);
+  d.callback(6);
+  assertTrue('Fn should have been called', called);
+}
+
+function testWhenDoesntAlterOriginalChain() {
+  var calls = 0;
+
+  var d1 = new goog.async.Deferred();
+  var d2 = goog.async.Deferred.when(d1, function(obj) {
+    calls++;
+    return obj * 2;
+  });
+  d1.addCallback(function(obj) {
+    assertEquals('Original chain should get original value', 5, obj);
+    calls++;
+  });
+  d2.addCallback(function(obj) {
+    assertEquals('Branched chain should get modified value', 10, obj);
+    calls++;
+  });
+
+  d1.callback(5);
+
+  assertEquals('There should have been 3 callbacks', 3, calls);
 }
 
 </script>

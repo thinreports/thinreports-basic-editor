@@ -22,6 +22,7 @@
 goog.provide('goog.async.Deferred');
 goog.provide('goog.async.Deferred.AlreadyCalledError');
 goog.provide('goog.async.Deferred.CancelledError');
+goog.provide('goog.async.Deferred.UnhandledError');
 
 goog.require('goog.array');
 goog.require('goog.asserts');
@@ -211,7 +212,7 @@ goog.async.Deferred.prototype.pause_ = function() {
  * @private
  */
 goog.async.Deferred.prototype.unpause_ = function() {
-  // TODO(user): Rename
+  // TODO(arv): Rename
   this.paused_--;
   if (this.paused_ == 0 && this.hasFired()) {
     this.fire_();
@@ -510,17 +511,11 @@ goog.async.Deferred.prototype.fire_ = function() {
   }
 
   if (unhandledException) {
-    // Rethrow the unhandled error after a timeout. Execution will continue, but
-    // the error will be seen by global handlers and the user. The rethrow will
+    // Throw an UnhandledError after a timeout. Execution will continue, but
+    // the error will be seen by global handlers and the user. The throw will
     // be canceled if another errback is appended before the timeout executes.
     this.unhandledExceptionTimeoutId_ = goog.global.setTimeout(function() {
-      // The stack trace is clobbered when the error is rethrown. Append the
-      // stack trace to the message if available. Since no one is capturing this
-      // error, the stack trace will be printed to the debug console.
-      if (goog.DEBUG && goog.isDef(res.message) && res.stack) {
-        res.message += '\n' + res.stack;
-      }
-      throw res;
+      throw new goog.async.Deferred.UnhandledError(/** @type {!Error} */ (res));
     }, 0);
   }
 };
@@ -548,6 +543,58 @@ goog.async.Deferred.fail = function(res) {
   d.errback(res);
   return d;
 };
+
+
+/**
+ * Creates a deferred that has already been cancelled.
+ * @return {!goog.async.Deferred} The deferred object.
+ */
+goog.async.Deferred.cancelled = function() {
+  var d = new goog.async.Deferred();
+  d.cancel();
+  return d;
+};
+
+
+/**
+ * Applies a callback to both deferred and non-deferred values, providing a
+ * mechanism to normalize synchronous and asynchronous behavior.
+ *
+ * If the value is non-deferred, the callback will be executed immediately and
+ * an already committed deferred returned.
+ *
+ * If the object is a deferred, it is branched (so the callback doesn't affect
+ * the previous chain) and the callback is added to the new deferred.  The
+ * branched deferred is then returned.
+ *
+ * In the following (contrived) example, if <code>isImmediate</code> is true
+ * then 3 is alerted immediately, otherwise 6 is alerted after a 2-second delay.
+ *
+ * <pre>
+ * var value;
+ * if (isImmediate) {
+ *   value = 3;
+ * } else {
+ *   value = new goog.async.Deferred();
+ *   setTimeout(function() { value.callback(6); }, 2000);
+ * }
+ *
+ * var d = goog.async.Deferred.when(value, alert);
+ * </pre>
+ *
+ * @param {*} value Deferred or non-deferred value to pass to the callback.
+ * @param {!Function} callback The callback to execute.
+ * @param {Object=} opt_scope An optional scope to call the callback in.
+ * @return {!goog.async.Deferred}
+ */
+goog.async.Deferred.when = function(value, callback, opt_scope) {
+  if (value instanceof goog.async.Deferred) {
+    return value.branch(true).addCallback(callback, opt_scope);
+  } else {
+    return goog.async.Deferred.succeed(value).addCallback(callback, opt_scope);
+  }
+};
+
 
 
 /**
@@ -601,3 +648,31 @@ goog.inherits(goog.async.Deferred.CancelledError, goog.debug.Error);
  * @override
  */
 goog.async.Deferred.CancelledError.prototype.message = 'Deferred was cancelled';
+
+
+
+/**
+ * An error thrown when an exception is raised from a Deferred callback chain
+ * and there are no errbacks left to handle it.
+ * @param {!Error} cause The original unhandled error.
+ * @constructor
+ * @extends {goog.debug.Error}
+ */
+goog.async.Deferred.UnhandledError = function(cause) {
+  goog.debug.Error.call(this);
+
+  /**
+   * The original error.
+   * @type {!Error}
+   */
+  this.cause = cause;
+
+  /**
+   * Message text.
+   * @type {string}
+   * @override
+   */
+  this.message = 'Unhandled Error in Deferred: ' +
+      (cause.message || '[No message]');
+};
+goog.inherits(goog.async.Deferred.UnhandledError, goog.debug.Error);

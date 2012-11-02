@@ -139,11 +139,21 @@ goog.net.XhrManager.prototype.setTimeoutInterval = function(ms) {
 
 
 /**
- * Returns the number of reuqests either in flight, or waiting to be sent.
+ * Returns the number of requests either in flight, or waiting to be sent.
  * @return {number} The number of requests in flight or pending send.
  */
 goog.net.XhrManager.prototype.getOutstandingCount = function() {
   return this.requests_.getCount();
+};
+
+
+/**
+ * Returns requests that are either in flight, or waiting to be sent, in an
+ * object keyed by request id.
+ * @return {!Object} An object containing requests in flight or pending send.
+ */
+goog.net.XhrManager.prototype.getOutstandingRequests = function() {
+  return this.requests_.toObject();
 };
 
 
@@ -212,15 +222,17 @@ goog.net.XhrManager.prototype.abort = function(id, opt_force) {
     var xhrIo = request.xhrIo;
     request.setAborted(true);
     if (opt_force) {
-      // We remove listeners to make sure nothing gets called if a new request
-      // with the same id is made.
-      this.removeXhrListener_(xhrIo, request.getXhrEventCallback());
-      goog.events.listenOnce(
-          xhrIo,
-          goog.net.EventType.READY,
-          function() { this.xhrPool_.releaseObject(xhrIo); },
-          false,
-          this);
+      if (xhrIo) {
+        // We remove listeners to make sure nothing gets called if a new request
+        // with the same id is made.
+        this.removeXhrListener_(xhrIo, request.getXhrEventCallback());
+        goog.events.listenOnce(
+            xhrIo,
+            goog.net.EventType.READY,
+            function() { this.xhrPool_.releaseObject(xhrIo); },
+            false,
+            this);
+      }
       this.requests_.remove(id);
     }
     if (xhrIo) {
@@ -511,10 +523,6 @@ goog.inherits(goog.net.XhrManager.Event, goog.events.Event);
 
 /** @override */
 goog.net.XhrManager.Event.prototype.disposeInternal = function() {
-  goog.net.XhrManager.Event.superClass_.disposeInternal.call(this);
-  delete this.id;
-  this.xhrIo = null;
-  this.xhrLite = null;
 };
 
 

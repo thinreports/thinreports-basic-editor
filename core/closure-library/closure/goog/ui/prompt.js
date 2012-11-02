@@ -59,7 +59,7 @@ goog.require('goog.userAgent');
  */
 goog.ui.Prompt = function(promptTitle, promptText, callback, opt_defaultValue,
     opt_class, opt_useIframeForIE, opt_domHelper) {
-  goog.ui.Dialog.call(this, opt_class, opt_useIframeForIE, opt_domHelper);
+  goog.base(this, opt_class, opt_useIframeForIE, opt_domHelper);
 
   /**
    * The id of the input element.
@@ -139,6 +139,14 @@ goog.ui.Prompt.prototype.cols_ = 0;
 
 
 /**
+ * The input decorator function.
+ * @type {function(Element)?}
+ * @private
+ */
+goog.ui.Prompt.prototype.inputDecoratorFn_ = null;
+
+
+/**
  * A validation function that takes a string and returns true if the string is
  * accepted, false otherwise.
  * @type {function(string):boolean}
@@ -160,6 +168,9 @@ goog.ui.Prompt.prototype.setValidationFunction = function(fn) {
 
 /** @override */
 goog.ui.Prompt.prototype.enterDocument = function() {
+  if (this.inputDecoratorFn_) {
+    this.inputDecoratorFn_(this.userInputEl_);
+  }
   goog.ui.Prompt.superClass_.enterDocument.call(this);
   this.getHandler().listen(this,
       goog.ui.Dialog.EventType.SELECT, this.onPromptExit_);
@@ -167,6 +178,28 @@ goog.ui.Prompt.prototype.enterDocument = function() {
   this.getHandler().listen(this.userInputEl_,
       [goog.events.EventType.KEYUP, goog.events.EventType.CHANGE],
       this.handleInputChanged_);
+};
+
+
+/**
+ * @return {HTMLInputElement} The user input element. May be null if the Prompt
+ *     has not been rendered.
+ */
+goog.ui.Prompt.prototype.getInputElement = function() {
+  return this.userInputEl_;
+};
+
+
+/**
+ * Sets an input decorator function.  This function will be called in
+ * #enterDocument and will be passed the input element.  This is useful for
+ * attaching handlers to the input element for specific change events,
+ * for example.
+ * @param {function(Element)} inputDecoratorFn A function to call on the input
+ *     element on #enterDocument.
+ */
+goog.ui.Prompt.prototype.setInputDecoratorFn = function(inputDecoratorFn) {
+  this.inputDecoratorFn_ = inputDecoratorFn;
 };
 
 
@@ -230,6 +263,7 @@ goog.ui.Prompt.prototype.getCols = function() {
 
 /**
  * Create the initial DOM representation for the prompt.
+ * @override
  */
 goog.ui.Prompt.prototype.createDom = function() {
   goog.ui.Prompt.superClass_.createDom.call(this);
@@ -296,9 +330,11 @@ goog.ui.Prompt.prototype.updateOkButtonState_ = function() {
  * Causes the prompt to appear, centered on the screen, gives focus
  * to the text box, and selects the text
  * @param {boolean} visible Whether the dialog should be visible.
+ * @override
  */
 goog.ui.Prompt.prototype.setVisible = function(visible) {
-  goog.ui.Dialog.prototype.setVisible.call(this, visible);
+  goog.base(this, 'setVisible', visible);
+
   if (visible) {
     this.isClosing_ = false;
     this.userInputEl_.value = this.defaultValue_;
@@ -313,6 +349,8 @@ goog.ui.Prompt.prototype.setVisible = function(visible) {
  * @override
  */
 goog.ui.Prompt.prototype.focus = function() {
+  goog.base(this, 'focus');
+
   if (goog.userAgent.OPERA) {
     // select() doesn't focus <input> elements in Opera.
     this.userInputEl_.focus();

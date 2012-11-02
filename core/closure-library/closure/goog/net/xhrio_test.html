@@ -7,6 +7,7 @@ Use of this source code is governed by the Apache License, Version 2.0.
 See the COPYING file for details.
 -->
 <!--
+  Author: arv@google.com (Erik Arvidsson)
 -->
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -478,6 +479,24 @@ function testProtectEntryPointCalledOnAsyncSend() {
       errorHandlerCallbackCalled);
 }
 
+function testXHRIsDiposedEvenIfAListenerThrowsAnExceptionOnComplete() {
+  MockXmlHttp.syncSend = false;
+
+  var x = new goog.net.XhrIo;
+
+  goog.events.listen(x, goog.net.EventType.COMPLETE, function(e) {
+      throw Error();
+  }, false, x);
+
+  x.send('url');
+  assertThrows(function() {
+    lastMockXmlHttp.complete();
+  });
+
+  // The XHR should have been disposed, even though the listener threw an
+  // exception.
+  assertNull(x.xhr_);
+}
 
 function testDisposeInternalDoesNotAbortXhrRequestObjectWhenActiveIsFalse() {
   MockXmlHttp.syncSend = false;

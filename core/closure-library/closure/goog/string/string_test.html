@@ -371,15 +371,6 @@ function testUrlEncodeAndDecode() {
                input);
 }
 
-function testEncodeOptimizationRegex() {
-  assertEquals(0, 'foo'.search(goog.string.encodeUriRegExp_));
-  assertEquals(0, 'baby1224'.search(goog.string.encodeUriRegExp_));
-  assertEquals(0, '_-*!~'.search(goog.string.encodeUriRegExp_));
-  assertEquals(-1, '%'.search(goog.string.encodeUriRegExp_));
-  assertEquals(-1, '@'.search(goog.string.encodeUriRegExp_));
-  assertEquals(-1, '/'.search(goog.string.encodeUriRegExp_));
-}
-
 
 // === tests for goog.string.newLineToBr ===
 function testNewLineToBr() {
@@ -634,24 +625,29 @@ function testQuoteSpecialChars() {
   assertEquals('"\\""', goog.string.quote('"'));
   assertEquals('"\'"', goog.string.quote("'"));
   assertEquals('"\\\\"', goog.string.quote('\\'));
+
+  var zeroQuoted = goog.string.quote('\0');
+  assertTrue(
+      'goog.string.quote mangles the 0 char: ',
+      '"\\0"' == zeroQuoted || '"\\x00"' == zeroQuoted);
 }
 
 function testCrossBrowserQuote() {
-  var oldQuoteFn = String.prototype.quote;
-  try {
-    // The vertical space char has weird semantics on jscript, so we don't test
-    // that one.
-    var vertChar = '\x0B'.charCodeAt(0);
-    var str = allChars(0, vertChar) + allChars(vertChar + 1, 10000);
-    var nativeQuote = goog.string.quote(str);
+  // The vertical space char has weird semantics on jscript, so we don't test
+  // that one.
+  var vertChar = '\x0B'.charCodeAt(0);
 
-    String.prototype.quote = null;
-    assertNull(''.quote);
+  // The zero char has two alternate encodings (\0 and \x00) both are ok,
+  // and tested above.
+  var zeroChar = 0;
 
-    assertEquals(nativeQuote, goog.string.quote(str));
-  } finally {
-    String.prototype.quote = oldQuoteFn;
-  }
+  var str = allChars(zeroChar + 1, vertChar) + allChars(vertChar + 1, 10000);
+  var nativeQuote = goog.string.quote(str);
+
+  stubs.set(String.prototype, 'quote', null);
+  assertNull(''.quote);
+
+  assertEquals(nativeQuote, goog.string.quote(str));
 }
 
 function allChars(opt_start, opt_end) {
@@ -673,6 +669,38 @@ function testEscapeString() {
     fail('Quote failed: err ' + e.message);
   }
   assertEquals(expected, actual);
+}
+
+function testCountOf() {
+  assertEquals(goog.string.countOf('REDSOXROX', undefined), 0);
+  assertEquals(goog.string.countOf('REDSOXROX', null), 0);
+  assertEquals(goog.string.countOf('REDSOXROX', ''), 0);
+  assertEquals(goog.string.countOf('', undefined), 0);
+  assertEquals(goog.string.countOf('', null), 0);
+  assertEquals(goog.string.countOf('', ''), 0);
+  assertEquals(goog.string.countOf('', 'REDSOXROX'), 0);
+  assertEquals(goog.string.countOf(undefined, 'R'), 0);
+  assertEquals(goog.string.countOf(null, 'R'), 0);
+  assertEquals(goog.string.countOf(undefined, undefined), 0);
+  assertEquals(goog.string.countOf(null, null), 0);
+
+  assertEquals(goog.string.countOf('REDSOXROX', 'R'), 2);
+  assertEquals(goog.string.countOf('REDSOXROX', 'E'), 1);
+  assertEquals(goog.string.countOf('REDSOXROX', 'X'), 2);
+  assertEquals(goog.string.countOf('REDSOXROX', 'RED'), 1);
+  assertEquals(goog.string.countOf('REDSOXROX', 'ROX'), 1);
+  assertEquals(goog.string.countOf('REDSOXROX', 'OX'), 2);
+  assertEquals(goog.string.countOf('REDSOXROX', 'Z'), 0);
+  assertEquals(goog.string.countOf('REDSOXROX', 'REDSOXROX'), 1);
+  assertEquals(goog.string.countOf('REDSOXROX', 'YANKEES'), 0);
+  assertEquals(goog.string.countOf('REDSOXROX', 'EVIL_EMPIRE'), 0);
+
+  assertEquals(goog.string.countOf('RRRRRRRRR', 'R'), 9);
+  assertEquals(goog.string.countOf('RRRRRRRRR', 'RR'), 4);
+  assertEquals(goog.string.countOf('RRRRRRRRR', 'RRR'), 3);
+  assertEquals(goog.string.countOf('RRRRRRRRR', 'RRRR'), 2);
+  assertEquals(goog.string.countOf('RRRRRRRRR', 'RRRRR'), 1);
+  assertEquals(goog.string.countOf('RRRRRRRRR', 'RRRRRR'), 1);
 }
 
 function testRemoveAt() {
@@ -904,6 +932,8 @@ function testToCamelCase() {
   assertEquals('oneTwo', goog.string.toCamelCase('one-two'));
   assertEquals('one', goog.string.toCamelCase('one'));
   assertEquals('oneTwo', goog.string.toCamelCase('oneTwo'));
+  assertEquals('String value matching a native function name.',
+      'toString', goog.string.toCamelCase('toString'));
 }
 
 function testToSelectorCase() {
@@ -912,6 +942,112 @@ function testToSelectorCase() {
   assertEquals('one-two', goog.string.toSelectorCase('oneTwo'));
   assertEquals('one', goog.string.toSelectorCase('one'));
   assertEquals('one-two', goog.string.toSelectorCase('one-two'));
+  assertEquals('String value matching a native function name.',
+      'to-string', goog.string.toSelectorCase('toString'));
+}
+
+function testToTitleCase() {
+  assertEquals('One', goog.string.toTitleCase('one'));
+  assertEquals('CamelCase', goog.string.toTitleCase('camelCase'));
+  assertEquals('Onelongword', goog.string.toTitleCase('onelongword'));
+  assertEquals('One Two Three', goog.string.toTitleCase('one two three'));
+  assertEquals('One        Two    Three',
+      goog.string.toTitleCase('one        two    three'));
+  assertEquals('   Longword  ', goog.string.toTitleCase('   longword  '));
+  assertEquals('One-two-three', goog.string.toTitleCase('one-two-three'));
+  assertEquals('One_two_three', goog.string.toTitleCase('one_two_three'));
+  assertEquals('String value matching a native function name.',
+      'ToString', goog.string.toTitleCase('toString'));
+
+  // Verify results with no delimiter.
+  assertEquals('One two three', goog.string.toTitleCase('one two three', ''));
+  assertEquals('One-two-three', goog.string.toTitleCase('one-two-three', ''));
+  assertEquals(' onetwothree', goog.string.toTitleCase(' onetwothree', ''));
+
+  // Verify results with one delimiter.
+  assertEquals('One two', goog.string.toTitleCase('one two', '.'));
+  assertEquals(' one two', goog.string.toTitleCase(' one two', '.'));
+  assertEquals(' one.Two', goog.string.toTitleCase(' one.two', '.'));
+  assertEquals('One.Two', goog.string.toTitleCase('one.two', '.'));
+  assertEquals('One...Two...', goog.string.toTitleCase('one...two...', '.'));
+
+  // Verify results with multiple delimiters.
+  var delimiters = '_-.';
+  assertEquals('One two three',
+      goog.string.toTitleCase('one two three', delimiters));
+  assertEquals('  one two three',
+      goog.string.toTitleCase('  one two three', delimiters));
+  assertEquals('One-Two-Three',
+      goog.string.toTitleCase('one-two-three', delimiters));
+  assertEquals('One_Two_Three',
+      goog.string.toTitleCase('one_two_three', delimiters));
+  assertEquals('One...Two...Three',
+      goog.string.toTitleCase('one...two...three', delimiters));
+  assertEquals('One.  two.  three',
+      goog.string.toTitleCase('one.  two.  three', delimiters));
+}
+
+function testParseInt() {
+  // Many example values borrowed from
+  // http://trac.webkit.org/browser/trunk/LayoutTests/fast/js/kde/
+  // GlobalObject-expected.txt
+
+  // Check non-numbers and strings
+  assertTrue(isNaN(goog.string.parseInt(undefined)));
+  assertTrue(isNaN(goog.string.parseInt(null)));
+  assertTrue(isNaN(goog.string.parseInt({})));
+
+  assertTrue(isNaN(goog.string.parseInt('')));
+  assertTrue(isNaN(goog.string.parseInt(' ')));
+  assertTrue(isNaN(goog.string.parseInt('a')));
+  assertTrue(isNaN(goog.string.parseInt('FFAA')));
+  assertEquals(1, goog.string.parseInt(1))
+  assertEquals(1234567890123456, goog.string.parseInt(1234567890123456))
+  assertEquals(2, goog.string.parseInt(' 2.3'));
+  assertEquals(16, goog.string.parseInt('0x10'));
+  assertEquals(11, goog.string.parseInt('11'));
+  assertEquals(15, goog.string.parseInt('0xF'));
+  assertEquals(15, goog.string.parseInt('0XF'));
+  assertEquals(3735928559, goog.string.parseInt('0XDEADBEEF'));
+  assertEquals(3, goog.string.parseInt('3x'));
+  assertEquals(3, goog.string.parseInt('3 x'));
+  assertFalse(isFinite(goog.string.parseInt('Infinity')));
+  assertEquals(15, goog.string.parseInt('15'));
+  assertEquals(15, goog.string.parseInt('015'));
+  assertEquals(15, goog.string.parseInt('0xf'));
+  assertEquals(15, goog.string.parseInt('15'));
+  assertEquals(15, goog.string.parseInt('0xF'));
+  assertEquals(15, goog.string.parseInt('15.99'));
+  assertTrue(isNaN(goog.string.parseInt('FXX123')));
+  assertEquals(15, goog.string.parseInt('15*3'));
+  assertEquals(7, goog.string.parseInt('0x7'));
+  assertEquals(1, goog.string.parseInt('1x7'));
+
+  // Strings have no special meaning
+  assertTrue(isNaN(goog.string.parseInt('Infinity')));
+  assertTrue(isNaN(goog.string.parseInt('NaN')));
+
+  // Test numbers and values
+  assertEquals(3, goog.string.parseInt(3.3));
+  assertEquals(-3, goog.string.parseInt(-3.3));
+  assertEquals(0, goog.string.parseInt(-0));
+  assertTrue(isNaN(goog.string.parseInt(Infinity)));
+  assertTrue(isNaN(goog.string.parseInt(NaN)));
+  assertTrue(isNaN(goog.string.parseInt(Number.POSITIVE_INFINITY)));
+  assertTrue(isNaN(goog.string.parseInt(Number.NEGATIVE_INFINITY)));
+
+  // In Chrome (at least), parseInt(Number.MIN_VALUE) is 5 (5e-324) and
+  // parseInt(Number.MAX_VALUE) is 1 (1.79...e+308) as they are converted
+  // to strings.  We do not attempt to correct this behavior.
+
+  // Additional values for negatives.
+  assertEquals(-3, goog.string.parseInt('-3'));
+  assertEquals(-32, goog.string.parseInt('-32    '));
+  assertEquals(-32, goog.string.parseInt(' -32 '));
+  assertEquals(-3, goog.string.parseInt('-0x3'));
+  assertEquals(-50, goog.string.parseInt('-0x32    '));
+  assertEquals(-243, goog.string.parseInt('   -0xF3    '));
+  assertTrue(isNaN(goog.string.parseInt(' - 0x32 ')));
 }
 
 </script>

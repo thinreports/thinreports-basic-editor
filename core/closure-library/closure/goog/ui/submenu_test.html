@@ -59,10 +59,11 @@ See the COPYING file for details.
   goog.require('goog.dom');
   goog.require('goog.dom.classes');
   goog.require('goog.events');
-  goog.require('goog.style');
   goog.require('goog.positioning');
   goog.require('goog.positioning.Overflow');
+  goog.require('goog.style');
   goog.require('goog.testing.MockClock');
+  goog.require('goog.testing.events');
   goog.require('goog.testing.jsunit');
   goog.require('goog.ui.Component.EventType');
   goog.require('goog.ui.Menu');
@@ -70,6 +71,8 @@ See the COPYING file for details.
   goog.require('goog.ui.Popup');
   goog.require('goog.ui.SubMenu');
   goog.require('goog.ui.SubMenuRenderer');
+
+
 </script>
 </head>
 <body>
@@ -112,6 +115,55 @@ function tearDown() {
   }
 }
 
+function testKeyHandling() {
+  menu.setFocusable(true);
+  menu.decorate(goog.dom.getElement('demoMenu'));
+
+  var KeyCodes = goog.events.KeyCodes;
+  var plainItem = menu.getChildAt(0);
+  plainItem.setMnemonic(KeyCodes.F);
+
+  var subMenuItem1 = menu.getChildAt(1);
+  subMenuItem1.setMnemonic(KeyCodes.S);
+  var subMenuItem1Menu = subMenuItem1.getMenu();
+  menu.setHighlighted(plainItem);
+
+  var fireKeySequence = goog.testing.events.fireKeySequence;
+
+  assertTrue(
+      'Expected RIGHT key to not be handled',
+      fireKeySequence(plainItem.getElement(), KeyCodes.RIGHT));
+  assertFalse(subMenuItem1Menu.isVisible());
+
+  assertFalse(
+      'Expected F key to be handled',
+      fireKeySequence(plainItem.getElement(), KeyCodes.F));
+
+  assertFalse(
+      'Expected DOWN key to be handled',
+      fireKeySequence(plainItem.getElement(), KeyCodes.DOWN));
+  assertEquals(subMenuItem1, menu.getChildAt(1));
+
+  assertFalse(
+      'Expected RIGHT key to be handled',
+      fireKeySequence(subMenuItem1.getElement(), KeyCodes.RIGHT));
+  assertTrue(subMenuItem1Menu.isVisible());
+
+  assertFalse(
+      'Expected LEFT key to be handled',
+      fireKeySequence(subMenuItem1.getElement(), KeyCodes.LEFT));
+  assertFalse(subMenuItem1Menu.isVisible());
+
+  assertFalse(
+      'Expected UP key to be handled',
+      fireKeySequence(subMenuItem1.getElement(), KeyCodes.UP));
+
+  assertFalse(
+      'Expected S key to be handled',
+      fireKeySequence(plainItem.getElement(), KeyCodes.S));
+  assertTrue(subMenuItem1Menu.isVisible());
+}
+
 function testNormalLtrSubMenu() {
   menu.decorate(goog.dom.getElement('demoMenu'));
   var subMenu = menu.getChildAt(1);
@@ -138,11 +190,38 @@ function testLtrSubMenuAlignedToStart() {
   assertArrowPosition(subMenu, false);
 }
 
+function testNullContentElement() {
+  var subMenu = new goog.ui.SubMenu();
+  subMenu.setContent('demo');
+}
+
 function testRtlSubMenuAlignedToStart() {
   document.body.style.direction = 'rtl';
   menu.decorate(goog.dom.getElement('demoMenu'));
   var subMenu = menu.getChildAt(1);
   subMenu.setAlignToEnd(false);
+  assertArrowDirection(subMenu, false);
+  assertRenderDirection(subMenu, false);
+  assertArrowPosition(subMenu, true);
+}
+
+function testSetContentKeepsArrow_ltr() {
+  document.body.style.direction = 'ltr';
+  menu.decorate(goog.dom.getElement('demoMenu'));
+  var subMenu = menu.getChildAt(1);
+  subMenu.setAlignToEnd(false);
+  subMenu.setContent('test');
+  assertArrowDirection(subMenu, true);
+  assertRenderDirection(subMenu, true);
+  assertArrowPosition(subMenu, false);
+}
+
+function testSetContentKeepsArrow_rtl() {
+  document.body.style.direction = 'rtl';
+  menu.decorate(goog.dom.getElement('demoMenu'));
+  var subMenu = menu.getChildAt(1);
+  subMenu.setAlignToEnd(false);
+  subMenu.setContent('test');
   assertArrowDirection(subMenu, false);
   assertRenderDirection(subMenu, false);
   assertArrowPosition(subMenu, true);

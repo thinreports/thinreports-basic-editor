@@ -140,7 +140,7 @@ function testGetElementByClass() {
 }
 
 function testSetProperties() {
-  var attrs = { 'name': 'test3', 'title': 'A title', 'random': 'woop' };
+  var attrs = {'name': 'test3', 'title': 'A title', 'random': 'woop'};
   var el = $('testEl');
 
   var res = goog.dom.setProperties(el, attrs);
@@ -160,7 +160,8 @@ function testSetPropertiesDirectAttributeMap() {
 function testSetPropertiesAria() {
   var attrs = {
     'aria-hidden': 'true',
-    'aria-label': 'This is a label'
+    'aria-label': 'This is a label',
+    'role': 'presentation'
   };
   var el = goog.dom.createDom('div');
 
@@ -168,6 +169,21 @@ function testSetPropertiesAria() {
   assertEquals('Should be equal', 'true', el.getAttribute('aria-hidden'));
   assertEquals('Should be equal',
       'This is a label', el.getAttribute('aria-label'));
+  assertEquals('Should be equal', 'presentation', el.getAttribute('role'));
+}
+
+function testSetPropertiesData() {
+  var attrs = {
+    'data-tooltip': 'This is a tooltip',
+    'data-tooltip-delay': '100'
+  };
+  var el = goog.dom.createDom('div');
+
+  goog.dom.setProperties(el, attrs);
+  assertEquals('Should be equal', 'This is a tooltip',
+      el.getAttribute('data-tooltip'));
+  assertEquals('Should be equal', '100',
+      el.getAttribute('data-tooltip-delay'));
 }
 
 function testSetTableProperties() {
@@ -1205,6 +1221,9 @@ function testGetAncestorByTagNameAndClass() {
   assertEquals(expected,
       goog.dom.getAncestorByTagNameAndClass(elem, goog.dom.TagName.DIV,
           'testAncestor'));
+  assertNull(
+      'Should return null if no search criteria are given',
+      goog.dom.getAncestorByTagNameAndClass(elem));
 }
 
 function testCreateTable() {
@@ -1314,6 +1333,31 @@ function testActiveElementIE() {
 
   assertEquals(link.tagName, goog.dom.getActiveElement(document).tagName);
   assertEquals(link, goog.dom.getActiveElement(document));
+}
+
+function testParentElement() {
+  var testEl = $('testEl');
+  var bodyEl = goog.dom.getParentElement(testEl);
+  assertNotNull(bodyEl);
+  var htmlEl = goog.dom.getParentElement(bodyEl);
+  assertNotNull(htmlEl);
+  var documentNotAnElement = goog.dom.getParentElement(htmlEl);
+  assertNull(documentNotAnElement);
+
+  var tree = goog.dom.htmlToDocumentFragment(
+      '<div>' +
+      '<p>Some text</p>' +
+      '<blockquote>Some <i>special</i> <b>text</b></blockquote>' +
+      '<address><!-- comment -->Foo</address>' +
+      '</div>');
+  assertNull(goog.dom.getParentElement(tree));
+  pEl = goog.dom.getNextNode(tree);
+  var fragmentRootEl = goog.dom.getParentElement(pEl);
+  assertEquals(tree, fragmentRootEl);
+
+  var detachedEl = goog.dom.createDom('div');
+  var detachedHasNoParent = goog.dom.getParentElement(detachedEl);
+  assertNull(detachedHasNoParent);
 }
 
 /**

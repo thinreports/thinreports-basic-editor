@@ -69,8 +69,12 @@ function testUriCreate() {
 }
 
 function testClone() {
-  var uri1 = new goog.Uri('http://www.google.com:8080/foo');
+  var uri1 = new goog.Uri(
+      'http://user:pass@www.google.com:8080/foo?a=1&b=2#c=3');
   var uri2 = uri1.clone();
+
+  assertNotEquals(uri1, uri2);
+  assertEquals(uri1.toString(), uri2.toString());
 
   uri2.setParameterValues('q','bar');
   assertFalse(uri1.getParameterValue('q') == 'bar');
@@ -316,6 +320,10 @@ function testParameterSetters() {
                goog.Uri.parse('/path?a=b&key=v1&c=d&key=v2&keywithsuffix=v3')
                .setParameterValues('key', ['1', '2', '3']).toString());
 
+  assertEquals('/path',
+      goog.Uri.parse('/path?key=v1&key=v2')
+          .setParameterValues('key', []).toString());
+
   // Test case-insensitive setters
   assertEquals('/path?a=b&key=newval&c=d&keywithsuffix=v3',
                goog.Uri.parse('/path?a=b&key=v1&c=d&key=v2&keywithsuffix=v3', true)
@@ -333,34 +341,174 @@ function testEncoding() {
                goog.Uri.parse('/foo+bar+baz').getPath());
 }
 
-function testSetters() {
+function testSetScheme() {
   var uri = new goog.Uri('http://www.google.com:80/path?q=query#fragmento');
+
+  uri.setScheme('https');
+  assertTrue(uri.hasScheme());
+  assertEquals('https', uri.getScheme());
   assertEquals('https://www.google.com:80/path?q=query#fragmento',
-               uri.setScheme('https').toString());
-  assertEquals('https://%E1%B8%A1oogle.com:80/path?q=query#fragmento',
-               uri.setDomain('\u1e21oogle.com').toString());
-  assertEquals('https://%E1%B8%A1oogle.com:443/path?q=query#fragmento',
-               uri.setPort(443).toString());
+               uri.toString());
+
+  uri.setScheme(encodeURIComponent('ab cd'), true);
+  assertTrue(uri.hasScheme());
+  assertEquals('ab cd', uri.getScheme());
+  assertEquals('ab%20cd://www.google.com:80/path?q=query#fragmento',
+               uri.toString());
+
+  uri.setScheme('http:');
+  assertTrue(uri.hasScheme());
+  assertEquals('http', uri.getScheme());
+  assertEquals('http://www.google.com:80/path?q=query#fragmento',
+               uri.toString());
+
+  uri.setScheme('');
+  assertFalse(uri.hasScheme());
+  assertEquals('', uri.getScheme());
+  assertEquals('//www.google.com:80/path?q=query#fragmento',
+               uri.toString());
+}
+
+function testSetDomain() {
+  var uri = new goog.Uri('http://www.google.com:80/path?q=query#fragmento');
+
+  uri.setDomain('\u1e21oogle.com');
+  assertTrue(uri.hasDomain());
+  assertEquals('\u1e21oogle.com', uri.getDomain());
+  assertEquals('http://%E1%B8%A1oogle.com:80/path?q=query#fragmento',
+               uri.toString());
+
+  uri.setDomain(encodeURIComponent('\u1e21oogle.com'), true);
+  assertTrue(uri.hasDomain());
+  assertEquals('\u1e21oogle.com', uri.getDomain());
+  assertEquals('http://%E1%B8%A1oogle.com:80/path?q=query#fragmento',
+               uri.toString());
+
+  uri.setDomain('');
+  assertFalse(uri.hasDomain());
+  assertEquals('', uri.getDomain());
+  assertEquals('http:/path?q=query#fragmento',
+               uri.toString());
+}
+
+function testSetPort() {
+  var uri = new goog.Uri('http://www.google.com:80/path?q=query#fragmento');
+
+  assertThrows(function() {
+    uri.setPort(-1);
+  });
+  assertEquals(80, uri.getPort());
+
+  assertThrows(function() {
+    uri.setPort('a');
+  });
+  assertEquals(80, uri.getPort());
+
+  uri.setPort(443);
+  assertTrue(uri.hasPort());
+  assertEquals(443, uri.getPort());
+  assertEquals('http://www.google.com:443/path?q=query#fragmento',
+               uri.toString());
+
+  // TODO(user): This is undocumented, but exist in previous unit
+  // test. We should clarify whether this is intended (alternatively,
+  // setPort(0) also works).
+  uri.setPort(null);
+  assertFalse(uri.hasPort());
+  assertEquals(null, uri.getPort());
+  assertEquals('http://www.google.com/path?q=query#fragmento',
+               uri.toString());
+}
+
+function testSetPath() {
+  var uri = new goog.Uri('http://www.google.com:80/path?q=query#fragmento');
+
+  uri.setPath('/search path/');
+  assertTrue(uri.hasPath());
+  assertEquals('/search path/', uri.getPath());
   assertEquals(
-      'https://%E1%B8%A1oogle.com:443/search%20path/?q=query#fragmento',
-      uri.setPath('/search path/').toString());
+      'http://www.google.com:80/search%20path/?q=query#fragmento',
+      uri.toString());
+
+  uri.setPath(encodeURIComponent('/search path 2/'), true);
+  assertTrue(uri.hasPath());
+  assertEquals('/search path 2/', uri.getPath());
   assertEquals(
-      'https://%E1%B8%A1oogle.com:443/search%20path/?q=query#fragmento',
-      uri.setPath('search path/').toString());
+      'http://www.google.com:80/search%20path%202/?q=query#fragmento',
+      uri.toString());
+
+  uri.setPath('');
+  assertFalse(uri.hasPath());
+  assertEquals('', uri.getPath());
   assertEquals(
-      'https://%E1%B8%A1oogle.com:443/search%20path/?q=some%20stuff&lang=en' +
-      '#fragmento', uri.setParameterValues('q', 'some stuff')
-                       .setParameterValues('lang', 'en').toString());
+      'http://www.google.com:80?q=query#fragmento',
+      uri.toString());
+}
+
+function testSetFragment() {
+  var uri = new goog.Uri('http://www.google.com:80/path?q=query#fragmento');
+
+  uri.setFragment('foo?bar=a b&baz=2');
+  assertTrue(uri.hasFragment());
+  assertEquals('foo?bar=a b&baz=2', uri.getFragment());
   assertEquals(
-      'https://%E1%B8%A1oogle.com:443/search%20path/?q=some%20stuff&lang=en',
-      uri.setFragment(null).toString());
+      'http://www.google.com:80/path?q=query#foo?bar=a%20b&baz=2',
+      uri.toString());
+
+  uri.setFragment(encodeURIComponent('foo?bar=a b&baz=3'), true);
+  assertTrue(uri.hasFragment());
+  assertEquals('foo?bar=a b&baz=3', uri.getFragment());
   assertEquals(
-      'https://%E1%B8%A1oogle.com/search%20path/?q=some%20stuff&lang=en',
-      uri.setPort(null).toString());
+      'http://www.google.com:80/path?q=query#foo?bar=a%20b&baz=3',
+      uri.toString());
+
+  uri.setFragment('');
+  assertFalse(uri.hasFragment());
+  assertEquals('', uri.getFragment());
   assertEquals(
-      'https://user:pwd@%E1%B8%A1oogle.com/search%20path/' +
-      '?q=some%20stuff&lang=en',
-      uri.setUserInfo('user:pwd').toString());
+      'http://www.google.com:80/path?q=query',
+      uri.toString());
+}
+
+function testSetUserInfo() {
+  var uri = new goog.Uri('http://www.google.com:80/path?q=query#fragmento');
+
+  uri.setUserInfo('user:pw d');
+  assertTrue(uri.hasUserInfo());
+  assertEquals('user:pw d', uri.getUserInfo());
+  assertEquals('http://user:pw%20d@www.google.com:80/path?q=query#fragmento',
+      uri.toString());
+
+  uri.setUserInfo(encodeURIComponent('user:pw d2'), true);
+  assertTrue(uri.hasUserInfo());
+  assertEquals('user:pw d2', uri.getUserInfo());
+  assertEquals('http://user:pw%20d2@www.google.com:80/path?q=query#fragmento',
+      uri.toString());
+
+  uri.setUserInfo('user');
+  assertTrue(uri.hasUserInfo());
+  assertEquals('user', uri.getUserInfo());
+  assertEquals('http://user@www.google.com:80/path?q=query#fragmento',
+      uri.toString());
+
+  uri.setUserInfo('');
+  assertFalse(uri.hasUserInfo());
+  assertEquals('', uri.getUserInfo());
+  assertEquals('http://www.google.com:80/path?q=query#fragmento',
+      uri.toString());
+}
+
+function testSetParameterValues() {
+  var uri = new goog.Uri('http://www.google.com:80/path?q=query#fragmento');
+
+  uri.setParameterValues('q', ['foo', 'other query']);
+  assertEquals('http://www.google.com:80/path?q=foo&q=other%20query#fragmento',
+      uri.toString());
+
+  uri.setParameterValues('lang', 'en');
+  assertEquals(
+      'http://www.google.com:80/path?q=foo&q=other%20query&lang=en#fragmento',
+      uri.toString());
 }
 
 function testTreatmentOfAt1() {
@@ -609,12 +757,17 @@ function testQueryDataGetKeys() {
 function testQueryDataGetValues() {
   var qd = new goog.Uri.QueryData('a=A&b=B&a=A2&b=B2&c=C=extra');
 
-  assertEquals('AA2BB2C=extra', qd.getValues().join(''));
+  assertArrayEquals(['A', 'A2', 'B', 'B2', 'C=extra'], qd.getValues());
   qd.remove('a');
-  assertEquals('BB2C=extra', qd.getValues().join(''));
+  assertArrayEquals(['B', 'B2', 'C=extra'], qd.getValues());
   qd.add('d', 'D');
   qd.add('d', 'D');
-  assertEquals('BB2C=extraDD', qd.getValues().join(''));
+  assertArrayEquals(['B', 'B2', 'C=extra', 'D', 'D'], qd.getValues());
+
+  qd.add('e', new String('Eee'));
+  assertArrayEquals(['B', 'B2', 'C=extra', 'D', 'D', 'Eee'], qd.getValues());
+
+  assertArrayEquals(['Eee'], qd.getValues('e'));
 }
 
 function testQueryDataSet() {
@@ -646,6 +799,11 @@ function testQueryDataGet() {
   assertEquals('B', qd.get('b'));
   assertEquals('C=extra', qd.get('C'));
   assertEquals('Default', qd.get('D', 'Default'));
+
+  // Some unit tests pass undefined to get method (even though the type
+  // for key is {string}). This is not caught by JsCompiler as
+  // tests aren't typically compiled.
+  assertUndefined(qd.get(undefined));
 }
 
 
@@ -660,7 +818,7 @@ function testQueryDataSetValues() {
   assertEquals('a=A3&a=A4&a=A5&b=B&b=B2&c=C&d=D', String(qd));
 }
 
-function testQueryDataToLowerCase() {
+function testQueryDataSetIgnoreCase() {
   var qd = new goog.Uri.QueryData('aaA=one&BBb=two&cCc=three');
   assertEquals('one', qd.get('aaA'));
   assertEquals(undefined, qd.get('aaa'));
@@ -673,6 +831,13 @@ function testQueryDataToLowerCase() {
   qd.add('DdD', 'four');
   assertEquals('four', qd.get('DdD'));
   assertEquals(undefined, qd.get('ddd'));
+}
+
+function testQueryDataSetIgnoreCaseWithMultipleValues() {
+  var qd = new goog.Uri.QueryData('aaA=one&aaA=two');
+  qd.setIgnoreCase(true);
+  assertArrayEquals(['one', 'two'], qd.getValues('aaA'));
+  assertArrayEquals(['one', 'two'], qd.getValues('aaa'));
 }
 
 function testQueryDataExtend() {
@@ -701,12 +866,36 @@ function testQueryDataCreateFromMap() {
       String(goog.Uri.QueryData.createFromMap({a:'foo&bar'})));
 }
 
+function testQueryDataCreateFromMapWithArrayValues() {
+  var obj = {'key': ['1', '2', '3']};
+  var qd = goog.Uri.QueryData.createFromMap(obj);
+  assertEquals('key=1&key=2&key=3', qd.toString());
+  qd.add('breakCache', 1);
+  obj.key.push('4');
+  assertEquals('key=1&key=2&key=3&breakCache=1', qd.toString());
+
+}
+
 function testQueryDataCreateFromKeysValues() {
   assertEquals('', String(goog.Uri.QueryData.createFromKeysValues([], [])));
   assertEquals('a=A&b=B&c=C', String(goog.Uri.QueryData.createFromKeysValues(
       ['a','b','c'],['A','B','C'])));
   assertEquals('a=A&a=B&a=C', String(goog.Uri.QueryData.createFromKeysValues(
       ['a','a','a'],['A','B','C'])));
+}
+
+function testQueryDataAddMultipleValuesWithSameKey() {
+  var qd = new goog.Uri.QueryData();
+  qd.add('abc', 'v');
+  qd.add('abc', 'v2');
+  qd.add('abc', 'v3');
+  assertEquals('abc=v&abc=v2&abc=v3', qd.toString());
+}
+
+function testQueryDataAddWithArray() {
+  var qd = new goog.Uri.QueryData();
+  qd.add('abc', ['v', 'v2']);
+  assertEquals('abc=v%2Cv2', qd.toString());
 }
 
 function testFragmentEncoding() {

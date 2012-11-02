@@ -22,13 +22,16 @@
 
 goog.provide('goog.editor.plugins.LinkDialogPlugin');
 
+goog.require('goog.array');
 goog.require('goog.editor.Command');
 goog.require('goog.editor.plugins.AbstractDialogPlugin');
 goog.require('goog.events.EventHandler');
 goog.require('goog.functions');
 goog.require('goog.ui.editor.AbstractDialog.EventType');
 goog.require('goog.ui.editor.LinkDialog');
+goog.require('goog.ui.editor.LinkDialog.EventType');
 goog.require('goog.ui.editor.LinkDialog.OkEvent');
+goog.require('goog.uri.utils');
 
 
 
@@ -46,6 +49,14 @@ goog.editor.plugins.LinkDialogPlugin = function() {
    * @private
    */
   this.eventHandler_ = new goog.events.EventHandler(this);
+
+
+  /**
+   * A list of whitelisted URL schemes which are safe to open.
+   * @type {Array.<string>}
+   * @private
+   */
+  this.safeToOpenSchemes_ = ['http', 'https', 'ftp'];
 };
 goog.inherits(goog.editor.plugins.LinkDialogPlugin,
     goog.editor.plugins.AbstractDialogPlugin);
@@ -88,6 +99,15 @@ goog.editor.plugins.LinkDialogPlugin.prototype.isOpenLinkInNewWindowChecked_ =
 
 
 /**
+ * Weather to show a checkbox where the user can choose to add 'rel=nofollow'
+ * attribute added to the link.
+ * @type {boolean}
+ * @private
+ */
+goog.editor.plugins.LinkDialogPlugin.prototype.showRelNoFollow_ = false;
+
+
+/**
  * Whether to stop referrer leaks.  Defaults to false.
  * @type {boolean}
  * @private
@@ -95,9 +115,47 @@ goog.editor.plugins.LinkDialogPlugin.prototype.isOpenLinkInNewWindowChecked_ =
 goog.editor.plugins.LinkDialogPlugin.prototype.stopReferrerLeaks_ = false;
 
 
+/**
+ * Whether to block opening links with a non-whitelisted URL scheme.
+ * @type {boolean}
+ * @private
+ */
+goog.editor.plugins.LinkDialogPlugin.prototype.blockOpeningUnsafeSchemes_ =
+    true;
+
+
 /** @override */
 goog.editor.plugins.LinkDialogPlugin.prototype.getTrogClassId =
     goog.functions.constant('LinkDialogPlugin');
+
+
+/**
+ * Tells the plugin whether to block URLs with schemes not in the whitelist.
+ * If blocking is enabled, this plugin will stop the 'Test Link' popup
+ * window from being created. Blocking doesn't affect link creation--if the
+ * user clicks the 'OK' button with an unsafe URL, the link will still be
+ * created as normal.
+ * @param {boolean} blockOpeningUnsafeSchemes Whether to block non-whitelisted
+ *     schemes.
+ */
+goog.editor.plugins.LinkDialogPlugin.prototype.setBlockOpeningUnsafeSchemes =
+    function(blockOpeningUnsafeSchemes) {
+  this.blockOpeningUnsafeSchemes_ = blockOpeningUnsafeSchemes;
+};
+
+
+/**
+ * Sets a whitelist of allowed URL schemes that are safe to open.
+ * Schemes should all be in lowercase. If the plugin is set to block opening
+ * unsafe schemes, user-entered URLs will be converted to lowercase and checked
+ * against this list. The whitelist has no effect if blocking is not enabled.
+ * @param {Array.<String>} schemes String array of URL schemes to allow (http,
+ *     https, etc.).
+ */
+goog.editor.plugins.LinkDialogPlugin.prototype.setSafeToOpenSchemes =
+    function(schemes) {
+  this.safeToOpenSchemes_ = schemes;
+};
 
 
 /**
@@ -111,6 +169,15 @@ goog.editor.plugins.LinkDialogPlugin.prototype.showOpenLinkInNewWindow =
     function(startChecked) {
   this.showOpenLinkInNewWindow_ = true;
   this.isOpenLinkInNewWindowChecked_ = startChecked;
+};
+
+
+/**
+ * Tells the dialog to show a checkbox where the user can choose to have
+ * 'rel=nofollow' attribute added to the link.
+ */
+goog.editor.plugins.LinkDialogPlugin.prototype.showRelNoFollow = function() {
+  this.showRelNoFollow_ = true;
 };
 
 
@@ -203,27 +270,32 @@ goog.editor.plugins.LinkDialogPlugin.prototype.getCurrentLink = function() {
  * Creates a new instance of the dialog and registers for the relevant events.
  * @param {goog.dom.DomHelper} dialogDomHelper The dom helper to be used to
  *     create the dialog.
- * @param {*} link The target link (should be a goog.editor.Link).
+ * @param {*=} opt_link The target link (should be a goog.editor.Link).
  * @return {goog.ui.editor.LinkDialog} The dialog.
  * @override
  * @protected
  */
 goog.editor.plugins.LinkDialogPlugin.prototype.createDialog = function(
-    dialogDomHelper, link) {
+    dialogDomHelper, opt_link) {
   var dialog = new goog.ui.editor.LinkDialog(dialogDomHelper,
-      /** @type {goog.editor.Link} */ (link));
+      /** @type {goog.editor.Link} */ (opt_link));
   if (this.emailWarning_) {
     dialog.setEmailWarning(this.emailWarning_);
   }
   if (this.showOpenLinkInNewWindow_) {
     dialog.showOpenLinkInNewWindow(this.isOpenLinkInNewWindowChecked_);
   }
+  if (this.showRelNoFollow_) {
+    dialog.showRelNoFollow();
+  }
   dialog.setStopReferrerLeaks(this.stopReferrerLeaks_);
   this.eventHandler_.
       listen(dialog, goog.ui.editor.AbstractDialog.EventType.OK,
           this.handleOk_).
       listen(dialog, goog.ui.editor.AbstractDialog.EventType.CANCEL,
-          this.handleCancel_);
+          this.handleCancel_).
+      listen(dialog, goog.ui.editor.LinkDialog.EventType.BEFORE_TEST_LINK,
+          this.handleBeforeTestLink);
   return dialog;
 };
 
@@ -261,6 +333,18 @@ goog.editor.plugins.LinkDialogPlugin.prototype.handleOk_ = function(e) {
     this.isOpenLinkInNewWindowChecked_ = e.openInNewWindow;
   }
 
+  if (this.showRelNoFollow_) {
+    var anchor = this.getCurrentLink().getAnchor();
+    var alreadyPresent = goog.ui.editor.LinkDialog.hasNoFollow(anchor.rel);
+    if (alreadyPresent && !e.noFollow) {
+      anchor.rel = goog.ui.editor.LinkDialog.removeNoFollow(anchor.rel);
+    } else if (!alreadyPresent && e.noFollow) {
+      anchor.rel = anchor.rel ? anchor.rel + ' nofollow' : 'nofollow';
+    }
+  }
+
+  this.fieldObject.focus();
+
   // Place cursor to the right of the modified link.
   this.currentLink_.placeCursorRightOf();
 
@@ -284,4 +368,47 @@ goog.editor.plugins.LinkDialogPlugin.prototype.handleCancel_ = function(e) {
   }
 
   this.eventHandler_.removeAll();
+};
+
+
+/**
+ * Handles the BeforeTestLink event fired when the 'test' link is clicked.
+ * @param {goog.ui.editor.LinkDialog.BeforeTestLinkEvent} e BeforeTestLink event
+ *     object.
+ * @protected
+ */
+goog.editor.plugins.LinkDialogPlugin.prototype.handleBeforeTestLink =
+    function(e) {
+  if (!this.shouldOpenUrl(e.url)) {
+    /** @desc Message when the user tries to test (preview) a link, but the
+     * link cannot be tested. */
+    var MSG_UNSAFE_LINK = goog.getMsg('This link cannot be tested.');
+    alert(MSG_UNSAFE_LINK);
+    e.preventDefault();
+  }
+};
+
+
+/**
+ * Checks whether the plugin should open the given url in a new window.
+ * @param {string} url The url to check.
+ * @return {boolean} If the plugin should open the given url in a new window.
+ * @protected
+ */
+goog.editor.plugins.LinkDialogPlugin.prototype.shouldOpenUrl = function(url) {
+  return !this.blockOpeningUnsafeSchemes_ || this.isSafeSchemeToOpen_(url);
+};
+
+
+/**
+ * Determines whether or not a url has a scheme which is safe to open.
+ * Schemes like javascript are unsafe due to the possibility of XSS.
+ * @param {string} url A url.
+ * @return {boolean} Whether the url has a safe scheme.
+ * @private
+ */
+goog.editor.plugins.LinkDialogPlugin.prototype.isSafeSchemeToOpen_ =
+    function(url) {
+  var scheme = goog.uri.utils.getScheme(url) || 'http';
+  return goog.array.contains(this.safeToOpenSchemes_, scheme.toLowerCase());
 };

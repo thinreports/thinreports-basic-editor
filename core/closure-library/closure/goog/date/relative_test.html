@@ -18,6 +18,7 @@ See the COPYING file for details.
   goog.LOCALE = 'en_US';
   goog.require('goog.testing.jsunit');
   goog.require('goog.date.relative');
+  goog.require('goog.date.DateTime');
 </script>
 </head>
 <body>
@@ -49,7 +50,11 @@ See the COPYING file for details.
     assertEquals('2 hours ago', fn(timestamp('23 March 2009 12:20:56')));
     assertEquals('23 hours ago', fn(timestamp('22 March 2009 15:30:56')));
     assertEquals('1 day ago', fn(timestamp('22 March 2009 12:11:04')));
+    assertEquals('1 day ago', fn(timestamp('22 March 2009 00:00:00')));
+    assertEquals('2 days ago', fn(timestamp('21 March 2009 23:59:59')));
     assertEquals('2 days ago', fn(timestamp('21 March 2009 10:30:56')));
+    assertEquals('2 days ago', fn(timestamp('21 March 2009 00:00:00')));
+    assertEquals('3 days ago', fn(timestamp('20 March 2009 23:59:59')));
   }
 
   function testFormatRelativeForFutureDates() {
@@ -66,8 +71,13 @@ See the COPYING file for details.
     assertEquals('in 59 minutes', fn(timestamp('23 March 2009 15:29:15')));
     assertEquals('in 2 hours', fn(timestamp('23 March 2009 17:20:56')));
     assertEquals('in 23 hours', fn(timestamp('24 March 2009 13:30:56')));
+    assertEquals('in 1 day', fn(timestamp('24 March 2009 14:31:07')));
     assertEquals('in 1 day', fn(timestamp('24 March 2009 16:11:04')));
+    assertEquals('in 1 day', fn(timestamp('24 March 2009 23:59:59')));
+    assertEquals('in 2 days', fn(timestamp('25 March 2009 00:00:00')));
     assertEquals('in 2 days', fn(timestamp('25 March 2009 10:30:56')));
+    assertEquals('in 2 days', fn(timestamp('25 March 2009 23:59:59')));
+    assertEquals('in 3 days', fn(timestamp('26 March 2009 00:00:00')));
   }
 
 
@@ -96,15 +106,22 @@ See the COPYING file for details.
 
     assertEquals('2:21 PM (10 minutes ago)',
                  fn(new Date(baseTime - 10 * 60 * 1000)));
-
     assertEquals('4:31 AM (10 hours ago)',
                  fn(new Date(baseTime - 10 * 60 * 60 * 1000)));
-
     assertEquals('Friday, March 13, 2009 (10 days ago)',
                  fn(new Date(baseTime - 10 * 24 * 60 * 60 * 1000)));
-
     assertEquals('Tuesday, March 3, 2009',
                  fn(new Date(baseTime - 20 * 24 * 60 * 60 * 1000)));
+
+    // Test that goog.date.DateTime can also be accepted as input.
+    assertEquals('2:21 PM (10 minutes ago)',
+                 fn(gdatetime(baseTime - 10 * 60 * 1000)));
+    assertEquals('4:31 AM (10 hours ago)',
+                 fn(gdatetime(baseTime - 10 * 60 * 60 * 1000)));
+    assertEquals('Friday, March 13, 2009 (10 days ago)',
+                 fn(gdatetime(baseTime - 10 * 24 * 60 * 60 * 1000)));
+    assertEquals('Tuesday, March 3, 2009',
+                 fn(gdatetime(baseTime - 20 * 24 * 60 * 60 * 1000)));
   }
 
   function testGetPastDateString() {
@@ -113,10 +130,20 @@ See the COPYING file for details.
                  fn(new Date(baseTime - 10 * 60 * 1000)));
     assertEquals('2:41 PM (0 minutes ago)',
                  fn(new Date(baseTime + 10 * 60 * 1000)));
+
+    // Test that goog.date.DateTime can also be accepted as input.
+    assertEquals('2:21 PM (10 minutes ago)',
+                 fn(gdatetime(baseTime - 10 * 60 * 1000)));
+    assertEquals('2:41 PM (0 minutes ago)',
+                 fn(gdatetime(baseTime + 10 * 60 * 1000)));
+  }
+
+  function gdatetime(timestamp) {
+    return new goog.date.DateTime(new Date(timestamp));
   }
 
   function timestamp(str) {
-    return new Date(str).getTime()
+    return new Date(str).getTime();
   }
 
 </script>

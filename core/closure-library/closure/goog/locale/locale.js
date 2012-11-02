@@ -15,6 +15,7 @@
 /**
  * @fileoverview Functions for dealing with Date formatting & Parsing,
  * County and language name, TimeZone list.
+ * @suppress {deprecated} Use goog.i18n instead.
  */
 
 
@@ -159,8 +160,8 @@ goog.locale.getNativeCountryName = function(countryCode) {
  * current or provided locale symbols set.
  *
  * This method depends on goog.locale.LocaleNameConstants__<locale> available
- * from //javascript/googledata/i18n/js_locale_data. User of this method
- * has to add dependency to this.
+ * from http://go/js_locale_data. User of this method has to add dependency to
+ * this.
  *
  * @param {string} languageCode Language code to lookup the country name for.
  * @param {Object=} opt_localeSymbols If omitted the current locale symbol
@@ -203,8 +204,8 @@ goog.locale.getNativeLanguageName = function(languageCode) {
  * the current or provided locale symbols set.
  *
  * This method depends on goog.locale.LocaleNameConstants__<locale> available
- * from //javascript/googledata/i18n/js_locale_data. User of this method
- * has to add dependency to this.
+ * from http://go/js_locale_data. User of this method has to add dependency to
+ * this.
  *
  * @param {string} languageCode Language code to lookup the language name for.
  * @param {Object=} opt_localeSymbols locale symbol set if given.

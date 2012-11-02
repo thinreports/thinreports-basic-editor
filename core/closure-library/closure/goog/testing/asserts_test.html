@@ -820,19 +820,66 @@ See the COPYING file for details.
     assertArrayEquals('Arrays should be equal', a1, a2);
 
     assertThrows('Should have thrown because args are not arrays', function() {
-      var b1 = true;
-      var b2 = true;
-      assertArrayEquals(b1, b2);
+      assertArrayEquals(true, true);
     });
+
+    a1 = [0, undefined, 2];
+    a2 = [0, , 2];
+    // The following test fails unexpectedly. The bug is tracked at
+    // http://code.google.com/p/closure-library/issues/detail?id=419
+    // assertThrows(
+    //     'assertArrayEquals distinguishes undefined items from sparse arrays',
+    //     function() {
+    //       assertArrayEquals(a1, a2);
+    //     });
+
+    // For the record. This behavior will probably change in the future.
+    assertArrayEquals(
+        'Bug: sparse arrays and undefined items are not distinguished',
+        [0, undefined, 2], [0, , 2]);
+
+    assertThrows('The array elements should be compared with ===', function() {
+      assertArrayEquals([0], ['0'])
+    });
+
+    assertThrows('Arrays with different length should be different',
+        function() {
+          assertArrayEquals([0, undefined], [0])
+        });
+
+    a1 = [0];
+    a2 = [0];
+    a2[-1] = -1;
+    assertArrayEquals('Negative indexes are ignored', a1, a2);
+
+    a1 = [0];
+    a2 = [0];
+    a2['extra'] = 1
+    assertArrayEquals(
+        'Extra properties are ignored. Use assertObjectEquals to compare them.',
+        a1, a2);
+
+    assertArrayEquals('An example where assertObjectEquals would fail in IE.',
+        ['x'], 'x'.match(/x/g))
   }
 
   function testAssertObjectsEqualsDifferentArrays() {
     assertThrows('Should have thrown because args are different', function() {
       var a1 = ['className1'];
       var a2 = ['className2'];
-      assertArrayEquals(a1, a2);
       assertObjectEquals(a1, a2);
     });
+  }
+
+  function testAssertObjectsEqualsNegativeArrayIndexes() {
+    var a1 = [0];
+    var a2 = [0];
+    a2[-1] = -1;
+    // The following test fails unexpectedly. The bug is tracked at
+    // http://code.google.com/p/closure-library/issues/detail?id=418
+    // assertThrows('assertObjectEquals compares negative indexes', function() {
+    //   assertObjectEquals(a1, a2);
+    // });
   }
 
   function testAssertObjectsEqualsDifferentTypeSameToString() {
@@ -853,6 +900,15 @@ See the COPYING file for details.
       var a2 = [['className1']];
       assertObjectEquals(a1, a2);
     });
+  }
+
+  function testAssertObjectsRoughlyEquals() {
+    assertObjectRoughlyEquals({'a': 1}, {'a': 1.2}, 0.3);
+    assertThrowsJsUnitException(
+        function() { assertObjectRoughlyEquals({'a': 1}, {'a': 1.2}, 0.1); },
+        'Expected <[object Object]> (Object) but was <[object Object]> ' +
+        '(Object)\n   a: Expected <1> (Number) but was <1.2> (Number) which ' +
+        'was more than 0.1 away');
   }
 
   function testFindDifferences_equal() {
@@ -971,7 +1027,7 @@ See the COPYING file for details.
       }
     }
 
-    // TODO(user,user): This test does not terminate with the current
+    // TODO(gboyer,user): This test does not terminate with the current
     // algorithm. Can be enabled when (if) the algorithm is improved.
     //assertNull(goog.testing.asserts.findDifferences(
     //    createBinTree(5, null), createBinTree(5, null)));
@@ -990,6 +1046,32 @@ See the COPYING file for details.
     }
   }
 
+  function testStringSamePrefix() {
+    assertThrowsJsUnitException(
+        function() { assertEquals('abcdefghi', 'abcdefghx'); },
+        'Expected <abcdefghi> (String) but was <abcdefghx> (String)\n' +
+        'Difference was at position 8. Expected [...ghi] vs. actual [...ghx]');
+  }
+
+  function testStringSameSuffix() {
+    assertThrowsJsUnitException(
+        function() { assertEquals('xbcdefghi', 'abcdefghi'); },
+        'Expected <xbcdefghi> (String) but was <abcdefghi> (String)\n' +
+        'Difference was at position 0. Expected [xbc...] vs. actual [abc...]');
+  }
+
+  function testStringDissimilarShort() {
+    assertThrowsJsUnitException(
+        function() { assertEquals('x', 'y'); },
+        'Expected <x> (String) but was <y> (String)');
+  }
+
+  function testStringDissimilarLong() {
+    assertThrowsJsUnitException(
+        function() { assertEquals('xxxxxxxxxx', 'yyyyyyyyyy'); },
+        'Expected <xxxxxxxxxx> (String) but was <yyyyyyyyyy> (String)');
+  }
+
   function testAssertElementsEquals() {
     assertElementsEquals([1, 2], [1, 2]);
     assertElementsEquals([1, 2], {0: 1, 1: 2, length: 2});
@@ -1004,6 +1086,30 @@ See the COPYING file for details.
 
   function stringForWindowIEHelper() {
     window.stringForWindowIEResult = _displayStringForValue(window);
+  }
+
+  function testDisplayStringForValue() {
+    assertEquals('<hello> (String)', _displayStringForValue('hello'));
+    assertEquals('<1> (Number)', _displayStringForValue(1));
+    assertEquals('<null>', _displayStringForValue(null));
+    assertEquals('<undefined>', _displayStringForValue(undefined));
+    assertEquals('<hello,,,,1> (Array)', _displayStringForValue(
+        ['hello', /* array hole */, undefined, null, 1]));
+  }
+
+  function testDisplayStringForValue_exception() {
+    assertEquals('<toString failed: foo message> (Object)',
+        _displayStringForValue({toString: function() {
+          throw Error('foo message');
+        }}));
+  }
+
+  function testDisplayStringForValue_cycle() {
+    var cycle = ['cycle'];
+    cycle.push(cycle);
+    assertTrue(
+        'Computing string should terminate and result in a reasonable length',
+        _displayStringForValue(cycle).length < 1000);
   }
 
 </script>

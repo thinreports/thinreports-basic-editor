@@ -196,6 +196,7 @@ goog.ui.Popup.prototype.setMargin = function(arg1, opt_arg2, opt_arg3,
 
 /**
  * Repositions the popup according to the current state.
+ * @override
  */
 goog.ui.Popup.prototype.reposition = function() {
   if (!this.position_) {
@@ -213,7 +214,7 @@ goog.ui.Popup.prototype.reposition = function() {
   this.position_.reposition(el, this.popupCorner_, this.margin_);
 
   if (hideForPositioning) {
-    // NOTE(user): The visibility property is reset to 'visible' by the show_
+    // NOTE(eae): The visibility property is reset to 'visible' by the show_
     // method in PopupBase. Resetting it here causes flickering in some
     // situations, even if set to visible after the display property has been
     // set to none by the call below.

@@ -11,13 +11,21 @@ See the COPYING file for details.
 <title>Closure Unit Tests - goog.testing.MockClock</title>
 <script src="../base.js"></script>
 <script>
+  goog.require('goog.events');
   goog.require('goog.functions');
   goog.require('goog.testing.MockClock');
+  goog.require('goog.testing.PropertyReplacer');
   goog.require('goog.testing.jsunit');
+  goog.require('goog.testing.recordFunction');
 </script>
 </head>
 <body>
 <script>
+  var stubs = new goog.testing.PropertyReplacer();
+
+  function tearDown() {
+    stubs.reset();
+  }
 
   function testMockClockWasInstalled() {
     var clock = new goog.testing.MockClock();
@@ -107,6 +115,28 @@ See the COPYING file for details.
   }
 
 
+  function testRequestAnimationFrame() {
+    goog.global.requestAnimationFrame = function () {
+    };
+    var clock = new goog.testing.MockClock(true);
+    var times = [];
+    var recFunc = goog.testing.recordFunction(function(now) {
+      times.push(now);
+    });
+    goog.global.requestAnimationFrame(recFunc);
+    clock.tick(50);
+    assertEquals(1, recFunc.getCallCount());
+    assertEquals(20, times[0]);
+
+    goog.global.requestAnimationFrame(recFunc);
+    clock.tick(100);
+    assertEquals(2, recFunc.getCallCount());
+    assertEquals(70, times[1]);
+
+    clock.uninstall();
+  }
+
+
   function testClearTimeout() {
     var clock = new goog.testing.MockClock(true);
     var ran = false;
@@ -163,6 +193,23 @@ See the COPYING file for details.
     clock.tick(50);
     assertEquals(6, times);
 
+    clock.uninstall();
+  }
+
+
+  function testCancelRequestAnimationFrame() {
+    goog.global.requestAnimationFrame = function () {
+    };
+    goog.global.cancelRequestAnimationFrame = function () {
+    };
+    var clock = new goog.testing.MockClock(true);
+    var ran = false;
+    var c = goog.global.requestAnimationFrame(function() { ran = true; });
+    clock.tick(10);
+    assertFalse(ran);
+    goog.global.cancelRequestAnimationFrame(c);
+    clock.tick(20);
+    assertFalse(ran);
     clock.uninstall();
   }
 
@@ -392,20 +439,48 @@ See the COPYING file for details.
   }
 
   function testCorrectSetTimeoutIsRestored() {
-    var original = window.setTimeout;
     var safe = goog.functions.error('should not have been called');
-    try {
-      window.setTimeout = safe;
-      var clock = new goog.testing.MockClock(true);
-      assertNotEquals('setTimeout is replaced', safe, window.setTimeout);
-      clock.uninstall();
-      // NOTE: If this assertion proves to be flaky in IE, the string value of
-      // the two functions have to be compared as described in
-      // goog.testing.TestCase#finalize.
-      assertEquals('setTimeout is restored', safe, window.setTimeout);
-    } finally {
-      window.setTimeout = original;
-    }
+    stubs.set(window, 'setTimeout', safe);
+
+    var clock = new goog.testing.MockClock(true);
+    assertNotEquals('setTimeout is replaced', safe, window.setTimeout);
+    clock.uninstall();
+    // NOTE: If this assertion proves to be flaky in IE, the string value of
+    // the two functions have to be compared as described in
+    // goog.testing.TestCase#finalize.
+    assertEquals('setTimeout is restored', safe, window.setTimeout);
+  }
+
+  function testMozRequestAnimationFrame() {
+    // Setting this function will indirectly tell the mock clock to mock it out.
+    stubs.set(window, 'mozRequestAnimationFrame', goog.nullFunction);
+
+    var clock = new goog.testing.MockClock(true);
+
+    var mozBeforePaint = goog.testing.recordFunction();
+    goog.events.listen(window, 'MozBeforePaint', mozBeforePaint);
+
+    window.mozRequestAnimationFrame(null);
+    assertEquals(0, mozBeforePaint.getCallCount());
+
+    clock.tick(goog.testing.MockClock.REQUEST_ANIMATION_FRAME_TIMEOUT);
+    assertEquals(1, mozBeforePaint.getCallCount());
+    clock.dispose();
+  }
+
+  function testClearBeforeSet() {
+    var clock = new goog.testing.MockClock(true);
+    var expectedId = 1;
+    window.clearTimeout(expectedId);
+
+    var fn = goog.testing.recordFunction();
+    var actualId = window.setTimeout(fn, 0);
+    assertEquals(
+        'In order for this test to work, we have to guess the ids in advance',
+        expectedId, actualId);
+    clock.tick(1);
+    assertEquals(1, fn.getCallCount());
+    clock.dispose();
   }
 
 </script>

@@ -20,7 +20,7 @@ will also do logical validation to prevent duplicate provides and circular
 dependencies.
 """
 
-
+__author__ = 'nnaze@google.com (Nathan Naze)'
 
 
 class DepsTree(object):
@@ -70,7 +70,7 @@ class DepsTree(object):
       NamespaceNotFoundError: A namespace is requested but doesn't exist.
       CircularDependencyError: A cycle is detected in the dependency tree.
     """
-    if type(required_namespaces) is str:
+    if isinstance(required_namespaces, str):
       required_namespaces = [required_namespaces]
 
     deps_sources = []
@@ -123,16 +123,19 @@ class DepsTree(object):
       # This must be a cycle.
       raise CircularDependencyError(traversal_path)
 
-    traversal_path.append(required_namespace)
+    # If we don't have the source yet, we'll have to visit this namespace and
+    # add the required dependencies to deps_list.
+    if source not in deps_list:
+      traversal_path.append(required_namespace)
 
-    for require in source.requires:
+      for require in source.requires:
 
-      # Append all other dependencies before we append our own.
-      DepsTree._ResolveDependencies(require, deps_list, provides_map,
-                                    traversal_path)
-    deps_list.append(source)
+        # Append all other dependencies before we append our own.
+        DepsTree._ResolveDependencies(require, deps_list, provides_map,
+                                      traversal_path)
+      deps_list.append(source)
 
-    traversal_path.pop()
+      traversal_path.pop()
 
     return deps_list
 

@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /**
- * @fileoverview Factory class to create a simple autocomplete that will match
- * from an array of data.
+ * @fileoverview This is a stub for backward compatibility. For actual
+ * documentation, please see {@link goog.ui.ac.createSimpleAutoComplete}.
  *
  * @see ../../demos/autocomplete-basic.html
  */
@@ -25,9 +25,16 @@ goog.require('goog.ui.AutoComplete');
 goog.require('goog.ui.AutoComplete.ArrayMatcher');
 goog.require('goog.ui.AutoComplete.InputHandler');
 goog.require('goog.ui.AutoComplete.Renderer');
+/**
+ * @suppress {extraRequire} This is left here only for dependency management
+ *     until all existing usages are transitioned to the new namespace.
+ */
+goog.require('goog.ui.ac');
 
 
 
+// TODO(user): Remove this file completely after known usages are replaced
+// with goog.ui.ac.createSimpleAutoComplete.
 /**
  * Factory class for building a basic autocomplete widget that autocompletes
  * an inputbox or text area from a data array.
@@ -38,16 +45,17 @@ goog.require('goog.ui.AutoComplete.Renderer');
  * @param {boolean=} opt_useSimilar use similar matches. e.g. "gost" => "ghost".
  * @constructor
  * @extends {goog.ui.AutoComplete}
+ * @deprecated Use {@link goog.ui.ac.createSimpleAutoComplete} instead.
  */
 goog.ui.AutoComplete.Basic = function(data, input, opt_multi, opt_useSimilar) {
   var matcher = new goog.ui.AutoComplete.ArrayMatcher(data, !opt_useSimilar);
   var renderer = new goog.ui.AutoComplete.Renderer();
-  var inputhandler =
-      new goog.ui.AutoComplete.InputHandler(null, null, !!opt_multi);
+  var inputHandler = new goog.ui.AutoComplete.InputHandler(
+      null, null, !!opt_multi);
 
-  goog.ui.AutoComplete.call(this, matcher, renderer, inputhandler);
+  goog.ui.AutoComplete.call(this, matcher, renderer, inputHandler);
 
-  inputhandler.attachAutoComplete(this);
-  inputhandler.attachInputs(input);
+  inputHandler.attachAutoComplete(this);
+  inputHandler.attachInputs(input);
 };
 goog.inherits(goog.ui.AutoComplete.Basic, goog.ui.AutoComplete);

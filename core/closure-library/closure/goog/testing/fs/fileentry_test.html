@@ -11,7 +11,6 @@ See the COPYING file for details.
 <head>
 <title>Closure Unit Tests - goog.testing.fs.FileEntry</title>
 <script src="../../base.js"></script>
-<script src="../../../../third_party/closure/goog/deps.js"></script>
 <script>
 goog.require('goog.fs.DirectoryEntry.Behavior');
 goog.require('goog.testing.AsyncTestCase');
@@ -68,6 +67,19 @@ function testGetLastModified() {
     asyncTestCase.continueTesting();
   });
   waitForAsync('testGetLastModified');
+}
+
+function testGetMetadata() {
+  // Advance the clock to a known time.
+  mockClock.tick(54);
+  var testFile = new goog.testing.fs.FileEntry(fs, fs.getRoot(),
+                                               'timeTest', 'hello world');
+  mockClock.tick();
+  testFile.getMetadata().addCallback(function(metadata) {
+    assertEquals(54, metadata.modificationTime.getTime());
+    asyncTestCase.continueTesting();
+  });
+  waitForAsync('testGetMetadata');
 }
 
 

@@ -14,6 +14,8 @@ See the COPYING file for details.
 -->
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,
+    maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
 <title>Closure Unit Tests - goog.dom.style</title>
 <script src="../base.js"></script>
 <script>
@@ -218,6 +220,21 @@ i {
      scroll positions in all browsers. */
   overflow: hidden;
   height: 20px;
+}
+
+#translation {
+  position: absolute;
+  z-index: 10;
+  left: 10px;
+  top: 10px;
+  width: 10px;
+  height: 10px;
+  background-color: blue;
+  -webkit-transform: translate(20px, 30px);
+  -ms-transform: translate(20px, 30px);
+  -o-transform: translate(20px, 30px);
+  -moz-transform: translate(20px, 30px);
+  transform: translate(20px, 30px);
 }
 
 </style>
@@ -462,6 +479,17 @@ Test-visible
 <div id="offset-parent" style="position:relative">
   <div id="offset-child">child</div>
 </div>
+
+<div id="offset-parent-overflow"
+     style="overflow: scroll; width: 50px; height: 50px;">
+  <a id="offset-child-overflow">
+    scrollscrollscrollscrollscrollscrollscrollscroll
+  </a>
+</div>
+
+<div id="test-viewport"></div>
+<div id="translation"></div>
+
 <script>
 
 var EPSILON = 2;
@@ -832,7 +860,7 @@ function testGetPageOffsetElementOffscreen() {
 function testGetPageOffsetFixedPositionElements() {
   // Skip these tests in certain browsers.
   // position:fixed is not supported in IE before version 7
-  // TODO(user): This conditional looks fishy: it excludes all versions of
+  // TODO(gboyer): This conditional looks fishy: it excludes all versions of
   // IE version 6 and greater.
   if (!goog.userAgent.IE || !goog.userAgent.isVersion('6')) {
     // Test with a position fixed element
@@ -1100,8 +1128,16 @@ function testInstallStyles() {
   var result = goog.style.installStyles(
       '#installTest0 { background-color: rgb(255, 192, 203); }');
 
-  assertColorRgbEquals('rgb(255,192,203)', goog.style.getBackgroundColor(el));
+  // For some odd reason, the change in computed style does not register on
+  // Chrome 19 unless the style property is touched.  The behavior goes
+  // away again in Chrome 20.
+  // TODO(nnaze): Remove special caseing once we switch the testing image
+  // to Chrome 20 or higher.
+  if (isChrome19()) {
+    el.style.display = ''
+  }
 
+  assertColorRgbEquals('rgb(255,192,203)', goog.style.getBackgroundColor(el));
   goog.style.uninstallStyles(result);
   assertEquals(originalBackground, goog.style.getBackgroundColor(el));
 }
@@ -1112,6 +1148,16 @@ function testSetStyles() {
   // Change to pink
   var ss = goog.style.installStyles(
       '#installTest1 { background-color: rgb(255, 192, 203); }');
+
+  // For some odd reason, the change in computed style does not register on
+  // Chrome 19 unless the style property is touched.  The behavior goes
+  // away again in Chrome 20.
+  // TODO(nnaze): Remove special caseing once we switch the testing image
+  // to Chrome 20 or higher.
+  if (isChrome19()) {
+    el.style.display = ''
+  }
+
   assertColorRgbEquals('rgb(255,192,203)', goog.style.getBackgroundColor(el));
 
   // Now change to orange
@@ -1124,6 +1170,11 @@ function testSetStyles() {
 function assertColorRgbEquals(expected, actual) {
   assertEquals(expected,
       goog.color.hexToRgbStyle(goog.color.parse(actual).hex));
+}
+
+function isChrome19() {
+  return goog.userAgent.product.CHROME &&
+         goog.string.startsWith(goog.userAgent.product.VERSION, '19.');
 }
 
 function testIsRightToLeft() {
@@ -1282,6 +1333,16 @@ function testSetBorderBoxSize() {
              goog.userAgent.IE && goog.userAgent.isVersion('8')) {
     assertEquals('border-box', el.style.boxSizing);
   }
+
+  // Try a negative width/height.
+  setBorderBoxSize(el, new Size(-10, -10));
+
+  // Setting the border box smaller than the borders will just give you
+  // a content box of size 0.
+  // NOTE(nicksantos): I'm not really sure why IE7 is special here.
+  var isIeLt8 = goog.userAgent.IE && !goog.userAgent.isVersion('8');
+  assertEquals(20, el.offsetWidth);
+  assertEquals(isIeLt8 ? 39 : 20, el.offsetHeight);
 }
 
 function testSetContentBoxSize() {
@@ -1328,6 +1389,14 @@ function testSetContentBoxSize() {
              goog.userAgent.IE && goog.userAgent.isVersion('8')) {
     assertEquals('content-box', el.style.boxSizing);
   }
+
+  // Try a negative width/height.
+  setContentBoxSize(el, new Size(-10, -10));
+
+  // NOTE(nicksantos): I'm not really sure why IE7 is special here.
+  var isIeLt8 = goog.userAgent.IE && !goog.userAgent.isVersion('8');
+  assertEquals(20, el.offsetWidth);
+  assertEquals(isIeLt8 ? 39 : 20, el.offsetHeight);
 }
 
 function testGetPaddingBox() {
@@ -2185,10 +2254,54 @@ function testScrollBarWidth() {
 }
 
 function testOffsetParent() {
-  var $ = goog.dom.getElement;
-  var parent = $('offset-parent');
-  var child = $('offset-child');
+  var parent = goog.dom.getElement('offset-parent');
+  var child = goog.dom.getElement('offset-child');
   assertEquals(parent, goog.style.getOffsetParent(child));
+}
+
+function testOverflowOffsetParent() {
+  var $ = goog.dom.getElement;
+  var parent = goog.dom.getElement('offset-parent-overflow');
+  var child = goog.dom.getElement('offset-child-overflow');
+  assertEquals(parent, goog.style.getOffsetParent(child));
+}
+
+function testGetViewportPageOffset() {
+  var testViewport = goog.dom.getElement('test-viewport');
+  testViewport.style.height = '5000px';
+  testViewport.style.width = '5000px';
+  var offset = goog.style.getViewportPageOffset(document);
+  assertEquals(0, offset.x);
+  assertEquals(0, offset.y);
+
+  window.scrollTo(0, 100);
+  offset = goog.style.getViewportPageOffset(document);
+  assertEquals(0, offset.x);
+  assertEquals(100, offset.y);
+
+  window.scrollTo(100, 0);
+  offset = goog.style.getViewportPageOffset(document);
+  assertEquals(100, offset.x);
+  assertEquals(0, offset.y);
+}
+
+function testGetsTranslation() {
+  var element = document.getElementById('translation');
+
+  expectedFailures.expectFailureFor(
+      goog.userAgent.IE && !goog.userAgent.product.isVersion(9),
+      'CSS transforms were only introduced in IE9');
+
+  // First check the element is actually translated, and we haven't missed
+  // one of the vendor-specific transform properties
+  var position = goog.style.getClientPosition(element);
+  var translation = goog.style.getCssTranslation(element);
+  var expectedTranslation = new goog.math.Coordinate(20, 30);
+
+  expectedFailures.run(function() {
+    assertObjectEquals(new goog.math.Coordinate(30, 40), position);
+    assertObjectEquals(expectedTranslation, translation);
+  });
 }
 
 function hasVerticalScroll(el) {

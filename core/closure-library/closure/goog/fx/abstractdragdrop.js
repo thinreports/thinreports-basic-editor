@@ -18,6 +18,7 @@
  * Provides functionality for implementing drag and drop classes. Also provides
  * support classes and events.
  *
+ * @author eae@google.com (Emil A Eklund)
  */
 
 goog.provide('goog.fx.AbstractDragDrop');
@@ -56,6 +57,8 @@ goog.require('goog.style');
  * @constructor
  */
 goog.fx.AbstractDragDrop = function() {
+  goog.base(this);
+
   /**
    * List of items that makes up the drag source or drop target.
    * @type {Array.<goog.fx.DragDropItem>}
@@ -238,12 +241,11 @@ goog.fx.AbstractDragDrop.prototype.isInitialized = function() {
 /**
  * Add item to drag object.
  *
- * @param {goog.fx.DragDropItem} item Item to be added.
+ * @param {Element|string} element Dom Node, or string representation of node
+ *     id, to be used as drag source/drop target.
  * @throws Error Thrown if called on instance of abstract class
  */
-goog.fx.AbstractDragDrop.prototype.addItem = function(item) {
-  throw Error('Call to pure virtual method');
-};
+goog.fx.AbstractDragDrop.prototype.addItem = goog.abstractMethod;
 
 
 /**
@@ -371,11 +373,9 @@ goog.fx.AbstractDragDrop.prototype.startDrag = function(event, item) {
   var dragStartEvent = new goog.fx.DragDropEvent(
       goog.fx.AbstractDragDrop.EventType.DRAGSTART, this, this.dragItem_);
   if (this.dispatchEvent(dragStartEvent) == false) {
-    dragStartEvent.dispose();
     this.dragItem_ = null;
     return;
   }
-  dragStartEvent.dispose();
 
   // Get the source element and create a drag element for it.
   var el = item.getCurrentDragElement();
@@ -504,20 +504,17 @@ goog.fx.AbstractDragDrop.prototype.endDrag = function(event) {
         activeTarget.target_, activeTarget.item_, activeTarget.element_,
         clientX, clientY, x, y);
     this.dispatchEvent(dragEvent);
-    dragEvent.dispose();
 
     var dropEvent = new goog.fx.DragDropEvent(
         goog.fx.AbstractDragDrop.EventType.DROP, this, this.dragItem_,
         activeTarget.target_, activeTarget.item_, activeTarget.element_,
         clientX, clientY, x, y, subtarget);
     activeTarget.target_.dispatchEvent(dropEvent);
-    dropEvent.dispose();
   }
 
   var dragEndEvent = new goog.fx.DragDropEvent(
       goog.fx.AbstractDragDrop.EventType.DRAGEND, this, this.dragItem_);
   this.dispatchEvent(dragEndEvent);
-  dragEndEvent.dispose();
 
   goog.events.unlisten(this.dragger_, goog.fx.Dragger.EventType.DRAG,
                        this.moveDrag_, false, this);
@@ -570,11 +567,9 @@ goog.fx.AbstractDragDrop.prototype.disposeDrag = function() {
  * @private
  */
 goog.fx.AbstractDragDrop.prototype.moveDrag_ = function(event) {
-  var x = event.clientX;
-  var y = event.clientY;
-  var scroll = this.getScrollPos();
-  x += scroll.x;
-  y += scroll.y;
+  var position = this.getEventPosition(event);
+  var x = position.x;
+  var y = position.y;
 
   // Check if we're still inside the bounds of the active target, if not fire
   // a dragout event and proceed to find a new target.
@@ -598,7 +593,6 @@ goog.fx.AbstractDragDrop.prototype.moveDrag_ = function(event) {
           goog.fx.AbstractDragDrop.EventType.DRAGOUT, this, this.dragItem_,
           activeTarget.target_, activeTarget.item_, activeTarget.element_);
       this.dispatchEvent(sourceDragOutEvent);
-      sourceDragOutEvent.dispose();
 
       // The event should be dispatched the by target DragDrop so that the
       // target DragDrop can manage these events without having to know what
@@ -616,7 +610,6 @@ goog.fx.AbstractDragDrop.prototype.moveDrag_ = function(event) {
           undefined,
           this.activeSubtarget_);
       activeTarget.target_.dispatchEvent(targetDragOutEvent);
-      targetDragOutEvent.dispose();
     }
     this.activeSubtarget_ = subtarget;
     this.activeTarget_ = null;
@@ -637,7 +630,6 @@ goog.fx.AbstractDragDrop.prototype.moveDrag_ = function(event) {
           activeTarget.target_, activeTarget.item_, activeTarget.element_);
       sourceDragOverEvent.subtarget = subtarget;
       this.dispatchEvent(sourceDragOverEvent);
-      sourceDragOverEvent.dispose();
 
       // The event should be dispatched by the target DragDrop so that the
       // target DragDrop can manage these events without having to know what
@@ -647,7 +639,6 @@ goog.fx.AbstractDragDrop.prototype.moveDrag_ = function(event) {
           activeTarget.target_, activeTarget.item_, activeTarget.element_,
           event.clientX, event.clientY, undefined, undefined, subtarget);
       activeTarget.target_.dispatchEvent(targetDragOverEvent);
-      targetDragOverEvent.dispose();
 
     } else if (!activeTarget) {
       // If no target was found create a dummy one so we won't have to iterate
@@ -732,6 +723,22 @@ goog.fx.AbstractDragDrop.prototype.containerScrollHandler_ = function(e) {
       container.savedScrollTop_ = container.element_.scrollTop;
       container.savedScrollLeft_ = container.element_.scrollLeft;
 
+      // When the container scrolls, it's possible that one of the targets will
+      // move to the region contained by the dummy target. Since we don't know
+      // which sides (if any) of the dummy target are defined by targets
+      // contained by this container, we are conservative and just shrink it.
+      if (this.dummyTarget_ && this.activeTarget_ == this.dummyTarget_) {
+        if (deltaTop > 0) {
+          this.dummyTarget_.box_.top += deltaTop;
+        } else {
+          this.dummyTarget_.box_.bottom += deltaTop;
+        }
+        if (deltaLeft > 0) {
+          this.dummyTarget_.box_.left += deltaLeft;
+        } else {
+          this.dummyTarget_.box_.right += deltaLeft;
+        }
+      }
       for (var j = 0, target; target = container.containedTargets_[j]; j++) {
         var box = target.box_;
         box.top += deltaTop;
@@ -743,6 +750,7 @@ goog.fx.AbstractDragDrop.prototype.containerScrollHandler_ = function(e) {
       }
     }
   }
+  this.dragger_.onScroll_(e);
 };
 
 
@@ -795,8 +803,8 @@ goog.fx.AbstractDragDrop.prototype.getDragElementPosition =
   // Subtract margin from drag element position twice, once to adjust the
   // position given by the original node and once for the drag node.
   var marginBox = goog.style.getMarginBox(el);
-  pos.x += (marginBox.left || 0) * 2;
-  pos.y += (marginBox.top || 0) * 2;
+  pos.x -= (marginBox.left || 0) * 2;
+  pos.y -= (marginBox.top || 0) * 2;
 
   return pos;
 };
@@ -891,7 +899,7 @@ goog.fx.AbstractDragDrop.prototype.calculateTargetBox_ = function(box) {
 /**
  * Creates a dummy target for the given cursor position. The assumption is to
  * create as big dummy target box as possible, the only constraints are:
- * - The dummy targert box cannot overlap any of real target boxes.
+ * - The dummy target box cannot overlap any of real target boxes.
  * - The dummy target has to contain a point with current mouse coordinates.
  *
  * NOTE: For performance reasons the box construction algorithm is kept simple
@@ -905,6 +913,10 @@ goog.fx.AbstractDragDrop.prototype.calculateTargetBox_ = function(box) {
  * - Mouse pointer is in the bounding box of real target boxes.
  * - None of the boxes have negative coordinate values.
  * - Mouse pointer is not contained by any of "real target" boxes.
+ * - For targets inside a scrollable container, the box used is the
+ *   intersection of the scrollable container's box and the target's box.
+ *   This is because the part of the target that extends outside the scrollable
+ *   container should not be used in the clipping calculations.
  *
  * b) Outline
  * - Initialize the fake target to the bounding box of real targets.
@@ -959,6 +971,18 @@ goog.fx.AbstractDragDrop.prototype.maybeCreateDummyTargetForPosition_ =
   for (var i = 0, target; target = this.targetList_[i]; i++) {
     var box = target.box_;
 
+    if (target.scrollableContainer_) {
+      // If the target has a scrollable container, use the intersection of that
+      // container's box and the target's box.
+      var scrollBox = target.scrollableContainer_.box_;
+
+      box = new goog.math.Box(
+          Math.max(box.top, scrollBox.top),
+          Math.min(box.right, scrollBox.right),
+          Math.min(box.bottom, scrollBox.bottom),
+          Math.max(box.left, scrollBox.left));
+    }
+
     // Calculate clipping coordinates for horizontal and vertical axis.
     // The clipping coordinate is calculated by projecting fake target box,
     // the mouse pointer and DnD target box onto an axis and checking how
@@ -966,7 +990,7 @@ goog.fx.AbstractDragDrop.prototype.maybeCreateDummyTargetForPosition_ =
     // mouse pointer. The clipping coordinate cannot be computed and is set to
     // a negative value if the projected DnD target contains the mouse pointer.
 
-    var horizontalClip = -1; // Assume mouse is above or below the DnD box.
+    var horizontalClip = null; // Assume mouse is above or below the DnD box.
     if (x >= box.right) { // Mouse is to the right of the DnD box.
       // Clip the fake box only if the DnD box overlaps it.
       horizontalClip = box.right > fakeTargetBox.left ?
@@ -976,7 +1000,7 @@ goog.fx.AbstractDragDrop.prototype.maybeCreateDummyTargetForPosition_ =
       horizontalClip = box.left < fakeTargetBox.right ?
           box.left : fakeTargetBox.right;
     }
-    var verticalClip = -1;
+    var verticalClip = null;
     if (y >= box.bottom) {
       verticalClip = box.bottom > fakeTargetBox.top ?
           box.bottom : fakeTargetBox.top;
@@ -985,26 +1009,26 @@ goog.fx.AbstractDragDrop.prototype.maybeCreateDummyTargetForPosition_ =
           box.top : fakeTargetBox.bottom;
     }
 
-    // If both clippings are possible (positive values have been set), choose
-    // one that gives us larger distance to mouse pointer (mark the shorter
-    // clipping as impossible, by setting it to negative value).
-    if (horizontalClip >= 0 && verticalClip >= 0) {
+    // If both clippings are possible, choose one that gives us larger distance
+    // to mouse pointer (mark the shorter clipping as impossible, by setting it
+    // to null).
+    if (!goog.isNull(horizontalClip) && !goog.isNull(verticalClip)) {
       if (Math.abs(horizontalClip - x) > Math.abs(verticalClip - y)) {
-        verticalClip = -1;
+        verticalClip = null;
       } else {
-        horizontalClip = -1;
+        horizontalClip = null;
       }
     }
 
     // Clip none or one of fake target box sides (at most one clipping
     // coordinate can be active).
-    if (horizontalClip >= 0) {
+    if (!goog.isNull(horizontalClip)) {
       if (horizontalClip <= x) {
         fakeTargetBox.left = horizontalClip;
       } else {
         fakeTargetBox.right = horizontalClip;
       }
-    } else if (verticalClip >= 0) {
+    } else if (!goog.isNull(verticalClip)) {
       if (verticalClip <= y) {
         fakeTargetBox.top = verticalClip;
       } else {
@@ -1078,9 +1102,22 @@ goog.fx.AbstractDragDrop.prototype.getScrollPos = function() {
 };
 
 
+/**
+ * Get the position of a drag event.
+ * @param {goog.fx.DragEvent} event Drag event.
+ * @return {goog.math.Coordinate} Position of the event.
+ * @protected
+ */
+goog.fx.AbstractDragDrop.prototype.getEventPosition = function(event) {
+  var scroll = this.getScrollPos();
+  return new goog.math.Coordinate(event.clientX + scroll.x,
+                                  event.clientY + scroll.y);
+};
+
+
 /** @override */
 goog.fx.AbstractDragDrop.prototype.disposeInternal = function() {
-  goog.fx.AbstractDragDrop.superClass_.disposeInternal.call(this);
+  goog.base(this, 'disposeInternal');
   this.removeItems();
 };
 
@@ -1107,9 +1144,9 @@ goog.fx.DragDropEvent = function(type, source, sourceItem,
                                  opt_target, opt_targetItem, opt_targetElement,
                                  opt_clientX, opt_clientY, opt_x, opt_y,
                                  opt_subtarget) {
-  // TODO(user): Get rid of all the optional parameters and have the caller set
+  // TODO(eae): Get rid of all the optional parameters and have the caller set
   // the fields directly instead.
-  goog.events.Event.call(this, type);
+  goog.base(this, type);
 
   /**
    * Reference to the source goog.fx.AbstractDragDrop object.
@@ -1177,13 +1214,6 @@ goog.inherits(goog.fx.DragDropEvent, goog.events.Event);
 
 /** @override */
 goog.fx.DragDropEvent.prototype.disposeInternal = function() {
-  goog.fx.DragDropEvent.superClass_.disposeInternal.call(this);
-
-  delete this.dragSource;
-  delete this.dragSourceItem;
-  delete this.dropTarget;
-  delete this.dropTargetItem;
-  delete this.dropTargetElement;
 };
 
 
@@ -1199,6 +1229,7 @@ goog.fx.DragDropEvent.prototype.disposeInternal = function() {
  * @constructor
  */
 goog.fx.DragDropItem = function(element, opt_data) {
+  goog.base(this);
 
   /**
    * Reference to drag source/target element
@@ -1349,7 +1380,7 @@ goog.fx.DragDropItem.prototype.mouseMove_ = function(event) {
   var distanceAboveThreshold =
       distance > goog.fx.AbstractDragDrop.initDragDistanceThreshold;
   var mouseOutOnDragElement = event.type == goog.events.EventType.MOUSEOUT &&
-      event.relatedTarget == currentDragElement;
+      event.target == currentDragElement;
   if (distanceAboveThreshold || mouseOutOnDragElement) {
     goog.events.unlisten(currentDragElement, goog.events.EventType.MOUSEMOVE,
                          this.mouseMove_, false, this);

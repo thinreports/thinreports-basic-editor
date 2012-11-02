@@ -93,6 +93,28 @@ goog.string.linkify.linkifyPlainText = function(text, opt_attributes) {
 
 
 /**
+ * Gets the first URI in text.
+ * @param {string} text Plain text.
+ * @return {string} The first URL, or an empty string if not found.
+ */
+goog.string.linkify.findFirstUrl = function(text) {
+  var link = text.match(goog.string.linkify.URL_);
+  return link != null ? link[0] : '';
+};
+
+
+/**
+ * Gets the first email address in text.
+ * @param {string} text Plain text.
+ * @return {string} The first email address, or an empty string if not found.
+ */
+goog.string.linkify.findFirstEmail = function(text) {
+  var email = text.match(goog.string.linkify.EMAIL_);
+  return email != null ? email[0] : '';
+};
+
+
+/**
  * @type {string}
  * @const
  * @private
@@ -116,7 +138,7 @@ goog.string.linkify.ENDS_WITH_PUNCTUATION_RE_ =
  * @private
  */
 goog.string.linkify.ACCEPTABLE_URL_CHARS_ =
-    goog.string.linkify.ENDING_PUNCTUATION_CHARS_ + '\\w/~%&=+#-@';
+    goog.string.linkify.ENDING_PUNCTUATION_CHARS_ + '\\w/~%&=+#-@!';
 
 
 /**
@@ -186,7 +208,7 @@ goog.string.linkify.TOP_LEVEL_DOMAIN_ =
  * @private
  */
 goog.string.linkify.EMAIL_ =
-    '(?:mailto:)?([\\w\\+\\-]+@[A-Za-z0-9\\.-]+\\.' +
+    '(?:mailto:)?([\\w.+-]+@[A-Za-z0-9.-]+\\.' +
     goog.string.linkify.TOP_LEVEL_DOMAIN_ + ')';
 
 
@@ -201,8 +223,11 @@ goog.string.linkify.EMAIL_ =
  * @private
  */
 goog.string.linkify.FIND_LINKS_RE_ = new RegExp(
-    '(.*?)\\b(' +
-    goog.string.linkify.EMAIL_ + '|' +
-    goog.string.linkify.URL_ + '|$)',
+    // Match everything including newlines.
+    '([\\S\\s]*?)(' +
+    // Match email after a word break.
+    '\\b' + goog.string.linkify.EMAIL_ + '|' +
+    // Match url after a workd break.
+    '\\b' + goog.string.linkify.URL_ + '|$)',
     'g');
 

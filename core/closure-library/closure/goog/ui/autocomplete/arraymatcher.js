@@ -13,153 +13,26 @@
 // limitations under the License.
 
 /**
- * @fileoverview Basic class for matching words in an array.
+ * @fileoverview This is a stub for backward compatibility.
+ * For actual documentation, please see {@link goog.ui.ac.ArrayMatcher}.
  *
  */
 
-
 goog.provide('goog.ui.AutoComplete.ArrayMatcher');
 
-goog.require('goog.iter');
-goog.require('goog.string');
 goog.require('goog.ui.AutoComplete');
+goog.require('goog.ui.ac.ArrayMatcher');
 
 
 
+// TODO(user): Remove this after known usages are replaced.
 /**
- * Basic class for matching words in an array
+ * This is a stub for backward compatibility. For actual documentation,
+ * please see {@link goog.ui.ac.ArrayMatcher}.
+ *
  * @constructor
- * @param {Array} rows Dictionary of items to match.  Can be objects if they
- *     have a toString method that returns the value to match against.
- * @param {boolean=} opt_noSimilar if true, do not do similarity matches for the
- *     input token against the dictionary.
+ * @param {Array} rows Rows.
+ * @param {boolean=} opt_noSimilar Opt_noSimilar.
+ * @deprecated Use {@link goog.ui.ac.ArrayMatcher} instead.
  */
-goog.ui.AutoComplete.ArrayMatcher = function(rows, opt_noSimilar) {
-  this.rows_ = rows;
-  this.useSimilar_ = !opt_noSimilar;
-};
-
-
-/**
- * Replaces the rows that this object searches over.
- * @param {Array} rows Dictionary of items to match.
- */
-goog.ui.AutoComplete.ArrayMatcher.prototype.setRows = function(rows) {
-  this.rows_ = rows;
-};
-
-
-/**
- * Function used to pass matches to the autocomplete
- * @param {string} token Token to match.
- * @param {number} maxMatches Max number of matches to return.
- * @param {Function} matchHandler callback to execute after matching.
- * @param {string=} opt_fullString The full string from the input box.
- */
-goog.ui.AutoComplete.ArrayMatcher.prototype.requestMatchingRows =
-    function(token, maxMatches, matchHandler, opt_fullString) {
-
-  var matches = this.getPrefixMatches(token, maxMatches);
-
-  if (matches.length == 0 && this.useSimilar_) {
-    matches = this.getSimilarRows(token, maxMatches);
-  }
-  matchHandler(token, matches);
-};
-
-
-/**
- * Matches the token against the start of words in the row.
- * @param {string} token Token to match.
- * @param {number} maxMatches Max number of matches to return.
- * @return {Array} Rows that match.
- */
-goog.ui.AutoComplete.ArrayMatcher.prototype.getPrefixMatches =
-    function(token, maxMatches) {
-  var matches = [];
-
-  if (token != '') {
-    var escapedToken = goog.string.regExpEscape(token);
-    var matcher = new RegExp('(^|\\W+)' + escapedToken, 'i');
-
-    goog.iter.some(this.rows_, function(row) {
-      if (String(row).match(matcher)) {
-        matches.push(row);
-      }
-      return matches.length >= maxMatches;
-    });
-  }
-  return matches;
-};
-
-
-/**
- * Matches the token against similar rows, by calculating "distance" between the
- * terms.
- * @param {string} token Token to match.
- * @param {number} maxMatches Max number of matches to return.
- * @return {Array} The best maxMatches rows.
- */
-goog.ui.AutoComplete.ArrayMatcher.prototype.getSimilarRows =
-    function(token, maxMatches) {
-
-  var results = [];
-
-  goog.iter.forEach(this.rows_, function(row, index) {
-    var str = token.toLowerCase();
-    var txt = String(row).toLowerCase();
-    var score = 0;
-
-    if (txt.indexOf(str) != -1) {
-      score = parseInt((txt.indexOf(str) / 4).toString(), 10);
-
-    } else {
-      var arr = str.split('');
-
-      var lastPos = -1;
-      var penalty = 10;
-
-      for (var i = 0, c; c = arr[i]; i++) {
-        var pos = txt.indexOf(c);
-
-        if (pos > lastPos) {
-          var diff = pos - lastPos - 1;
-
-          if (diff > penalty - 5) {
-            diff = penalty - 5;
-          }
-
-          score += diff;
-
-          lastPos = pos;
-        } else {
-          score += penalty;
-          penalty += 5;
-        }
-      }
-    }
-
-    if (score < str.length * 6) {
-      results.push({
-        str: row,
-        score: score,
-        index: index
-      });
-    }
-  });
-
-  results.sort(function(a, b) {
-    var diff = a.score - b.score;
-    if (diff != 0) {
-      return diff;
-    }
-    return a.index - b.index;
-  });
-
-  var matches = [];
-  for (var i = 0; i < maxMatches && i < results.length; i++) {
-    matches.push(results[i].str);
-  }
-
-  return matches;
-};
+goog.ui.AutoComplete.ArrayMatcher = goog.ui.ac.ArrayMatcher;

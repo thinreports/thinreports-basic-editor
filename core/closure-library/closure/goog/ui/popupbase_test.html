@@ -7,6 +7,7 @@ Use of this source code is governed by the Apache License, Version 2.0.
 See the COPYING file for details.
 -->
 <!--
+  Author: gboyer@google.com (Garrett Boyer)
 -->
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,6 +18,7 @@ See the COPYING file for details.
   goog.require('goog.events.EventType');
   goog.require('goog.fx.Transition');
   goog.require('goog.fx.Transition.EventType');
+  goog.require('goog.fx.css3');
   goog.require('goog.ui.Popup');
   goog.require('goog.testing.MockClock');
   goog.require('goog.testing.events');
@@ -240,6 +242,49 @@ function testOnHideTransition() {
   assertTrue(hideHandlerCalled);
 }
 
+function testSetVisibleWorksCorrectlyWithTransitions() {
+  popup.setTransition(
+      goog.fx.css3.fadeIn(popup.getElement(), 1),
+      goog.fx.css3.fadeOut(popup.getElement(), 1));
+
+  // Consecutive calls to setVisible works without needing to wait for
+  // transition to finish.
+  popup.setVisible(true);
+  assertTrue(popup.isVisible());
+  popup.setVisible(false);
+  assertFalse(popup.isVisible());
+  clock.tick(1100);
+
+  // Calling setVisible(true) immediately changed the state to visible.
+  popup.setVisible(true);
+  assertTrue(popup.isVisible());
+  clock.tick(1100);
+
+  // Consecutive calls to setVisible, in opposite order.
+  popup.setVisible(false);
+  popup.setVisible(true);
+  assertTrue(popup.isVisible());
+  clock.tick(1100);
+
+  // Calling setVisible(false) immediately changed the state to not visible.
+  popup.setVisible(false);
+  assertFalse(popup.isVisible());
+  clock.tick(1100);
+}
+
+function testWasRecentlyVisibleWorksCorrectlyWithTransitions() {
+  popup.setTransition(
+      goog.fx.css3.fadeIn(popup.getElement(), 1),
+      goog.fx.css3.fadeOut(popup.getElement(), 1));
+
+  popup.setVisible(true);
+  clock.tick(1100);
+  popup.setVisible(false);
+  assertTrue(popup.isOrWasRecentlyVisible());
+  clock.tick(goog.ui.PopupBase.DEBOUNCE_DELAY_MS);
+  assertFalse(popup.isOrWasRecentlyVisible());
+}
+
 
 
 /**
@@ -261,7 +306,7 @@ MockTransition.prototype.play = function() {
 MockTransition.prototype.stop = goog.nullFunction;
 
 
-// TODO(user): Write better unit tests for click and cross-iframe dismissal.
+// TODO(gboyer): Write better unit tests for click and cross-iframe dismissal.
 
 </script>
 </body>
