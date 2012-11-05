@@ -1156,7 +1156,7 @@ thin.editor.Layout.prototype.getShapeForShapeId = function(shapeId, opt_shapeIdM
  */
 thin.editor.Layout.prototype.createClipPath = function(model, target) {
   var element = this.createSvgElement('clipPath');
-  this.addDef_(String(goog.graphics.SvgGraphics.nextDefId_), element);
+  this.addDef(String(goog.graphics.SvgGraphics.nextDefId_), element);
   return new thin.editor.ClipPath(element, model, target, this);
 };
 
