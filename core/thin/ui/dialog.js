@@ -115,10 +115,6 @@ thin.ui.Dialog.prototype.focus = function() {
 thin.ui.Dialog.prototype.onShow = function() {
   goog.base(this, 'onShow');
   
-  this.getHandler().
-      listen(this.getElement(), goog.events.EventType.KEYDOWN, this.onKey_).
-      listen(this.getElement(), goog.events.EventType.KEYPRESS, this.onKey_);
-  
   this.enableButtonSetActionHandling_(true);
   this.enableBackgroundActionHandling_(true);
 };
@@ -126,10 +122,6 @@ thin.ui.Dialog.prototype.onShow = function() {
 
 /** @override */
 thin.ui.Dialog.prototype.onHide = function() {
-  this.getHandler().
-      unlisten(this.getElement(), goog.events.EventType.KEYDOWN, this.onKey_).
-      unlisten(this.getElement(), goog.events.EventType.KEYPRESS, this.onKey_);
-      
   this.enableButtonSetActionHandling_(false);
   this.enableBackgroundActionHandling_(false);
   
@@ -230,6 +222,9 @@ thin.ui.Dialog.prototype.getButtonSetWrapper = function() {
 thin.ui.Dialog.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
   
+  this.getHandler().unlisten(this.buttonEl_, goog.events.EventType.CLICK,
+      this.onButtonClick_);
+
   this.setWidth(this.getWidth());
 };
 
