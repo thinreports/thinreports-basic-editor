@@ -112,33 +112,28 @@ thin.ui.Dialog.prototype.focus = function() {
 
 
 /** @override */
-thin.ui.Dialog.prototype.setVisibleInternal_ = function(e) {
-  if (e.target != this) {
-    return;
-  }
+thin.ui.Dialog.prototype.onShow = function() {
+  goog.base(this, 'onShow');
   
-  var visible = this.isVisible();
+  this.getHandler().
+      listen(this.getElement(), goog.events.EventType.KEYDOWN, this.onKey_).
+      listen(this.getElement(), goog.events.EventType.KEYPRESS, this.onKey_);
+  
+  this.enableButtonSetActionHandling_(true);
+  this.enableBackgroundActionHandling_(true);
+};
 
-  if (visible) {
-    this.getHandler().
-        listen(this.getElement(), goog.events.EventType.KEYDOWN, this.onKey_).
-        listen(this.getElement(), goog.events.EventType.KEYPRESS, this.onKey_);
-    
-    this.enableButtonSetActionHandling_(true);
-    this.enableBackgroundActionHandling_(true);
-  } else {
-    this.getHandler().
-        unlisten(this.getElement(), goog.events.EventType.KEYDOWN, this.onKey_).
-        unlisten(this.getElement(), goog.events.EventType.KEYPRESS, this.onKey_);
-        
-    this.enableButtonSetActionHandling_(false);
-    this.enableBackgroundActionHandling_(false);
-    
-    this.dispatchEvent(goog.ui.Dialog.EventType.AFTER_HIDE);
-    if (this.disposeOnHide_) {
-      this.dispose();
-    }
-  }
+
+/** @override */
+thin.ui.Dialog.prototype.onHide = function() {
+  this.getHandler().
+      unlisten(this.getElement(), goog.events.EventType.KEYDOWN, this.onKey_).
+      unlisten(this.getElement(), goog.events.EventType.KEYPRESS, this.onKey_);
+      
+  this.enableButtonSetActionHandling_(false);
+  this.enableBackgroundActionHandling_(false);
+  
+  goog.base(this, 'onHide');
 };
 
 
