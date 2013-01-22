@@ -485,9 +485,10 @@ thin.editor.TextShape.prototype.setTextDecoration = function(underline, linethro
 
 
 /**
+ * @param {boolean=} opt_onlyFirstLine
  * @return {string}
  */
-thin.editor.TextShape.prototype.getTextContent = function() {
+thin.editor.TextShape.prototype.getTextContent = function(opt_onlyFirstLine) {
   if (!goog.isString(this.textContent_)) {
     var newTextContent = '';
     goog.array.forEach(this.getTextLineShapes(), 
@@ -495,20 +496,79 @@ thin.editor.TextShape.prototype.getTextContent = function() {
         if (lineCount == 0) {
           newTextContent += textlineShape.getText();
         } else {
-          newTextContent += '\n' + textlineShape.getText();
+          newTextContent += "\n" + textlineShape.getText();
         }
       });
-    this.setTextContent(newTextContent);
+    this.textContent_ = newTextContent;
   }
-  return this.textContent_;
+
+  if (opt_onlyFirstLine) {
+    return this.textContent_.split("\n")[0];
+  } else {
+    return this.textContent_;
+  }
 };
 
 
 /**
- * @param {string} textline
+ * @return {string}
  */
-thin.editor.TextShape.prototype.setTextContent = function(textline) {
-  this.textContent_ = textline;
+thin.editor.TextShape.prototype.getFirstTextLine = function() {
+  return this.getTextContent(true);
+};
+
+
+/**
+ * @param {string} textLine
+ */
+thin.editor.TextShape.prototype.updateFirstTextLine = function(textLine) {
+  this.setTextContent(textLine, true);
+};
+
+
+/**
+ * @param {string} textContent
+ * @param {boolean=} opt_toFirstLine
+ */
+thin.editor.TextShape.prototype.setTextContent = function(textContent, opt_toFirstLine) {
+  if (opt_toFirstLine) {
+    var content = this.getTextContent().split("\n");
+    content.shift();
+    if (textContent) {
+      content.unshift(textContent);
+    }
+    textContent = content.join("\n");
+  }
+  this.createTextContent(textContent);
+  this.updateDecoration();
+  this.updateSize();
+  this.updatePosition();
+
+  this.textContent_ = textContent;
+}
+
+
+thin.editor.TextShape.prototype.updateDecoration = function() {
+  this.setTextDecoration(this.isFontUnderline(), 
+                         this.isFontLinethrough());
+};
+
+
+/**
+ * @param {number=} opt_baseWidth
+ * @param {number=} opt_baseHeight
+ */
+thin.editor.TextShape.prototype.updateSize = function(opt_baseWidth, opt_baseHeight) {
+  var width = opt_baseWidth || this.getWidth();
+  var height = opt_baseHeight || this.getHeight();
+  this.setWidth(this.getAllowWidth(width));
+  this.setHeight(this.getAllowHeight(height));
+};
+
+
+thin.editor.TextShape.prototype.updatePosition = function() {
+  this.setLeft(this.getLeft());
+  this.setTop(this.getTop());
 };
 
 
@@ -524,7 +584,7 @@ thin.editor.TextShape.prototype.createTextContent = function(textContent) {
   goog.array.clear(this.textLineContainer_);
 
   var layout = this.getLayout();
-  this.setTextContent(textContent);
+  this.textContent_ = textContent;
   
   var textlineShape;
   goog.array.forEach(textContent.split(/\n/), goog.bind(function(content, lineCount) {
@@ -728,6 +788,11 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
+  var textContentProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_text_content'));
+  textContentProperty.addEventListener(propEventType.CHANGE,
+      this.setTextContentPropertyUpdate, false, this);
+
+  proppane.addProperty(textContentProperty, baseGroup, 'text-content');
   
   var fontGroup = proppane.addGroup(thin.t('property_group_font'));
   
@@ -939,6 +1004,29 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
 
 
 /**
+ * @param {e} thin.ui.PropertyPane.PropertyEvent
+ */
+thin.editor.TextShape.prototype.setTextContentPropertyUpdate = function(e) {
+  var scope = this;
+  var proppane = thin.ui.getComponent('proppane');
+  var text = e.target.getValue();
+  var captureText = this.getTextContent();
+  
+  this.getLayout().getWorkspace().normalVersioning(function(version) {
+    version.upHandler(function() {
+      this.updateFirstTextLine(text);
+      proppane.getPropertyControl('text-content').setValue(text || this.getFirstTextLine());
+    }, scope);
+    
+    version.downHandler(function() {
+      this.setTextContent(captureText);
+      proppane.getPropertyControl('text-content').setValue(this.getFirstTextLine());
+    }, scope);
+  });
+};
+
+
+/**
  * @return {Object}
  */
 thin.editor.TextShape.prototype.getProperties = function() {
@@ -953,6 +1041,7 @@ thin.editor.TextShape.prototype.getProperties = function() {
     'width': this.getWidth(),
     'height': this.getHeight(),
     'display': this.getDisplay(),
+    'text-content': this.getFirstTextLine(),
     'font-color': this.getFill().getColor(),
     'font-family': this.getFontFamily(),
     'font-size': this.getFontSize(),
@@ -983,6 +1072,7 @@ thin.editor.TextShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('width').setValue(properties['width']);
     proppane.getPropertyControl('height').setValue(properties['height']);
     proppane.getPropertyControl('display').setChecked(properties['display']);
+    proppane.getPropertyControl('text-content').setValue(properties['text-content']);
     
     var fontColor = properties['font-color'];
     if (thin.isExactlyEqual(fontColor, thin.editor.ModuleShape.NONE)) {

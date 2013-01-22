@@ -96,6 +96,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   field_width: 'Width',
   field_height: 'Height',
   field_display: 'Display',
+  field_text_content: 'Text (First line)',
   field_fill_color: 'Fill Color',
   field_stroke_color: 'Stroke Color',
   field_stroke_width: 'Stroke Width',

@@ -96,6 +96,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   field_width: '幅',
   field_height: '高さ',
   field_display: '表示',
+  field_text_content: 'テキスト（1行目）',
   field_fill_color: '塗り',
   field_stroke_color: '線の色',
   field_stroke_width: '線の幅',
