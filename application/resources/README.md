@@ -19,7 +19,7 @@ Currently releases are Japanese and English versions.
 Please contribute to translate in your language! See TRANSLATION.md.
 
 **English version**
-![English version](http://a2.sphotos.ak.fbcdn.net/hphotos-ak-ash4/289975_413479922037106_573851698_o.jpg?dl=1)
+![English version](http://sphotos-b.ak.fbcdn.net/hphotos-ak-snc6/251812_413479922037106_573851698_n.jpg)
 
 ### Auto generation of the specification
 
