@@ -2587,13 +2587,11 @@ thin.editor.Action.prototype.actionTextEdit = function(opt_isDraw) {
        */
       var updateTextContent = function(textContent) {
         targetTextShape.createTextContent(textContent);
-        targetTextShape.setTextDecoration(targetTextShape.isFontUnderline(), 
-                                          targetTextShape.isFontLinethrough());
-        targetTextShape.setWidth(targetTextShape.getAllowWidth(captureWidth));
-        targetTextShape.setHeight(targetTextShape.getAllowHeight(captureHeight));
-        targetTextShape.setLeft(targetTextShape.getLeft());
-        targetTextShape.setTop(targetTextShape.getTop());
+        targetTextShape.updateDecoration();
+        targetTextShape.updateSize(captureWidth, captureHeight);
+        targetTextShape.updatePosition();
         targetTextShape.updateProperties();
+
         guide.adjustToTargetShapeBounds();
       }
       
