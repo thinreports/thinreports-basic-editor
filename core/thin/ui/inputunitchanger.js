@@ -41,7 +41,8 @@ thin.ui.InputUnitChanger = function(opt_label) {
    * @type {thin.ui.InputUnitChanger.Unit}
    * @private
    */
-  this.unit_ = thin.ui.InputUnitChanger.Unit.PX;
+  this.unit_ = /** @type {thin.ui.InputUnitChanger.Unit} */ (thin.settings.get('default_unit'))
+      || thin.ui.InputUnitChanger.Unit.PX;
   
   this.initControls_(opt_label);
 };

@@ -1275,12 +1275,29 @@ thin.boot = function() {
       languageSelectbox.setWidth(152);
       languageSelectbox.render(goog.dom.getElement('dialog-preference-language'));
 
+      var defaultUnitSelectbox = new thin.ui.Select();
+      defaultUnitSelectbox.setTextAlignLeft();
+      dialog.addChild(defaultUnitSelectbox, false);
+
+      var units = goog.object.getValues(/** @type {Object} */ (thin.ui.InputUnitChanger.Unit));
+
+      goog.array.forEach(units, function(unit) {
+        defaultUnitSelectbox.addItem(new thin.ui.Option(unit));
+      });
+
+      defaultUnitSelectbox.setWidth(60);
+      defaultUnitSelectbox.setValue(thin.settings.getDefaultUnit());
+      defaultUnitSelectbox.render(goog.dom.getElement('dialog-preference-default-unit'));
+
       dialog.decorate(goog.dom.getElement('dialog-preference'));
       dialog.addEventListener(goog.ui.Dialog.EventType.SELECT, function(e) {
         if (e.isOk()) {
           // update locale
           var rawLocale = thin.settings.get('locale');
-          thin.settings.set('locale', languageSelectbox.getValue());
+          thin.settings.set('locale', /** @type {string} */ (languageSelectbox.getValue()));
+
+          // update default unit
+          thin.settings.setDefaultUnit(/** @type {string} */ (defaultUnitSelectbox.getValue()));
 
           // when has been changed
           if (thin.$('getCurrentInternalLocale()') != thin.settings.get('locale')) {

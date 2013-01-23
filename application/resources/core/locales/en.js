@@ -130,6 +130,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   field_list_footer: 'Footer',
   field_position: 'Position', 
   field_language: 'Locale', 
+  field_default_unit: 'Default Unit',
 
   button_new_report: 'New',
   button_save: 'Save',

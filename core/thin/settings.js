@@ -49,6 +49,23 @@ thin.Settings.DEFINITION = [
 ];
 
 
+/**
+ * @param {string} unit
+ */
+thin.Settings.prototype.setDefaultUnit = function(unit) {
+  this.set('default_unit', unit);
+};
+
+
+/**
+ * @return {string}
+ */
+thin.Settings.prototype.getDefaultUnit = function() {
+  return this.get('default_unit')
+      || /** @type {string} */ (thin.ui.InputUnitChanger.Unit.PX);
+};
+
+
 /** @override */
 thin.Settings.prototype.set = function(key, value) {
   this.validateKey_(key);

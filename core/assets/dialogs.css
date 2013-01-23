@@ -126,6 +126,13 @@
 }
 
 /**
+ * Preference
+ */
+.thin-dialog-preference .thin-dialogs-setting {
+  margin-bottom: 5px;
+}
+
+/**
  * About
  */
 .thin-dialog-about .thin-dialog-content {
