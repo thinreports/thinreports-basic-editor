@@ -32,15 +32,21 @@ goog.addSingletonGetter(thin.Settings);
 
 
 /**
- * @type {Object}
+ * @type {Array}
  * @const
  */
-thin.Settings.DEFINITION = {
-  'locale': 'System locale', 
-  'last_image_path': 'The directory of path that accessed image file at the last', 
-  'last_layout_doc_path': 'The directory of path that saved the layout definition file at the last', 
-  'last_layout_path': 'The directory of path that accessed layout file at the last'
-};
+thin.Settings.DEFINITION = [
+  // Default unit.
+  'default_unit', 
+  // System locale.
+  'locale',
+  // The directory of path that accessed image file at the last.
+  'last_image_path', 
+  // The directory of path that saved the layout definition file at the last.
+  'last_layout_doc_path', 
+  // The directory of path that accessed layout file at the last.
+  'last_layout_path'
+];
 
 
 /** @override */
@@ -62,8 +68,7 @@ thin.Settings.prototype.get = function(key) {
  * @private
  */
 thin.Settings.prototype.validateKey_ = function(key) {
-  var definitions = goog.object.getKeys(thin.Settings.DEFINITION);
-  if (!goog.array.contains(definitions, key)) {
+  if (!goog.array.contains(thin.Settings.DEFINITION, key)) {
     throw new Error('Invalid configuration key');
   }
 };
