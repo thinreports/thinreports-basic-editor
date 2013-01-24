@@ -37,7 +37,7 @@ thin.editor.Cursor = function(type, opt_isUri) {
 thin.editor.Cursor.Type = {
   'DEFAULT': 'default',
   'CROSSHAIR': 'crosshair',
-  'MOVE': 'move',
+  'MOVE': 'cell',
   'TLEFT': 'nw-resize',
   'TCENTER': 'n-resize',
   'TRIGHT': 'ne-resize',
