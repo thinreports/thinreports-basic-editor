@@ -780,7 +780,7 @@ thin.boot = function() {
     var toolZoomRate = toolbar.setupChild('zoom-rate', 
         new thin.ui.ComboBox(), dom.getElement('tbar-zoom-rate'), 
         function(combobox) {
-          var zoomRateList = ['25', '50', '75', '100', '150', '200'];
+          var zoomRateList = ['25', '50', '75', '100', '150', '200', '400', '600'];
           var comboboxItem;
           goog.array.forEach(zoomRateList, function(zoomRate) {
             comboboxItem = new thin.ui.ComboBoxItem(zoomRate);
