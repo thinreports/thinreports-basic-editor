@@ -1189,3 +1189,13 @@ thin.editor.ModuleShape.prototype.setSectionEnabled = function(
     }, scope);
   });
 };
+
+
+/**
+ * @this {goog.graphics.Element}
+ * @param {judgement_box} goog.math.Rect
+ * @return {boolean}
+ */
+thin.editor.ModuleShape.prototype.isIntersects = function(judgement_box) {
+  return goog.math.Box.intersects(judgement_box, this.getBoxSize());
+};

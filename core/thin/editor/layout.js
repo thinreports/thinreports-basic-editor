@@ -1095,21 +1095,10 @@ thin.editor.Layout.prototype.calculateActiveShapeBounds = function(shapes) {
  * @return {Array}
  */
 thin.editor.Layout.prototype.getActiveShapeFromSelectRange = function(boxSize, shapes) {
-  var left = boxSize.left;
-  var top = boxSize.top;
-  var right = boxSize.right;
-  var bottom = boxSize.bottom;
-  
-  var box;
   var newShapes = [];
   goog.array.forEach(shapes, function(shape, i) {
-    box = shape.getBoxSize();
-    if (left <= box.left && top <= box.top &&
-    right >= box.right &&
-    bottom >= box.bottom) {
-      if (!shape.instanceOfListShape()) {
-        goog.array.insertAt(newShapes, shape, i);
-      }
+    if (!shape.instanceOfListShape() && shape.isIntersects(boxSize)) {
+      goog.array.insertAt(newShapes, shape, i);
     }
   });
   return newShapes;
