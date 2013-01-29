@@ -191,7 +191,7 @@ thin.editor.ImageShape.prototype.adjustToAllowSize = function() {
   var element = this.getElement();
   element.removeAttribute('width');
   element.removeAttribute('height');
-  this.setNaturalSize(element.clientWidth, element.clientHeight);
+  this.setNaturalSize(this.file_.getWidth(), this.file_.getHeight());
   
   var allowSize = this.getAllowSize(this.getNaturalWidth(), this.getNaturalHeight());
   this.setWidth(allowSize.width);
@@ -457,6 +457,7 @@ thin.editor.ImageShape.prototype.setFileInternal = function(file) {
 thin.editor.ImageShape.prototype.setFile = function(file) {
   this.setFileInternal(file);
   this.setSource(file.getContent());
+
 };
 
 

@@ -21,6 +21,7 @@
 #include <QFile>
 #include <QByteArray>
 #include <QBuffer>
+#include <QImage>
 
 
 JsExtImage::JsExtImage(QWidget *parent) :
@@ -38,4 +39,14 @@ QString JsExtImage::encodeBase64(const QString &fileName)
         return image.toBase64();
     }
     return "";
+}
+
+int JsExtImage::getWidth(const QString &fileName)
+{
+    return QImage(fileName).width();
+}
+
+int JsExtImage::getHeight(const QString &fileName)
+{
+    return QImage(fileName).height();
 }

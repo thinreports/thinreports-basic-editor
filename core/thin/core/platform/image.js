@@ -25,3 +25,25 @@ thin.core.platform.Image.getBase64EncodeString = function(path) {
             thin.core.platform.callNativeFunction(
                 'platform', 'Image', 'encodeBase64', [path]));
 };
+
+
+/**
+ * @param {string} path
+ * @return {number}
+ */
+thin.core.platform.Image.getWidth = function(path) {
+  return /** @type {number} */ (
+            thin.core.platform.callNativeFunction(
+                'platform', 'Image', 'getWidth', [path]));
+};
+
+
+/**
+ * @param {string} path
+ * @return {number}
+ */
+thin.core.platform.Image.getHeight = function(path) {
+  return /** @type {number} */ (
+            thin.core.platform.callNativeFunction(
+                'platform', 'Image', 'getHeight', [path]));
+};

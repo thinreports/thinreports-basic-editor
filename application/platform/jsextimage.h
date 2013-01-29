@@ -33,6 +33,8 @@ signals:
 
 public slots:
     QString encodeBase64(const QString &fileName);
+    int getWidth(const QString &fileName);
+    int getHeight(const QString &fileName);
 };
 
 #endif // JSEXTIMAGE_H

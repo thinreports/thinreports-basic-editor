@@ -70,6 +70,20 @@ thin.editor.ImageFile.prototype.content_;
 
 
 /**
+ * @type {number}
+ * @private
+ */
+thin.editor.ImageFile.prototype.width_;
+
+
+/**
+ * @type {number}
+ * @private
+ */
+thin.editor.ImageFile.prototype.height_;
+
+
+/**
  * @param {string} path
  * @return {number}
  * @private
@@ -157,6 +171,28 @@ thin.editor.ImageFile.openDialog = function(opt_path) {
  */
 thin.editor.ImageFile.prototype.getPath = function() {
   return this.file_.getPath();
+};
+
+
+/**
+ * @return {number}
+ */
+thin.editor.ImageFile.prototype.getWidth = function() {
+  if (!goog.isDef(this.width_)) {
+    this.width_ = thin.core.platform.Image.getWidth(this.getPath());
+  }
+  return this.width_;
+};
+
+
+/**
+ * @return {number}
+ */
+thin.editor.ImageFile.prototype.getHeight = function() {
+  if (!goog.isDef(this.height_)) {
+    this.height_ = thin.core.platform.Image.getHeight(this.getPath());
+  }
+  return this.height_;
 };
 
 
