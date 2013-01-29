@@ -2713,7 +2713,7 @@ thin.editor.Action.prototype.actionImageEdit = function() {
           targetImageShape.updateProperties();
           guide.adjustToTargetShapeBounds();
 
-          thin.ui.Message.alert('画像ファイルの読み込みに失敗しました。', 'Error', 
+          thin.ui.Message.alert(thin.t('error_failed_to_load_image'), 'Error', 
             function(e) {
               workspace.focusElement(e);
             });
@@ -2728,7 +2728,7 @@ thin.editor.Action.prototype.actionImageEdit = function() {
     validDelay.start();
     
   } else if (isFileExist && !isValid) {
-    thin.ui.Message.alert('画像ファイルの読み込みに失敗しました。', 'Error', 
+    thin.ui.Message.alert(thin.t('error_failed_to_load_image'), 'Error', 
         function(e) {
           workspace.focusElement(e);
         });

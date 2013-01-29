@@ -192,6 +192,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   error_can_not_edit_layout_file: 'このレイアウトファイルは、互換性が無いため編集することができません。\n\n編集可能なバージョン: {$required}\nレイアウトファイルのバージョン: {$version}',
   error_unknown: '予期しないエラーが発生しました。',
   error_invalid_layout_file: 'レイアウトファイルの内容に異常が検出されたため開くことができません。',
+  error_failed_to_load_image: '画像ファイルの読み込みに失敗しました。',
 
   notice_no_shapes: 'オブジェクトはありません',
   warning_discard_changes: '保存していないレイアウトがある場合は必ず保存して下さい。', 

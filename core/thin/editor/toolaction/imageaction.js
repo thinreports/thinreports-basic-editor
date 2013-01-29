@@ -79,7 +79,7 @@ thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
           workspace.undo();
           scope.commonEndAction(e, outline, handler, captureActiveForStart, true);
           delay.dispose();
-          thin.ui.Message.alert('画像ファイルの読み込みに失敗しました。', 'Error', 
+          thin.ui.Message.alert(thin.t('error_failed_to_load_image'), 'Error', 
               function(e) {
                 workspace.focusElement(e);
               });
@@ -92,7 +92,7 @@ thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
     delay.start();
   } else {
     if (isFileExist && !isValid) {
-      thin.ui.Message.alert('画像ファイルの読み込みに失敗しました。', 'Error', 
+      thin.ui.Message.alert(thin.t('error_failed_to_load_image'), 'Error', 
           function(e) {
             workspace.focusElement(e);
           });

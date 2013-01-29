@@ -192,6 +192,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   error_can_not_edit_layout_file: 'This layout file cannot be opened because it is incompatible.\n\nCompatible versions: {$required}\nCurrent version: {$version}',
   error_unknown: 'An unexpected error occurred.',
   error_invalid_layout_file: 'This layout file cannot be opened because has problem.',
+  error_failed_to_load_image: 'Failed to load image.',
 
   notice_no_shapes: 'No shapes',
   warning_discard_changes: 'If you have unsaved files, the changes will be discarded. Please be sure to save.', 
