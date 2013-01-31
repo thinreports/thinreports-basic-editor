@@ -35,6 +35,13 @@ goog.mixin(thin.editor.LineOutline.prototype, thin.editor.ModuleOutline.prototyp
 
 
 /**
+ * @type {number}
+ * @private
+ */
+thin.editor.LineOutline.THICK_STROKE_RATE_ = 1.3;
+
+
+/**
  * @param {goog.graphics.Element} shape
  */
 thin.editor.LineOutline.prototype.setTargetShape = function(shape) {
@@ -79,6 +86,12 @@ thin.editor.LineOutline.prototype.setBoundsByCoordinate = function(startPosX, st
  */
 thin.editor.LineOutline.prototype.toShape = function() {
   return this.getLayout().createLineShape();
+};
+
+
+/** @inheritDoc */
+thin.editor.LineOutline.prototype.setStrokeWidth = function(width) {
+  this.setStrokeWidth_(width * thin.editor.LineOutline.THICK_STROKE_RATE_);
 };
 
 

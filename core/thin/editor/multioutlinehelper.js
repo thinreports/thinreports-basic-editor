@@ -278,9 +278,9 @@ thin.editor.MultiOutlineHelper.prototype.toLineOutline = function(shape, helpers
     'y1': coordinate.y0,
     'x2': coordinate.x1,
     'y2': coordinate.y1,
-    'stroke-opacity': 0.3
+    'stroke-opacity': 0.6
   });
-  
+  outline.setStrokeWidth(stroke.getWidth());
   this.setOutlineForMultiple(outline, shape);
 };
 
