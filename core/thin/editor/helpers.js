@@ -21,6 +21,7 @@ goog.require('goog.Disposable');
 goog.require('goog.graphics.SvgGroupElement');
 goog.require('thin.editor.Rect');
 goog.require('thin.editor.Layer');
+goog.require('thin.editor.Grid');
 goog.require('thin.editor.RectOutline');
 goog.require('thin.editor.EllipseOutline');
 goog.require('thin.editor.LineOutline');
@@ -65,6 +66,13 @@ thin.editor.Helpers.HELPERS_CLASS_ID = 'helpers';
  * @private
  */
 thin.editor.Helpers.prototype.canvas_;
+
+
+/**
+ * @type {thin.editor.Grid}
+ * @private
+ */
+thin.editor.Helpers.prototype.grid_;
 
 
 /**
@@ -184,8 +192,10 @@ thin.editor.Helpers.prototype.setup = function() {
   surface.setVisibled(true);
   this.surface_ = surface;
   
+  this.grid_ = new thin.editor.Grid(layout);
+
   this.canvas_ = new thin.editor.Rect(layout.createSvgElement('rect'),
-                        layout, null, new goog.graphics.SolidFill('#FFFFFF'));
+                    layout, null, null);
   this.canvas_.setBounds(canvasBounds);
   
   var drawLayer = new thin.editor.Layer(layout);
@@ -200,6 +210,8 @@ thin.editor.Helpers.prototype.setup = function() {
 
 
 thin.editor.Helpers.prototype.render = function() {
+  this.layout_.addDef(this.grid_.getDefKey(), this.grid_.getElement());
+  this.canvas_.setFill(this.grid_.getPatternFill());
   this.appendFront(this.canvas_);
   this.appendFront(this.marginGuideHelper_);
   this.appendFront(this.surface_);
@@ -608,6 +620,7 @@ thin.editor.Helpers.prototype.disposeInternal = function() {
   this.marginGuideHelper_.dispose();
   this.layoutGuideHelper_.dispose();
   this.surface_.dispose();
+  this.grid_.dispose();
   this.canvas_.dispose();
   this.zoomLayer_.dispose();
   this.drawLayer_.dispose();
@@ -621,6 +634,7 @@ thin.editor.Helpers.prototype.disposeInternal = function() {
   delete this.marginGuideHelper_;
   delete this.layoutGuideHelper_;
   delete this.surface_;
+  delete this.grid_;
   delete this.canvas_;
   delete this.zoomLayer_;
   delete this.drawLayer_;
