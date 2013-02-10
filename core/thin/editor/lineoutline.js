@@ -38,7 +38,7 @@ goog.mixin(thin.editor.LineOutline.prototype, thin.editor.ModuleOutline.prototyp
  * @type {number}
  * @private
  */
-thin.editor.LineOutline.THICK_STROKE_RATE_ = 1.3;
+thin.editor.LineOutline.THICK_STROKE_PX_ = 4;
 
 
 /**
@@ -91,7 +91,7 @@ thin.editor.LineOutline.prototype.toShape = function() {
 
 /** @inheritDoc */
 thin.editor.LineOutline.prototype.setStrokeWidth = function(width) {
-  this.setStrokeWidth_(width * thin.editor.LineOutline.THICK_STROKE_RATE_);
+  this.setStrokeWidth_(width + thin.editor.LineOutline.THICK_STROKE_PX_);
 };
 
 
