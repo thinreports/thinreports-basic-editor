@@ -111,6 +111,24 @@ thin.editor.ModuleShape.prototype.updateProperties = goog.abstractMethod;
 
 /**
  * @this {goog.graphics.Element}
+ * @return {boolean}
+ */
+thin.editor.ModuleShape.prototype.canResizeWidth = function() {
+  return true;
+};
+
+
+/**
+ * @this {goog.graphics.Element}
+ * @return {boolean}
+ */
+thin.editor.ModuleShape.prototype.canResizeHeight = function() {
+  return true;
+};
+
+
+/**
+ * @this {goog.graphics.Element}
  * @param {number} width
  */
 thin.editor.ModuleShape.prototype.setStrokeWidth = function(width) {
@@ -325,26 +343,8 @@ thin.editor.ModuleShape.prototype.getDeltaCoordinateForGuide = function() {
 };
 
 
-/**
- * @this {goog.graphics.Element}
- */
-thin.editor.ModuleShape.prototype.adjustToUiStatusForAvailableShape = function() {
-
-  var isTblockShape = this.instanceOfTblockShape();
-  if (this.instanceOfTextShape() || isTblockShape) {
-    this.adjustToUiStatusForShape();
-    thin.ui.setEnabledForFontUi(true);
-
-    if (isTblockShape) {
-      if (this.isMultiMode()) {
-        thin.ui.setEnabledForVerticalAlignTypeUi(true);
-      } else {
-        thin.ui.setEnabledForVerticalAlignTypeUi(false);
-      }
-    }
-  } else {
-    thin.ui.setEnabledForFontUi(false);
-  }
+thin.editor.ModuleShape.prototype.updateToolbarUI = function() {
+  thin.ui.setEnabledForFontUi(false);
 };
 
 
@@ -417,7 +417,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                 this.dragger_.setEnabled(true);
                 activeShapeManagerByListShape.clear();
                 listHelper.setActiveShape(this);
-                this.adjustToUiStatusForAvailableShape();
+                this.updateToolbarUI();
                 guide.setEnableAndTargetShape(this);
                 layout.setOutlineForSingle(this);
                 this.updateProperties();
@@ -444,7 +444,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                     helpers.disableAll();
                     activeShapeManagerByListShape.clear();
                     listHelper.setActiveShape(this);
-                    this.adjustToUiStatusForAvailableShape();
+                    this.updateToolbarUI();
                     guide.setEnableAndTargetShape(this);
                     layout.setOutlineForSingle(this);
                     this.updateProperties();
@@ -458,7 +458,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                   this.dragger_.setEnabled(true);
                   activeShapeManager.clear();
                   manager.setActiveShape(this);
-                  this.adjustToUiStatusForAvailableShape();
+                  this.updateToolbarUI();
                   guide.setEnableAndTargetShape(this);
                   layout.setOutlineForSingle(this);
                   this.updateProperties();
@@ -488,7 +488,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                 this.dragger_.setEnabled(true);
                 activeShapeManager.clear();
                 manager.setActiveShape(this);
-                this.adjustToUiStatusForAvailableShape();
+                this.updateToolbarUI();
                 guide.setEnableAndTargetShape(this);
                 layout.setOutlineForSingle(this);
                 this.updateProperties();
@@ -515,7 +515,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                 listHelper.inactive();
               }
             }
-            this.adjustToUiStatusForAvailableShape();
+            this.updateToolbarUI();
           }
         }
       }, scope);
@@ -533,7 +533,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
               thin.ui.setEnabledForFontUi(false);
             } else {
               if (singleShapeByGlobal) {
-                singleShapeByGlobal.adjustToUiStatusForAvailableShape();
+                singleShapeByGlobal.updateToolbarUI();
                 guide.setEnableAndTargetShape(singleShapeByGlobal);
                 layout.setOutlineForSingle(singleShapeByGlobal);
                 singleShapeByGlobal.updateProperties();
@@ -557,7 +557,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
             } else {
               activeShapeManagerByListShape.set(oldShapesByListShape);
               if (singleShapeByListShape) {
-                singleShapeByListShape.adjustToUiStatusForAvailableShape();
+                singleShapeByListShape.updateToolbarUI();
                 guide.setEnableAndTargetShape(singleShapeByListShape);
                 layout.setOutlineForSingle(singleShapeByListShape);
                 singleShapeByListShape.updateProperties();
@@ -578,7 +578,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
             if (!captureActive) {
               activeShapeManager.set(oldShapesByGlobal);
               if (isSelfMouseDown) {
-                singleShapeByGlobal.adjustToUiStatusForAvailableShape();
+                singleShapeByGlobal.updateToolbarUI();
                 guide.setEnableAndTargetShape(singleShapeByGlobal);
                 layout.setOutlineForSingle(singleShapeByGlobal);
                 singleShapeByGlobal.updateProperties();
@@ -594,7 +594,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                   if (singleShapeByGlobal) {
                     singleShapeByGlobal.getTargetOutline().disable();
                     guide.setEnableAndTargetShape(singleShapeByGlobal);
-                    singleShapeByGlobal.adjustToUiStatusForAvailableShape();
+                    singleShapeByGlobal.updateToolbarUI();
                     layout.setOutlineForSingle(singleShapeByGlobal);
                     singleShapeByGlobal.updateProperties();
                   } else {
@@ -612,7 +612,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                 listHelper.setActiveSectionName(captureActiveSectionName);
                 
                 if (isSelfMouseDown) {
-                  singleShapeByListShape.adjustToUiStatusForAvailableShape();
+                  singleShapeByListShape.updateToolbarUI();
                   guide.setEnableAndTargetShape(singleShapeByListShape);
                   layout.setOutlineForSingle(singleShapeByListShape);
                   singleShapeByListShape.updateProperties();
@@ -627,7 +627,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                     activeShapeManagerByListShape.set(oldShapesByListShape);
                     if (singleShapeByListShape) {
                       singleShapeByListShape.getTargetOutline().disable();
-                      singleShapeByListShape.adjustToUiStatusForAvailableShape();
+                      singleShapeByListShape.updateToolbarUI();
                       guide.setEnableAndTargetShape(singleShapeByListShape);
                       layout.setOutlineForSingle(singleShapeByListShape);
                       singleShapeByListShape.updateProperties();
@@ -655,7 +655,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                 } else {
                   activeShapeManagerByListShape.set(oldShapesByListShape);
                   if (singleShapeByListShape) {
-                    singleShapeByListShape.adjustToUiStatusForAvailableShape();
+                    singleShapeByListShape.updateToolbarUI();
                     guide.setEnableAndTargetShape(singleShapeByListShape);
                     layout.setOutlineForSingle(singleShapeByListShape);
                     singleShapeByListShape.updateProperties();
@@ -683,7 +683,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                 thin.ui.setEnabledForFontUi(false);
               } else {
                 if (singleShapeByGlobal) {
-                  singleShapeByGlobal.adjustToUiStatusForAvailableShape();
+                  singleShapeByGlobal.updateToolbarUI();
                   guide.setEnableAndTargetShape(singleShapeByGlobal);
                   layout.setOutlineForSingle(singleShapeByGlobal);
                   singleShapeByGlobal.updateProperties();
@@ -708,7 +708,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                 } else {
                   activeShapeManagerByListShape.set(oldShapesByListShape);
                   if (singleShapeByListShape) {
-                    singleShapeByListShape.adjustToUiStatusForAvailableShape();
+                    singleShapeByListShape.updateToolbarUI();
                     guide.setEnableAndTargetShape(singleShapeByListShape);
                     layout.setOutlineForSingle(singleShapeByListShape);
                     singleShapeByListShape.updateProperties();
@@ -735,7 +735,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                 } else {
                   activeShapeManagerByListShape.set(oldShapesByListShape);
                   if (singleShapeByListShape) {
-                    singleShapeByListShape.adjustToUiStatusForAvailableShape();
+                    singleShapeByListShape.updateToolbarUI();
                     guide.setEnableAndTargetShape(singleShapeByListShape);
                     layout.setOutlineForSingle(singleShapeByListShape);
                     singleShapeByListShape.updateProperties();
@@ -781,7 +781,7 @@ thin.editor.ModuleShape.prototype.setupDragHandlers = function() {
   goog.events.listen(dragger, eventType.START, function(e) {
     dragger.setAdsorptionX(helpers.getAdsorptionX());
     dragger.setAdsorptionY(helpers.getAdsorptionY());
-    var cursorTypeMove = thin.editor.Cursor.Type['MOVE'];
+    var cursorTypeMove = thin.editor.Cursor.Type.MOVE;
     var cursorMove = new thin.editor.Cursor(cursorTypeMove);
     goog.style.setStyle(body, 'cursor', cursorTypeMove);
     dragLayer.setCursor(cursorMove);
@@ -797,7 +797,7 @@ thin.editor.ModuleShape.prototype.setupDragHandlers = function() {
   }, false, this);
   goog.events.listen(dragger, eventType.END, function(e) {
   
-    var cursorTypeDefault = thin.editor.Cursor.Type['DEFAULT'];
+    var cursorTypeDefault = thin.editor.Cursor.Type.DEFAULT;
     var cursorDefault = new thin.editor.Cursor(cursorTypeDefault);
     goog.style.setStyle(body, 'cursor', cursorTypeDefault);
     dragLayer.setCursor(cursorDefault);

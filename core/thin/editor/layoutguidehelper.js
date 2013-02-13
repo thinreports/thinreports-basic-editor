@@ -236,7 +236,7 @@ thin.editor.LayoutGuideHelper.prototype.createYLayoutGuide = function() {
   var size = this.getLayout().getNormalLayoutSize();
   var yline = this.createLayoutGuide_(thin.editor.DraggableLine.Direction.HORIZONTAL,
         new goog.math.Rect(0, thin.numberWithPrecision(size.height * 0.1, 0), size.width, 1),
-        thin.editor.Cursor.Type['BCENTER']);
+        thin.editor.Cursor.Type.BCENTER);
   goog.array.insert(this.ylines_, yline);
   
   return yline;
@@ -250,7 +250,7 @@ thin.editor.LayoutGuideHelper.prototype.createXLayoutGuide = function() {
   var size = this.getLayout().getNormalLayoutSize();
   var xline = this.createLayoutGuide_(thin.editor.DraggableLine.Direction.VERTICAL,
         new goog.math.Rect(thin.numberWithPrecision(size.width * 0.1), 0, 1, size.height),
-        thin.editor.Cursor.Type['MRIGHT']);
+        thin.editor.Cursor.Type.MRIGHT);
   goog.array.insert(this.xlines_, xline);
   
   return xline;

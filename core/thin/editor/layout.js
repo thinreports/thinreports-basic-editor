@@ -26,6 +26,7 @@ goog.require('goog.graphics.SolidFill');
 goog.require('goog.graphics.SvgGroupElement');
 goog.require('thin.editor.TextShape');
 goog.require('thin.editor.TblockShape');
+goog.require('thin.editor.PageNumberShape');
 goog.require('thin.editor.ListShape');
 goog.require('thin.editor.RectShape');
 goog.require('thin.editor.LineShape');
@@ -138,7 +139,11 @@ thin.editor.Layout.prototype.drawBasicShapeFromElement = function(element, opt_s
     case thin.editor.TblockShape.CLASSID:
       shape = thin.editor.TblockShape.createFromElement(element, this, opt_shapeIdManager);
       break;
-      
+
+    case thin.editor.PageNumberShape.CLASSID:
+      shape = thin.editor.PageNumberShape.createFromElement(element, this, opt_shapeIdManager);
+      break;
+
     case thin.editor.TextShape.CLASSID:
       shape = thin.editor.TextShape.createFromElement(element, this, opt_shapeIdManager);
       break;
@@ -205,6 +210,28 @@ thin.editor.Layout.prototype.getHelpers = function() {
 
 
 /**
+ * @return {thin.editor.ListHelper}
+ */
+thin.editor.Layout.prototype.getListHelper = function() {
+  return this.getHelpers().getListHelper();
+};
+
+
+/**
+ * @return {thin.editor.ActiveShapeManager}
+ */
+thin.editor.Layout.prototype.getActiveShapeManager = function() {
+  var listHelper = this.getListHelper();
+
+  if (listHelper.isActive()) {
+    return listHelper.getActiveShape();
+  } else {
+    return this.getManager().getActiveShape();
+  }
+};
+
+
+/**
  * @param {goog.graphics.Element} shape
  * @param {boolean} setting
  */
@@ -250,6 +277,14 @@ thin.editor.Layout.prototype.setElementCursor = function(element, cursor) {
   this.setElementAttributes(element, {
     'cursor': cursor.getType()
   });
+};
+
+
+/**
+ * @param {Element} element
+ */
+thin.editor.Layout.prototype.removeElementCursor = function(element) {
+  this.setElementAttributes(element, {'cursor': null});
 };
 
 
@@ -875,7 +910,7 @@ thin.editor.Layout.prototype.pasteShapes = function() {
       } else {
         var singleShape = isAllowRenderToListShape ? activeShapeManagerByListShape.getIfSingle() : activeShapeManager.getIfSingle();
         this.setOutlineForSingle(singleShape);
-        singleShape.adjustToUiStatusForAvailableShape();
+        singleShape.updateToolbarUI();
         guide.setEnableAndTargetShape(singleShape);
         singleShape.updateProperties();
       }
@@ -891,7 +926,7 @@ thin.editor.Layout.prototype.pasteShapes = function() {
         var singleShapeByGlobal = activeShapeManager.getIfSingle();
         if (singleShapeByGlobal) {
           this.setOutlineForSingle(singleShapeByGlobal);
-          singleShapeByGlobal.adjustToUiStatusForAvailableShape();
+          singleShapeByGlobal.updateToolbarUI();
           guide.setEnableAndTargetShape(singleShapeByGlobal);
           singleShapeByGlobal.updateProperties();
         } else if (activeShapeManager.isMultiple()) {
@@ -926,7 +961,7 @@ thin.editor.Layout.prototype.pasteShapes = function() {
         } else {
           var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
           if (singleShapeByListShape) {
-            singleShapeByListShape.adjustToUiStatusForAvailableShape();
+            singleShapeByListShape.updateToolbarUI();
             guide.setEnableAndTargetShape(singleShapeByListShape);
             singleShapeByListShape.updateProperties();
           } else {
@@ -1245,6 +1280,16 @@ thin.editor.Layout.prototype.createTblockShape = function() {
 
 
 /**
+ * @return {thin.editor.PageNumberShape}
+ */
+thin.editor.Layout.prototype.createPageNumberShape = function() {
+  var shape = new thin.editor.PageNumberShape(this.createSvgElement('g'), this);
+  shape.setKerning(thin.editor.TextStyle.DEFAULT_KERNING);
+  shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
+  return shape;
+};
+
+/**
  * @return {thin.editor.TextShape}
  */
 thin.editor.Layout.prototype.createTextShape = function() {
@@ -1302,6 +1347,22 @@ thin.editor.Layout.prototype.forTblockShapesEach = function(shapes, fn, opt_self
     if (shape.instanceOfTblockShape()) {
       fn.call(selfObj, shape, tblockShapeCount);
       tblockShapeCount += 1;
+    }
+  });
+};
+
+
+/**
+ * @param {Array} shapes
+ * @param {Function} fn
+ * @param {Object=} opt_selfObj
+ */
+thin.editor.Layout.prototype.forPageNumberShapesEach = function(shapes, fn, opt_selfObj) {
+  var selfObj = opt_selfObj || this;
+  var count = 0;
+  goog.array.forEach(shapes, function(shape, i) {
+    if (shape.instanceOfPageNumberShape()) {
+      fn.call(selfObj, shape, count++);
     }
   });
 };

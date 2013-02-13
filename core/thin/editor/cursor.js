@@ -16,36 +16,95 @@
 goog.provide('thin.editor.Cursor');
 goog.provide('thin.editor.Cursor.Type');
 
+goog.require('goog.Disposable');
+
 
 /**
  * @param {string} type
  * @param {boolean=} opt_isUri
+ * @extends {goog.Disposable}
  * @constructor
  */
 thin.editor.Cursor = function(type, opt_isUri) {
+  goog.base(this);
+
   if (opt_isUri) {
     this.setUri(type)
   } else {
     this.setType(type);
   }
 };
+goog.inherits(thin.editor.Cursor, goog.Disposable);
 
 
 /**
  * @enum {string}
  */
 thin.editor.Cursor.Type = {
-  'DEFAULT': 'default',
-  'CROSSHAIR': 'crosshair',
-  'MOVE': 'cell',
-  'TLEFT': 'nw-resize',
-  'TCENTER': 'n-resize',
-  'TRIGHT': 'ne-resize',
-  'MLEFT': 'w-resize',
-  'MRIGHT': 'e-resize',
-  'BLEFT': 'sw-resize',
-  'BCENTER': 's-resize',
-  'BRIGHT': 'se-resize'
+  DEFAULT: 'default',
+  CROSSHAIR: 'crosshair',
+  MOVE: 'cell',
+  TLEFT: 'nw-resize',
+  TCENTER: 'n-resize',
+  TRIGHT: 'ne-resize',
+  MLEFT: 'w-resize',
+  MRIGHT: 'e-resize',
+  BLEFT: 'sw-resize',
+  BCENTER: 's-resize',
+  BRIGHT: 'se-resize',
+  NOTALLOWED: 'not-allowed'
+};
+
+
+/**
+ * @param {string} name
+ * @return {thin.editor.Cursor}
+ */
+thin.editor.Cursor.getCursorByName = function(name) {
+  var cursor;
+  var type = thin.editor.Cursor.Type;
+  switch(name) {
+    case 'DEFAULT':
+      cursor = type.DEFAULT;
+      break;
+    case 'CROSSHAIR':
+      cursor = type.CROSSHAIR;
+      break;
+    case 'MOVE':
+      cursor = type.MOVE;
+      break;
+    case 'TLEFT':
+      cursor = type.TLEFT;
+      break;
+    case 'TCENTER':
+      cursor = type.TCENTER;
+      break;
+    case 'TRIGHT':
+      cursor = type.TRIGHT;
+      break;
+    case 'MLEFT':
+      cursor = type.MLEFT;
+      break;
+    case 'MRIGHT':
+      cursor = type.MRIGHT;
+      break;
+    case 'BLEFT':
+      cursor = type.BLEFT;
+      break;
+    case 'BCENTER':
+      cursor = type.BCENTER;
+      break;
+    case 'BRIGHT':
+      cursor = type.BRIGHT;
+      break;
+    case 'NOTALLOWED':
+      cursor = type.NOTALLOWED;
+      break;
+    default:
+      throw new thin.Error('Unknown Cursor Name');
+      break;
+  }
+  return new thin.editor.Cursor(cursor);
 };
 
 
@@ -53,7 +112,7 @@ thin.editor.Cursor.Type = {
  * @type {string}
  * @private
  */
-thin.editor.Cursor.prototype.default_ = thin.editor.Cursor.Type['DEFAULT'];
+thin.editor.Cursor.prototype.default_ = thin.editor.Cursor.Type.DEFAULT;
 
 
 /**
@@ -120,4 +179,11 @@ thin.editor.Cursor.prototype.setDefault = function(type) {
  */
 thin.editor.Cursor.prototype.getDefault = function() {
   return this.default_;
+};
+
+
+thin.editor.Cursor.prototype.disposeInternal = function() {
+  delete this.default_;
+  delete this.type_;
+  delete this.uri_;
 };

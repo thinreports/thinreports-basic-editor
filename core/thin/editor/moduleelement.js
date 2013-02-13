@@ -727,6 +727,14 @@ thin.editor.ModuleElement.prototype.instanceOfTblockShape = function() {
 /**
  * @return {boolean}
  */
+thin.editor.ModuleElement.prototype.instanceOfPageNumberShape = function() {
+  return this instanceof thin.editor.PageNumberShape;
+};
+
+
+/**
+ * @return {boolean}
+ */
 thin.editor.ModuleElement.prototype.instanceOfImageblockShape = function() {
   return this instanceof thin.editor.ImageblockShape;
 };

@@ -232,7 +232,7 @@ thin.editor.ModuleOutline.prototype.setupMouseDownHandler = function() {
           
           if (singleShapeForUp) {
             singleShapeForUp.getTargetOutline().disable();
-            singleShapeForUp.adjustToUiStatusForAvailableShape();
+            singleShapeForUp.updateToolbarUI();
             guide.setEnableAndTargetShape(singleShapeForUp);
             singleShapeForUp.updateProperties();
           } else {

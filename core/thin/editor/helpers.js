@@ -20,12 +20,14 @@ goog.require('goog.array');
 goog.require('goog.Disposable');
 goog.require('goog.graphics.SvgGroupElement');
 goog.require('thin.editor.Rect');
-goog.require('thin.editor.Layer');
 goog.require('thin.editor.Grid');
+goog.require('thin.editor.ActionLayer');
+goog.require('thin.editor.DrawActionLayer');
 goog.require('thin.editor.RectOutline');
 goog.require('thin.editor.EllipseOutline');
 goog.require('thin.editor.LineOutline');
 goog.require('thin.editor.TblockOutline');
+goog.require('thin.editor.PageNumberOutline');
 goog.require('thin.editor.ImageblockOutline');
 goog.require('thin.editor.TextOutline');
 goog.require('thin.editor.ListOutline');
@@ -183,29 +185,24 @@ thin.editor.Helpers.prototype.setup = function() {
   this.layoutGuideHelper_ = new thin.editor.LayoutGuideHelper(layout);
   this.marginGuideHelper_ = thin.editor.MarginGuideHelper.setup(layout);
   var canvasBounds = layout.getBounds();
-  var surface = new thin.editor.Layer(layout);
+  var surface = new thin.editor.ActionLayer(layout,
+          new thin.editor.Cursor(cursorType.CROSSHAIR));
   layout.setElementAttributes(surface.getElement(), {
     'fill-opacity': 0
   });
-  surface.setCursor(new thin.editor.Cursor(cursorType['CROSSHAIR']));
-  layout.setElementCursor(surface.getElement(), surface.getCursor());
   surface.setVisibled(true);
+
   this.surface_ = surface;
-  
   this.grid_ = new thin.editor.Grid(layout);
 
   this.canvas_ = new thin.editor.Rect(layout.createSvgElement('rect'),
                     layout, null, null);
   this.canvas_.setBounds(canvasBounds);
   
-  var drawLayer = new thin.editor.Layer(layout);
-  drawLayer.setCursor(new thin.editor.Cursor(cursorType['CROSSHAIR']));
-  layout.setElementCursor(drawLayer.getElement(), drawLayer.getCursor());
-  this.drawLayer_ = drawLayer;
-
+  this.drawLayer_ = new thin.editor.DrawActionLayer(layout);
   this.listHelper_ = new thin.editor.ListHelper(layout);
-  this.dragLayer_ = new thin.editor.Layer(layout);
-  this.zoomLayer_ = new thin.editor.Layer(layout);
+  this.dragLayer_ = new thin.editor.ActionLayer(layout);
+  this.zoomLayer_ = new thin.editor.ActionLayer(layout);
 };
 
 
@@ -422,6 +419,14 @@ thin.editor.Helpers.prototype.getTblockOutline = function() {
 
 
 /**
+ * @return {thin.editor.PageNumberOutline}
+ */
+thin.editor.Helpers.prototype.getPageNumberOutline = function() {
+  return this.outlineHelper_.getPageNumberOutline();
+};
+
+
+/**
  * @return {thin.editor.ImageblockOutline}
  */
 thin.editor.Helpers.prototype.getImageblockOutline = function() {
@@ -521,6 +526,23 @@ thin.editor.Helpers.prototype.createTblockOutline = function(helper, stroke, fil
                             this.layout_, stroke, fill);
   tblockOutline.setOutlineHelper(helper);
   return tblockOutline;
+};
+
+
+/**
+ * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {goog.graphics.Stroke?} stroke
+ * @param {goog.graphics.Fill?} fill
+ * @param {Object=} opt_attr
+ * @return {thin.editor.PageNumberOutline}
+ * @private
+ */
+thin.editor.Helpers.prototype.createPageNumberOutline = function(helper, stroke, fill, opt_attr) {
+  var pageNumberOutline = new thin.editor.PageNumberOutline(
+                            this.layout_.createSvgElement('rect', opt_attr), 
+                            this.layout_, stroke, fill);
+  pageNumberOutline.setOutlineHelper(helper);
+  return pageNumberOutline;
 };
 
 

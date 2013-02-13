@@ -123,6 +123,13 @@ thin.editor.TextShape.prototype.getClassId = function() {
 };
 
 
+/** @inheritDoc */
+thin.editor.TextShape.prototype.updateToolbarUI = function() {
+  goog.base(this, 'updateToolbarUI');
+  thin.ui.setEnabledForFontUi(true);
+};
+
+
 /**
  * @param {Element} element
  * @param {thin.editor.Layout} layout

@@ -33,7 +33,7 @@ goog.require('thin.editor.TextShape');
 goog.require('thin.editor.TextStyle');
 goog.require('thin.editor.TextStyle.HorizonAlignType');
 goog.require('thin.editor.TextStyle.VerticalAlignType');
-goog.require('thin.editor.Layer');
+goog.require('thin.editor.DrawActionLayer');
 goog.require('thin.editor.DraggableLine');
 goog.require('thin.editor.DraggableLine.Direction');
 goog.require('thin.editor.ModuleElement');
@@ -234,11 +234,7 @@ thin.editor.ListSectionHelper.prototype.inactive = function() {
  * @private
  */
 thin.editor.ListSectionHelper.prototype.createDrawLayer_ = function() {
-  var layout = this.layout_;
-  var drawLayer = new thin.editor.Layer(layout);
-  drawLayer.setCursor(new thin.editor.Cursor(thin.editor.Cursor.Type['CROSSHAIR']));
-  layout.setElementCursor(drawLayer.getElement(), drawLayer.getCursor());
-  return drawLayer;
+  return new thin.editor.DrawActionLayer(this.layout_);
 };
 
 
@@ -248,9 +244,8 @@ thin.editor.ListSectionHelper.prototype.createDrawLayer_ = function() {
  */
 thin.editor.ListSectionHelper.prototype.createSelectorLayer_ = function() {
   var layout = this.layout_;
-  var selectorLayer = new thin.editor.Layer(layout);
-  selectorLayer.setCursor(new thin.editor.Cursor(thin.editor.Cursor.Type['CROSSHAIR']));
-  layout.setElementCursor(selectorLayer.getElement(), selectorLayer.getCursor());
+  var selectorLayer = new thin.editor.ActionLayer(layout, 
+          new thin.editor.Cursor(thin.editor.Cursor.Type.CROSSHAIR));
   selectorLayer.setFill(new goog.graphics.SolidFill('#FFFFFF', 0.3));
   return selectorLayer;
 };
@@ -418,7 +413,7 @@ thin.editor.ListSectionHelper.Separator_.prototype.getLineHeight = function() {
 
 /** @override */
 thin.editor.ListSectionHelper.Separator_.prototype.setup = function() {
-  var cursor = new thin.editor.Cursor(thin.editor.Cursor.Type['TCENTER']);
+  var cursor = new thin.editor.Cursor(thin.editor.Cursor.Type.TCENTER);
   this.setCursor(cursor);
   this.layout_.setElementCursor(this.getElement(), cursor);
   this.layout_.appendChild(this.line_, this);
@@ -456,7 +451,7 @@ thin.editor.ListSectionHelper.Separator_.prototype.init = function(sectionName) 
   }, false, dragger);
 
   goog.events.listen(dragger, fxEventType.END, function(e) {
-    var defaultType = thin.editor.Cursor.Type['DEFAULT'];
+    var defaultType = thin.editor.Cursor.Type.DEFAULT;
     var defaultCursor = new thin.editor.Cursor(defaultType);
     dragLayer.setCursor(defaultCursor);
     layout.setElementCursor(dragLayer.getElement(), defaultCursor);

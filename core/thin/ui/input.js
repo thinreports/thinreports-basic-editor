@@ -81,6 +81,13 @@ thin.ui.Input.EventType = {
 
 
 /**
+ * @type {string}
+ * @private
+ */
+thin.ui.Input.prototype.tooltip_ = '';
+
+
+/**
  * @type {boolean}
  * @private
  */
@@ -218,11 +225,24 @@ thin.ui.Input.prototype.getKeyHandler = function() {
 };
 
 
+/**
+ * @param {string} tooltip
+ */
+thin.ui.Input.prototype.setTooltip = function(tooltip) {
+  var element = this.getElement();
+  if (element) {
+    element.setAttribute('title', tooltip);
+  }
+  this.tooltip_ = tooltip;
+};
+
+
 /** @inheritDoc */
 thin.ui.Input.prototype.createDom = function() {
   var attributes = {
     'type': 'text', 
     'placeholder': this.label_, 
+    'title': this.tooltip_,
     'class': thin.ui.getCssName(this.getCssClass())
   };
   this.setElementInternal(goog.dom.createDom('input', attributes));

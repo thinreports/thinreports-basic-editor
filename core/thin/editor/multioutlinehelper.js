@@ -56,7 +56,23 @@ thin.editor.MultiOutlineHelper.COLOR_ = '#94C3F5';
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.MultiOutlineHelper.FILL_ = new goog.graphics.SolidFill(thin.editor.MultiOutlineHelper.COLOR_, 0.3)
+thin.editor.MultiOutlineHelper.FILL_ = new goog.graphics.SolidFill(thin.editor.MultiOutlineHelper.COLOR_, 0.3);
+
+
+/**
+ * @return {boolean}
+ */
+thin.editor.MultiOutlineHelper.prototype.canResizeWidth = function() {
+  return true;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.editor.MultiOutlineHelper.prototype.canResizeHeight = function() {
+  return true;
+};
 
 
 thin.editor.MultiOutlineHelper.prototype.init = function() {
@@ -86,7 +102,7 @@ thin.editor.MultiOutlineHelper.prototype.init = function() {
     this.setAdsorptionX(helpers.getAdsorptionX());
     this.setAdsorptionY(helpers.getAdsorptionY());
     
-    var cursorTypeMove = thin.editor.Cursor.Type['MOVE'];
+    var cursorTypeMove = thin.editor.Cursor.Type.MOVE;
     var cursorMove = new thin.editor.Cursor(cursorTypeMove);
     goog.style.setStyle(body, 'cursor', cursorTypeMove);
     dragLayer.setCursor(cursorMove);
@@ -111,7 +127,7 @@ thin.editor.MultiOutlineHelper.prototype.init = function() {
     var reLocationX = startPositionX - currentPositionX;
     var reLocationY = startPositionY - currentPositionY;
     
-    var cursorTypeDefault = thin.editor.Cursor.Type['DEFAULT'];
+    var cursorTypeDefault = thin.editor.Cursor.Type.DEFAULT;
     var cursorDefault = new thin.editor.Cursor(cursorTypeDefault);
     goog.style.setStyle(body, 'cursor', cursorTypeDefault);
     dragLayer.setCursor(cursorDefault);
@@ -225,7 +241,7 @@ thin.editor.MultiOutlineHelper.prototype.isMultiple = function() {
  */
 thin.editor.MultiOutlineHelper.prototype.setOutlineForMultiple = function(outline, shape) {
   var layout = this.getLayout();
-  var cursorMove = new thin.editor.Cursor(thin.editor.Cursor.Type['MOVE']);
+  var cursorMove = new thin.editor.Cursor(thin.editor.Cursor.Type.MOVE);
   outline.setCursor(cursorMove);
   layout.setElementCursor(outline.getElement(), cursorMove);
   outline.setupMouseDownHandler();
@@ -305,6 +321,20 @@ thin.editor.MultiOutlineHelper.prototype.toTextOutline = function(shape, helpers
  */
 thin.editor.MultiOutlineHelper.prototype.toTblockOutline = function(shape, helpers) {
   var outline = helpers.createTblockOutline(this, shape.getStroke(),
+                    thin.editor.MultiOutlineHelper.FILL_, {
+                      'stroke-opacity': 0
+                    });
+  outline.setBounds(shape.getBounds());
+  this.setOutlineForMultiple(outline, shape);
+};
+
+
+/**
+ * @param {thin.editor.PageNumberShape} shape
+ * @param {thin.editor.Helpers} helpers
+ */
+thin.editor.MultiOutlineHelper.prototype.toPageNumberOutline = function(shape, helpers) {
+  var outline = helpers.createPageNumberOutline(this, shape.getStroke(),
                     thin.editor.MultiOutlineHelper.FILL_, {
                       'stroke-opacity': 0
                     });

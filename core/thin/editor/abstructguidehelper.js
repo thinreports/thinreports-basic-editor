@@ -194,7 +194,7 @@ thin.editor.AbstractGuideHelper.prototype.setResizeCursor = function(cursorName)
 
 thin.editor.AbstractGuideHelper.prototype.removeResizeCursor = function() {
   var layout = this.getLayout();
-  var defaultType = thin.editor.Cursor.Type['DEFAULT'];
+  var defaultType = thin.editor.Cursor.Type.DEFAULT;
   var cursor = new thin.editor.Cursor(defaultType);
   var dragLayer = layout.getHelpers().getDragLayer();
   dragLayer.setCursor(cursor);

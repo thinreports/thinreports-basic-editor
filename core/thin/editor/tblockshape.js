@@ -24,6 +24,7 @@ goog.require('goog.object');
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
 goog.require('goog.graphics.Font');
+goog.require('thin.ui');
 goog.require('thin.editor.Box');
 goog.require('thin.editor.IdShape');
 goog.require('thin.editor.TextStyle');
@@ -229,6 +230,22 @@ thin.editor.TblockShape.prototype.referenceShape_;
  */
 thin.editor.TblockShape.prototype.getClassId = function() {
   return thin.editor.TblockShape.CLASSID;
+};
+
+
+/**
+ * Override thin.editor.ModuleShape#canResizeHeight.
+ * @return {boolean}
+ */
+thin.editor.TblockShape.prototype.canResizeHeight = function() {
+  return this.isMultiMode();
+};
+
+
+/** @inheritDoc */
+thin.editor.TblockShape.prototype.updateToolbarUI = function() {
+  goog.base(this, 'updateToolbarUI');
+  thin.ui.enablingFontUIs(true, true, true, this.isMultiMode(), false);
 };
 
 
@@ -1181,7 +1198,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
                     scope.getFontFamily(), scope.getFontSize()));
           }
 
-          scope.adjustToUiStatusForAvailableShape();
+          scope.updateToolbarUI();
           guide.setEnableAndTargetShape(scope);
           scope.updateProperties();
         };

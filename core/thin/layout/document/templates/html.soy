@@ -232,6 +232,12 @@
       {param shapeGroup: $shapeGroup /}
       {param t: $t /}
     {/call}
+  {case thin.editor.PageNumberShape.CLASSID}
+    {call .renderPagenumberShapes}
+      {param shapeGroup: $shapeGroup /}
+      {param t: $t /}
+      {param inList: $inList /}
+    {/call}
   {default}
     {call .renderBasicShapes}
       {param shapeGroup: $shapeGroup /}
@@ -320,6 +326,42 @@
   <tr>
     <td>{$shape.id}</td>
     <td>{$shape.display}</td>
+    <td>{$shape.desc}</td>
+  </tr>
+  {/foreach}
+  </tbody>
+</table>
+{/template}
+
+/**
+ * @param shapeGroup
+ * @param t
+ * @param? inList
+ */
+{template .renderPagenumberShapes private="true"}
+{call .renderShapeTitle}
+  {param shapeName: $shapeGroup.name /}
+  {param inList: $inList /}
+{/call}
+<table>
+  <thead>
+  <tr>
+    <th>{$t['field_pageno_format']}</th>
+    <th>ID</th>
+    <th>{$t['field_display']}</th>
+    <th>{$t['field_start_pageno']}</th>
+    <th>{$t['field_counted_page_target']}</th>
+    <th>{$t['field_description']}</th>
+  </tr>
+  </thead>
+  <tbody>
+  {foreach $shape in $shapeGroup.shapes}
+  <tr>
+    <td>{$shape.format}</td>
+    <td>{$shape.id}</td>
+    <td>{$shape.display}</td>
+    <td>{$shape.startAt}</td>
+    <td>{$shape.target}</td>
     <td>{$shape.desc}</td>
   </tr>
   {/foreach}

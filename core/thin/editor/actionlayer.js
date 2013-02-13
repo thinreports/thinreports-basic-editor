@@ -13,47 +13,52 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Layer');
+goog.provide('thin.editor.ActionLayer');
 
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.SvgDrawer');
+goog.require('thin.editor.Layer');
 
 
 /**
  * @param {thin.editor.Layout} layout
  * @param {thin.editor.Cursor=} opt_cursor
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.editor.Layer}
  */
-thin.editor.Layer = function(layout, opt_cursor) {
-  goog.base(this, layout.createSvgElement('rect'),
-      layout, null, new goog.graphics.SolidFill('#FFFFFF', 0.01));
-  
-  if (opt_cursor) {
-    this.setCursor(opt_cursor);
-  }
-
-  var size = layout.getNormalLayoutSize();
-
-  this.setBounds(new goog.math.Rect(0, 0, size.width, size.height));
-  this.setVisibled(false);
+thin.editor.ActionLayer = function(layout, opt_cursor) {
+  goog.base(this, layout, opt_cursor);
 };
-goog.inherits(thin.editor.Layer, thin.editor.Rect);
+goog.inherits(thin.editor.ActionLayer, thin.editor.Layer);
 
 
 /**
- * @param {thin.editor.Cursor} cursor
+ * @type {thin.editor.SvgDrawer}
+ * @private
  */
-thin.editor.Layer.prototype.setCursor = function(cursor) {
-  delete this.cursor_;
-  goog.base(this, 'setCursor', cursor);
-  this.getLayout().setElementCursor(this.getElement(), cursor);
+thin.editor.ActionLayer.prototype.drawer_;
+
+
+/**
+ * @param {thin.editor.SvgDrawer} drawer
+ */
+thin.editor.ActionLayer.prototype.setDrawer = function(drawer) {
+  this.drawer_ = drawer;
+};
+
+
+/**
+ * @return {thin.editor.SvgDrawer}
+ */
+thin.editor.ActionLayer.prototype.getDrawer = function() {
+  return this.drawer_;
 };
 
 
 /** @inheritDoc */
-thin.editor.Layer.prototype.disposeInternal = function() {
+thin.editor.ActionLayer.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
 
-  delete this.cursor_;
+  if (this.drawer_) {
+    this.drawer_.dispose();
+    delete this.drawer_;
+  }
 };

@@ -59,6 +59,9 @@ thin.editor.ShapeStructure.serialize = function(shape) {
     case thin.editor.ImageblockShape.CLASSID:
       json = thin.editor.ShapeStructure.serializeForImageblock_(shape, json);
       break;
+    case thin.editor.PageNumberShape.CLASSID:
+      json = thin.editor.ShapeStructure.serializeForPageNumber_(shape, json);
+      break;
     default:
       var attrs = {};
       thin.editor.ShapeStructure.forEachShapeAttribute_(shape,
@@ -273,6 +276,62 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
   json['overflow'] = shape.getAttribute('x-overflow') || blank;
   json['svg'] = {
     'tag': tag,
+    'attrs': attrs
+  };
+  return json;
+};
+
+
+/**
+ * @param {Element} shape
+ * @param {Object} json
+ * @return {Object}
+ * @private
+ */
+thin.editor.ShapeStructure.serializeForPageNumber_ = function(shape, json) {
+  var left = Number(shape.getAttribute('x-left'));
+  var top = Number(shape.getAttribute('x-top'));
+  var width = Number(shape.getAttribute('x-width'));
+
+  var attrs = {};
+  
+  var family = shape.getAttribute('font-family');
+  var fontSize = Number(shape.getAttribute('font-size'));
+  var isBold = shape.getAttribute('font-weight') == 'bold';
+
+  json['box'] = {
+    'x': left,
+    'y': top,
+    'width': width, 
+    'height': Number(shape.getAttribute('x-height'))
+  };
+
+  switch(shape.getAttribute('text-anchor')) {
+    case thin.editor.TextStyle.HorizonAlignType.MIDDLE:
+      attrs['x'] = thin.numberWithPrecision(left + (width / 2));
+      break;
+    case thin.editor.TextStyle.HorizonAlignType.END:
+      attrs['x'] = thin.numberWithPrecision(left + width);
+      break;
+    default:
+      attrs['x'] = left;
+      break;
+  }
+  
+  attrs['y'] = thin.numberWithPrecision(top + 
+      thin.core.Font.getAscent(family, fontSize, isBold));
+
+  thin.editor.ShapeStructure.forEachShapeAttribute_(shape,
+    function(key, value) {
+      attrs[key] = value;
+    });
+  
+  json['start-at'] = shape.getAttribute('x-start-at') || '';
+  json['target'] = shape.getAttribute('x-target') || '';
+  json['format'] = shape.getAttribute('x-format') || '';
+  json['overflow'] = shape.getAttribute('x-overflow') || '';
+  json['svg'] = {
+    'tag': 'text',
     'attrs': attrs
   };
   return json;

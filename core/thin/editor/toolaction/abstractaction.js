@@ -220,7 +220,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
           guide.setEnableAndTargetShape(shape);
           shape.setupEventHandlers();
         }
-        shape.adjustToUiStatusForAvailableShape();
+        shape.updateToolbarUI();
         shape.updateProperties();
       }
       outline.disable();
@@ -246,7 +246,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
           multipleShapesHelper.updateProperties();
           thin.ui.setEnabledForFontUi(true);
         } else if (singleShapeByGlobal) {
-          singleShapeByGlobal.adjustToUiStatusForAvailableShape();
+          singleShapeByGlobal.updateToolbarUI();
           guide.setEnableAndTargetShape(singleShapeByGlobal);
           layout.setOutlineForSingle(singleShapeByGlobal);
           singleShapeByGlobal.updateProperties();
@@ -268,7 +268,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
           thin.ui.setEnabledForFontUi(false);
         } else {
           if (singleShapeByListShape) {
-            singleShapeByListShape.adjustToUiStatusForAvailableShape();
+            singleShapeByListShape.updateToolbarUI();
             guide.setEnableAndTargetShape(singleShapeByListShape);
             layout.setOutlineForSingle(singleShapeByListShape);
             singleShapeByListShape.updateProperties();

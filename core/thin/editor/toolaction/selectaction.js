@@ -110,7 +110,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
           var singleShape = activeShapeManager.getIfSingle();
           if (singleShape) {
             layout.setOutlineForSingle(singleShape);
-            singleShape.adjustToUiStatusForAvailableShape();
+            singleShape.updateToolbarUI();
             helpers.getGuideHelper().setEnableAndTargetShape(singleShape);
             singleShape.updateProperties();
           } else {
@@ -133,7 +133,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
           var singleShape = activeShapeManagerByListShape.getIfSingle();
           if (singleShape) {
             layout.setOutlineForSingle(singleShape);
-            singleShape.adjustToUiStatusForAvailableShape();
+            singleShape.updateToolbarUI();
             helpers.getGuideHelper().setEnableAndTargetShape(singleShape);
             singleShape.updateProperties();
           } else {
@@ -158,7 +158,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
         if (!captureActiveForStart) {
           if (singleShapeByGlobal) {
             layout.setOutlineForSingle(singleShapeByGlobal);
-            singleShapeByGlobal.adjustToUiStatusForAvailableShape();
+            singleShapeByGlobal.updateToolbarUI();
             guide.setEnableAndTargetShape(singleShapeByGlobal);
             singleShapeByGlobal.updateProperties();
           } else if (isMultipleByGlobal) {
@@ -187,7 +187,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
           } else {
             if (singleShapeByListShape) {
               singleShapeByListShape.updateProperties();
-              singleShapeByListShape.adjustToUiStatusForAvailableShape();
+              singleShapeByListShape.updateToolbarUI();
               guide.setEnableAndTargetShape(singleShapeByListShape);
             } else {
               var shapes = activeShapeManagerByListShape.get();
@@ -209,7 +209,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
         } else {
           if (singleShapeByListShape) {
             singleShapeByListShape.updateProperties();
-            singleShapeByListShape.adjustToUiStatusForAvailableShape();
+            singleShapeByListShape.updateToolbarUI();
             guide.setEnableAndTargetShape(singleShapeByListShape);
           } else {
           

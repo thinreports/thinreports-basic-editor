@@ -194,7 +194,9 @@ thin.editor.ListGuideResizer.prototype.setup = function() {
     'stroke-opacity': 0
   });
   var handler = new thin.editor.Rect(element, layout, null, new goog.graphics.SolidFill('#FFFFFF', 0.0001));
-  var cursor = new thin.editor.Cursor(thin.editor.Cursor.Type[this.positionName_]);
+  var cursor = thin.editor.Cursor.getCursorByName(
+        /** @type {string} */ (this.positionName_));
+
   handler.setCursor(cursor);
   layout.setElementCursor(element, cursor);
   layout.appendChild(container, this);

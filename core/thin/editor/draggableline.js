@@ -160,7 +160,7 @@ thin.editor.DraggableLine.prototype.init = function() {
   }, false, dragger);
 
   goog.events.listen(dragger, eventType.END, function(e) {
-    var defaultType = thin.editor.Cursor.Type['DEFAULT'];
+    var defaultType = thin.editor.Cursor.Type.DEFAULT;
     var defaultCursor = new thin.editor.Cursor(defaultType);
     dragLayer.setCursor(defaultCursor);
     layout.setElementCursor(dragLayer.getElement(), defaultCursor);

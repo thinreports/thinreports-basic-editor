@@ -913,7 +913,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
         var originalOverflowTypes = [];
         var shapes = manager.getActiveShapeByIncludeList().getClone();
         var targetShapes = goog.array.filter(shapes, function(shape) {
-          if (shape.instanceOfTblockShape()) {
+          if (goog.isFunction(shape.getOverflowType)) {
             originalOverflowTypes[originalOverflowTypes.length] = shape.getOverflowType();
             return true;
           } else {

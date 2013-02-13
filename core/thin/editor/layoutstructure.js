@@ -307,9 +307,8 @@ thin.editor.LayoutStructure.finalizeLayoutElement_ = function(layoutElement) {
  * @private
  */
 thin.editor.LayoutStructure.isSerializableShape_ = function(element) {
-  var id = element.getAttribute('x-id');
-  return goog.isString(id) && 
-         thin.editor.ModuleShape.DEFAULT_SHAPEID != id;
+  var type = element.getAttribute('class');
+  return goog.array.contains(['s-tblock', 's-iblock', 's-list', 's-pageno'], type) || !goog.string.isEmpty(element.getAttribute('x-id'));
 };
 
 

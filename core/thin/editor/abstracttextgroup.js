@@ -361,21 +361,20 @@ thin.editor.AbstractTextGroup.prototype.isFontLinethrough = function() {
 };
 
 
-thin.editor.AbstractTextGroup.prototype.adjustToUiStatusForShape = function() {
-  var workspace = this.getLayout().getWorkspace();
-  var valign = this.getVerticalAlign();
-  if (thin.isExactlyEqual(valign, thin.editor.TextStyle.DEFAULT_VALIGN)) {
-    valign = thin.editor.TextStyle.VerticalAlignType.TOP;
-  }
+/**
+ * Override thin.editor.ModuleShape#updateToolbarUI
+ */
+thin.editor.AbstractTextGroup.prototype.updateToolbarUI = function() {
+  var w = this.getLayout().getWorkspace();
 
-  workspace.setUiStatusForFontFamily(this.getFontFamily());
-  workspace.setUiStatusForFontSize(this.getFontSize());
-  workspace.setUiStatusForHorizonAlignType(this.getTextAnchor());
-  workspace.setUiStatusForVerticalAlignType(valign);
-  workspace.setUiStatusForBold(this.isFontBold());
-  workspace.setUiStatusForUnderlIne(this.isFontUnderline());
-  workspace.setUiStatusForLineThrough(this.isFontLinethrough());
-  workspace.setUiStatusForItalic(this.isFontItalic());
+  w.setUiStatusForFontFamily(this.getFontFamily());
+  w.setUiStatusForFontSize(this.getFontSize());
+  w.setUiStatusForBold(this.isFontBold());
+  w.setUiStatusForUnderlIne(this.isFontUnderline());
+  w.setUiStatusForLineThrough(this.isFontLinethrough());
+  w.setUiStatusForItalic(this.isFontItalic());
+  w.setUiStatusForHorizonAlignType(this.getTextAnchor());
+  w.setUiStatusForVerticalAlignType(this.getVerticalAlign());
 
   thin.ui.adjustToUiStatusForWorkspace();
 };

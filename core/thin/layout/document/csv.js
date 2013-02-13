@@ -122,6 +122,9 @@ thin.layout.document.CSV.prototype.appendShapes_ = function(opt_data) {
       case thin.editor.ImageblockShape.CLASSID:
         this.appendImageblockShape_(data);
         break;
+      case thin.editor.PageNumberShape.CLASSID:
+        this.appendPagenumberShape_(data);
+        break;
       case thin.editor.ListShape.CLASSID:
         this.appendListShape_(data);
         break;
@@ -192,6 +195,36 @@ thin.layout.document.CSV.prototype.appendBasicShape_ = function(data) {
       shape.id,
       shape.typeName,
       shape.display,
+      shape.desc
+    );
+  }, this);
+};
+
+
+/**
+ * @param {Object} data
+ * @private
+ */
+thin.layout.document.CSV.prototype.appendPagenumberShape_ = function(data) {
+  this.appendBlankLineIfNotIndented_();
+
+  this.appendLine_(data.name);
+  this.appendLine_(
+    thin.t('field_pageno_format'), 
+    'ID', 
+    thin.t('field_display'), 
+    thin.t('field_start_pageno'), 
+    thin.t('field_counted_page_target'), 
+    thin.t('field_description')
+  );
+
+  goog.array.forEach(data.shapes, function(shape) {
+    this.appendLine_(
+      shape.format, 
+      shape.id, 
+      shape.display, 
+      shape.startAt, 
+      shape.target, 
       shape.desc
     );
   }, this);

@@ -21,7 +21,7 @@ goog.require('goog.object');
 goog.require('goog.math.Rect');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
-goog.require('thin.editor.Layer');
+goog.require('thin.editor.ActionLayer');
 goog.require('thin.editor.Component');
 goog.require('thin.editor.HeaderSectionHelper');
 goog.require('thin.editor.DetailSectionHelper');
@@ -401,11 +401,11 @@ thin.editor.ListHelper.prototype.setup = function() {
   this.sectionHelpers_[sectionName.PAGEFOOTER] = new thin.editor.PageFooterSectionHelper(layout, sectionName.PAGEFOOTER);
   this.sectionHelpers_[sectionName.FOOTER] = new thin.editor.FooterSectionHelper(layout, sectionName.FOOTER);
   this.listGuideHelper_ = new thin.editor.ListGuideHelper(layout);
-  var blankRangeSelecotorLayer = new thin.editor.Layer(layout);
+  var blankRangeSelecotorLayer = new thin.editor.ActionLayer(layout);
   blankRangeSelecotorLayer.setBounds(new goog.math.Rect(0, 0, 0, 0));
   blankRangeSelecotorLayer.setFill(new goog.graphics.SolidFill(thin.editor.ListHelper.FILL_, thin.editor.ListHelper.FILLOPACITY_));
   this.blankRangeSelectorLayer_ = blankRangeSelecotorLayer;
-  var blankRangeDrawLayer = new thin.editor.Layer(layout);
+  var blankRangeDrawLayer = new thin.editor.ActionLayer(layout);
   blankRangeDrawLayer.setBounds(new goog.math.Rect(0, 0, 0, 0));
   this.blankRangeDrawLayer_ = blankRangeDrawLayer;
 };
@@ -464,7 +464,7 @@ thin.editor.ListHelper.prototype.init = function() {
         } else {
           if (singleShapeByListShape) {
             singleShapeByListShape.updateProperties();
-            singleShapeByListShape.adjustToUiStatusForAvailableShape();
+            singleShapeByListShape.updateToolbarUI();
             guide.setEnableAndTargetShape(singleShapeByListShape);
           } else {
             layout.setOutlineForMultiple(shapes);

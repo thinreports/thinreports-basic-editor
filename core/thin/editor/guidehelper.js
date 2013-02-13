@@ -157,15 +157,16 @@ thin.editor.GuideHelper.prototype.createResizers_ = function() {
   var stroke = new goog.graphics.Stroke(strokeSetting.STROKEWIDTH, strokeSetting.STROKE);
   var layout = this.getLayout();
   var cursorType = thin.editor.Cursor.Type;
-  goog.object.forEach(thin.editor.AbstractGuideHelper.PositionName, goog.bind(function(positionName) {
+  goog.object.forEach(thin.editor.AbstractGuideHelper.PositionName, function(positionName) {
     var element = layout.createSvgElement('ellipse');
     var resizer = new thin.editor.GuideResizer(element, layout, stroke, this);
-    var cursor = new thin.editor.Cursor(cursorType[positionName]);
+    var cursor = thin.editor.Cursor.getCursorByName(
+          /** @type {string} */ (positionName));
     resizer.setCursor(cursor);
     layout.setElementCursor(element, cursor);
     layout.appendChild(resizer, this);
     goog.object.set(this.resizers_, positionName, resizer);
-  }, this));
+  }, this);
 };
 
 
@@ -176,18 +177,26 @@ thin.editor.GuideHelper.prototype.setEnableAndTargetShape = function(target) {
 
   thin.editor.GuideHelper.superClass_.setEnableAndTargetShape.call(this, target);
   this.adjustToTargetShapeBounds();
-
   this.enableAllResizers_(true);
-  if (target.instanceOfTblockShape() && !target.isMultiMode()) {
-    var resizers = this.resizers_;
-    var positionName = thin.editor.AbstractGuideHelper.PositionName;
-    resizers[positionName.TLEFT].setReadOnly(true);
-    resizers[positionName.TCENTER].setReadOnly(true);
-    resizers[positionName.TRIGHT].setReadOnly(true);
-    resizers[positionName.BLEFT].setReadOnly(true);
-    resizers[positionName.BCENTER].setReadOnly(true);
-    resizers[positionName.BRIGHT].setReadOnly(true);
+
+  if (!target.canResizeHeight()) {
+    this.disableResizingHeight_();
   }
+};
+
+
+/**
+ * @private
+ */
+thin.editor.GuideHelper.prototype.disableResizingHeight_ = function() {
+  var pos = thin.editor.AbstractGuideHelper.PositionName;
+  var resizers = [
+    pos.TLEFT, pos.TCENTER, pos.TRIGHT, 
+    pos.BLEFT, pos.BCENTER, pos.BRIGHT
+  ];
+  goog.array.forEach(resizers, function(resizer) {
+    this.getResizerByPositionName(resizer).setReadOnly(true);
+  }, this);
 };
 
 
@@ -199,7 +208,9 @@ thin.editor.GuideHelper.prototype.enableAllResizers_ = function(setting) {
   this.body_.setVisibled(!setting);
   goog.object.forEach(this.resizers_, function(resizer) {
     resizer.setVisibled(setting);
-    resizer.setReadOnly(false);
+    if (resizer.isReadOnly()) {
+      resizer.setReadOnly(false);
+    }
   });
 };
 
@@ -376,7 +387,7 @@ thin.editor.GuideHelper.prototype.init = function() {
   
   var tleftResizer = this.getResizerByPositionName(positionName.TLEFT).getResizer();
   goog.events.listen(tleftResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['TLEFT']);
+    this.setResizeCursor(cursorType.TLEFT);
   }, false, this);
   goog.events.listen(tleftResizer, eventType.START, startListener, false, this);
   goog.events.listen(tleftResizer, eventType.END, endResizeListener, false, this);
@@ -387,7 +398,7 @@ thin.editor.GuideHelper.prototype.init = function() {
   tcenterResizer.setAspectObserve(false);
   
   goog.events.listen(tcenterResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['TCENTER']);
+    this.setResizeCursor(cursorType.TCENTER);
   }, false, this);
   goog.events.listen(tcenterResizer, eventType.START, startListener, false, this);
   goog.events.listen(tcenterResizer, eventType.END, endResizeListener, false, this);
@@ -397,7 +408,7 @@ thin.editor.GuideHelper.prototype.init = function() {
   trightResizer.setResizeDirectionToVertical(vertical.TOP);
   
   goog.events.listen(trightResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['TRIGHT']);
+    this.setResizeCursor(cursorType.TRIGHT);
   }, false, this);
   goog.events.listen(trightResizer, eventType.START, startListener, false, this);
   goog.events.listen(trightResizer, eventType.END, endResizeListener, false, this);
@@ -408,7 +419,7 @@ thin.editor.GuideHelper.prototype.init = function() {
   mleftResizer.setAspectObserve(false);
   
   goog.events.listen(mleftResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['MLEFT']);
+    this.setResizeCursor(cursorType.MLEFT);
   }, false, this);
   goog.events.listen(mleftResizer, eventType.START, startListener, false, this);
   goog.events.listen(mleftResizer, eventType.END, endResizeListener, false, this);
@@ -419,7 +430,7 @@ thin.editor.GuideHelper.prototype.init = function() {
   mrightResizer.setAspectObserve(false);
 
   goog.events.listen(mrightResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['MRIGHT']);
+    this.setResizeCursor(cursorType.MRIGHT);
   }, false, this);
   goog.events.listen(mrightResizer, eventType.START, startListener, false, this);
   goog.events.listen(mrightResizer, eventType.END, endResizeListener, false, this);
@@ -429,7 +440,7 @@ thin.editor.GuideHelper.prototype.init = function() {
   bleftResizer.setResizeDirectionToVertical(vertical.BOTTOM);
   
   goog.events.listen(bleftResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['BLEFT']);
+    this.setResizeCursor(cursorType.BLEFT);
   }, false, this);
   goog.events.listen(bleftResizer, eventType.START, startListener, false, this);
   goog.events.listen(bleftResizer, eventType.END, endResizeListener, false, this);
@@ -440,7 +451,7 @@ thin.editor.GuideHelper.prototype.init = function() {
   bcenterResizer.setAspectObserve(false);
   
   goog.events.listen(bcenterResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['BCENTER']);
+    this.setResizeCursor(cursorType.BCENTER);
   }, false, this);
   goog.events.listen(bcenterResizer, eventType.START, startListener, false, this);
   goog.events.listen(bcenterResizer, eventType.END, endResizeListener, false, this);
@@ -450,7 +461,7 @@ thin.editor.GuideHelper.prototype.init = function() {
   brightResizer.setResizeDirectionToVertical(vertical.BOTTOM);
   
   goog.events.listen(brightResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['BRIGHT']);
+    this.setResizeCursor(cursorType.BRIGHT);
   }, false, this);
   goog.events.listen(brightResizer, eventType.START, startListener, false, this);
   goog.events.listen(brightResizer, eventType.END, endResizeListener, false, this);

@@ -33,6 +33,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   property_group_list_footer: 'List Footer',
   property_group_list_page_footer: 'List Page Footer',
   property_group_image: 'Image', 
+  property_group_pageno: 'Page no',
 
   label_title_setting: 'Title',
   label_page_setting: 'Page',
@@ -131,6 +132,10 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   field_position: 'Position', 
   field_language: 'Locale', 
   field_default_unit: 'Default Unit',
+  field_start_pageno: 'Start At',
+  field_pageno_format: 'Format',
+  field_counted_page_target: 'Counted Target',
+  field_default_counted_page_target: 'Report', 
 
   button_new_report: 'New',
   button_save: 'Save',
@@ -176,6 +181,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   button_image_tool: 'Image',
   button_text_block_tool: 'Text Block',
   button_image_block_tool: 'Image Block',
+  button_page_number_tool: 'Page Number',
   button_list_tool: 'List',
 
   error_id_is_already_used: '{$id} is already in use.',
@@ -184,6 +190,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   error_id_is_required: 'ID is required.',
   error_id_not_found: '{$id} is not found.',
   error_id_is_not_textblock: '{$id} is not TextBlock shape.',
+  error_id_is_not_list: '{$id} is not List shape.',
   error_can_not_specify_myself: 'Self cannot be specified.',
   error_id_already_has_reference: '{$id} has already reference.',
   error_can_not_set_the_reference: 'Cannot set the reference, because has been already referenced from another shapes.',
@@ -193,10 +200,12 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   error_unknown: 'An unexpected error occurred.',
   error_invalid_layout_file: 'This layout file cannot be opened because has problem.',
   error_failed_to_load_image: 'Failed to load image.',
+  error_no_valid_placeholder_included: 'No a valid placeholder included.',
 
   notice_no_shapes: 'No shapes',
   warning_discard_changes: 'If you have unsaved files, the changes will be discarded. Please be sure to save.', 
   warning_discard_changes_en: '', 
+  info_non_standard_font: '{$font} is non-standard font, so may not be displayed correctly.',
 
   text_about_description: 'Please see the official site or official project site about the license, help, release notes of ThinReports.',
   text_editor_force_close_confirmation: 'There is unsaved layout files.\nSave these files before close?',
@@ -205,6 +214,8 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   text_change_unit: 'Change unit to {$unit}',
   text_apply_locale_setting: 'After reloading the Editor, the setting will be applied.\nDo you want to apply now?',
   text_layout_force_edit_confirmation: 'Because this layout has been created with a newer version, there is a risk of some configurations are broken by editing.\nAre you sure you want to edit anyway?',
+  text_placeholder_of_pageno_description: '[Available Placeholders] {page}:Page Number, {total}:Total Page Count',
+  text_counted_page_target_description: '[Allowed Targets] List (The ID of target List) or Report (Empty)', 
 
   shape_rectangle: 'Rectangle', 
   shape_ellipse: 'Ellipse', 

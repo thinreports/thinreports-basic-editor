@@ -332,29 +332,31 @@ thin.editor.Action.prototype.actionSetFontSize = function(newFontSize) {
   var layout = this.layout_;
   var helpers = layout.getHelpers();
   var guide = helpers.getGuideHelper();
-  var listHelper = helpers.getListHelper();
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var captureProperties = multipleShapesHelper.getCloneProperties();
   var captureFontSize = workspace.getUiStatusForFontSize();
+  var activeShapeManager = layout.getActiveShapeManager();
 
-  if (!listHelper.isActive()) {
-    var activeShapeManager = layout.getManager().getActiveShape();
-  } else {
-    var activeShapeManager = listHelper.getActiveShape();
-  }
   var singleShape = activeShapeManager.getIfSingle();
   var shapes = activeShapeManager.getClone();
   var isMultipleSelect = activeShapeManager.isMultiple();
 
   var captureTextFontSizeArray = [];
   var captureTextBoundsArray = [];
+
   layout.forTextShapesEach(shapes, function(shape, i) {
     goog.array.insertAt(captureTextFontSizeArray, shape.getFontSize(), i);
     goog.array.insertAt(captureTextBoundsArray, shape.getBounds(), i);
   });
+
   var captureTblockFontSizeArray = [];
   layout.forTblockShapesEach(shapes, function(shape, i) {
     goog.array.insertAt(captureTblockFontSizeArray, shape.getFontSize(), i);
+  });
+
+  var pageNumberFonts = [];
+  layout.forPageNumberShapesEach(shapes, function(shape, i) {
+    goog.array.insertAt(pageNumberFonts, shape.getFontSize(), i);
   });
 
   /**
@@ -389,15 +391,30 @@ thin.editor.Action.prototype.actionSetFontSize = function(newFontSize) {
     }
   };
 
+  /**
+   * @param {goog.graphics.Element} shape
+   * @param {number} fontSize
+   */
+  var setPageNumberFontSize = function(shape, fontSize) {
+    shape.setFontSize(fontSize);
+    shape.setHeight(thin.core.Font.getHeight(shape.getFontFamily(), fontSize));
+    if (isMultipleSelect) {
+      shape.getTargetOutline().setHeight(shape.getHeight());
+    }
+  };
+
   workspace.normalVersioning(function(version) {
     version.upHandler(function() {
-    
       layout.forTextShapesEach(shapes, function(shape, i) {
         setFontSizeTextShape(shape, newFontSize);
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
         setFontSizeTblockShape(shape, newFontSize);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setPageNumberFontSize(shape, newFontSize);
       });
       
       if (guide.isEnable()) {
@@ -416,7 +433,6 @@ thin.editor.Action.prototype.actionSetFontSize = function(newFontSize) {
     }, scope);
     
     version.downHandler(function() {
-    
       layout.forTextShapesEach(shapes, function(shape, i) {
         setFontSizeTextShape(shape, captureTextFontSizeArray[i], 
                                     captureTextBoundsArray[i]);
@@ -424,6 +440,10 @@ thin.editor.Action.prototype.actionSetFontSize = function(newFontSize) {
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
         setFontSizeTblockShape(shape, captureTblockFontSizeArray[i]);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setPageNumberFontSize(shape, pageNumberFonts[i]);
       });
       
       if (guide.isEnable()) {
@@ -453,34 +473,35 @@ thin.editor.Action.prototype.actionSetFontFamily = function(newFontFamily) {
   var layout = this.layout_;
   var helpers = layout.getHelpers();
   var guide = helpers.getGuideHelper();
-  var listHelper = helpers.getListHelper();
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var captureProperties = multipleShapesHelper.getCloneProperties();
   var currentFontFamily = workspace.getUiStatusForFontFamily();
+  var activeShapeManager = layout.getActiveShapeManager();
   
   if (!thin.core.Font.isBuiltinFont(newFontFamily)) {
-    thin.ui.Notification.info('"' + newFontFamily + '" は標準フォントではないため、' +
-                              'PDF出力時に正しく表示されない可能性があります。');
+    thin.ui.Notification.info(thin.t('info_non_standard_font', {'font': newFontFamily}));
   }
   
-  if (!listHelper.isActive()) {
-    var activeShapeManager = layout.getManager().getActiveShape();
-  } else {
-    var activeShapeManager = listHelper.getActiveShape();
-  }
   var singleShape = activeShapeManager.getIfSingle();
   var shapes = activeShapeManager.getClone();
   var isMultipleSelect = activeShapeManager.isMultiple();
   
   var captureTextFontFamilyArray = [];
   var captureTextBoundsArray = [];
+
   layout.forTextShapesEach(shapes, function(shape, i) {
     goog.array.insertAt(captureTextFontFamilyArray, shape.getFontFamily(), i);
     goog.array.insertAt(captureTextBoundsArray, shape.getBounds(), i);
   });
+
   var captureTblockFontFamilyArray = [];
   layout.forTblockShapesEach(shapes, function(shape, i) {
     goog.array.insertAt(captureTblockFontFamilyArray, shape.getFontFamily(), i);
+  });
+
+  var pageNumberFontFamilies = [];
+  layout.forPageNumberShapesEach(shapes, function(shape, i) {
+    goog.array.insertAt(pageNumberFontFamilies, shape.getFontFamily(), i);
   });
   
   /**
@@ -514,16 +535,30 @@ thin.editor.Action.prototype.actionSetFontFamily = function(newFontFamily) {
       }
     }
   };
+
+  /**
+   * @param {thin.editor.PageNumberShape} shape
+   * @param {string} fontFamily
+   */
+  var setPageNumberFontFamily = function(shape, fontFamily) {
+    shape.setFontFamily(fontFamily);
+    if (isMultipleSelect) {
+      shape.getTargetOutline().setBounds(shape.getBounds());
+    }
+  };
   
   workspace.normalVersioning(function(version) {
     version.upHandler(function() {
-
       layout.forTextShapesEach(shapes, function(shape, i) {
         setFontFamilyTextShape(shape, newFontFamily);
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
         setFontFamilyTblockShape(shape, newFontFamily);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setPageNumberFontFamily(shape, newFontFamily);
       });
       
       if (guide.isEnable()) {
@@ -545,7 +580,6 @@ thin.editor.Action.prototype.actionSetFontFamily = function(newFontFamily) {
     }, scope);
     
     version.downHandler(function() {
-      
       layout.forTextShapesEach(shapes, function(shape, i) {
         setFontFamilyTextShape(shape, captureTextFontFamilyArray[i],
                                       captureTextBoundsArray[i]);
@@ -553,6 +587,10 @@ thin.editor.Action.prototype.actionSetFontFamily = function(newFontFamily) {
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
         setFontFamilyTblockShape(shape, captureTblockFontFamilyArray[i]);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setPageNumberFontFamily(shape, pageNumberFontFamilies[i]);
       });
       
       if (guide.isEnable()) {
@@ -588,12 +626,8 @@ thin.editor.Action.prototype.actionSetTextAnchor = function(newTextAnchor) {
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var captureProperties = multipleShapesHelper.getCloneProperties();
   var captureTextAnchor = workspace.getUiStatusForHorizonAlignType();
+  var activeShapeManager = layout.getActiveShapeManager();
   
-  if (!listHelper.isActive()) {
-    var activeShapeManager = layout.getManager().getActiveShape();
-  } else {
-    var activeShapeManager = listHelper.getActiveShape();
-  }
   var singleShape = activeShapeManager.getIfSingle();
   var shapes = activeShapeManager.getClone();
   var isMultipleSelect = activeShapeManager.isMultiple();
@@ -602,26 +636,32 @@ thin.editor.Action.prototype.actionSetTextAnchor = function(newTextAnchor) {
   layout.forTextShapesEach(shapes, function(shape, i) {
     goog.array.insertAt(captureTextTextAnchorArray, shape.getTextAnchor(), i);
   });
+
   var captureTblockTextAnchorArray = [];
   layout.forTblockShapesEach(shapes, function(shape, i) {
     goog.array.insertAt(captureTblockTextAnchorArray, shape.getTextAnchor(), i);
+  });
+
+  var pageNumberTextAnchors = [];
+  layout.forPageNumberShapesEach(shapes, function(shape, i) {
+    goog.array.insertAt(pageNumberTextAnchors, shape.getTextAnchor(), i);
   });
   
   /**
    * @param {goog.graphics.Element} shape
    * @param {string} textAnchor
    */
-  var setTextAnchorTextShape = function(shape, textAnchor) {
+  var setTextAnchor = function(shape, textAnchor) {
     shape.setTextAnchor(textAnchor);
-    shape.setLeft(shape.getLeft());
   };
-  
+
   /**
    * @param {goog.graphics.Element} shape
    * @param {string} textAnchor
    */
-  var setTextAnchorTblockShape = function(shape, textAnchor) {
-    shape.setTextAnchor(textAnchor);
+  var setTextAnchorTextShape = function(shape, textAnchor) {
+    setTextAnchor(shape, textAnchor);
+    shape.setLeft(shape.getLeft());
   };
   
   workspace.normalVersioning(function(version) {
@@ -632,7 +672,11 @@ thin.editor.Action.prototype.actionSetTextAnchor = function(newTextAnchor) {
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
-        setTextAnchorTblockShape(shape, newTextAnchor);
+        setTextAnchor(shape, newTextAnchor);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setTextAnchor(shape, newTextAnchor);
       });
       
       if (guide.isEnable()) {
@@ -660,7 +704,11 @@ thin.editor.Action.prototype.actionSetTextAnchor = function(newTextAnchor) {
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
-        setTextAnchorTblockShape(shape, captureTblockTextAnchorArray[i]);
+        setTextAnchor(shape, captureTblockTextAnchorArray[i]);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setTextAnchor(shape, pageNumberTextAnchors[i]);
       });
       
       if (guide.isEnable()) {
@@ -1318,7 +1366,7 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
 
         var singleShape = activeShapeManager.getIfSingle();
         if (singleShape) {
-          singleShape.adjustToUiStatusForAvailableShape();
+          singleShape.updateToolbarUI();
           guide.setEnableAndTargetShape(singleShape);
           singleShape.updateProperties();
         } else {
@@ -1390,7 +1438,7 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
             thin.ui.setEnabledForFontUi(true);
           } else {
             var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
-            singleShapeByListShape.adjustToUiStatusForAvailableShape();
+            singleShapeByListShape.updateToolbarUI();
             guide.setEnableAndTargetShape(singleShapeByListShape);
             singleShapeByListShape.updateProperties();
           }

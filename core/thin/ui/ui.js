@@ -213,6 +213,22 @@ thin.ui.setEnabledForFontUi = function(enabled) {
 
 
 /**
+ * @param {boolean} base FontBaseUI
+ * @param {boolean} style TextStyleUI
+ * @param {boolean} align HorizontalAlignUI
+ * @param {boolean} valign VerticalAlignUI
+ * @param {boolean} edit TextEditUI
+ */
+thin.ui.enablingFontUIs = function(base, style, align, valign, edit) {
+  thin.ui.setEnabledForFontBaseUi(base);
+  thin.ui.setEnabledForTextStyleUi(style);
+  thin.ui.setEnabledForHorizontalAlignTypeUi(align);
+  thin.ui.setEnabledForVerticalAlignTypeUi(valign);
+  thin.ui.setEnabledForTextEdit(edit);
+};
+
+
+/**
  * @param {boolean} enabled
  */
 thin.ui.setEnabledForFontBaseUi = function(enabled) {

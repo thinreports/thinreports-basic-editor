@@ -82,6 +82,7 @@ goog.require('thin.editor.toolaction.TblockAction');
 goog.require('thin.editor.toolaction.ListAction');
 goog.require('thin.editor.toolaction.ImageAction');
 goog.require('thin.editor.toolaction.ImageblockAction');
+goog.require('thin.editor.toolaction.PageNumberAction');
 goog.require('thin.editor.LayoutStructure');
 goog.require('thin.editor.ListHelper');
 goog.require('thin.editor.ListHelper.SectionName');
@@ -1459,6 +1460,12 @@ thin.boot = function() {
           new thin.ui.Icon('tool-iblock')), 'iblock');
     toolIblock.setTooltip(thin.t('button_image_block_tool'));
     
+    // PageNumber
+    var toolPageNumber = toolbox.addItem(
+        new thin.ui.ToolboxButton(new thin.editor.toolaction.PageNumberAction(), 
+          new thin.ui.Icon('tool-pageno')), 'pagenumber');
+    toolPageNumber.setTooltip(thin.t('button_page_number_tool'));
+
     // Separator
     toolbox.addItem(new thin.ui.ToolboxSeparator());
     

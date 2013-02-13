@@ -84,13 +84,19 @@ thin.editor.GuideResizer.prototype.isReadOnly = function() {
 
 
 /**
- * @param {boolean} only
+ * @param {boolean} readonly
  */
-thin.editor.GuideResizer.prototype.setReadOnly = function(only) {
+thin.editor.GuideResizer.prototype.setReadOnly = function(readonly) {
   var fillSetting = thin.editor.GuideResizer.Fill_;
-  this.readOnly_ = only;
-  this.setFill(only ? fillSetting.READONLYFILL : fillSetting.DEFAULTFILL);
-  this.getResizer().setEnabled(!only);
+  this.readOnly_ = readonly;
+  this.setFill(readonly ? fillSetting.READONLYFILL : fillSetting.DEFAULTFILL);
+  this.getResizer().setEnabled(!readonly);
+  
+  if (readonly) {
+    this.getLayout().removeElementCursor(this.getElement());
+  } else {
+    this.getLayout().setElementCursor(this.getElement(), this.getCursor());
+  }
 };
 
 

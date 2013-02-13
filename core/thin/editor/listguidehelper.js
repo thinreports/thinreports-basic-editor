@@ -81,7 +81,7 @@ thin.editor.ListGuideHelper.prototype.setup = function() {
   var guideBody = new thin.editor.GuideBody(element, layout, 
                     new goog.graphics.Stroke(strokeSetting.STROKEWIDTH, strokeSetting.COLOR), null);
 
-  var cursorMove = new thin.editor.Cursor(thin.editor.Cursor.Type['MOVE']);
+  var cursorMove = new thin.editor.Cursor(thin.editor.Cursor.Type.MOVE);
   guideBody.setCursor(cursorMove);
   layout.setElementCursor(element, cursorMove);
   
@@ -226,7 +226,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
     bodyDragger.setLimits(new goog.math.Rect(bounds.left, bounds.top, bounds.width - guideBounds.width, bounds.height - guideBounds.height));
     bodyDragger.setAdsorptionX(helpers.getAdsorptionX());
     bodyDragger.setAdsorptionY(helpers.getAdsorptionY());
-    var cursorTypeMove = thin.editor.Cursor.Type['MOVE'];
+    var cursorTypeMove = thin.editor.Cursor.Type.MOVE;
     var cursorMove = new thin.editor.Cursor(cursorTypeMove);
     goog.style.setStyle(body, 'cursor', cursorTypeMove);
     dragLayer.setCursor(cursorMove);
@@ -247,7 +247,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
   
   goog.events.listen(bodyDragger, eventType.END, function(e) {
 
-    var cursorTypeDefault = thin.editor.Cursor.Type['DEFAULT'];
+    var cursorTypeDefault = thin.editor.Cursor.Type.DEFAULT;
     var cursorDefault = new thin.editor.Cursor(cursorTypeDefault);
     goog.style.setStyle(body, 'cursor', cursorTypeDefault);
     dragLayer.setCursor(cursorDefault);
@@ -282,7 +282,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
       } else {
         if (singleShapeByListShape) {
           singleShapeByListShape.updateProperties();
-          singleShapeByListShape.adjustToUiStatusForAvailableShape();
+          singleShapeByListShape.updateToolbarUI();
           guide.setEnableAndTargetShape(singleShapeByListShape);
         } else {
           layout.setOutlineForMultiple(shapes);
@@ -486,7 +486,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
   
   var tleftResizer = this.getResizerByPositionName(positionName.TLEFT).getResizer();
   goog.events.listen(tleftResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['TLEFT']);
+    this.setResizeCursor(cursorType.TLEFT);
     if (listHelper.getActiveShape().isEmpty()) {
       tleftResizer.setResizeModeByCoordinate(true);
       tleftResizer.setResizeModeByTransScale(false);
@@ -502,7 +502,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
   tcenterResizer.setAspectObserve(false);
   
   goog.events.listen(tcenterResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['TCENTER']);
+    this.setResizeCursor(cursorType.TCENTER);
   }, false, this);
   
   goog.events.listen(tcenterResizer, eventType.START, startResizeListener, false, this);
@@ -513,7 +513,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
   trightResizer.setResizeDirectionToVertical(vertical.TOP);
   
   goog.events.listen(trightResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['TRIGHT']);
+    this.setResizeCursor(cursorType.TRIGHT);
   }, false, this);
   
   goog.events.listen(trightResizer, eventType.START, startResizeListener, false, this);
@@ -524,7 +524,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
   mleftResizer.setResizeDirectionToVertical(vertical.MIDDLE);
   mleftResizer.setAspectObserve(false);
   goog.events.listen(mleftResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['MLEFT']);
+    this.setResizeCursor(cursorType.MLEFT);
   }, false, this);
   
   goog.events.listen(mleftResizer, eventType.START, startResizeListener, false, this);
@@ -535,7 +535,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
   mrightResizer.setResizeDirectionToVertical(vertical.MIDDLE);
   mrightResizer.setAspectObserve(false);
   goog.events.listen(mrightResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['MRIGHT']);
+    this.setResizeCursor(cursorType.MRIGHT);
   }, false, this);
   
   goog.events.listen(mrightResizer, eventType.START, startResizeListener, false, this);
@@ -546,7 +546,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
   bleftResizer.setResizeDirectionToVertical(vertical.BOTTOM);
   
   goog.events.listen(bleftResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['BLEFT']);
+    this.setResizeCursor(cursorType.BLEFT);
   }, false, this);
   
   goog.events.listen(bleftResizer, eventType.START, startResizeListener, false, this);
@@ -557,7 +557,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
   bcenterResizer.setResizeDirectionToVertical(vertical.BOTTOM);
   bcenterResizer.setAspectObserve(false);
   goog.events.listen(bcenterResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['BCENTER']);
+    this.setResizeCursor(cursorType.BCENTER);
   }, false, this);
   
   goog.events.listen(bcenterResizer, eventType.START, startResizeListener, false, this);
@@ -568,7 +568,7 @@ thin.editor.ListGuideHelper.prototype.init = function() {
   brightResizer.setResizeDirectionToVertical(vertical.BOTTOM);
   
   goog.events.listen(brightResizer, draggerEventType.BEFORESTART, function(e) {
-    this.setResizeCursor(cursorType['BRIGHT']);
+    this.setResizeCursor(cursorType.BRIGHT);
   }, false, this);
   
   goog.events.listen(brightResizer, eventType.START, startResizeListener, false, this);

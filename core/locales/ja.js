@@ -33,6 +33,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   property_group_list_footer: 'フッター',
   property_group_list_page_footer: 'ページフッター',
   property_group_image: '画像位置',
+  property_group_pageno: 'ページ番号',
 
   label_title_setting: 'タイトル設定',
   label_page_setting: '用紙設定',
@@ -131,6 +132,10 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   field_position: '位置', 
   field_language: '言語', 
   field_default_unit: 'デフォルト単位', 
+  field_start_pageno: '開始ページ',
+  field_pageno_format: '書式',
+  field_counted_page_target: 'カウント対象',
+  field_default_counted_page_target: 'レポート', 
 
   button_new_report: '新規作成',
   button_save: '保存',
@@ -176,6 +181,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   button_image_tool: '画像ツール',
   button_text_block_tool: 'テキストブロックツール',
   button_image_block_tool: '画像ブロックツール',
+  button_page_number_tool: 'ページ番号ツール', 
   button_list_tool: '一覧表ツール',
 
   error_id_is_already_used: '{$id} は既に使用されています。',
@@ -184,6 +190,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   error_id_is_required: 'IDは必須です。',
   error_id_not_found: '{$id} は存在しません。',
   error_id_is_not_textblock: '{$id} はテキストブロックではありません。',
+  error_id_is_not_list: '{$id} はリストではありません。',
   error_can_not_specify_myself: '自身は指定できません。',
   error_id_already_has_reference: '{$id} は参照先を持っているため、指定できません。',
   error_can_not_set_the_reference: '他のテキストブロックから参照されているため、参照先を設定することはできません。',
@@ -193,10 +200,12 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   error_unknown: '予期しないエラーが発生しました。',
   error_invalid_layout_file: 'レイアウトファイルの内容に異常が検出されたため開くことができません。',
   error_failed_to_load_image: '画像ファイルの読み込みに失敗しました。',
+  error_no_valid_placeholder_included: '有効なプレースホルダが一つも含まれていません。',
 
   notice_no_shapes: 'オブジェクトはありません',
   warning_discard_changes: '保存していないレイアウトがある場合は必ず保存して下さい。', 
   warning_discard_changes_en: 'If you have unsaved files, the changes will be discarded. Please be sure to save.', 
+  info_non_standard_font: '{$font} は標準フォントではないため、PDF 出力時に正しく表示されない可能性があります。',
 
   text_about_description: 'ThinReports のライセンス、ヘルプ、及びリリース情報については、公式サイト又はプロジェクトサイトよりご確認下さい。',
   text_editor_force_close_confirmation: '保存されていないファイルがあります。\n保存しますか？',
@@ -205,6 +214,8 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   text_change_unit: '単位 {$unit} へ切り替える',
   text_apply_locale_setting: '設定を反映するにはエディタの再読み込みが必要です。\n今すぐ設定を反映しますか？',
   text_layout_force_edit_confirmation: 'このレイアウトは新しいバージョンのエディタで作成されているため、\n編集すると一部の設定情報が消失する可能性があります。\nそれでも開きますか？',
+  text_placeholder_of_pageno_description: '[利用可能なプレースホルダ] {page}:ページ番号, {total}:総ページ数', 
+  text_counted_page_target_description: '[指定可能な対象] リスト（対象リストID） or レポート（空）', 
 
   shape_rectangle: '四角形', 
   shape_ellipse: '楕円形', 
