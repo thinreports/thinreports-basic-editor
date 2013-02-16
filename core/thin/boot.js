@@ -141,6 +141,7 @@ thin.boot = function() {
     var valignBottom_ = toolbar.getChild('text-valign-bottom');
     
     thin.ui.getComponent('toolbox').setSelectedItem(null);
+    toolbar.getChild('grid').setChecked(false);
     toolbar.getChild('guide').setChecked(false);
     
     toolbar.getChild('redo').setEnabled(false);
@@ -220,12 +221,13 @@ thin.boot = function() {
       var toolbox = thin.ui.getComponent('toolbox');
       var toolbar = thin.ui.getComponent('toolbar');
       var layout = selectedWorkspace.getLayout();
-      
+      var helper = layout.getHelpers();
       selectedWorkspace.focusElement(e);
       
       initUiStatus();
       toolbox.setSelectedItem(toolbox.getChild(selectedAction));
-      toolbar.getChild('guide').setChecked(layout.getHelpers().getLayoutGuideHelper().isEnable());
+      toolbar.getChild('guide').setChecked(helper.getLayoutGuideHelper().isEnable());
+      toolbar.getChild('grid').setChecked(helper.isVisibledGrid());
       thin.ui.setEnabledForFontBaseUi(
             selectedWorkspace.getUiStatusForFontBaseUi());
       thin.ui.setEnabledForTextStyleUi(
@@ -801,10 +803,23 @@ thin.boot = function() {
       }
     });
     
+    // Grid
+    var toolGrid = toolbar.setupChild('grid', 
+        new thin.ui.ToolbarToggleIconButton(new thin.ui.Icon('grid')),
+            dom.getElement('tbar-grid'));
+    
+    toolGrid.addEventListener(componentEventType.ACTION, function(e) {
+      var workspace = thin.editor.getActiveWorkspace();
+      if (workspace) {
+        workspace.getLayout().getHelpers().switchGridLayerFill(e.target.isChecked());
+        focusWorkspace(e);
+      }
+    });
+    
     // Guide
     var toolGuide = toolbar.setupChild('guide', 
         new thin.ui.ToolbarSplitToggleButton(thin.t('button_guide'), 
-            new thin.ui.Icon('guide'), thin.ui.SplitButton.Orientation.VERTICAL), 
+            new thin.ui.Icon('guide'), thin.ui.SplitButton.Orientation.HORIZONTAL), 
         dom.getElement('tbar-guide'));
     
     toolGuide.getButton().addEventListener(componentEventType.ACTION, function(e) {

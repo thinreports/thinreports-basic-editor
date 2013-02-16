@@ -96,6 +96,9 @@
 .thin-icon-zoom-out {
   background-image: url(icons/magnifier-zoom-out.png);
 }
+.thin-icon-grid {
+  background-image: url(icons/grid.png);
+}
 .thin-icon-guide {
   background-image: url(icons/guide.png);
 }

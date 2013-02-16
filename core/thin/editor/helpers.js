@@ -78,6 +78,20 @@ thin.editor.Helpers.prototype.grid_;
 
 
 /**
+ * @type {thin.editor.Layer}
+ * @private
+ */
+thin.editor.Helpers.prototype.gridLayer_;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.editor.Helpers.prototype.visibledGrid_ = false;
+
+
+/**
  * @type {thin.editor.GuideHelper}
  * @private
  */
@@ -193,6 +207,14 @@ thin.editor.Helpers.prototype.setup = function() {
   surface.setVisibled(true);
 
   this.surface_ = surface;
+  
+  var gridLayer = new thin.editor.Layer(layout);
+  gridLayer.setVisibled(true);
+  layout.setElementAttributes(gridLayer.getElement(), {
+    'width': '100%',
+    'height': '100%'
+  });
+  this.gridLayer_ = gridLayer;
   this.grid_ = new thin.editor.Grid(layout);
 
   this.canvas_ = new thin.editor.Rect(layout.createSvgElement('rect'),
@@ -208,8 +230,9 @@ thin.editor.Helpers.prototype.setup = function() {
 
 thin.editor.Helpers.prototype.render = function() {
   this.layout_.addDef(this.grid_.getDefKey(), this.grid_.getElement());
-  this.canvas_.setFill(this.grid_.getPatternFill());
+  this.switchGridLayerFill(false);
   this.appendFront(this.canvas_);
+  this.appendFront(this.gridLayer_);
   this.appendFront(this.marginGuideHelper_);
   this.appendFront(this.surface_);
 
@@ -226,6 +249,29 @@ thin.editor.Helpers.prototype.render = function() {
   goog.dom.insertSiblingBefore(this.frontContainer_.getElement(),
                                goog.dom.getFirstElementChild(svgElement));
   svgElement.appendChild(this.backContainer_.getElement());
+};
+
+
+/**
+ * @param {boolean} is_grid
+ */
+thin.editor.Helpers.prototype.switchGridLayerFill = function(is_grid) {
+  var fill = null;
+  if (is_grid) {
+    fill = this.grid_.getPatternFill();
+  } else {
+    fill = new goog.graphics.SolidFill('#FFFFFF');
+  }
+  this.gridLayer_.setFill(fill);
+  this.visibledGrid_ = is_grid;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.editor.Helpers.prototype.isVisibledGrid = function() {
+  return this.visibledGrid_;
 };
 
 
@@ -643,6 +689,7 @@ thin.editor.Helpers.prototype.disposeInternal = function() {
   this.layoutGuideHelper_.dispose();
   this.surface_.dispose();
   this.grid_.dispose();
+  this.gridLayer_.dispose();
   this.canvas_.dispose();
   this.zoomLayer_.dispose();
   this.drawLayer_.dispose();
@@ -657,6 +704,7 @@ thin.editor.Helpers.prototype.disposeInternal = function() {
   delete this.layoutGuideHelper_;
   delete this.surface_;
   delete this.grid_;
+  delete this.gridLayer_;
   delete this.canvas_;
   delete this.zoomLayer_;
   delete this.drawLayer_;
