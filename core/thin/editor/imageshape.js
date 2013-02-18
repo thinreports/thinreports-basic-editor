@@ -90,6 +90,13 @@ thin.editor.ImageShape.prototype.file_;
 
 
 /**
+ * @type {boolean}
+ * @private
+ */
+thin.editor.ImageShape.prototype.background_ = false;
+
+
+/**
  * @return {string}
  */
 thin.editor.ImageShape.prototype.getClassId = function() {
@@ -110,6 +117,7 @@ thin.editor.ImageShape.createFromElement = function(element, layout, opt_shapeId
   shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
   shape.setNaturalSize(Number(layout.getElementAttribute(element, 'x-natural-width')), 
                        Number(layout.getElementAttribute(element, 'x-natural-height')));
+  shape.setBackground(layout.getElementAttribute(element, 'x-bg') == 'true');
   
   return shape;
 };
@@ -257,6 +265,22 @@ thin.editor.ImageShape.prototype.setHeight = function(height) {
 };
 
 
+/**
+ * @param {boolean} isBg
+ */
+thin.editor.ImageShape.prototype.setBackground = function(isBg) {
+  this.background_ = isBg;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.editor.ImageShape.prototype.isBackground = function() {
+  return this.background_;
+};
+
+
 thin.editor.ImageShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getImageOutline());
 };
@@ -275,7 +299,6 @@ thin.editor.ImageShape.prototype.toOutline = function(helpers, multiOutlineHelpe
  * @return {Function}
  */
 thin.editor.ImageShape.prototype.getCloneCreator = function() {
-
   var sourceCoordinate = new goog.math.Coordinate(this.getLeft(), this.getTop()).clone();
   var deltaCoordinateForList = this.getDeltaCoordinateForList().clone();
   var deltaCoordinateForGuide = this.getDeltaCoordinateForGuide().clone();
@@ -286,6 +309,7 @@ thin.editor.ImageShape.prototype.getCloneCreator = function() {
   var naturalHeight = this.getNaturalHeight();
   var file = this.getFile().clone();
   var display = this.getDisplay();
+  var isBg = this.isBackground();
  
   var isAffiliationListShape = this.isAffiliationListShape();
   var deltaCoordinate = this.getDeltaCoordinateForList();
@@ -298,7 +322,6 @@ thin.editor.ImageShape.prototype.getCloneCreator = function() {
    * @return {thin.editor.ImageShape}
    */
   return function(layout, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate) {
-    
     var shape = layout.createImageShape();
     layout.appendChild(shape, opt_renderTo);
     
@@ -309,6 +332,7 @@ thin.editor.ImageShape.prototype.getCloneCreator = function() {
     shape.setFile(file);
     shape.setNaturalSize(naturalWidth, naturalHeight);
     shape.setBounds(new goog.math.Rect(pasteCoordinate.x, pasteCoordinate.y, width, height));
+    shape.setBackground(isBg);
     shape.setDisplay(display);
     return shape;
   };
@@ -374,6 +398,31 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
       this.setDisplayForPropertyUpdate, false, this);
   
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
+
+
+  var bgImageGroup = proppane.addGroup(thin.t('property_group_background_image'));
+
+  var bgCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_background_image'));
+  bgCheckProperty.addEventListener(propEventType.CHANGE, 
+      function(e) {
+        var scope = this;
+        var newIsBg = e.target.isChecked();
+        var oldIsBg = this.isBackground();
+
+        this.getLayout().getWorkspace().normalVersioning(function(version) {
+          version.upHandler(function() {
+            this.setBackground(newIsBg);
+            proppane.getPropertyControl('background-image').setChecked(newIsBg);
+          }, scope);
+
+          version.downHandler(function() {
+            this.setBackground(oldIsBg);
+            proppane.getPropertyControl('background-image').setChecked(oldIsBg);
+          }, scope);
+        });
+      }, false, this);
+
+  proppane.addProperty(bgCheckProperty, bgImageGroup, 'background-image');
   
 
   var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
@@ -403,6 +452,7 @@ thin.editor.ImageShape.prototype.getProperties = function() {
     'width': this.getWidth(),
     'height': this.getHeight(),
     'display': this.getDisplay(),
+    'background-image': this.isBackground(), 
     'shape-id': this.getShapeId(),
     'desc': this.getDesc()
   };
@@ -424,6 +474,8 @@ thin.editor.ImageShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('width').setValue(properties['width']);
     proppane.getPropertyControl('height').setValue(properties['height']);
     proppane.getPropertyControl('display').setChecked(properties['display']);
+    proppane.getPropertyControl('background-image').setChecked(
+        properties['background-image']);
     proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
     proppane.getPropertyControl('desc').setValue(properties['desc']);
   }, this);
