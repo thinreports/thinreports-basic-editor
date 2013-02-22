@@ -67,7 +67,7 @@ Then, please see the [here](http://osc.matsukei.net/projects/thinreports/wiki/In
 
 ### How to translate in your own language
 
-See TRANSLATION.md.
+See [TRANSLATION.md](https://github.com/thinreports/thinreports-editor/blob/master/TRANSLATION.md).
 
 ## License
 
