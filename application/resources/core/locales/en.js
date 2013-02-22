@@ -34,6 +34,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   property_group_list_page_footer: 'List Page Footer',
   property_group_image: 'Image', 
   property_group_pageno: 'Page no',
+  property_group_background_image: 'Background Image', 
 
   label_title_setting: 'Title',
   label_page_setting: 'Page',
@@ -136,6 +137,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   field_pageno_format: 'Format',
   field_counted_page_target: 'Counted Target',
   field_default_counted_page_target: 'Report', 
+  field_background_image: 'Background', 
 
   button_new_report: 'New',
   button_save: 'Save',
@@ -147,6 +149,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   button_page_setting: 'Report Format',
   button_zoom_in: '+10%',
   button_zoom_out: '-10%',
+  button_grid: 'Grid',
   button_guide: 'Guide',
   button_add_horizontal_guide: 'Add Horizontal Guide',
   button_add_vertical_guide: 'Add Vertical Guide',

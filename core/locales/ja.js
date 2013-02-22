@@ -149,6 +149,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   button_page_setting: 'ページ設定',
   button_zoom_in: '拡大',
   button_zoom_out: '縮小',
+  button_grid: 'グリッド',
   button_guide: 'ガイド',
   button_add_horizontal_guide: 'ガイドラインの追加（水平）',
   button_add_vertical_guide: 'ガイドラインの追加（垂直）',

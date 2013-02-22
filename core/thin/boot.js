@@ -804,9 +804,9 @@ thin.boot = function() {
     });
     
     // Grid
-    var toolGrid = toolbar.setupChild('grid', 
-        new thin.ui.ToolbarToggleIconButton(new thin.ui.Icon('grid')),
-            dom.getElement('tbar-grid'));
+    var gridButton = new thin.ui.ToolbarToggleIconButton(new thin.ui.Icon('grid'));
+    gridButton.setContent(thin.t('button_grid'));
+    var toolGrid = toolbar.setupChild('grid', gridButton, dom.getElement('tbar-grid'));
     
     toolGrid.addEventListener(componentEventType.ACTION, function(e) {
       var workspace = thin.editor.getActiveWorkspace();

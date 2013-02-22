@@ -149,6 +149,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   button_page_setting: 'Report Format',
   button_zoom_in: '+10%',
   button_zoom_out: '-10%',
+  button_grid: 'Grid',
   button_guide: 'Guide',
   button_add_horizontal_guide: 'Add Horizontal Guide',
   button_add_vertical_guide: 'Add Vertical Guide',

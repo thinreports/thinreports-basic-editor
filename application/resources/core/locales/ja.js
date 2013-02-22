@@ -34,6 +34,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   property_group_list_page_footer: 'ページフッター',
   property_group_image: '画像位置',
   property_group_pageno: 'ページ番号',
+  property_group_background_image: '背景画像', 
 
   label_title_setting: 'タイトル設定',
   label_page_setting: '用紙設定',
@@ -136,6 +137,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   field_pageno_format: '書式',
   field_counted_page_target: 'カウント対象',
   field_default_counted_page_target: 'レポート', 
+  field_background_image: '背景にする',
 
   button_new_report: '新規作成',
   button_save: '保存',
@@ -147,6 +149,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   button_page_setting: 'ページ設定',
   button_zoom_in: '拡大',
   button_zoom_out: '縮小',
+  button_grid: 'グリッド',
   button_guide: 'ガイド',
   button_add_horizontal_guide: 'ガイドラインの追加（水平）',
   button_add_vertical_guide: 'ガイドラインの追加（垂直）',
