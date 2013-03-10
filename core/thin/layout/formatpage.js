@@ -60,8 +60,8 @@ goog.inherits(thin.layout.FormatPage, goog.Disposable);
 thin.layout.FormatPage.PaperSize = {
   'A3': [1190.5, 841.8],
   'A4': [841.8, 595.2],
-  'B4': [1031.8, 728.5],
-  'B5': [728.5, 515.9],
+  'B4': [1000.6, 708.6],
+  'B5': [708.6, 498.8],
   'USER': null
 };
 
