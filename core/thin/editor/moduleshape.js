@@ -127,6 +127,16 @@ thin.editor.ModuleShape.prototype.canResizeHeight = function() {
 };
 
 
+thin.editor.ModuleShape.prototype.initIdentifier = function() {
+  var layout = this.getLayout();
+  if (!layout.getElementAttribute(this.getElement(), 'id')) {
+    layout.setElementAttributes(this.getElement(), {
+      'id': goog.string.createUniqueString()
+    });
+  }
+};
+
+
 /**
  * @this {goog.graphics.Element}
  * @param {number} width
