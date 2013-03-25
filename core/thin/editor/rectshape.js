@@ -82,6 +82,7 @@ thin.editor.RectShape.createFromElement = function(element, layout, opt_shapeIdM
   shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
   shape.setStrokeDashFromType(layout.getElementAttribute(element, 'x-stroke-type'));
   shape.setRounded(Number(layout.getElementAttribute(element, 'rx')));
+  shape.initIdentifier();
   return shape;
 };
 

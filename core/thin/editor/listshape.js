@@ -189,6 +189,8 @@ thin.editor.ListShape.createFromElement = function(groupElement, layout) {
       sectionShapeForScope.initHeightForLastActive();
     }
   });
+  shape.initIdentifier();
+
   return shape;
 };
 

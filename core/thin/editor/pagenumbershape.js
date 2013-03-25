@@ -167,6 +167,7 @@ thin.editor.PageNumberShape.createFromElement = function(element, layout, opt_sh
   shape.setTextAnchor(layout.getElementAttribute(element, 'text-anchor'));
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
   shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
+  shape.initIdentifier();
 
   return shape;
 };

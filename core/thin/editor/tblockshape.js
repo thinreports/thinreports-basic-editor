@@ -317,6 +317,7 @@ thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeI
       break;
   }
   
+  shape.initIdentifier();
   return shape;
 };
 

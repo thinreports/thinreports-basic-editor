@@ -242,6 +242,7 @@ thin.editor.ImageblockShape.createFromElement = function(element, layout, opt_sh
   shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
   shape.setPositionX(layout.getElementAttribute(element, 'x-position-x'));
   shape.setPositionY(layout.getElementAttribute(element, 'x-position-y'));
+  shape.initIdentifier();
 
   return shape;
 };

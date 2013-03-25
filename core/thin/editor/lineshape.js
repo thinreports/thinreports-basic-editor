@@ -75,6 +75,7 @@ thin.editor.LineShape.createFromElement = function(element, layout, opt_shapeIdM
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
   shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
   shape.setStrokeDashFromType(layout.getElementAttribute(element, 'x-stroke-type'));
+  shape.initIdentifier();
   return shape;
 };
 

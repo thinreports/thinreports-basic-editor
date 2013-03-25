@@ -168,6 +168,7 @@ thin.editor.TextShape.createFromElement = function(element, layout, opt_shapeIdM
   if (!goog.isNull(lineHeightRatio)) {
     shape.setTextLineHeightRatio(lineHeightRatio);
   }
+  shape.initIdentifier();
   return shape;
 };
 

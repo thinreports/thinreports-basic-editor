@@ -118,6 +118,7 @@ thin.editor.ImageShape.createFromElement = function(element, layout, opt_shapeId
   shape.setNaturalSize(Number(layout.getElementAttribute(element, 'x-natural-width')), 
                        Number(layout.getElementAttribute(element, 'x-natural-height')));
   shape.setBackground(layout.getElementAttribute(element, 'x-bg') == 'true');
+  shape.initIdentifier();
   
   return shape;
 };

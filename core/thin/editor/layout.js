@@ -1196,6 +1196,7 @@ thin.editor.Layout.prototype.createEllipseShape = function() {
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
   shape.setStrokeDashFromType(thin.editor.ModuleElement.StrokeType.SOLID);
   shape.setShapeId(thin.editor.ModuleShape.DEFAULT_SHAPEID);
+  shape.initIdentifier();
   return shape;
 };
 
@@ -1210,6 +1211,7 @@ thin.editor.Layout.prototype.createLineShape = function() {
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
   shape.setStrokeDashFromType(thin.editor.ModuleElement.StrokeType.SOLID);
   shape.setShapeId(thin.editor.ModuleShape.DEFAULT_SHAPEID);
+  shape.initIdentifier();
   return shape;
 };
 
@@ -1226,6 +1228,7 @@ thin.editor.Layout.prototype.createRectShape = function() {
   shape.setStrokeDashFromType(thin.editor.ModuleElement.StrokeType.SOLID);
   shape.setShapeId(thin.editor.ModuleShape.DEFAULT_SHAPEID);
   shape.setRounded(thin.editor.Rect.DEFAULT_RADIUS);
+  shape.initIdentifier();
   return shape;
 };
 
@@ -1249,6 +1252,7 @@ thin.editor.Layout.prototype.createListShape = function() {
     shape.setChangingPage(false);
   }
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
+  shape.initIdentifier();
   return shape;
 };
 
@@ -1259,6 +1263,7 @@ thin.editor.Layout.prototype.createListShape = function() {
 thin.editor.Layout.prototype.createImageblockShape = function() {
   var shape = new thin.editor.ImageblockShape(this.createSvgElement('g'), this);
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
+  shape.initIdentifier();
   return shape;
 };
 
@@ -1275,6 +1280,7 @@ thin.editor.Layout.prototype.createTblockShape = function() {
   shape.setKerning(thin.editor.TextStyle.DEFAULT_KERNING);
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
   shape.setMultiModeInternal(thin.editor.TblockShape.DEFAULT_MULTIPLE);
+  shape.initIdentifier();
   return shape;
 };
 
@@ -1286,6 +1292,7 @@ thin.editor.Layout.prototype.createPageNumberShape = function() {
   var shape = new thin.editor.PageNumberShape(this.createSvgElement('g'), this);
   shape.setKerning(thin.editor.TextStyle.DEFAULT_KERNING);
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
+  shape.initIdentifier();
   return shape;
 };
 
@@ -1298,6 +1305,7 @@ thin.editor.Layout.prototype.createTextShape = function() {
   shape.setKerning(thin.editor.TextStyle.DEFAULT_KERNING);
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
   shape.setShapeId(thin.editor.ModuleShape.DEFAULT_SHAPEID);
+  shape.initIdentifier();
   return shape;
 };
 
@@ -1313,6 +1321,7 @@ thin.editor.Layout.prototype.createImageShape = function() {
 
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
   shape.setShapeId(thin.editor.ModuleShape.DEFAULT_SHAPEID);
+  shape.initIdentifier();
 
   return shape;
 };
