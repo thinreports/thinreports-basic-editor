@@ -107,7 +107,7 @@ thin.layout.document.Base.prototype.getPaperInfo_ = function() {
   }
   
   return {
-    type: thin.layout.FormatPage.PaperTypeContent[page.getPaperType()],
+    type: thin.layout.FormatPage.PaperName[page.getPaperType()],
     orientation: orientation,
     width: (page.isUserType() ? page.getWidth() : ''),
     height: (page.isUserType() ? page.getHeight() : ''),

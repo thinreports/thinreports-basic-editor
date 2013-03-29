@@ -33,7 +33,7 @@ goog.require('thin.editor.TextStyle.HorizonAlignType');
 goog.require('thin.editor.TextStyle.VerticalAlignType');
 goog.require('thin.layout.File');
 goog.require('thin.layout.FormatPage.PaperType');
-goog.require('thin.layout.FormatPage.PaperTypeContent');
+goog.require('thin.layout.FormatPage.PaperName');
 goog.require('thin.layout.FormatPage.DirectionType');
 goog.require('thin.layout.document');
 goog.require('thin.core.Font');

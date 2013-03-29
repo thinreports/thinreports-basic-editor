@@ -16,7 +16,7 @@
 goog.provide('thin.layout.FormatPage');
 goog.provide('thin.layout.FormatPage.DEFAULT_SETTINGS');
 goog.provide('thin.layout.FormatPage.PaperType');
-goog.provide('thin.layout.FormatPage.PaperTypeContent');
+goog.provide('thin.layout.FormatPage.PaperName');
 goog.provide('thin.layout.FormatPage.PaperSize');
 goog.provide('thin.layout.FormatPage.DirectionType');
 
@@ -73,20 +73,20 @@ thin.layout.FormatPage.PaperSize = {
  * @enum {string}
  */
 thin.layout.FormatPage.PaperType = {
-  'A3': 'A3',
-  'A4': 'A4',
-  'B4': 'B4',
-  'B5': 'B5',
-  'B4_ISO': 'B4_ISO',
-  'B5_ISO': 'B5_ISO',
-  'USER': 'user'
+  A3: 'A3',
+  A4: 'A4',
+  B4: 'B4',
+  B5: 'B5',
+  B4_ISO: 'B4_ISO',
+  B5_ISO: 'B5_ISO',
+  USER: 'user'
 };
 
 
 /**
  * @enum {string}
  */
-thin.layout.FormatPage.PaperTypeContent = {
+thin.layout.FormatPage.PaperName = {
   'A3': thin.layout.FormatPage.PaperType.A3,
   'A4': thin.layout.FormatPage.PaperType.A4,
   'B4': thin.layout.FormatPage.PaperType.B4,
