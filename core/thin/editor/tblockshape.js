@@ -1347,7 +1347,6 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
           var delimiterProperty = proppane.getChild('format-number-delimiter');
           delimiterProperty.setValue(delimiter);
           delimiterProperty.setControlEnabled(delimitation);
-          delimiterProperty.getValueControlMain().setEnabled(delimitation);
         }
 
         var captureFormatStyle = scope.getFormatStyle();
@@ -1371,12 +1370,9 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   
   delimiterInput.addEventListener(componentEventType.CHANGE,
       function(e) {
-        var updatePropertiesForDelimiter = function(delimiter, delimitation) {
-          var delimiterProperty = proppane.getChild('format-number-delimiter');
-          delimiterProperty.setValue(delimiter);
-          delimiterProperty.setControlEnabled(delimitation);
-          delimiterProperty.getValueControlMain().setEnabled(delimitation);
-        }        
+        var updatePropertiesForDelimiter = function(delimiter) {
+          proppane.getChild('format-number-delimiter').setValue(delimiter);
+        }
         
         var captureFormatStyle = scope.getFormatStyle();
         var numberFormatStyle = new thin.editor.formatstyles.NumberFormat(
@@ -1387,11 +1383,11 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         
           version.upHandler(function() {
             this.setFormatStyle(numberFormatStyle);
-            updatePropertiesForDelimiter(numberFormatStyle.getDelimiter(), numberFormatStyle.isDelimitationEnabled());
+            updatePropertiesForDelimiter(numberFormatStyle.getDelimiter());
           }, scope);
           version.downHandler(function() {
             this.setFormatStyle(captureFormatStyle);
-            updatePropertiesForDelimiter(captureFormatStyle.getDelimiter(), captureFormatStyle.isDelimitationEnabled());
+            updatePropertiesForDelimiter(captureFormatStyle.getDelimiter());
           }, scope);
         });
       }, false, this);
@@ -1769,7 +1765,6 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
         delimiterProperty.setValue(properties['format-number-delimiter']);
         var isDelimitationEnabled = properties['format-number-delimitation'];
         delimiterProperty.setControlEnabled(isDelimitationEnabled);
-        delimiterProperty.getValueControlMain().setEnabled(isDelimitationEnabled);
         proppane.getPropertyControl('format-number-precision').setValue(properties['format-number-precision']);
         break;
         

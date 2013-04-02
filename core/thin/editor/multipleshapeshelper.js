@@ -1774,7 +1774,6 @@ thin.editor.MultipleShapesHelper.prototype.updateProperties = function() {
     delimiterProperty.setValue(properties['format-number-delimiter']);
     var isDelimitationEnabled = properties['format-number-delimitation'];
     delimiterProperty.setControlEnabled(isDelimitationEnabled);
-    delimiterProperty.getValueControlMain().setEnabled(isDelimitationEnabled);
     proppane.getPropertyControl('format-number-precision').setValue(properties['format-number-precision']);
     proppane.getPropertyControl('format-padding-length').setValue(properties['format-padding-length']);
     proppane.getPropertyControl('format-padding-char').setValue(properties['format-padding-char']);

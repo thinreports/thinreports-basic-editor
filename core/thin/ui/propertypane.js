@@ -117,8 +117,23 @@ thin.ui.PropertyPane.prototype.updateAsync = function(fn, opt_scope) {
     this.delay_.dispose();
   }
   var me = this;
+  var proppane_css_name = new RegExp(thin.ui.PropertyPane.CSS_CLASS);
+
   this.delay_ = new goog.async.Delay(function() {
+    var is_proppane = false;
+    var activeElement = goog.dom.getDocument().activeElement;
+
     fn.call(opt_scope || me, me);
+    
+    goog.array.forEach(goog.dom.classes.get(activeElement), function(css) {
+      if (proppane_css_name.test(css)) {
+        is_proppane = true;
+      }
+    }, this);
+    
+    if (is_proppane && activeElement != goog.dom.getDocument().activeElement) {
+      activeElement.focus();
+    }
   }, 100);
   
   this.delay_.start();
@@ -235,7 +250,9 @@ thin.ui.PropertyPane.prototype.createSelectionModel_ = function() {
   this.selectionModel_ = model;
   
   model.setSelectionHandler(function(item, select) {
-    item.setTargettedInternal(select);
+    if (item.canTargetting()) {
+      item.setTargettedInternal(select);
+    }
   });
 };
 
@@ -504,7 +521,12 @@ thin.ui.PropertyPane.AbstractItem.prototype.setTargetted = function(targetted) {
  * @param {boolean} targetted
  */
 thin.ui.PropertyPane.AbstractItem.prototype.setTargettedInternal = function(targetted) {
-  this.targetted_ = targetted;
+  if (this.canTargetting()) {
+    this.targetted_ = targetted;
+  } else {
+    this.targetted_ = false;
+  }
+
   goog.dom.classes.enable(this.getElement(), 
       thin.ui.getCssName(this.getRenderer().getCssClass(), 'target'), targetted);
 };
@@ -521,8 +543,10 @@ thin.ui.PropertyPane.AbstractItem.prototype.isTargetted = function() {
 /**
  * @param {goog.events.Event} e
  */
-thin.ui.PropertyPane.AbstractItem.prototype.handleClickOrMouseDown = function(e) {
-  this.setTargetted(true);
+thin.ui.PropertyPane.AbstractItem.prototype.handleFocus = function(e) {
+  if (!this.isTargetted()) {
+    this.setTargetted(true);
+  }
 };
 
 
@@ -530,11 +554,8 @@ thin.ui.PropertyPane.AbstractItem.prototype.enterDocument = function() {
   thin.ui.PropertyPane.AbstractItem.superClass_.enterDocument.call(this);
   
   this.getHandler().
-    listen(this.getElement(), 
-        [goog.events.EventType.CLICK, 
-            goog.events.EventType.MOUSEDOWN, 
-            goog.events.EventType.FOCUS], 
-        this.handleClickOrMouseDown, false, this);
+    listen(this.getElement(), goog.events.EventType.FOCUS, 
+        this.handleFocus, false, this);
 };
 
 
@@ -658,6 +679,18 @@ thin.ui.PropertyPane.Property.EventType = {
  * @private
  */
 thin.ui.PropertyPane.Property.prototype.group_ = null;
+
+
+/**
+ * @param {goog.events.Event} e
+ */
+thin.ui.PropertyPane.Property.prototype.handleClick = function(e) {
+  if (!this.isTargetted()) {
+    this.setTargetted(true);
+  }
+
+  this.getParent().handlePropertyActivateControl(e);
+};
 
 
 /**
@@ -991,6 +1024,10 @@ thin.ui.PropertyPane.SelectProperty.prototype.enterDocument = function() {
   control.getMenu().
       addEventListener(goog.ui.Component.EventType.HIDE, 
           this.handleInactivate, false, this);
+  
+  // For Click Active
+  goog.events.listen(control.getElement(),
+    goog.events.EventType.CLICK, this.handleClick, false, this);
 };
 
 
@@ -1066,6 +1103,7 @@ thin.ui.PropertyPane.AbstractCheckableProperty.prototype.getValueControlMain = f
  */
 thin.ui.PropertyPane.AbstractCheckableProperty.prototype.setControlEnabled = function(enable) {
   this.getValueControlCheckbox().setChecked(enable);
+  this.getValueControlMain().setEnabled(enable);
 };
 
 
@@ -1124,8 +1162,14 @@ goog.inherits(thin.ui.PropertyPane.CheckableInputProperty,
  * @return {boolean}
  */
 thin.ui.PropertyPane.CheckableInputProperty.prototype.activateControlInternal = function() {
-  goog.dom.forms.focusAndSelect(this.getValueControlMain().getElement());
+  if (!this.isControlEnabled()) {
+    this.setControlEnabled(true);
+    this.getValueControlCheckbox().dispatchEvent(
+        goog.ui.Component.EventType.CHANGE);
+  }
   
+  goog.dom.forms.focusAndSelect(this.getValueControlMain().getElement());
+
   return true;
 };
 
@@ -1146,6 +1190,27 @@ thin.ui.PropertyPane.CheckableInputProperty.prototype.setValue = function(value)
 };
 
 
+/**
+ * @param {goog.events.Event} e
+ */
+thin.ui.PropertyPane.CheckableInputProperty.prototype.handleClickCheck = function(e) {
+  if (!this.isTargetted()) {
+    this.setTargetted(true);
+  }
+
+  this.getElement().focus();
+  this.dispatchPropertyChangeEvent();
+};
+
+
+/**
+ * @param {goog.events.Event} e
+ */
+thin.ui.PropertyPane.CheckableInputProperty.prototype.handleClickInput = function(e) {
+  this.handleClick(e);
+};
+
+
 /** @inheritDoc */
 thin.ui.PropertyPane.CheckableInputProperty.prototype.enterDocument = function() {
   thin.ui.PropertyPane.CheckableInputProperty.superClass_.enterDocument.call(this);
@@ -1160,6 +1225,14 @@ thin.ui.PropertyPane.CheckableInputProperty.prototype.enterDocument = function()
   goog.events.listen(inputControl, 
       [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING], 
       this.handleInactivate, false, this);
+  
+  // For Click Active by Input(MainControl).
+  goog.events.listen(inputControl.getElement(),
+    goog.events.EventType.CLICK, this.handleClickInput, false, this);
+  
+  // For Click Active by Checkbox(CheckboxControl).
+  goog.events.listen(this.getValueControlCheckbox().getElement(),
+    goog.events.EventType.CLICK, this.handleClickCheck, false, this);
 };
 
 
@@ -1208,6 +1281,10 @@ thin.ui.PropertyPane.InputProperty.prototype.enterDocument = function() {
   goog.events.listen(control, 
       [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING], 
       this.handleInactivate, false, this);
+  
+  // For Click Active
+  goog.events.listen(control.getElement(),
+    goog.events.EventType.CLICK, this.handleClick, false, this);
 };
 
 
@@ -1254,6 +1331,10 @@ thin.ui.PropertyPane.NumberInputProperty.prototype.enterDocument = function() {
   goog.events.listen(control, 
       [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING], 
       this.handleInactivate, false, this);
+  
+  // For Click Active
+  goog.events.listen(control.getElement(),
+    goog.events.EventType.CLICK, this.handleClick, false, this);
 };
 
 
@@ -1425,7 +1506,9 @@ thin.ui.PropertyPane.ComboBoxProperty.prototype.activateControlInternal = functi
   var control = this.getValueControl();
   goog.dom.forms.focusAndSelect(control.getInputElement());
 
-  this.getValueControl().setActive(true);
+  if (control.isActive()) {
+    control.setActive(true);
+  }
   return true;
 };
 
@@ -1444,6 +1527,10 @@ thin.ui.PropertyPane.ComboBoxProperty.prototype.enterDocument = function() {
   goog.events.listen(control.getInput(), 
       [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING], 
       this.handleInactivate, false, this);
+  
+  // For Click Active
+  goog.events.listen(control.getInput().getElement(),
+    goog.events.EventType.CLICK, this.handleClick, false, this);
 };
 
 
@@ -1477,10 +1564,13 @@ thin.ui.PropertyPane.CheckboxProperty.prototype.activateControlInternal = functi
 /**
  * @param {goog.events.Event} e
  */
-thin.ui.PropertyPane.CheckboxProperty.prototype.handleClickOrMouseDown = function(e) {
-  thin.ui.PropertyPane.CheckboxProperty.superClass_.handleClickOrMouseDown.call(this, e);
-  
+thin.ui.PropertyPane.CheckboxProperty.prototype.handleClick = function(e) {
+  if (!this.isTargetted()) {
+    this.setTargetted(true);
+  }
+
   this.getElement().focus();
+  this.dispatchPropertyChangeEvent();
 };
 
 
@@ -1491,6 +1581,10 @@ thin.ui.PropertyPane.CheckboxProperty.prototype.enterDocument = function() {
   // For Common-Change
   this.getValueControl().addEventListener(
       goog.ui.Component.EventType.CHANGE, this.dispatchPropertyChangeEvent, false, this);
+  
+  // For Click Active
+  goog.events.listen(this.getValueControl().getElement(),
+    goog.events.EventType.CLICK, this.handleClick, false, this);
 };
 
 
@@ -1558,6 +1652,10 @@ thin.ui.PropertyPane.ColorProperty.prototype.enterDocument = function() {
   colorMenu.
       addEventListener(goog.ui.Component.EventType.HIDE, 
           this.handleInactivate, false, this);
+  
+  // For Click Active
+  goog.events.listen(control.getInput().getElement(),
+    goog.events.EventType.CLICK, this.handleClick, false, this);
 };
 
 
