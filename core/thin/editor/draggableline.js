@@ -214,14 +214,12 @@ thin.editor.DraggableLine.prototype.createPropertyComponent_ = function() {
 
 thin.editor.DraggableLine.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
-  proppane.updateAsync(function() {
-    if (!proppane.isTarget(this)) {
-      this.getLayout().updatePropertiesForEmpty();
-      proppane.setTarget(this);
-      this.createPropertyComponent_();
-    }
-    proppane.getPropertyControl('position').setValue(this.position_);
-  }, this);
+  if (!proppane.isTarget(this)) {
+    this.getLayout().updatePropertiesForEmpty();
+    proppane.setTarget(this);
+    this.createPropertyComponent_();
+  }
+  proppane.getPropertyControl('position').setValue(this.position_);
 };
 
 

@@ -877,35 +877,33 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
 
 thin.editor.ListShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
-  proppane.updateAsync(function() {
-    if (!proppane.isTarget(this)) {
-      this.getLayout().updatePropertiesForEmpty();
-      proppane.setTarget(this);
-      this.createPropertyComponent_();
-    }
+  if (!proppane.isTarget(this)) {
+    this.getLayout().updatePropertiesForEmpty();
+    proppane.setTarget(this);
+    this.createPropertyComponent_();
+  }
+  
+  var listHelper = this.getLayout().getHelpers().getListHelper();
+  var activeSectionName = listHelper.getActiveSectionName();
+  if (activeSectionName) {
+    this.getSectionShape(activeSectionName).updateProperties();
+  } else {
+    var sectionName = thin.editor.ListHelper.SectionName;
+    proppane.getPropertyControl('left').setValue(this.getLeft());
+    proppane.getPropertyControl('top').setValue(this.getTop());
+    proppane.getPropertyControl('width').setValue(this.getWidth());
+    proppane.getPropertyControl('height').setValue(this.getHeight());
+    proppane.getPropertyControl('display').setChecked(this.getDisplay());
     
-    var listHelper = this.getLayout().getHelpers().getListHelper();
-    var activeSectionName = listHelper.getActiveSectionName();
-    if (activeSectionName) {
-      this.getSectionShape(activeSectionName).updateProperties();
-    } else {
-      var sectionName = thin.editor.ListHelper.SectionName;
-      proppane.getPropertyControl('left').setValue(this.getLeft());
-      proppane.getPropertyControl('top').setValue(this.getTop());
-      proppane.getPropertyControl('width').setValue(this.getWidth());
-      proppane.getPropertyControl('height').setValue(this.getHeight());
-      proppane.getPropertyControl('display').setChecked(this.getDisplay());
-      
-      proppane.getPropertyControl('list-header-enable').setChecked(this.getSectionShape(sectionName.HEADER).isEnabled());
-      proppane.getPropertyControl('list-pagefooter-enable').setChecked(this.getSectionShape(sectionName.PAGEFOOTER).isEnabled());
-      proppane.getPropertyControl('list-footer-enable').setChecked(this.getSectionShape(sectionName.FOOTER).isEnabled());
-      proppane.getPropertyControl('list-changing-page').setChecked(this.isChangingPage());
-      
-      proppane.getPropertyControl('shape-id').setValue(this.getShapeId());
-      proppane.getPropertyControl('desc').setValue(this.getDesc());
-      proppane.getChild('list-changing-page').setEnabled(listHelper.isEnableChangingPage(this));
-    }
-  }, this);
+    proppane.getPropertyControl('list-header-enable').setChecked(this.getSectionShape(sectionName.HEADER).isEnabled());
+    proppane.getPropertyControl('list-pagefooter-enable').setChecked(this.getSectionShape(sectionName.PAGEFOOTER).isEnabled());
+    proppane.getPropertyControl('list-footer-enable').setChecked(this.getSectionShape(sectionName.FOOTER).isEnabled());
+    proppane.getPropertyControl('list-changing-page').setChecked(this.isChangingPage());
+    
+    proppane.getPropertyControl('shape-id').setValue(this.getShapeId());
+    proppane.getPropertyControl('desc').setValue(this.getDesc());
+    proppane.getChild('list-changing-page').setEnabled(listHelper.isEnableChangingPage(this));
+  }
 };
 
 

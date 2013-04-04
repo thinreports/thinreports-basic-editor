@@ -1721,76 +1721,74 @@ thin.editor.TblockShape.prototype.getProperties = function() {
 
 thin.editor.TblockShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
-  proppane.updateAsync(function() {
-    if (!proppane.isTarget(this)) {
-      this.getLayout().updatePropertiesForEmpty();
-      proppane.setTarget(this);
-      this.createPropertyComponent_();
-    }
-    
-    var properties = this.getProperties();
-    var formatStyle = this.getFormatStyle();
-    var isMultiple = this.isMultiMode();
-    var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-    
-    proppane.getPropertyControl('left').setValue(properties['left']);
-    proppane.getPropertyControl('top').setValue(properties['top']);
-    proppane.getPropertyControl('width').setValue(properties['width']);
-    proppane.getPropertyControl('height').setValue(properties['height']);
-    proppane.getPropertyControl('display').setChecked(properties['display']);
-    
-    var fontColor = properties['font-color'];
-    if (thin.isExactlyEqual(fontColor, thin.editor.ModuleShape.NONE)) {
-      fontColor = proppaneBlank
-    }
-    proppane.getPropertyControl('font-color').setValue(fontColor);
-    proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
-    proppane.getPropertyControl('font-family').setValue(properties['font-family']);
-    proppane.getPropertyControl('text-halign').setValue(
-          thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
-    proppane.getPropertyControl('text-valign').setValue(
-          thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
-    proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
-    proppane.getPropertyControl('kerning').setValue(properties['kerning']);
-    proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
-    proppane.getPropertyControl('overflow').setValue(properties['overflow']);
-    
-    var formatType = properties['format-type'];
-    proppane.getPropertyControl('format-type').setValue(thin.editor.formatstyles.getFormatNameFromType(formatType));
-    proppane.getPropertyControl('format-base').setValue(properties['format-base']);
+  if (!proppane.isTarget(this)) {
+    this.getLayout().updatePropertiesForEmpty();
+    proppane.setTarget(this);
+    this.createPropertyComponent_();
+  }
+  
+  var properties = this.getProperties();
+  var formatStyle = this.getFormatStyle();
+  var isMultiple = this.isMultiMode();
+  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+  
+  proppane.getPropertyControl('left').setValue(properties['left']);
+  proppane.getPropertyControl('top').setValue(properties['top']);
+  proppane.getPropertyControl('width').setValue(properties['width']);
+  proppane.getPropertyControl('height').setValue(properties['height']);
+  proppane.getPropertyControl('display').setChecked(properties['display']);
+  
+  var fontColor = properties['font-color'];
+  if (thin.isExactlyEqual(fontColor, thin.editor.ModuleShape.NONE)) {
+    fontColor = proppaneBlank
+  }
+  proppane.getPropertyControl('font-color').setValue(fontColor);
+  proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
+  proppane.getPropertyControl('font-family').setValue(properties['font-family']);
+  proppane.getPropertyControl('text-halign').setValue(
+        thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+  proppane.getPropertyControl('text-valign').setValue(
+        thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
+  proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
+  proppane.getPropertyControl('kerning').setValue(properties['kerning']);
+  proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
+  proppane.getPropertyControl('overflow').setValue(properties['overflow']);
+  
+  var formatType = properties['format-type'];
+  proppane.getPropertyControl('format-type').setValue(thin.editor.formatstyles.getFormatNameFromType(formatType));
+  proppane.getPropertyControl('format-base').setValue(properties['format-base']);
 
-    switch (true) {
-      case thin.editor.formatstyles.isNumberFormat(formatStyle):
-        var delimiterProperty = proppane.getChild('format-number-delimiter');
-        delimiterProperty.setValue(properties['format-number-delimiter']);
-        var isDelimitationEnabled = properties['format-number-delimitation'];
-        delimiterProperty.setControlEnabled(isDelimitationEnabled);
-        proppane.getPropertyControl('format-number-precision').setValue(properties['format-number-precision']);
-        break;
-        
-      case thin.editor.formatstyles.isPaddingFormat(formatStyle):
-        proppane.getPropertyControl('format-padding-length').setValue(properties['format-padding-length']);
-        proppane.getPropertyControl('format-padding-char').setValue(properties['format-padding-char']);
-        proppane.getPropertyControl('format-padding-direction').setValue(
-            thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(properties['format-padding-direction']));
-        break;
-        
-      case thin.editor.formatstyles.isDatetimeFormat(formatStyle):
-        proppane.getPropertyControl('format-datetime-format').setInternalValue(properties['format-datetime-format']);
-        break;
-    };
+  switch (true) {
+    case thin.editor.formatstyles.isNumberFormat(formatStyle):
+      var delimiterProperty = proppane.getChild('format-number-delimiter');
+      delimiterProperty.setValue(properties['format-number-delimiter']);
+      var isDelimitationEnabled = properties['format-number-delimitation'];
+      delimiterProperty.setControlEnabled(isDelimitationEnabled);
+      proppane.getPropertyControl('format-number-precision').setValue(properties['format-number-precision']);
+      break;
+      
+    case thin.editor.formatstyles.isPaddingFormat(formatStyle):
+      proppane.getPropertyControl('format-padding-length').setValue(properties['format-padding-length']);
+      proppane.getPropertyControl('format-padding-char').setValue(properties['format-padding-char']);
+      proppane.getPropertyControl('format-padding-direction').setValue(
+          thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(properties['format-padding-direction']));
+      break;
+      
+    case thin.editor.formatstyles.isDatetimeFormat(formatStyle):
+      proppane.getPropertyControl('format-datetime-format').setInternalValue(properties['format-datetime-format']);
+      break;
+  };
 
-    proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
-    proppane.getPropertyControl('ref-id').setValue(properties['ref-id']);
-    proppane.getPropertyControl('default-value').setValue(properties['default-value']);
-    proppane.getPropertyControl('desc').setValue(properties['desc']);
-    
-    proppane.getChild('line-height').setEnabled(isMultiple);
-    proppane.getChild('text-valign').setEnabled(isMultiple);
-    proppane.getChild('height').setEnabled(isMultiple);
-    
-    this.setDisplayForPropPane(formatType);
-  }, this);
+  proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
+  proppane.getPropertyControl('ref-id').setValue(properties['ref-id']);
+  proppane.getPropertyControl('default-value').setValue(properties['default-value']);
+  proppane.getPropertyControl('desc').setValue(properties['desc']);
+  
+  proppane.getChild('line-height').setEnabled(isMultiple);
+  proppane.getChild('text-valign').setEnabled(isMultiple);
+  proppane.getChild('height').setEnabled(isMultiple);
+  
+  this.setDisplayForPropPane(formatType);
 };
 
 

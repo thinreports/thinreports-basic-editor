@@ -631,26 +631,24 @@ thin.editor.ImageblockShape.prototype.getProperties = function() {
 
 thin.editor.ImageblockShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
-  proppane.updateAsync(function() {
-    if (!proppane.isTarget(this)) {
-      this.getLayout().updatePropertiesForEmpty();
-      proppane.setTarget(this);
-      this.createPropertyComponent_();
-    }
-    
-    var properties = this.getProperties();
-    var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-    
-    proppane.getPropertyControl('left').setValue(properties['left']);
-    proppane.getPropertyControl('top').setValue(properties['top']);
-    proppane.getPropertyControl('width').setValue(properties['width']);
-    proppane.getPropertyControl('height').setValue(properties['height']);
-    proppane.getPropertyControl('display').setChecked(properties['display']);
-    proppane.getPropertyControl('position-x').setValue(properties['position-x']);
-    proppane.getPropertyControl('position-y').setValue(properties['position-y']);
-    proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
-    proppane.getPropertyControl('desc').setValue(properties['desc']);
-  }, this);
+  if (!proppane.isTarget(this)) {
+    this.getLayout().updatePropertiesForEmpty();
+    proppane.setTarget(this);
+    this.createPropertyComponent_();
+  }
+  
+  var properties = this.getProperties();
+  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+  
+  proppane.getPropertyControl('left').setValue(properties['left']);
+  proppane.getPropertyControl('top').setValue(properties['top']);
+  proppane.getPropertyControl('width').setValue(properties['width']);
+  proppane.getPropertyControl('height').setValue(properties['height']);
+  proppane.getPropertyControl('display').setChecked(properties['display']);
+  proppane.getPropertyControl('position-x').setValue(properties['position-x']);
+  proppane.getPropertyControl('position-y').setValue(properties['position-y']);
+  proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
+  proppane.getPropertyControl('desc').setValue(properties['desc']);
 };
 
 

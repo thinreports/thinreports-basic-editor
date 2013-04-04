@@ -1065,39 +1065,38 @@ thin.editor.TextShape.prototype.getProperties = function() {
 
 thin.editor.TextShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
-  proppane.updateAsync(function() {
-    if (!proppane.isTarget(this)) {
-      this.getLayout().updatePropertiesForEmpty();
-      proppane.setTarget(this);
-      this.createPropertyComponent_();
-    }
-    
-    var properties = this.getProperties();
-    var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-    
-    proppane.getPropertyControl('left').setValue(properties['left']);
-    proppane.getPropertyControl('top').setValue(properties['top']);
-    proppane.getPropertyControl('width').setValue(properties['width']);
-    proppane.getPropertyControl('height').setValue(properties['height']);
-    proppane.getPropertyControl('display').setChecked(properties['display']);
-    proppane.getPropertyControl('text-content').setValue(properties['text-content']);
-    
-    var fontColor = properties['font-color'];
-    if (thin.isExactlyEqual(fontColor, thin.editor.ModuleShape.NONE)) {
-      fontColor = proppaneBlank
-    }
-    proppane.getPropertyControl('font-color').setValue(fontColor);
-    proppane.getPropertyControl('font-family').setValue(properties['font-family']);
-    proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
-    proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
-    proppane.getPropertyControl('text-halign').setValue(
-          thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
-    proppane.getPropertyControl('text-valign').setValue(
-          thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
-    proppane.getPropertyControl('kerning').setValue(properties['kerning']);
-    proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
-    proppane.getPropertyControl('desc').setValue(properties['desc']);
-  }, this);
+
+  if (!proppane.isTarget(this)) {
+    this.getLayout().updatePropertiesForEmpty();
+    proppane.setTarget(this);
+    this.createPropertyComponent_();
+  }
+  
+  var properties = this.getProperties();
+  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+  
+  proppane.getPropertyControl('left').setValue(properties['left']);
+  proppane.getPropertyControl('top').setValue(properties['top']);
+  proppane.getPropertyControl('width').setValue(properties['width']);
+  proppane.getPropertyControl('height').setValue(properties['height']);
+  proppane.getPropertyControl('display').setChecked(properties['display']);
+  proppane.getPropertyControl('text-content').setValue(properties['text-content']);
+  
+  var fontColor = properties['font-color'];
+  if (thin.isExactlyEqual(fontColor, thin.editor.ModuleShape.NONE)) {
+    fontColor = proppaneBlank
+  }
+  proppane.getPropertyControl('font-color').setValue(fontColor);
+  proppane.getPropertyControl('font-family').setValue(properties['font-family']);
+  proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
+  proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
+  proppane.getPropertyControl('text-halign').setValue(
+        thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+  proppane.getPropertyControl('text-valign').setValue(
+        thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
+  proppane.getPropertyControl('kerning').setValue(properties['kerning']);
+  proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
+  proppane.getPropertyControl('desc').setValue(properties['desc']);
 };
 
 

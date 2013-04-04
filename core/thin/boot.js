@@ -249,9 +249,7 @@ thin.boot = function() {
         var activeShapeManager = layout.getManager().getActiveShape();
         
         if (activeShapeManager.isEmpty()) {
-          thin.ui.getComponent('proppane').updateAsync(function() {
-            layout.updatePropertiesForEmpty();
-          });
+          layout.updatePropertiesForEmpty();
         } else {
           var listHelper = helpers.getListHelper();
           var singleShape = activeShapeManager.getIfSingle();

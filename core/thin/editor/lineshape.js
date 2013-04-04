@@ -290,38 +290,37 @@ thin.editor.LineShape.prototype.getProperties = function() {
 
 thin.editor.LineShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
-  proppane.updateAsync(function() {
-    if (!proppane.isTarget(this)) {
-      this.getLayout().updatePropertiesForEmpty();
-      proppane.setTarget(this);
-      this.createPropertyComponent_();
-    }
-    
-    var properties = this.getProperties();
-    var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-    
-    proppane.getPropertyControl('left').setValue(properties['left']);
-    proppane.getPropertyControl('top').setValue(properties['top']);
-    proppane.getPropertyControl('width').setValue(properties['width']);
-    proppane.getPropertyControl('height').setValue(properties['height']);
-    proppane.getPropertyControl('display').setChecked(properties['display']);
-    
-    var stroke = properties['stroke'];
-    if (thin.isExactlyEqual(stroke, thin.editor.ModuleShape.NONE)) {
-      stroke = proppaneBlank
-    }
-    proppane.getPropertyControl('stroke').setValue(stroke);
-    var strokeWidth = properties['stroke-width'];
-    if (thin.isExactlyEqual(strokeWidth, thin.editor.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
-      strokeWidth = proppaneBlank;
-    }
-    proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
-    
-    proppane.getPropertyControl('stroke-dash-type').setValue(thin.editor.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
-    
-    proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
-    proppane.getPropertyControl('desc').setValue(properties['desc']);
-  }, this);
+
+  if (!proppane.isTarget(this)) {
+    this.getLayout().updatePropertiesForEmpty();
+    proppane.setTarget(this);
+    this.createPropertyComponent_();
+  }
+  
+  var properties = this.getProperties();
+  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+  
+  proppane.getPropertyControl('left').setValue(properties['left']);
+  proppane.getPropertyControl('top').setValue(properties['top']);
+  proppane.getPropertyControl('width').setValue(properties['width']);
+  proppane.getPropertyControl('height').setValue(properties['height']);
+  proppane.getPropertyControl('display').setChecked(properties['display']);
+  
+  var stroke = properties['stroke'];
+  if (thin.isExactlyEqual(stroke, thin.editor.ModuleShape.NONE)) {
+    stroke = proppaneBlank
+  }
+  proppane.getPropertyControl('stroke').setValue(stroke);
+  var strokeWidth = properties['stroke-width'];
+  if (thin.isExactlyEqual(strokeWidth, thin.editor.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
+    strokeWidth = proppaneBlank;
+  }
+  proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
+  
+  proppane.getPropertyControl('stroke-dash-type').setValue(thin.editor.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
+  
+  proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
+  proppane.getPropertyControl('desc').setValue(properties['desc']);
 };
 
 

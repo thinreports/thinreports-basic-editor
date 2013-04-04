@@ -109,38 +109,6 @@ thin.ui.PropertyPane.prototype.createDom = function() {
 
 
 /**
- * @param {Function} fn
- * @param {Object=} opt_scope
- */
-thin.ui.PropertyPane.prototype.updateAsync = function(fn, opt_scope) {
-  if (this.delay_ && this.delay_.isActive()) {
-    this.delay_.dispose();
-  }
-  var me = this;
-  var proppane_css_name = new RegExp(thin.ui.PropertyPane.CSS_CLASS);
-
-  this.delay_ = new goog.async.Delay(function() {
-    var is_proppane = false;
-    var activeElement = goog.dom.getDocument().activeElement;
-
-    fn.call(opt_scope || me, me);
-    
-    goog.array.forEach(goog.dom.classes.get(activeElement), function(css) {
-      if (proppane_css_name.test(css)) {
-        is_proppane = true;
-      }
-    }, this);
-    
-    if (is_proppane && activeElement != goog.dom.getDocument().activeElement) {
-      activeElement.focus();
-    }
-  }, 100);
-  
-  this.delay_.start();
-};
-
-
-/**
  * @param {thin.ui.PropertyPane.Property} property
  * @param {thin.ui.PropertyPane.PropertyGroup} group
  * @param {string=} opt_id

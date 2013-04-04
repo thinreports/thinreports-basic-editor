@@ -1713,77 +1713,76 @@ thin.editor.MultipleShapesHelper.prototype.setDisplayForPropPane = function(form
 
 thin.editor.MultipleShapesHelper.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
-  proppane.updateAsync(function() {
-    if (!proppane.isTarget(this)) {
-      this.getLayout().updatePropertiesForEmpty();
-      proppane.setTarget(this);
-      this.createPropertyComponent_();
-    }
-    if (!this.isCapture_) {
-      this.initializeProperties();
-    }
-    
-    var properties = this.getCloneProperties();
-    var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-    var noneColor = thin.editor.ModuleShape.NONE;
-    
-    proppane.getPropertyControl('left').setValue(properties['left']);
-    proppane.getPropertyControl('top').setValue(properties['top']);
-    proppane.getPropertyControl('width').setValue(properties['width']);
-    proppane.getPropertyControl('height').setValue(properties['height']);
-    proppane.getPropertyControl('display').setChecked(properties['display']);
-    var fill = properties['fill'];
-    if (thin.isExactlyEqual(fill, noneColor)) {
-      fill = proppaneBlank
-    }
-    proppane.getPropertyControl('fill').setValue(fill);
-    var stroke = properties['stroke'];
-    if (thin.isExactlyEqual(stroke, noneColor)) {
-      stroke = proppaneBlank
-    }
-    proppane.getPropertyControl('stroke').setValue(stroke);
-    var strokeWidth = properties['stroke-width'];
-    if (thin.isExactlyEqual(strokeWidth, thin.editor.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
-      strokeWidth = proppaneBlank;
-    }
-    proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
-    proppane.getPropertyControl('stroke-dash-type').setValue(thin.editor.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
-    proppane.getPropertyControl('radius').setValue(properties['radius']);
-    var fontColor = properties['font-color'];
-    if (thin.isExactlyEqual(fontColor, noneColor)) {
-      fontColor = proppaneBlank
-    }
-    proppane.getPropertyControl('font-color').setValue(fontColor);
-    proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
-    proppane.getPropertyControl('font-family').setValue(properties['font-family']);
-    proppane.getPropertyControl('text-halign').setValue(thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
-    proppane.getPropertyControl('text-valign').setValue(thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
-    proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
-    proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
-    
-    proppane.getPropertyControl('kerning').setValue(properties['kerning']);
-    proppane.getPropertyControl('overflow').setValue(properties['overflow']);
 
-    var formatType = properties['format-type'];
+  if (!proppane.isTarget(this)) {
+    this.getLayout().updatePropertiesForEmpty();
+    proppane.setTarget(this);
+    this.createPropertyComponent_();
+  }
+  if (!this.isCapture_) {
+    this.initializeProperties();
+  }
+  
+  var properties = this.getCloneProperties();
+  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+  var noneColor = thin.editor.ModuleShape.NONE;
+  
+  proppane.getPropertyControl('left').setValue(properties['left']);
+  proppane.getPropertyControl('top').setValue(properties['top']);
+  proppane.getPropertyControl('width').setValue(properties['width']);
+  proppane.getPropertyControl('height').setValue(properties['height']);
+  proppane.getPropertyControl('display').setChecked(properties['display']);
+  var fill = properties['fill'];
+  if (thin.isExactlyEqual(fill, noneColor)) {
+    fill = proppaneBlank
+  }
+  proppane.getPropertyControl('fill').setValue(fill);
+  var stroke = properties['stroke'];
+  if (thin.isExactlyEqual(stroke, noneColor)) {
+    stroke = proppaneBlank
+  }
+  proppane.getPropertyControl('stroke').setValue(stroke);
+  var strokeWidth = properties['stroke-width'];
+  if (thin.isExactlyEqual(strokeWidth, thin.editor.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
+    strokeWidth = proppaneBlank;
+  }
+  proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
+  proppane.getPropertyControl('stroke-dash-type').setValue(thin.editor.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
+  proppane.getPropertyControl('radius').setValue(properties['radius']);
+  var fontColor = properties['font-color'];
+  if (thin.isExactlyEqual(fontColor, noneColor)) {
+    fontColor = proppaneBlank
+  }
+  proppane.getPropertyControl('font-color').setValue(fontColor);
+  proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
+  proppane.getPropertyControl('font-family').setValue(properties['font-family']);
+  proppane.getPropertyControl('text-halign').setValue(thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+  proppane.getPropertyControl('text-valign').setValue(thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
+  proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
+  proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
+  
+  proppane.getPropertyControl('kerning').setValue(properties['kerning']);
+  proppane.getPropertyControl('overflow').setValue(properties['overflow']);
 
-    proppane.getPropertyControl('format-type').setValue(thin.editor.formatstyles.getFormatNameFromType(formatType));
-    proppane.getPropertyControl('format-base').setValue(properties['format-base']);
-    proppane.getPropertyControl('format-datetime-format').setInternalValue(properties['format-datetime-format']);
+  var formatType = properties['format-type'];
+
+  proppane.getPropertyControl('format-type').setValue(thin.editor.formatstyles.getFormatNameFromType(formatType));
+  proppane.getPropertyControl('format-base').setValue(properties['format-base']);
+  proppane.getPropertyControl('format-datetime-format').setInternalValue(properties['format-datetime-format']);
  
     var delimiterProperty = proppane.getChild('format-number-delimiter');
-    delimiterProperty.setValue(properties['format-number-delimiter']);
-    var isDelimitationEnabled = properties['format-number-delimitation'];
-    delimiterProperty.setControlEnabled(isDelimitationEnabled);
-    proppane.getPropertyControl('format-number-precision').setValue(properties['format-number-precision']);
-    proppane.getPropertyControl('format-padding-length').setValue(properties['format-padding-length']);
-    proppane.getPropertyControl('format-padding-char').setValue(properties['format-padding-char']);
-    proppane.getPropertyControl('format-padding-direction').setValue(thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(properties['format-padding-direction']));
-    proppane.getPropertyControl('default-value').setValue(properties['default-value']);
-    
-    this.setDisplayForPropPane(formatType);
-    
-    this.isCapture_ = false;
-  }, this);
+  delimiterProperty.setValue(properties['format-number-delimiter']);
+  var isDelimitationEnabled = properties['format-number-delimitation'];
+  delimiterProperty.setControlEnabled(isDelimitationEnabled);
+  proppane.getPropertyControl('format-number-precision').setValue(properties['format-number-precision']);
+  proppane.getPropertyControl('format-padding-length').setValue(properties['format-padding-length']);
+  proppane.getPropertyControl('format-padding-char').setValue(properties['format-padding-char']);
+  proppane.getPropertyControl('format-padding-direction').setValue(thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(properties['format-padding-direction']));
+  proppane.getPropertyControl('default-value').setValue(properties['default-value']);
+  
+  this.setDisplayForPropPane(formatType);
+  
+  this.isCapture_ = false;
 };
 
 

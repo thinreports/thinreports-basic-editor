@@ -189,9 +189,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
           listHelper.setActiveSectionName(newActiveSectionName);
         }
         thin.ui.setEnabledForFontUi(false);
-        thin.ui.getComponent('proppane').updateAsync(function() {
-          layout.updatePropertiesForEmpty();
-        });
+        layout.updatePropertiesForEmpty();
       } else {
         if (!isActive) {
           if (captureActiveForStart) {
@@ -251,9 +249,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
           layout.setOutlineForSingle(singleShapeByGlobal);
           singleShapeByGlobal.updateProperties();
         } else {
-          thin.ui.getComponent('proppane').updateAsync(function() {
-            layout.updatePropertiesForEmpty();
-          });
+          layout.updatePropertiesForEmpty();
           thin.ui.setEnabledForFontUi(false);
         }
       } else {

@@ -123,9 +123,7 @@ thin.editor.LayoutGuideHelper.prototype.disable = function(disabled) {
     var activeShapeManager = layout.getManager().getActiveShape();
     
     if (activeShapeManager.isEmpty()) {
-      thin.ui.getComponent('proppane').updateAsync(function() {
-        layout.updatePropertiesForEmpty();
-      });
+      layout.updatePropertiesForEmpty();
     } else {
       var listHelper = helpers.getListHelper();
       var singleShape = activeShapeManager.getIfSingle();
@@ -268,9 +266,7 @@ thin.editor.LayoutGuideHelper.prototype.removeLayoutGuide = function() {
       var activeShapeManager = layout.getManager().getActiveShape();
 
       if (activeShapeManager.isEmpty()) {
-        thin.ui.getComponent('proppane').updateAsync(function() {
-          layout.updatePropertiesForEmpty();
-        });
+        layout.updatePropertiesForEmpty();
       } else {
         var listHelper = helpers.getListHelper();
         var singleShape = activeShapeManager.getIfSingle();
@@ -356,9 +352,7 @@ thin.editor.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
       
       version.downHandler(function() {
         if (isEmpty) {
-          thin.ui.getComponent('proppane').updateAsync(function() {
-            layout.updatePropertiesForEmpty();
-          });
+          layout.updatePropertiesForEmpty();
         } else {
           if (!isActive) {
             if (singleShape) {

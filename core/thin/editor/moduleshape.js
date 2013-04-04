@@ -476,9 +476,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                 } else {
                   if (isSelfMouseDown) {
                     activeShapeManager.clear();
-                    proppane.updateAsync(function() {
-                      layout.updatePropertiesForEmpty();
-                    });
+                    layout.updatePropertiesForEmpty();
                     thin.ui.setEnabledForFontUi(false);
                   } else {
                   
@@ -537,9 +535,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
           
           if (!captureActive) {
             if (isEmptyByGlobal) {
-              proppane.updateAsync(function() {
-                layout.updatePropertiesForEmpty();
-              });
+              layout.updatePropertiesForEmpty();
               thin.ui.setEnabledForFontUi(false);
             } else {
               if (singleShapeByGlobal) {
@@ -596,9 +592,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
                 this.getTargetOutline().disable();
                 if (isEmptyByGlobal) {
                   guide.setDisable();
-                  proppane.updateAsync(function() {
-                    layout.updatePropertiesForEmpty();
-                  });
+                  layout.updatePropertiesForEmpty();
                   thin.ui.setEnabledForFontUi(false);
                 } else {
                   if (singleShapeByGlobal) {
@@ -687,9 +681,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
               if (isEmptyByGlobal) {
                 guide.setDisable();
                 activeShapeManager.clear();
-                proppane.updateAsync(function() {
-                  layout.updatePropertiesForEmpty();
-                });
+                layout.updatePropertiesForEmpty();
                 thin.ui.setEnabledForFontUi(false);
               } else {
                 if (singleShapeByGlobal) {

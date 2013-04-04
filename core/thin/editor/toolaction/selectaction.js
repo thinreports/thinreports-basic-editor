@@ -102,9 +102,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
         activeShapeManager.clear();
         activeShapeManager.set(newShapes);
         if (activeShapeManager.isEmpty()) {
-          thin.ui.getComponent('proppane').updateAsync(function() {
-            layout.updatePropertiesForEmpty();
-          });
+          layout.updatePropertiesForEmpty();
           thin.ui.setEnabledForFontUi(false);
         } else {
           var singleShape = activeShapeManager.getIfSingle();
@@ -171,9 +169,7 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
             multipleShapesHelper.updateProperties();
             thin.ui.setEnabledForFontUi(true);
           } else {
-            thin.ui.getComponent('proppane').updateAsync(function() {
-              layout.updatePropertiesForEmpty();
-            });
+            layout.updatePropertiesForEmpty();
             thin.ui.setEnabledForFontUi(false);
           }
         } else {

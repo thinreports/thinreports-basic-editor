@@ -1313,15 +1313,11 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
       thin.ui.setEnabledForFontUi(false);
       if (!isActive) {
         guide.setDisable();
-        proppane.updateAsync(function() {
-          layout.updatePropertiesForEmpty();
-        });
+        layout.updatePropertiesForEmpty();
       } else {
         if (isEmptyByListShape) {
           listHelper.inactive();
-          proppane.updateAsync(function() {
-            layout.updatePropertiesForEmpty();
-          });
+          layout.updatePropertiesForEmpty();
         } else {
           guide.setDisable();
           singleShapeByGlobal.updateProperties();

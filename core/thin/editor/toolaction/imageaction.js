@@ -55,9 +55,7 @@ thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
   outline.setLeft(pos.x);
   outline.setTop(pos.y);
 
-  proppane.updateAsync(function() {
-    layout.updatePropertiesForEmpty();
-  });
+  layout.updatePropertiesForEmpty();
 
   var file = thin.editor.ImageFile.openDialog();
   var isFileExist = !!file;
