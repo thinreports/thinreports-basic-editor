@@ -82,6 +82,13 @@ thin.editor.ModuleShape.prototype.display_;
 
 
 /**
+ * @type {string}
+ * @private
+ */
+thin.editor.ModuleShape.prototype.identifier_;
+
+
+/**
  * @type {thin.editor.SvgDragger}
  * @private
  */
@@ -129,11 +136,23 @@ thin.editor.ModuleShape.prototype.canResizeHeight = function() {
 
 thin.editor.ModuleShape.prototype.initIdentifier = function() {
   var layout = this.getLayout();
-  if (!layout.getElementAttribute(this.getElement(), 'id')) {
+  this.identifier_ = layout.getElementAttribute(this.getElement(), 'id');
+
+  if (!this.identifier_) {
+    var identifier = goog.string.createUniqueString();
     layout.setElementAttributes(this.getElement(), {
-      'id': goog.string.createUniqueString()
+      'id': identifier
     });
+    this.identifier_ = identifier;
   }
+};
+
+
+/**
+ * @return {string}
+ */
+thin.editor.ModuleShape.prototype.getIdentifier = function() {
+  return this.identifier_;
 };
 
 

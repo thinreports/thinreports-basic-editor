@@ -24,15 +24,95 @@ goog.require('thin.editor.AbstractManager');
  * @extends {thin.editor.AbstractManager}
  */
 thin.editor.ShapeManager = function(layout) {
-  thin.editor.AbstractManager.call(this, layout);
+  goog.base(this, layout);
+
+  /**
+   * @type {Array.<number>}
+   * @private
+   */
+  this.identifiers_ = [];
 };
 goog.inherits(thin.editor.ShapeManager, thin.editor.AbstractManager);
 
 
-/** @inheritDoc */
+/**
+ * @param {string} identifier
+ * @return {goog.graphics.Element}
+ */
+thin.editor.ShapeManager.prototype.getShapeByIdentifier = function(identifier) {
+  var index = goog.array.indexOf(this.identifiers_, this.makeKey_(identifier));
+  return index != -1 ? this.get()[index] : null;
+};
+
+
+/**
+ * @return {Array.<string>}
+ */
+thin.editor.ShapeManager.prototype.getIdentifiers = function() {
+  return this.identifiers_;
+};
+
+
+/** @override */
+thin.editor.ShapeManager.prototype.add = function(shape) {
+  goog.base(this, 'add', shape);
+  this.identifiers_[this.identifiers_.length] = this.makeKey_(shape.getIdentifier());
+};
+
+
+/** @override */
+thin.editor.ShapeManager.prototype.set = function(shapes) {
+  goog.base(this, 'set', shapes);
+  
+  delete this.identifiers_;
+  this.identifiers_ = [];
+
+  var identifiers = this.identifiers_;
+  var makeKey = this.makeKey_;
+
+  goog.array.forEach(shapes, function(shape) {
+    identifiers[identifiers.length] = makeKey(shape.getIdentifier());
+  }, this);
+};
+
+
+/**
+ * @return {Array}
+ */
+thin.editor.ShapeManager.prototype.getCloneIdentifiers = function() {
+  return goog.array.clone(this.identifiers_);
+};
+
+
+/**
+ * @param {string} identifier
+ * @return {number}
+ * @private
+ */
+thin.editor.ShapeManager.prototype.makeKey_ = function(identifier) {
+  return Number(identifier.replace(/[^\d]+/g, ''));
+};
+
+
+/** @override */
+thin.editor.ShapeManager.prototype.remove = function(shape) {
+  goog.base(this, 'remove', shape);
+  goog.array.remove(this.identifiers_, this.makeKey_(shape.getIdentifier()));
+};
+
+
+/** @override */
+thin.editor.ShapeManager.prototype.clear = function() {
+  goog.base(this, 'clear');
+  goog.array.clear(this.identifiers_);
+};
+
+
+/** @override */
 thin.editor.ShapeManager.prototype.disposeInternal = function() {
   goog.array.forEach(this.get(), function(shape) {
     shape.dispose();
   });
-  thin.editor.ShapeManager.superClass_.disposeInternal.call(this);
+  goog.base(this, 'disposeInternal');
+  delete this.identifiers_;
 };
