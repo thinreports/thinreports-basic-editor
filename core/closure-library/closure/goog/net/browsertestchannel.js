@@ -23,12 +23,14 @@
  */
 
 
+
 goog.provide('goog.net.BrowserTestChannel');
 
-goog.require('goog.json');
+goog.require('goog.json.EvalJsonProcessor');
 goog.require('goog.net.ChannelRequest');
 goog.require('goog.net.ChannelRequest.Error');
 goog.require('goog.net.tmpnetwork');
+goog.require('goog.string.Parser');
 goog.require('goog.userAgent');
 
 
@@ -56,6 +58,14 @@ goog.net.BrowserTestChannel = function(channel, channelDebug) {
    * @private
    */
   this.channelDebug_ = channelDebug;
+
+  /**
+   * Parser for a response payload. Defaults to use
+   * {@code goog.json.unsafeParse}. The parser should return an array.
+   * @type {goog.string.Parser}
+   * @private
+   */
+  this.parser_ = new goog.json.EvalJsonProcessor(null, true);
 };
 
 
@@ -229,6 +239,17 @@ goog.net.BrowserTestChannel.prototype.setExtraHeaders = function(extraHeaders) {
 
 
 /**
+ * Sets a new parser for the response payload. A custom parser may be set to
+ * avoid using eval(), for example.
+ * By default, the parser uses {@code goog.json.unsafeParse}.
+ * @param {!goog.string.Parser} parser Parser.
+ */
+goog.net.BrowserTestChannel.prototype.setParser = function(parser) {
+  this.parser_ = parser;
+};
+
+
+/**
  * Starts the test channel. This initiates connections to the server.
  *
  * @param {string} path The relative uri for the test connection.
@@ -239,6 +260,22 @@ goog.net.BrowserTestChannel.prototype.connect = function(path) {
 
   goog.net.BrowserChannel.notifyStatEvent(
       goog.net.BrowserChannel.Stat.TEST_STAGE_ONE_START);
+  this.startTime_ = goog.now();
+
+  // If the channel already has the result of the first test, then skip it.
+  var firstTestResults = this.channel_.getFirstTestResults();
+  if (goog.isDefAndNotNull(firstTestResults)) {
+    this.hostPrefix_ = this.channel_.correctHostPrefix(firstTestResults[0]);
+    this.blockedPrefix_ = firstTestResults[1];
+    if (this.blockedPrefix_) {
+      this.state_ = goog.net.BrowserTestChannel.State_.CHECKING_BLOCKED;
+      this.checkBlocked_();
+    } else {
+      this.state_ = goog.net.BrowserTestChannel.State_.CONNECTION_TESTING;
+      this.connectStage2_();
+    }
+    return;
+  }
 
   // the first request returns server specific parameters
   sendDataUri.setParameterValues('MODE', 'init');
@@ -248,7 +285,6 @@ goog.net.BrowserTestChannel.prototype.connect = function(path) {
   this.request_.xmlHttpGet(sendDataUri, false /* decodeChunks */,
       null /* hostPrefix */, true /* opt_noClose */);
   this.state_ = goog.net.BrowserTestChannel.State_.INIT;
-  this.startTime_ = goog.now();
 };
 
 
@@ -385,7 +421,7 @@ goog.net.BrowserTestChannel.prototype.onRequestData =
     }
     /** @preserveTry */
     try {
-      var respArray = goog.json.unsafeParse(responseText);
+      var respArray = this.parser_.parse(responseText);
     } catch (e) {
       this.channelDebug_.dumpException(e);
       this.channel_.testConnectionFailure(this,

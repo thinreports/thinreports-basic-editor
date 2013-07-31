@@ -23,6 +23,7 @@
 goog.provide('goog.editor.plugins.LinkDialogPlugin');
 
 goog.require('goog.array');
+goog.require('goog.dom');
 goog.require('goog.editor.Command');
 goog.require('goog.editor.plugins.AbstractDialogPlugin');
 goog.require('goog.events.EventHandler');
@@ -149,7 +150,7 @@ goog.editor.plugins.LinkDialogPlugin.prototype.setBlockOpeningUnsafeSchemes =
  * Schemes should all be in lowercase. If the plugin is set to block opening
  * unsafe schemes, user-entered URLs will be converted to lowercase and checked
  * against this list. The whitelist has no effect if blocking is not enabled.
- * @param {Array.<String>} schemes String array of URL schemes to allow (http,
+ * @param {Array.<string>} schemes String array of URL schemes to allow (http,
  *     https, etc.).
  */
 goog.editor.plugins.LinkDialogPlugin.prototype.setSafeToOpenSchemes =
@@ -291,7 +292,7 @@ goog.editor.plugins.LinkDialogPlugin.prototype.createDialog = function(
   dialog.setStopReferrerLeaks(this.stopReferrerLeaks_);
   this.eventHandler_.
       listen(dialog, goog.ui.editor.AbstractDialog.EventType.OK,
-          this.handleOk_).
+          this.handleOk).
       listen(dialog, goog.ui.editor.AbstractDialog.EventType.CANCEL,
           this.handleCancel_).
       listen(dialog, goog.ui.editor.LinkDialog.EventType.BEFORE_TEST_LINK,
@@ -310,16 +311,47 @@ goog.editor.plugins.LinkDialogPlugin.prototype.disposeInternal = function() {
 /**
  * Handles the OK event from the dialog by updating the link in the field.
  * @param {goog.ui.editor.LinkDialog.OkEvent} e OK event object.
- * @private
+ * @protected
  */
-goog.editor.plugins.LinkDialogPlugin.prototype.handleOk_ = function(e) {
+goog.editor.plugins.LinkDialogPlugin.prototype.handleOk = function(e) {
   // We're not restoring the original selection, so clear it out.
   this.disposeOriginalSelection();
 
   this.currentLink_.setTextAndUrl(e.linkText, e.linkUrl);
-
   if (this.showOpenLinkInNewWindow_) {
-    var anchor = this.currentLink_.getAnchor();
+    // Save checkbox state for next time.
+    this.isOpenLinkInNewWindowChecked_ = e.openInNewWindow;
+  }
+
+  var anchor = this.currentLink_.getAnchor();
+  this.touchUpAnchorOnOk_(anchor, e);
+  var extraAnchors = this.currentLink_.getExtraAnchors();
+  for (var i = 0; i < extraAnchors.length; ++i) {
+    extraAnchors[i].href = anchor.href;
+    this.touchUpAnchorOnOk_(extraAnchors[i], e);
+  }
+
+  // Place cursor to the right of the modified link.
+  this.currentLink_.placeCursorRightOf();
+
+  this.getFieldObject().focus();
+
+  this.getFieldObject().dispatchSelectionChangeEvent();
+  this.getFieldObject().dispatchChange();
+
+  this.eventHandler_.removeAll();
+};
+
+
+/**
+ * Apply the necessary properties to a link upon Ok being clicked in the dialog.
+ * @param {HTMLAnchorElement} anchor The anchor to set properties on.
+ * @param {goog.events.Event} e Event object.
+ * @private
+ */
+goog.editor.plugins.LinkDialogPlugin.prototype.touchUpAnchorOnOk_ =
+    function(anchor, e) {
+  if (this.showOpenLinkInNewWindow_) {
     if (e.openInNewWindow) {
       anchor.target = '_blank';
     } else {
@@ -329,12 +361,9 @@ goog.editor.plugins.LinkDialogPlugin.prototype.handleOk_ = function(e) {
       // If user didn't indicate to open in a new window but the link already
       // had a target other than '_blank', let's leave what they had before.
     }
-    // Save checkbox state for next time.
-    this.isOpenLinkInNewWindowChecked_ = e.openInNewWindow;
   }
 
   if (this.showRelNoFollow_) {
-    var anchor = this.getCurrentLink().getAnchor();
     var alreadyPresent = goog.ui.editor.LinkDialog.hasNoFollow(anchor.rel);
     if (alreadyPresent && !e.noFollow) {
       anchor.rel = goog.ui.editor.LinkDialog.removeNoFollow(anchor.rel);
@@ -342,16 +371,6 @@ goog.editor.plugins.LinkDialogPlugin.prototype.handleOk_ = function(e) {
       anchor.rel = anchor.rel ? anchor.rel + ' nofollow' : 'nofollow';
     }
   }
-
-  this.fieldObject.focus();
-
-  // Place cursor to the right of the modified link.
-  this.currentLink_.placeCursorRightOf();
-
-  this.fieldObject.dispatchSelectionChangeEvent();
-  this.fieldObject.dispatchChange();
-
-  this.eventHandler_.removeAll();
 };
 
 
@@ -363,8 +382,12 @@ goog.editor.plugins.LinkDialogPlugin.prototype.handleOk_ = function(e) {
 goog.editor.plugins.LinkDialogPlugin.prototype.handleCancel_ = function(e) {
   if (this.currentLink_.isNew()) {
     goog.dom.flattenElement(this.currentLink_.getAnchor());
+    var extraAnchors = this.currentLink_.getExtraAnchors();
+    for (var i = 0; i < extraAnchors.length; ++i) {
+      goog.dom.flattenElement(extraAnchors[i]);
+    }
     // Make sure listeners know the anchor was flattened out.
-    this.fieldObject.dispatchChange();
+    this.getFieldObject().dispatchChange();
   }
 
   this.eventHandler_.removeAll();

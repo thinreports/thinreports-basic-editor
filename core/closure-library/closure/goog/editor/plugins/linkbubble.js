@@ -208,7 +208,7 @@ goog.editor.plugins.LinkBubble.prototype.setBlockOpeningUnsafeSchemes =
  * Schemes should all be in lowercase. If the plugin is set to block opening
  * unsafe schemes, user-entered URLs will be converted to lowercase and checked
  * against this list. The whitelist has no effect if blocking is not enabled.
- * @param {Array.<String>} schemes String array of URL schemes to allow (http,
+ * @param {Array.<string>} schemes String array of URL schemes to allow (http,
  *     https, etc.).
  */
 goog.editor.plugins.LinkBubble.prototype.setSafeToOpenSchemes =
@@ -265,7 +265,7 @@ goog.editor.plugins.LinkBubble.prototype.getBubbleTargetFromSelection =
     // selected element = range.getContainerElement().  Right now this is true,
     // but attempts to re-use this method for other purposes could cause issues.
     // TODO(robbyw): Refactor this method to also take a range, and use that.
-    var range = this.fieldObject.getRange();
+    var range = this.getFieldObject().getRange();
     if (range && range.isCollapsed() && range.getStartOffset() == 0) {
       var startNode = range.getStartNode();
       var previous = startNode.previousSibling;
@@ -399,7 +399,7 @@ goog.editor.plugins.LinkBubble.prototype.testLink = function() {
       {
         'target': '_blank',
         'noreferrer': this.stopReferrerLeaks_
-      }, this.fieldObject.getAppWindow());
+      }, this.getFieldObject().getAppWindow());
 };
 
 
@@ -439,11 +439,16 @@ goog.editor.plugins.LinkBubble.prototype.getLinkToTextObj_ = function() {
 
 
 /**
- * Shows the link dialog
+ * Shows the link dialog.
+ * @param {goog.events.BrowserEvent} e The event.
  * @private
  */
-goog.editor.plugins.LinkBubble.prototype.showLinkDialog_ = function() {
-  this.fieldObject.execCommand(goog.editor.Command.MODAL_LINK_EDITOR,
+goog.editor.plugins.LinkBubble.prototype.showLinkDialog_ = function(e) {
+  // Needed when this occurs due to an ENTER key event, else the newly created
+  // dialog manages to have its OK button pressed, causing it to disappear.
+  e.preventDefault();
+
+  this.getFieldObject().execCommand(goog.editor.Command.MODAL_LINK_EDITOR,
       new goog.editor.Link(
           /** @type {HTMLAnchorElement} */ (this.getTargetElement()),
           false));
@@ -456,7 +461,7 @@ goog.editor.plugins.LinkBubble.prototype.showLinkDialog_ = function() {
  * @private
  */
 goog.editor.plugins.LinkBubble.prototype.deleteLink_ = function() {
-  this.fieldObject.dispatchBeforeChange();
+  this.getFieldObject().dispatchBeforeChange();
 
   var link = this.getTargetElement();
   var child = link.lastChild;
@@ -465,7 +470,8 @@ goog.editor.plugins.LinkBubble.prototype.deleteLink_ = function() {
 
   this.closeBubble();
 
-  this.fieldObject.dispatchChange();
+  this.getFieldObject().dispatchChange();
+  this.getFieldObject().focus();
 };
 
 

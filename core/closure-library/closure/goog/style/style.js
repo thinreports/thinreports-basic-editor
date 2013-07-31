@@ -24,8 +24,8 @@ goog.provide('goog.style');
 
 
 goog.require('goog.array');
-goog.require('goog.asserts');
 goog.require('goog.dom');
+goog.require('goog.dom.vendor');
 goog.require('goog.math.Box');
 goog.require('goog.math.Coordinate');
 goog.require('goog.math.Rect');
@@ -62,14 +62,69 @@ goog.style.setStyle = function(element, style, opt_value) {
 
 /**
  * Sets a style value on an element, with parameters swapped to work with
- * {@code goog.object.forEach()}.
+ * {@code goog.object.forEach()}. Prepends a vendor-specific prefix when
+ * necessary.
  * @param {Element} element The element to change.
  * @param {string|number|boolean|undefined} value Style value.
  * @param {string} style Style name.
  * @private
  */
 goog.style.setStyle_ = function(element, value, style) {
-  element.style[goog.string.toCamelCase(style)] = value;
+  var propertyName = goog.style.getVendorJsStyleName_(element, style);
+
+  if (propertyName) {
+    element.style[propertyName] = value;
+  }
+};
+
+
+/**
+ * Returns the style property name in camel-case. If it does not exist and a
+ * vendor-specific version of the property does exist, then return the vendor-
+ * specific property name instead.
+ * @param {Element} element The element to change.
+ * @param {string} style Style name.
+ * @return {string} Vendor-specific style.
+ * @private
+ */
+goog.style.getVendorJsStyleName_ = function(element, style) {
+  var camelStyle = goog.string.toCamelCase(style);
+
+  if (element.style[camelStyle] === undefined) {
+    var prefixedStyle = goog.dom.vendor.getVendorJsPrefix() +
+        goog.string.toTitleCase(style);
+
+    if (element.style[prefixedStyle] !== undefined) {
+      return prefixedStyle;
+    }
+  }
+
+  return camelStyle;
+};
+
+
+/**
+ * Returns the style property name in CSS notation. If it does not exist and a
+ * vendor-specific version of the property does exist, then return the vendor-
+ * specific property name instead.
+ * @param {Element} element The element to change.
+ * @param {string} style Style name.
+ * @return {string} Vendor-specific style.
+ * @private
+ */
+goog.style.getVendorStyleName_ = function(element, style) {
+  var camelStyle = goog.string.toCamelCase(style);
+
+  if (element.style[camelStyle] === undefined) {
+    var prefixedStyle = goog.dom.vendor.getVendorJsPrefix() +
+        goog.string.toTitleCase(style);
+
+    if (element.style[prefixedStyle] !== undefined) {
+      return goog.dom.vendor.getVendorPrefix() + '-' + style;
+    }
+  }
+
+  return style;
 };
 
 
@@ -88,7 +143,16 @@ goog.style.getStyle = function(element, property) {
   // For for browser specific styles as 'filter' is undefined
   // so we need to return '' explicitly to make it consistent across
   // browsers.
-  return element.style[goog.string.toCamelCase(property)] || '';
+  var styleValue = element.style[goog.string.toCamelCase(property)];
+
+  // Using typeof here because of a bug in Safari 5.1, where this value
+  // was undefined, but === undefined returned false.
+  if (typeof(styleValue) !== 'undefined') {
+    return styleValue;
+  }
+
+  return element.style[goog.style.getVendorJsStyleName_(element, property)] ||
+      '';
 };
 
 
@@ -126,6 +190,7 @@ goog.style.getComputedStyle = function(element, property) {
  * @return {string} Style value.
  */
 goog.style.getCascadedStyle = function(element, style) {
+  // TODO(nicksantos): This should be documented to return null. #fixTypes
   return element.currentStyle ? element.currentStyle[style] : null;
 };
 
@@ -310,29 +375,6 @@ goog.style.getViewportPageOffset = function(doc) {
   var scrollLeft = body.scrollLeft || documentElement.scrollLeft;
   var scrollTop = body.scrollTop || documentElement.scrollTop;
   return new goog.math.Coordinate(scrollLeft, scrollTop);
-};
-
-
-/**
- * Determines whether getBoundingClientRect is supported for this element.
- * @param {!Element} el The element to be measured.
- * @return {boolean} Whether getBoundingClientRect is supported.
- * @private
- */
-goog.style.supportsGetBoundingClientRect_ = function(el) {
-  if (goog.userAgent.MOBILE && goog.userAgent.WEBKIT) {
-    // http://crbug.com/130651 -- Android Chrome's getBoundingClientRect
-    // incorrectly applies zoom in iframes.  To avoid adding a dependency to
-    // goog.userAgent.product, this is a little broader to apply to all mobile
-    // WebKit, so this will unfortunately slow down other mobile devices.  To
-    // mitigate the effect, we can still use getClientBoundingRect when not in
-    // an iframe.
-    var win = el.ownerDocument.defaultView;
-    if (win != win.top) {
-      return false;
-    }
-  }
-  return !!el.getBoundingClientRect;
 };
 
 
@@ -605,7 +647,7 @@ goog.style.getPageOffset = function(el) {
   }
 
   // IE, Gecko 1.9+, and most modern WebKit.
-  if (goog.style.supportsGetBoundingClientRect_(el)) {
+  if (el.getBoundingClientRect) {
     box = goog.style.getBoundingClientRect_(el);
     // Must add the scroll coordinates in to get the absolute page offset
     // of element since getBoundingClientRect returns relative coordinates to
@@ -786,7 +828,7 @@ goog.style.getClientPosition = function(el) {
   var pos = new goog.math.Coordinate;
   if (el.nodeType == goog.dom.NodeType.ELEMENT) {
     el = /** @type {!Element} */ (el);
-    if (goog.style.supportsGetBoundingClientRect_(el)) {
+    if (el.getBoundingClientRect) {
       // IE, Gecko 1.9+, and most modern WebKit
       var box = goog.style.getBoundingClientRect_(el);
       pos.x = box.left;
@@ -910,7 +952,7 @@ goog.style.setHeight = function(element, height) {
 
 /**
  * Set the width of an element.  Sets the element's style property.
- * @param {Element} element Element to set the height of.
+ * @param {Element} element Element to set the width of.
  * @param {string|number} width The width value to set.  If a number, 'px'
  *     will be appended, otherwise the value will be applied directly.
  */
@@ -1519,9 +1561,9 @@ goog.style.getIePixelValue_ = function(element, value, name, pixelName) {
  * @private
  */
 goog.style.getIePixelDistance_ = function(element, propName) {
-  return goog.style.getIePixelValue_(element,
-      goog.style.getCascadedStyle(element, propName),
-      'left', 'pixelLeft');
+  var value = goog.style.getCascadedStyle(element, propName);
+  return value ?
+      goog.style.getIePixelValue_(element, value, 'left', 'pixelLeft') : 0;
 };
 
 

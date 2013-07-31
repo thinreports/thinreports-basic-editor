@@ -20,10 +20,10 @@
 
 goog.provide('goog.ui.MenuItemRenderer');
 
+goog.require('goog.a11y.aria');
+goog.require('goog.a11y.aria.Role');
 goog.require('goog.dom');
-goog.require('goog.dom.a11y');
-goog.require('goog.dom.a11y.Role');
-goog.require('goog.dom.classes');
+goog.require('goog.dom.classlist');
 goog.require('goog.ui.Component.State');
 goog.require('goog.ui.ControlContent');
 goog.require('goog.ui.ControlRenderer');
@@ -108,7 +108,7 @@ goog.ui.MenuItemRenderer.prototype.getCompositeCssClass_ = function(index) {
 
 /** @override */
 goog.ui.MenuItemRenderer.prototype.getAriaRole = function() {
-  return goog.dom.a11y.Role.MENU_ITEM;
+  return goog.a11y.aria.Role.MENU_ITEM;
 };
 
 
@@ -126,6 +126,7 @@ goog.ui.MenuItemRenderer.prototype.createDom = function(item) {
   this.setEnableCheckBoxStructure(item, element,
       item.isSupportedState(goog.ui.Component.State.SELECTED) ||
       item.isSupportedState(goog.ui.Component.State.CHECKED));
+  this.setAriaStates(item, element);
   return element;
 };
 
@@ -150,7 +151,7 @@ goog.ui.MenuItemRenderer.prototype.decorate = function(item, element) {
     element.appendChild(
         this.createContent(element.childNodes, item.getDomHelper()));
   }
-  if (goog.dom.classes.has(element, goog.getCssName('goog-option'))) {
+  if (goog.dom.classlist.contains(element, goog.getCssName('goog-option'))) {
     item.setCheckable(true);
     this.setCheckable(item, element, true);
   }
@@ -194,7 +195,7 @@ goog.ui.MenuItemRenderer.prototype.hasContentStructure = function(element) {
   var child = goog.dom.getFirstElementChild(element);
   var contentClassName = this.getCompositeCssClass_(
       goog.ui.MenuItemRenderer.CompositeCssClassIndex_.CONTENT);
-  return !!child && goog.dom.classes.has(child, contentClassName);
+  return !!child && goog.dom.classlist.contains(child, contentClassName);
 };
 
 
@@ -223,8 +224,9 @@ goog.ui.MenuItemRenderer.prototype.createContent = function(content, dom) {
 goog.ui.MenuItemRenderer.prototype.setSelectable = function(item, element,
     selectable) {
   if (element) {
-    goog.dom.a11y.setRole(element, selectable ?
-        goog.dom.a11y.Role.MENU_ITEM_RADIO :
+    goog.a11y.aria.setRole(element,
+        selectable ?
+        goog.a11y.aria.Role.MENU_ITEM_RADIO :
         /** @type {string} */ (this.getAriaRole()));
     this.setEnableCheckBoxStructure(item, element, selectable);
   }
@@ -241,8 +243,9 @@ goog.ui.MenuItemRenderer.prototype.setSelectable = function(item, element,
 goog.ui.MenuItemRenderer.prototype.setCheckable = function(item, element,
     checkable) {
   if (element) {
-    goog.dom.a11y.setRole(element, checkable ?
-        goog.dom.a11y.Role.MENU_ITEM_CHECKBOX :
+    goog.a11y.aria.setRole(element,
+        checkable ?
+        goog.a11y.aria.Role.MENU_ITEM_CHECKBOX :
         /** @type {string} */ (this.getAriaRole()));
     this.setEnableCheckBoxStructure(item, element, checkable);
   }
@@ -258,10 +261,10 @@ goog.ui.MenuItemRenderer.prototype.setCheckable = function(item, element,
 goog.ui.MenuItemRenderer.prototype.hasCheckBoxStructure = function(element) {
   var contentElement = this.getContentElement(element);
   if (contentElement) {
-    var child = contentElement.firstChild;
+    var child = goog.dom.getFirstElementChild(contentElement);
     var checkboxClassName = this.getCompositeCssClass_(
         goog.ui.MenuItemRenderer.CompositeCssClassIndex_.CHECKBOX);
-    return !!child && goog.dom.classes.has(child, checkboxClassName);
+    return !!child && goog.dom.classlist.contains(child, checkboxClassName);
   }
   return false;
 };
@@ -279,7 +282,7 @@ goog.ui.MenuItemRenderer.prototype.hasCheckBoxStructure = function(element) {
 goog.ui.MenuItemRenderer.prototype.setEnableCheckBoxStructure = function(item,
     element, enable) {
   if (enable != this.hasCheckBoxStructure(element)) {
-    goog.dom.classes.enable(element, goog.getCssName('goog-option'), enable);
+    goog.dom.classlist.enable(element, goog.getCssName('goog-option'), enable);
     var contentElement = this.getContentElement(element);
     if (enable) {
       // Insert checkbox structure.

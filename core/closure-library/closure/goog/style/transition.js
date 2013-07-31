@@ -22,6 +22,9 @@ goog.provide('goog.style.transition.Css3Property');
 
 goog.require('goog.array');
 goog.require('goog.asserts');
+goog.require('goog.dom.vendor');
+goog.require('goog.style');
+goog.require('goog.userAgent');
 
 
 /**
@@ -61,10 +64,14 @@ goog.style.transition.set = function(element, properties) {
         if (goog.isString(p)) {
           return p;
         } else {
-          goog.asserts.assert(p && p.property && goog.isNumber(p.duration) &&
-              p.timing && goog.isNumber(p.delay));
-          return p.property + ' ' + p.duration + 's ' + p.timing + ' ' +
-              p.delay + 's';
+          goog.asserts.assertObject(p,
+              'Expected css3 property to be an object.');
+          var propString = p.property + ' ' + p.duration + 's ' + p.timing +
+              ' ' + p.delay + 's';
+          goog.asserts.assert(p.property && goog.isNumber(p.duration) &&
+              p.timing && goog.isNumber(p.delay),
+              'Unexpected css3 property value: %s', propString);
+          return propString;
         }
       });
   goog.style.transition.setPropertyValue_(element, values.join(','));
@@ -85,20 +92,29 @@ goog.style.transition.removeAll = function(element) {
  */
 goog.style.transition.isSupported = function() {
   if (!goog.isDef(goog.style.transition.css3TransitionSupported_)) {
-    // We create a test element with style=-webkit-transition, etc.
-    // We then detect whether those style properties are recognized and
-    // available from js.
-    var el = document.createElement('div');
-    el.innerHTML = '<div style="-webkit-transition:opacity 1s linear;' +
-        '-moz-transition:opacity 1s linear;-o-transition:opacity 1s linear">';
+    // Since IE would allow any attribute, we need to explicitly check the
+    // browser version here instead.
+    if (goog.userAgent.IE) {
+      goog.style.transition.css3TransitionSupported_ =
+          goog.userAgent.isVersion('10.0');
+    } else {
+      // We create a test element with style=-vendor-transition
+      // We then detect whether those style properties are recognized and
+      // available from js.
+      var el = document.createElement('div');
+      var transition = 'transition:opacity 1s linear;';
+      var vendorPrefix = goog.dom.vendor.getVendorPrefix();
+      var vendorTransition =
+          vendorPrefix ? vendorPrefix + '-' + transition : '';
+      el.innerHTML = '<div style="' + vendorTransition + transition + '">';
 
-    var testElement = el.firstChild;
-    goog.style.transition.css3TransitionSupported_ =
-        goog.isDef(testElement.style.WebkitTransition) ||
-        goog.isDef(testElement.style.MozTransition) ||
-        goog.isDef(testElement.style.OTransition);
+      var testElement = /** @type {Element} */ (el.firstChild);
+      goog.asserts.assert(testElement.nodeType == Node.ELEMENT_NODE);
+
+      goog.style.transition.css3TransitionSupported_ =
+          goog.style.getStyle(testElement, 'transition') != '';
+    }
   }
-
   return goog.style.transition.css3TransitionSupported_;
 };
 
@@ -118,7 +134,5 @@ goog.style.transition.css3TransitionSupported_;
  * @private
  */
 goog.style.transition.setPropertyValue_ = function(element, transitionValue) {
-  element.style.WebkitTransition = transitionValue;
-  element.style.MozTransition = transitionValue;
-  element.style.OTransition = transitionValue;
+  goog.style.setStyle(element, 'transition', transitionValue);
 };

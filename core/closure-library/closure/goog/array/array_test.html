@@ -12,12 +12,14 @@ See the COPYING file for details.
 <script src="../base.js"></script>
 <script>
   goog.require('goog.array');
+  goog.require('goog.dom');
   goog.require('goog.testing.PropertyReplacer');
   goog.require('goog.testing.jsunit');
   goog.require('goog.testing.recordFunction');
 </script>
 </head>
 <body>
+<div class="foo"></div>
 <script>
 
 function testArrayIndexOf() {
@@ -120,6 +122,16 @@ function testArrayForEachOmitsDeleted() {
     s += val + index;
   });
   assertEquals('a0c2', s);
+}
+
+function testArrayForEachScope() {
+  var scope = {};
+  var a = ['a', 'b', 'c', 'd'];
+  goog.array.forEach(a, function(val, index, a2) {
+    assertEquals(a, a2);
+    assertEquals('number', typeof index);
+    assertEquals(this, scope);
+  }, scope);
 }
 
 function testArrayForEachRight() {
@@ -568,6 +580,23 @@ function testArrayEveryOmitsDeleted() {
   assertFalse(b);
 }
 
+function testArrayCount() {
+  var a = [0, 1, 2, 3, 4];
+  var context = {};
+  assertEquals(3, goog.array.count(a, function(element, index, array) {
+    assertTrue(goog.isNumber(index));
+    assertEquals(a, array);
+    assertEquals(context, this);
+    return element % 2 == 0;
+  }, context));
+
+  delete a[2];
+  assertEquals('deleted element is ignored', 4,
+      goog.array.count(a, function() {
+        return true;
+      }));
+}
+
 function testArrayContains() {
   var a = [0, 1, 2, 3];
   assertTrue('contain, Should contain 3', goog.array.contains(a, 3));
@@ -775,6 +804,13 @@ function testExtendWithArguments() {
   var a2 = [0, 1, 2, 3, 4, 5];
   goog.array.extend(a, f(1, 2, 3), f(4, 5));
   assertArrayEquals('extend, should be equal', a, a2);
+}
+
+function testExtendWithQuerySelector() {
+  var a = [0];
+  var d = goog.dom.getElementsByTagNameAndClass('div', 'foo');
+  goog.array.extend(a, d);
+  assertEquals(2, a.length);
 }
 
 function testArraySplice() {
@@ -1374,6 +1410,50 @@ function testArrayBucketEvenOdd() {
 
   assertArraysEqual(b[true], [2, 4, 6, 8]);
   assertArraysEqual(b[false], [1, 3, 5, 7, 9]);
+}
+
+function testArrayToObject() {
+  var a = [
+    {name: 'a'},
+    {name: 'b'},
+    {name: 'c'},
+    {name: 'd'}];
+
+  function getName(value, index, array) {
+    assertEquals(value, array[index]);
+    assertEquals('number', typeof index);
+    assertEquals(a, array);
+    return value.name;
+  }
+
+  var b = goog.array.toObject(a, getName);
+
+  for (var i = 0; i < a.length; i++) {
+    assertEquals(a[i], b[a[i].name]);
+  }
+}
+
+function testRange() {
+  assertArrayEquals([], goog.array.range(0));
+  assertArrayEquals([], goog.array.range(5, 5, 5));
+  assertArrayEquals([], goog.array.range(-3, -3));
+  assertArrayEquals([], goog.array.range(10, undefined, -1));
+  assertArrayEquals([], goog.array.range(8, 0));
+  assertArrayEquals([], goog.array.range(-5, -10, 3));
+
+  assertArrayEquals([0], goog.array.range(1));
+  assertArrayEquals([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], goog.array.range(10));
+
+  assertArrayEquals([1], goog.array.range(1, 2));
+  assertArrayEquals([-3, -2, -1, 0, 1, 2], goog.array.range(-3, 3));
+
+  assertArrayEquals([4], goog.array.range(4, 40, 400));
+  assertArrayEquals([5, 8, 11, 14], goog.array.range(5, 15, 3));
+  assertArrayEquals([1, -1, -3], goog.array.range(1, -5, -2));
+  assertElementsRoughlyEqual([.2, .3, .4], goog.array.range(.2, .5, .1), 0.001);
+
+  assertArrayEquals([0], goog.array.range(7, undefined, 9));
+  assertArrayEquals([0, 2, 4, 6], goog.array.range(8, undefined, 2));
 }
 
 function testArrayRepeat() {

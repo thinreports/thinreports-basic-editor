@@ -93,8 +93,9 @@ goog.provide('goog.ui.ac.InputHandler');
 
 goog.require('goog.Disposable');
 goog.require('goog.Timer');
+goog.require('goog.a11y.aria');
+goog.require('goog.asserts');
 goog.require('goog.dom');
-goog.require('goog.dom.a11y');
 goog.require('goog.dom.selection');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventType');
@@ -112,6 +113,7 @@ goog.require('goog.userAgent.product');
  * text-input or textarea.
  *
  * @param {?string=} opt_separators Separators to split multiple entries.
+ *     If none passed, uses ',' and ';'.
  * @param {?string=} opt_literals Characters used to delimit text literals.
  * @param {?boolean=} opt_multi Whether to allow multiple entries
  *     (Default: true).
@@ -134,7 +136,7 @@ goog.ui.ac.InputHandler = function(opt_separators, opt_literals,
   this.multi_ = opt_multi != null ? opt_multi : true;
 
   // Set separators depends on this.multi_ being set correctly
-  this.setSeparators(goog.isDefAndNotNull(opt_separators) ? opt_separators :
+  this.setSeparators(opt_separators ||
       goog.ui.ac.InputHandler.STANDARD_LIST_SEPARATORS);
 
   /**
@@ -441,7 +443,8 @@ goog.ui.ac.InputHandler.prototype.setCursorPosition = function(pos) {
  */
 goog.ui.ac.InputHandler.prototype.attachInput = function(target) {
   if (goog.dom.isElement(target)) {
-    goog.dom.a11y.setState(/** @type {Element} */ (target), 'haspopup', true);
+    var el = /** @type {!Element} */ (target);
+    goog.a11y.aria.setState(el, 'haspopup', true);
   }
 
   this.eh_.listen(target, goog.events.EventType.FOCUS, this.handleFocus);

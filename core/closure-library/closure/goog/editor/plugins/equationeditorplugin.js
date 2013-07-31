@@ -23,6 +23,7 @@ goog.require('goog.ui.editor.EquationEditorDialog');
 goog.require('goog.ui.editor.EquationEditorOkEvent');
 goog.require('goog.ui.equation.EquationEditor');
 goog.require('goog.ui.equation.ImageRenderer');
+goog.require('goog.ui.equation.PaletteManager');
 goog.require('goog.ui.equation.TexEditor');
 
 
@@ -51,7 +52,7 @@ goog.editor.plugins.EquationEditorPlugin = function(opt_helpUrl) {
 
   /**
    * The listener key for double click events.
-   * @type {number?}
+   * @type {goog.events.Key}
    * @private
    */
   this.dblClickKey_;
@@ -124,7 +125,7 @@ goog.editor.plugins.EquationEditorPlugin.prototype.populateContext_ =
  */
 goog.editor.plugins.EquationEditorPlugin.prototype.getEquationFromSelection_ =
     function() {
-  var range = this.fieldObject.getRange();
+  var range = this.getFieldObject().getRange();
   if (range) {
     return range.getText();
   }
@@ -180,7 +181,7 @@ goog.editor.plugins.EquationEditorPlugin.prototype.handleOk_ =
   this.restoreOriginalSelection();
 
   // Notify listeners that the editable field's contents are about to change.
-  this.fieldObject.dispatchBeforeChange();
+  this.getFieldObject().dispatchBeforeChange();
 
   var dh = this.getFieldDomHelper();
   var node = dh.htmlToDocumentFragment(e.equationHtml);
@@ -196,7 +197,7 @@ goog.editor.plugins.EquationEditorPlugin.prototype.handleOk_ =
     // <br> right before and/or after the selection. Currently this is fixed
     // only for case of collapsed selection where we simply avoid calling
     // removeContants().
-    var range = this.fieldObject.getRange();
+    var range = this.getFieldObject().getRange();
     if (!range.isCollapsed()) {
       range.removeContents();
     }
@@ -207,5 +208,5 @@ goog.editor.plugins.EquationEditorPlugin.prototype.handleOk_ =
   // equation image.
   goog.editor.range.placeCursorNextTo(node, false);
 
-  this.fieldObject.dispatchChange();
+  this.getFieldObject().dispatchChange();
 };

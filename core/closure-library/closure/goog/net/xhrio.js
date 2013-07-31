@@ -42,9 +42,10 @@ goog.provide('goog.net.XhrIo');
 goog.provide('goog.net.XhrIo.ResponseType');
 
 goog.require('goog.Timer');
+goog.require('goog.array');
 goog.require('goog.debug.Logger');
 goog.require('goog.debug.entryPointRegistry');
-goog.require('goog.debug.errorHandlerWeakDep');
+goog.require('goog.events');
 goog.require('goog.events.EventTarget');
 goog.require('goog.json');
 goog.require('goog.net.ErrorCode');
@@ -149,15 +150,19 @@ goog.net.XhrIo.sendInstances_ = [];
  * @param {Function=} opt_callback Callback function for when request is
  *     complete.
  * @param {string=} opt_method Send method, default: GET.
- * @param {string|GearsBlob=} opt_content Post data. This can be a Gears blob
- *     if the underlying HTTP request object is a Gears HTTP request.
+ * @param {ArrayBuffer|Blob|Document|FormData|GearsBlob|string=} opt_content
+ *     Post data. This can be a Gears blob if the underlying HTTP request object
+ *     is a Gears HTTP request.
  * @param {Object|goog.structs.Map=} opt_headers Map of headers to add to the
  *     request.
  * @param {number=} opt_timeoutInterval Number of milliseconds after which an
  *     incomplete request will be aborted; 0 means no timeout is set.
+ * @param {boolean=} opt_withCredentials Whether to send credentials with the
+ *     request. Default to false. See {@link goog.net.XhrIo#setWithCredentials}.
  */
 goog.net.XhrIo.send = function(url, opt_callback, opt_method, opt_content,
-                               opt_headers, opt_timeoutInterval) {
+                               opt_headers, opt_timeoutInterval,
+                               opt_withCredentials) {
   var x = new goog.net.XhrIo();
   goog.net.XhrIo.sendInstances_.push(x);
   if (opt_callback) {
@@ -168,6 +173,9 @@ goog.net.XhrIo.send = function(url, opt_callback, opt_method, opt_content,
                      goog.partial(goog.net.XhrIo.cleanupSend_, x));
   if (opt_timeoutInterval) {
     x.setTimeoutInterval(opt_timeoutInterval);
+  }
+  if (opt_withCredentials) {
+    x.setWithCredentials(opt_withCredentials);
   }
   x.send(url, opt_method, opt_content, opt_headers);
 };
@@ -434,15 +442,17 @@ goog.net.XhrIo.prototype.getWithCredentials = function() {
  * Instance send that actually uses XMLHttpRequest to make a server call.
  * @param {string|goog.Uri} url Uri to make request to.
  * @param {string=} opt_method Send method, default: GET.
- * @param {string|GearsBlob=} opt_content Post data. This can be a Gears blob
- *     if the underlying HTTP request object is a Gears HTTP request.
+ * @param {ArrayBuffer|Blob|Document|FormData|GearsBlob|string=} opt_content
+ *     Post data. This can be a Gears blob if the underlying HTTP request object
+ *     is a Gears HTTP request.
  * @param {Object|goog.structs.Map=} opt_headers Map of headers to add to the
  *     request.
  */
 goog.net.XhrIo.prototype.send = function(url, opt_method, opt_content,
                                          opt_headers) {
   if (this.xhr_) {
-    throw Error('[goog.net.XhrIo] Object is active with another request');
+    throw Error('[goog.net.XhrIo] Object is active with another request=' +
+        this.lastUri_ + '; newUri=' + url);
   }
 
   var method = opt_method ? opt_method.toUpperCase() : 'GET';
@@ -491,9 +501,15 @@ goog.net.XhrIo.prototype.send = function(url, opt_method, opt_content,
     });
   }
 
+  var contentIsFormData = (goog.global['FormData'] &&
+      (content instanceof goog.global['FormData']));
   if (method == 'POST' &&
-      !headers.containsKey(goog.net.XhrIo.CONTENT_TYPE_HEADER)) {
-    // For POST requests, default to the url-encoded form content type.
+      !headers.containsKey(goog.net.XhrIo.CONTENT_TYPE_HEADER) &&
+      !contentIsFormData) {
+    // For POST requests, default to the url-encoded form content type
+    // unless this is a FormData request.  For FormData, the browser will
+    // automatically add a multipart/form-data content type with an appropriate
+    // multipart boundary.
     headers.set(goog.net.XhrIo.CONTENT_TYPE_HEADER,
                 goog.net.XhrIo.FORM_CONTENT_TYPE);
   }
@@ -910,11 +926,42 @@ goog.net.XhrIo.prototype.getResponseText = function() {
     // http://www.w3.org/TR/XMLHttpRequest/#the-responsetext-attribute
     // states that responseText should return '' (and responseXML null)
     // when the state is not LOADING or DONE. Instead, IE and Gears can
-    // throw unexpected exceptions, eg, when a request is aborted or no
-    // data is available yet.
+    // throw unexpected exceptions, for example when a request is aborted
+    // or no data is available yet.
     this.logger_.fine('Can not get responseText: ' + e.message);
     return '';
   }
+};
+
+
+/**
+ * Get the response body from the Xhr object. This property is only available
+ * in IE since version 7 according to MSDN:
+ * http://msdn.microsoft.com/en-us/library/ie/ms534368(v=vs.85).aspx
+ * Will only return correct result when called from the context of a callback.
+ *
+ * One option is to construct a VBArray from the returned object and convert
+ * it to a JavaScript array using the toArray method:
+ * {@code (new window['VBArray'](xhrIo.getResponseBody())).toArray()}
+ * This will result in an array of numbers in the range of [0..255]
+ *
+ * Another option is to use the VBScript CStr method to convert it into a
+ * string as outlined in http://stackoverflow.com/questions/1919972
+ *
+ * @return {Object} Binary result from the server or null if not available.
+ */
+goog.net.XhrIo.prototype.getResponseBody = function() {
+  /** @preserveTry */
+  try {
+    if (this.xhr_ && 'responseBody' in this.xhr_) {
+      return this.xhr_['responseBody'];
+    }
+  } catch (e) {
+    // IE can throw unexpected exceptions, for example when a request is aborted
+    // or no data is yet available.
+    this.logger_.fine('Can not get responseBody: ' + e.message);
+  }
+  return null;
 };
 
 

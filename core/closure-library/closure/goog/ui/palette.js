@@ -24,11 +24,11 @@ goog.provide('goog.ui.Palette');
 
 goog.require('goog.array');
 goog.require('goog.dom');
+goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.math.Size');
-goog.require('goog.ui.Component.Error');
-goog.require('goog.ui.Component.EventType');
+goog.require('goog.ui.Component');
 goog.require('goog.ui.Control');
 goog.require('goog.ui.PaletteRenderer');
 goog.require('goog.ui.SelectionModel');
@@ -55,10 +55,29 @@ goog.require('goog.ui.SelectionModel');
  * @extends {goog.ui.Control}
  */
 goog.ui.Palette = function(items, opt_renderer, opt_domHelper) {
-  goog.ui.Control.call(this, items,
+  goog.base(this, items,
       opt_renderer || goog.ui.PaletteRenderer.getInstance(), opt_domHelper);
+  this.setAutoStates(goog.ui.Component.State.CHECKED |
+      goog.ui.Component.State.SELECTED | goog.ui.Component.State.OPENED, false);
+
+  /**
+   * A fake component for dispatching events on palette cell changes.
+   * @type {!goog.ui.Palette.CurrentCell_}
+   * @private
+   */
+  this.currentCellControl_ = new goog.ui.Palette.CurrentCell_();
+  this.currentCellControl_.setParentEventTarget(this);
 };
 goog.inherits(goog.ui.Palette, goog.ui.Control);
+
+
+/**
+ * Events fired by the palette object
+ * @enum {string}
+ */
+goog.ui.Palette.EventType = {
+  AFTER_HIGHLIGHT: goog.events.getUniqueId('afterhighlight')
+};
 
 
 /**
@@ -99,6 +118,8 @@ goog.ui.Palette.prototype.disposeInternal = function() {
   }
 
   this.size_ = null;
+
+  this.currentCellControl_.dispose();
 };
 
 
@@ -200,7 +221,7 @@ goog.ui.Palette.prototype.handleMouseOut = function(e) {
   }
 
   if (item == this.getHighlightedItem()) {
-    this.getRenderer().highlightCell(this, item, false);
+    this.setHighlightedItem(null);
   }
 };
 
@@ -237,7 +258,7 @@ goog.ui.Palette.prototype.performActionInternal = function(e) {
   var item = this.getHighlightedItem();
   if (item) {
     this.setSelectedItem(item);
-    return this.dispatchEvent(goog.ui.Component.EventType.ACTION);
+    return goog.base(this, 'performActionInternal', e);
   }
   return false;
 };
@@ -390,11 +411,20 @@ goog.ui.Palette.prototype.getHighlightedIndex = function() {
 /**
  * Returns the currently highlighted palette item, or null if no item is
  * highlighted.
- * @return {Node} The highlighted item (null if none).
+ * @return {Node} The highlighted item (undefined if none).
  */
 goog.ui.Palette.prototype.getHighlightedItem = function() {
   var items = this.getContent();
   return items && items[this.highlightedIndex_];
+};
+
+
+/**
+ * @return {Element} The highlighted cell.
+ * @private
+ */
+goog.ui.Palette.prototype.getHighlightedCellElement_ = function() {
+  return this.getRenderer().getCellForItem(this.getHighlightedItem());
 };
 
 
@@ -409,6 +439,7 @@ goog.ui.Palette.prototype.setHighlightedIndex = function(index) {
     this.highlightIndex_(this.highlightedIndex_, false);
     this.highlightedIndex_ = index;
     this.highlightIndex_(index, true);
+    this.dispatchEvent(goog.ui.Palette.EventType.AFTER_HIGHLIGHT);
   }
 };
 
@@ -416,7 +447,7 @@ goog.ui.Palette.prototype.setHighlightedIndex = function(index) {
 /**
  * Highlights the given item, or removes the highlight if the argument is null
  * or invalid.  Any previously-highlighted item will be un-highlighted.
- * @param {Node} item Item to highlight.
+ * @param {Node|undefined} item Item to highlight.
  */
 goog.ui.Palette.prototype.setHighlightedItem = function(item) {
   var items = /** @type {Array.<Node>} */ (this.getContent());
@@ -440,8 +471,7 @@ goog.ui.Palette.prototype.getSelectedIndex = function() {
  */
 goog.ui.Palette.prototype.getSelectedItem = function() {
   return this.selectionModel_ ?
-    /** @type {Node} */ (this.selectionModel_.getSelectedItem()) :
-    null;
+      /** @type {Node} */ (this.selectionModel_.getSelectedItem()) : null;
 };
 
 
@@ -484,7 +514,13 @@ goog.ui.Palette.prototype.highlightIndex_ = function(index, highlight) {
   if (this.getElement()) {
     var items = this.getContent();
     if (items && index >= 0 && index < items.length) {
-      this.getRenderer().highlightCell(this, items[index], highlight);
+      var cellEl = this.getHighlightedCellElement_();
+      if (this.currentCellControl_.getElement() != cellEl) {
+        this.currentCellControl_.setElementInternal(cellEl);
+      }
+      if (this.currentCellControl_.tryHighlight(highlight)) {
+        this.getRenderer().highlightCell(this, items[index], highlight);
+      }
     }
   }
 };
@@ -535,4 +571,28 @@ goog.ui.Palette.prototype.adjustSize_ = function() {
     // No items; set size to 0x0.
     this.size_ = new goog.math.Size(0, 0);
   }
+};
+
+
+
+/**
+ * A component to represent the currently highlighted cell.
+ * @constructor
+ * @extends {goog.ui.Control}
+ * @private
+ */
+goog.ui.Palette.CurrentCell_ = function() {
+  goog.base(this, null);
+  this.setDispatchTransitionEvents(goog.ui.Component.State.HOVER, true);
+};
+goog.inherits(goog.ui.Palette.CurrentCell_, goog.ui.Control);
+
+
+/**
+ * @param {boolean} highlight Whether to highlight or unhighlight the component.
+ * @return {boolean} Whether it was successful.
+ */
+goog.ui.Palette.CurrentCell_.prototype.tryHighlight = function(highlight) {
+  this.setHighlighted(highlight);
+  return this.isHighlighted() == highlight;
 };

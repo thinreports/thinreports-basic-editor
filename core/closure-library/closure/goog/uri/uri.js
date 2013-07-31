@@ -249,19 +249,20 @@ goog.Uri.prototype.toString = function() {
 
 
 /**
- * Resolves a relative url string to a this base uri.
+ * Resolves the given relative URI (a goog.Uri object), using the URI
+ * represented by this instance as the base URI.
  *
- * There are several kinds of relative urls:<br>
+ * There are several kinds of relative URIs:<br>
  * 1. foo - replaces the last part of the path, the whole query and fragment<br>
  * 2. /foo - replaces the the path, the query and fragment<br>
  * 3. //foo - replaces everything from the domain on.  foo is a domain name<br>
  * 4. ?foo - replace the query and fragment<br>
  * 5. #foo - replace the fragment only
  *
- * Additionally, if relative url has a non-empty path, all ".." and "."
+ * Additionally, if relative URI has a non-empty path, all ".." and "."
  * segments will be resolved, as described in RFC 3986.
  *
- * @param {goog.Uri} relativeUri The relative url to resolve.
+ * @param {goog.Uri} relativeUri The relative URI to resolve.
  * @return {!goog.Uri} The resolved URI.
  */
 goog.Uri.prototype.resolve = function(relativeUri) {
@@ -1247,7 +1248,7 @@ goog.Uri.QueryData.prototype.containsValue = function(value) {
 /**
  * Returns all the keys of the parameters. If a key is used multiple times
  * it will be included multiple times in the returned array
- * @return {!Array} All the keys of the parameters.
+ * @return {!Array.<string>} All the keys of the parameters.
  */
 goog.Uri.QueryData.prototype.getKeys = function() {
   this.ensureKeyMapInitialized_();
@@ -1434,6 +1435,7 @@ goog.Uri.QueryData.prototype.clone = function() {
   rv.encodedQuery_ = this.encodedQuery_;
   if (this.keyMap_) {
     rv.keyMap_ = this.keyMap_.clone();
+    rv.count_ = this.count_;
   }
   return rv;
 };

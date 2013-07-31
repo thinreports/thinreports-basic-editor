@@ -30,6 +30,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.events.Event');
+goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.fx.Dragger');
@@ -325,6 +326,7 @@ goog.fx.AbstractDragDrop.prototype.disposeItem = function(item) {
   if (this.isTarget_ && this.targetClass_) {
     goog.dom.classes.remove(item.element, this.targetClass_);
   }
+  item.dispose();
 };
 
 
@@ -583,7 +585,7 @@ goog.fx.AbstractDragDrop.prototype.moveDrag_ = function(event) {
           activeTarget.box_, x, y);
     }
 
-    if (this.isInside_(x, y, activeTarget.box_) &&
+    if (activeTarget.box_.contains(position) &&
         subtarget == this.activeSubtarget_) {
       return;
     }
@@ -616,9 +618,9 @@ goog.fx.AbstractDragDrop.prototype.moveDrag_ = function(event) {
   }
 
   // Check if inside target box
-  if (this.isInside_(x, y, this.targetBox_)) {
+  if (this.targetBox_.contains(position)) {
     // Search for target and fire a dragover event if found
-    activeTarget = this.activeTarget_ = this.getTargetFromPosition_(x, y);
+    activeTarget = this.activeTarget_ = this.getTargetFromPosition_(position);
     if (activeTarget && activeTarget.target_) {
       // If a subtargeting function is enabled get the current subtarget
       if (this.subtargetFunction_) {
@@ -1048,20 +1050,19 @@ goog.fx.AbstractDragDrop.prototype.maybeCreateDummyTargetForPosition_ =
 /**
  * Returns the target for a given cursor position.
  *
- * @param {number} x Cursor position on the x-axis.
- * @param {number} y Cursor position on the y-axis.
+ * @param {goog.math.Coordinate} position Cursor position.
  * @return {Object} Target for position or null if no target was defined
  *     for the given position.
  * @private
  */
-goog.fx.AbstractDragDrop.prototype.getTargetFromPosition_ = function(x, y) {
+goog.fx.AbstractDragDrop.prototype.getTargetFromPosition_ = function(position) {
   for (var target, i = 0; target = this.targetList_[i]; i++) {
-    if (this.isInside_(x, y, target.box_)) {
+    if (target.box_.contains(position)) {
       if (target.scrollableContainer_) {
         // If we have a scrollable container we will need to make sure
         // we account for clipping of the scroll area
         var box = target.scrollableContainer_.box_;
-        if (this.isInside_(x, y, box)) {
+        if (box.contains(position)) {
           return target;
         }
       } else {
@@ -1081,9 +1082,10 @@ goog.fx.AbstractDragDrop.prototype.getTargetFromPosition_ = function(x, y) {
  * @param {number} y Cursor position on the y-axis.
  * @param {goog.math.Box} box Box to check position against.
  * @return {boolean} Whether the given point is inside {@code box}.
- * @private
+ * @protected
+ * @deprecated Use goog.math.Box.contains.
  */
-goog.fx.AbstractDragDrop.prototype.isInside_ = function(x, y, box) {
+goog.fx.AbstractDragDrop.prototype.isInside = function(x, y, box) {
   return x >= box.left &&
          x < box.right &&
          y >= box.top &&
@@ -1250,6 +1252,14 @@ goog.fx.DragDropItem = function(element, opt_data) {
    */
   this.parent_ = null;
 
+  /**
+   * Event handler for listeners on events that can initiate a drag.
+   * @type {!goog.events.EventHandler}
+   * @private
+   */
+  this.eventHandler_ = new goog.events.EventHandler(this);
+  this.registerDisposable(this.eventHandler_);
+
   if (!this.element) {
     throw Error('Invalid argument');
   }
@@ -1346,12 +1356,18 @@ goog.fx.DragDropItem.prototype.setParent = function(parent) {
  * @private
  */
 goog.fx.DragDropItem.prototype.maybeStartDrag_ = function(event, element) {
-  goog.events.listen(element, goog.events.EventType.MOUSEMOVE,
-                     this.mouseMove_, false, this);
-  goog.events.listen(element, goog.events.EventType.MOUSEOUT,
-                     this.mouseMove_, false, this);
-  goog.events.listen(element, goog.events.EventType.MOUSEUP,
-                     this.mouseUp_, false, this);
+  var eventType = goog.events.EventType;
+  this.eventHandler_.
+      listen(element, eventType.MOUSEMOVE, this.mouseMove_, false).
+      listen(element, eventType.MOUSEOUT, this.mouseMove_, false);
+
+  // Capture the MOUSEUP on the document to ensure that we cancel the start
+  // drag handlers even if the mouse up occurs on some other element. This can
+  // happen for instance when the mouse down changes the geometry of the element
+  // clicked on (e.g. through changes in activation styling) such that the mouse
+  // up occurs outside the original element.
+  var doc = goog.dom.getOwnerDocument(element);
+  this.eventHandler_.listen(doc, eventType.MOUSEUP, this.mouseUp_, true);
 
   this.currentDragElement_ = element;
 
@@ -1382,13 +1398,7 @@ goog.fx.DragDropItem.prototype.mouseMove_ = function(event) {
   var mouseOutOnDragElement = event.type == goog.events.EventType.MOUSEOUT &&
       event.target == currentDragElement;
   if (distanceAboveThreshold || mouseOutOnDragElement) {
-    goog.events.unlisten(currentDragElement, goog.events.EventType.MOUSEMOVE,
-                         this.mouseMove_, false, this);
-    goog.events.unlisten(currentDragElement, goog.events.EventType.MOUSEOUT,
-                         this.mouseMove_, false, this);
-    goog.events.unlisten(currentDragElement, goog.events.EventType.MOUSEUP,
-                         this.mouseUp_, false, this);
-
+    this.eventHandler_.removeAll();
     this.parent_.startDrag(event, this);
   }
 };
@@ -1402,13 +1412,7 @@ goog.fx.DragDropItem.prototype.mouseMove_ = function(event) {
  * @private
  */
 goog.fx.DragDropItem.prototype.mouseUp_ = function(event) {
-  var currentDragElement = this.currentDragElement_;
-  goog.events.unlisten(currentDragElement, goog.events.EventType.MOUSEMOVE,
-                       this.mouseMove_, false, this);
-  goog.events.unlisten(currentDragElement, goog.events.EventType.MOUSEOUT,
-                       this.mouseMove_, false, this);
-  goog.events.unlisten(currentDragElement, goog.events.EventType.MOUSEUP,
-                       this.mouseUp_, false, this);
+  this.eventHandler_.removeAll();
   delete this.startPosition_;
   this.currentDragElement_ = null;
 };

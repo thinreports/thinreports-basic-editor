@@ -32,7 +32,17 @@ This test has not yet been updated to run on IE8. See http://b/hotlist?id=36311
 </head>
 <body>
 
+<!--
+This wrapper table is outside the mock editor and only used ensure that it is
+ignored by the tests.
+-->
+<table>
+<tr>
+<td>
 <div id="html"></div>
+</td>
+</tr>
+</table>
 
 <div id="abcde">abcde</div>
 
@@ -48,15 +58,24 @@ This test has not yet been updated to run on IE8. See http://b/hotlist?id=36311
   var WEBKIT_AFTER_CHROME_16 = goog.userAgent.WEBKIT &&
       goog.userAgent.isVersion('535.7');
 
+  var WEBKIT_AFTER_CHROME_21 = goog.userAgent.WEBKIT &&
+      goog.userAgent.isVersion('537.1');
+
   // On Chrome 16, execCommand('insertImage') inserts a garbage BR
   // after the image that we insert. We use this command to paste HTML
   // in-place, because it has better paragraph-preserving semantics.
   //
   // TODO(nicksantos): Figure out if there are better chrome APIs that we
   // should be using, or if insertImage should just be fixed.
-  var insertImageBoldGarbage = WEBKIT_AFTER_CHROME_16 ? '<b><br/></b>' : '';
-  var insertImageFontGarbage = WEBKIT_AFTER_CHROME_16 ?
-      '<font size="1"><br/></font>' : '';
+  var insertImageBoldGarbage = '';
+  var insertImageFontGarbage = '';
+  if (WEBKIT_AFTER_CHROME_21) {
+    insertImageBoldGarbage = '<br>';
+    insertImageFontGarbage = '<br>';
+  } else if (WEBKIT_AFTER_CHROME_16) {
+    insertImageBoldGarbage = '<b><br/></b>';
+    insertImageFontGarbage = '<font size="1"><br/></font>';
+  }
 
   // Extra html to add to test html to make sure removeformatting is actually
   // getting called when you're testing if it leaves certain styles alone
@@ -851,16 +870,18 @@ function testGetTableAncestor() {
 
   div.innerHTML = "foo<table><tr><td>foo</td></tr></table>bar";
   assertTrue('Full table is in table',
-      !!goog.editor.plugins.RemoveFormatting.getTableAncestor_(
-          div.childNodes[1]));
+      !!FORMATTER.getTableAncestor_(div.childNodes[1]));
 
   assertFalse('Outside of table',
-      !!goog.editor.plugins.RemoveFormatting.getTableAncestor_(div.firstChild));
+      !!FORMATTER.getTableAncestor_(div.firstChild));
 
   assertTrue('Table cell is in table',
-      !!goog.editor.plugins.RemoveFormatting.getTableAncestor_(
+      !!FORMATTER.getTableAncestor_(
           div.childNodes[1].firstChild.firstChild.firstChild));
 
+  div.innerHTML = "foo";
+  assertNull('No table inside field.',
+      FORMATTER.getTableAncestor_(div.childNodes[0]));
 }
 
 /**

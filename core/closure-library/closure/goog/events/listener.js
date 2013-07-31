@@ -17,16 +17,15 @@
  * @see ../demos/events.html
  */
 
-
-/**
- * Namespace for events
- */
 goog.provide('goog.events.Listener');
+
+goog.require('goog.events.ListenableKey');
 
 
 
 /**
  * Simple class that stores information about a listener
+ * @implements {goog.events.ListenableKey}
  * @constructor
  */
 goog.events.Listener = function() {
@@ -34,14 +33,6 @@ goog.events.Listener = function() {
     this.creationStack = new Error().stack;
   }
 };
-
-
-/**
- * Counter used to create a unique key
- * @type {number}
- * @private
- */
-goog.events.Listener.counter_ = 0;
 
 
 /**
@@ -78,7 +69,7 @@ goog.events.Listener.prototype.proxy;
 
 /**
  * Object or node that callback is listening to
- * @type {Object|goog.events.EventTarget}
+ * @type {Object|goog.events.Listenable|goog.events.EventTarget}
  */
 goog.events.Listener.prototype.src;
 
@@ -107,6 +98,7 @@ goog.events.Listener.prototype.handler;
 /**
  * The key of the listener.
  * @type {number}
+ * @override
  */
 goog.events.Listener.prototype.key = 0;
 
@@ -163,7 +155,7 @@ goog.events.Listener.prototype.init = function(listener, proxy, src, type,
   this.capture = !!capture;
   this.handler = opt_handler;
   this.callOnce = false;
-  this.key = ++goog.events.Listener.counter_;
+  this.key = goog.events.ListenableKey.reserveKey();
   this.removed = false;
 };
 

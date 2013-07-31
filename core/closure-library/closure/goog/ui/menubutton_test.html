@@ -22,6 +22,8 @@ See the COPYING file for details.
 <script src="../base.js"></script>
 <script>
   goog.require('goog.Timer');
+  goog.require('goog.a11y.aria');
+  goog.require('goog.a11y.aria.State');
   goog.require('goog.dom');
   goog.require('goog.events');
   goog.require('goog.events.Event');
@@ -40,7 +42,10 @@ See the COPYING file for details.
   goog.require('goog.ui.MenuButton');
   goog.require('goog.ui.MenuItem');
   goog.require('goog.userAgent');
+  goog.require('goog.userAgent.product');
   goog.require('goog.userAgent.product.isVersion');
+
+
 </script>
 </head>
 <body>
@@ -75,6 +80,15 @@ function MyFakeEvent(keyCode) {
 }
 
 function setUp() {
+  window.scrollTo(0, 0);
+
+  var viewportSize = goog.dom.getViewportSize();
+  // Some tests need enough size viewport.
+  if (viewportSize.width < 600 || viewportSize.height < 600) {
+    window.moveTo(0, 0);
+    window.resizeTo(640, 640);
+  }
+
   clonedMenuButtonDom = goog.dom.getElement('demoMenuButton').cloneNode(true);
 
   menuButton = new goog.ui.MenuButton();
@@ -127,14 +141,15 @@ function testHighlightItemBehavior() {
     assertTrue('Menu must open after click', menuButton.isOpen());
 
     menuButton.handleKeyEvent(new MyFakeEvent(goog.events.KeyCodes.DOWN));
+    assertNotNull(menuButton.getElement());
     assertEquals('First menuitem must be the aria-activedescendant',
-        'menuItem1', goog.dom.a11y.getState(menuButton.getElement(),
-        goog.dom.a11y.State.ACTIVEDESCENDANT));
+        'menuItem1', goog.a11y.aria.getState(menuButton.getElement(),
+            goog.a11y.aria.State.ACTIVEDESCENDANT));
 
     menuButton.handleKeyEvent(new MyFakeEvent(goog.events.KeyCodes.DOWN));
     assertEquals('Second menuitem must be the aria-activedescendant',
-        'menuItem2', goog.dom.a11y.getState(menuButton.getElement(),
-        goog.dom.a11y.State.ACTIVEDESCENDANT));
+        'menuItem2', goog.a11y.aria.getState(menuButton.getElement(),
+            goog.a11y.aria.State.ACTIVEDESCENDANT));
 }
 
 /**
@@ -479,6 +494,56 @@ function testResizeOnItemAddOrRemove() {
 
   // Add back the last item to keep state consistent.
   menuButton.addItem(item);
+}
+
+/**
+ * Tests that adding and removing items from a menu with scrollOnOverflow is on
+ * correctly resizes the menu.
+ */
+function testResizeOnItemAddOrRemoveWithScrollOnOverflow() {
+  var node = goog.dom.getElement('demoMenuButton');
+  menuButton.decorate(node);
+  var menu = menuButton.getMenu();
+
+  // Show the menu.
+  menuButton.setScrollOnOverflow(true);
+  menuButton.setOpen(true);
+  var originalSize = goog.style.getSize(menu.getElement());
+
+  // Check that removing an item while the menu is left open correctly changes
+  // the size of the menu.
+  // Remove an item using a method on Menu.
+  var item = menu.removeChildAt(0, true);
+  menuButton.invalidateMenuSize();
+  menuButton.positionMenu();
+
+  // Confirm size of menu changed.
+  var afterRemoveSize = goog.style.getSize(menu.getElement());
+  assertTrue('Height of menu must decrease after removing a menu item.',
+      afterRemoveSize.height < originalSize.height);
+
+  var item2 = menu.removeChildAt(0, true);
+  menuButton.invalidateMenuSize();
+  menuButton.positionMenu();
+
+  // Confirm size of menu changed.
+  var afterRemoveAgainSize = goog.style.getSize(menu.getElement());
+  assertTrue('Height of menu must decrease after removing a second menu item.',
+      afterRemoveAgainSize.height < afterRemoveSize.height);
+
+  // Check that adding an item while the menu is opened correctly changes the
+  // size of the menu.
+  menuButton.addItem(item2);
+  menuButton.invalidateMenuSize();
+  menuButton.positionMenu();
+
+  // Confirm size of menu changed.
+  var afterAddSize = goog.style.getSize(menu.getElement());
+  assertTrue('Height of menu must increase after adding a menu item.',
+      afterRemoveAgainSize.height < afterAddSize.height);
+  assertEquals(
+      'Removing and adding back items must not change the height of a menu.',
+      afterRemoveSize.height, afterAddSize.height);
 }
 
 /**

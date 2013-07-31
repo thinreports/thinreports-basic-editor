@@ -21,6 +21,7 @@
 
 goog.provide('goog.ui.CustomButtonRenderer');
 
+goog.require('goog.a11y.aria.Role');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.string');
@@ -85,40 +86,11 @@ goog.ui.CustomButtonRenderer.prototype.createDom = function(control) {
 
 /**
  * Returns the ARIA role to be applied to custom buttons.
- * @return {goog.dom.a11y.Role|undefined} ARIA role.
+ * @return {goog.a11y.aria.Role|undefined} ARIA role.
  * @override
  */
 goog.ui.CustomButtonRenderer.prototype.getAriaRole = function() {
-  return goog.dom.a11y.Role.BUTTON;
-};
-
-
-/**
- * Sets the button's ARIA states.
- * @param {!goog.ui.Control} button Button whose ARIA state will be updated.
- * @param {!Element} element Element whose ARIA state is to be updated.
- * @override
- */
-goog.ui.CustomButtonRenderer.prototype.setAriaStates = function(button,
-    element) {
-  goog.asserts.assert(button);
-  goog.asserts.assert(element);
-  if (!button.isEnabled()) {
-    this.updateAriaState(element, goog.ui.Component.State.DISABLED,
-                         true);
-  }
-  if (button.isSelected()) {
-    this.updateAriaState(element, goog.ui.Component.State.SELECTED,
-                         true);
-  }
-  if (button.isSupportedState(goog.ui.Component.State.CHECKED)) {
-    this.updateAriaState(element, goog.ui.Component.State.CHECKED,
-                         true);
-  }
-  if (button.isOpen()) {
-    this.updateAriaState(element, goog.ui.Component.State.OPENED,
-                         true);
-  }
+  return goog.a11y.aria.Role.BUTTON;
 };
 
 

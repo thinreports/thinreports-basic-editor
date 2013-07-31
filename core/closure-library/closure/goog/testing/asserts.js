@@ -141,7 +141,7 @@ var _displayStringForValue = function(aVar) {
 };
 
 var fail = function(failureMessage) {
-  goog.testing.asserts.raiseException_('Call to fail()', failureMessage);
+  goog.testing.asserts.raiseException('Call to fail()', failureMessage);
 };
 
 var argumentsIncludeComments = function(expectedNumberOfNonCommentArgs, args) {
@@ -172,7 +172,7 @@ var _validateArguments = function(expectedNumberOfNonCommentArgs, args) {
 
 var _assert = function(comment, booleanValue, failureMessage) {
   if (!booleanValue) {
-    goog.testing.asserts.raiseException_(comment, failureMessage);
+    goog.testing.asserts.raiseException(comment, failureMessage);
   }
 };
 
@@ -267,7 +267,7 @@ var assertThrows = function(a, opt_b) {
     }
     return e;
   }
-  goog.testing.asserts.raiseException_(comment,
+  goog.testing.asserts.raiseException(comment,
       'No exception thrown from function passed to assertThrows');
 };
 
@@ -278,6 +278,7 @@ var assertThrows = function(a, opt_b) {
  * @param {!(string|Function)} a The assertion comment or the function to call.
  * @param {!Function=} opt_b The function to call (if the first argument of
  *     {@code assertNotThrows} was the comment).
+ * @return {*} The return value of the function.
  * @throws {goog.testing.JsUnitException} If the assertion failed.
  */
 var assertNotThrows = function(a, opt_b) {
@@ -288,7 +289,7 @@ var assertNotThrows = function(a, opt_b) {
       'Argument passed to assertNotThrows is not a function');
 
   try {
-    func();
+    return func();
   } catch (e) {
     comment = comment ? (comment + '\n') : '';
     comment += 'A non expected exception was thrown from function passed to ' +
@@ -296,7 +297,7 @@ var assertNotThrows = function(a, opt_b) {
     // Some browsers don't have a stack trace so at least have the error
     // description.
     var stackTrace = e['stack'] || e['stacktrace'] || e.toString();
-    goog.testing.asserts.raiseException_(comment, stackTrace);
+    goog.testing.asserts.raiseException(comment, stackTrace);
   }
 };
 
@@ -823,7 +824,7 @@ var assertArrayEquals = function(a, b, opt_c) {
  * @param {string|Object} a Failure message (3 arguments)
  *     or object #1 (2 arguments).
  * @param {Object} b Object #1 (2 arguments) or object #2 (3 arguments).
- * @param {Object} c Object #2 (3 arguments).
+ * @param {Object=} c Object #2 (3 arguments).
  */
 var assertElementsEquals = function(a, b, c) {
   _validateArguments(2, arguments);
@@ -936,6 +937,19 @@ var assertEvaluatesToFalse = function(a, opt_b) {
 
 
 /**
+ * Compares two HTML snippets.
+ *
+ * Take extra care if attributes are involved. {@code assertHTMLEquals}'s
+ * implementation isn't prepared for complex cases. For example, the following
+ * comparisons erroneously fail:
+ * <pre>
+ * assertHTMLEquals('<a href="x" target="y">', '<a target="y" href="x">');
+ * assertHTMLEquals('<div classname="a b">', '<div classname="b a">');
+ * assertHTMLEquals('<input disabled>', '<input disabled="disabled">');
+ * </pre>
+ *
+ * When in doubt, use {@code goog.testing.dom.assertHtmlMatches}.
+ *
  * @param {*} a The expected value (2 args) or the debug message (3 args).
  * @param {*} b The actual value (2 args) or the expected value (3 args).
  * @param {*=} opt_c The actual value (3 args only).
@@ -1143,9 +1157,8 @@ var standardizeCSSValue = function(propertyName, value) {
  * Raises a JsUnit exception with the given comment.
  * @param {string} comment A summary for the exception.
  * @param {string=} opt_message A description of the exception.
- * @private
  */
-goog.testing.asserts.raiseException_ = function(comment, opt_message) {
+goog.testing.asserts.raiseException = function(comment, opt_message) {
   if (goog.global['CLOSURE_INSPECTOR___'] &&
       goog.global['CLOSURE_INSPECTOR___']['supportsJSUnit']) {
     goog.global['CLOSURE_INSPECTOR___']['jsUnitFailure'](comment, opt_message);

@@ -644,8 +644,13 @@ goog.dom.createDom_ = function(doc, args) {
       // Clone attributes map to remove 'type' without mutating the input.
       var clone = {};
       goog.object.extend(clone, attributes);
+
+      // JSCompiler can't see how goog.object.extend added this property,
+      // because it was essentially added by reflection.
+      // So it needs to be quoted.
+      delete clone['type'];
+
       attributes = clone;
-      delete attributes.type;
     }
     tagNameArr.push('>');
     tagName = tagNameArr.join('');
@@ -731,11 +736,11 @@ goog.dom.createElement = function(name) {
 
 /**
  * Creates a new text node.
- * @param {string} content Content.
+ * @param {number|string} content Content.
  * @return {!Text} The new text node.
  */
 goog.dom.createTextNode = function(content) {
-  return document.createTextNode(content);
+  return document.createTextNode(String(content));
 };
 
 
@@ -780,7 +785,11 @@ goog.dom.createTable_ = function(doc, rows, columns, fillWithNbsp) {
 
 
 /**
- * Converts an HTML string into a document fragment.
+ * Converts an HTML string into a document fragment. The string must be
+ * sanitized in order to avoid cross-site scripting. For example
+ * {@code goog.dom.htmlToDocumentFragment('&lt;img src=x onerror=alert(0)&gt;')}
+ * triggers an alert in all browsers, even if the returned document fragment
+ * is thrown away immediately.
  *
  * @param {string} htmlString The HTML string to convert.
  * @return {!Node} The resulting document fragment.
@@ -873,6 +882,9 @@ goog.dom.isCss1CompatMode_ = function(doc) {
  *   console.log(a.innerHTML);  // Chrome: "", IE9: "foobar", FF3.5: "foobar"
  * </pre>
  *
+ * For more information, see:
+ * http://dev.w3.org/html5/markup/syntax.html#syntax-elements
+ *
  * TODO(user): Rename shouldAllowChildren() ?
  *
  * @param {Node} node The node to check.
@@ -888,12 +900,15 @@ goog.dom.canHaveChildren = function(node) {
     case goog.dom.TagName.BASE:
     case goog.dom.TagName.BR:
     case goog.dom.TagName.COL:
+    case goog.dom.TagName.COMMAND:
+    case goog.dom.TagName.EMBED:
     case goog.dom.TagName.FRAME:
     case goog.dom.TagName.HR:
     case goog.dom.TagName.IMG:
     case goog.dom.TagName.INPUT:
     case goog.dom.TagName.IFRAME:
     case goog.dom.TagName.ISINDEX:
+    case goog.dom.TagName.KEYGEN:
     case goog.dom.TagName.LINK:
     case goog.dom.TagName.NOFRAMES:
     case goog.dom.TagName.NOSCRIPT:
@@ -901,7 +916,10 @@ goog.dom.canHaveChildren = function(node) {
     case goog.dom.TagName.OBJECT:
     case goog.dom.TagName.PARAM:
     case goog.dom.TagName.SCRIPT:
+    case goog.dom.TagName.SOURCE:
     case goog.dom.TagName.STYLE:
+    case goog.dom.TagName.TRACK:
+    case goog.dom.TagName.WBR:
       return false;
   }
   return true;
@@ -1217,7 +1235,7 @@ goog.dom.getParentElement = function(element) {
     return element.parentElement;
   }
   var parent = element.parentNode;
-  return goog.dom.isElement(parent) ? (/** @type {!Element} */ parent) : null;
+  return goog.dom.isElement(parent) ? /** @type {!Element} */ (parent) : null;
 };
 
 
@@ -1272,6 +1290,16 @@ goog.dom.compareNodeOrder = function(node1, node2) {
   if (node1.compareDocumentPosition) {
     // 4 is the bitmask for FOLLOWS.
     return node1.compareDocumentPosition(node2) & 2 ? 1 : -1;
+  }
+
+  // Special case for document nodes on IE 7 and 8.
+  if (goog.userAgent.IE && !goog.userAgent.isDocumentMode(9)) {
+    if (node1.nodeType == goog.dom.NodeType.DOCUMENT) {
+      return -1;
+    }
+    if (node2.nodeType == goog.dom.NodeType.DOCUMENT) {
+      return 1;
+    }
   }
 
   // Process in IE using sourceIndex - we check to see if the first node has
@@ -1450,8 +1478,8 @@ goog.dom.getFrameContentWindow = function(frame) {
 /**
  * Cross-browser function for setting the text content of an element.
  * @param {Element} element The element to change the text content of.
- * @param {string} text The string that should replace the current element
- *     content.
+ * @param {string|number} text The string that should replace the current
+ *     element content.
  */
 goog.dom.setTextContent = function(element, text) {
   if ('textContent' in element) {
@@ -1467,7 +1495,7 @@ goog.dom.setTextContent = function(element, text) {
   } else {
     goog.dom.removeChildren(element);
     var doc = goog.dom.getOwnerDocument(element);
-    element.appendChild(doc.createTextNode(text));
+    element.appendChild(doc.createTextNode(String(text)));
   }
 };
 
@@ -1770,7 +1798,7 @@ goog.dom.getNodeTextOffset = function(node, opt_offsetParent) {
  * @return {Node} The node at the given offset.
  */
 goog.dom.getNodeAtOffset = function(parent, offset, opt_result) {
-  var stack = [parent], pos = 0, cur;
+  var stack = [parent], pos = 0, cur = null;
   while (stack.length > 0 && pos < offset) {
     cur = stack.pop();
     if (cur.nodeName in goog.dom.TAGS_TO_IGNORE_) {
@@ -2144,11 +2172,11 @@ goog.dom.DomHelper.prototype.createElement = function(name) {
 
 /**
  * Creates a new text node.
- * @param {string} content Content.
+ * @param {number|string} content Content.
  * @return {!Text} The new text node.
  */
 goog.dom.DomHelper.prototype.createTextNode = function(content) {
-  return this.document_.createTextNode(content);
+  return this.document_.createTextNode(String(content));
 };
 
 

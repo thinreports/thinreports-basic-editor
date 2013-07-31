@@ -17,6 +17,7 @@ See the COPYING file for details.
   goog.require('goog.events');
   goog.require('goog.events.EventTarget');
   goog.require('goog.events.EventType');
+  goog.require('goog.events.Listenable');
   goog.require('goog.functions');
   goog.require('goog.testing.PropertyReplacer');
   goog.require('goog.testing.jsunit');
@@ -176,6 +177,11 @@ See the COPYING file for details.
   }
 
   function testBubbleShortCircuit() {
+    // Short-circuit no longer works with listenable.
+    if (goog.events.Listenable.USE_LISTENABLE_INTERFACE) {
+      return;
+    }
+
     var et1 = new goog.events.EventTarget();
     var et2 = new goog.events.EventTarget();
 
@@ -430,7 +436,11 @@ See the COPYING file for details.
 
     goog.removeUid(target);
     target.dispatchEvent('foo');
-    assertEquals(0, listener.getCallCount());
+    if (goog.events.Listenable.USE_LISTENABLE_INTERFACE) {
+      assertEquals(1, listener.getCallCount());
+    } else {
+      assertEquals(0, listener.getCallCount());
+    }
   }
 
   /**
@@ -449,6 +459,206 @@ See the COPYING file for details.
     // Make sure that dispatching again doesn't fire the listener.
     dispatchClick(body);
     assertEquals(1, listener.getCallCount());
+  }
+
+  function testListenOnceAfterListenDoesNotChangeExistingListener() {
+    var listener = goog.testing.recordFunction();
+    goog.events.listen(document.body, 'click', listener);
+    goog.events.listenOnce(document.body, 'click', listener);
+
+    dispatchClick(document.body);
+    dispatchClick(document.body);
+    dispatchClick(document.body);
+
+    assertEquals(3, listener.getCallCount());
+  }
+
+  function testListenOnceAfterListenOnceDoesNotChangeExistingListener() {
+    var listener = goog.testing.recordFunction();
+    goog.events.listenOnce(document.body, 'click', listener);
+    goog.events.listenOnce(document.body, 'click', listener);
+
+    dispatchClick(document.body);
+    dispatchClick(document.body);
+    dispatchClick(document.body);
+
+    assertEquals(1, listener.getCallCount());
+  }
+
+  function testListenAfterListenOnceRemoveOnceness() {
+    var listener = goog.testing.recordFunction();
+    goog.events.listenOnce(document.body, 'click', listener);
+    goog.events.listen(document.body, 'click', listener);
+
+    dispatchClick(document.body);
+    dispatchClick(document.body);
+    dispatchClick(document.body);
+
+    assertEquals(3, listener.getCallCount());
+  }
+
+  function testUnlistenAfterListenOnce() {
+    var listener = goog.testing.recordFunction();
+
+    goog.events.listenOnce(document.body, 'click', listener);
+    goog.events.unlisten(document.body, 'click', listener);
+    dispatchClick(document.body);
+
+    goog.events.listenOnce(document.body, 'click', listener);
+    goog.events.listen(document.body, 'click', listener);
+    goog.events.unlisten(document.body, 'click', listener);
+    dispatchClick(document.body);
+
+    goog.events.listen(document.body, 'click', listener);
+    goog.events.listenOnce(document.body, 'click', listener);
+    goog.events.unlisten(document.body, 'click', listener);
+    dispatchClick(document.body);
+
+    goog.events.listenOnce(document.body, 'click', listener);
+    goog.events.listenOnce(document.body, 'click', listener);
+    goog.events.unlisten(document.body, 'click', listener);
+    dispatchClick(document.body);
+
+    assertEquals(0, listener.getCallCount());
+  }
+
+  function testRemoveAll() {
+    var listener = goog.testing.recordFunction();
+    var div = document.createElement('div');
+
+    goog.events.listenOnce(document.body, 'click', listener);
+    goog.events.listen(document.body, 'click', listener);
+    goog.events.listenOnce(div, 'click', listener);
+    goog.events.listen(div, 'click', listener);
+
+    goog.events.removeAll();
+
+    dispatchClick(document.body);
+    dispatchClick(div);
+    assertEquals(0, listener.getCallCount());
+  }
+
+  function testEventBubblingWithReentrantDispatch_bubbling() {
+    runEventPropogationWithReentrantDispatch(false);
+  }
+
+  function testEventBubblingWithReentrantDispatch_capture() {
+    runEventPropogationWithReentrantDispatch(true);
+  }
+
+  function runEventPropogationWithReentrantDispatch(useCapture) {
+    var eventType = 'test-event-type';
+
+    var child = new goog.events.EventTarget();
+    var parent = new goog.events.EventTarget();
+    child.setParentEventTarget(parent);
+
+    var firstTarget = useCapture ? parent : child;
+    var secondTarget = useCapture ? child : parent;
+
+    var firstListener = function(evt) {
+      if (evt.isFirstEvent) {
+        // Fires another event of the same type the first time it is invoked.
+        child.dispatchEvent(new goog.events.Event(eventType));
+      }
+    };
+    goog.events.listen(firstTarget, eventType, firstListener, useCapture);
+
+    var secondListener = goog.testing.recordFunction();
+    goog.events.listen(secondTarget, eventType, secondListener, useCapture);
+
+    // Fire the first event.
+    var firstEvent = new goog.events.Event(eventType);
+    firstEvent.isFirstEvent = true;
+    child.dispatchEvent(firstEvent);
+
+    assertEquals(2, secondListener.getCallCount());
+  }
+
+  function testEventPropogationWhenListenerRemoved_bubbling() {
+    runEventPropogationWhenListenerRemoved(false);
+  }
+
+  function testEventPropogationWhenListenerRemoved_capture() {
+    runEventPropogationWhenListenerRemoved(true);
+  }
+
+  function runEventPropogationWhenListenerRemoved(useCapture) {
+    var eventType = 'test-event-type';
+
+    var child = new goog.events.EventTarget();
+    var parent = new goog.events.EventTarget();
+    child.setParentEventTarget(parent);
+
+    var firstTarget = useCapture ? parent : child;
+    var secondTarget = useCapture ? child : parent;
+
+    var firstListener = goog.testing.recordFunction();
+    var secondListener = goog.testing.recordFunction();
+    goog.events.listenOnce(firstTarget, eventType, firstListener, useCapture);
+    goog.events.listen(secondTarget, eventType, secondListener, useCapture);
+
+    child.dispatchEvent(new goog.events.Event(eventType));
+
+    assertEquals(1, secondListener.getCallCount());
+  }
+
+  function testEventPropogationWhenListenerAdded_bubbling() {
+    runEventPropogationWhenListenerAdded(false);
+  }
+
+  function testEventPropogationWhenListenerAdded_capture() {
+    runEventPropogationWhenListenerAdded(true);
+  }
+
+  function runEventPropogationWhenListenerAdded(useCapture) {
+    var eventType = 'test-event-type';
+
+    var child = new goog.events.EventTarget();
+    var parent = new goog.events.EventTarget();
+    child.setParentEventTarget(parent);
+
+    var firstTarget = useCapture ? parent : child;
+    var secondTarget = useCapture ? child : parent;
+
+    var firstListener = function() {
+      goog.events.listen(secondTarget, eventType, secondListener, useCapture);
+    };
+    var secondListener = goog.testing.recordFunction();
+    goog.events.listen(firstTarget, eventType, firstListener, useCapture);
+
+    child.dispatchEvent(new goog.events.Event(eventType));
+
+    assertEquals(1, secondListener.getCallCount());
+  }
+
+  function testEventPropogationWhenListenerAddedAndRemoved_bubbling() {
+    runEventPropogationWhenListenerAddedAndRemoved(false);
+  }
+
+  function testEventPropogationWhenListenerAddedAndRemoved_capture() {
+    runEventPropogationWhenListenerAddedAndRemoved(true);
+  }
+
+  function runEventPropogationWhenListenerAddedAndRemoved(useCapture) {
+    var eventType = 'test-event-type';
+
+    var child = new goog.events.EventTarget();
+    var parent = new goog.events.EventTarget();
+    child.setParentEventTarget(parent);
+
+    var firstTarget = useCapture ? parent : child;
+    var secondTarget = useCapture ? child : parent;
+
+    var firstListener = function() {
+      goog.events.listen(secondTarget, eventType, secondListener, useCapture);
+    };
+    var secondListener = goog.testing.recordFunction();
+    goog.events.listenOnce(firstTarget, eventType, firstListener, useCapture);
+
+    child.dispatchEvent(new goog.events.Event(eventType));
+
+    assertEquals(1, secondListener.getCallCount());
   }
 
 </script>

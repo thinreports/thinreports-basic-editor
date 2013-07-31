@@ -20,7 +20,9 @@
 
 goog.provide('goog.ui.CharPicker');
 
+goog.require('goog.a11y.aria');
 goog.require('goog.array');
+goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.events.EventHandler');
@@ -29,6 +31,7 @@ goog.require('goog.events.InputHandler');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.i18n.CharListDecompressor');
 goog.require('goog.i18n.uChar');
+goog.require('goog.i18n.uChar.NameFetcher');
 goog.require('goog.structs.Set');
 goog.require('goog.style');
 goog.require('goog.ui.Button');
@@ -51,6 +54,9 @@ goog.require('goog.ui.Tooltip.ElementTooltipPosition');
  *
  * See charpicker.html demo for example usage.
  * @param {goog.i18n.CharPickerData} charPickerData Category names and charlist.
+ * @param {!goog.i18n.uChar.NameFetcher} charNameFetcher Object which fetches
+ *     the names of the characters that are shown in the widget. These names
+ *     may be stored locally or come from an external source.
  * @param {Array.<string>=} opt_recents List of characters to be displayed in
  *     resently selected characters area.
  * @param {number=} opt_initCategory Sequence number of initial category.
@@ -61,10 +67,17 @@ goog.require('goog.ui.Tooltip.ElementTooltipPosition');
  * @constructor
  * @extends {goog.ui.Component}
  */
-goog.ui.CharPicker = function(charPickerData, opt_recents, opt_initCategory,
-                              opt_initSubcategory, opt_rowCount,
-                              opt_columnCount, opt_domHelper) {
+goog.ui.CharPicker = function(charPickerData, charNameFetcher, opt_recents,
+                              opt_initCategory, opt_initSubcategory,
+                              opt_rowCount, opt_columnCount, opt_domHelper) {
   goog.ui.Component.call(this, opt_domHelper);
+
+  /**
+   * Object used to retrieve character names.
+   * @type {!goog.i18n.uChar.NameFetcher}
+   * @private
+   */
+  this.charNameFetcher_ = charNameFetcher;
 
   /**
    * Object containing character lists and category names.
@@ -233,6 +246,14 @@ goog.ui.CharPicker.prototype.okbutton_ = null;
 
 
 /**
+ * Element displaying character name in preview.
+ * @type {Element}
+ * @private
+ */
+goog.ui.CharPicker.prototype.charNameEl_ = null;
+
+
+/**
  * Element displaying character in preview.
  * @type {Element}
  * @private
@@ -241,7 +262,7 @@ goog.ui.CharPicker.prototype.zoomEl_ = null;
 
 
 /**
- * Element displaying character name or number in preview.
+ * Element displaying character number (codepoint) in preview.
  * @type {Element}
  * @private
  */
@@ -286,9 +307,9 @@ goog.ui.CharPicker.prototype.createDom = function() {
 
 /** @override */
 goog.ui.CharPicker.prototype.disposeInternal = function() {
-  this.hc_.dispose();
+  goog.dispose(this.hc_);
   this.hc_ = null;
-  this.eventHandler_.dispose();
+  goog.dispose(this.eventHandler_);
   this.eventHandler_ = null;
   goog.ui.CharPicker.superClass_.disposeInternal.call(this);
 };
@@ -319,7 +340,7 @@ goog.ui.CharPicker.prototype.decorateInternal = function(element) {
       this.submenu_);
   this.addChild(this.submenubutton_, true);
 
-  // The containing compnent for grid component and the scroller.
+  // The containing component for grid component and the scroller.
   var gridcontainer = new goog.ui.Component();
   this.addChild(gridcontainer, true);
 
@@ -370,11 +391,14 @@ goog.ui.CharPicker.prototype.decorateInternal = function(element) {
   this.zoomEl_ = goog.dom.createDom('div',
       {id: 'zoom', className: goog.getCssName('goog-char-picker-char-zoom')});
 
+  this.charNameEl_ = goog.dom.createDom('div',
+      {id: 'charName', className: goog.getCssName('goog-char-picker-name')});
+
   this.unicodeEl_ = goog.dom.createDom('div',
       {id: 'unicode', className: goog.getCssName('goog-char-picker-unicode')});
 
   var card = goog.dom.createDom('div', {'id': 'preview'}, this.zoomEl_,
-      this.unicodeEl_);
+      this.charNameEl_, this.unicodeEl_);
   goog.style.showElement(card, false);
   this.hc_ = new goog.ui.HoverCard({'DIV': 'char'});
   this.hc_.setElement(card);
@@ -388,7 +412,15 @@ goog.ui.CharPicker.prototype.decorateInternal = function(element) {
     var ch = self.getChar_(trigger);
     if (ch) {
       self.zoomEl_.innerHTML = self.displayChar_(ch);
-      self.unicodeEl_.innerHTML = self.getTagFromChar_(ch);
+      self.unicodeEl_.innerHTML = goog.i18n.uChar.toHexString(ch);
+      // Clear the character name since we don't want to show old data because
+      // it is retrieved asynchronously and the DOM object is re-used
+      self.charNameEl_.innerHTML = '';
+      self.charNameFetcher_.getName(ch, function(charName) {
+        if (charName) {
+          self.charNameEl_.innerHTML = charName;
+        }
+      });
     }
   }
 
@@ -467,13 +499,56 @@ goog.ui.CharPicker.prototype.enterDocument = function() {
       listen(
           this.keyHandler_,
           goog.events.KeyHandler.EventType.KEY,
-          this.handleEnter_);
+          this.handleEnter_).
+      listen(
+          this.recentgrid_,
+          goog.ui.Component.EventType.FOCUS,
+          this.handleFocus_).
+      listen(
+          this.grid_,
+          goog.ui.Component.EventType.FOCUS,
+          this.handleFocus_);
 
   goog.events.listen(this.okbutton_.getElement(),
       goog.events.EventType.MOUSEDOWN, this.handleOkClick_, true, this);
 
   goog.events.listen(this.stickwrap_, goog.events.EventType.SCROLL,
       this.handleScroll_, true, this);
+};
+
+
+/**
+ * Handles the button focus by updating the aria label with the character name
+ * so it becomes possible to get spoken feedback while tabbing through the
+ * visible symbols.
+ * @param {goog.events.Event} e The focus event.
+ * @private
+ */
+goog.ui.CharPicker.prototype.handleFocus_ = function(e) {
+  var button = e.target;
+  var element = button.getElement();
+  var ch = this.getChar_(element);
+
+  // Clear the aria label to avoid speaking the old value in case the button
+  // element has no char attribute or the character name cannot be retrieved.
+  goog.a11y.aria.setState(element, goog.a11y.aria.State.LABEL, '');
+
+  if (ch) {
+    // This is working with screen readers because the call to getName is
+    // synchronous once the values have been prefetched by the RemoteNameFetcher
+    // and because it is always synchronous when using the LocalNameFetcher.
+    // Also, the special character itself is not used as the label because some
+    // screen readers, notably ChromeVox, are not able to speak them.
+    // TODO(user): Consider changing the NameFetcher API to provide a
+    // method that lets the caller retrieve multiple character names at once
+    // so that this asynchronous gymnastic can be avoided.
+    this.charNameFetcher_.getName(ch, function(charName) {
+      if (charName) {
+        goog.a11y.aria.setState(
+            element, goog.a11y.aria.State.LABEL, charName);
+      }
+    });
+  }
 };
 
 
@@ -528,9 +603,10 @@ goog.ui.CharPicker.prototype.handleSelectedItem_ = function(e) {
 goog.ui.CharPicker.prototype.handleInput_ = function(e) {
   var ch = this.getInputChar();
   if (ch) {
-    var unicode = this.getTagFromChar_(ch);
+    var unicode = goog.i18n.uChar.toHexString(ch);
     this.zoomEl_.innerHTML = ch;
     this.unicodeEl_.innerHTML = unicode;
+    this.charNameEl_.innerHTML = '';
     var coord =
         new goog.ui.Tooltip.ElementTooltipPosition(this.input_.getElement());
     this.hc_.setPosition(coord);
@@ -651,6 +727,7 @@ goog.ui.CharPicker.prototype.setSelectedGrid_ = function(category,
   var charLists = this.data_.charList;
   var charListStr = charLists[category][subcategory];
   var content = this.decompressor_.toCharList(charListStr);
+  this.charNameFetcher_.prefetch(charListStr);
   this.updateGrid_(this.grid_, content);
 };
 
@@ -671,8 +748,8 @@ goog.ui.CharPicker.prototype.updateGrid_ = function(grid, items) {
     var MSG_PLEASE_HOVER =
         goog.getMsg('Please hover over each cell for the character name.');
 
-    this.notice_.getElement().innerHTML = goog.i18n.uChar.toName(items[0]) ?
-        MSG_PLEASE_HOVER : '';
+    this.notice_.getElement().innerHTML =
+        this.charNameFetcher_.isNameAvailable(items[0]) ? MSG_PLEASE_HOVER : '';
     this.items = items;
     if (this.stickwrap_.offsetHeight > 0) {
       this.stick_.style.height =
@@ -711,8 +788,6 @@ goog.ui.CharPicker.prototype.modifyGridWithItems_ = function(grid, items,
   for (; buttonpos < grid.buttoncount; buttonpos++) {
     grid.getChildAt(buttonpos).setVisible(false);
   }
-  var first = grid.getChildAt(0);
-  goog.dom.setFocusableTabIndex(first.getElement(), true);
 };
 
 
@@ -726,11 +801,20 @@ goog.ui.CharPicker.prototype.populateGridWithButtons_ = function(grid) {
   for (var i = 0; i < grid.buttoncount; i++) {
     var button = new goog.ui.Button(' ',
                                     goog.ui.FlatButtonRenderer.getInstance());
+
+    // Dispatch the focus event so we can update the aria description while
+    // the user tabs through the cells.
+    button.setDispatchTransitionEvents(goog.ui.Component.State.FOCUSED, true);
+
     grid.addChild(button, true);
     button.setVisible(false);
 
     var buttonEl = button.getElement();
-    goog.dom.a11y.setRole(buttonEl, 'gridcell');
+    goog.asserts.assert(buttonEl, 'The button DOM element cannot be null.');
+
+    // Override the button role so the user doesn't hear "button" each time he
+    // tabs through the cells.
+    goog.a11y.aria.setRole(buttonEl, '');
   }
 };
 
@@ -746,7 +830,6 @@ goog.ui.CharPicker.prototype.modifyCharNode_ = function(button, ch) {
   var buttonEl = button.getElement();
   buttonEl.innerHTML = text;
   buttonEl.setAttribute('char', ch);
-  goog.dom.setFocusableTabIndex(buttonEl, false);
   button.setVisible(true);
 };
 
@@ -776,22 +859,6 @@ goog.ui.CharPicker.prototype.getInputChar = function() {
   var text = this.input_.getValue();
   var code = parseInt(text, 16);
   return /** @type {string} */ (goog.i18n.uChar.fromCharCode(code));
-};
-
-
-/**
- * Gets the description text for the given character.
- * @param {string} ch Character whose description is fetched.
- * @return {string} The description of the given character.
- * @private
- */
-goog.ui.CharPicker.prototype.getTagFromChar_ = function(ch) {
-  var unicodetext = goog.i18n.uChar.toHexString(ch);
-  var name = goog.i18n.uChar.toName(ch);
-  if (name) {
-    unicodetext += ' ' + name;
-  }
-  return unicodetext;
 };
 
 

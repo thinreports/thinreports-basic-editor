@@ -62,12 +62,10 @@ goog.inherits(goog.ui.SubMenu, goog.ui.MenuItem);
 
 
 /**
- * The delay before opening the sub menu in milliseconds.  (This number is
- * arbitrary, it would be good to get some user studies or a designer to play
- * with some numbers).
+ * The delay before opening the sub menu in milliseconds.
  * @type {number}
  */
-goog.ui.SubMenu.MENU_DELAY_MS = 350;
+goog.ui.SubMenu.MENU_DELAY_MS = 218;
 
 
 /**
@@ -280,19 +278,22 @@ goog.ui.SubMenu.prototype.dismissSiblings_ = function() {
  * it is highlighted.  If the right key is pressed the sub menu takes control
  * and delegates further key events to its menu until it is dismissed OR the
  * left key is pressed.
- * TODO(user): RTL lookup
  * @param {goog.events.KeyEvent} e A key event.
  * @return {boolean} Whether the event was handled.
  * @override
  */
 goog.ui.SubMenu.prototype.handleKeyEvent = function(e) {
   var keyCode = e.keyCode;
+  var openKeyCode = this.isRightToLeft() ? goog.events.KeyCodes.LEFT :
+      goog.events.KeyCodes.RIGHT;
+  var closeKeyCode = this.isRightToLeft() ? goog.events.KeyCodes.RIGHT :
+      goog.events.KeyCodes.LEFT;
 
   if (!this.hasKeyboardControl_) {
     // Menu item doesn't have keyboard control and the right key was pressed.
     // So open take keyboard control and open the sub menu.
-    if (this.isEnabled() && (keyCode == goog.events.KeyCodes.RIGHT ||
-        keyCode == this.getMnemonic())) {
+    if (this.isEnabled() &&
+        (keyCode == openKeyCode || keyCode == this.getMnemonic())) {
       this.showSubMenu();
       this.getMenu().highlightFirst();
       this.clearTimers();
@@ -310,7 +311,7 @@ goog.ui.SubMenu.prototype.handleKeyEvent = function(e) {
 
   // The menu has control and the key hasn't yet been handled, on left arrow
   // we turn off key control.
-  } else if (keyCode == goog.events.KeyCodes.LEFT) {
+  } else if (keyCode == closeKeyCode) {
     this.dismissSubMenu();
 
   } else {
@@ -420,7 +421,7 @@ goog.ui.SubMenu.prototype.setSubMenuVisible_ = function(visible) {
     // We must position after the menu is visible, otherwise positioning logic
     // breaks in RTL.
     if (visible) {
-      this.positionSubMenu_();
+      this.positionSubMenu();
     }
   }
 };
@@ -474,10 +475,11 @@ goog.ui.SubMenu.prototype.isAlignedToEnd = function() {
 
 
 /**
- * Positions the submenu.
- * @private
+ * Positions the submenu. This method should be called if the sub menu is
+ * opened and the menu element's size changes (e.g., when adding/removing items
+ * to an opened sub menu).
  */
-goog.ui.SubMenu.prototype.positionSubMenu_ = function() {
+goog.ui.SubMenu.prototype.positionSubMenu = function() {
   var position = new goog.positioning.AnchoredViewportPosition(
       this.getElement(), this.isAlignedToEnd() ?
       goog.positioning.Corner.TOP_END : goog.positioning.Corner.TOP_START,

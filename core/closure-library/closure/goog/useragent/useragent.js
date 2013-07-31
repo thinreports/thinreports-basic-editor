@@ -273,6 +273,24 @@ goog.userAgent.ASSUME_X11 = false;
 
 
 /**
+ * @define {boolean} Whether the user agent is running on Android.
+ */
+goog.userAgent.ASSUME_ANDROID = false;
+
+
+/**
+ * @define {boolean} Whether the user agent is running on an iPhone.
+ */
+goog.userAgent.ASSUME_IPHONE = false;
+
+
+/**
+ * @define {boolean} Whether the user agent is running on an iPad.
+ */
+goog.userAgent.ASSUME_IPAD = false;
+
+
+/**
  * @type {boolean}
  * @private
  */
@@ -280,7 +298,10 @@ goog.userAgent.PLATFORM_KNOWN_ =
     goog.userAgent.ASSUME_MAC ||
     goog.userAgent.ASSUME_WINDOWS ||
     goog.userAgent.ASSUME_LINUX ||
-    goog.userAgent.ASSUME_X11;
+    goog.userAgent.ASSUME_X11 ||
+    goog.userAgent.ASSUME_ANDROID ||
+    goog.userAgent.ASSUME_IPHONE ||
+    goog.userAgent.ASSUME_IPAD;
 
 
 /**
@@ -321,6 +342,30 @@ goog.userAgent.initPlatform_ = function() {
   goog.userAgent.detectedX11_ = !!goog.userAgent.getNavigator() &&
       goog.string.contains(goog.userAgent.getNavigator()['appVersion'] || '',
           'X11');
+
+  // Need user agent string for Android/IOS detection
+  var ua = goog.userAgent.getUserAgentString();
+
+  /**
+   * Whether the user agent is running on Android.
+   * @type {boolean}
+   * @private
+   */
+  goog.userAgent.detectedAndroid_ = !!ua && ua.indexOf('Android') >= 0;
+
+  /**
+   * Whether the user agent is running on an iPhone.
+   * @type {boolean}
+   * @private
+   */
+  goog.userAgent.detectedIPhone_ = !!ua && ua.indexOf('iPhone') >= 0;
+
+  /**
+   * Whether the user agent is running on an iPad.
+   * @type {boolean}
+   * @private
+   */
+  goog.userAgent.detectedIPad_ = !!ua && ua.indexOf('iPad') >= 0;
 };
 
 
@@ -359,6 +404,30 @@ goog.userAgent.LINUX = goog.userAgent.PLATFORM_KNOWN_ ?
  */
 goog.userAgent.X11 = goog.userAgent.PLATFORM_KNOWN_ ?
     goog.userAgent.ASSUME_X11 : goog.userAgent.detectedX11_;
+
+
+/**
+ * Whether the user agent is running on Android.
+ * @type {boolean}
+ */
+goog.userAgent.ANDROID = goog.userAgent.PLATFORM_KNOWN_ ?
+    goog.userAgent.ASSUME_ANDROID : goog.userAgent.detectedAndroid_;
+
+
+/**
+ * Whether the user agent is running on an iPhone.
+ * @type {boolean}
+ */
+goog.userAgent.IPHONE = goog.userAgent.PLATFORM_KNOWN_ ?
+    goog.userAgent.ASSUME_IPHONE : goog.userAgent.detectedIPhone_;
+
+
+/**
+ * Whether the user agent is running on an iPad.
+ * @type {boolean}
+ */
+goog.userAgent.IPAD = goog.userAgent.PLATFORM_KNOWN_ ?
+    goog.userAgent.ASSUME_IPAD : goog.userAgent.detectedIPad_;
 
 
 /**
@@ -474,16 +543,6 @@ goog.userAgent.isVersion = function(version) {
 
 
 /**
- * Cache for {@link goog.userAgent.isDocumentMode}.
- * Browsers document mode version number is unlikely to change during a session
- * we cache the results.
- * @type {Object}
- * @private
- */
-goog.userAgent.isDocumentModeCache_ = {};
-
-
-/**
  * Whether the IE effective document mode is higher or the same as the given
  * document mode version.
  * NOTE: Only for IE, return false for another browser.
@@ -493,7 +552,24 @@ goog.userAgent.isDocumentModeCache_ = {};
  *     same as the given version.
  */
 goog.userAgent.isDocumentMode = function(documentMode) {
-  return goog.userAgent.isDocumentModeCache_[documentMode] ||
-      (goog.userAgent.isDocumentModeCache_[documentMode] = goog.userAgent.IE &&
-      !!document.documentMode && document.documentMode >= documentMode);
+  return goog.userAgent.IE && goog.userAgent.DOCUMENT_MODE >= documentMode;
 };
+
+
+/**
+ * For IE version < 7, documentMode is undefined, so attempt to use the
+ * CSS1Compat property to see if we are in standards mode. If we are in
+ * standards mode, treat the browser version as the document mode. Otherwise,
+ * IE is emulating version 5.
+ * @type {number|undefined}
+ * @const
+ */
+goog.userAgent.DOCUMENT_MODE = (function() {
+  var doc = goog.global['document'];
+  if (!doc || !goog.userAgent.IE) {
+    return undefined;
+  }
+  var mode = goog.userAgent.getDocumentMode_();
+  return mode || (doc['compatMode'] == 'CSS1Compat' ?
+      parseInt(goog.userAgent.VERSION, 10) : 5);
+})();

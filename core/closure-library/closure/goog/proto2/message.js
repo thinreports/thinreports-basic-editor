@@ -39,22 +39,12 @@ goog.proto2.Message = function() {
    */
   this.values_ = {};
 
-  // The descriptor_ is static to the message function that is being created.
-  // Therefore, we retrieve it via the constructor.
-
-  /**
-   * Stores the information (i.e. metadata) about this message.
-   * @type {!goog.proto2.Descriptor}
-   * @private
-   */
-  this.descriptor_ = this.constructor.descriptor_;
-
   /**
    * Stores the field information (i.e. metadata) about this message.
    * @type {Object.<number, !goog.proto2.FieldDescriptor>}
    * @private
    */
-  this.fields_ = this.descriptor_.getFieldsMap();
+  this.fields_ = this.getDescriptor().getFieldsMap();
 
   /**
    * The lazy deserializer for this message instance, if any.
@@ -109,6 +99,34 @@ goog.proto2.Message.FieldType = {
 
 
 /**
+ * All instances of goog.proto2.Message should have a static descriptorObj_
+ * property. This is a JSON representation of a Descriptor. The real Descriptor
+ * will be deserialized lazily in the getDescriptor() method.
+ *
+ * This declaration is just here for documentation purposes.
+ * goog.proto2.Message does not have its own descriptor.
+ *
+ * @type {undefined}
+ * @private
+ */
+goog.proto2.Message.descriptorObj_;
+
+
+/**
+ * All instances of goog.proto2.Message should have a static descriptor_
+ * property. The Descriptor will be deserialized lazily in the getDescriptor()
+ * method.
+ *
+ * This declaration is just here for documentation purposes.
+ * goog.proto2.Message does not have its own descriptor.
+ *
+ * @type {undefined}
+ * @private
+ */
+goog.proto2.Message.descriptor_;
+
+
+/**
  * Initializes the message with a lazy deserializer and its associated data.
  * This method should be called by internal methods ONLY.
  *
@@ -157,8 +175,9 @@ goog.proto2.Message.prototype.setUnknown = function(tag, value) {
 goog.proto2.Message.prototype.forEachUnknown = function(callback, opt_scope) {
   var scope = opt_scope || this;
   for (var key in this.values_) {
-    if (!this.fields_[/** @type {number} */ (key)]) {
-      callback.call(scope, Number(key), this.values_[key]);
+    var keyNum = Number(key);
+    if (!this.fields_[keyNum]) {
+      callback.call(scope, keyNum, this.values_[key]);
     }
   }
 };
@@ -167,10 +186,18 @@ goog.proto2.Message.prototype.forEachUnknown = function(callback, opt_scope) {
 /**
  * Returns the descriptor which describes the current message.
  *
- * @return {goog.proto2.Descriptor} The descriptor.
+ * This only works if we assume people never subclass protobufs.
+ *
+ * @return {!goog.proto2.Descriptor} The descriptor.
  */
 goog.proto2.Message.prototype.getDescriptor = function() {
-  return this.descriptor_;
+  // NOTE(nicksantos): These sorts of indirect references to descriptor
+  // through this.constructor are fragile. See the comments
+  // in set$Metadata for more info.
+  var Ctor = this.constructor;
+  return Ctor.descriptor_ ||
+      (Ctor.descriptor_ = goog.proto2.Message.create$Descriptor(
+          Ctor, Ctor.descriptorObj_));
 };
 
 
@@ -185,7 +212,7 @@ goog.proto2.Message.prototype.getDescriptor = function() {
  */
 goog.proto2.Message.prototype.has = function(field) {
   goog.proto2.Util.assert(
-      field.getContainingType() == this.descriptor_,
+      field.getContainingType() == this.getDescriptor(),
       'The current message does not contain the given field');
 
   return this.has$Value(field.getTag());
@@ -202,7 +229,7 @@ goog.proto2.Message.prototype.has = function(field) {
  */
 goog.proto2.Message.prototype.arrayOf = function(field) {
   goog.proto2.Util.assert(
-      field.getContainingType() == this.descriptor_,
+      field.getContainingType() == this.getDescriptor(),
       'The current message does not contain the given field');
 
   return this.array$Values(field.getTag());
@@ -219,7 +246,7 @@ goog.proto2.Message.prototype.arrayOf = function(field) {
  */
 goog.proto2.Message.prototype.countOf = function(field) {
   goog.proto2.Util.assert(
-      field.getContainingType() == this.descriptor_,
+      field.getContainingType() == this.getDescriptor(),
       'The current message does not contain the given field');
 
   return this.count$Values(field.getTag());
@@ -239,7 +266,7 @@ goog.proto2.Message.prototype.countOf = function(field) {
  */
 goog.proto2.Message.prototype.get = function(field, opt_index) {
   goog.proto2.Util.assert(
-      field.getContainingType() == this.descriptor_,
+      field.getContainingType() == this.getDescriptor(),
       'The current message does not contain the given field');
 
   return this.get$Value(field.getTag(), opt_index);
@@ -259,7 +286,7 @@ goog.proto2.Message.prototype.get = function(field, opt_index) {
  */
 goog.proto2.Message.prototype.getOrDefault = function(field, opt_index) {
   goog.proto2.Util.assert(
-      field.getContainingType() == this.descriptor_,
+      field.getContainingType() == this.getDescriptor(),
       'The current message does not contain the given field');
 
   return this.get$ValueOrDefault(field.getTag(), opt_index);
@@ -276,7 +303,7 @@ goog.proto2.Message.prototype.getOrDefault = function(field, opt_index) {
  */
 goog.proto2.Message.prototype.set = function(field, value) {
   goog.proto2.Util.assert(
-      field.getContainingType() == this.descriptor_,
+      field.getContainingType() == this.getDescriptor(),
       'The current message does not contain the given field');
 
   this.set$Value(field.getTag(), value);
@@ -293,7 +320,7 @@ goog.proto2.Message.prototype.set = function(field, value) {
  */
 goog.proto2.Message.prototype.add = function(field, value) {
   goog.proto2.Util.assert(
-      field.getContainingType() == this.descriptor_,
+      field.getContainingType() == this.getDescriptor(),
       'The current message does not contain the given field');
 
   this.add$Value(field.getTag(), value);
@@ -307,7 +334,7 @@ goog.proto2.Message.prototype.add = function(field, value) {
  */
 goog.proto2.Message.prototype.clear = function(field) {
   goog.proto2.Util.assert(
-      field.getContainingType() == this.descriptor_,
+      field.getContainingType() == this.getDescriptor(),
       'The current message does not contain the given field');
 
   this.clear$Field(field.getTag());
@@ -335,9 +362,9 @@ goog.proto2.Message.prototype.equals = function(other) {
     if (this.has(field)) {
       var isComposite = field.isCompositeType();
 
-      function fieldsEqual(value1, value2) {
+      var fieldsEqual = function(value1, value2) {
         return isComposite ? value1.equals(value2) : value1 == value2;
-      }
+      };
 
       var thisValue = this.getValueForField_(field);
       var otherValue = other.getValueForField_(field);
@@ -371,11 +398,13 @@ goog.proto2.Message.prototype.copyFrom = function(message) {
   goog.proto2.Util.assert(this.constructor == message.constructor,
       'The source message must have the same type.');
 
-  this.values_ = {};
-  if (this.deserializedFields_) {
-    this.deserializedFields_ = {};
+  if (this != message) {
+    this.values_ = {};
+    if (this.deserializedFields_) {
+      this.deserializedFields_ = {};
+    }
+    this.mergeFrom(message);
   }
-  this.mergeFrom(message);
 };
 
 
@@ -618,7 +647,7 @@ goog.proto2.Message.prototype.array$Values = function(tag) {
   var field = this.getFieldByTag_(tag);
   var value = this.getValueForField_(field);
   goog.proto2.Util.assert(value == null || goog.isArray(value));
-  return (/** @type {Array} */value) || [];
+  return /** @type {Array} */ (value) || [];
 };
 
 
@@ -753,15 +782,16 @@ goog.proto2.Message.prototype.clear$Field = function(tag) {
 
 
 /**
- * Sets the metadata that represents the definition of this message.
+ * Creates the metadata descriptor representing the definition of this message.
  *
  * GENERATED CODE USE ONLY. Called when constructing message classes.
  *
- * @param {Function} messageType Constructor for the message type to
- *     which this metadata applies.
+ * @param {function(new:goog.proto2.Message)} messageType Constructor for the
+ *     message type to which this metadata applies.
  * @param {Object} metadataObj The object containing the metadata.
+ * @return {!goog.proto2.Descriptor} The new descriptor.
  */
-goog.proto2.Message.set$Metadata = function(messageType, metadataObj) {
+goog.proto2.Message.create$Descriptor = function(messageType, metadataObj) {
   var fields = [];
   var descriptorInfo;
 
@@ -783,12 +813,28 @@ goog.proto2.Message.set$Metadata = function(messageType, metadataObj) {
   }
 
   goog.proto2.Util.assert(descriptorInfo);
+  return new goog.proto2.Descriptor(messageType, descriptorInfo, fields);
+};
 
-  // Create the descriptor.
-  messageType.descriptor_ =
-      new goog.proto2.Descriptor(messageType, descriptorInfo, fields);
 
+/**
+ * Sets the metadata that represents the definition of this message.
+ *
+ * GENERATED CODE USE ONLY. Called when constructing message classes.
+ *
+ * @param {!Function} messageType Constructor for the
+ *     message type to which this metadata applies.
+ * @param {Object} metadataObj The object containing the metadata.
+ */
+goog.proto2.Message.set$Metadata = function(messageType, metadataObj) {
+  // NOTE(nicksantos): JSCompiler's type-based optimizations really do not
+  // like indirectly defined methods (both prototype methods and
+  // static methods). This is very fragile in compiled code. I think it only
+  // really works by accident, and is highly likely to break in the future.
+  messageType.descriptorObj_ = metadataObj;
   messageType.getDescriptor = function() {
-    return messageType.descriptor_;
+    // The descriptor is created lazily when we instantiate a new instance.
+    return messageType.descriptor_ ||
+        (new messageType()).getDescriptor();
   };
 };

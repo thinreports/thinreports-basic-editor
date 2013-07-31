@@ -20,26 +20,35 @@
 goog.provide('goog.labs.net.image');
 
 goog.require('goog.events.EventHandler');
-goog.require('goog.labs.async.SimpleResult');
+goog.require('goog.events.EventType');
 goog.require('goog.net.EventType');
+goog.require('goog.result.SimpleResult');
+goog.require('goog.userAgent');
 
 
 /**
  * Loads a single image.  Useful for preloading images. May be combined with
- * goog.labs.async.combine to preload many images.
+ * goog.result.combine to preload many images.
  *
  * @param {string} uri URI of the image.
- * @return {!goog.labs.async.Result} An asyncronous result that will succeed
+ * @param {(Image|function(): !Image)=} opt_image If present, instead of
+ *     creating a new Image instance the function will use the passed Image
+ *     instance or the result of calling the Image factory respectively. This
+ *     can be used to control exactly how Image instances are created, for
+ *     example if they should be created in a particular document element, or
+ *     have fields that will trigger CORS image fetches.
+ * @return {!goog.result.Result} An asyncronous result that will succeed
  *     if the image successfully loads or error if the image load fails.
  */
-goog.labs.net.image.load = function(uri) {
-
-  // TODO(nnaze): If needed, allow a way to specify how the image is created
-  // (in case an element needs to be created for a specific document, for
-  // example). There was a mechanism for this in goog.net.ImageLoader, which
-  // this file is intended to replace.
-
-  var image = new Image();
+goog.labs.net.image.load = function(uri, opt_image) {
+  var image;
+  if (!goog.isDef(opt_image)) {
+    image = new Image();
+  } else if (goog.isFunction(opt_image)) {
+    image = opt_image();
+  } else {
+    image = opt_image;
+  }
 
   // IE's load event on images can be buggy.  Instead, we wait for
   // readystatechange events and check if readyState is 'complete'.
@@ -49,7 +58,7 @@ goog.labs.net.image.load = function(uri) {
   var loadEvent = goog.userAgent.IE ? goog.net.EventType.READY_STATE_CHANGE :
       goog.events.EventType.LOAD;
 
-  var result = new goog.labs.async.SimpleResult();
+  var result = new goog.result.SimpleResult();
 
   var handler = new goog.events.EventHandler();
   handler.listen(

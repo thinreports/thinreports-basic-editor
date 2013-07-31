@@ -11,6 +11,7 @@ See the COPYING file for details.
 <title>Closure Unit Tests - goog.json</title>
 <script src="../base.js"></script>
 <script>
+  goog.require('goog.functions');
   goog.require('goog.json');
   goog.require('goog.testing.jsunit');
   goog.require('goog.userAgent');
@@ -22,8 +23,8 @@ See the COPYING file for details.
 function allChars(start, end, opt_allowControlCharacters) {
   var sb = [];
   for (var i = start; i < end; i++) {
-    // unicode without the control characters 0x00 - 0x1f, 0x7f - 0x9f
-    if (opt_allowControlCharacters || i > 0x1f && i < 0x7f || i > 0x9f) {
+    // unicode without the control characters 0x00 - 0x1f
+    if (opt_allowControlCharacters || i > 0x1f) {
       sb.push(String.fromCharCode(i));
     }
   }
@@ -48,15 +49,17 @@ function testStringSerialize() {
 
 function testNullSerialize() {
   assertSerialize('null', null);
+  assertSerialize('null', undefined);
+  assertSerialize('null', NaN);
 
-  // TODO(nicksantos): I'm pretty sure that the goog.json.serialize behavior
-  // is correct by the ES5 spec, but JSON.stringify(undefined) is undefined
-  // on both Firefox and Chrome.
-  assertEquals('undefined', goog.json.serialize(undefined), 'null');
+  assertSerialize('0', 0);
+  assertSerialize('""', '');
+  assertSerialize('false', false);
+}
 
-  assertNotEquals('0', goog.json.serialize(0), 'null');
-  assertNotEquals('""', goog.json.serialize(''), 'null');
-  assertNotEquals('false', goog.json.serialize(false), 'null');
+function testNullPropertySerialize() {
+  assertSerialize('{"a":null}', {'a': null});
+  assertSerialize('{"a":null}', {'a': undefined});
 }
 
 function testNumberSerialize() {
@@ -90,18 +93,10 @@ function testNumberSerialize() {
 
 function testBooleanSerialize() {
   assertSerialize('true', true);
+  assertSerialize('"true"', 'true');
+
   assertSerialize('false', false);
-
-  assertNotEquals('0', goog.json.serialize(0), 'false');
-  assertNotEquals('"false"', goog.json.serialize('false'), 'false');
-  assertNotEquals('null', goog.json.serialize(null), 'false');
-  assertNotEquals('undefined', goog.json.serialize(undefined), 'false');
-  assertNotEquals('NaN', goog.json.serialize(NaN), 'false');
-
-  assertNotEquals('1', goog.json.serialize(1), 'true');
-  assertNotEquals('"true"', goog.json.serialize('true'), 'true');
-  assertNotEquals('{}', goog.json.serialize({}), 'true');
-  assertNotEquals('[]', goog.json.serialize([]), 'true');
+  assertSerialize('"false"', 'false');
 }
 
 function testArraySerialize() {
@@ -139,11 +134,8 @@ function testSerializeSkipFunction() {
     i: 100,
     f: function() { var x = 'x'; }
   };
-  assertEquals('failed to serialize function', '',
-      goog.json.serialize(object.f));
-  assertEquals('failed to serialize object with function',
-      '{"s":"string value","b":true,"i":100}',
-      goog.json.serialize(object));
+  assertSerialize('', object.f);
+  assertSerialize('{"s":"string value","b":true,"i":100}', object);
 }
 
 function testObjectSerialize_array() {
@@ -444,6 +436,7 @@ function testIsNotValid() {
   assertFalse(goog.json.isValid_('"\\\0\\"'));
   assertFalse(goog.json.isValid_('"\\\0"'));
   assertFalse(goog.json.isValid_('"\\0"'));
+  assertFalse(goog.json.isValid_('"\x0c"'));
 
   assertFalse(goog.json.isValid_('"\\\u200D\\", alert(\'foo\') //"\n'));
 }
@@ -452,6 +445,7 @@ function testIsValid() {
   assertTrue(goog.json.isValid_('\n""\n'));
   assertTrue(goog.json.isValid_('[1\n,2\r,3\u2028\n,4\u2029]'));
   assertTrue(goog.json.isValid_('"\x7f"'));
+  assertTrue(goog.json.isValid_('"\x09"'));
   // Test tab characters in json.
   assertTrue(goog.json.isValid_('{"\t":"\t"}'));
 }
@@ -512,6 +506,15 @@ function testReplacer() {
   });
 }
 
+function testDateSerialize() {
+  assertSerialize('{}', new Date(0));
+}
+
+function testToJSONSerialize() {
+  assertSerialize('{}', {toJSON: goog.functions.constant('serialized')});
+  assertSerialize('{"toJSON":"normal"}', {toJSON: 'normal'});
+}
+
 /**
  * Asserts that the given object serializes to the given value.
  * If the current browser has an implementation of JSON.serialize,
@@ -520,8 +523,26 @@ function testReplacer() {
 function assertSerialize(expected, obj, opt_replacer) {
   assertEquals(expected, goog.json.serialize(obj, opt_replacer));
 
-  // NOTE(nicksantos): Wow, native browser implementations of this suck.
-  if (typeof JSON != 'undefined' && goog.userAgent.WEBKIT) {
+  // I'm pretty sure that the goog.json.serialize behavior is correct by the ES5
+  // spec, but JSON.stringify(undefined) is undefined on all browsers.
+  if (obj === undefined) return;
+
+  // Browsers don't serialize undefined properties, but goog.json.serialize does
+  if (goog.isObject(obj) && ('a' in obj) && obj['a'] === undefined) return;
+
+  // Replacers are broken on IE and older versions of firefox.
+  if (opt_replacer && !goog.userAgent.WEBKIT) return;
+
+  // goog.json.serialize does not stringify dates the same way.
+  if (obj instanceof Date) return;
+
+  // goog.json.serialize does not stringify functions the same way.
+  if (obj instanceof Function) return;
+
+  // goog.json.serialize doesn't use the toJSON method.
+  if (goog.isObject(obj) && goog.isFunction(obj.toJSON)) return;
+
+  if (typeof JSON != 'undefined') {
     assertEquals(
         'goog.json.serialize does not match JSON.stringify',
         expected,

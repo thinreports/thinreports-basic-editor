@@ -248,10 +248,10 @@ goog.testing.AsyncTestCase.prototype.nextStepName_ = '';
 
 /**
  * The handle to the current setTimeout timer.
- * @type {number|undefined}
+ * @type {number}
  * @private
  */
-goog.testing.AsyncTestCase.prototype.timeoutHandle_;
+goog.testing.AsyncTestCase.prototype.timeoutHandle_ = 0;
 
 
 /**
@@ -634,7 +634,7 @@ goog.testing.AsyncTestCase.prototype.startTimeoutTimer_ = function() {
   if (!this.timeoutHandle_ && this.stepTimeout > 0) {
     this.timeoutHandle_ = this.timeout(goog.bind(function() {
       this.dbgLog_('Timeout timer fired with id ' + this.timeoutHandle_);
-      this.timeoutHandle_ = null;
+      this.timeoutHandle_ = 0;
 
       this.doTopOfStackAsyncError_('Timed out while waiting for ' +
           'continueTesting() to be called.');
@@ -709,14 +709,6 @@ goog.testing.AsyncTestCase.prototype.pump_ = function(opt_doFirst) {
   if (!this.returnWillPump_) {
     this.setBatchTime(this.now());
     this.returnWillPump_ = true;
-    // If we catch an exception in the step, we don't want to return control
-    // to our caller since there may be non-testcase code in our call stack.
-    // Eg)
-    //   asyncCallback() { fail(1); fail(2); }
-    //                       V
-    //   - ...
-    //   - pump_();
-    // We don't want fail(2) to ever be called.
     var topFuncResult = {};
 
     if (opt_doFirst) {
@@ -750,14 +742,6 @@ goog.testing.AsyncTestCase.prototype.pump_ = function(opt_doFirst) {
       }
     }
     this.returnWillPump_ = false;
-    // See note at top of this function.
-    if (topFuncResult.controlBreakingExceptionThrown) {
-      this.numControlExceptionsExpected_ += 1;
-      this.dbgLog_('pump: numControlExceptionsExpected_ = ' +
-          this.numControlExceptionsExpected_ + ' and throwing exception.');
-      throw new goog.testing.AsyncTestCase.
-          ControlBreakingException(topFuncResult.message);
-    }
   } else if (opt_doFirst) {
     opt_doFirst.call(this);
   }

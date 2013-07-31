@@ -29,6 +29,7 @@ goog.require('goog.editor.BrowserFeature');
 goog.require('goog.editor.Command');
 goog.require('goog.editor.Field.EventType');
 goog.require('goog.editor.Plugin');
+goog.require('goog.editor.node');
 goog.require('goog.editor.plugins.UndoRedoManager');
 goog.require('goog.editor.plugins.UndoRedoState');
 goog.require('goog.events');
@@ -107,7 +108,7 @@ goog.editor.plugins.UndoRedo.prototype.undoManager_;
 /**
  * The key for the event listener handling state change events from the
  * undo-redo manager.
- * @type {number}
+ * @type {goog.events.Key}
  * @private
  */
 goog.editor.plugins.UndoRedo.prototype.managerStateChangeKey_;
@@ -154,12 +155,12 @@ goog.editor.plugins.UndoRedo.prototype.setUndoRedoManager = function(manager) {
   }
 
   this.undoManager_ = manager;
-  this.managerStateChangeKey_ = /** @type {number} */ (
+  this.managerStateChangeKey_ =
       goog.events.listen(this.undoManager_,
           goog.editor.plugins.UndoRedoManager.EventType.STATE_CHANGE,
           this.dispatchCommandValueChange_,
           false,
-          this));
+          this);
 };
 
 
@@ -172,13 +173,6 @@ goog.editor.plugins.UndoRedo.prototype.setUndoRedoManager = function(manager) {
  */
 goog.editor.plugins.UndoRedo.prototype.isSupportedCommand = function(command) {
   return command in goog.editor.plugins.UndoRedo.SUPPORTED_COMMANDS_;
-};
-
-
-/** @override */
-goog.editor.plugins.UndoRedo.prototype.registerFieldObject = function(
-    fieldObject) {
-  this.fieldObject = fieldObject;
 };
 
 
@@ -195,7 +189,7 @@ goog.editor.plugins.UndoRedo.prototype.registerFieldObject = function(
 goog.editor.plugins.UndoRedo.prototype.unregisterFieldObject = function(
     fieldObject) {
   this.disable(fieldObject);
-  this.fieldObject = null;
+  this.setFieldObject(null);
 };
 
 
@@ -206,7 +200,7 @@ goog.editor.plugins.UndoRedo.prototype.unregisterFieldObject = function(
  *     focused field for the multi-field plugin case.
  */
 goog.editor.plugins.UndoRedo.prototype.getCurrentFieldObject = function() {
-  return this.fieldObject;
+  return this.getFieldObject();
 };
 
 
@@ -215,10 +209,10 @@ goog.editor.plugins.UndoRedo.prototype.getCurrentFieldObject = function() {
  * @param {string} fieldHashCode The Field's hashcode.
  * @return {goog.editor.Field} The field object with the hashcode.
  */
-goog.editor.plugins.UndoRedo.prototype.getFieldObject = function(
+goog.editor.plugins.UndoRedo.prototype.getFieldObjectForHash = function(
     fieldHashCode) {
   // With single field undoredo, there's only one Field involved.
-  return this.fieldObject;
+  return this.getFieldObject();
 };
 
 
@@ -227,7 +221,7 @@ goog.editor.plugins.UndoRedo.prototype.getFieldObject = function(
  * @return {goog.editor.Field} Target for COMMAND_VALUE_CHANGE events.
  */
 goog.editor.plugins.UndoRedo.prototype.getCurrentEventTarget = function() {
-  return this.fieldObject;
+  return this.getFieldObject();
 };
 
 
@@ -328,7 +322,7 @@ goog.editor.plugins.UndoRedo.prototype.disposeInternal = function() {
     this.eventHandlers_[hashcode].dispose();
     delete this.eventHandlers_[hashcode];
   }
-  this.fieldObject = null;
+  this.setFieldObject(null);
 
   if (this.undoManager_) {
     this.undoManager_.dispose();
@@ -395,7 +389,7 @@ goog.editor.plugins.UndoRedo.prototype.restoreState = function(
     state, content, cursorPosition) {
   // Fire any pending changes to get the current field state up to date and
   // then stop listening to changes while doing the undo/redo.
-  var fieldObj = this.getFieldObject(state.fieldHashCode);
+  var fieldObj = this.getFieldObjectForHash(state.fieldHashCode);
   if (!fieldObj) {
     return;
   }
@@ -418,7 +412,7 @@ goog.editor.plugins.UndoRedo.prototype.restoreState = function(
     // We specifically set the raw innerHTML of the field here as that's what
     // we get from the field when we save an undo/redo state. There's
     // no need to clean/unclean the contents in either direction.
-    fieldObj.getElement().innerHTML = content;
+    goog.editor.node.replaceInnerHtml(fieldObj.getElement(), content);
 
     if (cursorPosition) {
       cursorPosition.select();
@@ -495,9 +489,9 @@ goog.editor.plugins.UndoRedo.prototype.handleKeyboardShortcut = function(e, key,
 goog.editor.plugins.UndoRedo.prototype.clearHistory = function() {
   // Fire all pending change events, so that they don't come back
   // asynchronously to fill the queue.
-  this.fieldObject.stopChangeEvents(true, true);
+  this.getFieldObject().stopChangeEvents(true, true);
   this.undoManager_.clearHistory();
-  this.fieldObject.startChangeEvents();
+  this.getFieldObject().startChangeEvents();
 };
 
 

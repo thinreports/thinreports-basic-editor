@@ -246,7 +246,7 @@ goog.History = function(opt_invisible, opt_blankPageUrl, opt_input,
    * @type {HTMLInputElement}
    * @private
    */
-  this.hiddenInput_ = (/** @type {HTMLInputElement} */ input);
+  this.hiddenInput_ = /** @type {HTMLInputElement} */ (input);
 
   /**
    * The window whose location contains the history token fragment. This is
@@ -286,6 +286,7 @@ goog.History = function(opt_invisible, opt_blankPageUrl, opt_input,
    * @private
    */
   this.timer_ = new goog.Timer(goog.History.PollingType.NORMAL);
+  this.registerDisposable(this.timer_);
 
   /**
    * True if the state tokens are displayed in the address bar, false for hidden
@@ -323,7 +324,7 @@ goog.History = function(opt_invisible, opt_blankPageUrl, opt_input,
      * @type {HTMLIFrameElement}
      * @private
      */
-    this.iframe_ = (/** @type {HTMLIFrameElement} */ iframe);
+    this.iframe_ = /** @type {HTMLIFrameElement} */ (iframe);
 
     /**
      * Whether the hidden iframe has had a document written to it yet in this
