@@ -43,6 +43,6 @@ input[type="text"]:disabled {
 }
 
 svg {
-  -webkit-border-radius: 5px;
-  -webkit-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.02);
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
 }
