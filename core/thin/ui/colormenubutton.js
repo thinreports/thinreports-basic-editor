@@ -36,7 +36,7 @@ goog.require('thin.ui.ColorMenuButtonRenderer');
  */
 thin.ui.ColorMenuButton = function(content, opt_icon, opt_menu, opt_renderer) {
   var scope = this;
-  goog.ui.ColorMenuButton.call(/** @type {goog.ui.ColorMenuButton} */ (scope), content);
+  goog.ui.ColorMenuButton.call(/** @type {thin.ui.ColorMenuButton} */ (scope), content);
   thin.ui.MenuButton.call(this, content, opt_icon, 
       thin.ui.ColorMenuButton.newColorMenu(), /** @type {thin.ui.MenuButtonRenderer} */ (
       opt_renderer || thin.ui.ColorMenuButtonRenderer.getInstance()));

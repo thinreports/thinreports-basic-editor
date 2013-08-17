@@ -133,7 +133,7 @@ thin.editor.Action.prototype.actionLayerInsertAfter = function() {
   this.workspace_.normalVersioning(function(version) {
   
     version.upHandler(function() {
-      layout.moveShapeToAfter(shapes, targetIndexByShapes, parentGroup);
+      layout.moveShapeToAfter(shapes, targetIndexByShapes);
     }, scope);
     
     version.downHandler(function() {

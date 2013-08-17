@@ -27,11 +27,7 @@ goog.require('thin.ui.View');
  */
 thin.ui.PropertyView = function(caption) {
   thin.ui.View.call(this, caption);
-  
-  /**
-   * @type {thin.ui.PropertyPane}
-   * @private
-   */
+
   this.setControl(new thin.ui.PropertyPane());
   this.setHandleWindowResizeEvent(true);
 };

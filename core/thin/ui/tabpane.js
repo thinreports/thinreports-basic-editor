@@ -838,12 +838,3 @@ thin.ui.TabPaneEvent = function(type, target, page, opt_beforePage) {
   this.beforePage = opt_beforePage;
 };
 goog.inherits(thin.ui.TabPaneEvent, goog.events.Event);
-
-
-/** @inheritDoc */
-thin.ui.TabPaneEvent.prototype.disposeInternal = function() {
-  thin.ui.TabPaneEvent.superClass_.disposeInternal.call(this);
-  
-  this.page = null;
-  this.beforePage = null;
-};

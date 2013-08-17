@@ -361,8 +361,6 @@ thin.editor.ListSectionHelper.Separator_ = function(layout) {
    */
   this.line_ = this.createLine_();
   
-  var position = thin.editor.ListSectionHelper.SeparatorHandle_.Position;
-  
   /**
    * @type {thin.editor.ListSectionHelper.SeparatorHandle_}
    * @private
@@ -498,7 +496,7 @@ thin.editor.ListSectionHelper.Separator_.prototype.init = function(sectionName) 
     var updateListShape = function(sectionHeight, transLate) {
       sectionShape.setHeight(sectionHeight);
       listHelper.setTransLateOfNextSectionShapes(transLate, sectionShape);
-      listHelper.update(listShape);
+      listHelper.update();
       if (guide.isEnable()) {
         goog.array.forEach(shapes, function(shape) {
           shape.getTargetOutline().setBounds(shape.getBounds());
