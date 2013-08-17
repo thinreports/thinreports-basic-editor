@@ -26,11 +26,7 @@ goog.require('thin.ui.View');
  */
 thin.ui.ToolboxView = function(opt_caption) {
   thin.ui.View.call(this, opt_caption || '');
-  
-  /**
-   * @type {thin.ui.Toolbox}
-   * @private
-   */
+
   this.setControl(new thin.ui.Toolbox());
   this.setHandleWindowResizeEvent(false);
 };

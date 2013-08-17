@@ -46,7 +46,7 @@ thin.editor.ShapeManager.prototype.getShapeByIdentifier = function(identifier) {
 
 
 /**
- * @return {Array.<string>}
+ * @return {Array.<number>}
  */
 thin.editor.ShapeManager.prototype.getIdentifiers = function() {
   return this.identifiers_;
@@ -68,10 +68,9 @@ thin.editor.ShapeManager.prototype.set = function(shapes) {
   this.identifiers_ = [];
 
   var identifiers = this.identifiers_;
-  var makeKey = this.makeKey_;
 
   goog.array.forEach(shapes, function(shape) {
-    identifiers[identifiers.length] = makeKey(shape.getIdentifier());
+    identifiers[identifiers.length] = this.makeKey_(shape.getIdentifier());
   }, this);
 };
 

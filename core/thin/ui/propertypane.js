@@ -1642,12 +1642,3 @@ thin.ui.PropertyPane.PropertyEvent = function(type, pane, property, opt_target) 
   this.property = property
 };
 goog.inherits(thin.ui.PropertyPane.PropertyEvent, goog.events.Event);
-
-
-/** @inheritDoc */
-thin.ui.PropertyPane.PropertyEvent.prototype.disposeInternal = function() {
-  thin.ui.PropertyPane.PropertyEvent.superClass_.disposeInternal.call(this);
-  
-  this.pane = null;
-  this.property = null;
-};

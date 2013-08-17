@@ -733,14 +733,6 @@ thin.ui.Input.ValidatorEvent = function(type, value, opt_target) {
 goog.inherits(thin.ui.Input.ValidatorEvent, goog.events.Event);
 
 
-/** @inheritDoc */
-thin.ui.Input.ValidatorEvent.prototype.disposeInternal = function() {
-  goog.base(this, 'disposeInternal');
-  
-  delete this.value_;
-};
-
-
 /**
  * @param {Object=} opt_target
  * @constructor

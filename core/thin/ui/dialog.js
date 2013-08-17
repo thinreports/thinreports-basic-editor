@@ -311,7 +311,7 @@ thin.ui.Dialog.prototype.decorateInternal = function(element) {
         this.title_);
     this.titleEl_.appendChild(this.titleTextEl_);
   }
-  goog.dom.a11y.setState(this.getElement(), 'labelledby', this.titleId_ || '');
+  goog.a11y.aria.setState(this.getElement(), 'labelledby', this.titleId_ || '');
   // Decorate or create the title close element.
   if (!this.titleCloseEl_) {
     this.titleCloseEl_ = this.getDomHelper().createDom('span', titleCloseClass);

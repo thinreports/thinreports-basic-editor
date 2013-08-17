@@ -52,7 +52,7 @@ goog.inherits(thin.ui.Menu, goog.ui.Menu);
  */
 thin.ui.MenuItem = function(content, opt_icon, opt_accessLabel, opt_renderer) {
   goog.ui.MenuItem.call(this, content, null, null,
-      /** @type {goog.ui.MenuItemRenderer} */ (
+      /** @type {thin.ui.MenuItemRenderer} */ (
           opt_renderer || thin.ui.MenuItemRenderer.getInstance()));
 
   /**

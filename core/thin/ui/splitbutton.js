@@ -261,7 +261,7 @@ thin.ui.SplitButton.prototype.disposeInternal = function() {
  */
 thin.ui.SplitButton.Handle = function(opt_renderer) {
   thin.ui.MenuButton.call(this, null, null, null, 
-    /** @type {thin.ui.MenuButtonRenderer} */ (
+    /** @type {thin.ui.SplitButtonHandleRenderer} */ (
       opt_renderer || thin.ui.SplitButtonHandleRenderer.getInstance()));
 };
 goog.inherits(thin.ui.SplitButton.Handle, thin.ui.MenuButton);
