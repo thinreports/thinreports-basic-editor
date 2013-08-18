@@ -18,8 +18,9 @@
 ****************************************************************************/
 
 #include <QtGui>
-#include <QtWebKit>
+#include <QtWebKitWidgets>
 #include <QDir>
+#include <QMessageBox>
 #include <QFontDatabase>
 #include <QFileInfo>
 #include "platform.h"
@@ -40,7 +41,7 @@ void Platform::boot(const QString core)
         exit(0);
     }
 
-    view->load(app);
+    view->load(QUrl::fromLocalFile(app));
 
     setup();
 
@@ -104,22 +105,24 @@ QString Platform::adjustPath(const QString &path)
     if (QDir::isAbsolutePath(path)) {
         return path;
     }
+    QString result;
 // MacOSX
 #ifdef Q_OS_MAC
-    return QCoreApplication::applicationDirPath()
+    result = QCoreApplication::applicationDirPath()
             + QLatin1String("/../Resources/") + path;
 // Win32,Ubuntu(Linux)
 #else
-    return QCoreApplication::applicationDirPath()
+    result = QCoreApplication::applicationDirPath()
             + QLatin1String("/../resources/") + path;
 #endif
+    return QDir::cleanPath(result);
 }
 
 bool Platform::isDebugMode()
 {
-    if (QApplication::argc() > 1) {
-        QString arg = QApplication::argv()[1];
-        return arg == "-d";
+    QStringList args = QApplication::arguments();
+    if (args.size() > 1) {
+        return args.at(1) == "-d";
     }
     return false;
 }
