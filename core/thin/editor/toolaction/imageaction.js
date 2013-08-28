@@ -160,7 +160,7 @@ thin.editor.toolaction.ImageAction.prototype.handleActionInternal = function(e, 
                 layer = sectionHelper.getDrawLayer();
               }
             });
-            this.handleMouseDownAction_(e, layer, outline, false);
+            this.handleMouseDownAction_(e, layer, outline, true);
           }
         }, false, this);
     }, this);
