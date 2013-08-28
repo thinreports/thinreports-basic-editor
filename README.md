@@ -34,7 +34,7 @@ It can be generated automatically the specifications that contains the definitio
 ## Install
 
 Please download the files for your platform from [here](http://sourceforge.net/projects/thinreports/files/).
-Then, please see the Installation Guide [en / [ja](http://osc.matsukei.net/projects/thinreports/wiki/Installing_Editor)] about how to install editor for each platform
+Then, please see the Installation Guide [[en](http://osc.matsukei.net/projects/thinreports/wiki/En_Installing_Editor) / [ja](http://osc.matsukei.net/projects/thinreports/wiki/Installing_Editor)] about how to install editor for each platform
 
 ## For more information
 
@@ -47,8 +47,8 @@ Then, please see the Installation Guide [en / [ja](http://osc.matsukei.net/proje
 
 * Getting Started [[en](http://osc.matsukei.net/projects/thinreports/wiki/En_Getting_Started) / [ja](http://osc.matsukei.net/projects/thinreports/wiki/Getting_Started)]
 * Examples [en / [ja](http://osc.matsukei.net/projects/thinreports/wiki/Examples)]
-* HowTos [en / [ja](http://osc.matsukei.net/projects/thinreports/wiki/HowTos)]
-* Tutorial [en / [ja](http://osc.matsukei.net/projects/thinreports/wiki/Tutorial)]
+* HowTos [[en](http://osc.matsukei.net/projects/thinreports/wiki/En_HowTos) / [ja](http://osc.matsukei.net/projects/thinreports/wiki/HowTos)]
+* Tutorial [[en](http://osc.matsukei.net/projects/thinreports/wiki/En_Tutorial) / [ja](http://osc.matsukei.net/projects/thinreports/wiki/Tutorial)]
 
 ### Support
 
