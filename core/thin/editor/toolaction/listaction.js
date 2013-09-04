@@ -50,6 +50,19 @@ thin.editor.toolaction.ListAction.prototype.handleActionInternal = function(e, w
       this.drawLayerSetup(listDrawLayer, outline, true);
       listDrawLayer.setVisibled(true);
     }, this);
+    listHelper.setDrawable(false);
     listHelper.getBlankRangeDrawLayer().setVisibled(true);
   }
 };
+
+
+/** @override */
+thin.editor.toolaction.ListAction.prototype.handleEndAction = 
+    function(e, outline, handler, captureActiveForStart, opt_isCancelDraw) {
+  goog.base(this, 'handleEndAction', e, outline, handler, captureActiveForStart, opt_isCancelDraw);
+
+  if (!opt_isCancelDraw) {
+    this.layout.getHelpers().getListHelper().setDrawable(false);
+  }
+};
+

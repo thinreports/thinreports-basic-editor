@@ -300,6 +300,17 @@ thin.editor.ListHelper.prototype.setTransLate = function(translate) {
 
 
 /**
+ * Prohibit the drawing new List into the List.
+ * @param {boolean} drawable
+ */
+thin.editor.ListHelper.prototype.setDrawable = function(drawable) {
+  this.forEachSectionHelper(function(helper, name) {
+    helper.getDrawLayer().setDrawable(drawable);
+  });
+};
+
+
+/**
  * @param {goog.math.Coordinate} translate
  * @param {thin.editor.ListSectionShape} startSectionShape
  */
