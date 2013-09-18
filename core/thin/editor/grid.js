@@ -42,21 +42,35 @@ thin.editor.Grid.DEF_KEY_ = 'grid';
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.Grid.BLACK_FILL_ = new goog.graphics.SolidFill('#F2F2F2');
+thin.editor.Grid.BG_FILL_ = new goog.graphics.SolidFill('#FFFFFF');
 
 
 /**
- * @type {goog.graphics.SolidFill}
+ * @type {goog.graphics.Stroke}
  * @private
  */
-thin.editor.Grid.WHITE_FILL_ = new goog.graphics.SolidFill('#FFFFFF');
+thin.editor.Grid.BG_STROKE_ = new goog.graphics.Stroke(0.5, '#666666');
+
+
+/**
+ * @type {goog.graphics.Stroke}
+ * @private
+ */
+thin.editor.Grid.LINE_STROKE_ = new goog.graphics.Stroke(0.3, '#666666');
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.RECT_SIZE_ = 15;
+thin.editor.Grid.BG_SIZE_ = 50;
+
+
+/**
+ * @type {number}
+ * @private
+ */
+thin.editor.Grid.LINE_INTERVAL_ = 10;
 
 
 /**
@@ -90,31 +104,60 @@ thin.editor.Grid.prototype.getPatternFill = function() {
  */
 thin.editor.Grid.prototype.createElement_ = function(layout) {
   var pattern = this.createPattern_(layout);
-  var size = thin.editor.RECT_SIZE_;
-  pattern.appendChild(this.createRect_(layout, new goog.math.Rect(0, 0, size, size),
-      thin.editor.Grid.BLACK_FILL_).getElement());
-  pattern.appendChild(this.createRect_(layout, new goog.math.Rect(size, 0, size, size),
-      thin.editor.Grid.WHITE_FILL_).getElement());
-  pattern.appendChild(this.createRect_(layout, new goog.math.Rect(size, size, size, size),
-      thin.editor.Grid.BLACK_FILL_).getElement());
-  pattern.appendChild(this.createRect_(layout, new goog.math.Rect(0, size, size, size),
-      thin.editor.Grid.WHITE_FILL_).getElement());
-  
+  var bg = this.createRect_(layout);
+  pattern.appendChild(bg.getElement());
+
+  var bg_size = thin.editor.Grid.BG_SIZE_;
+  var interval = thin.editor.Grid.LINE_INTERVAL_;
+  for (var pos = interval; pos < bg_size; pos += interval) {
+    var line_x = this.createLine_(layout, {
+      'x1': 0,
+      'x2': bg_size,
+      'y1': pos,
+      'y2': pos
+    });
+    pattern.appendChild(line_x.getElement());
+
+    var line_y = this.createLine_(layout, {
+      'x1': pos,
+      'x2': pos,
+      'y1': 0,
+      'y2': bg_size
+    });
+    pattern.appendChild(line_y.getElement());
+  }
+
   return pattern;
 };
 
 
 /**
  * @param {thin.editor.Layout} layout
- * @param {goog.math.Rect} bounds
- * @param {goog.graphics.SolidFill} fill
  * @return {thin.editor.Rect}
  * @private
  */
-thin.editor.Grid.prototype.createRect_ = function(layout, bounds, fill) {
-  var rect = new thin.editor.Rect(layout.createSvgElement('rect'), layout, null, fill);
-  rect.setBounds(bounds);
+thin.editor.Grid.prototype.createRect_ = function(layout) {
+  var rect = new thin.editor.Rect(layout.createSvgElement('rect'),
+    layout, thin.editor.Grid.BG_STROKE_, thin.editor.Grid.BG_FILL_);
+  var bg_size = thin.editor.Grid.BG_SIZE_;
+  rect.setBounds(new goog.math.Rect(0, 0, bg_size, bg_size));
+
   return rect;
+};
+
+
+/**
+ * @param {thin.editor.Layout} layout
+ * @param {Object} attrs
+ * @return {thin.editor.Line}
+ * @private
+ */
+thin.editor.Grid.prototype.createLine_ = function(layout, attrs) {
+  var line = new thin.editor.Line(layout.createSvgElement('line', attrs),
+    layout, thin.editor.Grid.LINE_STROKE_);
+  line.setStrokeDashFromType(thin.editor.ModuleElement.StrokeType.DOTTED);
+
+  return line;
 };
 
 
@@ -124,12 +167,12 @@ thin.editor.Grid.prototype.createRect_ = function(layout, bounds, fill) {
  * @private
  */
 thin.editor.Grid.prototype.createPattern_ = function(layout) {
-  var size = thin.editor.RECT_SIZE_ * 2;
+  var bg_size = thin.editor.Grid.BG_SIZE_;
   return layout.createSvgElement('pattern', {
     'patternUnits': 'userSpaceOnUse',
     'x': 0,
     'y': 0,
-    'width': size,
-    'height': size
+    'width': bg_size,
+    'height': bg_size
   });
 };

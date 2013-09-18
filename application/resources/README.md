@@ -46,7 +46,7 @@ Then, please see the Installation Guide [[en](http://osc.matsukei.net/projects/t
 ### Documentation
 
 * Getting Started [[en](http://osc.matsukei.net/projects/thinreports/wiki/En_Getting_Started) / [ja](http://osc.matsukei.net/projects/thinreports/wiki/Getting_Started)]
-* Examples [en / [ja](http://osc.matsukei.net/projects/thinreports/wiki/Examples)]
+* Examples [[en](http://osc.matsukei.net/projects/thinreports/wiki/En_Examples) / [ja](http://osc.matsukei.net/projects/thinreports/wiki/Examples)]
 * HowTos [[en](http://osc.matsukei.net/projects/thinreports/wiki/En_HowTos) / [ja](http://osc.matsukei.net/projects/thinreports/wiki/HowTos)]
 * Tutorial [[en](http://osc.matsukei.net/projects/thinreports/wiki/En_Tutorial) / [ja](http://osc.matsukei.net/projects/thinreports/wiki/Tutorial)]
 
