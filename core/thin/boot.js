@@ -1585,7 +1585,21 @@ thin.boot = function() {
         }
       }
     }, false);
-  
+
+  goog.events.listen(goog.global, goog.events.EventType.ERROR, 
+    function(e) {
+      var dialog = new thin.ui.Dialog();
+      dialog.setDisposeOnHide(true);
+      dialog.setTitle('Error');
+      dialog.setWidth(500);
+      dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOk());
+      dialog.decorate(goog.dom.getElement('app-error-dialog'));
+      dialog.addEventListener(goog.ui.Dialog.EventType.AFTER_HIDE, focusWorkspace);
+      dialog.setVisible(true);
+
+      return false;
+    }, false);
+
   initUiStatus();
 };
 

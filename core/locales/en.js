@@ -204,6 +204,8 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   error_invalid_layout_file: 'This layout file cannot be opened because has problem.',
   error_failed_to_load_image: 'Failed to load image.',
   error_no_valid_placeholder_included: 'No a valid placeholder included.',
+  error_unexpected_title: 'An unexpected error has occurred.',
+  error_unexpected_description: "I'd like a bug report from button to report below. In addition, in order to investigate the place that caused this error message is displayed, please tell me what was said copper operation.",
 
   notice_no_shapes: 'No shapes',
   warning_discard_changes: 'If you have unsaved files, the changes will be discarded. Please be sure to save.', 
@@ -219,6 +221,8 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   text_layout_force_edit_confirmation: 'Because this layout has been created with a newer version, there is a risk of some configurations are broken by editing.\nAre you sure you want to edit anyway?',
   text_placeholder_of_pageno_description: '[Available Placeholders] {page}:Page Number, {total}:Total Page Count',
   text_counted_page_target_description: '[Allowed Targets] List (The ID of target List) or Report (Empty)', 
+  text_feedback_to_osc: 'Report a bug (Matsukei Open Source Center) ', 
+  text_feedback_to_github: 'Report a bug (GitHub) ',
 
   shape_rectangle: 'Rectangle', 
   shape_ellipse: 'Ellipse', 
