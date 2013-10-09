@@ -39,8 +39,33 @@ thin.ui.Message = function(opt_extraClass) {
    * @private
    */
   this.extraClass_ = opt_extraClass || '';
+
+  thin.ui.Message.active_ = this;
 };
 goog.inherits(thin.ui.Message, thin.ui.Dialog);
+
+
+/**
+ * @type {thin.ui.Message}
+ * @private
+ */
+thin.ui.Message.active_;
+
+
+thin.ui.Message.disposeActiveMessage = function() {
+  if (thin.ui.Message.hasActiveMessage()) {
+    thin.ui.Message.active_.dispose();
+    delete thin.ui.Message.active_;
+  }
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.ui.Message.hasActiveMessage = function() {
+  return !!thin.ui.Message.active_;
+};
 
 
 /**

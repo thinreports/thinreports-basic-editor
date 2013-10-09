@@ -1528,6 +1528,8 @@ thin.boot = function() {
       }
       
       if (isChanged) {
+        thin.ui.Message.disposeActiveMessage();
+
         thin.ui.Message.confirm(
           thin.t('text_editor_force_close_confirmation'), thin.t('label_confirmation'),
           function(e) {
