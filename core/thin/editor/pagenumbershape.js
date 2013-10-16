@@ -88,9 +88,8 @@ thin.editor.PageNumberShape.BOX_STROKE_ = new goog.graphics.Stroke(0.28, '#7C400
 
 /**
  * @type {string}
- * @private
  */
-thin.editor.PageNumberShape.DEFAULT_PAGENO_FORMAT_ = '{page}';
+thin.editor.PageNumberShape.DEFAULT_PAGENO_FORMAT = '{page}';
 
 
 /**
@@ -331,7 +330,7 @@ thin.editor.PageNumberShape.prototype.setFormat = function(format) {
  */
 thin.editor.PageNumberShape.prototype.getFormat = function() {
   return this.getLayout().getElementAttribute(this.getElement(), 
-      'x-format') || thin.editor.PageNumberShape.DEFAULT_PAGENO_FORMAT_;
+      'x-format') || thin.editor.PageNumberShape.DEFAULT_PAGENO_FORMAT;
 };
 
 
@@ -672,7 +671,7 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
 
   formatInputProperty.addEventListener(propEventType.CHANGE, 
       function(e) {
-        var newFormat = e.target.getValue() || thin.editor.PageNumberShape.DEFAULT_PAGENO_FORMAT_;
+        var newFormat = e.target.getValue() || thin.editor.PageNumberShape.DEFAULT_PAGENO_FORMAT;
         var oldFormat = scope.getFormat();
 
         workspace.normalVersioning(function(version) {

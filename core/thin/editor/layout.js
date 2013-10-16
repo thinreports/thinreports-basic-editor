@@ -1290,6 +1290,7 @@ thin.editor.Layout.prototype.createPageNumberShape = function() {
   var shape = new thin.editor.PageNumberShape(this.createSvgElement('g'), this);
   shape.setKerning(thin.editor.TextStyle.DEFAULT_KERNING);
   shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
+  shape.setFormat(thin.editor.PageNumberShape.DEFAULT_PAGENO_FORMAT);
   shape.initIdentifier();
   return shape;
 };
