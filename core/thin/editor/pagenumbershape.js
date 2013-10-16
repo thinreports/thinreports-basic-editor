@@ -730,7 +730,7 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
           }, scope);
           
           version.downHandler(function() {
-            this.setShapeId(oldTarget);
+            this.setTarget(oldTarget);
             proppane.getPropertyControl('target').setValue(oldTarget);
           }, scope);
         });

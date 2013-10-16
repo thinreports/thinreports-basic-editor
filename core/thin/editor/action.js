@@ -870,6 +870,10 @@ thin.editor.Action.prototype.actionSetFontBold = function(newBoldSetting) {
   layout.forTblockShapesEach(shapes, function(shape, i) {
     goog.array.insertAt(captureTblockFontBoldArray, shape.isFontBold(), i);
   });
+  var capturePageNumberFontBoldArray = [];
+  layout.forPageNumberShapesEach(shapes, function(shape, i) {
+    goog.array.insertAt(capturePageNumberFontBoldArray, shape.isFontBold(), i);
+  });
   
   /**
    * @param {goog.graphics.Element} shape
@@ -893,7 +897,7 @@ thin.editor.Action.prototype.actionSetFontBold = function(newBoldSetting) {
    * @param {goog.graphics.Element} shape
    * @param {boolean} bold
    */
-  var setFontBoldTblockShape = function(shape, bold) {
+  var setFontBoldTblockAndPageNumberShape = function(shape, bold) {
     shape.setFontBold(bold);
   };
 
@@ -905,7 +909,11 @@ thin.editor.Action.prototype.actionSetFontBold = function(newBoldSetting) {
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
-        setFontBoldTblockShape(shape, newBoldSetting);
+        setFontBoldTblockAndPageNumberShape(shape, newBoldSetting);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setFontBoldTblockAndPageNumberShape(shape, newBoldSetting);
       });
       
       if (guide.isEnable()) {
@@ -933,7 +941,11 @@ thin.editor.Action.prototype.actionSetFontBold = function(newBoldSetting) {
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
-        setFontBoldTblockShape(shape, captureTblockFontBoldArray[i]);
+        setFontBoldTblockAndPageNumberShape(shape, captureTblockFontBoldArray[i]);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setFontBoldTblockAndPageNumberShape(shape, capturePageNumberFontBoldArray[i]);
       });
       
       if (guide.isEnable()) {
@@ -986,6 +998,10 @@ thin.editor.Action.prototype.actionSetFontItalic = function(newItalicSetting) {
   layout.forTblockShapesEach(shapes, function(shape, i) {
     goog.array.insertAt(captureTblockFontItalicArray, shape.isFontItalic(), i);
   });
+  var capturePageNumberFontItalicArray = [];
+  layout.forPageNumberShapesEach(shapes, function(shape, i) {
+    goog.array.insertAt(capturePageNumberFontItalicArray, shape.isFontItalic(), i);
+  });
   
   /**
    * @param {goog.graphics.Element} shape
@@ -1000,7 +1016,7 @@ thin.editor.Action.prototype.actionSetFontItalic = function(newItalicSetting) {
    * @param {goog.graphics.Element} shape
    * @param {boolean} italic
    */
-  var setFontItalicTblockShape = function(shape, italic) {
+  var setFontItalicTblockAndPageNumberShape = function(shape, italic) {
     shape.setFontItalic(italic);
   };
 
@@ -1012,7 +1028,11 @@ thin.editor.Action.prototype.actionSetFontItalic = function(newItalicSetting) {
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
-        setFontItalicTblockShape(shape, newItalicSetting);
+        setFontItalicTblockAndPageNumberShape(shape, newItalicSetting);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setFontItalicTblockAndPageNumberShape(shape, newItalicSetting);
       });
       
       if (guide.isEnable()) {
@@ -1039,7 +1059,11 @@ thin.editor.Action.prototype.actionSetFontItalic = function(newItalicSetting) {
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
-        setFontItalicTblockShape(shape, captureTblockFontItalicArray[i]);
+        setFontItalicTblockAndPageNumberShape(shape, captureTblockFontItalicArray[i]);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setFontItalicTblockAndPageNumberShape(shape, capturePageNumberFontItalicArray[i]);
       });
       
       if (guide.isEnable()) {
@@ -1090,6 +1114,10 @@ thin.editor.Action.prototype.actionSetFontUnderline = function(newUnderlineSetti
   layout.forTblockShapesEach(shapes, function(shape, i) {
     goog.array.insertAt(captureTblockFontUnderlineArray, shape.isFontUnderline(), i);
   });
+  var capturePageNumberFontUnderlineArray = [];
+  layout.forPageNumberShapesEach(shapes, function(shape, i) {
+    goog.array.insertAt(capturePageNumberFontUnderlineArray, shape.isFontUnderline(), i);
+  });
   
   /**
    * @param {goog.graphics.Element} shape
@@ -1103,7 +1131,7 @@ thin.editor.Action.prototype.actionSetFontUnderline = function(newUnderlineSetti
    * @param {goog.graphics.Element} shape
    * @param {boolean} underline
    */
-  var setFontUnderlineTblockShape = function(shape, underline) {
+  var setFontUnderlineTblockAndPageNumberShape = function(shape, underline) {
     shape.setFontUnderline(underline);
   };
   
@@ -1115,7 +1143,11 @@ thin.editor.Action.prototype.actionSetFontUnderline = function(newUnderlineSetti
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
-        setFontUnderlineTblockShape(shape, newUnderlineSetting);
+        setFontUnderlineTblockAndPageNumberShape(shape, newUnderlineSetting);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setFontUnderlineTblockAndPageNumberShape(shape, newUnderlineSetting);
       });
 
       if (isMultipleSelect) {
@@ -1137,7 +1169,11 @@ thin.editor.Action.prototype.actionSetFontUnderline = function(newUnderlineSetti
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
-        setFontUnderlineTblockShape(shape, captureTblockFontUnderlineArray[i]);
+        setFontUnderlineTblockAndPageNumberShape(shape, captureTblockFontUnderlineArray[i]);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setFontUnderlineTblockAndPageNumberShape(shape, capturePageNumberFontUnderlineArray[i]);
       });
       
       if (isMultipleSelect) {
@@ -1184,6 +1220,10 @@ thin.editor.Action.prototype.actionSetFontLinethrough = function(newLinethrough)
   layout.forTblockShapesEach(shapes, function(shape, i) {
     goog.array.insertAt(captureTblockFontLinethroughArray, shape.isFontLinethrough(), i);
   });
+  var capturePageNumberFontLinethroughArray = [];
+  layout.forPageNumberShapesEach(shapes, function(shape, i) {
+    goog.array.insertAt(capturePageNumberFontLinethroughArray, shape.isFontLinethrough(), i);
+  });
   
   /**
    * @param {goog.graphics.Element} shape
@@ -1197,7 +1237,7 @@ thin.editor.Action.prototype.actionSetFontLinethrough = function(newLinethrough)
    * @param {goog.graphics.Element} shape
    * @param {boolean} linethrough
    */
-  var setFontLinethroughTblockShape = function(shape, linethrough) {
+  var setFontLinethroughTblockAndPageNumberShape = function(shape, linethrough) {
     shape.setFontLinethrough(linethrough);
   };
   
@@ -1209,7 +1249,11 @@ thin.editor.Action.prototype.actionSetFontLinethrough = function(newLinethrough)
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
-        setFontLinethroughTblockShape(shape, newLinethrough);
+        setFontLinethroughTblockAndPageNumberShape(shape, newLinethrough);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setFontLinethroughTblockAndPageNumberShape(shape, newLinethrough);
       });
       
       if (isMultipleSelect) {
@@ -1231,7 +1275,11 @@ thin.editor.Action.prototype.actionSetFontLinethrough = function(newLinethrough)
       });
       
       layout.forTblockShapesEach(shapes, function(shape, i) {
-        setFontLinethroughTblockShape(shape, captureTblockFontLinethroughArray[i]);
+        setFontLinethroughTblockAndPageNumberShape(shape, captureTblockFontLinethroughArray[i]);
+      });
+
+      layout.forPageNumberShapesEach(shapes, function(shape, i) {
+        setFontLinethroughTblockAndPageNumberShape(shape, capturePageNumberFontLinethroughArray[i]);
       });
       
       if (isMultipleSelect) {
