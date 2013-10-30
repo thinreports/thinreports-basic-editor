@@ -1028,6 +1028,9 @@ thin.editor.Layout.prototype.removeShape = function(shape) {
     if (listHelper.isEnableChangingPage(shape)) {
       listHelper.clearChangingPageSetShape();
     }
+    goog.array.forEach(shape.getPageNumberReferences(), function(target) {
+      target.removeTargetShape();
+    });
   }
   
   if (shape.instanceOfTblockShape()) {
@@ -1039,6 +1042,10 @@ thin.editor.Layout.prototype.removeShape = function(shape) {
     if (shape.isReferring()) {
       shape.removeReferenceShape();
     }
+  }
+
+  if (shape.instanceOfPageNumberShape()) {
+    shape.removeTargetShape();
   }
   
   if (shape.isAffiliationListShape()) {

@@ -114,6 +114,13 @@ thin.editor.PageNumberShape.prototype.base_;
 
 
 /**
+ * @type {thin.editor.ListShape}
+ * @private
+ */
+thin.editor.PageNumberShape.prototype.targetShape_;
+
+
+/**
  * @return {string}
  */
 thin.editor.PageNumberShape.prototype.getClassId = function() {
@@ -335,21 +342,52 @@ thin.editor.PageNumberShape.prototype.getFormat = function() {
 
 
 /**
- * @param {string} target
+ * @param {string} targetId
  */
-thin.editor.PageNumberShape.prototype.setTarget = function(target) {
-  this.getLayout().setElementAttributes(this.getElement(), {
-    'x-target': target
+thin.editor.PageNumberShape.prototype.setTargetId = function(targetId) {
+  var layout = this.getLayout();
+  layout.setElementAttributes(this.getElement(), {
+    'x-target': targetId
   });
+  if (!goog.string.isEmpty(targetId)) {
+    this.setTargetShape_(layout.getShapeForShapeId(targetId));
+  }
 };
 
 
 /**
  * @return {string}
  */
-thin.editor.PageNumberShape.prototype.getTarget = function() {
+thin.editor.PageNumberShape.prototype.getTargetId = function() {
   return this.getLayout().getElementAttribute(this.getElement(), 
       'x-target') || '';
+};
+
+
+/**
+ * @param {goog.graphics.Element} targetShape
+ * @private
+ */
+thin.editor.PageNumberShape.prototype.setTargetShape_ = function(targetShape) {
+  this.targetShape_ = targetShape;
+  this.targetShape_.setPageNumberReference(this);
+};
+
+
+/**
+ * @return {goog.graphics.Element}
+ */
+thin.editor.PageNumberShape.prototype.getTargetShape = function() {
+  return this.targetShape_;
+};
+
+
+thin.editor.PageNumberShape.prototype.removeTargetShape = function() {
+  if (this.targetShape_) {
+    this.targetShape_.removePageNumberReference(this);
+    this.setTargetId('');
+  }
+  delete this.targetShape_;
 };
 
 
@@ -719,18 +757,18 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
   
   targetInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        var newTarget = e.target.getValue();
-        var oldTarget = scope.getTarget();
+        var newTargetId = e.target.getValue();
+        var oldTargetId = scope.getTargetId();
         
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
-            this.setTarget(newTarget);
-            proppane.getPropertyControl('target').setValue(newTarget);
+            this.setTargetId(newTargetId);
+            proppane.getPropertyControl('target').setValue(newTargetId);
           }, scope);
           
           version.downHandler(function() {
-            this.setTarget(oldTarget);
-            proppane.getPropertyControl('target').setValue(oldTarget);
+            this.setTargetId(oldTargetId);
+            proppane.getPropertyControl('target').setValue(oldTargetId);
           }, scope);
         });
       }, false, this);
@@ -789,7 +827,7 @@ thin.editor.PageNumberShape.prototype.getProperties = function() {
     'overflow': this.getOverflowType(),
     'start-at': this.getStartAt(), 
     'format': this.getFormat(), 
-    'target': this.getTarget(), 
+    'target': this.getTargetId(), 
     'shape-id': this.getShapeId(),
     'desc': this.getDesc()
   };

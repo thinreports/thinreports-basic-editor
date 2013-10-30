@@ -56,6 +56,12 @@ thin.editor.ListShape = function(layout, opt_element, opt_referenceElement) {
   thin.editor.Component.call(this, layout, opt_element);
   this.setCss(thin.editor.ListShape.CLASSID);
   this.setup_(opt_referenceElement);
+
+  /**
+   * @type {Array.<thin.editor.PageNumberShape>}
+   * @private
+   */
+  this.pageNumberReferences_ = [];
 };
 goog.inherits(thin.editor.ListShape, thin.editor.Component);
 goog.mixin(thin.editor.ListShape.prototype, thin.editor.ModuleShape.prototype);
@@ -851,16 +857,23 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         var shapeId = e.target.getValue();
         var oldShapeId = scope.getShapeId();
+        var pageNumberReferences = scope.getPageNumberReferences();
         
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setShapeId(shapeId);
             this.updateProperties();
+            goog.array.forEach(pageNumberReferences, function(shape) {
+              shape.setTargetId(shapeId);
+            });
           }, scope);
           
           version.downHandler(function() {
             this.setShapeId(oldShapeId);
             this.updateProperties();
+            goog.array.forEach(pageNumberReferences, function(shape) {
+              shape.setTargetId(oldShapeId);
+            });
           }, scope);
         });
       }, false, this);
@@ -904,6 +917,30 @@ thin.editor.ListShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('desc').setValue(this.getDesc());
     proppane.getChild('list-changing-page').setEnabled(listHelper.isEnableChangingPage(this));
   }
+};
+
+
+/**
+ * @param {thin.editor.PageNumberShape} pageNumber
+ */
+thin.editor.ListShape.prototype.setPageNumberReference = function(pageNumber) {
+  goog.array.insert(this.pageNumberReferences_, pageNumber);
+};
+
+
+/**
+ * @return {Array.<thin.editor.PageNumberShape>}
+ */
+thin.editor.ListShape.prototype.getPageNumberReferences = function() {
+  return goog.array.clone(this.pageNumberReferences_);
+};
+
+
+/**
+ * @param {thin.editor.PageNumberShape} pageNumber
+ */
+thin.editor.ListShape.prototype.removePageNumberReference = function(pageNumber) {
+  goog.array.remove(this.pageNumberReferences_, pageNumber);
 };
 
 

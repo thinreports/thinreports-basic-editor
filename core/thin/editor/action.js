@@ -1321,13 +1321,17 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
   var isActive = listHelper.isActive();
   var targetShapes = activeShapeManager.getClone();
   var parentGroup = layout.getCanvasElement();
-  
+
+  var captureTargetIdArray = [];
+  var capturePageNumberReferences = [];
+
   if (isActive) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var isEmptyByListShape = activeShapeManagerByListShape.isEmpty();
     var captureActiveSectionName = listHelper.getActiveSectionName();
     if (isEmptyByListShape) {
       var isChangingPage = singleShapeByGlobal.isChangingPage();
+      capturePageNumberReferences = singleShapeByGlobal.getPageNumberReferences();
     } else {
       targetShapes = activeShapeManagerByListShape.getClone();
       parentGroup = singleShapeByGlobal.getSectionShape(captureActiveSectionName).getGroup();
@@ -1341,9 +1345,10 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
   var captureReferenceShapesArray = [];
   var captureReferringShapesArray = [];
   var defaultRefId = thin.editor.TblockShape.DEFAULT_REFID;
-  
+
   goog.array.forEach(targetShapes, function(shape, count) {
     goog.array.insertAt(captureShapeIdArray, shape.getShapeId(), count);
+
     if (shape.instanceOfTblockShape()) {
       goog.array.insertAt(captureRefIdArray, shape.getRefId(), count);
       goog.array.insertAt(captureReferenceShapesArray, shape.getReferenceShape(), count);
@@ -1352,6 +1357,12 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
       goog.array.insertAt(captureRefIdArray, defaultRefId, count);
       goog.array.insertAt(captureReferenceShapesArray, null, count);
       goog.array.insertAt(captureReferringShapesArray, null, count);
+    }
+
+    if (shape.instanceOfPageNumberShape()) {
+      goog.array.insertAt(captureTargetIdArray, shape.getTargetId(), count);
+    } else {
+      goog.array.insertAt(captureTargetIdArray, null, count);
     }
   });
 
@@ -1393,6 +1404,13 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
             var captureRefId = captureRefIdArray[count];
             if (!thin.isExactlyEqual(captureRefId, defaultRefId)) {
               shape.setRefId(captureRefId, captureReferenceShapesArray[count]);
+            }
+          }
+
+          if (shape.instanceOfPageNumberShape()) {
+            var captureTargetId = captureTargetIdArray[count];
+            if (captureTargetId) {
+              shape.setTargetId(captureTargetId);
             }
           }
         });
@@ -1441,6 +1459,11 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
           layout.setOutlineForSingle(singleShapeByGlobal);
           singleShapeByGlobal.updateProperties();
           thin.ui.setEnabledForFontUi(false);
+
+          var targetId = singleShapeByGlobal.getShapeId();
+          goog.array.forEach(capturePageNumberReferences, function(shape, count) {
+            shape.setTargetId(targetId);
+          });
         } else {
           listHelper.setActiveSectionName(captureActiveSectionName);
           activeShapeManagerByListShape.set(targetShapes);
@@ -1459,6 +1482,13 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
               var captureRefId = captureRefIdArray[count];
               if (!thin.isExactlyEqual(captureRefId, defaultRefId)) {
                 shape.setRefId(captureRefId, captureReferenceShapesArray[count]);
+              }
+            }
+
+            if (shape.instanceOfPageNumberShape()) {
+              var captureTargetId = captureTargetIdArray[count];
+              if (captureTargetId) {
+                shape.setTargetId(captureTargetId);
               }
             }
           });
