@@ -133,7 +133,6 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   field_position: '位置', 
   field_language: '言語', 
   field_default_unit: 'デフォルト単位', 
-  field_start_pageno: '開始ページ',
   field_pageno_format: '書式',
   field_counted_page_target: 'カウント対象',
   field_default_counted_page_target: 'レポート', 

@@ -123,12 +123,12 @@ thin.layout.document.HTMLRenderer.renderImageblockShapes = function(opt_data, op
 thin.layout.document.HTMLRenderer.renderPagenumberShapes = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
   thin.layout.document.HTMLRenderer.renderShapeTitle({shapeName: opt_data.shapeGroup.name, inList: opt_data.inList}, output);
-  output.append('<table><thead><tr><th>', soy.$$escapeHtml(opt_data.t['field_pageno_format']), '</th><th>ID</th><th>', soy.$$escapeHtml(opt_data.t['field_display']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_start_pageno']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_counted_page_target']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_description']), '</th></tr></thead><tbody>');
-  var shapeList177 = opt_data.shapeGroup.shapes;
-  var shapeListLen177 = shapeList177.length;
-  for (var shapeIndex177 = 0; shapeIndex177 < shapeListLen177; shapeIndex177++) {
-    var shapeData177 = shapeList177[shapeIndex177];
-    output.append('<tr><td>', soy.$$escapeHtml(shapeData177.format), '</td><td>', soy.$$escapeHtml(shapeData177.id), '</td><td>', soy.$$escapeHtml(shapeData177.display), '</td><td>', soy.$$escapeHtml(shapeData177.startAt), '</td><td>', soy.$$escapeHtml(shapeData177.target), '</td><td>', soy.$$escapeHtml(shapeData177.desc), '</td></tr>');
+  output.append('<table><thead><tr><th>', soy.$$escapeHtml(opt_data.t['field_pageno_format']), '</th><th>ID</th><th>', soy.$$escapeHtml(opt_data.t['field_display']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_counted_page_target']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_description']), '</th></tr></thead><tbody>');
+  var shapeList175 = opt_data.shapeGroup.shapes;
+  var shapeListLen175 = shapeList175.length;
+  for (var shapeIndex175 = 0; shapeIndex175 < shapeListLen175; shapeIndex175++) {
+    var shapeData175 = shapeList175[shapeIndex175];
+    output.append('<tr><td>', soy.$$escapeHtml(shapeData175.format), '</td><td>', soy.$$escapeHtml(shapeData175.id), '</td><td>', soy.$$escapeHtml(shapeData175.display), '</td><td>', soy.$$escapeHtml(shapeData175.target), '</td><td>', soy.$$escapeHtml(shapeData175.desc), '</td></tr>');
   }
   output.append('</tbody></table>');
   return opt_sb ? '' : output.toString();
@@ -145,11 +145,11 @@ thin.layout.document.HTMLRenderer.renderBasicShapes = function(opt_data, opt_sb)
   var output = opt_sb || new soy.StringBuilder();
   thin.layout.document.HTMLRenderer.renderShapeTitle({shapeName: opt_data.shapeGroup.name, inList: opt_data.inList}, output);
   output.append('<table><thead><tr><th>ID</th><th>', soy.$$escapeHtml(opt_data.t['label_shape_type']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_display']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_description']), '</th></tr></thead><tbody>');
-  var shapeList204 = opt_data.shapeGroup.shapes;
-  var shapeListLen204 = shapeList204.length;
-  for (var shapeIndex204 = 0; shapeIndex204 < shapeListLen204; shapeIndex204++) {
-    var shapeData204 = shapeList204[shapeIndex204];
-    output.append('<tr><td>', soy.$$escapeHtml(shapeData204.id), '</td><td>', soy.$$escapeHtml(shapeData204.typeName), '</td><td>', soy.$$escapeHtml(shapeData204.display), '</td><td>', soy.$$escapeHtml(shapeData204.desc), '</td></tr>');
+  var shapeList200 = opt_data.shapeGroup.shapes;
+  var shapeListLen200 = shapeList200.length;
+  for (var shapeIndex200 = 0; shapeIndex200 < shapeListLen200; shapeIndex200++) {
+    var shapeData200 = shapeList200[shapeIndex200];
+    output.append('<tr><td>', soy.$$escapeHtml(shapeData200.id), '</td><td>', soy.$$escapeHtml(shapeData200.typeName), '</td><td>', soy.$$escapeHtml(shapeData200.display), '</td><td>', soy.$$escapeHtml(shapeData200.desc), '</td></tr>');
   }
   output.append('</tbody></table>');
   return opt_sb ? '' : output.toString();
@@ -164,17 +164,17 @@ thin.layout.document.HTMLRenderer.renderBasicShapes = function(opt_data, opt_sb)
  */
 thin.layout.document.HTMLRenderer.renderListShapes = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  var listList217 = opt_data.shapeGroup.shapes;
-  var listListLen217 = listList217.length;
-  for (var listIndex217 = 0; listIndex217 < listListLen217; listIndex217++) {
-    var listData217 = listList217[listIndex217];
-    output.append('<h3>', soy.$$escapeHtml(opt_data.shapeGroup.name), '</h3><table><thead><tr><th>ID</th><th>', soy.$$escapeHtml(opt_data.t['field_display']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_auto_page_break']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_list_header']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_list_page_footer']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_list_footer']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_description']), '</th></tr></thead><tbody><tr><td>', soy.$$escapeHtml(listData217.id), '</td><td>', soy.$$escapeHtml(listData217.display), '</td><td>', soy.$$escapeHtml(listData217.pageBreak), '</td><td>', soy.$$escapeHtml(listData217.header), '</td><td>', soy.$$escapeHtml(listData217.pageFooter), '</td><td>', soy.$$escapeHtml(listData217.footer), '</td><td>', soy.$$escapeHtml(listData217.desc), '</td></tr></tbody></table>');
-    var sectionList247 = listData217.sections;
-    var sectionListLen247 = sectionList247.length;
-    for (var sectionIndex247 = 0; sectionIndex247 < sectionListLen247; sectionIndex247++) {
-      var sectionData247 = sectionList247[sectionIndex247];
-      output.append('<h4>', soy.$$escapeHtml(sectionData247.name), '</h4><div class="section-shapes">');
-      thin.layout.document.HTMLRenderer.renderShapes({shapeGroups: sectionData247.shapes, t: opt_data.t, inList: true}, output);
+  var listList213 = opt_data.shapeGroup.shapes;
+  var listListLen213 = listList213.length;
+  for (var listIndex213 = 0; listIndex213 < listListLen213; listIndex213++) {
+    var listData213 = listList213[listIndex213];
+    output.append('<h3>', soy.$$escapeHtml(opt_data.shapeGroup.name), '</h3><table><thead><tr><th>ID</th><th>', soy.$$escapeHtml(opt_data.t['field_display']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_auto_page_break']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_list_header']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_list_page_footer']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_list_footer']), '</th><th>', soy.$$escapeHtml(opt_data.t['field_description']), '</th></tr></thead><tbody><tr><td>', soy.$$escapeHtml(listData213.id), '</td><td>', soy.$$escapeHtml(listData213.display), '</td><td>', soy.$$escapeHtml(listData213.pageBreak), '</td><td>', soy.$$escapeHtml(listData213.header), '</td><td>', soy.$$escapeHtml(listData213.pageFooter), '</td><td>', soy.$$escapeHtml(listData213.footer), '</td><td>', soy.$$escapeHtml(listData213.desc), '</td></tr></tbody></table>');
+    var sectionList243 = listData213.sections;
+    var sectionListLen243 = sectionList243.length;
+    for (var sectionIndex243 = 0; sectionIndex243 < sectionListLen243; sectionIndex243++) {
+      var sectionData243 = sectionList243[sectionIndex243];
+      output.append('<h4>', soy.$$escapeHtml(sectionData243.name), '</h4><div class="section-shapes">');
+      thin.layout.document.HTMLRenderer.renderShapes({shapeGroups: sectionData243.shapes, t: opt_data.t, inList: true}, output);
       output.append('</div>');
     }
   }

@@ -133,7 +133,6 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   field_position: 'Position', 
   field_language: 'Locale', 
   field_default_unit: 'Default Unit',
-  field_start_pageno: 'Start At',
   field_pageno_format: 'Format',
   field_counted_page_target: 'Counted Target',
   field_default_counted_page_target: 'Report', 

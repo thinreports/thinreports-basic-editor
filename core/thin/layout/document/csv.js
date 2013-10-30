@@ -213,7 +213,6 @@ thin.layout.document.CSV.prototype.appendPagenumberShape_ = function(data) {
     thin.t('field_pageno_format'), 
     'ID', 
     thin.t('field_display'), 
-    thin.t('field_start_pageno'), 
     thin.t('field_counted_page_target'), 
     thin.t('field_description')
   );
@@ -223,7 +222,6 @@ thin.layout.document.CSV.prototype.appendPagenumberShape_ = function(data) {
       shape.format, 
       shape.id, 
       shape.display, 
-      shape.startAt, 
       shape.target, 
       shape.desc
     );

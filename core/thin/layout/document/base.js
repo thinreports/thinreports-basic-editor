@@ -266,7 +266,6 @@ thin.layout.document.Base.prototype.createPagenumberData_ = function(shapes, dat
       name: shapeName, 
       format: shape.getFormat(), 
       display: this.formatFlag_(shape.getDisplay()), 
-      startAt: shape.getStartAt(), 
       target: shape.getTarget() || thin.t('field_default_counted_page_target'), 
       desc: shape.getDesc()
     });

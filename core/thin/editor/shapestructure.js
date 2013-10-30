@@ -326,7 +326,6 @@ thin.editor.ShapeStructure.serializeForPageNumber_ = function(shape, json) {
       attrs[key] = value;
     });
   
-  json['start-at'] = shape.getAttribute('x-start-at') || '';
   json['target'] = shape.getAttribute('x-target') || '';
   json['format'] = shape.getAttribute('x-format') || '';
   json['overflow'] = shape.getAttribute('x-overflow') || '';

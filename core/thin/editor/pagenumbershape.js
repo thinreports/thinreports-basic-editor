@@ -303,25 +303,6 @@ thin.editor.PageNumberShape.prototype.getOverflowType = function() {
 
 
 /**
- * @param {number} pageNo
- */
-thin.editor.PageNumberShape.prototype.setStartAt = function(pageNo) {
-  this.getLayout().setElementAttributes(this.getElement(), {
-    'x-start-at': pageNo
-  });
-};
-
-
-/**
- * @return {number}
- */
-thin.editor.PageNumberShape.prototype.getStartAt = function() {
-  return this.getLayout().getElementAttribute(this.getElement(), 
-      'x-start-at') || 1;
-};
-
-
-/**
  * @param {string} format
  */
 thin.editor.PageNumberShape.prototype.setFormat = function(format) {
@@ -669,32 +650,6 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
 
   var pageNoGroup = proppane.addGroup(thin.t('property_group_pageno'));
 
-  var startAtInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_start_pageno'));
-  var startAtInput = startAtInputProperty.getValueControl();
-  var startAtValidator = new thin.ui.Input.NumberValidator();
-  startAtValidator.setAllowBlank(true);
-  startAtInput.setValidator(startAtValidator);
-  
-  startAtInputProperty.addEventListener(propEventType.CHANGE,
-      function(e) {
-        var newStartAt = Number(e.target.getValue() || 1);
-        var oldStartAt = scope.getStartAt();
-
-        workspace.normalVersioning(function(version) {
-          version.upHandler(function() {
-            this.setStartAt(newStartAt);
-            proppane.getPropertyControl('start-at').setValue(newStartAt);
-          }, scope);
-
-          version.downHandler(function() {
-            this.setStartAt(oldStartAt);
-            proppane.getPropertyControl('start-at').setValue(oldStartAt);
-          }, scope);
-        });
-      }, false, this);
-  
-  proppane.addProperty(startAtInputProperty, pageNoGroup, 'start-at');
-
   var formatInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_pageno_format'));
   var formatInput = formatInputProperty.getValueControl();
   var formatValidator = new thin.ui.Input.Validator();
@@ -825,7 +780,6 @@ thin.editor.PageNumberShape.prototype.getProperties = function() {
     'text-halign': this.getTextAnchor(),
     'kerning': this.getKerning(),
     'overflow': this.getOverflowType(),
-    'start-at': this.getStartAt(), 
     'format': this.getFormat(), 
     'target': this.getTargetId(), 
     'shape-id': this.getShapeId(),
@@ -864,7 +818,6 @@ thin.editor.PageNumberShape.prototype.updateProperties = function() {
         thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
   proppane.getPropertyControl('kerning').setValue(properties['kerning']);
   proppane.getPropertyControl('overflow').setValue(properties['overflow']);
-  proppane.getPropertyControl('start-at').setValue(properties['start-at']);
   proppane.getPropertyControl('format').setValue(properties['format']);
   proppane.getPropertyControl('target').setValue(properties['target']);
   
