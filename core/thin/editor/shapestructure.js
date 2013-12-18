@@ -477,12 +477,8 @@ thin.editor.ShapeStructure.getTransLateCoordinate = function(transformElement) {
  */
 thin.editor.ShapeStructure.serializeToContent = function(childNodes) {
   var content = '';
-  var xml;
   goog.array.forEach(childNodes, function(element) {
-    xml = thin.editor.serializeToXML(element);
-    xml = thin.editor.LayoutStructure.fixSerializationXmlSpace(xml);
-    xml = thin.editor.LayoutStructure.fixSerializationHref(xml);
-    content += xml;
+    content += thin.editor.serializeToXML(element);
   });
   
   return content;

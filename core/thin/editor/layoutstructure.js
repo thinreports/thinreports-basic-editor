@@ -95,26 +95,6 @@ thin.editor.LayoutStructure.restoreKerningFromLetterSpacing = function(xml) {
 
 
 /**
- * @param {string} xml
- * @return {string}
- */
-thin.editor.LayoutStructure.fixSerializationXmlSpace = function(xml) {
-  return xml.replace(/(<[^>]*?)(space="preserve")([^<]*?>)/g, "$1" + 'xml:space="preserve"' + "$3");
-};
-
-
-/**
- * @param {string} xml
- * @return {string}
- */
-thin.editor.LayoutStructure.fixSerializationHref = function(xml) {
-  return xml.replace(/(<[^>]*?)(href="(.+?)")([^<]*?>)/g, function(str, prefix, attr, dataUrl, suffix) {
-    return prefix + 'xlink:href="' + dataUrl + '"' + suffix;
-  });
-};
-
-
-/**
  * @param {thin.editor.Layout} layout
  * @return {string} The base64 encoded string.
  */
@@ -151,13 +131,8 @@ thin.editor.LayoutStructure.serializeForFormat_ = function(layout) {
   thin.editor.LayoutStructure.serializeShapes(
       goog.dom.getElementsByTagNameAndClass('g', thin.editor.Layout.CANVAS_CLASS_ID, 
       /** @type {Element} */(svg))[0].childNodes);
-  
-  var xml = thin.editor.serializeToXML(/** @type {Element} */(svg));
-  
-  xml = thin.editor.LayoutStructure.fixSerializationXmlSpace(xml);
-  xml = thin.editor.LayoutStructure.fixSerializationHref(xml);
-  
-  return xml;
+
+  return thin.editor.serializeToXML(/** @type {Element} */(svg));
 };
 
 
