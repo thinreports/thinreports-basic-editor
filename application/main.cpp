@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include "platform.h"
 
 int main(int argc, char *argv[])

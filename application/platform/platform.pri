@@ -1,4 +1,4 @@
-QT += webkit
+QT += webkitwidgets
 
 TEMPLATE = app
 

@@ -20,8 +20,8 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
-#include <QtGui/QMainWindow>
-#include <QtWebKit/QWebView>
+#include <QtWidgets/QMainWindow>
+#include <QtWebKitWidgets/QWebView>
 #include "jsextfile.h"
 #include "jsextfont.h"
 #include "jsextimage.h"
