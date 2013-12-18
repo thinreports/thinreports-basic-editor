@@ -83,6 +83,7 @@ Thin.setLocale('en', 'Helvetica, Arial', {
   label_shape_type: 'Shape',
   label_layout: 'Layout', 
   label_shapes: 'Shapes', 
+  label_export_layout_definition: 'Export Layout Definition',
 
   field_page_title: 'Page Title',
   field_paper_type: 'Paper Type',

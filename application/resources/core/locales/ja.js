@@ -83,6 +83,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   label_shape_type: '種別',
   label_layout: 'レイアウト', 
   label_shapes: 'オブジェクト', 
+  label_export_layout_definition: 'レイアウト定義をエクスポート',
 
   field_page_title: 'ページタイトル',
   field_paper_type: '用紙',
