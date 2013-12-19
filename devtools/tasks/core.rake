@@ -32,7 +32,8 @@ namespace :core do
                      coredir)
       # Copy application assets files (app.css, icons/*)
       FileUtils.cp_r([File.join(sourcedir, 'assets', 'app.css'),
-                      File.join(sourcedir, 'assets', 'icons')],
+                      File.join(sourcedir, 'assets', 'icons'),
+                      File.join(sourcedir, 'assets', 'fonts')],
                      File.join(coredir, 'assets'))
       # Copy docs
       FileUtils.cp(Dir.glob(File.join(TREDevelopment::PROJECT_ROOT,
