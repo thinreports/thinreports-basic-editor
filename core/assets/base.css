@@ -26,6 +26,10 @@ body {
   color: #333;
 }
 
+* {
+  outline: none !important;
+}
+
 a {
   color: #333;
   text-decoration: none;
@@ -40,6 +44,7 @@ input, select {
 
 input[type="text"]:disabled {
   background-color: #fff !important;
+  -webkit-user-select: none;
 }
 
 svg {

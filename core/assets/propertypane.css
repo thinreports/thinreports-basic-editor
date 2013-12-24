@@ -45,12 +45,6 @@
   text-shadow: 1px 1px 0 rgb(60, 60, 60);
 }
 
-.thin-proppane-prop {
-/*
-  outline: none;
-*/
-}
-
 .thin-proppane-prop-body {
   display: -webkit-box;
   border-left: 7px solid rgb(235, 235, 235);
@@ -114,7 +108,7 @@
   font-size: 1.1em;
   height: inherit;
   background-color: transparent;
-  line-height: inherit;
+  line-height: 2.1em;
 }
 
 .thin-proppane-propvalue > .thin-input-focus {
@@ -136,8 +130,7 @@
   line-height: inherit;
   -webkit-box-sizing: border-box;
   -webkit-border-radius: 2px;
-  -webkit-box-shadow: 0 0 1px rgba(180, 180, 180, 0.8),
-      inset 0 0 0 1px rgba(255, 255, 255, .7);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
   background-image: -webkit-gradient(linear, left top, left bottom, 
       from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
   border: 1px solid rgb(180, 180, 180);
@@ -161,7 +154,7 @@
 }
 
 .thin-proppane-prop-select-hover .thin-proppane-prop-select-body {
-  border-color: rgb(140, 140, 140) !important;
+  border-color: rgb(160, 160, 160) !important;
 }
 
 .thin-proppane-prop-select-active .thin-proppane-prop-select-body, 
@@ -213,14 +206,13 @@
   padding: 0 3px;
   font-size: 1.1em;
   background-color: transparent;
-  line-height: inherit;
+  line-height: 2.1em;
 }
 
 .thin-proppane-prop-combobox-handle {
   width: 16px;
   -webkit-border-radius: 2px;
-  -webkit-box-shadow: 0 0 1px rgba(180, 180, 180, 0.8),
-      inset 0 0 0 1px rgba(255, 255, 255, .7);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
   border: 1px solid rgb(180, 180, 180);
   background: transparent url(icons/x-trigger-small.png) no-repeat center center;
   text-align: center;
@@ -267,7 +259,7 @@
   padding: 0 3px !important;
   border: 0;
   background-color: transparent;
-  line-height: inherit;
+  line-height: 2.1em;
 }
 
 .thin-proppane-prop-color .thin-input-focus {
@@ -347,7 +339,7 @@
 .thin-proppane-propvalue .thin-input-unit-changer {
   display: block !important;
   height: inherit;
-  line-height: inherit !important;
+  line-height: inherit;
   width: auto;
   background-color: transparent;
 }
@@ -362,7 +354,7 @@
   padding: 0 3px;
   font-size: 1.1em;
   background-color: transparent;
-  line-height: inherit;
+  line-height: 2.1em;
 }
 
 .thin-proppane-propvalue .thin-input-unit-changer-focus {

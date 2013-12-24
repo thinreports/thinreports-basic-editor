@@ -45,6 +45,7 @@
 .thin-dialogs .thin-dialog-content legend {
   padding: 0 10px;
   font-weight: bold;
+  background-color: #eee;
 }
 
 .thin-dialogs .thin-dialogs-setting {

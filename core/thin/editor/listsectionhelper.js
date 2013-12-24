@@ -630,7 +630,7 @@ thin.editor.ListSectionHelper.Separator_.prototype.disposeInternal = function() 
  */
 thin.editor.ListSectionHelper.SeparatorHandle_ = function(element, layout) {
   goog.base(this, element, layout, 
-      null, new goog.graphics.SolidFill('ffffff'));
+      null, new goog.graphics.SolidFill('#ffffff'));
 };
 goog.inherits(thin.editor.ListSectionHelper.SeparatorHandle_, thin.editor.Rect);
 
