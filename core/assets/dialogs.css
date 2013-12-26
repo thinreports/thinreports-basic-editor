@@ -72,7 +72,8 @@
   overflow-y: scroll !important;
   width: 300px !important;
   height: 150px !important;
-  font-family: monospace, serif !important;
+  font-family: IPAGothic, monospace, serif !important;
+  font-size: 13px !important;
 }
 
 /**
