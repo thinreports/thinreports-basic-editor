@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Thin.setLocale('ja', 'Meiryo', {
+Thin.setLocale('ja', "'Segoe UI', 'Meiryo UI'", {
   toolbar_group_file: 'ファイル',
   toolbar_group_edit: '編集',
   toolbar_group_view: '表示',

@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Thin.setLocale('en', 'Helvetica, Arial', {
+Thin.setLocale('en', "'Lucida Grande', 'Segoe UI', Helvetica, Arial", {
   toolbar_group_file: 'File',
   toolbar_group_edit: 'Edit',
   toolbar_group_view: 'View',
