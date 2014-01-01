@@ -949,7 +949,10 @@ thin.ui.PropertyPane.SelectProperty = function(label, opt_menu) {
         thin.ui.MenuButtonRenderer, 
         thin.ui.getCssName(thin.ui.PropertyPane.PropertyRenderer.CSS_CLASS, 'select'));
   
-  var control = new thin.ui.Select(undefined, opt_menu, 
+  var menuRenderer = goog.ui.ControlRenderer.getCustomRenderer(
+        thin.ui.OptionMenuRenderer,
+        thin.ui.getCssName(renderer.getCssClass(), 'optionmenu'));
+  var control = new thin.ui.Select(undefined, new thin.ui.OptionMenu(menuRenderer), 
                     /** @type {thin.ui.MenuButtonRenderer} */ (renderer));
   
   control.getMenu().setMaxHeight(200);
