@@ -212,3 +212,48 @@
   line-height: 1.4em;
 }
 
+/**
+ * Error
+ */
+.thin-dialog-app-error .thin-dialog-content p:first-child {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.thin-dialog-app-error-links {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.thin-dialog-app-error-links a {
+  width: 120px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7),
+      0 0 1px rgba(180, 180, 180, 0.8);
+  background: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
+  padding: 8px 10px;
+  border: 1px solid rgb(180, 180, 180);
+  text-decoration: none !important;
+  color: rgb(90, 90, 90);
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+}
+
+.thin-dialog-app-error-links a:first-child {
+  margin-right: 5px;
+}
+
+.thin-dialog-app-error-links a:active {
+  background: rgb(210, 210, 210) !important;
+}
+
+.thin-dialog-app-error-links a:hover {
+  border-color: rgb(140, 140, 140) !important;
+}
+
+.thin-dialog-app-error-links a:focus {
+  color: rgb(0, 0, 0) !important;
+}
+
