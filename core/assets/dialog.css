@@ -82,6 +82,10 @@
   text-decoration: underline;
 }
 
+.thin-dialog-buttons .thin-button {
+  min-width: 50px;
+}
+
 .thin-dialog-buttons-wrapper {
   height: 40px;
   line-height: 40px;
