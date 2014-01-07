@@ -802,6 +802,15 @@ thin.ui.PropertyPane.Property.prototype.disposeInternal = function() {
 };
 
 
+/** @inheritDoc */
+thin.ui.PropertyPane.Property.prototype.enterDocument = function() {
+  goog.base(this, 'enterDocument');
+
+  goog.events.listen(this.getElement(),
+      goog.events.EventType.CLICK, this.handleFocus, false, this);
+};
+
+
 /**
  * @constructor
  * @extends {goog.ui.ControlRenderer}
@@ -995,10 +1004,6 @@ thin.ui.PropertyPane.SelectProperty.prototype.enterDocument = function() {
   control.getMenu().
       addEventListener(goog.ui.Component.EventType.HIDE, 
           this.handleInactivate, false, this);
-  
-  // For Click Active
-  goog.events.listen(control.getElement(),
-    goog.events.EventType.CLICK, this.handleClick, false, this);
 };
 
 
@@ -1645,3 +1650,4 @@ thin.ui.PropertyPane.PropertyEvent = function(type, pane, property, opt_target) 
   this.property = property
 };
 goog.inherits(thin.ui.PropertyPane.PropertyEvent, goog.events.Event);
+
