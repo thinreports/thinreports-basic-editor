@@ -58,8 +58,7 @@ goog.inherits(thin.editor.ListGuideHelper, thin.editor.AbstractGuideHelper);
 thin.editor.ListGuideHelper.Stroke_ = {
   COLOR: '#AAAAAA',
   STROKEWIDTH: '8px',
-  STROKEOPACITY: '0.6',
-  LINEJOIN: 'round'
+  STROKEOPACITY: '0.6'
 };
 
 
@@ -75,11 +74,11 @@ thin.editor.ListGuideHelper.prototype.setup = function() {
   var strokeSetting = thin.editor.ListGuideHelper.Stroke_;
   var layout = this.getLayout();
   var element = layout.createSvgElement('rect', {
-    'stroke-opacity': strokeSetting.STROKEOPACITY,
-    'stroke-linejoin': strokeSetting.LINEJOIN
+    'stroke-opacity': strokeSetting.STROKEOPACITY
   });
   var guideBody = new thin.editor.GuideBody(element, layout, 
                     new goog.graphics.Stroke(strokeSetting.STROKEWIDTH, strokeSetting.COLOR), null);
+  guideBody.setRounded(0.5);
 
   var cursorMove = new thin.editor.Cursor(thin.editor.Cursor.Type.MOVE);
   guideBody.setCursor(cursorMove);
