@@ -768,10 +768,7 @@ thin.editor.TblockShape.prototype.setMultiMode = function(multipleMode) {
     if (!thin.isExactlyEqual(ratio, thin.editor.TextStyle.DEFAULT_LINEHEIGHT)) {
       this.setTextLineHeightRatio(ratio);
     }
-    var valign = this.getVerticalAlign();
-    if (thin.isExactlyEqual(valign, thin.editor.TextStyle.DEFAULT_VALIGN)) {
-      this.setVerticalAlign(valign);
-    }
+    this.setVerticalAlign(this.getVerticalAlign());
   } else {
     var element = this.getElement();
     element.removeAttribute('x-line-height');
@@ -1667,11 +1664,6 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
  * @return {Object}
  */
 thin.editor.TblockShape.prototype.getProperties = function() {
-  var valign = this.getVerticalAlign();
-  if (thin.isExactlyEqual(valign, thin.editor.TextStyle.DEFAULT_VALIGN)) {
-    valign = thin.editor.TextStyle.VerticalAlignType.TOP;
-  }
-  
   var properties = {
     'left': this.getLeft(),
     'top': this.getTop(),
@@ -1683,7 +1675,7 @@ thin.editor.TblockShape.prototype.getProperties = function() {
     'font-family': this.getFontFamily(),
     'line-height': this.getTextLineHeightRatio(),
     'text-halign': this.getTextAnchor(),
-    'text-valign': valign,
+    'text-valign': this.getVerticalAlign(),
     'kerning': this.getKerning(),
     'multiple': this.isMultiMode(),
     'overflow': this.getOverflowType(),

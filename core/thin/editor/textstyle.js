@@ -97,12 +97,6 @@ thin.editor.TextStyle.DEFAULT_OVERFLOWTYPE = 'truncate';
 /**
  * @type {string}
  */
-thin.editor.TextStyle.DEFAULT_VALIGN = '';
-
-
-/**
- * @type {string}
- */
 thin.editor.TextStyle.DEFAULT_KERNING = '';
 
 

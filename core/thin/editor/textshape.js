@@ -1038,11 +1038,6 @@ thin.editor.TextShape.prototype.setTextContentPropertyUpdate = function(e) {
  * @return {Object}
  */
 thin.editor.TextShape.prototype.getProperties = function() {
-  var valign = this.getVerticalAlign();
-  if (thin.isExactlyEqual(valign, thin.editor.TextStyle.DEFAULT_VALIGN)) {
-    valign = thin.editor.TextStyle.VerticalAlignType.TOP;
-  }
-  
   return {
     'left': this.getLeft(),
     'top': this.getTop(),
@@ -1055,7 +1050,7 @@ thin.editor.TextShape.prototype.getProperties = function() {
     'font-size': this.getFontSize(),
     'line-height': this.getTextLineHeightRatio(),
     'text-halign': this.getTextAnchor(),
-    'text-valign': valign,
+    'text-valign': this.getVerticalAlign(),
     'kerning': this.getKerning(),
     'shape-id': this.getShapeId(),
     'desc': this.getDesc()
