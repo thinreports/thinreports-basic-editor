@@ -51,6 +51,10 @@
   bottom: 0px;
 }
 
+.thin-toolbar-group-row > span {
+  display: inline-block;
+}
+
 .thin-toolbar-group-separator {
   width: 1px;
   margin: 0;
@@ -301,7 +305,7 @@
  */
 .thin-toolbar-select .thin-menu-button-button {
   background-color: #fff;
-  border-right: 1px solid rgb(180, 180, 180);
+  border-right: 1px solid rgb(200, 200, 200);
   text-shadow: none !important;
 }
 
@@ -310,3 +314,15 @@
   background-position: center center !important;
   -webkit-box-shadow: inset 1px 0 0 rgba(255, 255, 255, .7);
 }
+
+/**
+ * Style of each Component
+ */
+#tbar-font-size {
+  padding-left: 2px;
+}
+
+#tbar-grid, #tbar-vertical-text-align {
+  padding-top: 1px;
+}
+

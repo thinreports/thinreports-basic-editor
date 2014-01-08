@@ -21,7 +21,6 @@
 #include <QtWebKitWidgets>
 #include <QDir>
 #include <QMessageBox>
-#include <QFontDatabase>
 #include <QFileInfo>
 #include "platform.h"
 
@@ -64,15 +63,6 @@ void Platform::setup()
     }
     // Change directory to .thinreports
     home.cd(".thinreports");
-
-    // Load built-in fonts.
-    QDirIterator it(adjustPath(QLatin1String("fonts")));
-    while (it.hasNext()) {
-        it.next();
-        if (it.fileInfo().completeSuffix().toLower() == "ttf") {
-            QFontDatabase::addApplicationFont(it.filePath());
-        }
-    }
 
     // Setup of WebView.
     setAttribute(Qt::WA_InputMethodEnabled, true);

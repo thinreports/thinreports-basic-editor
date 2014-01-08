@@ -26,6 +26,10 @@ body {
   color: #333;
 }
 
+* {
+  outline: none !important;
+}
+
 a {
   color: #333;
   text-decoration: none;
@@ -40,9 +44,39 @@ input, select {
 
 input[type="text"]:disabled {
   background-color: #fff !important;
+  -webkit-user-select: none;
 }
 
 svg {
   -webkit-border-radius: 2px;
   -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
 }
+
+@font-face {
+  font-family: IPAMincho;
+  font-style: normal;
+  font-weight: 400;
+  src: url(fonts/ipam.ttf);
+}
+
+@font-face {
+  font-family: IPAPMincho;
+  font-style: normal;
+  font-weight: 400;
+  src: url(fonts/ipamp.ttf);
+}
+
+@font-face {
+  font-family: IPAGothic;
+  font-style: normal;
+  font-weight: 400;
+  src: url(fonts/ipag.ttf);
+}
+
+@font-face {
+  font-family: IPAPGothic;
+  font-style: normal;
+  font-weight: 400;
+  src: url(fonts/ipagp.ttf);
+}
+

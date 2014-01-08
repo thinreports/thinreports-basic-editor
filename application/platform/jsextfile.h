@@ -21,6 +21,7 @@
 #define JSEXTFILE_H
 
 #include <QWidget>
+#include <QFileDialog>
 
 class JsExtFile : public QWidget
 {
@@ -48,6 +49,12 @@ public slots:
     QString pathBaseName(const QString &path);
     QString pathDirName(const QString &path);
     QString getFileSuffix(const QString &fileName);
+
+private:
+    QString openFileDialog(const QFileDialog::AcceptMode &acceptMode,
+                           const QString &title = QString(),
+                           const QString &dir = QString(),
+                           const QString &filter = QString());
 };
 
 #endif // JSEXTFILE_H

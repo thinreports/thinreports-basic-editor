@@ -22,6 +22,7 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QTextStream>
+#include <QRegExp>
 
 JsExtFile::JsExtFile(QWidget *parent)
     : QWidget(parent)
@@ -46,10 +47,7 @@ QString JsExtFile::getOpenFileName(const QString &title,
                                     const QString &dir,
                                     const QString &filter)
 {
-    return QFileDialog::getOpenFileName(this,
-                                        title.isEmpty() ? QString("Open file.") : title,
-                                        dir.isEmpty() ? QDir::homePath() : dir,
-                                        filter.isEmpty() ? QString("All files (*)") : filter);
+    return openFileDialog(QFileDialog::AcceptOpen, title, dir, filter);
 }
 
 QString JsExtFile::getTextFileContent(const QString &fileName)
@@ -101,10 +99,7 @@ QString JsExtFile::getSaveFileName(const QString &title,
                                    const QString &dir,
                                    const QString &filter)
 {
-    return QFileDialog::getSaveFileName(this,
-                                        title.isEmpty() ? QString("Save file.") : title,
-                                        dir.isEmpty() ? QDir::homePath() : dir,
-                                        filter.isEmpty() ? "All files (*)" : filter);
+    return openFileDialog(QFileDialog::AcceptSave, title, dir, filter);
 }
 
 QString JsExtFile::pathBaseName(const QString &path)
@@ -124,3 +119,57 @@ QString JsExtFile::getFileSuffix(const QString &fileName)
     QFileInfo fi(fileName);
     return fi.suffix();
 }
+
+QString JsExtFile::openFileDialog(const QFileDialog::AcceptMode &acceptMode,
+                                  const QString &title,
+                                  const QString &dir,
+                                  const QString &filter)
+{
+    QFileDialog dialog(this, title.isEmpty() ? tr("Save file") : title);
+
+    dialog.setAcceptMode(acceptMode);
+    dialog.setViewMode(QFileDialog::Detail);
+    dialog.setOption(QFileDialog::DontUseNativeDialog, true);
+
+    if (acceptMode == QFileDialog::AcceptSave) {
+        dialog.setDefaultSuffix(tr("tlf"));
+    }
+    if (!filter.isEmpty()) {
+        dialog.setNameFilter(filter);
+    }
+
+    QDir defaultDir;
+    QString defaultFilename;
+
+    // when dir is empty string
+    if (dir.isEmpty()) {
+        defaultDir = QDir::home();
+    } else {
+        // when dir is File
+        if (QRegExp("^.+\\.[a-z]+$").exactMatch(dir)) {
+            defaultDir = QFileInfo(dir).dir();
+            defaultFilename = pathBaseName(dir);
+        // when dir is Directory
+        } else {
+            defaultDir = QDir(dir);
+        }
+        // when dir is not exists
+        if (!defaultDir.exists()) {
+            defaultDir = QDir::home();
+        }
+    }
+
+    // Set default directory
+    dialog.setDirectory(defaultDir);
+    // Set default filename if defaultFilename is setted
+    if (!defaultFilename.isEmpty()) {
+        dialog.selectFile(defaultFilename);
+    }
+
+    if (dialog.exec()) {
+        return dialog.selectedFiles().first();
+    } else {
+        return tr("");
+    }
+}
+

@@ -16,13 +16,16 @@
  */
 
 .thin-menu {
-  -webkit-box-shadow: 1px 1px 0 rgba(160, 160, 160, 0.3), 
-      inset 0 0 0 2px rgba(255, 255, 255, 0.3);
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.8);
   background: rgb(240, 240, 240);
-  border: 1px solid rgb(151, 151, 151);
+  border: 1px solid rgb(200, 200, 200);
+  border-top: 1px solid rgb(210, 210, 210);
+  border-radius: 0 0 2px 2px;
   cursor: default;
   margin: 0;
   padding: 2px;
   position: absolute;
   z-index: 20000;
 }
+

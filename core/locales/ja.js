@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGothic"', {
+Thin.setLocale('ja', "'Segoe UI', 'Meiryo UI'", {
   toolbar_group_file: 'ファイル',
   toolbar_group_edit: '編集',
   toolbar_group_view: '表示',
@@ -83,6 +83,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   label_shape_type: '種別',
   label_layout: 'レイアウト', 
   label_shapes: 'オブジェクト', 
+  label_export_layout_definition: 'レイアウト定義をエクスポート',
 
   field_page_title: 'ページタイトル',
   field_paper_type: '用紙',
@@ -203,8 +204,7 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   error_invalid_layout_file: 'レイアウトファイルの内容に異常が検出されたため開くことができません。',
   error_failed_to_load_image: '画像ファイルの読み込みに失敗しました。',
   error_no_valid_placeholder_included: '有効なプレースホルダが一つも含まれていません。',
-  error_unexpected_title: '予期しないエラーが発生しました。',
-  error_unexpected_description: '下の報告するボタンからバグ報告をお願いします。また、このエラーメッセージが表示される原因となった箇所を調べるために、どういった操作をしたのか教えて下さい。', 
+  error_unexpected_error: '予期しないエラーが発生しました。',
   notice_no_shapes: 'オブジェクトはありません',
   warning_discard_changes: '保存していないレイアウトがある場合は必ず保存して下さい。', 
   warning_discard_changes_en: 'If you have unsaved files, the changes will be discarded. Please be sure to save.', 
@@ -219,8 +219,9 @@ Thin.setLocale('ja', 'Meiryo, "Hiragino Kaku Gothic Pro", "IPA PGothic", "MS PGo
   text_layout_force_edit_confirmation: 'このレイアウトは新しいバージョンのエディタで作成されているため、\n編集すると一部の設定情報が消失する可能性があります。\nそれでも開きますか？',
   text_placeholder_of_pageno_description: '[利用可能なプレースホルダ] {page}:ページ番号, {total}:総ページ数', 
   text_counted_page_target_description: '[指定可能な対象] リスト（対象リストID） or レポート（空）', 
-  text_feedback_to_osc: 'バグ報告をする（Matsukei Open Source Center）', 
-  text_feedback_to_github: 'バグ報告をする（GitHub）',
+  text_feedback_in_project_site: 'プロジェクトサイトへ', 
+  text_feedback_in_github: 'GitHub Issues へ',
+  text_please_feedback: '下記サイトより問題の報告をお願いします。また、問題が発生した状況をできるだけ詳しく教えて下さい。', 
 
   shape_rectangle: '四角形', 
   shape_ellipse: '楕円形', 

@@ -29,7 +29,7 @@ thin.layout.document.File.save = function(path, content) {
     thin.core.platform.File.write(path, content);
     thin.layout.document.File.setLastAccessedPath(path);
   } catch(e) {
-    thin.ui.Notification.error('保存できませんでした。');
+    thin.ui.Notification.error(thin.t('error_can_not_save'));
     return false;
   }
   return true;
@@ -72,7 +72,7 @@ thin.layout.document.File.getSaveFileInfo = function(opt_fileName) {
            '.' + thin.layout.document.Type.HTML;
   }
   
-  var path = platform.File.getSaveFileName('定義をエクスポート', dir, filter);
+  var path = platform.File.getSaveFileName(thin.t('label_export_layout_definition'), dir, filter);
   if (path) {
     return {
       type: platform.File.getFileType(path).toLowerCase(),

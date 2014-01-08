@@ -130,7 +130,7 @@ thin.editor.toolaction.AbstractAction.prototype.commonStartAction = function(e, 
   this.layout.getHelpers().getGuideHelper().setDisable();
   thin.ui.setEnabledForFontUi(false);
   outline.enable(true);
-  outline.setBoundsByCoordinate(e.startX, e.startY, e.endX, e.endY);
+  outline.setBoundsByCoordinate(e.startX || 0, e.startY || 0, e.endX || 0, e.endY || 0);
 };
 
 

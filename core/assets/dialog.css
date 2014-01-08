@@ -19,9 +19,9 @@
   min-width: 200px;
   min-height: 80px;
   background: #f0f0f0;
-  border: 1px solid #444;
-  -webkit-border-radius: 2px;
-  -webkit-box-shadow: 2px 2px 0 rgba(160, 160, 160, 0.3), 0 0 1px #444;
+  border: 1px solid #666;
+  -webkit-border-radius: 3px;
+  -webkit-box-shadow: 0 0 5px 1px rgba(160, 160, 160, 0.7);
   position: absolute;
   z-index: 200;
 }
@@ -80,6 +80,10 @@
 
 .thin-dialog-content a {
   text-decoration: underline;
+}
+
+.thin-dialog-buttons .thin-button {
+  min-width: 50px;
 }
 
 .thin-dialog-buttons-wrapper {

@@ -1591,7 +1591,7 @@ thin.boot = function() {
       var dialog = new thin.ui.Dialog();
       dialog.setDisposeOnHide(true);
       dialog.setTitle('Error');
-      dialog.setWidth(500);
+      dialog.setWidth(400);
       dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOk());
       dialog.decorate(goog.dom.getElement('app-error-dialog'));
       dialog.addEventListener(goog.ui.Dialog.EventType.AFTER_HIDE, focusWorkspace);

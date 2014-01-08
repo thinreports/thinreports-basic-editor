@@ -25,7 +25,7 @@ goog.require('thin.ui.StylableControl');
 
 
 /**
- * @param {thin.ui.OptionMenuRenderer=} opt_renderer
+ * @param {goog.ui.ControlRenderer|thin.ui.OptionMenuRenderer=} opt_renderer
  * @constructor
  * @extends {thin.ui.Menu}
  */
