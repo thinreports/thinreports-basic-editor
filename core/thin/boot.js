@@ -367,13 +367,18 @@ thin.boot = function() {
       dialog.addChild(pageHeightInput, false);
       
       pageHeightInput.render(goog.dom.getElement('new-config-page-height'));
-      
-      var pageDirectionPr = goog.dom.getElement('new-config-page-direction-pr');
-      dialog.setControl('page-direction-pr', pageDirectionPr);
-      
-      var pageDirectionLs = goog.dom.getElement('new-config-page-direction-ls');
-      dialog.setControl('page-direction-ls', pageDirectionLs);
-      
+
+      var pageDirectionSelectbox = new thin.ui.Select();
+      dialog.addChild(pageDirectionSelectbox, false);
+
+      pageDirectionSelectbox.setTextAlignLeft();
+      goog.array.forEach(goog.object.getValues(thin.layout.FormatPage.DirectionType), function(direction) {
+        pageDirectionSelectbox.addItem(new thin.ui.Option(
+            thin.t('label_direction_' + direction), direction));
+      });
+      pageDirectionSelectbox.setWidth(150);
+      pageDirectionSelectbox.render(goog.dom.getElement('new-config-page-direction'));
+
       var pageMarginTop = new thin.ui.InputUnitChanger();
       pageMarginTop.setWidth(150);
       pageMarginTop.getNumberValidator().setAllowDecimal(true, 1);
@@ -409,7 +414,7 @@ thin.boot = function() {
           var paperTypeValue = paperTypeSelectbox.getValue();
           var formatConfig = {
             'paper-type': paperTypeValue,
-            'orientation': pageDirectionPr.checked ? pageDirectionPr.value : pageDirectionLs.value,
+            'orientation': pageDirectionSelectbox.getValue(),
             'margin-top': pageMarginTop.getValue() || 0,
             'margin-bottom': pageMarginBottom.getValue() || 0,
             'margin-left': pageMarginLeft.getValue() || 0,
@@ -446,7 +451,7 @@ thin.boot = function() {
       // Initialize dialog.
       pageTitleInput.setValue('');
       paperTypeSelectbox.setValue(thin.layout.FormatPage.DEFAULT_SETTINGS['paper-type']);
-      pageDirectionPr.checked = true;
+      pageDirectionSelectbox.setValue(thin.layout.FormatPage.DEFAULT_SETTINGS['orientation']);
       
       pageWidthInput.setEnabled(false);
       pageWidthInput.setValue('');
@@ -660,12 +665,18 @@ thin.boot = function() {
         pageHeightInputValidation.setInputRange(1);
         pageHeightInputValidation.setAllowDecimal(true, 1);
         pageHeightInput.render(goog.dom.getElement('edit-config-page-height'));
-        
-        var pageDirectionPr = goog.dom.getElement('edit-config-page-direction-pr');
-        dialog.setControl('page-direction-pr', pageDirectionPr);
-        var pageDirectionLs = goog.dom.getElement('edit-config-page-direction-ls');
-        dialog.setControl('page-direction-ls', pageDirectionLs);
-        
+
+        var pageDirectionSelectbox = new thin.ui.Select();
+        dialog.addChild(pageDirectionSelectbox, false);
+
+        pageDirectionSelectbox.setTextAlignLeft();
+        goog.array.forEach(goog.object.getValues(thin.layout.FormatPage.DirectionType), function(direction) {
+          pageDirectionSelectbox.addItem(new thin.ui.Option(
+              thin.t('label_direction_' + direction), direction));
+        });
+        pageDirectionSelectbox.setWidth(150);
+        pageDirectionSelectbox.render(goog.dom.getElement('edit-config-page-direction'));
+
         var pageMarginTop = new thin.ui.InputUnitChanger();
         pageMarginTop.setWidth(150);
         pageMarginTop.getNumberValidator().setAllowDecimal(true, 1);
@@ -702,7 +713,7 @@ thin.boot = function() {
               var userHeight = pageHeightInput.getValue();
               
               if (goog.string.isEmpty(userWidth) ||
-                  goog.string.isEmpty(userHeight)) {              
+                  goog.string.isEmpty(userHeight)) {
                 thin.ui.Message.alert(thin.t('error_paper_size_is_empty'), 'Error', function() {
                   dialog.focus();
                 });
@@ -716,11 +727,8 @@ thin.boot = function() {
                                 pageMarginRight.getValue(),
                                 pageMarginBottom.getValue(), 
                                 pageMarginLeft.getValue());
-            var directionTypeValue = pageDirectionPr.checked ? 
-                    pageDirectionPr.value : pageDirectionLs.value;
-            
             thin.editor.getActiveWorkspace().updateFormatPage(margins, paperTypeValue,
-                directionTypeValue, pageTitleInput.getValue(), opt_width, opt_height);
+                pageDirectionSelectbox.getValue(), pageTitleInput.getValue(), opt_width, opt_height);
           }
           return true;
         });
@@ -733,9 +741,8 @@ thin.boot = function() {
 
         pageTitleInput.setValue(currentFormatPage.getTitle());
         paperTypeSelectbox.setValue(paperTypeValue);
-        pageDirectionPr.value == currentFormatPage.getOrientation() ? 
-          pageDirectionPr.checked = true : pageDirectionLs.checked = true;
-        
+        pageDirectionSelectbox.setValue(currentFormatPage.getOrientation());
+
         var isUserType = currentFormatPage.isUserType();
         
         if (isUserType) {
