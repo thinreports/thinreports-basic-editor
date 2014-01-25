@@ -32,6 +32,7 @@ goog.require('thin.editor.TextStyle.HorizonAlignType');
 goog.require('thin.editor.TextStyle.VerticalAlignType');
 goog.require('thin.editor.TextStyle.OverflowType');
 goog.require('thin.editor.TextStyle.OverflowTypeName');
+goog.require('thin.editor.TextStyle.WordWrapTypeName');
 goog.require('thin.editor.AbstractTextGroup');
 goog.require('thin.editor.ModuleShape');
 goog.require('thin.editor.formatstyles');
@@ -812,6 +813,25 @@ thin.editor.TblockShape.prototype.setFontSize = function(size) {
 
 
 /**
+ * @params {string} wrap
+ */
+thin.editor.TblockShape.prototype.setTextWordWrap = function(wrap) {
+  this.getLayout().setElementAttributes(this.getElement(), {
+    'x-word-wrap': wrap 
+  });
+};
+
+
+/**
+ * @return {string}
+ */
+thin.editor.TblockShape.prototype.getTextWordWrap = function() {
+  return this.getLayout().getElementAttribute(this.getElement(), 'x-word-wrap')
+    || thin.editor.TextStyle.getDefaultWordWrap();
+};
+
+
+/**
  * @param {string} type
  */
 thin.editor.TblockShape.prototype.setOverflowType = function(type) {
@@ -881,6 +901,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
   var isAffiliationListShape = this.isAffiliationListShape();
   var deltaCoordinate = this.getDeltaCoordinateForList();
   var overflow = this.getOverflowType();
+  var wordWrap = this.getTextWordWrap();
 
   /**
    * @param {thin.editor.Layout} layout
@@ -920,6 +941,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
     shape.setBaseFormat(formatBase);
     shape.setFormatStyle(formatStyle);
     shape.setOverflowType(overflow);
+    shape.setTextWordWrap(wordWrap);
 
     return shape;
   };
@@ -1100,7 +1122,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
   
-  
+
   var lineHeightCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_text_line_height'));
   var lineHeightComb = lineHeightCombProperty.getValueControl();
   var lineHeightInput = lineHeightComb.getInput();
@@ -1245,8 +1267,40 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(textOverflowSelectProperty , textGroup, 'overflow');
 
-  var formatGroup = proppane.addGroup(thin.t('property_group_simple_format'), 'format-group');
 
+  var textWordWrapSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_word_wrap'));
+  var textWordWrapSelect = textWordWrapSelectProperty.getValueControl();
+  textWordWrapSelect.setTextAlignLeft();
+
+  var wordWrapTypeName = thin.editor.TextStyle.WordWrapTypeName;
+
+  goog.object.forEach(thin.editor.TextStyle.WordWrapType, function(value, key) {
+    textWordWrapSelect.addItem(
+        new thin.ui.Option(goog.object.get(wordWrapTypeName, key), value));
+  });
+
+  textWordWrapSelectProperty.addEventListener(propEventType.CHANGE,
+      function(e) {
+        var wordWrap = e.target.getValue();
+        var captureWordWrap = scope.getTextWordWrap();
+
+        workspace.normalVersioning(function(version) {
+          version.upHandler(function() {
+            this.setTextWordWrap(wordWrap);
+            proppane.getPropertyControl('word-wrap').setValue(wordWrap);
+          }, scope);
+
+          version.downHandler(function() {
+            this.setTextWordWrap(captureWordWrap);
+            proppane.getPropertyControl('word-wrap').setValue(captureWordWrap);
+          }, scope);
+        });
+      }, false, this);
+
+  proppane.addProperty(textWordWrapSelectProperty, textGroup, 'word-wrap');
+
+
+  var formatGroup = proppane.addGroup(thin.t('property_group_simple_format'), 'format-group');
 
   var formatTypeSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_format_type'));
   var formatTypeSelect = formatTypeSelectProperty.getValueControl();
@@ -1676,6 +1730,7 @@ thin.editor.TblockShape.prototype.getProperties = function() {
     'line-height': this.getTextLineHeightRatio(),
     'text-halign': this.getTextAnchor(),
     'text-valign': this.getVerticalAlign(),
+    'word-wrap': this.getTextWordWrap(),
     'kerning': this.getKerning(),
     'multiple': this.isMultiMode(),
     'overflow': this.getOverflowType(),
@@ -1745,6 +1800,9 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
   proppane.getPropertyControl('kerning').setValue(properties['kerning']);
   proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
   proppane.getPropertyControl('overflow').setValue(properties['overflow']);
+
+  proppane.getPropertyControl('word-wrap').setValue(
+      properties['word-wrap'] || thin.editor.TextStyle.getDefaultWordWrap());
   
   var formatType = properties['format-type'];
   proppane.getPropertyControl('format-type').setValue(thin.editor.formatstyles.getFormatNameFromType(formatType));

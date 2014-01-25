@@ -20,12 +20,32 @@ goog.provide('thin.editor.TextStyle.HorizonAlignTypeName');
 goog.provide('thin.editor.TextStyle.VerticalAlignTypeName');
 goog.provide('thin.editor.TextStyle.OverflowType');
 goog.provide('thin.editor.TextStyle.OverflowTypeName');
+goog.provide('thin.editor.TextStyle.WordWrapType');
+goog.provide('thin.editor.TextStyle.WordWrapTypeName');
 
 
 /**
  * @constructor
  */
 thin.editor.TextStyle = function() {};
+
+
+/**
+ * @enum {string}
+ */
+thin.editor.TextStyle.WordWrapType = {
+  NONE: 'none',
+  BREAK_WORD: 'break-word'
+};
+
+
+/**
+ * @enum {string}
+ */
+thin.editor.TextStyle.WordWrapTypeName = {
+  NONE: thin.t('label_word_wrap_none'),
+  BREAK_WORD: thin.t('label_word_wrap_break_word')
+};
 
 
 /**
@@ -122,6 +142,24 @@ thin.editor.TextStyle.DEFAULT_LINEHEIGHT_INTERNAL = '1';
  * @type {Array.<string>}
  */
 thin.editor.TextStyle.LINEHEIGHT_LIST = ['1', '1.5', '2.0', '2.5', '3.0'];
+
+
+/**
+ * @return {string}
+ */
+thin.editor.TextStyle.getDefaultWordWrap = function() {
+  var wordWrapType = thin.editor.TextStyle.WordWrapType;
+  var defaultWordWrapCaption = thin.t('field_default_text_word_wrap');
+
+  var defaultType = wordWrapType.NONE;
+  goog.object.forEach(thin.editor.TextStyle.WordWrapTypeName, function(caption, type) {
+    if (caption == defaultWordWrapCaption) {
+      defaultType = goog.object.get(wordWrapType, type);
+      return;
+    }
+  });
+  return defaultType;
+};
 
 
 /**
