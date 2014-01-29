@@ -274,6 +274,7 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
   json['value'] = shape.getAttribute('x-value') || blank;
   json['ref-id'] = shape.getAttribute('x-ref-id') || blank;
   json['overflow'] = shape.getAttribute('x-overflow') || blank;
+  json['word-wrap'] = shape.getAttribute('x-word-wrap') || thin.editor.TextStyle.getDefaultWordWrap();
   json['svg'] = {
     'tag': tag,
     'attrs': attrs

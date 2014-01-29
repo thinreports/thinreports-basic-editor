@@ -134,7 +134,7 @@ thin.editor.AbstractTextGroup.prototype.setTextAnchor = function(anchor) {
  * @param {string} valign
  */
 thin.editor.AbstractTextGroup.prototype.setVerticalAlign = function(valign) {
-  if (thin.isExactlyEqual(valign, thin.editor.TextStyle.DEFAULT_VALIGN)) {
+  if (thin.isExactlyEqual(valign, thin.editor.TextStyle.VerticalAlignType.TOP)) {
     this.getElement().removeAttribute('x-valign');
   } else {
     this.getLayout().setElementAttributes(this.getElement(), {
@@ -275,7 +275,7 @@ thin.editor.AbstractTextGroup.prototype.getTextAnchor = function() {
  */
 thin.editor.AbstractTextGroup.prototype.getVerticalAlign = function() {
   return /** @type {string} */ (thin.getValIfNotDef(this.textStyle_.getVerticalAlign(),
-             thin.editor.TextStyle.DEFAULT_VALIGN));
+             thin.editor.TextStyle.VerticalAlignType.TOP));
 };
 
 

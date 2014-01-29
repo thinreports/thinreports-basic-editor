@@ -101,8 +101,8 @@ thin.layout.FormatPage.PaperName = {
  * @enum {string}
  */
 thin.layout.FormatPage.DirectionType = {
-  LS: 'landscape',
-  PR: 'portrait'
+  PR: 'portrait',
+  LS: 'landscape'
 };
 
 
@@ -130,7 +130,7 @@ thin.layout.FormatPage.prototype.paperType_ = thin.layout.FormatPage.PaperType.A
  * @type {string}
  * @private
  */
-thin.layout.FormatPage.prototype.orientation_ = thin.layout.FormatPage.DirectionType.LS;
+thin.layout.FormatPage.prototype.orientation_ = thin.layout.FormatPage.DirectionType.PR;
 
 
 /**
