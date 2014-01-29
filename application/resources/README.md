@@ -27,9 +27,9 @@ It can be generated automatically the specifications that contains the definitio
 
 ## Supported Platforms
 
-* Windows XP/Vista/7
-* Mac OS X 10.6+
-* Linux x86 (Ubuntu 11.04+)
+* Windows XP/7/8
+* Mac OS X 10.7+
+* Linux (Ubuntu 13+)
 
 ## Install
 
@@ -72,4 +72,4 @@ See [TRANSLATION.md](https://github.com/thinreports/thinreports-editor/blob/mast
 
 ## License
 
-Copyright (C) 2010-2012 Matsukei Co.,Ltd. All rights reserved. See LICENSE for further details.
+Copyright (C) 2010-2014 Matsukei Co.,Ltd. All rights reserved. See LICENSE for further details.
