@@ -1554,11 +1554,7 @@ thin.ui.PropertyPane.CheckboxProperty.prototype.handleClick = function(e) {
 thin.ui.PropertyPane.CheckboxProperty.prototype.enterDocument = function() {
   thin.ui.PropertyPane.CheckboxProperty.superClass_.enterDocument.call(this);
   
-  // For Common-Change
-  this.getValueControl().addEventListener(
-      goog.ui.Component.EventType.CHANGE, this.dispatchPropertyChangeEvent, false, this);
-  
-  // For Click Active
+  // For Click Active and Common-Change
   goog.events.listen(this.getValueControl().getElement(),
     goog.events.EventType.CLICK, this.handleClick, false, this);
 };
