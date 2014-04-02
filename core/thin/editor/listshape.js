@@ -584,7 +584,7 @@ thin.editor.ListShape.prototype.setHeightForSectionShape = function(unlimitedHei
       layout.calculateGuideBounds(shapes);
       guide.adjustToTargetShapeBounds();
     }
-    scope.updateProperties();
+    sectionShapeForScope.updateProperties();
   };
   
   layout.getWorkspace().normalVersioning(function(version) {
