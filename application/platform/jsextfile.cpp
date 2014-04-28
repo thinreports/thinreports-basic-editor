@@ -49,10 +49,14 @@ QString JsExtFile::getOpenFileName(const QString &title,
                                     const QString &dir,
                                     const QString &filter)
 {
+#ifdef Q_OS_MAC
     return QFileDialog::getOpenFileName(this,
                                         title.isEmpty() ? QString("Open file.") : title,
                                         dir.isEmpty() ? QDir::homePath() : dir,
                                         filter.isEmpty() ? QString("All files (*)") : filter);
+#else
+    return openFileDialog(QFileDialog::AcceptOpen, title, dir, filter);
+#endif
 }
 
 QString JsExtFile::getTextFileContent(const QString &fileName)
@@ -104,10 +108,14 @@ QString JsExtFile::getSaveFileName(const QString &title,
                                    const QString &dir,
                                    const QString &filter)
 {
+#ifdef Q_OS_MAC
     return QFileDialog::getSaveFileName(this,
                                         title.isEmpty() ? QString("Save file.") : title,
                                         dir.isEmpty() ? QDir::homePath() : dir,
                                         filter.isEmpty() ? "All files (*)" : filter);
+#else
+    return openFileDialog(QFileDialog::AcceptSave, title, dir, filter);
+#endif
 }
 
 QString JsExtFile::pathBaseName(const QString &path)
