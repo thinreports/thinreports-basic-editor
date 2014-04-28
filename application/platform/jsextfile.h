@@ -50,11 +50,13 @@ public slots:
     QString pathDirName(const QString &path);
     QString getFileSuffix(const QString &fileName);
 
+#ifndef Q_OS_MAC
 private:
     QString openFileDialog(const QFileDialog::AcceptMode &acceptMode,
                            const QString &title = QString(),
                            const QString &dir = QString(),
                            const QString &filter = QString());
+#endif
 };
 
 #endif // JSEXTFILE_H

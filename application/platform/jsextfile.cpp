@@ -22,7 +22,9 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QTextStream>
+#ifndef Q_OS_MAC
 #include <QRegExp>
+#endif
 
 JsExtFile::JsExtFile(QWidget *parent)
     : QWidget(parent)
@@ -47,7 +49,10 @@ QString JsExtFile::getOpenFileName(const QString &title,
                                     const QString &dir,
                                     const QString &filter)
 {
-    return openFileDialog(QFileDialog::AcceptOpen, title, dir, filter);
+    return QFileDialog::getOpenFileName(this,
+                                        title.isEmpty() ? QString("Open file.") : title,
+                                        dir.isEmpty() ? QDir::homePath() : dir,
+                                        filter.isEmpty() ? QString("All files (*)") : filter);
 }
 
 QString JsExtFile::getTextFileContent(const QString &fileName)
@@ -99,7 +104,10 @@ QString JsExtFile::getSaveFileName(const QString &title,
                                    const QString &dir,
                                    const QString &filter)
 {
-    return openFileDialog(QFileDialog::AcceptSave, title, dir, filter);
+    return QFileDialog::getSaveFileName(this,
+                                        title.isEmpty() ? QString("Save file.") : title,
+                                        dir.isEmpty() ? QDir::homePath() : dir,
+                                        filter.isEmpty() ? "All files (*)" : filter);
 }
 
 QString JsExtFile::pathBaseName(const QString &path)
@@ -120,6 +128,7 @@ QString JsExtFile::getFileSuffix(const QString &fileName)
     return fi.suffix();
 }
 
+#ifndef Q_OS_MAC
 QString JsExtFile::openFileDialog(const QFileDialog::AcceptMode &acceptMode,
                                   const QString &title,
                                   const QString &dir,
@@ -172,4 +181,4 @@ QString JsExtFile::openFileDialog(const QFileDialog::AcceptMode &acceptMode,
         return tr("");
     }
 }
-
+#endif
