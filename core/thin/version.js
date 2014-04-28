@@ -37,9 +37,9 @@ thin.Version.TINY = 7;
 
 
 /**
- * @type {string?}
+ * @type {number|string?}
  */
-thin.Version.PRE = null;
+thin.Version.PRE = 1;
 
 
 /**
