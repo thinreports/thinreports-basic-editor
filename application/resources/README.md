@@ -27,9 +27,9 @@ It can be generated automatically the specifications that contains the definitio
 
 ## Supported Platforms
 
-* Windows XP/7/8
+* Windows XP/7/8/8.1
 * Mac OS X 10.7+
-* Linux (Ubuntu 13+)
+* Linux (Ubuntu 14.04+)
 
 ## Install
 
