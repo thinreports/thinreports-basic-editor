@@ -1,0 +1,632 @@
+<!--
+  Copyright (C) 2011 Matsukei Co.,Ltd.
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html> 
+<html>
+  <head>
+    <title>ThinReportsEditor</title>
+    <meta charset="UTF-8">
+    <script src="editor.js"></script>
+    <script src="locales/ja.js"></script>
+<script src="lib/closure-library/closure/goog/base.js"></script>
+<script src="lib/closure-library/closure/goog/debug/error.js"></script>
+<script src="lib/closure-library/closure/goog/string/string.js"></script>
+<script src="lib/closure-library/closure/goog/asserts/asserts.js"></script>
+<script src="lib/closure-library/closure/goog/array/array.js"></script>
+<script src="lib/closure-library/closure/goog/dom/classes.js"></script>
+<script src="lib/closure-library/closure/goog/a11y/aria/roles.js"></script>
+<script src="lib/closure-library/closure/goog/object/object.js"></script>
+<script src="lib/closure-library/closure/goog/dom/tagname.js"></script>
+<script src="lib/closure-library/closure/goog/useragent/useragent.js"></script>
+<script src="lib/closure-library/closure/goog/math/size.js"></script>
+<script src="lib/closure-library/closure/goog/dom/browserfeature.js"></script>
+<script src="lib/closure-library/closure/goog/math/math.js"></script>
+<script src="lib/closure-library/closure/goog/math/coordinate.js"></script>
+<script src="lib/closure-library/closure/goog/dom/dom.js"></script>
+<script src="lib/closure-library/closure/goog/a11y/aria/attributes.js"></script>
+<script src="lib/closure-library/closure/goog/a11y/aria/aria.js"></script>
+<script src="lib/closure-library/closure/goog/math/box.js"></script>
+<script src="lib/closure-library/closure/goog/math/rect.js"></script>
+<script src="lib/closure-library/closure/goog/dom/vendor.js"></script>
+<script src="lib/closure-library/closure/goog/style/style.js"></script>
+<script src="lib/closure-library/closure/goog/debug/errorhandlerweakdep.js"></script>
+<script src="lib/closure-library/closure/goog/disposable/idisposable.js"></script>
+<script src="lib/closure-library/closure/goog/disposable/disposable.js"></script>
+<script src="lib/closure-library/closure/goog/events/event.js"></script>
+<script src="lib/closure-library/closure/goog/events/listenable.js"></script>
+<script src="lib/closure-library/closure/goog/events/listener.js"></script>
+<script src="lib/closure-library/closure/goog/events/browserfeature.js"></script>
+<script src="lib/closure-library/closure/goog/debug/entrypointregistry.js"></script>
+<script src="lib/closure-library/closure/goog/events/eventwrapper.js"></script>
+<script src="lib/closure-library/closure/goog/events/eventtype.js"></script>
+<script src="lib/closure-library/closure/goog/reflect/reflect.js"></script>
+<script src="lib/closure-library/closure/goog/events/browserevent.js"></script>
+<script src="lib/closure-library/closure/goog/events/events.js"></script>
+<script src="lib/closure-library/closure/goog/events/eventhandler.js"></script>
+<script src="lib/closure-library/closure/goog/ui/idgenerator.js"></script>
+<script src="lib/closure-library/closure/goog/events/eventtarget.js"></script>
+<script src="lib/closure-library/closure/goog/ui/component.js"></script>
+<script src="lib/closure-library/closure/goog/ui/controlrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/registry.js"></script>
+<script src="lib/closure-library/closure/goog/ui/decorate.js"></script>
+<script src="lib/closure-library/closure/goog/ui/controlcontent.js"></script>
+<script src="lib/closure-library/closure/goog/events/keycodes.js"></script>
+<script src="lib/closure-library/closure/goog/events/keyhandler.js"></script>
+<script src="lib/closure-library/closure/goog/ui/control.js"></script>
+<script src="lib/closure-library/closure/goog/ui/menuseparatorrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/separator.js"></script>
+<script src="lib/closure-library/closure/goog/ui/containerrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/menurenderer.js"></script>
+<script src="lib/closure-library/closure/goog/dom/classlist.js"></script>
+<script src="lib/closure-library/closure/goog/ui/menuitemrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/menuitem.js"></script>
+<script src="lib/closure-library/closure/goog/style/bidi.js"></script>
+<script src="lib/closure-library/closure/goog/fx/dragger.js"></script>
+<script src="lib/closure-library/closure/goog/timer/timer.js"></script>
+<script src="lib/closure-library/closure/goog/fx/transition.js"></script>
+<script src="lib/closure-library/closure/goog/ui/popupbase.js"></script>
+<script src="lib/closure-library/closure/goog/events/focushandler.js"></script>
+<script src="lib/closure-library/closure/goog/dom/iframe.js"></script>
+<script src="lib/closure-library/closure/goog/ui/modalpopup.js"></script>
+<script src="lib/closure-library/closure/goog/iter/iter.js"></script>
+<script src="lib/closure-library/closure/goog/structs/structs.js"></script>
+<script src="lib/closure-library/closure/goog/structs/map.js"></script>
+<script src="lib/closure-library/closure/goog/ui/dialog.js"></script>
+<script src="core/base.js"></script>
+<script src="core/i18n.js"></script>
+<script src="core/editor/textstyle.js"></script>
+<script src="core/ui/ui.js"></script>
+<script src="core/ui/icon.js"></script>
+<script src="lib/closure-library/closure/goog/ui/menuseparator.js"></script>
+<script src="lib/closure-library/closure/goog/ui/container.js"></script>
+<script src="lib/closure-library/closure/goog/ui/menuheaderrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/menuheader.js"></script>
+<script src="lib/closure-library/closure/goog/ui/menu.js"></script>
+<script src="core/ui/menuitemrenderer.js"></script>
+<script src="core/ui/menuseparatorrenderer.js"></script>
+<script src="core/ui/controlstyleutils.js"></script>
+<script src="core/ui/stylablecontrol.js"></script>
+<script src="core/ui/menu.js"></script>
+<script src="lib/closure-library/closure/goog/ui/checkboxrenderer.js"></script>
+<script src="core/ui/checkboxrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/checkbox.js"></script>
+<script src="core/ui/checkbox.js"></script>
+<script src="core/core/platform/platform.js"></script>
+<script src="core/version.js"></script>
+<script src="core/compatibility.js"></script>
+<script src="core/layout/layout.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/affinetransform.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/element.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/strokeandfillelement.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/rectelement.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/pathelement.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/groupelement.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/textelement.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/ellipseelement.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/imageelement.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/svgelement.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/font.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/fill.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/solidfill.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/lineargradient.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/stroke.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/path.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/abstractgraphics.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/svggraphics.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/vmlelement.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/vmlgraphics.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/canvaselement.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/canvasgraphics.js"></script>
+<script src="lib/closure-library/closure/goog/graphics/graphics.js"></script>
+<script src="core/editor/moduleelement.js"></script>
+<script src="core/editor/component.js"></script>
+<script src="lib/closure-library/closure/goog/async/delay.js"></script>
+<script src="core/editor/history.js"></script>
+<script src="core/layout/formatpage.js"></script>
+<script src="core/ui/component.js"></script>
+<script src="core/ui/inputcolorpickerrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/positioning/positioning.js"></script>
+<script src="lib/closure-library/closure/goog/useragent/product.js"></script>
+<script src="lib/closure-library/closure/goog/positioning/abstractposition.js"></script>
+<script src="lib/closure-library/closure/goog/positioning/anchoredposition.js"></script>
+<script src="lib/closure-library/closure/goog/positioning/anchoredviewportposition.js"></script>
+<script src="lib/closure-library/closure/goog/positioning/menuanchoredposition.js"></script>
+<script src="lib/closure-library/closure/goog/ui/buttonside.js"></script>
+<script src="lib/closure-library/closure/goog/ui/buttonrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/nativebuttonrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/button.js"></script>
+<script src="lib/closure-library/closure/goog/ui/cssnames.js"></script>
+<script src="lib/closure-library/closure/goog/ui/custombuttonrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/menubuttonrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/menubutton.js"></script>
+<script src="core/ui/buttonrenderer.js"></script>
+<script src="core/ui/menubuttonrenderer.js"></script>
+<script src="core/ui/menubutton.js"></script>
+<script src="core/ui/optionmenurenderer.js"></script>
+<script src="core/ui/optionmenu.js"></script>
+<script src="lib/closure-library/closure/goog/ui/selectionmodel.js"></script>
+<script src="lib/closure-library/closure/goog/ui/select.js"></script>
+<script src="core/ui/select.js"></script>
+<script src="lib/closure-library/closure/goog/color/names.js"></script>
+<script src="lib/closure-library/closure/goog/color/color.js"></script>
+<script src="lib/closure-library/closure/goog/ui/colormenubuttonrenderer.js"></script>
+<script src="core/ui/colormenubuttonrenderer.js"></script>
+<script src="lib/closure-library/closure/goog/functions/functions.js"></script>
+<script src="lib/closure-library/closure/goog/async/animationdelay.js"></script>
+<script src="lib/closure-library/closure/goog/fx/anim/anim.js"></script>
+<script src="lib/closure-library/closure/goog/fx/transitionbase.js"></script>
+<script src="lib/closure-library/closure/goog/fx/animation.js"></script>
+<script src="lib/closure-library/closure/goog/fx/dom.js"></script>
+<script src="lib/closure-library/closure/goog/crypt/crypt.js"></script>
+<script src="lib/closure-library/closure/goog/crypt/hash32.js"></script>
+<script src="lib/closure-library/closure/goog/string/stringbuffer.js"></script>
+<script src="lib/closure-library/closure/goog/soy/data.js"></script>
+<script src="lib/closure-library/closure/goog/soy/soy.js"></script>
+<script src="lib/closure-library/closure/goog/structs/inversionmap.js"></script>
+<script src="lib/closure-library/closure/goog/i18n/graphemebreak.js"></script>
+<script src="lib/closure-library/closure/goog/format/format.js"></script>
+<script src="lib/closure-library/closure/goog/i18n/bidi.js"></script>
+<script src="lib/closure-library/closure/goog/i18n/bidiformatter.js"></script>
+<script src="lib/closure-templates/soyutils_usegoog.js"></script>
+<script src="core/layout/document/templates/html.soy.js"></script>
+<script src="core/core/platform/string.js"></script>
+<script src="lib/closure-library/closure/goog/json/json.js"></script>
+<script src="core/editor/shapestructure.js"></script>
+<script src="core/editor/layoutstructure.js"></script>
+<script src="core/editor/cursor.js"></script>
+<script src="core/editor/abstractdragger.js"></script>
+<script src="core/editor/svgdragger.js"></script>
+<script src="core/editor/svgdrawer.js"></script>
+<script src="core/editor/rect.js"></script>
+<script src="core/editor/layer.js"></script>
+<script src="core/editor/actionlayer.js"></script>
+<script src="core/editor/drawactionlayer.js"></script>
+<script src="core/editor/draggableline.js"></script>
+<script src="core/editor/moduleshape.js"></script>
+<script src="core/core/platform/font.js"></script>
+<script src="core/core/font.js"></script>
+<script src="core/editor/fontstyle.js"></script>
+<script src="core/editor/abstractboxgroup.js"></script>
+<script src="core/editor/abstracttextgroup.js"></script>
+<script src="core/editor/abstracttext.js"></script>
+<script src="core/editor/textlineshape.js"></script>
+<script src="core/editor/texthelper.js"></script>
+<script src="core/editor/textshape.js"></script>
+<script src="core/editor/listsectionhelper.js"></script>
+<script src="core/editor/svgresizer.js"></script>
+<script src="core/editor/abstructguidehelper.js"></script>
+<script src="core/editor/guidebody.js"></script>
+<script src="core/editor/ellipse.js"></script>
+<script src="core/editor/listguideresizer.js"></script>
+<script src="core/editor/listguidehelper.js"></script>
+<script src="core/editor/listhelper.js"></script>
+<script src="core/editor/formatstyle/abstractformat.js"></script>
+<script src="core/editor/formatstyle/paddingformat.js"></script>
+<script src="core/editor/formatstyle/numberformat.js"></script>
+<script src="core/editor/formatstyle/datetimeformat.js"></script>
+<script src="core/editor/formatstyle/formatstyle.js"></script>
+<script src="core/core/platform/file.js"></script>
+<script src="core/layout/document/base.js"></script>
+<script src="core/layout/document/html.js"></script>
+<script src="core/core/platform/image.js"></script>
+<script src="core/core/core.js"></script>
+<script src="core/core/file.js"></script>
+<script src="core/layout/file.js"></script>
+<script src="core/layout/document/file.js"></script>
+<script src="core/layout/document/csv.js"></script>
+<script src="core/layout/document/document.js"></script>
+<script src="core/ui/button.js"></script>
+<script src="core/ui/dialog.js"></script>
+<script src="core/ui/message.js"></script>
+<script src="core/editor/idshape.js"></script>
+<script src="core/editor/imageblockshape.js"></script>
+<script src="core/editor/abstractmanager.js"></script>
+<script src="core/editor/shapeidmanager.js"></script>
+<script src="core/editor/rectshape.js"></script>
+<script src="core/editor/imageshape.js"></script>
+<script src="core/editor/clippath.js"></script>
+<script src="core/editor/box.js"></script>
+<script src="core/editor/pagenumbershape.js"></script>
+<script src="core/editor/clipboardshapemanager.js"></script>
+<script src="core/editor/ellipseshape.js"></script>
+<script src="core/editor/moduleoutline.js"></script>
+<script src="core/editor/tblockoutline.js"></script>
+<script src="core/editor/ellipseoutline.js"></script>
+<script src="core/editor/guideresizer.js"></script>
+<script src="core/editor/guidehelper.js"></script>
+<script src="core/editor/layoutguidehelper.js"></script>
+<script src="core/editor/textoutline.js"></script>
+<script src="core/editor/pagenumberoutline.js"></script>
+<script src="core/editor/imageoutline.js"></script>
+<script src="core/editor/selectoroutline.js"></script>
+<script src="core/editor/outlinehelper.js"></script>
+<script src="core/editor/rectoutline.js"></script>
+<script src="core/editor/multipleshapeshelper.js"></script>
+<script src="core/editor/grid.js"></script>
+<script src="core/editor/multioutlinehelper.js"></script>
+<script src="lib/closure-library/closure/goog/math/line.js"></script>
+<script src="core/editor/line.js"></script>
+<script src="core/editor/marginguide.js"></script>
+<script src="core/editor/marginguidehelper.js"></script>
+<script src="core/editor/imageblockoutline.js"></script>
+<script src="core/editor/listoutline.js"></script>
+<script src="core/editor/lineoutline.js"></script>
+<script src="core/editor/helpers.js"></script>
+<script src="core/editor/shapemanager.js"></script>
+<script src="core/editor/listsectionshape.js"></script>
+<script src="core/editor/activeshapemanager.js"></script>
+<script src="core/editor/listshape.js"></script>
+<script src="core/editor/tblockshape.js"></script>
+<script src="core/editor/statemanager.js"></script>
+<script src="core/editor/lineshape.js"></script>
+<script src="core/editor/layout.js"></script>
+<script src="core/editor/action.js"></script>
+<script src="core/editor/workspace.js"></script>
+<script src="core/editor/editor.js"></script>
+<script src="lib/closure-library/closure/goog/positioning/clientposition.js"></script>
+<script src="lib/closure-library/closure/goog/positioning/viewportclientposition.js"></script>
+<script src="lib/closure-library/closure/goog/positioning/absoluteposition.js"></script>
+<script src="lib/closure-library/closure/goog/positioning/viewportposition.js"></script>
+<script src="lib/closure-library/closure/goog/ui/popup.js"></script>
+<script src="core/ui/notification.js"></script>
+<script src="core/ui/input.js"></script>
+<script src="lib/closure-library/closure/goog/dom/tagiterator.js"></script>
+<script src="lib/closure-library/closure/goog/dom/nodeiterator.js"></script>
+<script src="lib/closure-library/closure/goog/ui/paletterenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/palette.js"></script>
+<script src="lib/closure-library/closure/goog/ui/colorpalette.js"></script>
+<script src="lib/closure-library/closure/goog/ui/colormenubutton.js"></script>
+<script src="core/ui/colormenubutton.js"></script>
+<script src="lib/closure-library/closure/goog/dom/forms.js"></script>
+<script src="core/ui/inputcolorpicker.js"></script>
+<script src="lib/closure-library/closure/goog/ui/option.js"></script>
+<script src="core/ui/option.js"></script>
+<script src="core/ui/fontselect.js"></script>
+<script src="lib/closure-library/closure/goog/ui/itemevent.js"></script>
+<script src="lib/closure-library/closure/goog/ui/labelinput.js"></script>
+<script src="lib/closure-library/closure/goog/events/inputhandler.js"></script>
+<script src="lib/closure-library/closure/goog/structs/collection.js"></script>
+<script src="lib/closure-library/closure/goog/structs/set.js"></script>
+<script src="lib/closure-library/closure/goog/debug/debug.js"></script>
+<script src="lib/closure-library/closure/goog/debug/logrecord.js"></script>
+<script src="lib/closure-library/closure/goog/debug/logbuffer.js"></script>
+<script src="lib/closure-library/closure/goog/debug/logger.js"></script>
+<script src="lib/closure-library/closure/goog/ui/combobox.js"></script>
+<script src="core/ui/combobox.js"></script>
+<script src="core/ui/inputunitchanger.js"></script>
+<script src="core/ui/propertypane.js"></script>
+<script src="core/layout/format.js"></script>
+<script src="core/editor/toolaction/abstractaction.js"></script>
+<script src="core/editor/toolaction/drawaction.js"></script>
+<script src="core/editor/toolaction/rectaction.js"></script>
+<script src="core/ui/splitbuttonhandlerenderer.js"></script>
+<script src="core/ui/splitbuttonrenderer.js"></script>
+<script src="core/ui/splitbutton.js"></script>
+<script src="core/ui/iconbutton.js"></script>
+<script src="core/ui/toggleiconbutton.js"></script>
+<script src="core/ui/togglebutton.js"></script>
+<script src="core/ui/splittogglebutton.js"></script>
+<script src="core/ui/toolbar.js"></script>
+<script src="core/editor/toolaction/tblockaction.js"></script>
+<script src="core/ui/layout.js"></script>
+<script src="core/ui/tabpane.js"></script>
+<script src="lib/closure-library/closure/goog/storage/mechanism/mechanism.js"></script>
+<script src="lib/closure-library/closure/goog/storage/mechanism/iterablemechanism.js"></script>
+<script src="lib/closure-library/closure/goog/storage/mechanism/errorcode.js"></script>
+<script src="core/settings.js"></script>
+<script src="core/ui/mainlayout.js"></script>
+<script src="core/editor/toolaction/imageblockaction.js"></script>
+<script src="core/editor/toolaction/ellipseaction.js"></script>
+<script src="core/editor/imagefile.js"></script>
+<script src="core/editor/toolaction/imageaction.js"></script>
+<script src="lib/closure-library/closure/goog/ui/textarearenderer.js"></script>
+<script src="lib/closure-library/closure/goog/ui/textarea.js"></script>
+<script src="core/editor/toolaction/textaction.js"></script>
+<script src="core/editor/toolaction/listaction.js"></script>
+<script src="core/editor/toolaction/zoomaction.js"></script>
+<script src="core/ui/panelrenderer.js"></script>
+<script src="core/ui/panel.js"></script>
+<script src="core/ui/view.js"></script>
+<script src="core/ui/propertyview.js"></script>
+<script src="core/ui/toolbox.js"></script>
+<script src="core/editor/toolaction/pagenumberaction.js"></script>
+<script src="core/ui/togglegroup.js"></script>
+<script src="core/editor/toolaction/lineaction.js"></script>
+<script src="core/editor/toolaction/selectaction.js"></script>
+<script src="core/ui/toolboxview.js"></script>
+<script src="core/boot.js"></script>
+    <link rel="stylesheet" href="assets/workspace.css">
+    <link rel="stylesheet" href="assets/base.css">
+    <link rel="stylesheet" href="assets/layout.css">
+    <link rel="stylesheet" href="assets/view.css">
+    <link rel="stylesheet" href="assets/icon.css">
+    <link rel="stylesheet" href="assets/button.css">
+    <link rel="stylesheet" href="assets/combobox.css">
+    <link rel="stylesheet" href="assets/splitbutton.css">
+    <link rel="stylesheet" href="assets/menubutton.css">
+    <link rel="stylesheet" href="assets/toolbar.css">
+    <link rel="stylesheet" href="assets/tabpane.css">
+    <link rel="stylesheet" href="assets/menu.css">
+    <link rel="stylesheet" href="assets/menuitem.css">
+    <link rel="stylesheet" href="assets/option.css">
+    <link rel="stylesheet" href="assets/optionmenu.css">
+    <link rel="stylesheet" href="assets/fontoption.css">
+    <link rel="stylesheet" href="assets/menuseparator.css">
+    <link rel="stylesheet" href="assets/checkbox.css">
+    <link rel="stylesheet" href="assets/propertypane.css">
+    <link rel="stylesheet" href="assets/colormenubutton.css">
+    <link rel="stylesheet" href="assets/colorpalette.css">
+    <link rel="stylesheet" href="assets/inputcolorpicker.css">
+    <link rel="stylesheet" href="assets/inputunitchanger.css">
+    <link rel="stylesheet" href="assets/dialog.css">
+    <link rel="stylesheet" href="assets/dialogs.css">
+    <link rel="stylesheet" href="assets/message.css">
+    <link rel="stylesheet" href="assets/toolbox.css">
+    <link rel="stylesheet" href="assets/notification.css">
+  </head>
+  <body>
+    <div class="thin-toolbar" id="thin-toolbar">
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td rowspan="2" id="tbar-report-add"></td>
+            <td rowspan="2" id="tbar-report-save"></td>
+            <td rowspan="2" id="tbar-report-open"></td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label" data-i18n="toolbar_group_file"></div>
+      </div>
+      <div class="thin-toolbar-group-separator"></div>
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td id="tbar-undo"></td>
+            <td rowspan="2" id="tbar-report-config"></td>
+          </tr>
+          <tr>
+            <td id="tbar-redo"></td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label" data-i18n="toolbar_group_edit"></div>
+      </div>
+      <div class="thin-toolbar-group-separator"></div>
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td id="tbar-zoom-in"></td>
+            <td id="tbar-zoom-out"></td> 
+            <td id="tbar-guide"></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <span data-i18n="label_specify_zoom_rate"></span>: <span id="tbar-zoom-rate"></span> %
+            </td>
+            <td id="tbar-grid"></td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label" data-i18n="toolbar_group_view"></div>
+      </div>      
+      <div class="thin-toolbar-group-separator"></div>
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td>
+              <span id="tbar-font-family"></span>
+              <span id="tbar-font-size"></span>
+            </td>
+          </tr>
+          <tr>
+            <td id="tbar-font-styles"></td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label" data-i18n="toolbar_group_font"></div>
+      </div>
+      <div class="thin-toolbar-group-separator"></div>
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td id="tbar-horizon-text-align"></td>
+            <td rowspan="2" id="tbar-shape-align"></td>
+            <td id="tbar-layer-front"></td>
+          </tr>
+          <tr>
+            <td id="tbar-vertical-text-align"></td>
+            <td id="tbar-layer-back"></td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label" data-i18n="toolbar_group_position"></div>
+      </div>
+      <div class="thin-toolbar-group-separator"></div>
+      <div class="thin-toolbar-group">
+        <table>
+          <tr>
+            <td id="tbar-preference"></td>
+          </tr>
+          <tr>
+            <td id="tbar-help"></td>
+          </tr>
+        </table>
+        <div class="thin-toolbar-group-label">&nbsp;</div>
+      </div>
+    </div>
+    
+    <div class="thin-layout" id="thin-main">
+      <div class="thin-layout-left"></div>
+      <div class="thin-layout-main"></div>
+      <div class="thin-layout-right"></div>
+    </div>
+    <!-- Dialog template for TextEditor. -->
+    <div id="dialog-text-editor" class="thin-dialogs thin-dialog-text-editor" style="display:none;">
+      <div class="thin-dialog-content">
+        <div id="dialog-texteditor-textarea"></div>
+      </div>
+    </div>
+    <!-- Dialog template for New ReportConfiguration. -->
+    <div id="new-dialog-report-config" class="thin-dialogs thin-dialog-report-config" style="display:none;">
+      <div class="thin-dialog-content">
+        <fieldset>
+          <legend data-i18n="label_title_setting"></legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_page_title"></div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-title"></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend data-i18n="label_page_setting"></legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_type"></div>
+            <div class="thin-dialogs-setting-control" id="new-config-paper-type"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_width"></div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-width"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_height"></div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-height"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_direction"></div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-direction">
+              <input type="radio" id="new-config-page-direction-pr" name="page-direction-group" value="portrait">
+              <label for="new-config-page-direction-pr" data-i18n="label_direction_portrait"></label>
+              <input type="radio" id="new-config-page-direction-ls" name="page-direction-group" value="landscape">
+              <label for="new-config-page-direction-ls" data-i18n="label_direction_landscape"></label>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend data-i18n="label_margin_setting"></legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_top"></div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-margin-top"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_bottom"></div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-margin-bottom"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_left"></div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-margin-left"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_right"></div>
+            <div class="thin-dialogs-setting-control" id="new-config-page-margin-right"></div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <!-- Dialog template for Edit ReportConfiguration. -->
+    <div id="edit-dialog-report-config" class="thin-dialogs thin-dialog-report-config" style="display:none;">
+      <div class="thin-dialog-content">
+        <fieldset>
+          <legend data-i18n="label_title_setting"></legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_page_title"></div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-title"></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend data-i18n="label_page_setting"></legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_type"></div>
+            <div class="thin-dialogs-setting-control" id="edit-config-paper-type"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_width"></div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-width"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_height"></div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-height"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_paper_direction"></div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-direction">
+              <input type="radio" id="edit-config-page-direction-pr" name="page-direction-group" value="portrait">
+              <label for="edit-config-page-direction-pr" data-i18n="label_direction_portrait"></label>
+              <input type="radio" id="edit-config-page-direction-ls" name="page-direction-group" value="landscape">
+              <label for="edit-config-page-direction-ls" data-i18n="label_direction_landscape"></label>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend data-i18n="label_margin_setting"></legend>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_top"></div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-margin-top"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_bottom"></div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-margin-bottom"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_left"></div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-margin-left"></div>
+          </div>
+          <div class="thin-dialogs-setting">
+            <div class="thin-dialogs-setting-caption" data-i18n="field_margin_right"></div>
+            <div class="thin-dialogs-setting-control" id="edit-config-page-margin-right"></div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <!-- Dialog template for Preference -->
+    <div id="dialog-preference" class="thin-dialogs thin-dialog-preference" style="display:none;">
+      <div class="thin-dialog-content">
+        <div class="thin-dialogs-setting">
+          <div class="thin-dialogs-setting-caption" data-i18n="field_language"></div>
+          <div class="thin-dialogs-setting-control" id="dialog-preference-language"></div>
+        </div>
+        <div class="thin-dialogs-setting">
+          <div class="thin-dialogs-setting-caption" data-i18n="field_default_unit"></div>
+          <div class="thin-dialogs-setting-control" id="dialog-preference-default-unit"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dialog template for About. -->
+    <div id="about-dialog" class="thin-dialogs thin-dialog-about" style="display:none;">
+      <div class="thin-dialog-content">
+        <div class="thin-dialog-about-appinfo">
+          <h1>ThinReports Editor</h1>
+          <div id="about-dialog-version"></div>
+        </div>
+        <div class="thin-dialog-about-details">
+          <p class="thin-dialog-about-copyright">
+            Copyright &copy; 2010-2012 <a href="http://www.matsukei.co.jp/">Matsukei</a> Co.,Ltd. All Rights Reserved.
+          </p>
+          <p class="thin-dialog-about-description" data-i18n="text_about_description"></p>
+          <div class="thin-dialog-about-resources">
+            <dl>
+              <dt>Official Site:</dt>
+              <dd><a href="http://www.thinreports.org/">http://www.thinreports.org/</a></dd>
+              <dt>Project Site (Matsukei Open Source Center):</dt>
+              <dd><a href="http://osc.matsukei.net/projects/thinreports/wiki">http://osc.matsukei.net/projects/thinreports/</a></dd>
+              <dt>GitHub:</dt>
+              <dd><a href="https://github.com/thinreports">https://github.com/thinreports/</a></dd>
+              <dt>Social:</dt>
+              <dd><strong>facebook:</strong> <a href="http://www.facebook.com/ThinReports.org">http://www.facebook.com/ThinReports.org</a></dd>
+              <dd><strong>Twitter:</strong> <a href="http://twitter.com/#!/thinreports_org">@thinreports_org</a></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
