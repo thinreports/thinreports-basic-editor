@@ -20,38 +20,16 @@ goog.require('thin.core');
 
 
 /**
- * @return {boolean}
- */
-thin.core.platform.isUsable = function() {
-  return goog.isDef(goog.global['platform']);
-};
-
-
-/**
- * @param {string} func like "foo.bar.func"
- * @param {...*} var_args arguments for calling function
- * @return {*}
- */
-thin.core.platform.call = function(func, var_args) {
-  func = thin.core.platform.getNativeFunction.apply(goog.global, func.split('.'));
-  return func.apply(goog.global, goog.array.clone(arguments).slice(1));
-};
-
-thin.core.platform.callChrome = function(func, var_args) {
-  return thin.core.platform.call.apply(goog.global,
-      ['chrome.' + func].concat(goog.array.clone(arguments).slice(1)));
-};
-
-/**
  * @param {...*} var_args
  * @return {*}
- * @deprecated use .call instead
  */
 thin.core.platform.callNativeFunction = function(var_args) {
   var argsClone = goog.array.clone(arguments);
   var args = goog.isArray(argsClone[argsClone.length - 1]) ? argsClone.pop() : [];
-  var func = thin.core.platform.getNativeFunction.apply(goog.global, argsClone);
-  return func.apply(goog.global, args);
+  var methodName = argsClone.pop();
+  var obj = thin.core.platform.getNativeFunction.apply(goog.global, argsClone);
+
+  return obj[methodName].apply(obj, args);
 };
 
 

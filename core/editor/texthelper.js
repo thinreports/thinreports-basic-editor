@@ -86,5 +86,5 @@ thin.editor.TextHelper.prototype.disposeInternal = function() {
   this.firstLine_.dispose();
   delete this.firstLine_;
 
-  goog.base('disposeInternal', this);
+  goog.base(this, 'disposeInternal');
 };

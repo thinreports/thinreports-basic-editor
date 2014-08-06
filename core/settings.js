@@ -75,7 +75,8 @@ thin.Settings.prototype.set = function(key, value) {
 
   var item = {};
   item[key] = value;
-  chrome.storage.local.set(item);
+  thin.core.platform.callNativeFunction(
+    'chrome', 'storage', 'local', 'set', [item]);
 };
 
 
@@ -91,9 +92,10 @@ thin.Settings.prototype.get = function(key) {
 thin.Settings.prototype.sync = function() {
   var scope = this;
   goog.array.forEach(thin.Settings.DEFINITION, function(key) {
-    chrome.storage.local.get([key], function(record) {
-      scope.storage[key] = record[key];
-    });
+    thin.core.platform.callNativeFunction(
+      'chrome', 'storage', 'local', 'get', [[key], function(record) {
+        scope.storage[key] = record[key];
+    }]);
   });
 };
 

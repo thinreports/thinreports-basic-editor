@@ -1342,7 +1342,7 @@ thin.boot = function() {
               thin.t('label_confirmation'), 
               function(e) {
                 if (e.isYes()) {
-                  chrome.runtime.reload();
+                  thin.core.platform.callNativeFunction('chrome', 'runtime', 'reload');
                 }
               }, 
               thin.ui.Dialog.ButtonSet.typeYesNo());
@@ -1619,4 +1619,4 @@ thin.boot = function() {
 
 goog.exportProperty(goog.global['Thin'], 'boot', thin.boot);
 
-goog.events.listen(goog.global, goog.events.EventType.LOAD, Thin.boot, false, this);
+goog.events.listen(goog.global, goog.events.EventType.LOAD, thin.boot, false, this);

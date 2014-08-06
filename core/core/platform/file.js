@@ -36,17 +36,19 @@ thin.core.platform.File.open = function(fn_callback, opt_readAsDataUrl) {
     }];
   }
 
-  chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function(openFileEntry) {
+  thin.core.platform.callNativeFunction('chrome', 'fileSystem', 'chooseEntry',[
+      {type: 'openFile', accepts: accepts}, function(openFileEntry) {
+
     if (!openFileEntry) {
       if (opt_readAsDataUrl) {
         fn_callback(null, null);
       }
-      console.log('No file selected');
+      // console.log('No file selected');
     }
     openFileEntry.file(function(file) {
       var reader = new FileReader();
       reader.onerror = function(e) {
-        console.log(e);
+        // console.log(e);
       };
       reader.onload = function(e) {
         fn_callback(e.target.result, openFileEntry);
@@ -57,7 +59,7 @@ thin.core.platform.File.open = function(fn_callback, opt_readAsDataUrl) {
         reader.readAsText(file);
       }
     });
-  });
+  }]);
 };
 
 
@@ -68,18 +70,21 @@ thin.core.platform.File.write = function(workspace) {
   var saveFileEntry = workspace.getSaveFileEntry();
   saveFileEntry.createWriter(function(fileWriter) {
     fileWriter.onwriteend = function(e) {
-      // TODO
+      fileWriter.onwriteend = null;
+      fileWriter.truncate(blob.size);
     };
 
-    var blob = new Blob([workspace.getSaveFormat_()], {type: 'text/plain'});
+    var blob = new Blob([workspace.getSaveFormat_()], {type: 'application/json'});
     fileWriter.write(blob);
   });
 
-  chrome.fileSystem.getDisplayPath(saveFileEntry, function(filePath) {
+  thin.core.platform.callNativeFunction('chrome', 'fileSystem', 'getDisplayPath', [
+      saveFileEntry, function(filePath) {
+
     var page = thin.ui.getComponent('tabpane').getSelectedPage();
     page.setTitle(saveFileEntry.name);
     page.setTooltip(filePath);
-  });
+  }]);
 };
 
 
@@ -95,10 +100,13 @@ thin.core.platform.File.save = function(workspace) {
   } else {
     // 開いたファイル
     if (openFileEntry) {
-      chrome.fileSystem.getWritableEntry(openFileEntry, function(saveFileEntry) {
+      thin.core.platform.callNativeFunction('chrome', 'fileSystem', 'getWritableEntry', [
+          openFileEntry, function(saveFileEntry) {
+
         workspace.setSaveFileEntry(saveFileEntry);
         thin.core.platform.File.write(workspace);
-      });
+      }]);
+
     // 新規ファイル
     } else {
       thin.core.platform.File.saveAs(workspace);
@@ -115,10 +123,12 @@ thin.core.platform.File.saveAs = function(workspace) {
     extensions: ["tlf"]
   }];
 
-  chrome.fileSystem.chooseEntry({type: 'saveFile', accepts: accepts}, function(saveFileEntry) {
+  thin.core.platform.callNativeFunction('chrome', 'fileSystem', 'chooseEntry', [
+      {type: 'saveFile', accepts: accepts}, function(saveFileEntry) {
+
     workspace.setSaveFileEntry(saveFileEntry);
     thin.core.platform.File.write(workspace);
-  });
+  }]);
 };
 
 

@@ -58,6 +58,9 @@ thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
   layout.updatePropertiesForEmpty();
 
   // var file = thin.editor.ImageFile.openDialog();
+  var isFileExist = null;//!!file;
+  // var isValid = isFileExist && file.isValid();
+
   thin.core.platform.File.open(function(content, selectedFile) {
     var isValid = !!content;
     scope.commonEndAction(e, outline, handler, captureActiveForStart, !isValid);
