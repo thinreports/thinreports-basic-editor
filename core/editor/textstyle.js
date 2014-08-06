@@ -23,6 +23,8 @@ goog.provide('thin.editor.TextStyle.OverflowTypeName');
 goog.provide('thin.editor.TextStyle.WordWrapType');
 goog.provide('thin.editor.TextStyle.WordWrapTypeName');
 
+goog.require('thin.i18n');
+
 
 /**
  * @constructor

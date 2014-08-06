@@ -15,7 +15,9 @@
 
 goog.provide('thin.core.platform.File');
 
-goog.require('goog.string');
+goog.require('goog.array');
+goog.require('thin.ui');
+goog.require('thin.core.platform');
 
 
 /**

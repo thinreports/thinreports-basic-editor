@@ -16,7 +16,7 @@
 goog.provide('thin.editor');
 
 goog.require('goog.crypt.hash32');
-goog.require('thin.editor.Workspace');
+goog.require('thin.ui');
 
 
 /**

@@ -15,6 +15,10 @@
 
 goog.provide('thin.core.platform.Font');
 
+goog.require('goog.dom');
+goog.require('thin.core.platform');
+goog.require('thin.editor.TextHelper');
+
 
 /**
  * @type {string}

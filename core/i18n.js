@@ -60,3 +60,18 @@ thin.i18n.getMsg_ = function(str, opt_values) {
   }
   return str;
 };
+
+
+// Alias method
+(function() {
+
+  /**
+   * @param {string} name
+   * @param {Object=} opt_values
+   * @return {string}
+   */
+  thin.t = function(name, opt_values) {
+    return thin.i18n.translate(name, opt_values);
+  };
+
+})();

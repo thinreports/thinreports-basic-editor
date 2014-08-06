@@ -18,7 +18,6 @@ goog.provide('thin.editor.AbstractTextGroup');
 goog.require('thin.editor.AbstractBoxGroup');
 goog.require('thin.editor.FontStyle');
 goog.require('thin.editor.TextStyle');
-goog.require('thin.core.Font');
 
 
 /**

@@ -25,6 +25,7 @@ goog.require('thin.editor.ModuleShape');
 goog.require('thin.editor.TextStyle');
 goog.require('thin.editor.TextStyle.HorizonAlignType');
 goog.require('thin.editor.TextStyle.VerticalAlignType');
+goog.require('thin.core.Font');
 
 
 /**

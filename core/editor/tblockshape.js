@@ -40,6 +40,7 @@ goog.require('thin.editor.formatstyles.FormatType');
 goog.require('thin.editor.formatstyles.NumberFormat');
 goog.require('thin.editor.formatstyles.DatetimeFormat');
 goog.require('thin.editor.formatstyles.PaddingFormat');
+goog.require('thin.core.Font');
 
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Component.EventType');

@@ -15,6 +15,8 @@
 
 goog.provide('thin.core.platform.Image');
 
+goog.require('thin.core.platform');
+
 
 /**
  * @param {string} path

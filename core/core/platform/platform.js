@@ -15,6 +15,9 @@
 
 goog.provide('thin.core.platform');
 
+goog.require('goog.array');
+goog.require('thin.core');
+
 
 /**
  * @return {boolean}

@@ -14,3 +14,5 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.core');
+
+goog.require('thin');

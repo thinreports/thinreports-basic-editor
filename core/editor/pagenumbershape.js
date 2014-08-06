@@ -31,7 +31,7 @@ goog.require('thin.editor.TextStyle.OverflowType');
 goog.require('thin.editor.TextStyle.OverflowTypeName');
 goog.require('thin.editor.AbstractTextGroup');
 goog.require('thin.editor.ModuleShape');
-
+goog.require('thin.core.Font');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Component.EventType');
 

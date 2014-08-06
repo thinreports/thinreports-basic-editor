@@ -17,7 +17,6 @@ goog.provide('thin.core.File');
 goog.provide('thin.core.File.Mode');
 
 goog.require('goog.Disposable');
-goog.require('goog.string');
 goog.require('thin.core');
 goog.require('thin.core.platform');
 goog.require('thin.core.platform.File');

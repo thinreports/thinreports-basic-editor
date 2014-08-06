@@ -15,6 +15,7 @@
 
 goog.provide('thin.layout.document.File');
 
+goog.require('thin.ui');
 goog.require('thin.layout.File');
 goog.require('thin.core.platform.File');
 

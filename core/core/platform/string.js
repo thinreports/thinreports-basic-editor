@@ -15,6 +15,8 @@
 
 goog.provide('thin.core.platform.String');
 
+goog.require('thin.core.platform');
+
 
 /**
  * @param {string} data

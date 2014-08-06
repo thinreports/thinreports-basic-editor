@@ -20,6 +20,7 @@ goog.provide('thin.ui.Icon.SizeType');
 goog.require('goog.ui.Component');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
+goog.require('thin.ui');
 
 
 /**

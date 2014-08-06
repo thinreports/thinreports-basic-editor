@@ -16,7 +16,8 @@
 goog.provide('thin.Settings');
 
 goog.require('goog.array');
-goog.require('goog.object');
+goog.require('thin.ui.InputUnitChanger');
+goog.require('thin.ui.InputUnitChanger.Unit');
 
 
 /**

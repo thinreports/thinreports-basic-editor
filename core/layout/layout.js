@@ -17,7 +17,6 @@ goog.provide('thin.layout');
 goog.provide('thin.layout.CompatibilityState');
 
 goog.require('goog.array');
-goog.require('goog.string');
 goog.require('thin.Version');
 goog.require('thin.Compatibility');
 
