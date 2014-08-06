@@ -1,8 +1,9 @@
 *.swp
 *.pro.user
 *.pyc
-core/base.js
-core/base-compile.log
-core/assets/app.css
+/base.js
+/base-compile.log
+/deps.log
+/assets/app.css
 
 release/
