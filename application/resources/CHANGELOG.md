@@ -2,6 +2,7 @@
 
 ### Bug fixes
 
+* When paper type is "user", paper orientation is not applied #9
 * The format of the PageNumber tool is not copied #8
 * 用紙のサイズでuserを使用して作成したtlfが使用出来ません #7
 
