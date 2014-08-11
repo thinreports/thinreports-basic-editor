@@ -322,13 +322,23 @@ thin.editor.Workspace.prototype.enablingOnceKeyEventHandling_ = function(enable)
 thin.editor.Workspace.create = function(file) {
   try {
     var format = thin.layout.Format.parse(file.getContent());
+    var version = format.getVersion();
+
     var xmlString = thin.editor.LayoutStructure.restoreStructure(format.getSvg());
-    
-    thin.Compatibility.applyIf(format.getVersion(), '=', '0.6.0.pre3',
+    thin.Compatibility.applyIf(version, '=', '0.6.0.pre3',
       function() {
         xmlString = thin.editor.LayoutStructure.restoreKerningFromLetterSpacing(xmlString);
       });
-    
+
+    var userTypeCompatibilityFn = function() {
+      var formatPage = format.page;
+      if (thin.layout.FormatPage.isUserType(formatPage.getPaperType().toLowerCase())) {
+        formatPage.setPaperType(thin.layout.FormatPage.PaperType['USER']);
+      }
+    };
+    thin.Compatibility.applyIf(version, '=', '0.7.7', userTypeCompatibilityFn);
+    thin.Compatibility.applyIf(version, '=', '0.7.7.1', userTypeCompatibilityFn);
+
     var doc = new DOMParser().parseFromString(xmlString, "application/xml");
     var canvasNode = goog.dom.getLastElementChild(doc.documentElement);
     
