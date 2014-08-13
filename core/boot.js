@@ -338,9 +338,9 @@ thin.boot = function() {
       dialog.addChild(paperTypeSelectbox, false);
 
       paperTypeSelectbox.setTextAlignLeft();
-      goog.array.forEach(goog.object.getKeys(thin.layout.FormatPage.PaperName), function(typeValue) {
+      goog.array.forEach(goog.object.getKeys(thin.layout.FormatPage.PaperName), function(key) {
         paperTypeSelectbox.addItem(new thin.ui.Option(
-            thin.layout.FormatPage.PaperName[typeValue], typeValue));
+            thin.layout.FormatPage.PaperName[key], thin.layout.FormatPage.PaperType[key]));
       });
       paperTypeSelectbox.setWidth(152);
       paperTypeSelectbox.render(goog.dom.getElement('new-config-paper-type'));
@@ -645,9 +645,9 @@ thin.boot = function() {
         var paperTypeSelectbox = new thin.ui.Select();
         paperTypeSelectbox.setTextAlignLeft();
         dialog.addChild(paperTypeSelectbox, false);
-        goog.array.forEach(goog.object.getKeys(thin.layout.FormatPage.PaperName), function(typeValue) {
+        goog.array.forEach(goog.object.getKeys(thin.layout.FormatPage.PaperName), function(key) {
           paperTypeSelectbox.addItem(new thin.ui.Option(
-              thin.layout.FormatPage.PaperName[typeValue], typeValue));
+              thin.layout.FormatPage.PaperName[key], thin.layout.FormatPage.PaperType[key]));
         });
         paperTypeSelectbox.setWidth(152);
         paperTypeSelectbox.render(goog.dom.getElement('edit-config-paper-type'));

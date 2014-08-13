@@ -366,6 +366,16 @@ thin.editor.Workspace.prototype.enablingOnceKeyEventHandling_ = function(enable)
 thin.editor.Workspace.create = function(file) {
   try {
     var format = thin.layout.Format.parse(file.getContent());
+    var version = format.getVersion();
+    var userTypeCompatibilityFn = function() {
+      var formatPage = format.page;
+      if (thin.layout.FormatPage.isUserType(formatPage.getPaperType().toLowerCase())) {
+        formatPage.setPaperType(thin.layout.FormatPage.PaperType['USER']);
+      }
+    };
+    thin.Compatibility.applyIf(version, '=', '0.7.7', userTypeCompatibilityFn);
+    thin.Compatibility.applyIf(version, '=', '0.7.7.1', userTypeCompatibilityFn);
+
     var workspace = new thin.editor.Workspace(format, file);
     workspace.createDom();
 
