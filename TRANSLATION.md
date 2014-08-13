@@ -63,7 +63,7 @@ Thin.LOCALES = {
 
 1. Fork [thinreports/thinreports-editor](https://github.com/thinreports/thinreports-editor) on github
 2. Create your feature branch: `git checkout -b new-locale`
-3. Add your translation file and add your language setting to `editor.js`
+3. Add your translation file and add your language setting to `app.js`
 4. Commit: `git commit -am 'added xx locale'`
 5. Push to the branch: `git push origin new-locale`
 6. Create new pull request
