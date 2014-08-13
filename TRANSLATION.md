@@ -12,7 +12,7 @@ Related files are as follows:
   * Windows: `INSTALLDIR\resources\core\app.js`
   * Mac OS: `ThinReportsEditor.app/Contents/Resources/core/app.js`
   * LInux: `INSTALLDIR/resources/core/app.js`
-  
+
 ### Create a Translation file
 
 Copy the `en.js`, create a translation file with a name like `xx.js` for your language
@@ -23,7 +23,7 @@ Modify the `xx.js` as follows:
 
 ```javascript
 Thin.setLocale('<your language like "en", "ja">', '<best font-families in your language>') {
-  toolbar_group_file: 'File', 
+  toolbar_group_file: 'File',
     :
 });
 ```
@@ -31,7 +31,7 @@ Thin.setLocale('<your language like "en", "ja">', '<best font-families in your l
 Translate into your language
 
 ```javascript
-  toolbar_group_file: '<translated text>', 
+  toolbar_group_file: '<translated text>',
     :
 ```
 
@@ -44,8 +44,8 @@ Add the following to your `app.js` (Configuration script):
  * Available locales
  */
 Thin.LOCALES = {
-  'ja': '日本語', 
-  'en': 'English', 
+  'ja': '日本語',
+  'en': 'English',
   'xx': '<your language name>'
 };
 ```
@@ -63,11 +63,7 @@ Thin.LOCALES = {
 
 1. Fork [thinreports/thinreports-editor](https://github.com/thinreports/thinreports-editor) on github
 2. Create your feature branch: `git checkout -b new-locale`
-3. Add your translation file and add your language setting to `app.js`
+3. Add your translation file and add your language setting to `editor.js`
 4. Commit: `git commit -am 'added xx locale'`
 5. Push to the branch: `git push origin new-locale`
 6. Create new pull request
-
-### Send as attachment of patch
-
-Submit your translation file from [the official issue tracker](http://osc.matsukei.net/projects/thinreports-editor/issues/new)(login required)
