@@ -161,9 +161,16 @@
   text-shadow: #eee 1px 1px 1px; 
 }
 
+.thin-dialog-about-version-info {
+  margin: 3px 0 0 2px;
+}
+
+.thin-dialog-about-version-info a {
+  display: inline-block;
+  margin-left: 1em;
+}
+
 #about-dialog-version {
-  padding-left: 2px;
-  margin-top: 3px;
   font-size: 14px;
 }
 

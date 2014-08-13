@@ -1398,7 +1398,7 @@ thin.boot = function() {
     
     // Forum
     var toolForum = new thin.ui.MenuLinkItem(
-        thin.t('button_go_to_forum'), 'http://osc.matsukei.net/projects/thinreports/boards',
+        thin.t('button_go_to_forum'), 'https://groups.google.com/forum/#!forum/thinreports',
         new thin.ui.Icon('forum'));
     toolHelp.addItem(toolForum);
     
@@ -1406,7 +1406,7 @@ thin.boot = function() {
     
     // Report Bug
     var toolHelpFeedBack = new thin.ui.MenuLinkItem(
-          thin.t('button_feedback'), 'http://osc.matsukei.net/projects/thinreports/issues/new',
+          thin.t('button_feedback'), 'https://github.com/thinreports/thinreports-editor/issues/new',
           new thin.ui.Icon('report-bug'));
     toolHelp.addItem(toolHelpFeedBack);
 
