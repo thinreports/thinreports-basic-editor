@@ -59,6 +59,7 @@ goog.inherits(thin.layout.FormatPage, goog.Disposable);
  * @enum {Array.<number>?}
  */
 thin.layout.FormatPage.PaperSize = {
+  // [height, width]
   'A3': [1190.5, 841.8],
   'A4': [841.8, 595.2],
   'B4': [1031.8, 728.5],
@@ -187,11 +188,17 @@ thin.layout.FormatPage.isUserType = function(paperType) {
 /**
  * @param {thin.layout.FormatPage.PaperType|string} type
  * @param {thin.layout.FormatPage.DirectionType|string} direction
+ * @param {number=} opt_width
+ * @param {number=} opt_height
  * @return {goog.math.Size}
  */
-thin.layout.FormatPage.paperSize = function(type, direction) {
+thin.layout.FormatPage.getPaperSize = function(type, direction, opt_width, opt_height) {
   var formatPage = thin.layout.FormatPage;
-  var size = formatPage.PaperSize[type];
+  if (formatPage.isUserType(type)) {
+    var size = [opt_height, opt_width];
+  } else {
+    var size = formatPage.PaperSize[type];
+  }
 
   if (direction == formatPage.DirectionType.PR) {
     return new goog.math.Size(size[1], size[0]);
@@ -312,11 +319,8 @@ thin.layout.FormatPage.prototype.getHeight = function() {
  * @return {goog.math.Size}
  */
 thin.layout.FormatPage.prototype.getPaperSize = function() {
-  var formatPage = thin.layout.FormatPage;
-  if (this.isUserType()) {
-    return new goog.math.Size(this.getWidth(), this.getHeight());
-  }
-  return formatPage.paperSize(this.getPaperType(), this.getOrientation());
+  return thin.layout.FormatPage.getPaperSize(this.getPaperType(),
+    this.getOrientation(), this.getWidth(), this.getHeight());
 };
 
 

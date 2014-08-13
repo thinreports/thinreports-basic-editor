@@ -558,18 +558,17 @@ thin.editor.Workspace.prototype.updateFormatPage = function(newMargins, newPaper
    * @param {number=} opt_height
    */
   var updateLayoutSize = function(margins, paperType, directionType, title, opt_width, opt_height) {
-  
+
     if (formatPage.isUserType(paperType)) {
+      var size = formatPage.getPaperSize(paperType, directionType, opt_width, opt_height);
       page.setWidth(opt_width);
       page.setHeight(opt_height);
-      var width = opt_width;
-      var height = opt_height;
     } else {
-      var size = formatPage.paperSize(paperType, directionType);
-      var width = size.width;
-      var height = size.height;
+      var size = formatPage.getPaperSize(paperType, directionType);
     }
-    
+
+    var width = size.width;
+    var height = size.height;
     page.setTitle(title);
     page.setPaperType(paperType);
     page.setOrientation(directionType);
