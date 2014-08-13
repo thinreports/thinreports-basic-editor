@@ -407,6 +407,7 @@ thin.editor.PageNumberShape.prototype.getCloneCreator = function() {
   var isAffiliationListShape = this.isAffiliationListShape();
   var deltaCoordinate = this.getDeltaCoordinateForList();
   var overflow = this.getOverflowType();
+  var format = this.getFormat();
 
   /**
    * @param {thin.editor.Layout} layout
@@ -435,6 +436,7 @@ thin.editor.PageNumberShape.prototype.getCloneCreator = function() {
     shape.setKerning(kerning);
     shape.setDisplay(display);
     shape.setOverflowType(overflow);
+    shape.setFormat(format);
 
     return shape;
   };

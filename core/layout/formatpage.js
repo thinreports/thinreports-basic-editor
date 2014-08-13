@@ -59,6 +59,7 @@ goog.inherits(thin.layout.FormatPage, goog.Disposable);
  * @enum {Array.<number>?}
  */
 thin.layout.FormatPage.PaperSize = {
+  // [height, width]
   'A3': [1190.5, 841.8],
   'A4': [841.8, 595.2],
   'B4': [1031.8, 728.5],
@@ -73,13 +74,13 @@ thin.layout.FormatPage.PaperSize = {
  * @enum {string}
  */
 thin.layout.FormatPage.PaperType = {
-  A3: 'A3',
-  A4: 'A4',
-  B4: 'B4',
-  B5: 'B5',
-  B4_ISO: 'B4_ISO',
-  B5_ISO: 'B5_ISO',
-  USER: 'user'
+  'A3': 'A3',
+  'A4': 'A4',
+  'B4': 'B4',
+  'B5': 'B5',
+  'B4_ISO': 'B4_ISO',
+  'B5_ISO': 'B5_ISO',
+  'USER': 'user'
 };
 
 
@@ -87,13 +88,13 @@ thin.layout.FormatPage.PaperType = {
  * @enum {string}
  */
 thin.layout.FormatPage.PaperName = {
-  'A3': thin.layout.FormatPage.PaperType.A3,
-  'A4': thin.layout.FormatPage.PaperType.A4,
-  'B4': thin.layout.FormatPage.PaperType.B4,
-  'B5': thin.layout.FormatPage.PaperType.B5,
+  'A3': thin.layout.FormatPage.PaperType['A3'],
+  'A4': thin.layout.FormatPage.PaperType['A4'],
+  'B4': thin.layout.FormatPage.PaperType['B4'],
+  'B5': thin.layout.FormatPage.PaperType['B5'],
   'B4_ISO': 'B4(ISO)',
   'B5_ISO': 'B5(ISO)',
-  'USER': thin.layout.FormatPage.PaperType.USER
+  'USER': thin.layout.FormatPage.PaperType['USER']
 };
 
 
@@ -110,7 +111,7 @@ thin.layout.FormatPage.DirectionType = {
  * @type {Object}
  */
 thin.layout.FormatPage.DEFAULT_SETTINGS = {
-  'paper-type': thin.layout.FormatPage.PaperType.A4,
+  'paper-type': thin.layout.FormatPage.PaperType['A4'],
   'orientation': thin.layout.FormatPage.DirectionType.PR,
   'margin-top': 20,
   'margin-bottom': 20,
@@ -123,7 +124,7 @@ thin.layout.FormatPage.DEFAULT_SETTINGS = {
  * @type {thin.layout.FormatPage.PaperType|string}
  * @private
  */
-thin.layout.FormatPage.prototype.paperType_ = thin.layout.FormatPage.PaperType.A4;
+thin.layout.FormatPage.prototype.paperType_ = thin.layout.FormatPage.PaperType['A4'];
 
 
 /**
@@ -180,21 +181,25 @@ thin.layout.FormatPage.prototype.marginRight_ = 20;
  * @return {boolean}
  */
 thin.layout.FormatPage.isUserType = function(paperType) {
-  return paperType.toLowerCase() == thin.layout.FormatPage.PaperType.USER;
+  return paperType == thin.layout.FormatPage.PaperType['USER'];
 };
 
 
 /**
  * @param {thin.layout.FormatPage.PaperType|string} type
  * @param {thin.layout.FormatPage.DirectionType|string} direction
+ * @param {number=} opt_width
+ * @param {number=} opt_height
  * @return {goog.math.Size}
  */
-thin.layout.FormatPage.paperSize = function(type, direction) {
-  type = type.toUpperCase();
-  
+thin.layout.FormatPage.getPaperSize = function(type, direction, opt_width, opt_height) {
   var formatPage = thin.layout.FormatPage;
-  var size = formatPage.PaperSize[type];
-  
+  if (formatPage.isUserType(type)) {
+    var size = [opt_height, opt_width];
+  } else {
+    var size = formatPage.PaperSize[type];
+  }
+
   if (direction == formatPage.DirectionType.PR) {
     return new goog.math.Size(size[1], size[0]);
   } else {
@@ -314,11 +319,8 @@ thin.layout.FormatPage.prototype.getHeight = function() {
  * @return {goog.math.Size}
  */
 thin.layout.FormatPage.prototype.getPaperSize = function() {
-  var formatPage = thin.layout.FormatPage;
-  if (this.isUserType()) {
-    return new goog.math.Size(this.getWidth(), this.getHeight());
-  }
-  return formatPage.paperSize(this.getPaperType(), this.getOrientation());
+  return thin.layout.FormatPage.getPaperSize(this.getPaperType(),
+    this.getOrientation(), this.getWidth(), this.getHeight());
 };
 
 

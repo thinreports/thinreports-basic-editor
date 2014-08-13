@@ -107,8 +107,13 @@ thin.layout.document.Base.prototype.getPaperInfo_ = function() {
       break;
   }
   
+  var paperType = page.getPaperType();
+  var paperTypeKey = goog.object.findKey(thin.layout.FormatPage.PaperType, function(value, key) {
+    return value == paperType;
+  });
+  
   return {
-    type: thin.layout.FormatPage.PaperName[page.getPaperType()],
+    type: thin.layout.FormatPage.PaperName[paperTypeKey],
     orientation: orientation,
     width: (page.isUserType() ? page.getWidth() : ''),
     height: (page.isUserType() ? page.getHeight() : ''),

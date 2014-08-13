@@ -366,6 +366,16 @@ thin.editor.Workspace.prototype.enablingOnceKeyEventHandling_ = function(enable)
 thin.editor.Workspace.create = function(file) {
   try {
     var format = thin.layout.Format.parse(file.getContent());
+    var version = format.getVersion();
+    var userTypeCompatibilityFn = function() {
+      var formatPage = format.page;
+      if (thin.layout.FormatPage.isUserType(formatPage.getPaperType().toLowerCase())) {
+        formatPage.setPaperType(thin.layout.FormatPage.PaperType['USER']);
+      }
+    };
+    thin.Compatibility.applyIf(version, '=', '0.7.7', userTypeCompatibilityFn);
+    thin.Compatibility.applyIf(version, '=', '0.7.7.1', userTypeCompatibilityFn);
+
     var workspace = new thin.editor.Workspace(format, file);
     workspace.createDom();
 
@@ -548,18 +558,17 @@ thin.editor.Workspace.prototype.updateFormatPage = function(newMargins, newPaper
    * @param {number=} opt_height
    */
   var updateLayoutSize = function(margins, paperType, directionType, title, opt_width, opt_height) {
-  
+
     if (formatPage.isUserType(paperType)) {
+      var size = formatPage.getPaperSize(paperType, directionType, opt_width, opt_height);
       page.setWidth(opt_width);
       page.setHeight(opt_height);
-      var width = opt_width;
-      var height = opt_height;
     } else {
-      var size = formatPage.paperSize(paperType, directionType);
-      var width = size.width;
-      var height = size.height;
+      var size = formatPage.getPaperSize(paperType, directionType);
     }
-    
+
+    var width = size.width;
+    var height = size.height;
     page.setTitle(title);
     page.setPaperType(paperType);
     page.setOrientation(directionType);
