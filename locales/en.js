@@ -142,6 +142,7 @@ Thin.setLocale('en', "'Lucida Grande', 'Segoe UI', Helvetica, Arial", {
   field_counted_page_target: 'Counted Target',
   field_default_counted_page_target: 'Report', 
   field_background_image: 'Background', 
+  field_inline_format: 'Allow inline format',
 
   button_new_report: 'New',
   button_save: 'Save',
