@@ -13,6 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+var CLOSURE_IMPORT_SCRIPT = function() {};
 var Thin = {};
 
 
@@ -20,7 +21,7 @@ var Thin = {};
  * Available locales
  */
 Thin.LOCALES = {
-  'ja': '日本語', 
+  'ja': '日本語',
   'en': 'English'
 };
 
@@ -35,7 +36,7 @@ Thin.setLocale = function(locale, fontFamilies, translations) {
   var current = Thin.locale_;
   current.name = locale;
   current.translations = translations;
-  
+
   Thin.insertTagAfterHead_('style',
       'body, textarea { font-family: ' + Thin.escape_(fontFamilies) + ', sans-serif; }',
       {type: 'text/css'});
@@ -62,7 +63,7 @@ Thin.locale_ = {
  * Get browser locale
  */
 Thin.getDefaultLocale = function() {
-  return (navigator.language || navigator.browserLanguage 
+  return (navigator.language || navigator.browserLanguage
       || navigator.userLanguage || 'en').substr(0, 2).toLowerCase();
 };
 
