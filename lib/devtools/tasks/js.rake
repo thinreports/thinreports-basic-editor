@@ -9,7 +9,6 @@ namespace :js do
     output_mode = ENV['output_mode'] || 'compiled'
     output_file = ENV['output_file'] || 'base.js'
     log_file = ENV['log_file'] || 'base-compile.log'
-    debug_mode = ENV['debug']
 
     log_file_path = File.join(CommandBuilder::ROOT, log_file)
 
@@ -29,59 +28,35 @@ namespace :js do
 
   desc 'JS dependency calculation'
   task :deps do
-    output_file = 'js.manifest'
-    output_file_path = File.join(CommandBuilder::ROOT, output_file)
-    editor_html_path = File.join(CommandBuilder::ROOT, 'editor.html')
+    require 'erb'
 
-    ENV['output_mode'] = 'list'
-    ENV['output_file'] = output_file
-    ENV['log_file'] = 'deps.log'
-
-    Rake::Task['js:compile'].invoke
-
-    if FileTest.exists?(output_file_path)
-      script_tags = []
-      first_core_script_index = nil
-      base_js_script_tag = nil
-
-      File.open(output_file_path) do |js_manifest|
-        js_manifest.readlines.each_with_index do |js_path, index|
-          js_path.match(/\.\.\\\.\.\\(.+)/) do |matched|
-            src = matched[1]
-            script_tag = "<script src='#{src}'></script>"
-
-            if !first_core_script_index && src =~ /^core\\/
-              first_core_script_index = index
-            end
-
-            if src =~ /^core\\base\.js/
-              base_js_script_tag = script_tag
-            else
-              script_tags << script_tag
-            end
-          end
-        end
-      end
-
-      script_tags.insert(first_core_script_index, base_js_script_tag)
-
-      editor_html_content = ''
-      indent = "\n    "
-      script = indent + script_tags.join(indent) + "\n"
-
-      File.open(editor_html_path) do |editor_html|
-        editor_html_content = editor_html.read
-        editor_html_content.match(/<!-- DEPENDENCY SCRIPT START -->(.+)<!-- DEPENDENCY SCRIPT END -->/m) do |matched|
-          editor_html_content.gsub!(matched[1], script)
-        end
-      end
-
-      File.open(editor_html_path, 'w+') do |editor_html|
-        editor_html.write(editor_html_content)
-      end
+    output_file_path = File.join(CommandBuilder::ROOT, 'js_list.txt')
+    run_command do
+      add "python #{closure_calcdeps_py}"
+      add "--input=#{path_from_core('boot.js')}"
+      add "--path=#{closure_library_for}"
+      add "--path=#{closure_templates_for}"
+      add "--path=#{path_from_core}"
+      add "-o list"
+      add "> #{output_file_path}"
     end
 
-    FileUtils.rm(output_file_path) if FileTest.exists?(output_file_path)
+    @dependencies_js = []
+    if FileTest.exists?(output_file_path)
+      File.open(output_file_path) do |output_file|
+        @dependencies_js = output_file.readlines.compact.map do |js|
+          "<script src=\"#{js.chomp.sub(/\A\.\.\\\.\.\\/, '')}\"></script>"
+        end
+      end
+      FileUtils.rm(output_file_path)
+    end
+
+    editor_html_path = File.join(CommandBuilder::ROOT, 'editor.html')
+    File.open(editor_html_path, 'w+') do |editor_html|
+      editor_html_content = ERB.new(File.read(File.join(
+        CommandBuilder::ROOT, 'editor.html.erb')), nil, '-').result
+      editor_html.write(editor_html_content)
+    end
   end
 
 end

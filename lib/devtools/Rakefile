@@ -35,7 +35,7 @@ module ThinReportsEditor
         else
           require 'open3'
         end
-        
+
         Open3.popen3(builder.to_s) do |stdin, stdout, stderr|
           File.open(options[:output], 'w') do |f|
             f.puts stderr.read
@@ -62,15 +62,15 @@ module ThinReportsEditor
     def initialize
       @commands = []
     end
-    
+
     def add(cmd)
       @commands << cmd
     end
-    
+
     def to_s
       @commands.join(' ')
     end
-    
+
     def inspect
       unless @commands.size.zero?
         ' ' + @commands.join($/ + ' ' * 3)
@@ -109,6 +109,10 @@ module ThinReportsEditor
       closure_library_for(*(%w( closure bin ) + paths))
     end
 
+    def closure_calcdeps_py
+      closure_library_bin_for('calcdeps.py')
+    end
+
     def closure_builder_py
       closure_library_bin_for('build', 'closurebuilder.py')
     end
@@ -124,7 +128,7 @@ module ThinReportsEditor
     def closure_compiler_jar(options = {})
       quote_path(CLOSURE_COMPILER, options)
     end
-  
+
     def closure_stylesheets_jar(options = {})
       quote_path(CLOSURE_STYLESHEETS, options)
     end

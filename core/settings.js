@@ -16,6 +16,7 @@
 goog.provide('thin.Settings');
 
 goog.require('goog.array');
+goog.require('thin.core.platform');
 goog.require('thin.ui.InputUnitChanger');
 goog.require('thin.ui.InputUnitChanger.Unit');
 
@@ -36,13 +37,13 @@ goog.addSingletonGetter(thin.Settings);
  */
 thin.Settings.DEFINITION = [
   // Default unit.
-  'default_unit', 
+  'default_unit',
   // System locale.
   'locale',
   // The directory of path that accessed image file at the last.
-  'last_image_path', 
+  'last_image_path',
   // The directory of path that saved the layout definition file at the last.
-  'last_layout_doc_path', 
+  'last_layout_doc_path',
   // The directory of path that accessed layout file at the last.
   'last_layout_path'
 ];
