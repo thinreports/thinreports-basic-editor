@@ -131,6 +131,7 @@ thin.editor.MultipleShapesHelper.prototype.initializeProperties = function() {
     'multiple': thin.editor.TblockShape.DEFAULT_MULTIPLE,
     'line-height': thin.editor.TextStyle.DEFAULT_LINEHEIGHT,
     'kerning': thin.editor.TextStyle.DEFAULT_KERNING,
+    'inline-format': thin.editor.AbstractTextGroup.DEFAULT_INLINE_FORMAT_ALLOWED,
     'format-type': thin.editor.TblockShape.DEFAULT_FORMAT_TYPE,
     'format-base': thin.editor.TblockShape.DEFAULT_FORMAT_BASE,
     'format-datetime-format': thin.editor.formatstyles.DatetimeFormat.DEFAULT_FORMAT,
@@ -941,6 +942,45 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       }, false, this);
 
   proppane.addProperty(textOverflowSelectProperty , textGroup, 'overflow');
+
+  var inlineFormatProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_inline_format'));
+  inlineFormatProperty.addEventListener(propEventType.CHANGE, function(e) {
+  
+    var inlineFormat = e.target.isChecked();
+    var captureProperties = scope.getCloneProperties();
+    var shapes = manager.getActiveShapeByIncludeList().getClone();
+    var targetShapes = [];
+    var captureInlineFormatArray = [];
+    goog.array.forEach(shapes, function(shape, count) {
+      var properties = shape.getProperties();
+      if (goog.object.containsKey(properties, 'inline-format')) {
+        goog.array.insert(targetShapes, shape);
+        goog.array.insertAt(captureInlineFormatArray, shape.getInlineFormatAllowed(), count);
+      }
+    });
+    
+    workspace.normalVersioning(function(version) {
+    
+      version.upHandler(function() {
+        goog.array.forEach(targetShapes, function(shape) {
+          shape.setInlineFormatAllowed(inlineFormat);
+        });
+        this.setPropertyForNonDestructive(captureProperties, 'inline-format', inlineFormat);
+        updateGuideAndProperties(shapes);
+      }, scope);
+      
+      version.downHandler(function() {
+      
+        goog.array.forEach(targetShapes, function(shape, count) {
+          shape.setInlineFormatAllowed(captureInlineFormatArray[count]);
+        });
+        this.setCloneProperties(captureProperties);
+        updateGuideAndProperties(shapes);
+      }, scope);
+    });
+  }, false, this);
+  
+  proppane.addProperty(inlineFormatProperty, textGroup, 'inline-format');
 
 
   var fontGroup = proppane.addGroup(thin.t('property_group_font'));
@@ -1763,6 +1803,7 @@ thin.editor.MultipleShapesHelper.prototype.updateProperties = function() {
   
   proppane.getPropertyControl('kerning').setValue(properties['kerning']);
   proppane.getPropertyControl('overflow').setValue(properties['overflow']);
+  proppane.getPropertyControl('inline-format').setChecked(properties['inline-format']);
 
   var formatType = properties['format-type'];
 

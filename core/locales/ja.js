@@ -142,6 +142,7 @@ Thin.setLocale('ja', "'Segoe UI', 'Meiryo UI'", {
   field_counted_page_target: 'カウント対象',
   field_default_counted_page_target: 'レポート', 
   field_background_image: '背景にする',
+  field_inline_format: 'インライン書式の許可',
 
   button_new_report: '新規作成',
   button_save: '保存',

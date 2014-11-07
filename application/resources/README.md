@@ -40,8 +40,8 @@ Then, please see the Installation Guide [[en](http://osc.matsukei.net/projects/t
 
 ### Release information
 
-[News](http://osc.matsukei.net/projects/thinreports/news) /
-[Changelog](http://osc.matsukei.net/projects/thinreports/wiki/Changelog)
+[News](http://www.thinreports.org/news/) /
+[Changelog](https://github.com/thinreports/thinreports-editor/blob/master/CHANGELOG.md)
 
 ### Documentation
 
@@ -52,7 +52,7 @@ Then, please see the Installation Guide [[en](http://osc.matsukei.net/projects/t
 
 ### Support
 
-[Open Forum](http://osc.matsukei.net/projects/thinreports/boards)
+[Discussion Group](https://groups.google.com/forum/#!forum/thinreports)
 
 ## Author
 
@@ -64,7 +64,7 @@ Then, please see the Installation Guide [[en](http://osc.matsukei.net/projects/t
 ## Contributing
 
 * Pull request
-* Feedback from [here](http://osc.matsukei.net/projects/thinreports/issues/new)
+* Feedback from [here](https://github.com/thinreports/thinreports-editor/issues/new)
 
 ### How to translate in your own language
 

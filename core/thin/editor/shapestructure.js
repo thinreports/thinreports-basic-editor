@@ -103,7 +103,8 @@ thin.editor.ShapeStructure.serializeForText_ = function(shape, json) {
     'width': Number(shape.getAttribute('x-width')),
     'height': Number(shape.getAttribute('x-height'))
   };
-  
+  json['inline-format'] = shape.getAttribute('x-inline-format') == 'true';
+
   thin.editor.ShapeStructure.forEachShapeAttribute_(shape,
     function(key, value) {
       if (key == 'space') {
@@ -188,7 +189,7 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
   
   json['multiple'] = mutliple;
   json['valign'] = shape.getAttribute('x-valign') || blank;
-  
+
   if (shape.hasAttribute('x-line-height')) {
     json['line-height'] = Number(shape.getAttribute('x-line-height'));
   } else {
@@ -239,6 +240,8 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
     'width': width,
     'height': height
   };
+
+  json['inline-format'] = shape.getAttribute('x-inline-format') == 'true';
 
   if (tag == 'text') {
     switch(anchor) {
