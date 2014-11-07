@@ -21,65 +21,102 @@ goog.require('thin.core.platform.File');
 
 
 /**
- * @param {string} path
- * @param {string} content
- * @return {boolean}
+ * @param {thin.core.File} file
+ * @constructor
+ * @extends {goog.Disposable}
  */
-thin.layout.document.File.save = function(path, content) {
-  try {
-    thin.core.platform.File.write(path, content);
-    thin.layout.document.File.setLastAccessedPath(path);
-  } catch(e) {
-    thin.ui.Notification.error(thin.t('error_can_not_save'));
-    return false;
-  }
-  return true;
+thin.layout.document.File = function(file) {
+  this.file_ = file;
+
+  goog.base(this);
+};
+goog.inherits(thin.layout.document.File, goog.Disposable);
+
+
+/**
+ * @enum {string}
+ */
+thin.layout.document.File.EXT_NAMES = {
+  CSV: 'csv',
+  HTML: 'html'
+};
+
+
+/**
+ * @type {string}
+ * @private
+ */
+thin.layout.document.File.EXT_DESCRIPTION_ = 'Text CSV/HTML Document';
+
+
+/**
+ * @type {Array.<Object>}
+ * @private
+ */
+thin.layout.document.File.ACCEPTS_ = [{
+  'extensions': goog.object.getValues(thin.layout.document.File.EXT_NAMES),
+  'description': thin.layout.document.File.EXT_DESCRIPTION_
+}];
+
+
+/**
+ * @enum {string}
+ */
+thin.layout.document.File.MIME_TYPES = {
+  'csv': 'text/csv',
+  'html': 'text/html'
+};
+
+
+/**
+ * @type {thin.core.File}
+ * @private
+ */
+thin.layout.document.File.prototype.file_;
+
+
+/**
+ * @param {string} fileName
+ * @param {Object.<Function>} callbacks
+ */
+thin.layout.document.File.saveDialog = function(fileName, callbacks) {
+  thin.core.platform.File.saveAs(fileName, thin.layout.document.File.ACCEPTS_, {
+    success: function(entry) {
+      thin.layout.document.File.handleSelectFileToSave(callbacks, entry);
+    },
+    cancel: goog.nullFunction,
+    error: function(e) {
+      thin.ui.Notification.error(thin.t('error_can_not_save'));
+    }
+  });
+};
+
+
+/**
+ * @param {Object.<Function>} callbacks
+ * @param {FileEntry} entry
+ */
+thin.layout.document.File.handleSelectFileToSave = function(callbacks, entry) {
+  thin.core.platform.File.getPath(entry, function(path) {
+    var coreFile = new thin.core.File(entry, path);
+    callbacks.success(new thin.layout.document.File(coreFile));
+  });
+};
+
+
+/**
+ * @param {string} content
+ * @param {string} mimeType
+ */
+thin.layout.document.File.prototype.save = function(content, mimeType) {
+  this.file_.setContent(content);
+  this.file_.write(content, mimeType);
 };
 
 
 /**
  * @return {string}
  */
-thin.layout.document.File.getLastAccessedPath = function() {
-  return thin.settings.get('last_layout_doc_path')
-      || thin.layout.File.getLastAccessedPath();
-};
-
-
-/**
- * @param {string} path
- */
-thin.layout.document.File.setLastAccessedPath = function(path) {
-  thin.settings.set('last_layout_doc_path', path);
-};
-
-
-/**
- * @param {string=} opt_fileName
- * @return {Object?}
- */
-thin.layout.document.File.getSaveFileInfo = function(opt_fileName) {
-  var platform = thin.core.platform;
-  
-  var filter = [
-    platform.File.createFilter('HTML Document', ['html']),
-    platform.File.createFilter('Text CSV', ['csv'])
-  ].join(';;');
-  var dir = platform.File.getPathDirName(
-      thin.layout.document.File.getLastAccessedPath());
-  
-  if (opt_fileName) {
-    dir += '/' + platform.File.getPathBaseName(opt_fileName) +
-           '.' + thin.layout.document.Type.HTML;
-  }
-  
-  var path = platform.File.getSaveFileName(thin.t('label_export_layout_definition'), dir, filter);
-  if (path) {
-    return {
-      type: platform.File.getFileType(path).toLowerCase(),
-      path: path
-    };
-  } else {
-    return null;
-  }
+thin.layout.document.File.prototype.getExt = function() {
+  return (this.file_.getName().split('.')).pop().toLowerCase();
 };

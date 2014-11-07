@@ -17,10 +17,8 @@ goog.provide('thin.editor.ImageFile');
 
 goog.require('goog.Disposable');
 goog.require('thin.core.File');
-goog.require('thin.core.File.Mode');
 goog.require('thin.core.platform');
 goog.require('thin.core.platform.File');
-goog.require('thin.core.platform.Image');
 
 
 /**
@@ -29,14 +27,10 @@ goog.require('thin.core.platform.Image');
  * @extends {goog.Disposable}
  */
 thin.editor.ImageFile = function(file) {
-  
-  /**
-   * @type {thin.core.File}
-   * @private
-   */
   this.file_ = file;
+  this.setSize();
 
-  goog.Disposable.call(this);
+  goog.base(this);
 };
 goog.inherits(thin.editor.ImageFile, goog.Disposable);
 
@@ -63,10 +57,21 @@ thin.editor.ImageFile.MIMETYPE_ = ['image/jpeg', 'image/png'];
 
 
 /**
- * @type {string?}
+ * @type {Array.<Object>}
  * @private
  */
-thin.editor.ImageFile.prototype.content_;
+thin.editor.ImageFile.ACCEPTS_ = [{
+  'extensions': thin.editor.ImageFile.EXT_NAME_,
+  'description': thin.editor.ImageFile.EXT_DESCRIPTION_,
+  'mimeTypes': thin.editor.ImageFile.MIMETYPE_
+}];
+
+
+/**
+ * @type {thin.core.File}
+ * @private
+ */
+thin.editor.ImageFile.prototype.file_;
 
 
 /**
@@ -84,85 +89,57 @@ thin.editor.ImageFile.prototype.height_;
 
 
 /**
- * @param {string} path
- * @return {number}
- * @private
+ * @param {Object.<Function>} callbacks
  */
-thin.editor.ImageFile.getMimeTypeIndex_ = function(path) {
-  var fileType = thin.core.platform.File.getFileType(path).toLowerCase();
-  return goog.array.findIndex(thin.editor.ImageFile.EXT_NAME_, function(imageType) {
-    return fileType === imageType;
+thin.editor.ImageFile.openDialog = function(callbacks) {
+  thin.core.platform.File.open(thin.editor.ImageFile.ACCEPTS_, {
+    success: function(entry) {
+      thin.editor.ImageFile.handleSelectFileToOpen(callbacks, entry);
+    },
+    cancel: function() {
+      thin.editor.ImageFile.handleCancelFileToOpen(callbacks);
+    },
+    error: goog.nullFunction
   });
 };
 
 
 /**
- * @param {string} path
- * @param {string} base64String
- * @return {string?}
- * @private
+ * @param {Object.<Function>} callbacks
  */
-thin.editor.ImageFile.createDataURIScheme_ = function(path, base64String) {
-  if (!!base64String) {
-    var mymeTypeIndex = thin.editor.ImageFile.getMimeTypeIndex_(path);
-    var mimeType = thin.editor.ImageFile.MIMETYPE_[mymeTypeIndex];
-    return goog.string.buildString('data:', mimeType, ';base64,', base64String);
-  } else {
-    return null;
-  }
+thin.editor.ImageFile.handleCancelFileToOpen = function(callbacks) {
+  callbacks.cancel();
 };
 
 
 /**
- * @return {string}
+ * @param {Object.<Function>} callbacks
+ * @param {FileEntry} entry
  */
-thin.editor.ImageFile.getLastAccessedPath = function() {
-  return thin.settings.get('last_image_path') || thin.core.File.HOME_PATH;
+thin.editor.ImageFile.handleSelectFileToOpen = function(callbacks, entry) {
+  entry.file(function(file) {
+    var fileReader = new FileReader();
+    fileReader.onload = function(e) {
+      thin.core.platform.File.getPath(entry, function(path) {
+        var coreFile = new thin.core.File(entry, path, e.target.result);
+        callbacks.success(new thin.editor.ImageFile(coreFile));
+      });
+    };
+    fileReader.onerror = callbacks.error;
+    fileReader.readAsDataURL(file);
+  });
 };
 
 
 /**
- * @param {string} path
+ * @param {Element} element
+ * @return {thin.editor.ImageFile}
  */
-thin.editor.ImageFile.setLastAccessedPath = function(path) {
-  thin.settings.set('last_image_path', path);
-};
+thin.editor.ImageFile.createFromElement = function(element) {
+  var entry = thin.core.File.createDummyEntry('DummyImageFile');
+  var coreFile = new thin.core.File(entry, '', element.href.baseVal);
 
-
-/**
- * @param {string=} opt_path
- * @return {string}
- */
-thin.editor.ImageFile.getOpenDirPath = function(opt_path) {
-  var lastPath = thin.editor.ImageFile.getLastAccessedPath();
-  if (!!opt_path) {
-    return thin.core.platform.File.getPathDirName(opt_path);
-  } else if (!!lastPath) {
-    return thin.core.platform.File.getPathDirName(lastPath);
-  } else {
-    // homepath
-    return thin.core.File.HOME_PATH;
-  }
-};
-
-
-/**
- * @param {string=} opt_path
- * @return {thin.editor.ImageFile?}
- */
-thin.editor.ImageFile.openDialog = function(opt_path) {
-  var path = thin.core.platform.File.getOpenFileName(thin.t('label_open_image'),
-                 thin.editor.ImageFile.getOpenDirPath(opt_path),
-                 thin.core.platform.File.createFilter(
-                    thin.editor.ImageFile.EXT_DESCRIPTION_, 
-                    thin.editor.ImageFile.EXT_NAME_));
-
-  if (!!path) {
-    thin.editor.ImageFile.setLastAccessedPath(path);
-    return new thin.editor.ImageFile(thin.core.File.open(
-                  path, thin.core.File.Mode.IMAGE));
-  }
-  return null;
+  return new thin.editor.ImageFile(coreFile);
 };
 
 
@@ -174,13 +151,22 @@ thin.editor.ImageFile.prototype.getPath = function() {
 };
 
 
+thin.editor.ImageFile.prototype.setSize = function() {
+  var tmpImg = new Image();
+  tmpImg.src = this.file_.getContent();
+
+  this.width_ = tmpImg.width;
+  this.height_ = tmpImg.height;
+
+  // cannot be deleted in ES5 strict mode
+  tmpImg = null;
+};
+
+
 /**
  * @return {number}
  */
 thin.editor.ImageFile.prototype.getWidth = function() {
-  if (!goog.isDef(this.width_)) {
-    this.width_ = thin.core.platform.Image.getWidth(this.getPath());
-  }
   return this.width_;
 };
 
@@ -189,18 +175,7 @@ thin.editor.ImageFile.prototype.getWidth = function() {
  * @return {number}
  */
 thin.editor.ImageFile.prototype.getHeight = function() {
-  if (!goog.isDef(this.height_)) {
-    this.height_ = thin.core.platform.Image.getHeight(this.getPath());
-  }
   return this.height_;
-};
-
-
-/**
- * @param {string?} content
- */
-thin.editor.ImageFile.prototype.setContent = function(content) {
-  this.content_ = content;
 };
 
 
@@ -208,20 +183,7 @@ thin.editor.ImageFile.prototype.setContent = function(content) {
  * @return {string?}
  */
 thin.editor.ImageFile.prototype.getContent = function() {
-  if (!goog.isDef(this.content_)) {
-    var file = this.file_;
-    this.setContent(thin.editor.ImageFile.createDataURIScheme_(
-          file.getPath(), file.read()));
-  }
-  return this.content_;
-};
-
-
-/**
- * @return {boolean}
- */
-thin.editor.ImageFile.prototype.isValid = function() {
-  return !goog.isNull(this.getContent());
+  return this.file_.getContent();
 };
 
 
@@ -229,19 +191,14 @@ thin.editor.ImageFile.prototype.isValid = function() {
  * @return {thin.editor.ImageFile}
  */
 thin.editor.ImageFile.prototype.clone = function() {
-  var file = new thin.editor.ImageFile(
-                    thin.core.File.open(this.getPath(), 
-                    thin.core.File.Mode.IMAGE));
-  file.setContent(this.getContent());
-  return file;
+  return new thin.editor.ImageFile(this.file_.clone());
 };
 
 
 /** @inheritDoc */
 thin.editor.ImageFile.prototype.disposeInternal = function() {
-  if (goog.isDef(this.file_)) {
-    this.file_.dispose();
-    delete this.file_;
-  }
-  thin.editor.ImageFile.superClass_.disposeInternal.call(this);
+  this.file_.dispose();
+  delete this.file_;
+
+  goog.base(this, 'disposeInternal');
 };

@@ -54,7 +54,8 @@ thin.core.platform.Font.getTextLineSpec = function(family, fontSize, isBold) {
   };
 
   goog.dom.removeNode(textHelper.getElement());
-  delete firstLine;
+  // cannot be deleted in ES5 strict mode
+  firstLine = null;
 
   return spec;
 };

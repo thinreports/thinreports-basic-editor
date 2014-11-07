@@ -37,7 +37,7 @@ thin.Version.TINY = 7;
 
 
 /**
- * @type {string?}
+ * @type {number}
  */
 thin.Version.PRE = 2;
 
@@ -57,8 +57,8 @@ thin.Version.isPreview = function() {
 thin.getVersion = function(opt_ignorePre) {
   var version = thin.Version;
   var res = [
-      version.MAJOR, 
-      version.MINOR, 
+      version.MAJOR,
+      version.MINOR,
       version.TINY
   ];
   if (!opt_ignorePre && version.isPreview()) {
@@ -78,7 +78,7 @@ thin.getNextMajorVersion = function() {
 
 /**
  * Advanced comparison.
- * 
+ *
  * @param {string} base
  * @param {string} operator
  * @param {string} target

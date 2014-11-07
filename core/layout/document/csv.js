@@ -27,7 +27,7 @@ goog.require('thin.layout.document.Base');
  */
 thin.layout.document.CSV = function(layout) {
   goog.base(this, layout);
-  
+
   /**
    * @type {goog.string.StringBuffer}
    * @private
@@ -50,7 +50,7 @@ thin.layout.document.CSV.prototype.generate = function() {
   this.appendBlankLine_();
   this.appendPaperInfo_();
   this.appendShapes_();
-  
+
   return this.buffer_.toString();
 };
 
@@ -85,14 +85,14 @@ thin.layout.document.CSV.prototype.appendMetaInfo_ = function() {
  */
 thin.layout.document.CSV.prototype.appendPaperInfo_ = function() {
   var paper = this.getPaperInfo_();
-  
+
   this.appendLine_(
-    thin.t('field_paper_type'), 
-    thin.t('field_paper_width'), 
-    thin.t('field_paper_height'), 
-    thin.t('field_paper_direction'), 
-    thin.t('field_margin_top'), 
-    thin.t('field_margin_bottom'), 
+    thin.t('field_paper_type'),
+    thin.t('field_paper_width'),
+    thin.t('field_paper_height'),
+    thin.t('field_paper_direction'),
+    thin.t('field_margin_top'),
+    thin.t('field_margin_bottom'),
     thin.t('field_margin_left'),
     thin.t('field_margin_right')
   );
@@ -182,12 +182,12 @@ thin.layout.document.CSV.prototype.appendLine_ = function(var_args) {
  */
 thin.layout.document.CSV.prototype.appendBasicShape_ = function(data) {
   this.appendBlankLineIfNotIndented_();
-  
+
   this.appendLine_(data.name);
   this.appendLine_(
-    'ID', 
-    thin.t('label_shape_type'), 
-    thin.t('field_display'), 
+    'ID',
+    thin.t('label_shape_type'),
+    thin.t('field_display'),
     thin.t('field_description')
   );
   goog.array.forEach(data.shapes, function(shape) {
@@ -210,19 +210,19 @@ thin.layout.document.CSV.prototype.appendPagenumberShape_ = function(data) {
 
   this.appendLine_(data.name);
   this.appendLine_(
-    thin.t('field_pageno_format'), 
-    'ID', 
-    thin.t('field_display'), 
-    thin.t('field_counted_page_target'), 
+    thin.t('field_pageno_format'),
+    'ID',
+    thin.t('field_display'),
+    thin.t('field_counted_page_target'),
     thin.t('field_description')
   );
 
   goog.array.forEach(data.shapes, function(shape) {
     this.appendLine_(
-      shape.format, 
-      shape.id, 
-      shape.display, 
-      shape.target, 
+      shape.format,
+      shape.id,
+      shape.display,
+      shape.target,
       shape.desc
     );
   }, this);
@@ -235,17 +235,17 @@ thin.layout.document.CSV.prototype.appendPagenumberShape_ = function(data) {
  */
 thin.layout.document.CSV.prototype.appendTblockShape_ = function(data) {
   this.appendBlankLineIfNotIndented_();
-  
+
   this.appendLine_(data.name);
   this.appendLine_(
-    'ID', 
-    thin.t('field_reference_id'), 
-    thin.t('field_display'), 
+    'ID',
+    thin.t('field_reference_id'),
+    thin.t('field_display'),
     thin.t('field_multiple_line'),
-    thin.t('field_default_value'), 
-    thin.t('field_basic_format'), 
-    thin.t('field_format_type'), 
-    thin.t('label_format'), 
+    thin.t('field_default_value'),
+    thin.t('field_basic_format'),
+    thin.t('field_format_type'),
+    thin.t('label_format'),
     thin.t('field_description')
   );
 
@@ -271,14 +271,14 @@ thin.layout.document.CSV.prototype.appendTblockShape_ = function(data) {
  */
 thin.layout.document.CSV.prototype.appendImageblockShape_ = function(data) {
   this.appendBlankLineIfNotIndented_();
-  
+
   this.appendLine_(data.name);
   this.appendLine_(
-    'ID', 
-    thin.t('field_display'), 
+    'ID',
+    thin.t('field_display'),
     thin.t('field_description')
   );
-  
+
   goog.array.forEach(data.shapes, function(shape) {
     this.appendLine_(
       shape.id,
@@ -295,21 +295,21 @@ thin.layout.document.CSV.prototype.appendImageblockShape_ = function(data) {
  */
 thin.layout.document.CSV.prototype.appendListShape_ = function(data) {
   var listName = data.name;
-  
+
   goog.array.forEach(data.shapes, function(shape) {
     this.appendBlankLine_();
-    
+
     this.appendLine_(listName);
     this.appendLine_(
-      'ID', 
-      thin.t('field_display'), 
-      thin.t('field_auto_page_break'), 
-      thin.t('field_list_header'), 
-      thin.t('field_list_page_footer'), 
-      thin.t('field_list_footer'), 
+      'ID',
+      thin.t('field_display'),
+      thin.t('field_auto_page_break'),
+      thin.t('field_list_header'),
+      thin.t('field_list_page_footer'),
+      thin.t('field_list_footer'),
       thin.t('field_description')
     );
-    
+
     this.appendLine_(
       shape.id,
       shape.display,
@@ -319,7 +319,7 @@ thin.layout.document.CSV.prototype.appendListShape_ = function(data) {
       shape.footer,
       shape.desc
     );
-    
+
     goog.array.forEach(shape.sections, function(section) {
       this.appendLine_(section.name);
       this.setIndent_(1);
@@ -333,7 +333,7 @@ thin.layout.document.CSV.prototype.appendListShape_ = function(data) {
 /** @inheritDoc */
 thin.layout.document.CSV.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
-  
+
   delete this.indention_;
   delete this.buffer_;
 };

@@ -20,7 +20,6 @@ goog.require('thin.editor.AbstractTextGroup');
 
 
 /**
- * @param {Element} element
  * @param {thin.editor.Layout} layout
  * @constructor
  * @extends {thin.editor.AbstractTextGroup}
@@ -32,7 +31,7 @@ goog.inherits(thin.editor.TextHelper, thin.editor.AbstractTextGroup);
 
 
 /**
- * @type {string}
+ * @type {thin.editor.TextLineShape}
  * @private
  */
 thin.editor.TextHelper.prototype.firstLine_ = null;

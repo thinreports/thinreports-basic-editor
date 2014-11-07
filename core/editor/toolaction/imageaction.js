@@ -39,13 +39,13 @@ goog.inherits(thin.editor.toolaction.ImageAction, thin.editor.toolaction.Abstrac
  */
 thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
     e, handler, outline, captureActiveForStart) {
-  
+
   var scope = this;
   var layout = this.layout;
   var workspace = layout.getWorkspace();
   var proppane = thin.ui.getComponent('proppane');
   var guide = layout.getHelpers().getGuideHelper();
-  
+
   outline.setWidth(0);
   outline.setHeight(0);
   this.commonStartAction(e, outline);
@@ -57,18 +57,23 @@ thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
 
   layout.updatePropertiesForEmpty();
 
-  // var file = thin.editor.ImageFile.openDialog();
-  var isFileExist = null;//!!file;
-  // var isValid = isFileExist && file.isValid();
+  var handleCancelFileToOpen = function() {
+    scope.commonEndAction(e, outline, handler, captureActiveForStart, true);
+  };
 
-  thin.core.platform.File.open(function(content, selectedFile) {
-    var isValid = !!content;
-    scope.commonEndAction(e, outline, handler, captureActiveForStart, !isValid);
+  var handleErrorFileToOpen = function() {
+    handleCancelFileToOpen();
+    thin.ui.Message.alert(thin.t('error_failed_to_load_image'), 'Error',
+      function(e) {
+        workspace.focusElement(e);
+      });
+  };
 
-    if (isValid) {
+  thin.editor.ImageFile.openDialog({
+    success: function(file) {
+      scope.commonEndAction(e, outline, handler, captureActiveForStart, false);
       var singleShape = layout.getManager().getActiveShapeByIncludeList().getIfSingle();
-      // singleShape.setFile(file);
-      singleShape.setSource(content);
+      singleShape.setFile(file);
 
       var count = 1;
       var delay = new goog.Delay(function() {
@@ -80,12 +85,8 @@ thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
         } else {
           if (count > 5) {
             workspace.undo();
-            scope.commonEndAction(e, outline, handler, captureActiveForStart, true);
+            handleErrorFileToOpen();
             delay.dispose();
-            thin.ui.Message.alert(thin.t('error_failed_to_load_image'), 'Error', 
-                function(e) {
-                  workspace.focusElement(e);
-                });
           } else {
             count += 1;
             delay.start();
@@ -93,16 +94,10 @@ thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
         }
       }, 10, singleShape);
       delay.start();
-    } else {
-      if (isFileExist && !isValid) {
-        thin.ui.Message.alert(thin.t('error_failed_to_load_image'), 'Error', 
-            function(e) {
-              workspace.focusElement(e);
-            });
-      }
-    }
-
-  }, true);
+    },
+    cancel: handleCancelFileToOpen,
+    error: handleErrorFileToOpen
+  });
 
   e.preventDefault();
 };
@@ -157,7 +152,7 @@ thin.editor.toolaction.ImageAction.prototype.handleActionInternal = function(e, 
       listDrawLayer = sectionHelper.getDrawLayer();
       listDrawLayer.setDisposed(false);
       listDrawLayer.setVisibled(true);
-      listDrawLayer.addEventListener(eventType.MOUSEDOWN, 
+      listDrawLayer.addEventListener(eventType.MOUSEDOWN,
         function(e) {
           if (e.isMouseActionButton()) {
             var layer;

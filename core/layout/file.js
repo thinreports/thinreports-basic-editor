@@ -17,7 +17,6 @@ goog.provide('thin.layout.File');
 
 goog.require('goog.Disposable');
 goog.require('thin.core.File');
-goog.require('thin.core.File.Mode');
 goog.require('thin.core.platform');
 goog.require('thin.core.platform.File');
 
@@ -31,8 +30,8 @@ thin.layout.File = function(opt_file) {
   if (opt_file) {
     this.file_ = opt_file;
   }
-  
-  goog.Disposable.call(this);
+
+  goog.base(this);
 };
 goog.inherits(thin.layout.File, goog.Disposable);
 
@@ -52,85 +51,103 @@ thin.layout.File.EXT_DESCRIPTION_ = 'ThinReports Layout Format';
 
 
 /**
+ * @type {string}
+ * @private
+ */
+thin.layout.File.MIME_TYPE_ = 'application/json';
+
+
+/**
+ * @type {Array.<Object>}
+ * @private
+ */
+thin.layout.File.ACCEPTS_ = [{
+  'extensions': [thin.layout.File.EXT_NAME_],
+  'description': thin.layout.File.EXT_DESCRIPTION_
+}];
+
+
+/**
  * @type {thin.core.File}
  * @private
  */
 thin.layout.File.prototype.file_;
 
 
-thin.layout.File.prototype.content_;
-
-thin.layout.File.prototype.name_;
-
-
 /**
- * @return {string}
+ * @param {Object.<Function>} callbacks
  */
-thin.layout.File.getLastAccessedPath = function() {
-  return thin.settings.get('last_layout_path') || thin.core.File.HOME_PATH;
+thin.layout.File.openDialog = function(callbacks) {
+  thin.core.platform.File.open(thin.layout.File.ACCEPTS_, {
+    success: function(entry) {
+      thin.layout.File.handleSelectFileToOpen(callbacks, entry);
+    },
+    cancel: goog.nullFunction,
+    error: goog.nullFunction
+  });
 };
 
 
 /**
- * @param {string} path
+ * @param {Object.<Function>} callbacks
+ * @param {FileEntry} entry
  */
-thin.layout.File.setLastAccessedPath = function(path) {
-  thin.settings.set('last_layout_path', path);
+thin.layout.File.handleSelectFileToOpen = function(callbacks, entry) {
+  entry.file(function(file) {
+    var fileReader = new FileReader();
+    fileReader.onload = function(e) {
+      thin.core.platform.File.getPath(entry, function(path) {
+        var coreFile = new thin.core.File(entry, path, e.target.result);
+        callbacks.success(new thin.layout.File(coreFile));
+      });
+    };
+    fileReader.onerror = callbacks.error;
+    fileReader.readAsText(file);
+  });
 };
 
 
 /**
- * @param {string=} opt_path
- * @return {string}
- * @private
+ * @param {string} fileName
+ * @param {Object.<Function>} callbacks
  */
-thin.layout.File.getOpenDirPath = function(opt_path) {
-  var lastPath = thin.layout.File.getLastAccessedPath();
-  if (!!opt_path) {
-    return thin.core.platform.File.getPathDirName(opt_path);
-  } else if (!!lastPath) {
-    return thin.core.platform.File.getPathDirName(lastPath);
-  } else {
-    // homepath
-    return thin.core.File.HOME_PATH;
-  }
+thin.layout.File.saveDialog = function(fileName, callbacks) {
+  thin.core.platform.File.saveAs(fileName, thin.layout.File.ACCEPTS_, {
+    success: function(entry) {
+      thin.layout.File.handleSelectFileToSave(callbacks, entry);
+    },
+    cancel: goog.nullFunction,
+    error: goog.nullFunction
+  });
 };
 
 
 /**
- * @param {string=} opt_path
- * @return {string}
- * @private
+ * @param {Object.<Function>} callbacks
+ * @param {FileEntry} entry
  */
-thin.layout.File.getSaveAsDirPath = function(opt_path) {
-  var lastPath = thin.layout.File.getLastAccessedPath();
-  if (!!opt_path) {
-    return opt_path;
-  } else if (!!lastPath) {
-    return thin.core.platform.File.getPathDirName(lastPath);
-  } else {
-    // homepath
-    return thin.core.File.HOME_PATH;
-  }
+thin.layout.File.handleSelectFileToSave = function(callbacks, entry) {
+  thin.core.platform.File.getPath(entry, function(path) {
+    var coreFile = new thin.core.File(entry, path);
+    callbacks.success(new thin.layout.File(coreFile));
+  });
 };
 
 
 /**
- * @param {string=} opt_path
- * @return {thin.layout.File?}
+ * @param {string} content
  */
-thin.layout.File.openDialog = function(opt_path) {
-  var path = thin.core.platform.File.getOpenFileName(thin.t('label_open_file'), 
-                 thin.layout.File.getOpenDirPath(opt_path),
-                 thin.core.platform.File.createFilter(
-                    thin.layout.File.EXT_DESCRIPTION_, 
-                    [thin.layout.File.EXT_NAME_], true));
+thin.layout.File.prototype.save = function(content) {
+  this.file_.setContent(content);
+  this.file_.write(content, thin.layout.File.MIME_TYPE_);
+};
 
-  if (!!path) {
-    thin.layout.File.setLastAccessedPath(path);
-    return new thin.layout.File(thin.core.File.open(path));
-  }
-  return null;
+
+/**
+ * @param {thin.core.File} file
+ */
+thin.layout.File.prototype.setFile = function(file) {
+  this.file_ = file;
 };
 
 
@@ -146,7 +163,7 @@ thin.layout.File.prototype.isNew = function() {
  * @return {string}
  */
 thin.layout.File.prototype.getName = function() {
-  return this.name_;
+  return this.file_.getName();
 };
 
 
@@ -154,16 +171,7 @@ thin.layout.File.prototype.getName = function() {
  * @return {string}
  */
 thin.layout.File.prototype.getPath = function() {
-  // return this.file_.getPath();
-  return 'hogehoge';
-};
-
-
-/**
- * @param {string} content
- */
-thin.layout.File.prototype.save = function(content) {
-  this.file_.write(content);
+  return this.file_.getPath();
 };
 
 
@@ -171,30 +179,7 @@ thin.layout.File.prototype.save = function(content) {
  * @return {string}
  */
 thin.layout.File.prototype.getContent = function() {
-  // return this.file_.read();
-  return this.content_;
-};
-
-
-/**
- * @param {string=} opt_path
- * @return {boolean}
- */
-thin.layout.File.prototype.saveAs = function(opt_path) {
-  var path = thin.core.platform.File.getSaveFileName(thin.t('label_save_file'), 
-                 thin.layout.File.getSaveAsDirPath(opt_path),
-                 thin.core.platform.File.createFilter(
-                    thin.layout.File.EXT_DESCRIPTION_, [thin.layout.File.EXT_NAME_]));
-
-  var isExistPath = !!path;
-  if (isExistPath) {
-    if (this.file_) {
-      this.file_.dispose();
-    }
-    thin.layout.File.setLastAccessedPath(path);
-    this.file_ = thin.core.File.open(path);
-  }
-  return isExistPath;
+  return this.file_.getContent();
 };
 
 
@@ -204,5 +189,6 @@ thin.layout.File.prototype.disposeInternal = function() {
     this.file_.dispose();
     delete this.file_;
   }
-  thin.layout.File.superClass_.disposeInternal.call(this);
+
+  goog.base(this, 'disposeInternal');
 };

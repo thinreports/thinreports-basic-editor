@@ -46,25 +46,25 @@ goog.require('thin.core.Font');
  * @extends {goog.ui.Component}
  */
 thin.editor.Workspace = function(format, opt_file) {
-  goog.ui.Component.call(this);
-  
+  goog.base(this);
+
   /**
    * @type {thin.layout.Format}
    */
   this.format = format;
-  
+
   if (goog.isDefAndNotNull(opt_file)) {
     this.setFile(opt_file);
   } else {
     this.setFile(new thin.layout.File());
   }
-  
+
   /**
    * @type {string}
    * @private
    */
   this.anchorType_ = thin.editor.TextStyle.HorizonAlignType.START;
-  
+
   /**
    * @type {string}
    * @private
@@ -82,32 +82,20 @@ thin.editor.Workspace = function(format, opt_file) {
    * @private
    */
   this.action_ = new thin.editor.Action(this);
-  
+
   /**
    * @type {thin.editor.HistoryManager}
    * @private
    */
   this.history_ = new thin.editor.HistoryManager();
-  
+
   /**
    * @type {string}
    * @private
-   */  
+   */
   this.fontFamily_ = thin.core.Font.getDefaultFont();
 };
 goog.inherits(thin.editor.Workspace, goog.ui.Component);
-
-
-/**
- * @type {FileEntry}
- */
-thin.editor.Workspace.prototype.saveFileEntry;
-
-
-/**
- * @type {FileEntry}
- */
-thin.editor.Workspace.prototype.openFileEntry;
 
 
 /**
@@ -216,38 +204,6 @@ thin.editor.Workspace.prototype.handlingOnceKeyEvent_ = false;
 
 
 /**
- * @type {FileEntry}
- */
-thin.editor.Workspace.prototype.setOpenFileEntry = function(fileEntry) {
-  this.openFileEntry = fileEntry;
-};
-
-
-/**
- * @return {FileEntry}
- */
-thin.editor.Workspace.prototype.getOpenFileEntry = function() {
-  return this.openFileEntry;
-};
-
-
-/**
- * @type {FileEntry}
- */
-thin.editor.Workspace.prototype.setSaveFileEntry = function(fileEntry) {
-  this.saveFileEntry = fileEntry;
-};
-
-
-/**
- * @return {FileEntry}
- */
-thin.editor.Workspace.prototype.getSaveFileEntry = function() {
-  return this.saveFileEntry;
-};
-
-
-/**
  * @param {goog.events.BrowserEvent} e
  * @private
  */
@@ -298,7 +254,7 @@ thin.editor.Workspace.prototype.handleKeyEvent_ = function(e) {
 thin.editor.Workspace.prototype.handleUndoRedoKeyEvent_ = function(e) {
   var keyCode = e.keyCode;
   var keyCodes = goog.events.KeyCodes;
-  
+
   if (e.ctrlKey) {
     switch(keyCode) {
       case keyCodes.Z:
@@ -321,7 +277,7 @@ thin.editor.Workspace.prototype.handleUndoRedoKeyEvent_ = function(e) {
 thin.editor.Workspace.prototype.handleCopyPasteKeyEvent_ = function(e) {
   var keyCode = e.keyCode;
   var keyCodes = goog.events.KeyCodes;
-  
+
   if (e.ctrlKey) {
     switch(keyCode) {
       case keyCodes.C:
@@ -411,12 +367,12 @@ thin.editor.Workspace.prototype.draw = function() {
     var format = layout.getFormat();
     var file = this.getFile();
     var xmlString = thin.editor.LayoutStructure.restoreStructure(format.getSvg());
-    
+
     thin.Compatibility.applyIf(format.getVersion(), '=', '0.6.0.pre3',
       function() {
         xmlString = thin.editor.LayoutStructure.restoreKerningFromLetterSpacing(xmlString);
       });
-    
+
     var doc = new DOMParser().parseFromString(xmlString, "application/xml");
     var canvasNode = goog.dom.getLastElementChild(doc.documentElement);
 
@@ -534,21 +490,21 @@ thin.editor.Workspace.prototype.updateFormatPage = function(newMargins, newPaper
   var currentPaperType = page.getPaperType();
   var currentDirection = page.getOrientation();
   var currentMargins = new goog.math.Box(page.getMarginTop(), page.getMarginRight(), page.getMarginBottom(), page.getMarginLeft());
-  
+
   var helpers = layout.getHelpers();
   var surface = helpers.getSurface();
   var canvas = helpers.getCanvas();
   var drawLayer = helpers.getDrawLayer();
   var zoomLayer = helpers.getZoomLayer();
   var marginGuideHelper = helpers.getMarginGuideHelper();
-  
+
   var marginGuideTop = marginGuideHelper.getTopGuide();
   var marginGuideLeft = marginGuideHelper.getLeftGuide();
   var marginGuideBottom = marginGuideHelper.getBottomGuide();
   var marginGuideRight = marginGuideHelper.getRightGuide();
   var workspaceScope = this;
 
-  
+
   /**
    * @param {goog.math.Box} margins
    * @param {thin.layout.FormatPage.PaperType|string} paperType
@@ -582,30 +538,30 @@ thin.editor.Workspace.prototype.updateFormatPage = function(newMargins, newPaper
     drawLayer.setHeight(height);
     zoomLayer.setWidth(width);
     zoomLayer.setHeight(height);
-    
+
     var mLeft = margins.left;
     var mTop = margins.top;
     var mRight = margins.right;
     var mBottom = margins.bottom;
     page.setMargin(mTop, mRight, mBottom, mLeft);
-    
+
     marginGuideLeft.setLeft(mLeft);
     marginGuideLeft.setHeight(height);
-    
+
     marginGuideTop.setTop(mTop);
     marginGuideTop.setWidth(width);
-    
+
     marginGuideBottom.setTop(height - mBottom);
     marginGuideBottom.setWidth(width);
-    
+
     marginGuideRight.setLeft(width - mRight);
     marginGuideRight.setHeight(height);
     helpers.getLayoutGuideHelper().updateLayoutGuideSize(width, height);
     this.action_.actionSetZoom(100);
   };
-  
+
   workspaceScope.normalVersioning(function(version) {
-  
+
     version.upHandler(function() {
       updateLayoutSize.call(this, newMargins, newPaperType, newDirectionType, newTitle, opt_newWidth, opt_newHeight);
     }, workspaceScope);
@@ -616,46 +572,13 @@ thin.editor.Workspace.prototype.updateFormatPage = function(newMargins, newPaper
 };
 
 
-/**
- * @return {boolean}
- */
 thin.editor.Workspace.prototype.save = function() {
   if (this.isNew()) {
-    // return saved?
-    return this.saveAs_();
+    this.saveAs();
   } else {
     if (this.isChanged()) {
       this.save_();
     }
-    return true;
-  }
-};
-
-
-/**
- * @return {boolean}
- */
-thin.editor.Workspace.prototype.saveAs = function() {
-  var opt_path;
-  if (!this.isNew()) {
-    opt_path = this.getFile().getPath();
-  }
-  // return saved?
-  return this.saveAs_(opt_path);
-};
-
-
-thin.editor.Workspace.prototype.generateLayoutDocument = function() {
-  if (this.isNew()) {
-    var msg = thin.t('text_layout_export_definition_confirmation');
-    thin.ui.Message.confirm(msg, thin.t('label_confirmation'), function(e) {
-      if (e.isYes() && this.saveAs_()) {
-        thin.layout.document.generate(this.getLayout());
-      }
-      this.focusElement(e);
-    }, thin.ui.Dialog.ButtonSet.typeYesNoCancel(), this);
-  } else {
-    thin.layout.document.generate(this.getLayout());
   }
 };
 
@@ -665,21 +588,30 @@ thin.editor.Workspace.prototype.save_ = function() {
 };
 
 
+thin.editor.Workspace.prototype.saveAs = function() {
+  thin.layout.File.saveDialog(this.getSuggestedFileName(), {
+    success: goog.bind(this.saveAs_, this),
+    cancel: goog.nullFunction,
+    error: goog.nullFunction
+  });
+};
+
+
 /**
- * @param {string=} opt_path
- * @return {boolean}
+ * @param {thin.layout.File} file
  */
-thin.editor.Workspace.prototype.saveAs_ = function(opt_path) {
-  var file = this.getFile();
-  var saved = file.saveAs(opt_path);
-  
-  if (saved) {
-    this.save_();
-    var page = thin.ui.getComponent('tabpane').getSelectedPage();
-    page.setTitle(thin.core.platform.File.getPathBaseName(file.getPath()));
-    page.setTooltip(file.getPath());
-  }
-  return saved;
+thin.editor.Workspace.prototype.saveAs_ = function(file) {
+  this.setFile(file);
+  this.save_();
+
+  var page = thin.ui.getComponent('tabpane').getSelectedPage();
+  page.setTitle(this.getTabName());
+  page.setTooltip(file.getPath());
+};
+
+
+thin.editor.Workspace.prototype.generateLayoutDocument = function() {
+  thin.layout.document.generate(this.getLayout());
 };
 
 
@@ -720,7 +652,7 @@ thin.editor.Workspace.prototype.setFile = function(file) {
   if (goog.isDef(this.file_)) {
     this.file_.dispose();
   }
-  
+
   this.file_ = file;
 };
 
@@ -730,6 +662,30 @@ thin.editor.Workspace.prototype.setFile = function(file) {
  */
 thin.editor.Workspace.prototype.getFile = function() {
   return this.file_;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.editor.Workspace.prototype.getTabName = function() {
+  if (this.file_.isNew()) {
+    return 'NoName';
+  } else {
+    return this.file_.getName();
+  }
+};
+
+
+/**
+ * @return {string}
+ */
+thin.editor.Workspace.prototype.getSuggestedFileName = function() {
+  if (this.file_.isNew()) {
+    return this.layout_.getFormatPage().getTitle();
+  } else {
+    return this.file_.getName();
+  }
 };
 
 
@@ -770,10 +726,10 @@ thin.editor.Workspace.prototype.updateFingerPrint_ = function() {
  */
 thin.editor.Workspace.prototype.getFingerPrint_ = function() {
   var layout = this.layout_;
-  
+
   return thin.editor.hash32(
     thin.editor.LayoutStructure.serializeForFingerPrint(layout) +
-    goog.json.serialize(this.format.page.toHash()) + 
+    goog.json.serialize(this.format.page.toHash()) +
     goog.json.serialize(layout.getHelpers().getLayoutGuideHelper().getGuides()));
 };
 
@@ -1059,14 +1015,14 @@ thin.editor.Workspace.prototype.setUiStatusForVerticalAlignTypeUi = function(ena
 /** @inheritDoc */
 thin.editor.Workspace.prototype.enterDocument = function() {
   thin.editor.Workspace.superClass_.enterDocument.call(this);
-  
+
   var eventHandler = this.getHandler();
   var eventType = goog.events.EventType;
-  
-  eventHandler.listen(this.element_, eventType.KEYDOWN, 
+
+  eventHandler.listen(this.element_, eventType.KEYDOWN,
     this.handleKeyEvent_, false, this);
-  
-  eventHandler.listen(this.element_, eventType.KEYUP, 
+
+  eventHandler.listen(this.element_, eventType.KEYUP,
     this.releaseOnceKeyEventHandling_, false, this);
 };
 
@@ -1074,10 +1030,10 @@ thin.editor.Workspace.prototype.enterDocument = function() {
 /** @inheritDoc */
 thin.editor.Workspace.prototype.exitDocument = function() {
   thin.editor.Workspace.superClass_.exitDocument.call(this);
-  
+
   var eventHandler = this.getHandler();
   var eventType = goog.events.EventType;
-  
+
   eventHandler.unlisten(this.element_, eventType.KEYDOWN);
   eventHandler.unlisten(this.element_, eventType.KEYUP);
 
@@ -1115,19 +1071,19 @@ thin.editor.Workspace.prototype.focusElement = function(e) {
 /** @inheritDoc */
 thin.editor.Workspace.prototype.disposeInternal = function() {
   this.format.dispose();
-  
+
   if (goog.isDef(this.file_)) {
     this.file_.dispose();
     delete this.file_;
   }
-  
+
   this.action_.dispose();
   this.history_.dispose();
-  
+
   delete this.format;
   delete this.action_;
   delete this.history_;
   delete this.layout_;
-  
-  thin.editor.Workspace.superClass_.disposeInternal.call(this);
+
+  goog.base(this, 'disposeInternal');
 };

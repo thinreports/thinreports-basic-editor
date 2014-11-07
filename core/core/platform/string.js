@@ -23,7 +23,5 @@ goog.require('thin.core.platform');
  * @return {string}
  */
 thin.core.platform.String.toBase64 = function(data) {
-  return /** @type {string} */ (
-            thin.core.platform.callNativeFunction(
-                'platform', 'String', 'toBase64', [data]));
+  return goog.global.btoa(unescape(encodeURIComponent(data)));
 };

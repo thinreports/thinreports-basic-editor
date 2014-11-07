@@ -22,38 +22,28 @@ goog.require('thin.layout.document.HTML');
 
 
 /**
- * @enum {string}
- */
-thin.layout.document.Type = {
-  CSV: 'csv',
-  HTML: 'html'
-};
-
-
-/**
  * @param {thin.editor.Layout} layout
  */
 thin.layout.document.generate = function(layout) {
-  var file = layout.getWorkspace().getFile();
-  var info = thin.layout.document.File.getSaveFileInfo(
-                file.isNew() ? undefined : file.getPath());
-  var doc;
-  
-  if (info) {
-    switch(info.type) {
-      case thin.layout.document.Type.CSV:
-        doc = thin.layout.document.generateCSV(layout);
-        break;
-      case thin.layout.document.Type.HTML:
-        doc = thin.layout.document.generateHTML(layout);
-        break;
-      default:
-        throw new Error('Unknown document type.');
-        break;
-    }
-    thin.layout.document.File.save(info.path, doc);
-    doc = null;
-  }
+  var fileName = layout.getWorkspace().getSuggestedFileName();
+  thin.layout.document.File.saveDialog(fileName, {
+    success: function(file) {
+      var ext = file.getExt();
+      var doc;
+      switch(ext) {
+        case thin.layout.document.File.EXT_NAMES.CSV:
+          doc = thin.layout.document.generateCSV(layout);
+          break;
+        case thin.layout.document.File.EXT_NAMES.HTML:
+          doc = thin.layout.document.generateHTML(layout);
+          break;
+      }
+
+      file.save(doc, thin.layout.document.File.MIME_TYPES[ext]);
+    },
+    cancel: goog.nullFunction,
+    error: goog.nullFunction
+  });
 };
 
 

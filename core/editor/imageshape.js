@@ -16,7 +16,6 @@
 goog.provide('thin.editor.ImageShape');
 
 goog.require('goog.graphics.SvgImageElement');
-goog.require('thin.core.File.Mode');
 goog.require('thin.editor.ModuleElement');
 goog.require('thin.editor.ModuleShape');
 
@@ -28,27 +27,26 @@ goog.require('thin.editor.ModuleShape');
  * @extends {goog.graphics.SvgImageElement}
  */
 thin.editor.ImageShape = function(element, layout) {
+  goog.base(this, element, layout);
 
-  goog.graphics.SvgImageElement.call(this, element, layout);
-  
   /**
    * @type {number}
    * @private
    */
   this.left_ = Number(layout.getElementAttribute(element, 'x'));
-  
+
   /**
    * @type {number}
    * @private
    */
   this.top_ = Number(layout.getElementAttribute(element, 'y'));
-  
+
   /**
    * @type {number}
    * @private
    */
   this.width_ = Number(layout.getElementAttribute(element, 'width'));
-  
+
   /**
    * @type {number}
    * @private
@@ -66,20 +64,6 @@ goog.mixin(thin.editor.ImageShape.prototype, thin.editor.ModuleShape.prototype);
  * @type {string}
  */
 thin.editor.ImageShape.CLASSID = 's-image';
-
-
-/**
- * @type {number}
- * @private
- */
-thin.editor.ImageShape.prototype.naturalWidth_;
-
-
-/**
- * @type {number}
- * @private
- */
-thin.editor.ImageShape.prototype.naturalHeight_;
 
 
 /**
@@ -115,11 +99,10 @@ thin.editor.ImageShape.createFromElement = function(element, layout, opt_shapeId
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
   shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
-  shape.setNaturalSize(Number(layout.getElementAttribute(element, 'x-natural-width')), 
-                       Number(layout.getElementAttribute(element, 'x-natural-height')));
   shape.setBackground(layout.getElementAttribute(element, 'x-bg') == 'true');
+  shape.setFile(thin.editor.ImageFile.createFromElement(element));
   shape.initIdentifier();
-  
+
   return shape;
 };
 
@@ -129,9 +112,6 @@ thin.editor.ImageShape.createFromElement = function(element, layout, opt_shapeId
  * @param {number} height
  */
 thin.editor.ImageShape.prototype.setNaturalSize = function(width, height) {
-  this.naturalWidth_ = width;
-  this.naturalHeight_ = height;
-  
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-natural-width': width
   });
@@ -145,7 +125,7 @@ thin.editor.ImageShape.prototype.setNaturalSize = function(width, height) {
  * @return {number}
  */
 thin.editor.ImageShape.prototype.getNaturalWidth = function() {
-  return this.naturalWidth_;
+  return this.file_.getWidth();
 };
 
 
@@ -153,7 +133,7 @@ thin.editor.ImageShape.prototype.getNaturalWidth = function() {
  * @return {number}
  */
 thin.editor.ImageShape.prototype.getNaturalHeight = function() {
-  return this.naturalHeight_;
+  return this.file_.getHeight();
 };
 
 
@@ -166,7 +146,7 @@ thin.editor.ImageShape.prototype.getNaturalHeight = function() {
  * @param {number=} opt_naturalHeight
  * @return {goog.math.Size}
  */
-thin.editor.ImageShape.prototype.getAllowSize = function(width, height, opt_left, opt_top, 
+thin.editor.ImageShape.prototype.getAllowSize = function(width, height, opt_left, opt_top,
                                                          opt_naturalWidth, opt_naturalHeight) {
 
   var allowWidth = this.getAllowWidth(width, opt_left);
@@ -180,16 +160,16 @@ thin.editor.ImageShape.prototype.getAllowSize = function(width, height, opt_left
                             thin.numberWithPrecision(naturalHeight / naturalWidth, 2));
 
     var limitedHeight = this.getAllowHeight(unlimitedHeight, opt_top);
-    return new goog.math.Size(thin.isExactlyEqual(limitedHeight, unlimitedHeight) ? allowWidth : 
+    return new goog.math.Size(thin.isExactlyEqual(limitedHeight, unlimitedHeight) ? allowWidth :
              thin.numberWithPrecision(limitedHeight *
                thin.numberWithPrecision(naturalWidth / naturalHeight, 2)), limitedHeight);
-    
+
   } else {
     var unlimitedWidth = thin.numberWithPrecision(allowHeight *
                            thin.numberWithPrecision(naturalWidth / naturalHeight, 2));
 
     var limitedWidth = this.getAllowWidth(unlimitedWidth, opt_left);
-    return new goog.math.Size(limitedWidth, thin.isExactlyEqual(limitedWidth, unlimitedWidth) ? allowHeight : 
+    return new goog.math.Size(limitedWidth, thin.isExactlyEqual(limitedWidth, unlimitedWidth) ? allowHeight :
              thin.numberWithPrecision(limitedWidth *
                thin.numberWithPrecision(naturalHeight / naturalWidth, 2)));
   }
@@ -208,13 +188,8 @@ thin.editor.ImageShape.prototype.adjustToAllowSize = function() {
  */
 thin.editor.ImageShape.prototype.setSource = function(src) {
   if (goog.isString(src)) {
-    this.getElement().setAttributeNS(thin.editor.Layout.SVG_NS_XLINK, 'xlink:href', src);
-
-    var tmpImg = new Image();
-    tmpImg.src = src;
-    this.setNaturalSize(tmpImg.width, tmpImg.height);
-
-    delete tmpImg;
+    this.getElement().setAttributeNS(
+      thin.editor.Layout.SVG_NS_XLINK, 'xlink:href', src);
   }
 };
 
@@ -307,12 +282,10 @@ thin.editor.ImageShape.prototype.getCloneCreator = function() {
 
   var width = this.getWidth();
   var height = this.getHeight();
-  var naturalWidth = this.getNaturalWidth();
-  var naturalHeight = this.getNaturalHeight();
   var file = this.getFile().clone();
   var display = this.getDisplay();
   var isBg = this.isBackground();
- 
+
   var isAffiliationListShape = this.isAffiliationListShape();
   var deltaCoordinate = this.getDeltaCoordinateForList();
 
@@ -326,13 +299,12 @@ thin.editor.ImageShape.prototype.getCloneCreator = function() {
   return function(layout, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate) {
     var shape = layout.createImageShape();
     layout.appendChild(shape, opt_renderTo);
-    
+
     var pasteCoordinate = layout.calculatePasteCoordinate(isAffiliationListShape,
           deltaCoordinateForList, deltaCoordinateForGuide, sourceCoordinate,
           opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate);
-    
+
     shape.setFile(file);
-    shape.setNaturalSize(naturalWidth, naturalHeight);
     shape.setBounds(new goog.math.Rect(pasteCoordinate.x, pasteCoordinate.y, width, height));
     shape.setBackground(isBg);
     shape.setDisplay(display);
@@ -345,67 +317,67 @@ thin.editor.ImageShape.prototype.getCloneCreator = function() {
  * @private
  */
 thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
-  
+
   var scope = this;
   var layout = this.getLayout();
   var guide = layout.getHelpers().getGuideHelper();
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
-  
+
   var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
-  
-  
+
+
   var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
   var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(topInputProperty, baseGroup, 'top');
-  
-  
+
+
   var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
-  
-  
+
+
   var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
-  
+
 
   var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
 
   var bgImageGroup = proppane.addGroup(thin.t('property_group_background_image'));
 
   var bgCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_background_image'));
-  bgCheckProperty.addEventListener(propEventType.CHANGE, 
+  bgCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var scope = this;
         var newIsBg = e.target.isChecked();
@@ -425,20 +397,20 @@ thin.editor.ImageShape.prototype.createPropertyComponent_ = function() {
       }, false, this);
 
   proppane.addProperty(bgCheckProperty, bgImageGroup, 'background-image');
-  
+
 
   var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
-  
+
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
       this.setShapeIdForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
-  
+
   var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
-  
+
   proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
@@ -454,7 +426,7 @@ thin.editor.ImageShape.prototype.getProperties = function() {
     'width': this.getWidth(),
     'height': this.getHeight(),
     'display': this.getDisplay(),
-    'background-image': this.isBackground(), 
+    'background-image': this.isBackground(),
     'shape-id': this.getShapeId(),
     'desc': this.getDesc()
   };
@@ -468,7 +440,7 @@ thin.editor.ImageShape.prototype.updateProperties = function() {
     proppane.setTarget(this);
     this.createPropertyComponent_();
   }
-  
+
   var properties = this.getProperties();
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
@@ -497,9 +469,12 @@ thin.editor.ImageShape.prototype.setInitShapeProperties = function(properties) {
  */
 thin.editor.ImageShape.prototype.setFileInternal = function(file) {
   if (goog.isDef(this.file_)) {
+    this.file_.dispose();
     delete this.file_;
   }
+
   this.file_ = file;
+  this.setNaturalSize(file.getWidth(), file.getHeight());
 };
 
 
@@ -509,7 +484,6 @@ thin.editor.ImageShape.prototype.setFileInternal = function(file) {
 thin.editor.ImageShape.prototype.setFile = function(file) {
   this.setFileInternal(file);
   this.setSource(file.getContent());
-
 };
 
 
@@ -517,20 +491,12 @@ thin.editor.ImageShape.prototype.setFile = function(file) {
  * @return {thin.editor.ImageFile}
  */
 thin.editor.ImageShape.prototype.getFile = function() {
-  if (!goog.isDef(this.file_)) {
-    var file = new thin.editor.ImageFile(thin.core.File.open(
-                        '', thin.core.File.Mode.IMAGE));
-    file.setContent(/** @type {string} */(
-        this.getLayout().getElementAttribute(this.getElement(), 'xlink:href')));
-    this.setFileInternal(file);
-  }
-  
   return this.file_;
 };
 
 
 /** @inheritDoc */
 thin.editor.ImageShape.prototype.disposeInternal = function() {
-  thin.editor.ImageShape.superClass_.disposeInternal.call(this);
+  goog.base(this, 'disposeInternal');
   this.disposeInternalForShape();
 };

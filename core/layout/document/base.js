@@ -32,19 +32,19 @@ goog.require('thin.editor.formatstyles');
  */
 thin.layout.document.Base = function(layout) {
   goog.base(this);
-  
+
   /**
    * @type {thin.editor.Layout}
    * @protected
    */
   this.layout = layout;
-  
+
   /**
    * @type {Array}
    * @private
    */
   this.data_ = [];
-  
+
   // Preparation
   this.createData_(layout.getManager());
 };
@@ -81,11 +81,10 @@ thin.layout.document.Base.prototype.getLayoutFile_ = function() {
  */
 thin.layout.document.Base.prototype.getMetaInfo_ = function() {
   var page = this.getLayoutFormat_().page;
-  var file = this.getLayoutFile_();
-  
+
   return {
     title: page.getTitle() || '[Untitled]',
-    fileName: thin.core.platform.File.getPathBaseName(file.getPath())
+    fileName: this.layout.getWorkspace().getSuggestedFileName()
   };
 };
 
@@ -97,7 +96,7 @@ thin.layout.document.Base.prototype.getMetaInfo_ = function() {
 thin.layout.document.Base.prototype.getPaperInfo_ = function() {
   var page = this.getLayoutFormat_().page;
   var orientation;
-  
+
   switch (page.getOrientation()) {
     case thin.layout.FormatPage.DirectionType.LS:
       orientation = thin.t('label_direction_landscape');
@@ -106,12 +105,12 @@ thin.layout.document.Base.prototype.getPaperInfo_ = function() {
       orientation = thin.t('label_direction_portrait');
       break;
   }
-  
+
   var paperType = page.getPaperType();
   var paperTypeKey = goog.object.findKey(thin.layout.FormatPage.PaperType, function(value, key) {
     return value == paperType;
   });
-  
+
   return {
     type: thin.layout.FormatPage.PaperName[paperTypeKey],
     orientation: orientation,
@@ -135,7 +134,7 @@ thin.layout.document.Base.prototype.getPaperInfo_ = function() {
 thin.layout.document.Base.prototype.createData_ = function(manager, opt_data) {
   var data = opt_data || this.data_;
   var shapes = {tblock: [], iblock: [], basic: [], list: [], pageno: []};
-  
+
   manager.forEachShapeWithId(function(id, shape) {
     switch(true) {
       case shape.instanceOfTblockShape():
@@ -155,7 +154,7 @@ thin.layout.document.Base.prototype.createData_ = function(manager, opt_data) {
         break;
     }
   });
-  
+
   if (!goog.array.isEmpty(shapes.tblock)) {
     var tblock = {
       type: thin.editor.TblockShape.CLASSID,
@@ -179,7 +178,7 @@ thin.layout.document.Base.prototype.createData_ = function(manager, opt_data) {
   if (!goog.array.isEmpty(shapes.pageno)) {
     var pageno = {
       type: thin.editor.PageNumberShape.CLASSID,
-      name: 'Page Number', 
+      name: 'Page Number',
       shapes: []
     };
     this.createPagenumberData_(shapes.pageno, pageno.shapes);
@@ -215,7 +214,7 @@ thin.layout.document.Base.prototype.createData_ = function(manager, opt_data) {
  */
 thin.layout.document.Base.prototype.createBasicData_ = function(shapes, data) {
   var shapeName = 'Basic';
-  
+
   goog.array.forEach(shapes, function(shape) {
     goog.array.insert(data, {
       id: shape.getShapeId(),
@@ -237,7 +236,7 @@ thin.layout.document.Base.prototype.createBasicData_ = function(shapes, data) {
 thin.layout.document.Base.prototype.createTblockData_ = function(shapes, data) {
   var shapeName = 'Text Block';
   var shapeType = thin.editor.TblockShape.CLASSID;
-  
+
   goog.array.forEach(shapes, function(shape) {
     goog.array.insert(data, {
       id: shape.getShapeId(),
@@ -267,12 +266,12 @@ thin.layout.document.Base.prototype.createPagenumberData_ = function(shapes, dat
 
   goog.array.forEach(shapes, function(shape) {
     goog.array.insert(data, {
-      id: shape.getShapeId(), 
-      type: shapeType, 
-      name: shapeName, 
-      format: shape.getFormat(), 
-      display: this.formatFlag_(shape.getDisplay()), 
-      target: shape.getTarget() || thin.t('field_default_counted_page_target'), 
+      id: shape.getShapeId(),
+      type: shapeType,
+      name: shapeName,
+      format: shape.getFormat(),
+      display: this.formatFlag_(shape.getDisplay()),
+      target: shape.getTargetId() || thin.t('field_default_counted_page_target'),
       desc: shape.getDesc()
     });
   }, this);
@@ -287,7 +286,7 @@ thin.layout.document.Base.prototype.createPagenumberData_ = function(shapes, dat
 thin.layout.document.Base.prototype.createImageblockData_ = function(shapes, data) {
   var shapeName = 'Image Block';
   var shapeType = thin.editor.ImageblockShape.CLASSID;
-  
+
   goog.array.forEach(shapes, function(shape) {
     goog.array.insert(data, {
       id: shape.getShapeId(),
@@ -310,7 +309,7 @@ thin.layout.document.Base.prototype.createListData_ = function(shapes, data) {
   var shapeType = thin.editor.ListShape.CLASSID;
   var listSectionName = thin.editor.ListHelper.SectionName;
   var listData, section;
-  
+
   goog.array.forEach(shapes, function(shape) {
     listData = {
       id: shape.getShapeId(),
@@ -324,29 +323,29 @@ thin.layout.document.Base.prototype.createListData_ = function(shapes, data) {
       sections: [],
       desc: shape.getDesc()
     };
-    
+
     // Header section.
     if (!this.createListSectionData_(
         shape.getSectionShape(listSectionName.HEADER), 'Header', listData)) {
       listData.header = this.formatFlag_(false);
     }
-    
+
     // Detail section.
     this.createListSectionData_(
         shape.getSectionShape(listSectionName.DETAIL), 'Detail', listData);
-    
+
     // Page Footer section.
     if (!this.createListSectionData_(
         shape.getSectionShape(listSectionName.PAGEFOOTER), 'Page Footer', listData)) {
       listData.pageFooter = this.formatFlag_(false);
     }
-    
+
     // Footer section.
     if (!this.createListSectionData_(
         shape.getSectionShape(listSectionName.FOOTER), 'Footer', listData)) {
       listData.footer = this.formatFlag_(false);
     }
-    
+
     goog.array.insert(data, listData);
   }, this);
 };
@@ -424,7 +423,7 @@ thin.layout.document.Base.prototype.formatShapeClassIdName_ = function(classId) 
 /** @inheritDoc */
 thin.layout.document.Base.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
-  
+
   this.layout = null;
   delete this.data_;
 };

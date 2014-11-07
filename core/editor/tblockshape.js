@@ -55,9 +55,9 @@ goog.require('goog.ui.Component.EventType');
 thin.editor.TblockShape = function(element, layout) {
   thin.editor.AbstractTextGroup.call(this, element, layout);
   this.setCss(thin.editor.TblockShape.CLASSID);
-  
+
   //this.setFactors_();
-  
+
   /**
    * @type {Array.<thin.editor.TblockShape>}
    * @private
@@ -271,11 +271,11 @@ thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeI
   var lineHeight = layout.getElementAttribute(element, 'x-line-height');
   var lineHeightRatio = layout.getElementAttribute(element, 'x-line-height-ratio');
   var kerning = layout.getElementAttribute(element, 'kerning');
-  
+
   if (element.hasAttribute('x-valign')) {
     shape.setVerticalAlign(layout.getElementAttribute(element, 'x-valign'));
   }
-  if (thin.isExactlyEqual(kerning, 
+  if (thin.isExactlyEqual(kerning,
         thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING)) {
     kerning = thin.editor.TextStyle.DEFAULT_KERNING;
   }
@@ -320,7 +320,7 @@ thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeI
         Number(layout.getElementAttribute(element, 'x-format-padding-length'))));
       break;
   }
-  
+
   shape.initIdentifier();
   return shape;
 };
@@ -340,11 +340,11 @@ thin.editor.TblockShape.prototype.createBox_ = function(opt_element) {
 
   var box = thin.editor.TblockShape.superClass_.
                 createBox_.call(this, opt_element, opt_classId);
-  
+
   box.setStroke(thin.editor.TblockShape.BOX_STROKE_);
   box.setFill(thin.editor.TblockShape.BOX_FILL_);
   box.setUsableClipPath(true);
-  
+
   return box;
 };
 
@@ -370,7 +370,7 @@ thin.editor.TblockShape.prototype.createId_ = function(opt_element) {
     'kerning': thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING
   });
 
-  return new thin.editor.IdShape(element, layout, null, 
+  return new thin.editor.IdShape(element, layout, null,
                   thin.editor.TblockShape.IDSHAPEFILL_);
 };
 
@@ -390,7 +390,7 @@ thin.editor.TblockShape.prototype.setup = function() {
 
   var opt_idElement = thin.editor.getElementByClassNameForChildNodes((
                           thin.editor.TblockShape.CLASSID + classId.ID), element.childNodes);
-  
+
   this.id_ = this.createId_(opt_idElement);
   if (!opt_idElement) {
     this.getLayout().appendChild(this.id_, this);
@@ -420,7 +420,7 @@ thin.editor.TblockShape.prototype.setDefaultOutline = function() {
 thin.editor.TblockShape.prototype.setFormatStyle = function(formatStyle) {
   if (formatStyle) {
     this.clearFormatStyle_(formatStyle);
-    
+
     var layout = this.getLayout();
     var element = this.getElement();
 
@@ -467,10 +467,10 @@ thin.editor.TblockShape.prototype.clearFormatStyle_ = function(opt_newFormat) {
     // Skip clear;
     return;
   }
-  
+
   var element = this.getElement();
   var captureFormatStyle = this.formatStyle_;
-  
+
   if (captureFormatStyle) {
     switch (true) {
       case thin.editor.formatstyles.isNumberFormat(captureFormatStyle):
@@ -489,10 +489,10 @@ thin.editor.TblockShape.prototype.clearFormatStyle_ = function(opt_newFormat) {
     this.formatStyle_.dispose();
     this.formatStyle_ = null;
   }
-  
+
   if (opt_newFormat) {
     var formatTypeTemp = thin.editor.formatstyles.FormatType;
-    
+
     switch (true) {
       case thin.editor.formatstyles.isNumberFormat(opt_newFormat):
         this.setFormatTypeInternal(formatTypeTemp.NUMBER);
@@ -565,7 +565,7 @@ thin.editor.TblockShape.prototype.getFormatType = function() {
  * @return {string}
  */
 thin.editor.TblockShape.prototype.getDefaultValueOfLink = function() {
-  return /** @type {string} */ (thin.getValIfNotDef(this.defaultValue_, 
+  return /** @type {string} */ (thin.getValIfNotDef(this.defaultValue_,
              thin.editor.TblockShape.DEFAULT_VALUE));
 };
 
@@ -585,7 +585,7 @@ thin.editor.TblockShape.prototype.setDefaultValueOfLink = function(value) {
  * @return {string}
  */
 thin.editor.TblockShape.prototype.getBaseFormat = function() {
-  return /** @type {string} */ (thin.getValIfNotDef(this.base_, 
+  return /** @type {string} */ (thin.getValIfNotDef(this.base_,
              thin.editor.TblockShape.DEFAULT_FORMAT_BASE));
 };
 
@@ -665,7 +665,7 @@ thin.editor.TblockShape.prototype.setRefId = function(refId, referenceShape) {
     // Skip setRefId;
     return;
   }
-  
+
   this.setInternalRefId(refId);
   if (this.isReferring()) {
     this.referenceShape_.removeReferringShape(this);
@@ -690,7 +690,7 @@ thin.editor.TblockShape.prototype.setInternalRefId = function(refId) {
  * @return {string}
  */
 thin.editor.TblockShape.prototype.getRefId = function() {
-  return /** @type {string} */ (thin.getValIfNotDef(this.refId_, 
+  return /** @type {string} */ (thin.getValIfNotDef(this.refId_,
              thin.editor.TblockShape.DEFAULT_REFID));
 };
 
@@ -745,7 +745,7 @@ thin.editor.TblockShape.prototype.setTop = function(top) {
  * @return {boolean}
  */
 thin.editor.TblockShape.prototype.isMultiMode = function() {
-  return /** @type {boolean} */ (thin.getValIfNotDef(this.multiMode_, 
+  return /** @type {boolean} */ (thin.getValIfNotDef(this.multiMode_,
              thin.editor.TblockShape.DEFAULT_MULTIPLE));
 };
 
@@ -816,11 +816,11 @@ thin.editor.TblockShape.prototype.setFontSize = function(size) {
 
 
 /**
- * @params {string} wrap
+ * @param {string} wrap
  */
 thin.editor.TblockShape.prototype.setTextWordWrap = function(wrap) {
   this.getLayout().setElementAttributes(this.getElement(), {
-    'x-word-wrap': wrap 
+    'x-word-wrap': wrap
   });
 };
 
@@ -885,7 +885,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
   var fill = this.getFill();
   var fontsize = this.getFontSize();
   var family = this.getFontFamily();
-  
+
   var bold = this.isFontBold();
   var italic = this.isFontItalic();
   var fontStyle = this.fontStyle_;
@@ -919,9 +919,9 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
 
     var shape = layout.createTblockShape();
     layout.appendChild(shape, opt_renderTo);
-    shape.setShapeId(layout.getNextShapeId(shapeIdPrefix, 
+    shape.setShapeId(layout.getNextShapeId(shapeIdPrefix,
                      opt_shapeIdManager), opt_shapeIdManager);
-    
+
     var pasteCoordinate = layout.calculatePasteCoordinate(isAffiliationListShape, deltaCoordinateForList, deltaCoordinateForGuide, sourceCoordinate, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate);
     shape.setBounds(new goog.math.Rect(pasteCoordinate.x, pasteCoordinate.y, width, height));
 
@@ -962,68 +962,68 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var workspace = layout.getWorkspace();
   var guide = layout.getHelpers().getGuideHelper();
   var textStyle = this.textStyle_;
-  
+
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
-  
+
   var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
-  
-  
+
+
   var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
   var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(topInputProperty, baseGroup, 'top');
-  
-  
+
+
   var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
-  
-  
+
+
   var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
-  
-  
+
+
   var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
 
   var fontGroup = proppane.addGroup(thin.t('property_group_font'));
-  
+
 
   var colorInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_font_color'));
   colorInputProperty.getValueControl().getInput().setLabel('none');
   colorInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-      
+
         var scope = this;
         var layout = this.getLayout();
         var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
@@ -1036,22 +1036,22 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         var captureFillColor = captureFill.getColor();
         if (thin.isExactlyEqual(captureFillColor, fillNone)) {
           captureFillColor = proppaneBlank;
-        }        
+        }
 
         layout.getWorkspace().normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setFill(fill);
             proppane.getPropertyControl('font-color').setValue(fillColor);
           }, scope);
-          
+
           version.downHandler(function() {
             this.setFill(captureFill);
             proppane.getPropertyControl('font-color').setValue(captureFillColor);
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(colorInputProperty , fontGroup, 'font-color');
 
 
@@ -1074,9 +1074,9 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         workspace.getAction().actionSetFontSize(Number(e.target.getValue()));
       }, false, this);
-  
+
   proppane.addProperty(fontSizeCombProperty , fontGroup, 'font-size');
-  
+
 
   var fontFamilySelectProperty =
         new thin.ui.PropertyPane.FontSelectProperty();
@@ -1085,17 +1085,17 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         workspace.getAction().actionSetFontFamily(e.target.getValue());
       }, false, this);
-  
+
   proppane.addProperty(fontFamilySelectProperty , fontGroup, 'font-family');
 
 
   var textGroup = proppane.addGroup(thin.t('property_group_text'));
-  
+
 
   var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
   var textAlignType = thin.editor.TextStyle.HorizonAlignTypeName;
-  
+
   textAlignSelect.setTextAlignLeft();
   textAlignSelect.addItem(new thin.ui.Option(textAlignType.START));
   textAlignSelect.addItem(new thin.ui.Option(textAlignType.MIDDLE));
@@ -1106,27 +1106,27 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         workspace.getAction().actionSetTextAnchor(
             thin.editor.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
       }, false, this);
-  
+
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
-  
-  
+
+
   var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_vertical_align'));
   var textVerticalAlignSelect = textVerticalAlignSelectProperty.getValueControl();
   textVerticalAlignSelect.setTextAlignLeft();
   var verticalAlignType = thin.editor.TextStyle.VerticalAlignTypeName;
-  
+
   textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.TOP));
   textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.CENTER));
   textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.BOTTOM));
-  
+
   textVerticalAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         workspace.getAction().actionSetVerticalAlign(
             thin.editor.TextStyle.getVerticalAlignTypeFromTypeName(e.target.getValue()));
       }, false, this);
-  
+
   proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
-  
+
 
   var lineHeightCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_text_line_height'));
   var lineHeightComb = lineHeightCombProperty.getValueControl();
@@ -1135,8 +1135,8 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var lineHeightInputValidation = new thin.ui.Input.NumberValidator(this);
   lineHeightInputValidation.setAllowBlank(true);
   lineHeightInputValidation.setAllowDecimal(true, 1);
-  lineHeightInput.setValidator(lineHeightInputValidation);  
-  
+  lineHeightInput.setValidator(lineHeightInputValidation);
+
   var lineHeightItem;
   goog.array.forEach(thin.editor.TextStyle.LINEHEIGHT_LIST, function(lineHeightValue) {
     lineHeightItem = new thin.ui.ComboBoxItem(lineHeightValue);
@@ -1149,37 +1149,37 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         var captureRatio = scope.getTextLineHeightRatio();
 
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setTextLineHeightRatio(ratio);
             proppane.getPropertyControl('line-height').setInternalValue(ratio);
           }, scope);
-          
+
           version.downHandler(function() {
             this.setTextLineHeightRatio(captureRatio);
             proppane.getPropertyControl('line-height').setInternalValue(captureRatio);
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(lineHeightCombProperty , textGroup, 'line-height');
-  
-  
+
+
   var kerningInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_text_kerning'), 'auto');
   var kerningInput = kerningInputProperty.getValueControl();
   var kerningInputValidation = kerningInput.getNumberValidator();
   kerningInputValidation.setAllowDecimal(true, 1);
   kerningInputValidation.setAllowBlank(true);
-  
+
   kerningInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var kerning = e.target.getValue();
         var captureSpacing = scope.getKerning();
-        
+
         if (kerning !== thin.editor.TextStyle.DEFAULT_KERNING) {
           kerning = String(Number(kerning));
         }
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setKerning(kerning);
@@ -1191,7 +1191,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(kerningInputProperty, textGroup, 'kerning');
 
 
@@ -1204,13 +1204,13 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         var anchorStart = thin.editor.TextStyle.HorizonAlignType.START;
         var captureTextAnchor = scope.getTextAnchor();
         var captureHeight = scope.getHeight();
-        
+
         /**
          * @param {boolean} isMultiple
          * @param {string} textAnchor
          */
         var setMultipleMode = function(isMultiple, textAnchor) {
-        
+
           scope.setMultiMode(isMultiple);
           proppane.getChild('line-height').setEnabled(isMultiple);
           proppane.getChild('text-valign').setEnabled(isMultiple);
@@ -1227,32 +1227,32 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
           guide.setEnableAndTargetShape(scope);
           scope.updateProperties();
         };
-        
+
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             setMultipleMode(multipleMode, anchorStart);
           }, scope);
-          
+
           version.downHandler(function() {
             setMultipleMode(captureMultipleMode, captureTextAnchor);
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(multipleCheckProperty, textGroup, 'multiple');
 
   var textOverflowSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_overflow'));
   var textOverflowSelect = textOverflowSelectProperty.getValueControl();
   textOverflowSelect.setTextAlignLeft();
-  
+
   var overflowName = thin.editor.TextStyle.OverflowTypeName;
   var overflowType = thin.editor.TextStyle.OverflowType;
-  
+
   textOverflowSelect.addItem(new thin.ui.Option(overflowName.TRUNCATE, overflowType.TRUNCATE));
   textOverflowSelect.addItem(new thin.ui.Option(overflowName.FIT, overflowType.FIT));
   textOverflowSelect.addItem(new thin.ui.Option(overflowName.EXPAND, overflowType.EXPAND));
-  
+
   textOverflowSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var overflow = e.target.getValue();
@@ -1269,7 +1269,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(textOverflowSelectProperty , textGroup, 'overflow');
 
 
@@ -1321,7 +1321,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(inlineFormatProperty, textGroup, 'inline-format');
 
   var formatGroup = proppane.addGroup(thin.t('property_group_simple_format'), 'format-group');
@@ -1338,9 +1338,9 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         var formatType = thin.editor.formatstyles.getFormatTypeFromName(formatValue);
         var captureFormatValue = thin.editor.formatstyles.getFormatNameFromType(scope.getFormatType());
         var captureFormatStyle = scope.getFormatStyle();
-        
+
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setFormatType(formatType);
             this.updateProperties();
@@ -1351,20 +1351,20 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(formatTypeSelectProperty , formatGroup, 'format-type');
-    
-  
+
+
   var baseFormatInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_basic_format'));
   var baseFormatInput = baseFormatInputProperty.getValueControl();
   baseFormatInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        
+
         var formatBase = e.target.getValue();
         var captureFormatBase = this.getBaseFormat();
-        
+
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setBaseFormat(formatBase);
             proppane.getPropertyControl('format-base').setValue(formatBase);
@@ -1387,15 +1387,15 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
     dateTimeItem.setSticky(true);
     dateTimeComb.addItem(dateTimeItem);
   });
-  
+
   dateTimeCombProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        
+
         var dateTimeFormat = e.target.getValue();
         var dateTimeFormatStyle = new thin.editor.formatstyles.DatetimeFormat(dateTimeFormat);
         var captureDateTimeFormatStyle = scope.getFormatStyle();
         var captureDateTimeFormat = captureDateTimeFormatStyle.getFormat();
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setFormatStyle(dateTimeFormatStyle);
@@ -1408,14 +1408,14 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         });
       }, false, this);
   proppane.addProperty(dateTimeCombProperty , formatGroup, 'format-datetime-format');
-  
-  
+
+
   var delimiterCheckableInputProperty = new thin.ui.PropertyPane.CheckableInputProperty(thin.t('field_delimiter'));
   var delimiterCheckBox = delimiterCheckableInputProperty.getValueControlCheckbox();
   var delimiterInput = delimiterCheckableInputProperty.getValueControlMain();
-  
+
   var componentEventType = goog.ui.Component.EventType;
-  
+
   delimiterCheckBox.addEventListener(componentEventType.CHANGE,
       function(e) {
         var updatePropertiesForDelimiter = function(delimiter, delimitation) {
@@ -1430,7 +1430,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
                                       captureFormatStyle.getPrecision(), e.target.isChecked());
 
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setFormatStyle(numberFormatStyle);
             updatePropertiesForDelimiter(numberFormatStyle.getDelimiter(), numberFormatStyle.isDelimitationEnabled());
@@ -1441,21 +1441,21 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
-  
+
+
   delimiterInput.addEventListener(componentEventType.CHANGE,
       function(e) {
         var updatePropertiesForDelimiter = function(delimiter) {
           proppane.getChild('format-number-delimiter').setValue(delimiter);
         }
-        
+
         var captureFormatStyle = scope.getFormatStyle();
         var numberFormatStyle = new thin.editor.formatstyles.NumberFormat(
                                       e.target.getValue(), captureFormatStyle.getPrecision(),
                                       captureFormatStyle.isDelimitationEnabled());
-        
+
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setFormatStyle(numberFormatStyle);
             updatePropertiesForDelimiter(numberFormatStyle.getDelimiter());
@@ -1468,24 +1468,24 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
       }, false, this);
 
   proppane.addProperty(delimiterCheckableInputProperty, formatGroup, 'format-number-delimiter');
-  
-  
+
+
   var precisionInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_decimal_place'));
   var precisionInput = precisionInputProperty.getValueControl();
   var precisionValidation = new thin.ui.Input.NumberValidator();
   precisionInput.setValidator(precisionValidation);
   precisionInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        
+
         var precision = Number(e.target.getValue());
         var captureFormatStyle = scope.getFormatStyle();
         var capturePrecision = captureFormatStyle.getPrecision();
         var numberFormatStyle = new thin.editor.formatstyles.NumberFormat(
                                       captureFormatStyle.getDelimiter(), precision,
                                       captureFormatStyle.isDelimitationEnabled());
-        
+
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setFormatStyle(numberFormatStyle);
             proppane.getPropertyControl('format-number-precision').setValue(precision);
@@ -1497,24 +1497,24 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         });
       }, false, this);
   proppane.addProperty(precisionInputProperty, formatGroup, 'format-number-precision');
-  
-  
+
+
   var lengthInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_fill_length'));
   var lengthInput = lengthInputProperty.getValueControl();
   var lengthValidation = new thin.ui.Input.NumberValidator();
   lengthInput.setValidator(lengthValidation);
-  
+
   lengthInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        
+
         var paddingLength = Number(e.target.getValue());
         var captureFormatStyle = scope.getFormatStyle();
         var capturePaddingLen = captureFormatStyle.getLength();
         var paddingFormat = new thin.editor.formatstyles.PaddingFormat(
                               captureFormatStyle.getDirection(), captureFormatStyle.getChar(), paddingLength);
-        
+
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setFormatStyle(paddingFormat);
             proppane.getPropertyControl('format-padding-length').setValue(paddingLength);
@@ -1526,13 +1526,13 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         });
       }, false, this);
   proppane.addProperty(lengthInputProperty, formatGroup, 'format-padding-length');
-  
-  
+
+
   var charInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_fill_character'));
   var charInput = charInputProperty.getValueControl();
   charInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        
+
         var paddingChar = e.target.getValue();
         var captureFormatStyle = scope.getFormatStyle();
         var capturePaddingChar = captureFormatStyle.getChar();
@@ -1541,7 +1541,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
                               captureFormatStyle.getLength());
 
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setFormatStyle(paddingFormat);
             proppane.getPropertyControl('format-padding-char').setValue(paddingChar);
@@ -1553,8 +1553,8 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         });
       }, false, this);
   proppane.addProperty(charInputProperty, formatGroup, 'format-padding-char');
-  
-  
+
+
   var directionSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_fill_direction'));
   var directionSelect = directionSelectProperty.getValueControl();
   directionSelect.setTextAlignLeft();
@@ -1572,9 +1572,9 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         var paddingFormat = new thin.editor.formatstyles.PaddingFormat(direction,
                                   captureFormatStyle.getChar(),
                                   captureFormatStyle.getLength());
-        
+
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setFormatStyle(paddingFormat);
             proppane.getPropertyControl('format-padding-direction').setValue(directionValue);
@@ -1586,21 +1586,21 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         });
       }, false, this);
   proppane.addProperty(directionSelectProperty , formatGroup, 'format-padding-direction');
-  
-  
+
+
   var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
-  
+
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.getIdValidator().setValidatePresence(true);
-  
+
   idInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        
+
         var shapeId = e.target.getValue();
         var captureShapeId = scope.getShapeId();
         var isReferences = scope.isReferences();
         var referringShapes = scope.getReferringShapes();
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setShapeId(shapeId);
@@ -1611,7 +1611,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
             }
             proppane.getPropertyControl('shape-id').setValue(shapeId);
           }, scope);
-          
+
           version.downHandler(function() {
             this.setShapeId(captureShapeId);
             if (isReferences) {
@@ -1623,13 +1623,13 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
 
 
   var refIdInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, thin.t('field_reference_id'));
   refIdInputProperty.getIdValidator().setValidateDuplication(false);
-  
+
   var refIdInput = refIdInputProperty.getValueControl();
   var refIdValidator = new thin.ui.Input.Validator(refIdInput);
   refIdValidator.setAllowBlank(true);
@@ -1640,7 +1640,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
     }
     var referenceShape = layout.getShapeForShapeId(value, opt_shapeIdManager);
     var notice = null;
-    
+
     switch(true) {
       case !goog.isDef(referenceShape):
         notice = thin.t('error_id_not_found', {'id': value});
@@ -1667,7 +1667,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   refIdInput.addValidator(refIdValidator);
   refIdInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        
+
         var refId = e.target.getValue();
         var isDefaultValue = thin.isExactlyEqual(refId, thin.editor.TblockShape.DEFAULT_REFID);
         var captureRefId = scope.getRefId();
@@ -1690,7 +1690,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
             }
             proppane.getPropertyControl('ref-id').setValue(refId);
           }, scope);
-          
+
           version.downHandler(function() {
             this.removeReferenceShape();
             if (captureIsReferring) {
@@ -1700,7 +1700,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(refIdInputProperty, cooperationGroup, 'ref-id');
 
 
@@ -1711,12 +1711,12 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   defaultValueInput.setValidator(defaultValidation);
   defaultValueInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        
+
         var defaultValue = e.target.getValue();
         var captureValue = scope.getDefaultValueOfLink();
-        
+
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setDefaultValueOfLink(defaultValue);
             proppane.getPropertyControl('default-value').setValue(defaultValue);
@@ -1727,13 +1727,13 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(defaultValueInputProperty, cooperationGroup, 'default-value');
-  
+
   var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
-  
+
   proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
@@ -1766,27 +1766,27 @@ thin.editor.TblockShape.prototype.getProperties = function() {
     'desc': this.getDesc(),
     'inline-format': this.getInlineFormatAllowed()
   };
-  
+
   var formatStyle = this.getFormatStyle();
-  
+
   switch (true) {
     case thin.editor.formatstyles.isNumberFormat(formatStyle):
       properties['format-number-delimiter'] = formatStyle.getDelimiter();
       properties['format-number-delimitation'] = formatStyle.isDelimitationEnabled();
       properties['format-number-precision'] = formatStyle.getPrecision();
       break;
-      
+
     case thin.editor.formatstyles.isPaddingFormat(formatStyle):
       properties['format-padding-length'] = formatStyle.getLength();
       properties['format-padding-char'] = formatStyle.getChar();
       properties['format-padding-direction'] = formatStyle.getDirection();
       break;
-      
+
     case thin.editor.formatstyles.isDatetimeFormat(formatStyle):
       properties['format-datetime-format'] = formatStyle.getFormat();
       break;
   };
-  
+
   return properties;
 };
 
@@ -1798,18 +1798,18 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
     proppane.setTarget(this);
     this.createPropertyComponent_();
   }
-  
+
   var properties = this.getProperties();
   var formatStyle = this.getFormatStyle();
   var isMultiple = this.isMultiMode();
   var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-  
+
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
   proppane.getPropertyControl('width').setValue(properties['width']);
   proppane.getPropertyControl('height').setValue(properties['height']);
   proppane.getPropertyControl('display').setChecked(properties['display']);
-  
+
   var fontColor = properties['font-color'];
   if (thin.isExactlyEqual(fontColor, thin.editor.ModuleShape.NONE)) {
     fontColor = proppaneBlank
@@ -1842,14 +1842,14 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
       delimiterProperty.setControlEnabled(isDelimitationEnabled);
       proppane.getPropertyControl('format-number-precision').setValue(properties['format-number-precision']);
       break;
-      
+
     case thin.editor.formatstyles.isPaddingFormat(formatStyle):
       proppane.getPropertyControl('format-padding-length').setValue(properties['format-padding-length']);
       proppane.getPropertyControl('format-padding-char').setValue(properties['format-padding-char']);
       proppane.getPropertyControl('format-padding-direction').setValue(
           thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(properties['format-padding-direction']));
       break;
-      
+
     case thin.editor.formatstyles.isDatetimeFormat(formatStyle):
       proppane.getPropertyControl('format-datetime-format').setInternalValue(properties['format-datetime-format']);
       break;
@@ -1859,11 +1859,11 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
   proppane.getPropertyControl('ref-id').setValue(properties['ref-id']);
   proppane.getPropertyControl('default-value').setValue(properties['default-value']);
   proppane.getPropertyControl('desc').setValue(properties['desc']);
-  
+
   proppane.getChild('line-height').setEnabled(isMultiple);
   proppane.getChild('text-valign').setEnabled(isMultiple);
   proppane.getChild('height').setEnabled(isMultiple);
-  
+
   this.setDisplayForPropPane(formatType);
 };
 
@@ -1882,14 +1882,14 @@ thin.editor.TblockShape.prototype.setDisplayForPropPane = function(formatType) {
                   'format-padding-char',
                   'format-padding-direction'];
   var targetlist = [];
-  
+
   goog.array.forEach(baselist, function(targetId) {
     var target = proppane.getChild(targetId);
     if (target.isDisplay()) {
       target.setDisplay(false);
     }
   });
-  
+
   switch (formatType) {
     case formatTypeTemplate.DATETIME:
       targetlist = ['format-datetime-format'];
@@ -1919,7 +1919,7 @@ thin.editor.TblockShape.prototype.setInitShapeProperties = function(properties) 
   }
 
   this.setShapeId(this.getLayout().getNextShapeId(
-        thin.editor.ShapeIdManager.DefaultPrefix.TEXT_BLOCK, 
+        thin.editor.ShapeIdManager.DefaultPrefix.TEXT_BLOCK,
         opt_shapeIdManager), opt_shapeIdManager);
   this.setFill(thin.editor.TblockShape.DEFAULT_FILL);
   this.setFontSize(properties.SIZE);
@@ -1939,11 +1939,11 @@ thin.editor.TblockShape.prototype.disposeInternal = function() {
   this.disposeInternalForShape();
 
   this.id_.dispose();
-  
+
   if (this.formatStyle_) {
     this.formatStyle_.dispose();
   }
-  
+
   delete this.id_;
   delete this.referenceShape_;
   delete this.referringShapes_;
