@@ -11,7 +11,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
   var width = 800;
   var height = 600;
 
-  chrome.app.window.create('editor.html', {
+  chrome.app.window.create('app.html', {
     id: "ThinReportsEditor",
     bounds: {
       width: width,
