@@ -13,27 +13,27 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.TblockOutline');
+goog.provide('thin.core.TblockOutline');
 
 goog.require('goog.math.Rect');
-goog.require('thin.core.Font');
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.ModuleOutline');
+goog.require('thin.Font');
+goog.require('thin.core.Rect');
+goog.require('thin.core.ModuleOutline');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.TblockOutline = function(element, layout, stroke, fill) {
-  thin.editor.Rect.call(this, element, layout, stroke, fill);
+thin.core.TblockOutline = function(element, layout, stroke, fill) {
+  thin.core.Rect.call(this, element, layout, stroke, fill);
 };
-goog.inherits(thin.editor.TblockOutline, thin.editor.Rect);
-goog.mixin(thin.editor.TblockOutline.prototype, thin.editor.ModuleOutline.prototype);
+goog.inherits(thin.core.TblockOutline, thin.core.Rect);
+goog.mixin(thin.core.TblockOutline.prototype, thin.core.ModuleOutline.prototype);
 
 
 /**
@@ -42,12 +42,12 @@ goog.mixin(thin.editor.TblockOutline.prototype, thin.editor.ModuleOutline.protot
  * @param {number} clientPosX
  * @param {number} clientPosY
  */
-thin.editor.TblockOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
+thin.core.TblockOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
   var workspace = this.getLayout().getWorkspace();
   this.setBounds(new goog.math.Rect(
     Math.min(startPosX, clientPosX), startPosY,
     thin.numberWithPrecision(Math.abs(startPosX - clientPosX)),
-    thin.core.Font.getHeight(
+    thin.Font.getHeight(
       workspace.getUiStatusForFontFamily(), 
       workspace.getUiStatusForFontSize())));
 };
@@ -58,7 +58,7 @@ thin.editor.TblockOutline.prototype.setBoundsByCoordinate = function(startPosX, 
  * @param {goog.math.Coordinate} transLate
  * @param {boolean} isVertex
  */
-thin.editor.TblockOutline.prototype.setBoundsByScale = function(scale, transLate, isVertex) {
+thin.core.TblockOutline.prototype.setBoundsByScale = function(scale, transLate, isVertex) {
 
   var scaleX = scale.x;
   var scaleY = scale.y;
@@ -78,7 +78,7 @@ thin.editor.TblockOutline.prototype.setBoundsByScale = function(scale, transLate
 /**
  * @return {goog.graphics.Element}
  */
-thin.editor.TblockOutline.prototype.toShape = function() {
+thin.core.TblockOutline.prototype.toShape = function() {
   return this.getLayout().createTblockShape();
 };
 
@@ -86,7 +86,7 @@ thin.editor.TblockOutline.prototype.toShape = function() {
 /**
  * @return {Object}
  */
-thin.editor.TblockOutline.prototype.getInitShapeProperties = function() {
+thin.core.TblockOutline.prototype.getInitShapeProperties = function() {
 
   var workspace = this.getLayout().getWorkspace();
   
@@ -104,7 +104,7 @@ thin.editor.TblockOutline.prototype.getInitShapeProperties = function() {
 
 
 /** @inheritDoc */
-thin.editor.TblockOutline.prototype.disposeInternal = function() {
-  thin.editor.TblockOutline.superClass_.disposeInternal.call(this);
+thin.core.TblockOutline.prototype.disposeInternal = function() {
+  thin.core.TblockOutline.superClass_.disposeInternal.call(this);
   this.disposeInternalForOutline();
 };

@@ -13,51 +13,51 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Action');
-goog.provide('thin.editor.Action.ShiftValue');
+goog.provide('thin.core.Action');
+goog.provide('thin.core.Action.ShiftValue');
 
 goog.require('goog.array');
 goog.require('goog.math.Coordinate');
 goog.require('goog.Disposable');
-goog.require('thin.core.Font');
-goog.require('thin.editor.HistoryManager');
-goog.require('thin.editor.HistoryManager.Mode');
+goog.require('thin.Font');
+goog.require('thin.core.HistoryManager');
+goog.require('thin.core.HistoryManager.Mode');
 
 
 /**
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.Action = function(workspace) {
+thin.core.Action = function(workspace) {
 
   /**
-   * @type {thin.editor.Workspace}
+   * @type {thin.core.Workspace}
    * @private
    */
   this.workspace_ = workspace;
 
   /**
-   * @type {thin.editor.Layout}
+   * @type {thin.core.Layout}
    * @private
    */
   this.layout_ = workspace.getLayout();
 
   goog.Disposable.call(this);
 };
-goog.inherits(thin.editor.Action, goog.Disposable);
+goog.inherits(thin.core.Action, goog.Disposable);
 
 
 /**
  * @enum {number}
  */
-thin.editor.Action.ShiftValue = {
+thin.core.Action.ShiftValue = {
   NORMAL: 5,
   PRESSSHIFTKEY: 1
 };
 
 
-thin.editor.Action.prototype.actionLayerInsertBefore = function() {
+thin.core.Action.prototype.actionLayerInsertBefore = function() {
 
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShape();
@@ -100,7 +100,7 @@ thin.editor.Action.prototype.actionLayerInsertBefore = function() {
 };
 
 
-thin.editor.Action.prototype.actionLayerInsertAfter = function() {
+thin.core.Action.prototype.actionLayerInsertAfter = function() {
 
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShape();
@@ -143,7 +143,7 @@ thin.editor.Action.prototype.actionLayerInsertAfter = function() {
 };
 
 
-thin.editor.Action.prototype.actionLayerInsertFront = function() {
+thin.core.Action.prototype.actionLayerInsertFront = function() {
 
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShape();
@@ -186,7 +186,7 @@ thin.editor.Action.prototype.actionLayerInsertFront = function() {
 };
 
 
-thin.editor.Action.prototype.actionLayerInsertBack = function() {
+thin.core.Action.prototype.actionLayerInsertBack = function() {
 
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShape();
@@ -232,12 +232,12 @@ thin.editor.Action.prototype.actionLayerInsertBack = function() {
 /**
  * @param {boolean} visibled
  */
-thin.editor.Action.prototype.actionShowLayoutGuide = function(visibled) {
+thin.core.Action.prototype.actionShowLayoutGuide = function(visibled) {
   this.layout_.getHelpers().getLayoutGuideHelper().disable(!visibled);
 };
 
 
-thin.editor.Action.prototype.actionAddYLayoutGuide = function() {
+thin.core.Action.prototype.actionAddYLayoutGuide = function() {
   var layoutGuideHelper = this.layout_.getHelpers().getLayoutGuideHelper();
   if (layoutGuideHelper.isEnable()) {
     layoutGuideHelper.createYLayoutGuide();
@@ -245,7 +245,7 @@ thin.editor.Action.prototype.actionAddYLayoutGuide = function() {
 };
 
 
-thin.editor.Action.prototype.actionAddXLayoutGuide = function() {
+thin.core.Action.prototype.actionAddXLayoutGuide = function() {
   var layoutGuideHelper = this.layout_.getHelpers().getLayoutGuideHelper();
   if (layoutGuideHelper.isEnable()) {
     layoutGuideHelper.createXLayoutGuide();
@@ -253,7 +253,7 @@ thin.editor.Action.prototype.actionAddXLayoutGuide = function() {
 };
 
 
-thin.editor.Action.prototype.actionRemoveLayoutGuide = function() {
+thin.core.Action.prototype.actionRemoveLayoutGuide = function() {
   this.layout_.getHelpers().getLayoutGuideHelper().removeLayoutGuide();
 };
 
@@ -262,7 +262,7 @@ thin.editor.Action.prototype.actionRemoveLayoutGuide = function() {
  * @param {number} zoom
  * @param {goog.math.Coordinate=} opt_pos
  */
-thin.editor.Action.prototype.actionSetZoom = function(zoom, opt_pos) {
+thin.core.Action.prototype.actionSetZoom = function(zoom, opt_pos) {
   if (zoom < 10) {
     zoom = 10;
   }
@@ -326,7 +326,7 @@ thin.editor.Action.prototype.actionSetZoom = function(zoom, opt_pos) {
 /**
  * @param {number} newFontSize
  */
-thin.editor.Action.prototype.actionSetFontSize = function(newFontSize) {
+thin.core.Action.prototype.actionSetFontSize = function(newFontSize) {
   var scope = this;
   var workspace = this.workspace_;
   var layout = this.layout_;
@@ -384,7 +384,7 @@ thin.editor.Action.prototype.actionSetFontSize = function(newFontSize) {
   var setFontSizeTblockShape = function(shape, fontSize) {
     shape.setFontSize(fontSize);
     if (!shape.isMultiMode()) {
-      shape.setHeight(thin.core.Font.getHeight(shape.getFontFamily(), fontSize));
+      shape.setHeight(thin.Font.getHeight(shape.getFontFamily(), fontSize));
       if (isMultipleSelect) {
         shape.getTargetOutline().setHeight(shape.getHeight());
       }
@@ -397,7 +397,7 @@ thin.editor.Action.prototype.actionSetFontSize = function(newFontSize) {
    */
   var setPageNumberFontSize = function(shape, fontSize) {
     shape.setFontSize(fontSize);
-    shape.setHeight(thin.core.Font.getHeight(shape.getFontFamily(), fontSize));
+    shape.setHeight(thin.Font.getHeight(shape.getFontFamily(), fontSize));
     if (isMultipleSelect) {
       shape.getTargetOutline().setHeight(shape.getHeight());
     }
@@ -467,7 +467,7 @@ thin.editor.Action.prototype.actionSetFontSize = function(newFontSize) {
 /**
  * @param {string} newFontFamily
  */
-thin.editor.Action.prototype.actionSetFontFamily = function(newFontFamily) {
+thin.core.Action.prototype.actionSetFontFamily = function(newFontFamily) {
   var scope = this;
   var workspace = this.workspace_;
   var layout = this.layout_;
@@ -478,7 +478,7 @@ thin.editor.Action.prototype.actionSetFontFamily = function(newFontFamily) {
   var currentFontFamily = workspace.getUiStatusForFontFamily();
   var activeShapeManager = layout.getActiveShapeManager();
 
-  if (!thin.core.Font.isBuiltinFont(newFontFamily)) {
+  if (!thin.Font.isBuiltinFont(newFontFamily)) {
     thin.ui.Notification.info(thin.t('info_non_standard_font', {'font': newFontFamily}));
   }
 
@@ -529,7 +529,7 @@ thin.editor.Action.prototype.actionSetFontFamily = function(newFontFamily) {
   var setFontFamilyTblockShape = function(shape, fontFamily) {
     shape.setFontFamily(fontFamily);
     if (!shape.isMultiMode()) {
-      shape.setHeight(thin.core.Font.getHeight(fontFamily, shape.getFontSize()));
+      shape.setHeight(thin.Font.getHeight(fontFamily, shape.getFontSize()));
       if (isMultipleSelect) {
         shape.getTargetOutline().setHeight(shape.getHeight());
       }
@@ -537,7 +537,7 @@ thin.editor.Action.prototype.actionSetFontFamily = function(newFontFamily) {
   };
 
   /**
-   * @param {thin.editor.PageNumberShape} shape
+   * @param {thin.core.PageNumberShape} shape
    * @param {string} fontFamily
    */
   var setPageNumberFontFamily = function(shape, fontFamily) {
@@ -616,7 +616,7 @@ thin.editor.Action.prototype.actionSetFontFamily = function(newFontFamily) {
 /**
  * @param {string} newTextAnchor
  */
-thin.editor.Action.prototype.actionSetTextAnchor = function(newTextAnchor) {
+thin.core.Action.prototype.actionSetTextAnchor = function(newTextAnchor) {
   var scope = this;
   var workspace = this.workspace_;
   var layout = this.layout_;
@@ -734,7 +734,7 @@ thin.editor.Action.prototype.actionSetTextAnchor = function(newTextAnchor) {
 /**
  * @param {string} newValign
  */
-thin.editor.Action.prototype.actionSetVerticalAlign = function(newValign) {
+thin.core.Action.prototype.actionSetVerticalAlign = function(newValign) {
   var scope = this;
   var workspace = this.workspace_;
   var layout = this.layout_;
@@ -841,7 +841,7 @@ thin.editor.Action.prototype.actionSetVerticalAlign = function(newValign) {
 /**
  * @param {boolean} newBoldSetting
  */
-thin.editor.Action.prototype.actionSetFontBold = function(newBoldSetting) {
+thin.core.Action.prototype.actionSetFontBold = function(newBoldSetting) {
   var scope = this;
   var workspace = this.workspace_;
   var layout = this.layout_;
@@ -971,7 +971,7 @@ thin.editor.Action.prototype.actionSetFontBold = function(newBoldSetting) {
 /**
  * @param {boolean} newItalicSetting
  */
-thin.editor.Action.prototype.actionSetFontItalic = function(newItalicSetting) {
+thin.core.Action.prototype.actionSetFontItalic = function(newItalicSetting) {
   var scope = this;
   var workspace = this.workspace_;
   var layout = this.layout_;
@@ -1088,7 +1088,7 @@ thin.editor.Action.prototype.actionSetFontItalic = function(newItalicSetting) {
 /**
  * @param {boolean} newUnderlineSetting
  */
-thin.editor.Action.prototype.actionSetFontUnderline = function(newUnderlineSetting) {
+thin.core.Action.prototype.actionSetFontUnderline = function(newUnderlineSetting) {
   var scope = this;
   var workspace = this.workspace_;
   var layout = this.layout_;
@@ -1194,7 +1194,7 @@ thin.editor.Action.prototype.actionSetFontUnderline = function(newUnderlineSetti
 /**
  * @param {boolean} newLinethrough
  */
-thin.editor.Action.prototype.actionSetFontLinethrough = function(newLinethrough) {
+thin.core.Action.prototype.actionSetFontLinethrough = function(newLinethrough) {
   var scope = this;
   var workspace = this.workspace_;
   var layout = this.layout_;
@@ -1300,7 +1300,7 @@ thin.editor.Action.prototype.actionSetFontLinethrough = function(newLinethrough)
 /**
  * @param {number} historyMode
  */
-thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
+thin.core.Action.prototype.actionDeleteShapes = function(historyMode) {
   var proppane = thin.ui.getComponent('proppane');
   var layout = this.layout_;
   var manager = layout.getManager();
@@ -1344,7 +1344,7 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
   var captureRefIdArray = [];
   var captureReferenceShapesArray = [];
   var captureReferringShapesArray = [];
-  var defaultRefId = thin.editor.TblockShape.DEFAULT_REFID;
+  var defaultRefId = thin.core.TblockShape.DEFAULT_REFID;
 
   goog.array.forEach(targetShapes, function(shape, count) {
     goog.array.insertAt(captureShapeIdArray, shape.getShapeId(), count);
@@ -1523,7 +1523,7 @@ thin.editor.Action.prototype.actionDeleteShapes = function(historyMode) {
 };
 
 
-thin.editor.Action.prototype.actionCopyShapes = function() {
+thin.core.Action.prototype.actionCopyShapes = function() {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShape();
   if (activeShapeManager.isEmpty()) {
@@ -1546,7 +1546,7 @@ thin.editor.Action.prototype.actionCopyShapes = function() {
 };
 
 
-thin.editor.Action.prototype.actionCutShapes = function() {
+thin.core.Action.prototype.actionCutShapes = function() {
   var layout = this.layout_;
   if(layout.getManager().getActiveShape().isEmpty()) {
     // Skip CutShapes;
@@ -1558,11 +1558,11 @@ thin.editor.Action.prototype.actionCutShapes = function() {
     return;
   }
   this.actionCopyShapes();
-  this.actionDeleteShapes(thin.editor.HistoryManager.Mode.NORMAL);
+  this.actionDeleteShapes(thin.core.HistoryManager.Mode.NORMAL);
 };
 
 
-thin.editor.Action.prototype.actionPasteShapes = function() {
+thin.core.Action.prototype.actionPasteShapes = function() {
   this.layout_.pasteShapes();
 };
 
@@ -1573,10 +1573,10 @@ thin.editor.Action.prototype.actionPasteShapes = function() {
  * @param {number} limitPos
  * @private
  */
-thin.editor.Action.prototype.calculateShift_ = function(
+thin.core.Action.prototype.calculateShift_ = function(
     pressShiftKey, currentPos, limitPos) {
 
-  var shiftValueTemplate = thin.editor.Action.ShiftValue;
+  var shiftValueTemplate = thin.core.Action.ShiftValue;
 
   if (pressShiftKey) {
     var shiftValue = shiftValueTemplate.PRESSSHIFTKEY + (currentPos % 1);
@@ -1602,10 +1602,10 @@ thin.editor.Action.prototype.calculateShift_ = function(
  * @param {number} limitPos
  * @private
  */
-thin.editor.Action.prototype.calculateUnShift_ = function(
+thin.core.Action.prototype.calculateUnShift_ = function(
     pressShiftKey, coordinate, size, limitPos) {
 
-  var shiftValueTemplate = thin.editor.Action.ShiftValue;
+  var shiftValueTemplate = thin.core.Action.ShiftValue;
   var currentPos = coordinate + size;
 
   if (pressShiftKey) {
@@ -1630,7 +1630,7 @@ thin.editor.Action.prototype.calculateUnShift_ = function(
  * @param {Array} shapes
  * @param {number} shiftValue
  */
-thin.editor.Action.prototype.shapesShiftLeft = function(shapes, shiftValue) {
+thin.core.Action.prototype.shapesShiftLeft = function(shapes, shiftValue) {
   var left;
   goog.array.forEach(shapes, function(shape) {
     left = shape.getLeft() + shiftValue;
@@ -1644,7 +1644,7 @@ thin.editor.Action.prototype.shapesShiftLeft = function(shapes, shiftValue) {
  * @param {Array} shapes
  * @param {number} shiftValue
  */
-thin.editor.Action.prototype.shapesShiftTop = function(shapes, shiftValue) {
+thin.core.Action.prototype.shapesShiftTop = function(shapes, shiftValue) {
   var top;
   goog.array.forEach(shapes, function(shape) {
     top = shape.getTop() + shiftValue;
@@ -1657,7 +1657,7 @@ thin.editor.Action.prototype.shapesShiftTop = function(shapes, shiftValue) {
 /**
  * @param {goog.events.BrowserEvent} e
  */
-thin.editor.Action.prototype.actionShiftLeft = function(e) {
+thin.core.Action.prototype.actionShiftLeft = function(e) {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShape();
   if (activeShapeManager.isEmpty()) {
@@ -1729,7 +1729,7 @@ thin.editor.Action.prototype.actionShiftLeft = function(e) {
 /**
  * @param {goog.events.BrowserEvent} e
  */
-thin.editor.Action.prototype.actionShiftRight = function(e) {
+thin.core.Action.prototype.actionShiftRight = function(e) {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShape();
   if (activeShapeManager.isEmpty()) {
@@ -1804,7 +1804,7 @@ thin.editor.Action.prototype.actionShiftRight = function(e) {
 /**
  * @param {goog.events.BrowserEvent} e
  */
-thin.editor.Action.prototype.actionShiftUp = function(e) {
+thin.core.Action.prototype.actionShiftUp = function(e) {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShape();
   if (activeShapeManager.isEmpty()) {
@@ -1875,7 +1875,7 @@ thin.editor.Action.prototype.actionShiftUp = function(e) {
 /**
  * @param {goog.events.BrowserEvent} e
  */
-thin.editor.Action.prototype.actionShiftDown = function(e) {
+thin.core.Action.prototype.actionShiftDown = function(e) {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShape();
   if (activeShapeManager.isEmpty()) {
@@ -1949,7 +1949,7 @@ thin.editor.Action.prototype.actionShiftDown = function(e) {
 };
 
 
-thin.editor.Action.prototype.actionAdjustToLeft = function() {
+thin.core.Action.prototype.actionAdjustToLeft = function() {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShapeByIncludeList();
   if (activeShapeManager.isEmpty()) {
@@ -2042,7 +2042,7 @@ thin.editor.Action.prototype.actionAdjustToLeft = function() {
 };
 
 
-thin.editor.Action.prototype.actionAdjustToCenter = function() {
+thin.core.Action.prototype.actionAdjustToCenter = function() {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShapeByIncludeList();
   if (activeShapeManager.isEmpty()) {
@@ -2135,7 +2135,7 @@ thin.editor.Action.prototype.actionAdjustToCenter = function() {
 };
 
 
-thin.editor.Action.prototype.actionAdjustToRight = function() {
+thin.core.Action.prototype.actionAdjustToRight = function() {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShapeByIncludeList();
   if (activeShapeManager.isEmpty()) {
@@ -2225,7 +2225,7 @@ thin.editor.Action.prototype.actionAdjustToRight = function() {
 };
 
 
-thin.editor.Action.prototype.actionAdjustToTop = function() {
+thin.core.Action.prototype.actionAdjustToTop = function() {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShapeByIncludeList();
   if (activeShapeManager.isEmpty()) {
@@ -2318,7 +2318,7 @@ thin.editor.Action.prototype.actionAdjustToTop = function() {
 };
 
 
-thin.editor.Action.prototype.actionAdjustToMiddle = function() {
+thin.core.Action.prototype.actionAdjustToMiddle = function() {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShapeByIncludeList();
   if (activeShapeManager.isEmpty()) {
@@ -2411,7 +2411,7 @@ thin.editor.Action.prototype.actionAdjustToMiddle = function() {
 };
 
 
-thin.editor.Action.prototype.actionAdjustToBottom = function() {
+thin.core.Action.prototype.actionAdjustToBottom = function() {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShapeByIncludeList();
   if (activeShapeManager.isEmpty()) {
@@ -2504,7 +2504,7 @@ thin.editor.Action.prototype.actionAdjustToBottom = function() {
 /**
  * @param {number} historyMode
  */
-thin.editor.Action.prototype.actionAdjustToWidth = function(historyMode) {
+thin.core.Action.prototype.actionAdjustToWidth = function(historyMode) {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShapeByIncludeList();
   if (!activeShapeManager.isMultiple()) {
@@ -2557,7 +2557,7 @@ thin.editor.Action.prototype.actionAdjustToWidth = function(historyMode) {
 /**
  * @param {number} historyMode
  */
-thin.editor.Action.prototype.actionAdjustToHeight = function(historyMode) {
+thin.core.Action.prototype.actionAdjustToHeight = function(historyMode) {
   var layout = this.layout_;
   var activeShapeManager = layout.getManager().getActiveShapeByIncludeList();
   if (!activeShapeManager.isMultiple()) {
@@ -2614,12 +2614,12 @@ thin.editor.Action.prototype.actionAdjustToHeight = function(historyMode) {
 };
 
 
-thin.editor.Action.prototype.actionAdjustToAspect = function() {
+thin.core.Action.prototype.actionAdjustToAspect = function() {
   if (!this.layout_.getManager().getActiveShapeByIncludeList().isMultiple()) {
     // Skip AdjustToAspect;
     return;
   }
-  var versioningModeIsGroup = thin.editor.HistoryManager.Mode.GROUP;
+  var versioningModeIsGroup = thin.core.HistoryManager.Mode.GROUP;
   this.actionAdjustToWidth(versioningModeIsGroup);
   this.actionAdjustToHeight(versioningModeIsGroup);
   this.workspace_.activateGroupVersioning();
@@ -2629,7 +2629,7 @@ thin.editor.Action.prototype.actionAdjustToAspect = function() {
 /**
  * @return {void}
  */
-thin.editor.Action.prototype.restfulF2Action = function() {
+thin.core.Action.prototype.restfulF2Action = function() {
 
   var actionTargetShape;
   var activeShapeManager = this.layout_.getManager().getActiveShape();
@@ -2663,7 +2663,7 @@ thin.editor.Action.prototype.restfulF2Action = function() {
 /**
  * @param {boolean=} opt_isDraw
  */
-thin.editor.Action.prototype.actionTextEdit = function(opt_isDraw) {
+thin.core.Action.prototype.actionTextEdit = function(opt_isDraw) {
 
   var layout = this.layout_;
   var guide = layout.getHelpers().getGuideHelper();

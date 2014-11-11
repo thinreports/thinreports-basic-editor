@@ -13,19 +13,19 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.FontStyle');
+goog.provide('thin.core.FontStyle');
 
 
 /**
  * @constructor
  */
-thin.editor.FontStyle = function() {};
+thin.core.FontStyle = function() {};
 
 
 /**
  * @type {Array.<string>}
  */
-thin.editor.FontStyle.FONTSIZE_LIST = [
+thin.core.FontStyle.FONTSIZE_LIST = [
   '8', '9', '10', '11', '12', '14', '16', '18',
   '20', '22', '24', '26', '28', '36', '48', '72'
 ];
@@ -34,40 +34,40 @@ thin.editor.FontStyle.FONTSIZE_LIST = [
 /**
  * @type {number}
  */
-thin.editor.FontStyle.prototype.size;
+thin.core.FontStyle.prototype.size;
 
 
 /**
  * @type {string}
  */
-thin.editor.FontStyle.prototype.family;
+thin.core.FontStyle.prototype.family;
 
 
 /**
  * @type {boolean}
  */
-thin.editor.FontStyle.prototype.bold = false;
+thin.core.FontStyle.prototype.bold = false;
 
 
 /**
  * @type {boolean}
  */
-thin.editor.FontStyle.prototype.italic = false;
+thin.core.FontStyle.prototype.italic = false;
 
 
 /**
  * @type {boolean}
  */
-thin.editor.FontStyle.prototype.underline = false;
+thin.core.FontStyle.prototype.underline = false;
 
 
 /**
  * @type {boolean}
  */
-thin.editor.FontStyle.prototype.linethrough = false;
+thin.core.FontStyle.prototype.linethrough = false;
 
 
 /**
  * @type {string}
  */
-thin.editor.FontStyle.prototype.decoration;
+thin.core.FontStyle.prototype.decoration;

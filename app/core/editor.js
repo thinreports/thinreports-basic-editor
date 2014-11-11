@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor');
+goog.provide('thin.core');
 
 goog.require('goog.crypt.hash32');
 goog.require('thin.ui');
@@ -23,7 +23,7 @@ goog.require('thin.ui');
  * @param {string} str
  * @return {number}
  */
-thin.editor.hash32 = function(str) {
+thin.core.hash32 = function(str) {
   return goog.crypt.hash32.encodeString(str);
 };
 
@@ -33,7 +33,7 @@ thin.editor.hash32 = function(str) {
  * @param {NodeList} elements
  * @return {Element?}
  */
-thin.editor.getElementByClassNameForChildNodes = function(className, elements) {
+thin.core.getElementByClassNameForChildNodes = function(className, elements) {
   var resultIndex = goog.array.findIndex(elements, function(element) {
     return element.getAttribute('class') == className;
   });
@@ -45,18 +45,18 @@ thin.editor.getElementByClassNameForChildNodes = function(className, elements) {
  * @param {Element} element
  * @return {string}
  */
-thin.editor.serializeToXML = function(element) {
+thin.core.serializeToXML = function(element) {
   return new XMLSerializer().serializeToString(element);
 };
 
 
 /**
- * @return {thin.editor.Workspace?}
+ * @return {thin.core.Workspace?}
  */
-thin.editor.getActiveWorkspace = function() {
+thin.core.getActiveWorkspace = function() {
   var tabpane = thin.ui.getComponent('tabpane');
   if(tabpane.hasSelectedPage()) {
-    return /** @type {thin.editor.Workspace} */ (
+    return /** @type {thin.core.Workspace} */ (
               tabpane.getSelectedPage().getContent());
   } else {
     return null;

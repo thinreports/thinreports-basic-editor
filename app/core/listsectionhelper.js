@@ -13,11 +13,11 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ListSectionHelper');
-goog.provide('thin.editor.HeaderSectionHelper');
-goog.provide('thin.editor.DetailSectionHelper');
-goog.provide('thin.editor.PageFooterSectionHelper');
-goog.provide('thin.editor.FooterSectionHelper');
+goog.provide('thin.core.ListSectionHelper');
+goog.provide('thin.core.HeaderSectionHelper');
+goog.provide('thin.core.DetailSectionHelper');
+goog.provide('thin.core.PageFooterSectionHelper');
+goog.provide('thin.core.FooterSectionHelper');
 
 goog.require('goog.dom');
 goog.require('goog.array');
@@ -27,29 +27,29 @@ goog.require('goog.events.EventType');
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
 goog.require('goog.graphics.StrokeAndFillElement');
-goog.require('thin.editor.Cursor');
-goog.require('thin.editor.Cursor.Type');
-goog.require('thin.editor.TextShape');
-goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
-goog.require('thin.editor.TextStyle.VerticalAlignType');
-goog.require('thin.editor.DrawActionLayer');
-goog.require('thin.editor.DraggableLine');
-goog.require('thin.editor.DraggableLine.Direction');
-goog.require('thin.editor.ModuleElement');
-goog.require('thin.editor.ModuleShape');
+goog.require('thin.core.Cursor');
+goog.require('thin.core.Cursor.Type');
+goog.require('thin.core.TextShape');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.VerticalAlignType');
+goog.require('thin.core.DrawActionLayer');
+goog.require('thin.core.DraggableLine');
+goog.require('thin.core.DraggableLine.Direction');
+goog.require('thin.core.ModuleElement');
+goog.require('thin.core.ModuleShape');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {string} sectionName
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.ListSectionHelper = function(layout, sectionName) {
+thin.core.ListSectionHelper = function(layout, sectionName) {
   
   /**
-   * @type {thin.editor.Layout}
+   * @type {thin.core.Layout}
    * @private
    */
   this.layout_ = layout;
@@ -61,51 +61,51 @@ thin.editor.ListSectionHelper = function(layout, sectionName) {
   this.sectionName_ = sectionName;
   
   /**
-   * @type {thin.editor.ListSectionHelper.Separator_}
+   * @type {thin.core.ListSectionHelper.Separator_}
    * @private
    */
-  this.separator_ = new thin.editor.ListSectionHelper.Separator_(layout);
+  this.separator_ = new thin.core.ListSectionHelper.Separator_(layout);
   
   /**
-   * @type {thin.editor.Layer}
+   * @type {thin.core.Layer}
    * @private
    */
   this.drawLayer_ = this.createDrawLayer_();
   
   /**
-   * @type {thin.editor.Layer}
+   * @type {thin.core.Layer}
    * @private
    */
   this.selectorLayer_ = this.createSelectorLayer_();
   
   /**
-   * @type {thin.editor.TextShape}
+   * @type {thin.core.TextShape}
    * @private
    */
   this.label_ = this.createSectionLabel_();
 };
-goog.inherits(thin.editor.ListSectionHelper, goog.Disposable);
-goog.mixin(thin.editor.ListSectionHelper.prototype, thin.editor.ModuleShape.prototype);
+goog.inherits(thin.core.ListSectionHelper, goog.Disposable);
+goog.mixin(thin.core.ListSectionHelper.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.ListSectionHelper.FILL_ = new goog.graphics.SolidFill('#AAAAAA');
+thin.core.ListSectionHelper.FILL_ = new goog.graphics.SolidFill('#AAAAAA');
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ListSectionHelper.prototype.active_ = false;
+thin.core.ListSectionHelper.prototype.active_ = false;
 
 
 /**
- * @param {thin.editor.Component=} opt_renderTo
+ * @param {thin.core.Component=} opt_renderTo
  */
-thin.editor.ListSectionHelper.prototype.init = function(opt_renderTo) {
+thin.core.ListSectionHelper.prototype.init = function(opt_renderTo) {
   var layout = this.layout_;
   var separator = this.separator_;
   var renderTo = opt_renderTo || layout.getHelpers().getListHelper();
@@ -122,40 +122,40 @@ thin.editor.ListSectionHelper.prototype.init = function(opt_renderTo) {
 /**
  * @return {boolean}
  */
-thin.editor.ListSectionHelper.prototype.isActive = function() {
+thin.core.ListSectionHelper.prototype.isActive = function() {
   return this.active_;
 };
 
 
 /**
- * @return {thin.editor.Layer}
+ * @return {thin.core.Layer}
  */
-thin.editor.ListSectionHelper.prototype.getDrawLayer = function() {
+thin.core.ListSectionHelper.prototype.getDrawLayer = function() {
   return this.drawLayer_;
 };
 
 
 /**
- * @return {thin.editor.Layer}
+ * @return {thin.core.Layer}
  */
-thin.editor.ListSectionHelper.prototype.getSelectorLayer = function() {
+thin.core.ListSectionHelper.prototype.getSelectorLayer = function() {
   return this.selectorLayer_;
 };
 
 
 /**
- * @return {thin.editor.ListSectionHelper.Separator_}
+ * @return {thin.core.ListSectionHelper.Separator_}
  */
-thin.editor.ListSectionHelper.prototype.getSeparator = function() {
+thin.core.ListSectionHelper.prototype.getSeparator = function() {
   return this.separator_;
 };
 
 
 /**
- * @param {thin.editor.ListShape} target
+ * @param {thin.core.ListShape} target
  * @param {goog.math.Rect} bounds
  */
-thin.editor.ListSectionHelper.prototype.update = function(target, bounds) {
+thin.core.ListSectionHelper.prototype.update = function(target, bounds) {
   var top = bounds.top;
   var width = bounds.width;
   var height = bounds.height;
@@ -177,10 +177,10 @@ thin.editor.ListSectionHelper.prototype.update = function(target, bounds) {
 
 
 /**
- * @param {thin.editor.ListShape} target
+ * @param {thin.core.ListShape} target
  * @param {boolean=} opt_visibled
  */
-thin.editor.ListSectionHelper.prototype.active = function(target, opt_visibled) {
+thin.core.ListSectionHelper.prototype.active = function(target, opt_visibled) {
   var sectionShape = target.getSectionShape(this.sectionName_);
   var isEnabled = sectionShape.isEnabled();
   var separator = this.separator_;
@@ -208,7 +208,7 @@ thin.editor.ListSectionHelper.prototype.active = function(target, opt_visibled) 
 };
 
 
-thin.editor.ListSectionHelper.prototype.inactive = function() {
+thin.core.ListSectionHelper.prototype.inactive = function() {
   if (this.isActive()) {
     var layout = this.layout_;
     
@@ -230,40 +230,40 @@ thin.editor.ListSectionHelper.prototype.inactive = function() {
 
 
 /**
- * @return {thin.editor.Layer}
+ * @return {thin.core.Layer}
  * @private
  */
-thin.editor.ListSectionHelper.prototype.createDrawLayer_ = function() {
-  return new thin.editor.DrawActionLayer(this.layout_);
+thin.core.ListSectionHelper.prototype.createDrawLayer_ = function() {
+  return new thin.core.DrawActionLayer(this.layout_);
 };
 
 
 /**
- * @return {thin.editor.Layer}
+ * @return {thin.core.Layer}
  * @private
  */
-thin.editor.ListSectionHelper.prototype.createSelectorLayer_ = function() {
+thin.core.ListSectionHelper.prototype.createSelectorLayer_ = function() {
   var layout = this.layout_;
-  var selectorLayer = new thin.editor.ActionLayer(layout, 
-          new thin.editor.Cursor(thin.editor.Cursor.Type.CROSSHAIR));
+  var selectorLayer = new thin.core.ActionLayer(layout, 
+          new thin.core.Cursor(thin.core.Cursor.Type.CROSSHAIR));
   selectorLayer.setFill(new goog.graphics.SolidFill('#FFFFFF', 0.3));
   return selectorLayer;
 };
 
 
 /**
- * @return {thin.editor.TextShape}
+ * @return {thin.core.TextShape}
  * @private
  */
-thin.editor.ListSectionHelper.prototype.createSectionLabel_ = function() {
+thin.core.ListSectionHelper.prototype.createSectionLabel_ = function() {
   var layout = this.layout_;
-  var sectionLabel = new thin.editor.TextShape(layout.createSvgElement('g'), layout);
+  var sectionLabel = new thin.core.TextShape(layout.createSvgElement('g'), layout);
   sectionLabel.createTextContent(this.sectionName_.toLowerCase());
   sectionLabel.setFontItalic(true);
   sectionLabel.setFontFamily('Georgia');
   sectionLabel.setFontSize(12);
-  sectionLabel.setTextAnchor(thin.editor.TextStyle.HorizonAlignType.MIDDLE);
-  sectionLabel.setVerticalAlign(thin.editor.TextStyle.VerticalAlignType.CENTER);
+  sectionLabel.setTextAnchor(thin.core.TextStyle.HorizonAlignType.MIDDLE);
+  sectionLabel.setVerticalAlign(thin.core.TextStyle.VerticalAlignType.CENTER);
   sectionLabel.setFill(new goog.graphics.SolidFill('#AAAAAA'));
   sectionLabel.setVisibled(false);
   return sectionLabel;
@@ -271,7 +271,7 @@ thin.editor.ListSectionHelper.prototype.createSectionLabel_ = function() {
 
 
 /** @inheritDoc */
-thin.editor.ListSectionHelper.prototype.disposeInternal = function() {
+thin.core.ListSectionHelper.prototype.disposeInternal = function() {
   this.inactive();
   var layout = this.layout_;
 
@@ -293,82 +293,82 @@ thin.editor.ListSectionHelper.prototype.disposeInternal = function() {
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {string} sectionName
  * @constructor
- * @extends {thin.editor.ListSectionHelper}
+ * @extends {thin.core.ListSectionHelper}
  */
-thin.editor.HeaderSectionHelper = function(layout, sectionName) {
-  thin.editor.ListSectionHelper.call(this, layout, sectionName);
+thin.core.HeaderSectionHelper = function(layout, sectionName) {
+  thin.core.ListSectionHelper.call(this, layout, sectionName);
 };
-goog.inherits(thin.editor.HeaderSectionHelper, thin.editor.ListSectionHelper);
+goog.inherits(thin.core.HeaderSectionHelper, thin.core.ListSectionHelper);
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {string} sectionName
  * @constructor
- * @extends {thin.editor.ListSectionHelper}
+ * @extends {thin.core.ListSectionHelper}
  */
-thin.editor.DetailSectionHelper = function(layout, sectionName) {
-  thin.editor.ListSectionHelper.call(this, layout, sectionName);
+thin.core.DetailSectionHelper = function(layout, sectionName) {
+  thin.core.ListSectionHelper.call(this, layout, sectionName);
 };
-goog.inherits(thin.editor.DetailSectionHelper, thin.editor.ListSectionHelper);
+goog.inherits(thin.core.DetailSectionHelper, thin.core.ListSectionHelper);
 
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {string} sectionName
  * @constructor
- * @extends {thin.editor.ListSectionHelper}
+ * @extends {thin.core.ListSectionHelper}
  */
-thin.editor.PageFooterSectionHelper = function(layout, sectionName) {
-  thin.editor.ListSectionHelper.call(this, layout, sectionName);
+thin.core.PageFooterSectionHelper = function(layout, sectionName) {
+  thin.core.ListSectionHelper.call(this, layout, sectionName);
 };
-goog.inherits(thin.editor.PageFooterSectionHelper, thin.editor.ListSectionHelper);
+goog.inherits(thin.core.PageFooterSectionHelper, thin.core.ListSectionHelper);
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {string} sectionName
  * @constructor
- * @extends {thin.editor.ListSectionHelper}
+ * @extends {thin.core.ListSectionHelper}
  */
-thin.editor.FooterSectionHelper = function(layout, sectionName) {
-  thin.editor.ListSectionHelper.call(this, layout, sectionName);
+thin.core.FooterSectionHelper = function(layout, sectionName) {
+  thin.core.ListSectionHelper.call(this, layout, sectionName);
 };
-goog.inherits(thin.editor.FooterSectionHelper, thin.editor.ListSectionHelper);
+goog.inherits(thin.core.FooterSectionHelper, thin.core.ListSectionHelper);
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
  * @private
- * @extends {thin.editor.Component}
+ * @extends {thin.core.Component}
  */
-thin.editor.ListSectionHelper.Separator_ = function(layout) {
+thin.core.ListSectionHelper.Separator_ = function(layout) {
   
   /**
-   * @type {thin.editor.Layout}
+   * @type {thin.core.Layout}
    * @private
    */
   this.layout_ = layout;
 
   /**
-   * @type {thin.editor.DraggableLine}
+   * @type {thin.core.DraggableLine}
    * @private
    */
   this.line_ = this.createLine_();
   
   /**
-   * @type {thin.editor.ListSectionHelper.SeparatorHandle_}
+   * @type {thin.core.ListSectionHelper.SeparatorHandle_}
    * @private
    */
   this.leftHandle_ = this.createHandle_();
   
   /**
-   * @type {thin.editor.ListSectionHelper.SeparatorHandle_}
+   * @type {thin.core.ListSectionHelper.SeparatorHandle_}
    * @private
    */
   this.rightHandle_ = this.createHandle_();
@@ -378,40 +378,40 @@ thin.editor.ListSectionHelper.Separator_ = function(layout) {
   this.left_ = 0;
   this.top_ = 0;
 };
-goog.inherits(thin.editor.ListSectionHelper.Separator_, thin.editor.Component);
+goog.inherits(thin.core.ListSectionHelper.Separator_, thin.core.Component);
 
 
 /**
- * @return {thin.editor.DraggableLine}
+ * @return {thin.core.DraggableLine}
  * @private
  */
-thin.editor.ListSectionHelper.Separator_.prototype.createLine_ = function() {
-  return new thin.editor.DraggableLine(
-                    thin.editor.DraggableLine.Direction.HORIZONTAL, this.layout_, 
-                    thin.editor.ListSectionHelper.FILL_);
+thin.core.ListSectionHelper.Separator_.prototype.createLine_ = function() {
+  return new thin.core.DraggableLine(
+                    thin.core.DraggableLine.Direction.HORIZONTAL, this.layout_, 
+                    thin.core.ListSectionHelper.FILL_);
 };
 
 
 /**
  * @private
  */
-thin.editor.ListSectionHelper.Separator_.prototype.createHandle_ = function() {
-  return new thin.editor.ListSectionHelper.SeparatorHandle_(
+thin.core.ListSectionHelper.Separator_.prototype.createHandle_ = function() {
+  return new thin.core.ListSectionHelper.SeparatorHandle_(
       this.layout_.createSvgElement('rect'), this.layout_);
 };
 
 
 /**
- * @return {thin.editor.DraggableLine}
+ * @return {thin.core.DraggableLine}
  */
-thin.editor.ListSectionHelper.Separator_.prototype.getLineHeight = function() {
+thin.core.ListSectionHelper.Separator_.prototype.getLineHeight = function() {
   return this.line_.getHeight();
 };
 
 
 /** @override */
-thin.editor.ListSectionHelper.Separator_.prototype.setup = function() {
-  var cursor = new thin.editor.Cursor(thin.editor.Cursor.Type.TCENTER);
+thin.core.ListSectionHelper.Separator_.prototype.setup = function() {
+  var cursor = new thin.core.Cursor(thin.core.Cursor.Type.TCENTER);
   this.setCursor(cursor);
   this.layout_.setElementCursor(this.getElement(), cursor);
   this.layout_.appendChild(this.line_, this);
@@ -424,7 +424,7 @@ thin.editor.ListSectionHelper.Separator_.prototype.setup = function() {
  * @param {string} sectionName
  * @return {void}
  */
-thin.editor.ListSectionHelper.Separator_.prototype.init = function(sectionName) {
+thin.core.ListSectionHelper.Separator_.prototype.init = function(sectionName) {
   var scope = this;
   var layout = this.layout_;
   var line = this.line_;
@@ -435,10 +435,10 @@ thin.editor.ListSectionHelper.Separator_.prototype.init = function(sectionName) 
   
   var body = goog.dom.getDocument().body;
   var dragLayer = layout.getHelpers().getDragLayer();
-  var dragger = new thin.editor.SvgDragger(this);
+  var dragger = new thin.core.SvgDragger(this);
   dragger.setDragModeByCoordinate(line.isVertical(), line.isHorizontal());
   var cursor = this.getCursor();
-  var eventType = thin.editor.AbstractDragger.EventType;
+  var eventType = thin.core.AbstractDragger.EventType;
   var fxEventType = goog.fx.Dragger.EventType;
 
   goog.events.listen(dragger, eventType.BEFORESTART, function(e) {
@@ -449,8 +449,8 @@ thin.editor.ListSectionHelper.Separator_.prototype.init = function(sectionName) 
   }, false, dragger);
 
   goog.events.listen(dragger, fxEventType.END, function(e) {
-    var defaultType = thin.editor.Cursor.Type.DEFAULT;
-    var defaultCursor = new thin.editor.Cursor(defaultType);
+    var defaultType = thin.core.Cursor.Type.DEFAULT;
+    var defaultCursor = new thin.core.Cursor(defaultType);
     dragLayer.setCursor(defaultCursor);
     layout.setElementCursor(dragLayer.getElement(), defaultCursor);
     goog.style.setStyle(body, 'cursor', defaultType);
@@ -539,7 +539,7 @@ thin.editor.ListSectionHelper.Separator_.prototype.init = function(sectionName) 
 /**
  * @param {number} left
  */
-thin.editor.ListSectionHelper.Separator_.prototype.setLeft = function(left) {
+thin.core.ListSectionHelper.Separator_.prototype.setLeft = function(left) {
   this.line_.setLeft(left);
   this.setHandleLeft_(left);
 
@@ -552,7 +552,7 @@ thin.editor.ListSectionHelper.Separator_.prototype.setLeft = function(left) {
  * @param {number} left
  * @private
  */
-thin.editor.ListSectionHelper.Separator_.prototype.setHandleLeft_ = function(left) {
+thin.core.ListSectionHelper.Separator_.prototype.setHandleLeft_ = function(left) {
   var listGuideHelper = this.layout_.getHelpers().getListHelper().getListGuideHelper();
 
   this.leftHandle_.setLeft(left - listGuideHelper.getStrokeWidth());
@@ -563,7 +563,7 @@ thin.editor.ListSectionHelper.Separator_.prototype.setHandleLeft_ = function(lef
 /**
  * @param {number} top
  */
-thin.editor.ListSectionHelper.Separator_.prototype.setTop = function(top) {
+thin.core.ListSectionHelper.Separator_.prototype.setTop = function(top) {
   this.line_.setTop(top);
   this.leftHandle_.setTop(top - (this.leftHandle_.getHeight() / 2));
   this.rightHandle_.setTop(top - (this.rightHandle_.getHeight() / 2));
@@ -576,7 +576,7 @@ thin.editor.ListSectionHelper.Separator_.prototype.setTop = function(top) {
 /**
  * @param {number} width
  */
-thin.editor.ListSectionHelper.Separator_.prototype.setWidth = function(width) {
+thin.core.ListSectionHelper.Separator_.prototype.setWidth = function(width) {
   this.line_.setWidth(width);
 
   width = thin.numberWithPrecision(width);
@@ -587,7 +587,7 @@ thin.editor.ListSectionHelper.Separator_.prototype.setWidth = function(width) {
 /**
  * @return {void}
  */
-thin.editor.ListSectionHelper.Separator_.prototype.reapplySizeAndStroke = function() {
+thin.core.ListSectionHelper.Separator_.prototype.reapplySizeAndStroke = function() {
   this.line_.reapplySizeAndStroke();
 
   this.leftHandle_.reapplySizeAndStroke();
@@ -599,15 +599,15 @@ thin.editor.ListSectionHelper.Separator_.prototype.reapplySizeAndStroke = functi
 
 
 /**
- * @return {thin.editor.SvgDragger}
+ * @return {thin.core.SvgDragger}
  */
-thin.editor.ListSectionHelper.Separator_.prototype.getDragger = function() {
+thin.core.ListSectionHelper.Separator_.prototype.getDragger = function() {
   return this.dragger_;
 };
 
 
 /** @override */
-thin.editor.ListSectionHelper.Separator_.prototype.disposeInternal = function() {
+thin.core.ListSectionHelper.Separator_.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   
   this.line_.dispose();
@@ -623,19 +623,19 @@ thin.editor.ListSectionHelper.Separator_.prototype.disposeInternal = function() 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  * @private
  */
-thin.editor.ListSectionHelper.SeparatorHandle_ = function(element, layout) {
+thin.core.ListSectionHelper.SeparatorHandle_ = function(element, layout) {
   goog.base(this, element, layout, 
       null, new goog.graphics.SolidFill('#ffffff'));
 };
-goog.inherits(thin.editor.ListSectionHelper.SeparatorHandle_, thin.editor.Rect);
+goog.inherits(thin.core.ListSectionHelper.SeparatorHandle_, thin.core.Rect);
 
 
-thin.editor.ListSectionHelper.SeparatorHandle_.prototype.reapplySizeAndStroke = function() {
+thin.core.ListSectionHelper.SeparatorHandle_.prototype.reapplySizeAndStroke = function() {
   var scale = this.getLayout().getPixelScale();
 
   this.setWidth(8 / scale);

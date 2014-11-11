@@ -13,15 +13,15 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.TextStyle');
-goog.provide('thin.editor.TextStyle.HorizonAlignType');
-goog.provide('thin.editor.TextStyle.VerticalAlignType');
-goog.provide('thin.editor.TextStyle.HorizonAlignTypeName');
-goog.provide('thin.editor.TextStyle.VerticalAlignTypeName');
-goog.provide('thin.editor.TextStyle.OverflowType');
-goog.provide('thin.editor.TextStyle.OverflowTypeName');
-goog.provide('thin.editor.TextStyle.WordWrapType');
-goog.provide('thin.editor.TextStyle.WordWrapTypeName');
+goog.provide('thin.core.TextStyle');
+goog.provide('thin.core.TextStyle.HorizonAlignType');
+goog.provide('thin.core.TextStyle.VerticalAlignType');
+goog.provide('thin.core.TextStyle.HorizonAlignTypeName');
+goog.provide('thin.core.TextStyle.VerticalAlignTypeName');
+goog.provide('thin.core.TextStyle.OverflowType');
+goog.provide('thin.core.TextStyle.OverflowTypeName');
+goog.provide('thin.core.TextStyle.WordWrapType');
+goog.provide('thin.core.TextStyle.WordWrapTypeName');
 
 goog.require('thin.i18n');
 
@@ -29,13 +29,13 @@ goog.require('thin.i18n');
 /**
  * @constructor
  */
-thin.editor.TextStyle = function() {};
+thin.core.TextStyle = function() {};
 
 
 /**
  * @enum {string}
  */
-thin.editor.TextStyle.WordWrapType = {
+thin.core.TextStyle.WordWrapType = {
   NONE: 'none',
   BREAK_WORD: 'break-word'
 };
@@ -44,7 +44,7 @@ thin.editor.TextStyle.WordWrapType = {
 /**
  * @enum {string}
  */
-thin.editor.TextStyle.WordWrapTypeName = {
+thin.core.TextStyle.WordWrapTypeName = {
   NONE: thin.t('label_word_wrap_none'),
   BREAK_WORD: thin.t('label_word_wrap_break_word')
 };
@@ -53,7 +53,7 @@ thin.editor.TextStyle.WordWrapTypeName = {
 /**
  * @enum {string}
  */
-thin.editor.TextStyle.HorizonAlignType = {
+thin.core.TextStyle.HorizonAlignType = {
   START: 'start',
   MIDDLE: 'middle',
   END: 'end'
@@ -63,7 +63,7 @@ thin.editor.TextStyle.HorizonAlignType = {
 /**
  * @enum {string}
  */
-thin.editor.TextStyle.VerticalAlignType = {
+thin.core.TextStyle.VerticalAlignType = {
   TOP: 'top',
   CENTER: 'center',
   BOTTOM: 'bottom'
@@ -73,7 +73,7 @@ thin.editor.TextStyle.VerticalAlignType = {
 /**
  * @enum {string}
  */
-thin.editor.TextStyle.HorizonAlignTypeName = {
+thin.core.TextStyle.HorizonAlignTypeName = {
   START: thin.t('label_left_align'),
   MIDDLE: thin.t('label_center_align'),
   END: thin.t('label_right_align')
@@ -83,7 +83,7 @@ thin.editor.TextStyle.HorizonAlignTypeName = {
 /**
  * @enum {string}
  */
-thin.editor.TextStyle.VerticalAlignTypeName = {
+thin.core.TextStyle.VerticalAlignTypeName = {
   TOP: thin.t('label_top_align'),
   CENTER: thin.t('label_middle_align'),
   BOTTOM: thin.t('label_bottom_align')
@@ -93,7 +93,7 @@ thin.editor.TextStyle.VerticalAlignTypeName = {
 /**
  * @enum {string}
  */
-thin.editor.TextStyle.OverflowType = {
+thin.core.TextStyle.OverflowType = {
   TRUNCATE: 'truncate',
   FIT: 'fit',
   EXPAND: 'expand'
@@ -103,7 +103,7 @@ thin.editor.TextStyle.OverflowType = {
 /**
  * @enum {string}
  */
-thin.editor.TextStyle.OverflowTypeName = {
+thin.core.TextStyle.OverflowTypeName = {
   TRUNCATE: thin.t('label_overflow_truncate'),
   FIT: thin.t('label_overflow_fit'),
   EXPAND: thin.t('label_overflow_expand')
@@ -113,48 +113,48 @@ thin.editor.TextStyle.OverflowTypeName = {
 /**
  * @type {string}
  */
-thin.editor.TextStyle.DEFAULT_OVERFLOWTYPE = 'truncate';
+thin.core.TextStyle.DEFAULT_OVERFLOWTYPE = 'truncate';
 
 
 /**
  * @type {string}
  */
-thin.editor.TextStyle.DEFAULT_KERNING = '';
+thin.core.TextStyle.DEFAULT_KERNING = '';
 
 
 /**
  * @type {string}
  */
-thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING = 'auto';
+thin.core.TextStyle.DEFAULT_ELEMENT_KERNING = 'auto';
 
 
 /**
  * @type {string}
  */
-thin.editor.TextStyle.DEFAULT_LINEHEIGHT = '';
+thin.core.TextStyle.DEFAULT_LINEHEIGHT = '';
 
 
 /**
  * @type {string}
  */
-thin.editor.TextStyle.DEFAULT_LINEHEIGHT_INTERNAL = '1';
+thin.core.TextStyle.DEFAULT_LINEHEIGHT_INTERNAL = '1';
 
 
 /**
  * @type {Array.<string>}
  */
-thin.editor.TextStyle.LINEHEIGHT_LIST = ['1', '1.5', '2.0', '2.5', '3.0'];
+thin.core.TextStyle.LINEHEIGHT_LIST = ['1', '1.5', '2.0', '2.5', '3.0'];
 
 
 /**
  * @return {string}
  */
-thin.editor.TextStyle.getDefaultWordWrap = function() {
-  var wordWrapType = thin.editor.TextStyle.WordWrapType;
+thin.core.TextStyle.getDefaultWordWrap = function() {
+  var wordWrapType = thin.core.TextStyle.WordWrapType;
   var defaultWordWrapCaption = thin.t('field_default_text_word_wrap');
 
   var defaultType = wordWrapType.NONE;
-  goog.object.forEach(thin.editor.TextStyle.WordWrapTypeName, function(caption, type) {
+  goog.object.forEach(thin.core.TextStyle.WordWrapTypeName, function(caption, type) {
     if (caption == defaultWordWrapCaption) {
       defaultType = goog.object.get(wordWrapType, type);
       return;
@@ -168,38 +168,38 @@ thin.editor.TextStyle.getDefaultWordWrap = function() {
  * @type {string}
  * @private
  */
-thin.editor.TextStyle.prototype.anchor_;
+thin.core.TextStyle.prototype.anchor_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.TextStyle.prototype.valign_;
+thin.core.TextStyle.prototype.valign_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.TextStyle.prototype.kerning_;
+thin.core.TextStyle.prototype.kerning_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.TextStyle.prototype.lineHeightRatio_;
+thin.core.TextStyle.prototype.lineHeightRatio_;
 
 
 /**
  * @param {string} textAnchor
  * @return {string}
  */
-thin.editor.TextStyle.getHorizonAlignValueFromType = function(textAnchor) {
+thin.core.TextStyle.getHorizonAlignValueFromType = function(textAnchor) {
 
-  var anchorType = thin.editor.TextStyle.HorizonAlignType;
-  var anchorTypeName = thin.editor.TextStyle.HorizonAlignTypeName;
+  var anchorType = thin.core.TextStyle.HorizonAlignType;
+  var anchorTypeName = thin.core.TextStyle.HorizonAlignTypeName;
   
   switch (textAnchor) {
     case anchorType.START:
@@ -220,10 +220,10 @@ thin.editor.TextStyle.getHorizonAlignValueFromType = function(textAnchor) {
  * @param {string} valign
  * @return {string}
  */
-thin.editor.TextStyle.getVerticalAlignValueFromType = function(valign) {
+thin.core.TextStyle.getVerticalAlignValueFromType = function(valign) {
 
-  var valignType = thin.editor.TextStyle.VerticalAlignType;
-  var valignTypeName = thin.editor.TextStyle.VerticalAlignTypeName;
+  var valignType = thin.core.TextStyle.VerticalAlignType;
+  var valignTypeName = thin.core.TextStyle.VerticalAlignTypeName;
   
   switch (valign) {
     case valignType.TOP:
@@ -243,10 +243,10 @@ thin.editor.TextStyle.getVerticalAlignValueFromType = function(valign) {
 /**
  * @return {string}
  */
-thin.editor.TextStyle.getHorizonAlignTypeFromTypeName = function(targetName) {
+thin.core.TextStyle.getHorizonAlignTypeFromTypeName = function(targetName) {
   
-  var anchorType = thin.editor.TextStyle.HorizonAlignType;
-  var anchorTypeName = thin.editor.TextStyle.HorizonAlignTypeName;
+  var anchorType = thin.core.TextStyle.HorizonAlignType;
+  var anchorTypeName = thin.core.TextStyle.HorizonAlignTypeName;
   
   switch (targetName) {
     case anchorTypeName.START:
@@ -266,10 +266,10 @@ thin.editor.TextStyle.getHorizonAlignTypeFromTypeName = function(targetName) {
 /**
  * @return {string}
  */
-thin.editor.TextStyle.getVerticalAlignTypeFromTypeName = function(targetName) {
+thin.core.TextStyle.getVerticalAlignTypeFromTypeName = function(targetName) {
   
-  var valignType = thin.editor.TextStyle.VerticalAlignType;
-  var valignTypeName = thin.editor.TextStyle.VerticalAlignTypeName;
+  var valignType = thin.core.TextStyle.VerticalAlignType;
+  var valignTypeName = thin.core.TextStyle.VerticalAlignTypeName;
   
   switch (targetName) {
     case valignTypeName.TOP:
@@ -289,7 +289,7 @@ thin.editor.TextStyle.getVerticalAlignTypeFromTypeName = function(targetName) {
 /**
  * @param {string} valign
  */
-thin.editor.TextStyle.prototype.setVerticalAlign = function(valign) {
+thin.core.TextStyle.prototype.setVerticalAlign = function(valign) {
   this.valign_ = valign;
 };
 
@@ -297,7 +297,7 @@ thin.editor.TextStyle.prototype.setVerticalAlign = function(valign) {
 /**
  * @return {string}
  */
-thin.editor.TextStyle.prototype.getVerticalAlign = function() {
+thin.core.TextStyle.prototype.getVerticalAlign = function() {
   return this.valign_;
 };
 
@@ -305,7 +305,7 @@ thin.editor.TextStyle.prototype.getVerticalAlign = function() {
 /**
  * @param {string} anchor
  */
-thin.editor.TextStyle.prototype.setTextAnchor = function(anchor) {
+thin.core.TextStyle.prototype.setTextAnchor = function(anchor) {
   this.anchor_ = anchor;
 };
 
@@ -313,7 +313,7 @@ thin.editor.TextStyle.prototype.setTextAnchor = function(anchor) {
 /**
  * @return {string}
  */
-thin.editor.TextStyle.prototype.getTextAnchor = function() {
+thin.core.TextStyle.prototype.getTextAnchor = function() {
   return this.anchor_;
 };
 
@@ -321,7 +321,7 @@ thin.editor.TextStyle.prototype.getTextAnchor = function() {
 /**
  * @param {string} ratio
  */
-thin.editor.TextStyle.prototype.setLineHeightRatio = function(ratio) {
+thin.core.TextStyle.prototype.setLineHeightRatio = function(ratio) {
   this.lineHeightRatio_ = ratio;
 };
 
@@ -329,7 +329,7 @@ thin.editor.TextStyle.prototype.setLineHeightRatio = function(ratio) {
 /**
  * @return {string}
  */
-thin.editor.TextStyle.prototype.getLineHeightRatio = function() {
+thin.core.TextStyle.prototype.getLineHeightRatio = function() {
   return this.lineHeightRatio_;
 };
 
@@ -337,7 +337,7 @@ thin.editor.TextStyle.prototype.getLineHeightRatio = function() {
 /**
  * @param {string} spacing
  */
-thin.editor.TextStyle.prototype.setKerning = function(spacing) {
+thin.core.TextStyle.prototype.setKerning = function(spacing) {
   this.kerning_ = spacing;
 };
 
@@ -345,7 +345,7 @@ thin.editor.TextStyle.prototype.setKerning = function(spacing) {
 /**
  * @return {string}
  */
-thin.editor.TextStyle.prototype.getKerning = function() {
+thin.core.TextStyle.prototype.getKerning = function() {
   return this.kerning_;
 };
 
@@ -353,30 +353,30 @@ thin.editor.TextStyle.prototype.getKerning = function() {
 /**
  * @return {boolean}
  */
-thin.editor.TextStyle.prototype.isAnchorEnd = function() {
-  return this.anchor_ == thin.editor.TextStyle.HorizonAlignType.END;
+thin.core.TextStyle.prototype.isAnchorEnd = function() {
+  return this.anchor_ == thin.core.TextStyle.HorizonAlignType.END;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.TextStyle.prototype.isAnchorMiddle = function() {
-  return this.anchor_ == thin.editor.TextStyle.HorizonAlignType.MIDDLE;
+thin.core.TextStyle.prototype.isAnchorMiddle = function() {
+  return this.anchor_ == thin.core.TextStyle.HorizonAlignType.MIDDLE;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.TextStyle.prototype.isVerticalBottom = function() {
-  return this.valign_ == thin.editor.TextStyle.VerticalAlignType.BOTTOM;
+thin.core.TextStyle.prototype.isVerticalBottom = function() {
+  return this.valign_ == thin.core.TextStyle.VerticalAlignType.BOTTOM;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.TextStyle.prototype.isVerticalCenter = function() {
-  return this.valign_ == thin.editor.TextStyle.VerticalAlignType.CENTER;
+thin.core.TextStyle.prototype.isVerticalCenter = function() {
+  return this.valign_ == thin.core.TextStyle.VerticalAlignType.CENTER;
 };

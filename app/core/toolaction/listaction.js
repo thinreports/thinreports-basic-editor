@@ -13,27 +13,27 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.toolaction.ListAction');
+goog.provide('thin.core.toolaction.ListAction');
 
-goog.require('thin.editor.toolaction.DrawAction');
+goog.require('thin.core.toolaction.DrawAction');
 
 
 /**
  * @constructor
- * @extends {thin.editor.toolaction.DrawAction}
+ * @extends {thin.core.toolaction.DrawAction}
  */
-thin.editor.toolaction.ListAction = function() {
-  thin.editor.toolaction.DrawAction.call(this);
+thin.core.toolaction.ListAction = function() {
+  thin.core.toolaction.DrawAction.call(this);
 };
-goog.inherits(thin.editor.toolaction.ListAction, thin.editor.toolaction.DrawAction);
+goog.inherits(thin.core.toolaction.ListAction, thin.core.toolaction.DrawAction);
 
 
 /**
  * @param {goog.events.BrowserEvent} e
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @protected
  */
-thin.editor.toolaction.ListAction.prototype.handleActionInternal = function(e, workspace) {
+thin.core.toolaction.ListAction.prototype.handleActionInternal = function(e, workspace) {
 
   var helpers = this.layout.getHelpers();
   var listHelper = helpers.getListHelper();
@@ -57,7 +57,7 @@ thin.editor.toolaction.ListAction.prototype.handleActionInternal = function(e, w
 
 
 /** @override */
-thin.editor.toolaction.ListAction.prototype.handleEndAction = 
+thin.core.toolaction.ListAction.prototype.handleEndAction = 
     function(e, outline, handler, captureActiveForStart, opt_isCancelDraw) {
   goog.base(this, 'handleEndAction', e, outline, handler, captureActiveForStart, opt_isCancelDraw);
 

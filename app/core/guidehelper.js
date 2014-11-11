@@ -13,8 +13,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.GuideHelper');
-goog.provide('thin.editor.GuideHelper.Stroke_');
+goog.provide('thin.core.GuideHelper');
+goog.provide('thin.core.GuideHelper.Stroke_');
 
 goog.require('goog.object');
 goog.require('goog.math.Rect');
@@ -22,35 +22,35 @@ goog.require('goog.math.Coordinate');
 goog.require('goog.events');
 goog.require('goog.fx.Dragger');
 goog.require('goog.fx.Dragger.EventType');
-goog.require('thin.editor.Cursor');
-goog.require('thin.editor.Cursor.Type');
-goog.require('thin.editor.AbstractDragger');
-goog.require('thin.editor.AbstractDragger.EventType');
-goog.require('thin.editor.SvgResizer');
-goog.require('thin.editor.SvgResizer.Horizon');
-goog.require('thin.editor.SvgResizer.Vertical');
-goog.require('thin.editor.AbstractGuideHelper');
-goog.require('thin.editor.AbstractGuideHelper.PositionName');
-goog.require('thin.editor.GuideResizer');
-goog.require('thin.editor.GuideBody');
+goog.require('thin.core.Cursor');
+goog.require('thin.core.Cursor.Type');
+goog.require('thin.core.AbstractDragger');
+goog.require('thin.core.AbstractDragger.EventType');
+goog.require('thin.core.SvgResizer');
+goog.require('thin.core.SvgResizer.Horizon');
+goog.require('thin.core.SvgResizer.Vertical');
+goog.require('thin.core.AbstractGuideHelper');
+goog.require('thin.core.AbstractGuideHelper.PositionName');
+goog.require('thin.core.GuideResizer');
+goog.require('thin.core.GuideBody');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.AbstractGuideHelper}
+ * @extends {thin.core.AbstractGuideHelper}
  */
-thin.editor.GuideHelper = function(layout) {
-  thin.editor.AbstractGuideHelper.call(this, layout);
+thin.core.GuideHelper = function(layout) {
+  thin.core.AbstractGuideHelper.call(this, layout);
 };
-goog.inherits(thin.editor.GuideHelper, thin.editor.AbstractGuideHelper);
+goog.inherits(thin.core.GuideHelper, thin.core.AbstractGuideHelper);
 
 
 /**
  * @enum {string}
  * @private
  */
-thin.editor.GuideHelper.Stroke_ = {
+thin.core.GuideHelper.Stroke_ = {
   STROKE: '#000000',
   OUTLINESTROKE: '#0000FF',
   STROKEWIDTH: '0.8px',
@@ -59,21 +59,21 @@ thin.editor.GuideHelper.Stroke_ = {
 
 
 /**
- * @type {thin.editor.GuideBody}
+ * @type {thin.core.GuideBody}
  * @private
  */
-thin.editor.GuideHelper.prototype.guideOutline_;
+thin.core.GuideHelper.prototype.guideOutline_;
 
 
-thin.editor.GuideHelper.prototype.setup = function() {
+thin.core.GuideHelper.prototype.setup = function() {
   
   var layout = this.getLayout();
-  var strokeSetting = thin.editor.GuideHelper.Stroke_;
+  var strokeSetting = thin.core.GuideHelper.Stroke_;
   var strokeWidth = strokeSetting.STROKEWIDTH;
   
-  var guideBody = new thin.editor.GuideBody(layout.createSvgElement('rect'), layout,
+  var guideBody = new thin.core.GuideBody(layout.createSvgElement('rect'), layout,
                     new goog.graphics.Stroke(strokeWidth, strokeSetting.STROKE), null);
-  var guideOutline = new thin.editor.GuideBody(layout.createSvgElement('rect'), layout,
+  var guideOutline = new thin.core.GuideBody(layout.createSvgElement('rect'), layout,
                        new goog.graphics.Stroke(strokeWidth, strokeSetting.OUTLINESTROKE), null);
 
   guideBody.setVisibled(false);
@@ -90,35 +90,35 @@ thin.editor.GuideHelper.prototype.setup = function() {
 /**
  * @param {goog.math.Rect} bounds
  */
-thin.editor.GuideHelper.prototype.setBounds = function(bounds) {
+thin.core.GuideHelper.prototype.setBounds = function(bounds) {
   this.body_.setBounds(bounds);
   this.guideOutline_.setBounds(bounds);
 };
 
 
 /**
- * @return {thin.editor.GuideBody}
+ * @return {thin.core.GuideBody}
  */
-thin.editor.GuideHelper.prototype.getGuideOutline = function() {
+thin.core.GuideHelper.prototype.getGuideOutline = function() {
   return this.guideOutline_;
 };
 
 
-thin.editor.GuideHelper.prototype.reapplySizeAndStroke = function() {
+thin.core.GuideHelper.prototype.reapplySizeAndStroke = function() {
   var guideBody = this.body_;
   guideBody.reapplyStroke();
   this.getLayout().setElementAttributes(guideBody.getElement(), {
-    'stroke-dasharray': Number(thin.editor.GuideHelper.Stroke_.STROKEDASHARRAY) / this.getLayout().getPixelScale()
+    'stroke-dasharray': Number(thin.core.GuideHelper.Stroke_.STROKEDASHARRAY) / this.getLayout().getPixelScale()
   });
   this.guideOutline_.reapplyStroke();
   
-  goog.object.forEach(thin.editor.AbstractGuideHelper.PositionName, goog.bind(function(positionName) {
+  goog.object.forEach(thin.core.AbstractGuideHelper.PositionName, goog.bind(function(positionName) {
     this.getResizerByPositionName(positionName).reapplyStrokeAndSize();
   }, this));
 };
 
 
-thin.editor.GuideHelper.prototype.adjustToTargetShapeBounds = function() {
+thin.core.GuideHelper.prototype.adjustToTargetShapeBounds = function() {
   var targetShape = this.getTargetShape();
   if (!goog.isDef(targetShape)) {
     // Skip adjust;
@@ -136,7 +136,7 @@ thin.editor.GuideHelper.prototype.adjustToTargetShapeBounds = function() {
   var right = left + width;
   var bottom = top + height;
 
-  var positionName = thin.editor.AbstractGuideHelper.PositionName;
+  var positionName = thin.core.AbstractGuideHelper.PositionName;
   this.getResizerByPositionName(positionName.TLEFT).setCenter(left, top);
   this.getResizerByPositionName(positionName.TCENTER).setCenter(center, top);
   this.getResizerByPositionName(positionName.TRIGHT).setCenter(right, top);
@@ -151,16 +151,16 @@ thin.editor.GuideHelper.prototype.adjustToTargetShapeBounds = function() {
 /**
  * @private
  */
-thin.editor.GuideHelper.prototype.createResizers_ = function() {
+thin.core.GuideHelper.prototype.createResizers_ = function() {
   
-  var strokeSetting = thin.editor.GuideHelper.Stroke_;
+  var strokeSetting = thin.core.GuideHelper.Stroke_;
   var stroke = new goog.graphics.Stroke(strokeSetting.STROKEWIDTH, strokeSetting.STROKE);
   var layout = this.getLayout();
-  var cursorType = thin.editor.Cursor.Type;
-  goog.object.forEach(thin.editor.AbstractGuideHelper.PositionName, function(positionName) {
+  var cursorType = thin.core.Cursor.Type;
+  goog.object.forEach(thin.core.AbstractGuideHelper.PositionName, function(positionName) {
     var element = layout.createSvgElement('ellipse');
-    var resizer = new thin.editor.GuideResizer(element, layout, stroke, this);
-    var cursor = thin.editor.Cursor.getCursorByName(
+    var resizer = new thin.core.GuideResizer(element, layout, stroke, this);
+    var cursor = thin.core.Cursor.getCursorByName(
           /** @type {string} */ (positionName));
     resizer.setCursor(cursor);
     layout.setElementCursor(element, cursor);
@@ -173,9 +173,9 @@ thin.editor.GuideHelper.prototype.createResizers_ = function() {
 /**
  * @param {goog.graphics.Element} target
  */
-thin.editor.GuideHelper.prototype.setEnableAndTargetShape = function(target) {
+thin.core.GuideHelper.prototype.setEnableAndTargetShape = function(target) {
 
-  thin.editor.GuideHelper.superClass_.setEnableAndTargetShape.call(this, target);
+  thin.core.GuideHelper.superClass_.setEnableAndTargetShape.call(this, target);
   this.adjustToTargetShapeBounds();
   this.enableAllResizers_(true);
 
@@ -188,8 +188,8 @@ thin.editor.GuideHelper.prototype.setEnableAndTargetShape = function(target) {
 /**
  * @private
  */
-thin.editor.GuideHelper.prototype.disableResizingHeight_ = function() {
-  var pos = thin.editor.AbstractGuideHelper.PositionName;
+thin.core.GuideHelper.prototype.disableResizingHeight_ = function() {
+  var pos = thin.core.AbstractGuideHelper.PositionName;
   var resizers = [
     pos.TLEFT, pos.TCENTER, pos.TRIGHT, 
     pos.BLEFT, pos.BCENTER, pos.BRIGHT
@@ -204,7 +204,7 @@ thin.editor.GuideHelper.prototype.disableResizingHeight_ = function() {
  * @param {boolean} setting
  * @private
  */
-thin.editor.GuideHelper.prototype.enableAllResizers_ = function(setting) {
+thin.core.GuideHelper.prototype.enableAllResizers_ = function(setting) {
   this.body_.setVisibled(!setting);
   goog.object.forEach(this.resizers_, function(resizer) {
     resizer.setVisibled(setting);
@@ -215,7 +215,7 @@ thin.editor.GuideHelper.prototype.enableAllResizers_ = function(setting) {
 };
 
 
-thin.editor.GuideHelper.prototype.init = function() {
+thin.core.GuideHelper.prototype.init = function() {
   var scope = this;
   this.reapplySizeAndStroke();
   var layout = this.getLayout();
@@ -223,12 +223,12 @@ thin.editor.GuideHelper.prototype.init = function() {
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var activeShapeManager = layout.getManager().getActiveShape();
   var guideOutline = this.guideOutline_;
-  var positionName = thin.editor.AbstractGuideHelper.PositionName;
+  var positionName = thin.core.AbstractGuideHelper.PositionName;
   var eventType = goog.fx.Dragger.EventType;
-  var draggerEventType = thin.editor.AbstractDragger.EventType;
-  var horizon = thin.editor.SvgResizer.Horizon;
-  var vertical = thin.editor.SvgResizer.Vertical;
-  var cursorType = thin.editor.Cursor.Type;
+  var draggerEventType = thin.core.AbstractDragger.EventType;
+  var horizon = thin.core.SvgResizer.Horizon;
+  var vertical = thin.core.SvgResizer.Vertical;
+  var cursorType = thin.core.Cursor.Type;
   var listHelper = helpers.getListHelper();
   
   /**
@@ -469,8 +469,8 @@ thin.editor.GuideHelper.prototype.init = function() {
 
 
 /** @inheritDoc */
-thin.editor.GuideHelper.prototype.disposeInternal = function() {
+thin.core.GuideHelper.prototype.disposeInternal = function() {
   this.guideOutline_.dispose();
   delete this.guideOutline_;
-  thin.editor.GuideHelper.superClass_.disposeInternal.call(this);
+  thin.core.GuideHelper.superClass_.disposeInternal.call(this);
 };

@@ -13,54 +13,54 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.toolaction.ZoomAction');
-goog.provide('thin.editor.toolaction.ZoomAction.CursorPath_');
+goog.provide('thin.core.toolaction.ZoomAction');
+goog.provide('thin.core.toolaction.ZoomAction.CursorPath_');
 
-goog.require('thin.editor.toolaction.AbstractAction');
+goog.require('thin.core.toolaction.AbstractAction');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.math.Coordinate');
-goog.require('thin.editor.Cursor');
+goog.require('thin.core.Cursor');
 
 
 /**
  * @constructor
- * @extends {thin.editor.toolaction.AbstractAction}
+ * @extends {thin.core.toolaction.AbstractAction}
  */
-thin.editor.toolaction.ZoomAction = function() {
-  thin.editor.toolaction.AbstractAction.call(this);
+thin.core.toolaction.ZoomAction = function() {
+  thin.core.toolaction.AbstractAction.call(this);
 };
-goog.inherits(thin.editor.toolaction.ZoomAction, thin.editor.toolaction.AbstractAction);
+goog.inherits(thin.core.toolaction.ZoomAction, thin.core.toolaction.AbstractAction);
 
 
 /**
  * @enum {string}
  * @private
  */
-thin.editor.toolaction.ZoomAction.CursorPath_ = {
+thin.core.toolaction.ZoomAction.CursorPath_ = {
   ZOOMIN: 'assets/icons/zoom-in.png',
   ZOOMOUT: 'assets/icons/zoom-out.png'
 };
 
 
 /**
- * @param {thin.editor.Layer} zoomLayer
+ * @param {thin.core.Layer} zoomLayer
  * @private
  */
-thin.editor.toolaction.ZoomAction.prototype.setZoomOutMode_ = function(zoomLayer) {
-  zoomLayer.setCursor(new thin.editor.Cursor(
-      thin.editor.toolaction.ZoomAction.CursorPath_.ZOOMOUT, true));
+thin.core.toolaction.ZoomAction.prototype.setZoomOutMode_ = function(zoomLayer) {
+  zoomLayer.setCursor(new thin.core.Cursor(
+      thin.core.toolaction.ZoomAction.CursorPath_.ZOOMOUT, true));
   this.layout.setElementCursor(zoomLayer.getElement(), zoomLayer.getCursor());
 };
 
 
 /**
- * @param {thin.editor.Layer} zoomLayer
+ * @param {thin.core.Layer} zoomLayer
  * @private
  */
-thin.editor.toolaction.ZoomAction.prototype.setZoomInMode_ = function(zoomLayer) {
-  zoomLayer.setCursor(new thin.editor.Cursor(
-      thin.editor.toolaction.ZoomAction.CursorPath_.ZOOMIN, true));
+thin.core.toolaction.ZoomAction.prototype.setZoomInMode_ = function(zoomLayer) {
+  zoomLayer.setCursor(new thin.core.Cursor(
+      thin.core.toolaction.ZoomAction.CursorPath_.ZOOMIN, true));
   this.layout.setElementCursor(zoomLayer.getElement(), zoomLayer.getCursor());
 };
 
@@ -69,7 +69,7 @@ thin.editor.toolaction.ZoomAction.prototype.setZoomInMode_ = function(zoomLayer)
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.toolaction.ZoomAction.prototype.setZoomMode_ = function(e) {
+thin.core.toolaction.ZoomAction.prototype.setZoomMode_ = function(e) {
   if (e.keyCode == goog.events.KeyCodes.ALT) {
     var zoomLayer = this.layout.getHelpers().getZoomLayer();
     if (e.altKey) {
@@ -85,7 +85,7 @@ thin.editor.toolaction.ZoomAction.prototype.setZoomMode_ = function(e) {
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.toolaction.ZoomAction.prototype.handleMouseDownAction_ = function(e) {
+thin.core.toolaction.ZoomAction.prototype.handleMouseDownAction_ = function(e) {
   var workspace = this.workspace;
   workspace.focusElement(e);
   var zoom = workspace.getUiStatusForZoom();
@@ -101,7 +101,7 @@ thin.editor.toolaction.ZoomAction.prototype.handleMouseDownAction_ = function(e)
  * @return {goog.math.Coordinate}
  * @private
  */
-thin.editor.toolaction.ZoomAction.prototype.calculatePosition_ = function(e) {
+thin.core.toolaction.ZoomAction.prototype.calculatePosition_ = function(e) {
   var layout = this.layout;
   var bounds = layout.getOffsetTarget().getBoundingClientRect();
   var rate = layout.getPixelScale();
@@ -113,10 +113,10 @@ thin.editor.toolaction.ZoomAction.prototype.calculatePosition_ = function(e) {
 
 /**
  * @param {goog.events.BrowserEvent} e
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @protected
  */
-thin.editor.toolaction.ZoomAction.prototype.handleActionInternal = function(e, workspace) {
+thin.core.toolaction.ZoomAction.prototype.handleActionInternal = function(e, workspace) {
 
   var eventType = goog.events.EventType;
   var zoomLayer = this.layout.getHelpers().getZoomLayer();

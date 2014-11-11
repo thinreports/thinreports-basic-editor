@@ -13,21 +13,21 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.MarginGuideHelper');
+goog.provide('thin.core.MarginGuideHelper');
 
 goog.require('goog.math.Box');
-goog.require('thin.editor.Component');
-goog.require('thin.editor.MarginGuide');
+goog.require('thin.core.Component');
+goog.require('thin.core.MarginGuide');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.math.Box} margins
  * @constructor
- * @extends {thin.editor.Component}
+ * @extends {thin.core.Component}
  */
-thin.editor.MarginGuideHelper = function(layout, margins) {
-  thin.editor.Component.call(this, layout);
+thin.core.MarginGuideHelper = function(layout, margins) {
+  thin.core.Component.call(this, layout);
   var size = layout.getNormalLayoutSize();
   
   var top = margins.top;
@@ -38,7 +38,7 @@ thin.editor.MarginGuideHelper = function(layout, margins) {
   var right = width - margins.right;
   
   /**
-   * @type {thin.editor.MarginGuide}
+   * @type {thin.core.MarginGuide}
    * @private
    */
   this.leftGuide_ = this.createGuide_(layout, {
@@ -49,7 +49,7 @@ thin.editor.MarginGuideHelper = function(layout, margins) {
   });
   
   /**
-   * @type {thin.editor.MarginGuide}
+   * @type {thin.core.MarginGuide}
    * @private
    */
   this.topGuide_ = this.createGuide_(layout, {
@@ -60,7 +60,7 @@ thin.editor.MarginGuideHelper = function(layout, margins) {
   });
   
   /**
-   * @type {thin.editor.MarginGuide}
+   * @type {thin.core.MarginGuide}
    * @private
    */
   this.bottomGuide_ = this.createGuide_(layout, {
@@ -71,7 +71,7 @@ thin.editor.MarginGuideHelper = function(layout, margins) {
   });
   
   /**
-   * @type {thin.editor.MarginGuide}
+   * @type {thin.core.MarginGuide}
    * @private
    */
   this.rightGuide_ = this.createGuide_(layout, {
@@ -81,22 +81,22 @@ thin.editor.MarginGuideHelper = function(layout, margins) {
     'y2': height
   });
 };
-goog.inherits(thin.editor.MarginGuideHelper, thin.editor.Component);
+goog.inherits(thin.core.MarginGuideHelper, thin.core.Component);
 
 
 /**
- * @param {thin.editor.Layout} layout
- * @return {thin.editor.MarginGuideHelper}
+ * @param {thin.core.Layout} layout
+ * @return {thin.core.MarginGuideHelper}
  */
-thin.editor.MarginGuideHelper.setup = function(layout) {
+thin.core.MarginGuideHelper.setup = function(layout) {
   var page = layout.getFormatPage();
-  return new thin.editor.MarginGuideHelper(layout, 
+  return new thin.core.MarginGuideHelper(layout, 
     new goog.math.Box(page.getMarginTop(),
           page.getMarginRight(), page.getMarginBottom(), page.getMarginLeft()));
 };
 
 
-thin.editor.MarginGuideHelper.prototype.reapplyStroke = function() {
+thin.core.MarginGuideHelper.prototype.reapplyStroke = function() {
   this.leftGuide_.reapplyStroke();
   this.topGuide_.reapplyStroke();
   this.bottomGuide_.reapplyStroke();
@@ -107,7 +107,7 @@ thin.editor.MarginGuideHelper.prototype.reapplyStroke = function() {
 /**
  * @return {Array.<number>}
  */
-thin.editor.MarginGuideHelper.prototype.getXPositions = function() {
+thin.core.MarginGuideHelper.prototype.getXPositions = function() {
   return [this.leftGuide_.getLeft(), this.rightGuide_.getLeft()];
 };
 
@@ -115,58 +115,58 @@ thin.editor.MarginGuideHelper.prototype.getXPositions = function() {
 /**
  * @return {Array.<number>}
  */
-thin.editor.MarginGuideHelper.prototype.getYPositions = function() {
+thin.core.MarginGuideHelper.prototype.getYPositions = function() {
   return [this.topGuide_.getTop(), this.bottomGuide_.getTop()];
 };
 
 
 /**
- * @return {thin.editor.MarginGuide}
+ * @return {thin.core.MarginGuide}
  */
-thin.editor.MarginGuideHelper.prototype.getLeftGuide = function() {
+thin.core.MarginGuideHelper.prototype.getLeftGuide = function() {
   return this.leftGuide_;
 };
 
 
 /**
- * @return {thin.editor.MarginGuide}
+ * @return {thin.core.MarginGuide}
  */
-thin.editor.MarginGuideHelper.prototype.getTopGuide = function() {
+thin.core.MarginGuideHelper.prototype.getTopGuide = function() {
   return this.topGuide_;
 };
 
 
 /**
- * @return {thin.editor.MarginGuide}
+ * @return {thin.core.MarginGuide}
  */
-thin.editor.MarginGuideHelper.prototype.getBottomGuide = function() {
+thin.core.MarginGuideHelper.prototype.getBottomGuide = function() {
   return this.bottomGuide_;
 };
 
 
 /**
- * @return {thin.editor.MarginGuide}
+ * @return {thin.core.MarginGuide}
  */
-thin.editor.MarginGuideHelper.prototype.getRightGuide = function() {
+thin.core.MarginGuideHelper.prototype.getRightGuide = function() {
   return this.rightGuide_;
 };
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {Object} attrs
- * @return {thin.editor.MarginGuide}
+ * @return {thin.core.MarginGuide}
  * @private
  */
-thin.editor.MarginGuideHelper.prototype.createGuide_ = function(layout, attrs) {
-  var marginGuide = new thin.editor.MarginGuide(layout.createSvgElement('line', attrs), layout);
+thin.core.MarginGuideHelper.prototype.createGuide_ = function(layout, attrs) {
+  var marginGuide = new thin.core.MarginGuide(layout.createSvgElement('line', attrs), layout);
   layout.appendChild(marginGuide, this);
   return marginGuide;
 };
 
 
 /** @inheritDoc */
-thin.editor.MarginGuideHelper.prototype.disposeInternal = function() {
+thin.core.MarginGuideHelper.prototype.disposeInternal = function() {
   this.leftGuide_.dispose();
   this.topGuide_.dispose();
   this.bottomGuide_.dispose();
@@ -176,5 +176,5 @@ thin.editor.MarginGuideHelper.prototype.disposeInternal = function() {
   delete this.topGuide_;
   delete this.bottomGuide_;
   delete this.rightGuide_;
-  thin.editor.MarginGuideHelper.superClass_.disposeInternal.call(this);
+  thin.core.MarginGuideHelper.superClass_.disposeInternal.call(this);
 };

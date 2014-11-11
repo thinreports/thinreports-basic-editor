@@ -13,22 +13,22 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Line');
-goog.provide('thin.editor.Line.DIRECTION_');
+goog.provide('thin.core.Line');
+goog.provide('thin.core.Line.DIRECTION_');
 
 goog.require('goog.math.Line');
 goog.require('goog.graphics.StrokeAndFillElement');
-goog.require('thin.editor.ModuleElement');
+goog.require('thin.core.ModuleElement');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @constructor
  * @extends {goog.graphics.StrokeAndFillElement}
  */
-thin.editor.Line = function(element, layout, stroke) {
+thin.core.Line = function(element, layout, stroke) {
   goog.graphics.StrokeAndFillElement.call(this,
     element, layout, stroke, null);
 
@@ -85,15 +85,15 @@ thin.editor.Line = function(element, layout, stroke) {
    */
   this.y2_ = y2;
 };
-goog.inherits(thin.editor.Line, goog.graphics.StrokeAndFillElement);
-goog.mixin(thin.editor.Line.prototype, thin.editor.ModuleElement.prototype);
+goog.inherits(thin.core.Line, goog.graphics.StrokeAndFillElement);
+goog.mixin(thin.core.Line.prototype, thin.core.ModuleElement.prototype);
 
 
 /**
  * @enum {string}
  * @private
  */
-thin.editor.Line.DIRECTION_ = {
+thin.core.Line.DIRECTION_ = {
   Y1: 'y1',
   Y2: 'y2'
 };
@@ -103,13 +103,13 @@ thin.editor.Line.DIRECTION_ = {
  * @type {string}
  * @private
  */
-thin.editor.Line.prototype.direction_;
+thin.core.Line.prototype.direction_;
 
 
 /**
  * @param {number} x1
  */
-thin.editor.Line.prototype.setX1 = function(x1) {
+thin.core.Line.prototype.setX1 = function(x1) {
   x1 = thin.numberWithPrecision(x1);
   this.x1_ = x1;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -121,7 +121,7 @@ thin.editor.Line.prototype.setX1 = function(x1) {
 /**
  * @param {number} x2
  */
-thin.editor.Line.prototype.setX2 = function(x2) {
+thin.core.Line.prototype.setX2 = function(x2) {
   x2 = thin.numberWithPrecision(x2);
   this.x2_ = x2;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -133,7 +133,7 @@ thin.editor.Line.prototype.setX2 = function(x2) {
 /**
  * @param {number} y1
  */
-thin.editor.Line.prototype.setY1 = function(y1) {
+thin.core.Line.prototype.setY1 = function(y1) {
   y1 = thin.numberWithPrecision(y1);
   this.y1_ = y1;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -145,7 +145,7 @@ thin.editor.Line.prototype.setY1 = function(y1) {
 /**
  * @param {number} y2
  */
-thin.editor.Line.prototype.setY2 = function(y2) {
+thin.core.Line.prototype.setY2 = function(y2) {
   y2 = thin.numberWithPrecision(y2);
   this.y2_ = y2;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -157,7 +157,7 @@ thin.editor.Line.prototype.setY2 = function(y2) {
 /**
  * @return {goog.math.Line}
  */
-thin.editor.Line.prototype.getCoordinate = function() {
+thin.core.Line.prototype.getCoordinate = function() {
   var transLateX = this.getParentTransLateX();
   var transLateY = this.getParentTransLateY();
   return new goog.math.Line(
@@ -171,7 +171,7 @@ thin.editor.Line.prototype.getCoordinate = function() {
 /**
  * @param {number} left
  */
-thin.editor.Line.prototype.setLeft = function(left) {
+thin.core.Line.prototype.setLeft = function(left) {
   left = thin.numberWithPrecision(left - this.getParentTransLateX());
   this.left_ = left;
   this.setX1(left);
@@ -182,11 +182,11 @@ thin.editor.Line.prototype.setLeft = function(left) {
 /**
  * @param {number} top
  */
-thin.editor.Line.prototype.setTop = function(top) {
+thin.core.Line.prototype.setTop = function(top) {
   top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
   
-  var directionType = thin.editor.Line.DIRECTION_;
+  var directionType = thin.core.Line.DIRECTION_;
   var direction = this.getDirection();
   
   if (direction == directionType.Y1) {
@@ -204,7 +204,7 @@ thin.editor.Line.prototype.setTop = function(top) {
 /**
  * @param {number} width
  */
-thin.editor.Line.prototype.setWidth = function(width) {
+thin.core.Line.prototype.setWidth = function(width) {
   width = thin.numberWithPrecision(width);
   this.width_ = width;
   this.setX2(this.getLeft() + width);
@@ -214,7 +214,7 @@ thin.editor.Line.prototype.setWidth = function(width) {
 /**
  * @param {number} height
  */
-thin.editor.Line.prototype.setHeight = function(height) {
+thin.core.Line.prototype.setHeight = function(height) {
   this.height_ = thin.numberWithPrecision(height);
   this.setTop(this.getTop());
 };
@@ -224,8 +224,8 @@ thin.editor.Line.prototype.setHeight = function(height) {
  * @param {number} y1
  * @param {number} y2
  */
-thin.editor.Line.prototype.calculateDirection = function(y1, y2) {
-  var directionType = thin.editor.Line.DIRECTION_;
+thin.core.Line.prototype.calculateDirection = function(y1, y2) {
+  var directionType = thin.core.Line.DIRECTION_;
   this.direction_ = y1 <= y2 ? directionType.Y1 : directionType.Y2;
 };
 
@@ -233,6 +233,6 @@ thin.editor.Line.prototype.calculateDirection = function(y1, y2) {
 /**
  * @return {string}
  */
-thin.editor.Line.prototype.getDirection = function() {
+thin.core.Line.prototype.getDirection = function() {
   return this.direction_;
 };

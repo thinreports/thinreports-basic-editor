@@ -13,8 +13,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ListShape');
-goog.provide('thin.editor.ListShape.ClassIds');
+goog.provide('thin.core.ListShape');
+goog.provide('thin.core.ListShape.ClassIds');
 
 goog.require('goog.dom');
 goog.require('goog.object');
@@ -22,61 +22,61 @@ goog.require('goog.string');
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
 goog.require('goog.graphics.Font');
-goog.require('thin.editor.ShapeStructure');
-goog.require('thin.editor.RectShape');
-goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
-goog.require('thin.editor.TextStyle.VerticalAlignType');
-goog.require('thin.editor.Component');
-goog.require('thin.editor.IdShape');
-goog.require('thin.editor.ListHelper');
-goog.require('thin.editor.ListHelper.SectionName');
-goog.require('thin.editor.ActiveShapeManager');
-goog.require('thin.editor.HeaderSectionShape');
-goog.require('thin.editor.DetailSectionShape');
-goog.require('thin.editor.PageFooterSectionShape');
-goog.require('thin.editor.FooterSectionShape');
-goog.require('thin.editor.ModuleShape');
+goog.require('thin.core.ShapeStructure');
+goog.require('thin.core.RectShape');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.VerticalAlignType');
+goog.require('thin.core.Component');
+goog.require('thin.core.IdShape');
+goog.require('thin.core.ListHelper');
+goog.require('thin.core.ListHelper.SectionName');
+goog.require('thin.core.ActiveShapeManager');
+goog.require('thin.core.HeaderSectionShape');
+goog.require('thin.core.DetailSectionShape');
+goog.require('thin.core.PageFooterSectionShape');
+goog.require('thin.core.FooterSectionShape');
+goog.require('thin.core.ModuleShape');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {Element=} opt_element
  * @param {Element=} opt_referenceElement
  * @constructor
- * @extends {thin.editor.Component}
+ * @extends {thin.core.Component}
  */
-thin.editor.ListShape = function(layout, opt_element, opt_referenceElement) {
+thin.core.ListShape = function(layout, opt_element, opt_referenceElement) {
   
   /**
-   * @type {Object.<thin.editor.ListSectionShape>}
+   * @type {Object.<thin.core.ListSectionShape>}
    * @private
    */
   this.sectionShapes_ = {};
-  thin.editor.Component.call(this, layout, opt_element);
-  this.setCss(thin.editor.ListShape.CLASSID);
+  thin.core.Component.call(this, layout, opt_element);
+  this.setCss(thin.core.ListShape.CLASSID);
   this.setup_(opt_referenceElement);
 
   /**
-   * @type {Array.<thin.editor.PageNumberShape>}
+   * @type {Array.<thin.core.PageNumberShape>}
    * @private
    */
   this.pageNumberReferences_ = [];
 };
-goog.inherits(thin.editor.ListShape, thin.editor.Component);
-goog.mixin(thin.editor.ListShape.prototype, thin.editor.ModuleShape.prototype);
+goog.inherits(thin.core.ListShape, thin.core.Component);
+goog.mixin(thin.core.ListShape.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
  * @type {string}
  */
-thin.editor.ListShape.CLASSID = 's-list';
+thin.core.ListShape.CLASSID = 's-list';
 
 
 /**
  * @enum {string}
  */
-thin.editor.ListShape.ClassIds = {
+thin.core.ListShape.ClassIds = {
   'HEADER': '-header',
   'DETAIL': '-detail',
   'FOOTER': '-footer',
@@ -90,71 +90,71 @@ thin.editor.ListShape.ClassIds = {
  * @type {number}
  * @private
  */
-thin.editor.ListShape.DELTAX_ = 2;
+thin.core.ListShape.DELTAX_ = 2;
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.ListShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#7C4007');
+thin.core.ListShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#7C4007');
 
 
 /**
  * @type {goog.graphics.Font}
  * @private
  */
-thin.editor.ListShape.IDSHAPEFONT_ = new goog.graphics.Font(11, 'Helvetica');
+thin.core.ListShape.IDSHAPEFONT_ = new goog.graphics.Font(11, 'Helvetica');
 
 
 /**
- * @type {thin.editor.IdShape}
+ * @type {thin.core.IdShape}
  * @private
  */
-thin.editor.ListShape.prototype.id_;
+thin.core.ListShape.prototype.id_;
 
 
 /**
- * @type {thin.editor.RectShape}
+ * @type {thin.core.RectShape}
  * @private
  */
-thin.editor.ListShape.prototype.face_;
+thin.core.ListShape.prototype.face_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ListShape.prototype.changingPage_ = false;
+thin.core.ListShape.prototype.changingPage_ = false;
 
 
 /**
- * @type {thin.editor.ActiveShapeManager}
+ * @type {thin.core.ActiveShapeManager}
  * @private
  */
-thin.editor.ListShape.prototype.activeshapes_;
+thin.core.ListShape.prototype.activeshapes_;
 
 
 /**
  * @return {string}
  */
-thin.editor.ListShape.prototype.getClassId = function() {
-  return thin.editor.ListShape.CLASSID;
+thin.core.ListShape.prototype.getClassId = function() {
+  return thin.core.ListShape.CLASSID;
 };
 
 
 /**
  * @param {Element} groupElement
- * @param {thin.editor.Layout} layout
- * @return {thin.editor.ListShape}
+ * @param {thin.core.Layout} layout
+ * @return {thin.core.ListShape}
  */
-thin.editor.ListShape.createFromElement = function(groupElement, layout) {
-  var shape = new thin.editor.ListShape(layout,
+thin.core.ListShape.createFromElement = function(groupElement, layout) {
+  var shape = new thin.core.ListShape(layout,
                     /** @type {Element} */(groupElement.cloneNode(false)), groupElement);
-  var classId = thin.editor.ListShape.ClassIds;
+  var classId = thin.core.ListShape.ClassIds;
 
   shape.setIdShape(layout.getElementAttribute(groupElement, 'x-id'),
-    thin.editor.getElementByClassNameForChildNodes(thin.editor.ListShape.CLASSID + classId['ID'], 
+    thin.core.getElementByClassNameForChildNodes(thin.core.ListShape.CLASSID + classId['ID'], 
     shape.getElement().childNodes));
   shape.setBounds(new goog.math.Rect(
       Number(layout.getElementAttribute(groupElement, 'x')),
@@ -173,10 +173,10 @@ thin.editor.ListShape.createFromElement = function(groupElement, layout) {
 
   shape.forEachSectionShape(function(sectionShapeForScope, sectionNameForScope) {
     var sectionGroup = sectionShapeForScope.getGroup();
-    var sectionElement = thin.editor.getElementByClassNameForChildNodes(
+    var sectionElement = thin.core.getElementByClassNameForChildNodes(
                           layout.getElementAttribute(sectionGroup.getElement(), 'class'),
                           groupElement.childNodes);
-    var transLateCoordinate = thin.editor.ShapeStructure.getTransLateCoordinate(sectionElement);
+    var transLateCoordinate = thin.core.ShapeStructure.getTransLateCoordinate(sectionElement);
     sectionGroup.setTransformation(transLateCoordinate.x, transLateCoordinate.y, 0, 0, 0);
     sectionShapeForScope.setTop(Number(layout.getElementAttribute(sectionElement, 'x-top')));
     sectionShapeForScope.setHeight(Number(layout.getElementAttribute(sectionElement, 'x-height')));
@@ -188,7 +188,7 @@ thin.editor.ListShape.createFromElement = function(groupElement, layout) {
   
   var shapeElement = shape.getElement();
   shape.forEachSectionShape(function(sectionShapeForScope, sectionNameForScope) {
-    if (thin.editor.ShapeStructure.getEnabledOfSection(
+    if (thin.core.ShapeStructure.getEnabledOfSection(
             sectionShapeForScope.getGroup().getElement(), shapeElement) == "false") {
 
       shape.setEnabledForSection(false, sectionNameForScope);
@@ -204,48 +204,48 @@ thin.editor.ListShape.createFromElement = function(groupElement, layout) {
 /**
  * @param {Element=} opt_referenceElement
  */
-thin.editor.ListShape.prototype.setup_ = function(opt_referenceElement) {
+thin.core.ListShape.prototype.setup_ = function(opt_referenceElement) {
   var layout = this.getLayout();
-  var classId = thin.editor.ListShape.ClassIds;
-  var sectionNameForTemp = thin.editor.ListHelper.SectionName;
+  var classId = thin.core.ListShape.ClassIds;
+  var sectionNameForTemp = thin.core.ListHelper.SectionName;
   var sectionNameForHeader = sectionNameForTemp.HEADER;
   var sectionNameForDetail = sectionNameForTemp.DETAIL;
   var sectionNameForPageFooter = sectionNameForTemp.PAGEFOOTER;
   var sectionNameForFooter = sectionNameForTemp.FOOTER;
-  var listShapeFaceClassId = thin.editor.ListShape.CLASSID + classId['FACE'];
+  var listShapeFaceClassId = thin.core.ListShape.CLASSID + classId['FACE'];
   var stroke = new goog.graphics.Stroke(1, '#BBBBBB');
   var fill = new goog.graphics.SolidFill('#FFFFFF');
   
   if (opt_referenceElement) {
-    var rect = thin.editor.getElementByClassNameForChildNodes(
+    var rect = thin.core.getElementByClassNameForChildNodes(
                    listShapeFaceClassId, opt_referenceElement.childNodes);
-    var face = new thin.editor.RectShape(rect, layout, stroke, fill);
+    var face = new thin.core.RectShape(rect, layout, stroke, fill);
 
-    var sectionShapeForHeader = new thin.editor.HeaderSectionShape(layout, this, sectionNameForHeader,
-                                       thin.editor.getElementByClassNameForChildNodes(
+    var sectionShapeForHeader = new thin.core.HeaderSectionShape(layout, this, sectionNameForHeader,
+                                       thin.core.getElementByClassNameForChildNodes(
                                          sectionNameForHeader, opt_referenceElement.childNodes));
                                          
-    var sectionShapeForDetail = new thin.editor.DetailSectionShape(layout, this, sectionNameForDetail,
-                                       thin.editor.getElementByClassNameForChildNodes(
+    var sectionShapeForDetail = new thin.core.DetailSectionShape(layout, this, sectionNameForDetail,
+                                       thin.core.getElementByClassNameForChildNodes(
                                          sectionNameForDetail, opt_referenceElement.childNodes));
                                          
-    var sectionShapeForPageFooter = new thin.editor.PageFooterSectionShape(layout, this, sectionNameForPageFooter,
-                                           thin.editor.getElementByClassNameForChildNodes(
+    var sectionShapeForPageFooter = new thin.core.PageFooterSectionShape(layout, this, sectionNameForPageFooter,
+                                           thin.core.getElementByClassNameForChildNodes(
                                              sectionNameForPageFooter, opt_referenceElement.childNodes));
                                              
-    var sectionShapeForFooter = new thin.editor.FooterSectionShape(layout, this, sectionNameForFooter, 
-                                       thin.editor.getElementByClassNameForChildNodes(
+    var sectionShapeForFooter = new thin.core.FooterSectionShape(layout, this, sectionNameForFooter, 
+                                       thin.core.getElementByClassNameForChildNodes(
                                          sectionNameForFooter, opt_referenceElement.childNodes));
   
   } else {
     var rect = layout.createSvgElement('rect', {
       'stroke-dasharray': 5
     });
-    var face = new thin.editor.RectShape(rect, layout, stroke, fill);
-    var sectionShapeForHeader = new thin.editor.HeaderSectionShape(layout, this, sectionNameForHeader);
-    var sectionShapeForDetail = new thin.editor.DetailSectionShape(layout, this, sectionNameForDetail);
-    var sectionShapeForPageFooter = new thin.editor.PageFooterSectionShape(layout, this, sectionNameForPageFooter);
-    var sectionShapeForFooter = new thin.editor.FooterSectionShape(layout, this, sectionNameForFooter);
+    var face = new thin.core.RectShape(rect, layout, stroke, fill);
+    var sectionShapeForHeader = new thin.core.HeaderSectionShape(layout, this, sectionNameForHeader);
+    var sectionShapeForDetail = new thin.core.DetailSectionShape(layout, this, sectionNameForDetail);
+    var sectionShapeForPageFooter = new thin.core.PageFooterSectionShape(layout, this, sectionNameForPageFooter);
+    var sectionShapeForFooter = new thin.core.FooterSectionShape(layout, this, sectionNameForFooter);
   }
   
   layout.setElementAttributes(rect, {
@@ -268,20 +268,20 @@ thin.editor.ListShape.prototype.setup_ = function(opt_referenceElement) {
   sectionShapeForPageFooter.setNextSectionShape(sectionShapeForFooter);
   sectionShapeForFooter.setPreviousSectionShape(sectionShapeForPageFooter);
 
-  this.activeshapes_ = new thin.editor.ActiveShapeManager(layout);
+  this.activeshapes_ = new thin.core.ActiveShapeManager(layout);
 };
 
 
-thin.editor.ListShape.prototype.setupEventHandlers = function() {
+thin.core.ListShape.prototype.setupEventHandlers = function() {
   this.face_.setMouseDownHandlers();
   this.setDisposed(false);
 };
 
 
 /**
- * @return {Object.<thin.editor.ListSectionShape>}
+ * @return {Object.<thin.core.ListSectionShape>}
  */
-thin.editor.ListShape.prototype.getSections = function() {
+thin.core.ListShape.prototype.getSections = function() {
   return this.sectionShapes_;
 };
 
@@ -290,7 +290,7 @@ thin.editor.ListShape.prototype.getSections = function() {
  * @param {Function} fn
  * @param {Object=} opt_selfObj
  */
-thin.editor.ListShape.prototype.forEachSectionShape = function(fn, opt_selfObj) {
+thin.core.ListShape.prototype.forEachSectionShape = function(fn, opt_selfObj) {
   var selfObj = opt_selfObj || this;
   goog.object.forEach(this.sectionShapes_, goog.bind(function(sectionShapeForEachObject, sectionNameForEachObject) {
     fn.call(selfObj, sectionShapeForEachObject, sectionNameForEachObject);
@@ -299,10 +299,10 @@ thin.editor.ListShape.prototype.forEachSectionShape = function(fn, opt_selfObj) 
 
 
 /**
- * @param {thin.editor.ListSectionShape} sectionShape
+ * @param {thin.core.ListSectionShape} sectionShape
  * @param {string} sectionName
  */
-thin.editor.ListShape.prototype.setSectionShape = function(sectionShape, sectionName) {
+thin.core.ListShape.prototype.setSectionShape = function(sectionShape, sectionName) {
   this.sectionShapes_[sectionName] = sectionShape;
   this.getLayout().appendChild(sectionShape.getGroup(), this);
 };
@@ -310,33 +310,33 @@ thin.editor.ListShape.prototype.setSectionShape = function(sectionShape, section
 
 /**
  * @param {string} sectionName
- * @return {thin.editor.ListSectionShape}
+ * @return {thin.core.ListSectionShape}
  */
-thin.editor.ListShape.prototype.getSectionShape = function(sectionName) {
+thin.core.ListShape.prototype.getSectionShape = function(sectionName) {
   return this.sectionShapes_[sectionName];
 };
 
 
 /**
- * @return {thin.editor.RectShape}
+ * @return {thin.core.RectShape}
  */
-thin.editor.ListShape.prototype.getListFace = function() {
+thin.core.ListShape.prototype.getListFace = function() {
   return this.face_;
 };
 
 
 /**
- * @return {thin.editor.ActiveShapeManager}
+ * @return {thin.core.ActiveShapeManager}
  */
-thin.editor.ListShape.prototype.getActiveShape = function() {
+thin.core.ListShape.prototype.getActiveShape = function() {
   return this.activeshapes_;
 };
 
 
 /**
- * @return {thin.editor.IdShape}
+ * @return {thin.core.IdShape}
  */
-thin.editor.ListShape.prototype.getIdShape = function() {
+thin.core.ListShape.prototype.getIdShape = function() {
   return this.id_;
 };
 
@@ -345,22 +345,22 @@ thin.editor.ListShape.prototype.getIdShape = function() {
  * @param {string} varId
  * @param {Element=} opt_element
  */
-thin.editor.ListShape.prototype.setIdShape = function(varId, opt_element) {
-  var listShape = thin.editor.ListShape;
+thin.core.ListShape.prototype.setIdShape = function(varId, opt_element) {
+  var listShape = thin.core.ListShape;
   var classId = listShape.ClassIds;
   var font = listShape.IDSHAPEFONT_;
   var layout = this.getLayout();
 
   var element = opt_element || layout.createSvgElement('text', {
-    'class': thin.editor.ListShape.CLASSID + classId['ID'],
+    'class': thin.core.ListShape.CLASSID + classId['ID'],
     'font-size': font.size,
     'font-family': font.family,
     'font-weight': 'normal',
     'font-style': 'normal',
-    'text-anchor': thin.editor.TextStyle.HorizonAlignType.START
+    'text-anchor': thin.core.TextStyle.HorizonAlignType.START
   });
   
-  var idShape = new thin.editor.IdShape(element, layout, null, listShape.IDSHAPEFILL_);
+  var idShape = new thin.core.IdShape(element, layout, null, listShape.IDSHAPEFILL_);
   layout.appendChild(idShape, this);
   goog.dom.insertSiblingAfter(this.face_.getElement(), element);  
 
@@ -372,8 +372,8 @@ thin.editor.ListShape.prototype.setIdShape = function(varId, opt_element) {
 /**
  * @param {string} shapeId
  */
-thin.editor.ListShape.prototype.setShapeId = function(shapeId) {
-  if (!thin.isExactlyEqual(shapeId, thin.editor.ModuleShape.DEFAULT_SHAPEID)) {
+thin.core.ListShape.prototype.setShapeId = function(shapeId) {
+  if (!thin.isExactlyEqual(shapeId, thin.core.ModuleShape.DEFAULT_SHAPEID)) {
     this.id_.setText(shapeId);
     this.setShapeId_(shapeId);
   }
@@ -383,7 +383,7 @@ thin.editor.ListShape.prototype.setShapeId = function(shapeId) {
 /**
  * @return {boolean}
  */
-thin.editor.ListShape.prototype.isChangingPage = function() {
+thin.core.ListShape.prototype.isChangingPage = function() {
   return this.changingPage_;
 };
 
@@ -391,7 +391,7 @@ thin.editor.ListShape.prototype.isChangingPage = function() {
 /**
  * @param {boolean} setting
  */
-thin.editor.ListShape.prototype.setChangingPage = function(setting) {
+thin.core.ListShape.prototype.setChangingPage = function(setting) {
   this.changingPage_ = setting;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-changing-page': setting
@@ -403,7 +403,7 @@ thin.editor.ListShape.prototype.setChangingPage = function(setting) {
  * @param {boolean} enabled
  * @param {string} sectionName
  */
-thin.editor.ListShape.prototype.setEnabledForSectionInternal = function(enabled, sectionName) {
+thin.core.ListShape.prototype.setEnabledForSectionInternal = function(enabled, sectionName) {
   var setting = {};
   goog.object.set(setting, 'x' + sectionName + '-enabled', enabled);
   this.getLayout().setElementAttributes(this.getElement(), setting);
@@ -414,7 +414,7 @@ thin.editor.ListShape.prototype.setEnabledForSectionInternal = function(enabled,
  * @param {boolean} enabled
  * @param {string} sectionNameForScope
  */
-thin.editor.ListShape.prototype.setEnabledForSection = function(enabled, sectionNameForScope) {
+thin.core.ListShape.prototype.setEnabledForSection = function(enabled, sectionNameForScope) {
   var layout = this.getLayout();
   var listHelper = layout.getHelpers().getListHelper();
   var captureListShapeHeight = this.getHeight();
@@ -423,7 +423,7 @@ thin.editor.ListShape.prototype.setEnabledForSection = function(enabled, section
   sectionShapeForScope.setEnabled(enabled);
   layout.setVisibled(sectionShapeForScope.getGroup(), enabled);
   this.setEnabledForSectionInternal(enabled, 
-      thin.editor.ListShape.ClassIds[sectionNameForScope]);
+      thin.core.ListShape.ClassIds[sectionNameForScope]);
 
   if (enabled) {
     var newSectionHeight = sectionShapeForScope.getHeightForLastActive();
@@ -484,10 +484,10 @@ thin.editor.ListShape.prototype.setEnabledForSection = function(enabled, section
 /**
  * @param {number} left
  */
-thin.editor.ListShape.prototype.setLeft = function(left) {
+thin.core.ListShape.prototype.setLeft = function(left) {
   left = thin.numberWithPrecision(left);
   this.left_ = left;
-  this.id_.setLeft(left + thin.editor.ListShape.DELTAX_);
+  this.id_.setLeft(left + thin.core.ListShape.DELTAX_);
   this.face_.setLeft(left);
   this.getLayout().setElementAttributes(this.getElement(), {
     'x': left
@@ -498,8 +498,8 @@ thin.editor.ListShape.prototype.setLeft = function(left) {
 /**
  * @param {number} top
  */
-thin.editor.ListShape.prototype.setTop = function(top) {
-  var listShape = thin.editor.ListShape;
+thin.core.ListShape.prototype.setTop = function(top) {
+  var listShape = thin.core.ListShape;
   top = thin.numberWithPrecision(top);
   this.top_ = top;
   this.id_.setTop(top + ((listShape.IDSHAPEFONT_.size * 0.8) + listShape.DELTAX_));
@@ -513,7 +513,7 @@ thin.editor.ListShape.prototype.setTop = function(top) {
 /**
  * @param {number} width
  */
-thin.editor.ListShape.prototype.setWidth = function(width) {
+thin.core.ListShape.prototype.setWidth = function(width) {
   width = thin.numberWithPrecision(width);
   this.width_ = width;
   this.face_.setWidth(width);
@@ -526,7 +526,7 @@ thin.editor.ListShape.prototype.setWidth = function(width) {
 /**
  * @param {number} height
  */
-thin.editor.ListShape.prototype.setHeight = function(height) {
+thin.core.ListShape.prototype.setHeight = function(height) {
   height = thin.numberWithPrecision(height);
   this.height_ = height;
   this.face_.setHeight(height);
@@ -540,7 +540,7 @@ thin.editor.ListShape.prototype.setHeight = function(height) {
  * @param {number} unlimitedHeight
  * @param {string} sectionNameForScope
  */
-thin.editor.ListShape.prototype.setHeightForSectionShape = function(unlimitedHeight, sectionNameForScope) {
+thin.core.ListShape.prototype.setHeightForSectionShape = function(unlimitedHeight, sectionNameForScope) {
   var scope = this;
   var layout = this.getLayout();
   var helpers = layout.getHelpers();
@@ -600,7 +600,7 @@ thin.editor.ListShape.prototype.setHeightForSectionShape = function(unlimitedHei
 };
 
 
-thin.editor.ListShape.prototype.setDefaultOutline = function() {
+thin.core.ListShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getListOutline());
 };
 
@@ -608,7 +608,7 @@ thin.editor.ListShape.prototype.setDefaultOutline = function() {
 /**
  * @param {Object} properties
  */
-thin.editor.ListShape.prototype.setInitShapeProperties = function(properties) {
+thin.core.ListShape.prototype.setInitShapeProperties = function(properties) {
   this.setBounds(properties.BOUNDS);
 };
 
@@ -616,12 +616,12 @@ thin.editor.ListShape.prototype.setInitShapeProperties = function(properties) {
 /**
  * @private
  */
-thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
+thin.core.ListShape.prototype.createPropertyComponent_ = function() {
   var scope = this;
   var layout = this.getLayout();
   var workspace = layout.getWorkspace();
   var listHelper = layout.getHelpers().getListHelper();
-  var sectionName = thin.editor.ListHelper.SectionName;
+  var sectionName = thin.core.ListHelper.SectionName;
   
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
@@ -755,7 +755,7 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
         var allowHeight = scope.getAllowHeight(Number(e.target.getValue()));
 
         if (captureHeight > allowHeight) {
-          var captureSectionShapeForScope = scope.getSectionShape(thin.editor.ListHelper.SectionName.FOOTER);
+          var captureSectionShapeForScope = scope.getSectionShape(thin.core.ListHelper.SectionName.FOOTER);
           var captureFooterBottom = captureSectionShapeForScope.getBounds().toBox().bottom;
           var limitHeight = captureHeight - (scope.getBounds().toBox().bottom - captureFooterBottom);
           if (limitHeight > allowHeight) {
@@ -888,7 +888,7 @@ thin.editor.ListShape.prototype.createPropertyComponent_ = function() {
 };
 
 
-thin.editor.ListShape.prototype.updateProperties = function() {
+thin.core.ListShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
   if (!proppane.isTarget(this)) {
     this.getLayout().updatePropertiesForEmpty();
@@ -901,7 +901,7 @@ thin.editor.ListShape.prototype.updateProperties = function() {
   if (activeSectionName) {
     this.getSectionShape(activeSectionName).updateProperties();
   } else {
-    var sectionName = thin.editor.ListHelper.SectionName;
+    var sectionName = thin.core.ListHelper.SectionName;
     proppane.getPropertyControl('left').setValue(this.getLeft());
     proppane.getPropertyControl('top').setValue(this.getTop());
     proppane.getPropertyControl('width').setValue(this.getWidth());
@@ -921,32 +921,32 @@ thin.editor.ListShape.prototype.updateProperties = function() {
 
 
 /**
- * @param {thin.editor.PageNumberShape} pageNumber
+ * @param {thin.core.PageNumberShape} pageNumber
  */
-thin.editor.ListShape.prototype.setPageNumberReference = function(pageNumber) {
+thin.core.ListShape.prototype.setPageNumberReference = function(pageNumber) {
   goog.array.insert(this.pageNumberReferences_, pageNumber);
 };
 
 
 /**
- * @return {Array.<thin.editor.PageNumberShape>}
+ * @return {Array.<thin.core.PageNumberShape>}
  */
-thin.editor.ListShape.prototype.getPageNumberReferences = function() {
+thin.core.ListShape.prototype.getPageNumberReferences = function() {
   return goog.array.clone(this.pageNumberReferences_);
 };
 
 
 /**
- * @param {thin.editor.PageNumberShape} pageNumber
+ * @param {thin.core.PageNumberShape} pageNumber
  */
-thin.editor.ListShape.prototype.removePageNumberReference = function(pageNumber) {
+thin.core.ListShape.prototype.removePageNumberReference = function(pageNumber) {
   goog.array.remove(this.pageNumberReferences_, pageNumber);
 };
 
 
 /** @inheritDoc */
-thin.editor.ListShape.prototype.disposeInternal = function() {
-  thin.editor.ListShape.superClass_.disposeInternal.call(this);
+thin.core.ListShape.prototype.disposeInternal = function() {
+  thin.core.ListShape.superClass_.disposeInternal.call(this);
   this.disposeInternalForShape();
   
   this.id_.dispose();

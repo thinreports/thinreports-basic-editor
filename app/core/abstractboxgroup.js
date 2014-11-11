@@ -13,18 +13,18 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.AbstractBoxGroup');
+goog.provide('thin.core.AbstractBoxGroup');
 
-goog.require('thin.editor.Component');
+goog.require('thin.core.Component');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.Component}
+ * @extends {thin.core.Component}
  */
-thin.editor.AbstractBoxGroup = function(element, layout) {
+thin.core.AbstractBoxGroup = function(element, layout) {
   goog.base(this, layout, element);
   
   /**
@@ -51,14 +51,14 @@ thin.editor.AbstractBoxGroup = function(element, layout) {
    */
   this.height_ = Number(layout.getElementAttribute(element, 'x-height'));
 };
-goog.inherits(thin.editor.AbstractBoxGroup, thin.editor.Component);
+goog.inherits(thin.core.AbstractBoxGroup, thin.core.Component);
 
 
 /**
- * @type {thin.editor.Box}
+ * @type {thin.core.Box}
  * @private
  */
-thin.editor.AbstractBoxGroup.prototype.box_;
+thin.core.AbstractBoxGroup.prototype.box_;
 
 
 /**
@@ -66,7 +66,7 @@ thin.editor.AbstractBoxGroup.prototype.box_;
  * @param {string=} opt_classId
  * @private
  */
-thin.editor.AbstractBoxGroup.prototype.createBox_ = function(
+thin.core.AbstractBoxGroup.prototype.createBox_ = function(
       opt_element, opt_classId) {
 
   var layout = this.getLayout();
@@ -78,14 +78,14 @@ thin.editor.AbstractBoxGroup.prototype.createBox_ = function(
     });
   }
   
-  return new thin.editor.Box(element, layout, null, null);
+  return new thin.core.Box(element, layout, null, null);
 };
 
 
 /**
  * @param {number} left
  */
-thin.editor.AbstractBoxGroup.prototype.setLeft = function(left) {
+thin.core.AbstractBoxGroup.prototype.setLeft = function(left) {
   left = thin.numberWithPrecision(left - this.getParentTransLateX());
   this.left_ = left;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -98,7 +98,7 @@ thin.editor.AbstractBoxGroup.prototype.setLeft = function(left) {
 /**
  * @param {number} top
  */
-thin.editor.AbstractBoxGroup.prototype.setTop = function(top) {
+thin.core.AbstractBoxGroup.prototype.setTop = function(top) {
   top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -111,7 +111,7 @@ thin.editor.AbstractBoxGroup.prototype.setTop = function(top) {
 /**
  * @param {number} width
  */
-thin.editor.AbstractBoxGroup.prototype.setWidth = function(width) {
+thin.core.AbstractBoxGroup.prototype.setWidth = function(width) {
   width = thin.numberWithPrecision(width);
   this.width_ = width;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -124,7 +124,7 @@ thin.editor.AbstractBoxGroup.prototype.setWidth = function(width) {
 /**
  * @param {number} height
  */
-thin.editor.AbstractBoxGroup.prototype.setHeight = function(height) {
+thin.core.AbstractBoxGroup.prototype.setHeight = function(height) {
   height = thin.numberWithPrecision(height);
   this.height_ = height;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -135,7 +135,7 @@ thin.editor.AbstractBoxGroup.prototype.setHeight = function(height) {
 
 
 /** @inheritDoc */
-thin.editor.AbstractBoxGroup.prototype.disposeInternal = function() {
+thin.core.AbstractBoxGroup.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   this.box_.dispose();
   delete this.box_;

@@ -13,22 +13,21 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.core.File');
+goog.provide('thin.File');
 
 goog.require('goog.Disposable');
-goog.require('thin.core');
-goog.require('thin.core.platform');
-goog.require('thin.core.platform.File');
+goog.require('thin.platform');
+goog.require('thin.platform.File');
 
 
 /**
- * @param {FileEntry|thin.core.File.DummyEntry} entry
+ * @param {FileEntry|thin.File.DummyEntry} entry
  * @param {string} path
  * @param {string=} opt_content
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.core.File = function(entry, path, opt_content) {
+thin.File = function(entry, path, opt_content) {
   this.entry_ = entry;
   this.path_ = path;
 
@@ -38,43 +37,43 @@ thin.core.File = function(entry, path, opt_content) {
 
   goog.base(this);
 };
-goog.inherits(thin.core.File, goog.Disposable);
+goog.inherits(thin.File, goog.Disposable);
 
 
 /**
  * @type {FileEntry}
  * @private
  */
-thin.core.File.prototype.entry_;
+thin.File.prototype.entry_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.core.File.prototype.content_;
+thin.File.prototype.content_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.core.File.prototype.path_;
+thin.File.prototype.path_;
 
 
 /**
  * @param {string} name
- * @return {thin.core.File.DummyEntry}
+ * @return {thin.File.DummyEntry}
  */
-thin.core.File.createDummyEntry = function(name) {
-  return new thin.core.File.DummyEntry(name);
+thin.File.createDummyEntry = function(name) {
+  return new thin.File.DummyEntry(name);
 };
 
 
 /**
  * @return {string}
  */
-thin.core.File.prototype.getName = function() {
+thin.File.prototype.getName = function() {
   return this.entry_.name;
 };
 
@@ -82,7 +81,7 @@ thin.core.File.prototype.getName = function() {
 /**
  * @return {string}
  */
-thin.core.File.prototype.getContent = function() {
+thin.File.prototype.getContent = function() {
   return this.content_;
 };
 
@@ -90,7 +89,7 @@ thin.core.File.prototype.getContent = function() {
 /**
  * @param {string} content
  */
-thin.core.File.prototype.setContent = function(content) {
+thin.File.prototype.setContent = function(content) {
   this.content_ = content;
 };
 
@@ -98,17 +97,17 @@ thin.core.File.prototype.setContent = function(content) {
 /**
  * @return {string}
  */
-thin.core.File.prototype.getPath = function() {
+thin.File.prototype.getPath = function() {
   return this.path_;
 };
 
 
 /**
- * @return {thin.core.File}
+ * @return {thin.File}
  */
-thin.core.File.prototype.clone = function() {
-  var entry = thin.core.File.createDummyEntry(this.getName());
-  return new thin.core.File(entry, this.getPath(), this.getContent());
+thin.File.prototype.clone = function() {
+  var entry = thin.File.createDummyEntry(this.getName());
+  return new thin.File(entry, this.getPath(), this.getContent());
 };
 
 
@@ -116,13 +115,13 @@ thin.core.File.prototype.clone = function() {
  * @param {string} content
  * @param {string} mimeType
  */
-thin.core.File.prototype.write = function(content, mimeType) {
-  thin.core.platform.File.write(this.entry_, content, mimeType);
+thin.File.prototype.write = function(content, mimeType) {
+  thin.platform.File.write(this.entry_, content, mimeType);
 };
 
 
 /** @inheritDoc */
-thin.core.File.prototype.disposeInternal = function() {
+thin.File.prototype.disposeInternal = function() {
   delete this.entry_;
 
   goog.base(this, 'disposeInternal');
@@ -134,7 +133,7 @@ thin.core.File.prototype.disposeInternal = function() {
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.core.File.DummyEntry = function(name) {
+thin.File.DummyEntry = function(name) {
   /**
    * @type {string}
    */
@@ -142,4 +141,4 @@ thin.core.File.DummyEntry = function(name) {
 
   goog.base(this);
 };
-goog.inherits(thin.core.File.DummyEntry, goog.Disposable);
+goog.inherits(thin.File.DummyEntry, goog.Disposable);

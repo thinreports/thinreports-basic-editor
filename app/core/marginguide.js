@@ -13,19 +13,19 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.MarginGuide');
+goog.provide('thin.core.MarginGuide');
 
-goog.require('thin.editor.Line');
+goog.require('thin.core.Line');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.Line}
+ * @extends {thin.core.Line}
  */
-thin.editor.MarginGuide = function(element, layout) {
-  thin.editor.Line.call(this, element, layout, new goog.graphics.Stroke('0.5px', '#BBBBBB'));
+thin.core.MarginGuide = function(element, layout) {
+  thin.core.Line.call(this, element, layout, new goog.graphics.Stroke('0.5px', '#BBBBBB'));
   this.calculateDirection(this.y1_, this.y2_);
 };
-goog.inherits(thin.editor.MarginGuide, thin.editor.Line);
+goog.inherits(thin.core.MarginGuide, thin.core.Line);

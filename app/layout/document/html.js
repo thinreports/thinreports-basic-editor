@@ -17,12 +17,12 @@ goog.provide('thin.layout.document.HTML');
 
 goog.require('thin.layout.document.HTMLRenderer');
 goog.require('thin.layout.document.Base');
-goog.require('thin.editor.LayoutStructure');
+goog.require('thin.core.LayoutStructure');
 goog.require('thin.i18n');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
  * @extends {thin.layout.document.Base}
  */
@@ -48,5 +48,5 @@ thin.layout.document.HTML.prototype.generate = function() {
  * @return {string}
  */
 thin.layout.document.HTML.prototype.getScreenShot_ = function() {
-  return thin.editor.LayoutStructure.createScreenShot(this.layout);
+  return thin.core.LayoutStructure.createScreenShot(this.layout);
 };

@@ -13,55 +13,55 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.LayoutGuideHelper');
+goog.provide('thin.core.LayoutGuideHelper');
 
 goog.require('goog.array');
 goog.require('goog.events');
-goog.require('thin.editor.Cursor');
-goog.require('thin.editor.Cursor.Type');
-goog.require('thin.editor.Component');
-goog.require('thin.editor.Layer');
-goog.require('thin.editor.DraggableLine');
-goog.require('thin.editor.DraggableLine.Direction');
+goog.require('thin.core.Cursor');
+goog.require('thin.core.Cursor.Type');
+goog.require('thin.core.Component');
+goog.require('thin.core.Layer');
+goog.require('thin.core.DraggableLine');
+goog.require('thin.core.DraggableLine.Direction');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.Component}
+ * @extends {thin.core.Component}
  */
-thin.editor.LayoutGuideHelper = function(layout) {
-  thin.editor.Component.call(this, layout);
+thin.core.LayoutGuideHelper = function(layout) {
+  thin.core.Component.call(this, layout);
   
   /**
-   * @type {Array.<thin.editor.DraggableLine>}
+   * @type {Array.<thin.core.DraggableLine>}
    * @private
    */
   this.ylines_ = [];
   
   /**
-   * @type {Array.<thin.editor.DraggableLine>}
+   * @type {Array.<thin.core.DraggableLine>}
    * @private
    */
   this.xlines_ = [];
 };
-goog.inherits(thin.editor.LayoutGuideHelper, thin.editor.Component);
+goog.inherits(thin.core.LayoutGuideHelper, thin.core.Component);
 
 
 /**
  * @type {goog.graphics.SolidFill}
  */
-thin.editor.LayoutGuideHelper.FILL = new goog.graphics.SolidFill('#FF00FF', 0.6);
+thin.core.LayoutGuideHelper.FILL = new goog.graphics.SolidFill('#FF00FF', 0.6);
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.LayoutGuideHelper.prototype.disable_ = true;
+thin.core.LayoutGuideHelper.prototype.disable_ = true;
 
 
-thin.editor.LayoutGuideHelper.prototype.reapplySizeAndStroke = function() {
+thin.core.LayoutGuideHelper.prototype.reapplySizeAndStroke = function() {
   goog.array.forEach(this.ylines_, function(yline) {
     yline.reapplySizeAndStroke();
   });
@@ -75,7 +75,7 @@ thin.editor.LayoutGuideHelper.prototype.reapplySizeAndStroke = function() {
  * @param {number} width
  * @param {number} height
  */
-thin.editor.LayoutGuideHelper.prototype.updateLayoutGuideSize = function(width, height) {
+thin.core.LayoutGuideHelper.prototype.updateLayoutGuideSize = function(width, height) {
   if (this.isEnable()) {
     goog.array.forEach(this.ylines_, function(yline) {
       yline.setWidth(width);
@@ -90,7 +90,7 @@ thin.editor.LayoutGuideHelper.prototype.updateLayoutGuideSize = function(width, 
 /**
  * @return {boolean}
  */
-thin.editor.LayoutGuideHelper.prototype.isEnable = function() {
+thin.core.LayoutGuideHelper.prototype.isEnable = function() {
   return this.disable_ != true;
 };
 
@@ -98,7 +98,7 @@ thin.editor.LayoutGuideHelper.prototype.isEnable = function() {
 /**
  * @param {boolean} disabled
  */
-thin.editor.LayoutGuideHelper.prototype.disable = function(disabled) {
+thin.core.LayoutGuideHelper.prototype.disable = function(disabled) {
   this.disable_ = disabled;
   var isTarget = false;
   var target = thin.ui.getComponent('proppane').getTarget();
@@ -158,7 +158,7 @@ thin.editor.LayoutGuideHelper.prototype.disable = function(disabled) {
 /**
  * @return {Array}
  */
-thin.editor.LayoutGuideHelper.prototype.getGuides = function() {
+thin.core.LayoutGuideHelper.prototype.getGuides = function() {
   var guides = [];
   goog.array.forEach(this.getXPositions(), function(x) {
     goog.array.insertAt(guides, {
@@ -180,7 +180,7 @@ thin.editor.LayoutGuideHelper.prototype.getGuides = function() {
 /**
  * @return {Array}
  */
-thin.editor.LayoutGuideHelper.prototype.getXPositions = function() {
+thin.core.LayoutGuideHelper.prototype.getXPositions = function() {
   return goog.array.map(this.xlines_, function(xline) {
     return xline.getLeft();
   });
@@ -190,14 +190,14 @@ thin.editor.LayoutGuideHelper.prototype.getXPositions = function() {
 /**
  * @return {Array}
  */
-thin.editor.LayoutGuideHelper.prototype.getYPositions = function() {
+thin.core.LayoutGuideHelper.prototype.getYPositions = function() {
   return goog.array.map(this.ylines_, function(yline) {
     return yline.getTop();
   });
 };
 
 
-thin.editor.LayoutGuideHelper.prototype.createFromHelperConfig = function() {
+thin.core.LayoutGuideHelper.prototype.createFromHelperConfig = function() {
   var workspace = this.workspace_;
   var guides = workspace.format.getLayoutGuides();
   
@@ -228,13 +228,13 @@ thin.editor.LayoutGuideHelper.prototype.createFromHelperConfig = function() {
 
 
 /**
- * @return {thin.editor.DraggableLine}
+ * @return {thin.core.DraggableLine}
  */
-thin.editor.LayoutGuideHelper.prototype.createYLayoutGuide = function() {
+thin.core.LayoutGuideHelper.prototype.createYLayoutGuide = function() {
   var size = this.getLayout().getNormalLayoutSize();
-  var yline = this.createLayoutGuide_(thin.editor.DraggableLine.Direction.HORIZONTAL,
+  var yline = this.createLayoutGuide_(thin.core.DraggableLine.Direction.HORIZONTAL,
         new goog.math.Rect(0, thin.numberWithPrecision(size.height * 0.1, 0), size.width, 1),
-        thin.editor.Cursor.Type.BCENTER);
+        thin.core.Cursor.Type.BCENTER);
   goog.array.insert(this.ylines_, yline);
   
   return yline;
@@ -242,24 +242,24 @@ thin.editor.LayoutGuideHelper.prototype.createYLayoutGuide = function() {
 
 
 /**
- * @return {thin.editor.DraggableLine}
+ * @return {thin.core.DraggableLine}
  */
-thin.editor.LayoutGuideHelper.prototype.createXLayoutGuide = function() {
+thin.core.LayoutGuideHelper.prototype.createXLayoutGuide = function() {
   var size = this.getLayout().getNormalLayoutSize();
-  var xline = this.createLayoutGuide_(thin.editor.DraggableLine.Direction.VERTICAL,
+  var xline = this.createLayoutGuide_(thin.core.DraggableLine.Direction.VERTICAL,
         new goog.math.Rect(thin.numberWithPrecision(size.width * 0.1), 0, 1, size.height),
-        thin.editor.Cursor.Type.MRIGHT);
+        thin.core.Cursor.Type.MRIGHT);
   goog.array.insert(this.xlines_, xline);
   
   return xline;
 };
 
 
-thin.editor.LayoutGuideHelper.prototype.removeLayoutGuide = function() {
+thin.core.LayoutGuideHelper.prototype.removeLayoutGuide = function() {
   if (this.isEnable()) {
     var removeLine = thin.ui.getComponent('proppane').getTarget();
     
-    if (removeLine instanceof thin.editor.DraggableLine) {
+    if (removeLine instanceof thin.core.DraggableLine) {
       var layout = this.getLayout();
       var helpers = layout.getHelpers();
       var multipleShapesHelper = helpers.getMultipleShapesHelper();
@@ -307,17 +307,17 @@ thin.editor.LayoutGuideHelper.prototype.removeLayoutGuide = function() {
  * @param {number} direction
  * @param {goog.math.Rect} bounds
  * @param {string} cursorType
- * @return {thin.editor.DraggableLine}
+ * @return {thin.core.DraggableLine}
  * @private
  */
-thin.editor.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
+thin.core.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
       direction, bounds, cursorType) {
 
   var layout = this.getLayout();
-  var draggableLine = new thin.editor.DraggableLine(direction,
-                              layout, thin.editor.LayoutGuideHelper.FILL);
+  var draggableLine = new thin.core.DraggableLine(direction,
+                              layout, thin.core.LayoutGuideHelper.FILL);
   draggableLine.setBounds(bounds);
-  var cursor = new thin.editor.Cursor(cursorType);
+  var cursor = new thin.core.Cursor(cursorType);
   draggableLine.setCursor(cursor);
   layout.setElementCursor(draggableLine.getElement(), cursor);
   draggableLine.init();
@@ -381,12 +381,12 @@ thin.editor.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
 
 
 /** @inheritDoc */
-thin.editor.LayoutGuideHelper.prototype.disposeInternal = function() {
+thin.core.LayoutGuideHelper.prototype.disposeInternal = function() {
   goog.array.forEach(this.ylines_, function(yline) {
     yline.dispose();
   });
   goog.array.forEach(this.xlines_, function(xline) {
     xline.dispose();
   });
-  thin.editor.LayoutGuideHelper.superClass_.disposeInternal.call(this);
+  thin.core.LayoutGuideHelper.superClass_.disposeInternal.call(this);
 };

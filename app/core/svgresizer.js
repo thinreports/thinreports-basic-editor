@@ -13,16 +13,16 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.SvgResizer');
-goog.provide('thin.editor.SvgResizer.Horizon');
-goog.provide('thin.editor.SvgResizer.Vertical');
+goog.provide('thin.core.SvgResizer');
+goog.provide('thin.core.SvgResizer.Horizon');
+goog.provide('thin.core.SvgResizer.Vertical');
 
 goog.require('goog.math.Size');
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
-goog.require('thin.editor.DragEvent');
-goog.require('thin.editor.AbstractDragger');
-goog.require('thin.editor.AbstractDragger.EventType');
+goog.require('thin.core.DragEvent');
+goog.require('thin.core.AbstractDragger');
+goog.require('thin.core.AbstractDragger.EventType');
 
 
 /**
@@ -31,24 +31,24 @@ goog.require('thin.editor.AbstractDragger.EventType');
  * @param {string=} opt_widthDirection
  * @param {string=} opt_heightDirection
  * @constructor
- * @extends {thin.editor.AbstractDragger}
+ * @extends {thin.core.AbstractDragger}
  */
-thin.editor.SvgResizer = function(target, handle, 
+thin.core.SvgResizer = function(target, handle, 
                                   opt_widthDirection, opt_heightDirection) {
 
-  thin.editor.AbstractDragger.call(this, target, handle);
+  thin.core.AbstractDragger.call(this, target, handle);
 
-  this.setResizeDirectionToHorizon(opt_widthDirection || thin.editor.SvgResizer.Horizon.LEFT);
-  this.setResizeDirectionToVertical(opt_heightDirection || thin.editor.SvgResizer.Vertical.TOP);
+  this.setResizeDirectionToHorizon(opt_widthDirection || thin.core.SvgResizer.Horizon.LEFT);
+  this.setResizeDirectionToVertical(opt_heightDirection || thin.core.SvgResizer.Vertical.TOP);
   this.setAspectObserve(true);
 };
-goog.inherits(thin.editor.SvgResizer, thin.editor.AbstractDragger);
+goog.inherits(thin.core.SvgResizer, thin.core.AbstractDragger);
 
 
 /**
  * @enum {string}
  */
-thin.editor.SvgResizer.Horizon = {
+thin.core.SvgResizer.Horizon = {
   LEFT: 'left',
   CENTER: 'center',
   RIGHT: 'right'
@@ -58,7 +58,7 @@ thin.editor.SvgResizer.Horizon = {
 /**
  * @enum {string}
  */
-thin.editor.SvgResizer.Vertical = {
+thin.core.SvgResizer.Vertical = {
   TOP: 'top',
   MIDDLE: 'middle',
   BOTTOM: 'bottom'
@@ -69,126 +69,126 @@ thin.editor.SvgResizer.Vertical = {
  * @type {number}
  * @private
  */
-thin.editor.SvgResizer.prototype.transLateX_ = 0;
+thin.core.SvgResizer.prototype.transLateX_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.SvgResizer.prototype.transLateY_ = 0;
+thin.core.SvgResizer.prototype.transLateY_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.SvgResizer.prototype.scaleX_ = 1;
+thin.core.SvgResizer.prototype.scaleX_ = 1;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.SvgResizer.prototype.scaleY_ = 1;
+thin.core.SvgResizer.prototype.scaleY_ = 1;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgResizer.prototype.enableTransScale_ = false;
+thin.core.SvgResizer.prototype.enableTransScale_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgResizer.prototype.enableCoordinate_ = true;
+thin.core.SvgResizer.prototype.enableCoordinate_ = true;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgResizer.prototype.isStandardWidth_ = false;
+thin.core.SvgResizer.prototype.isStandardWidth_ = false;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.SvgResizer.prototype.rateWidth_;
+thin.core.SvgResizer.prototype.rateWidth_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.SvgResizer.prototype.rateHeight_;
+thin.core.SvgResizer.prototype.rateHeight_;
 
 
 /**
  * @type {goog.math.Rect}
  * @private
  */
-thin.editor.SvgResizer.prototype.startShapeBounds_;
+thin.core.SvgResizer.prototype.startShapeBounds_;
 
 
 /**
  * @type {goog.math.Rect}
  * @private
  */
-thin.editor.SvgResizer.prototype.endShapeBounds_;
+thin.core.SvgResizer.prototype.endShapeBounds_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgResizer.prototype.isTop_ = false;
+thin.core.SvgResizer.prototype.isTop_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgResizer.prototype.isBottom_ = false;
+thin.core.SvgResizer.prototype.isBottom_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgResizer.prototype.isMiddle_ = false;
+thin.core.SvgResizer.prototype.isMiddle_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgResizer.prototype.isLeft_ = false;
+thin.core.SvgResizer.prototype.isLeft_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgResizer.prototype.isRight_ = false;
+thin.core.SvgResizer.prototype.isRight_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgResizer.prototype.isCenter_ = false;
+thin.core.SvgResizer.prototype.isCenter_ = false;
 
 
 /**
  * @param {string} hdirection
  */
-thin.editor.SvgResizer.prototype.setResizeDirectionToHorizon = function(hdirection) {
-  var horizon = thin.editor.SvgResizer.Horizon;
+thin.core.SvgResizer.prototype.setResizeDirectionToHorizon = function(hdirection) {
+  var horizon = thin.core.SvgResizer.Horizon;
   this.isLeft_ = hdirection == horizon.LEFT;
   this.isCenter_ = hdirection == horizon.CENTER;
   this.isRight_ = hdirection == horizon.RIGHT;
@@ -198,8 +198,8 @@ thin.editor.SvgResizer.prototype.setResizeDirectionToHorizon = function(hdirecti
 /**
  * @param {string} vdirection
  */
-thin.editor.SvgResizer.prototype.setResizeDirectionToVertical = function(vdirection) {
-  var vertical = thin.editor.SvgResizer.Vertical;
+thin.core.SvgResizer.prototype.setResizeDirectionToVertical = function(vdirection) {
+  var vertical = thin.core.SvgResizer.Vertical;
   this.isTop_ = vdirection == vertical.TOP;
   this.isMiddle_ = vdirection == vertical.MIDDLE;
   this.isBottom_ = vdirection == vertical.BOTTOM;
@@ -209,7 +209,7 @@ thin.editor.SvgResizer.prototype.setResizeDirectionToVertical = function(vdirect
 /**
  * @return {boolean}
  */
-thin.editor.SvgResizer.prototype.isVertex = function() {
+thin.core.SvgResizer.prototype.isVertex = function() {
   var isTopVertex = (this.isTop_ && this.isLeft_) || (this.isTop_ && this.isRight_);
   var isBottomVertex = (this.isBottom_ && this.isLeft_) || (this.isBottom_ && this.isRight_);
   return isTopVertex || isBottomVertex;
@@ -219,7 +219,7 @@ thin.editor.SvgResizer.prototype.isVertex = function() {
 /**
  * @param {boolean} setting
  */
-thin.editor.SvgResizer.prototype.setResizeModeByCoordinate = function(setting) {
+thin.core.SvgResizer.prototype.setResizeModeByCoordinate = function(setting) {
   this.enableCoordinate_ = setting;
 };
 
@@ -227,7 +227,7 @@ thin.editor.SvgResizer.prototype.setResizeModeByCoordinate = function(setting) {
 /**
  * @param {boolean} setting
  */
-thin.editor.SvgResizer.prototype.setResizeModeByTransScale = function(setting) {
+thin.core.SvgResizer.prototype.setResizeModeByTransScale = function(setting) {
   this.enableTransScale_ = setting;
 };
 
@@ -235,7 +235,7 @@ thin.editor.SvgResizer.prototype.setResizeModeByTransScale = function(setting) {
 /**
  * @return {boolean}
  */
-thin.editor.SvgResizer.prototype.isResizeModeByCoordinate = function() {
+thin.core.SvgResizer.prototype.isResizeModeByCoordinate = function() {
   return this.enableCoordinate_;
 };
 
@@ -243,7 +243,7 @@ thin.editor.SvgResizer.prototype.isResizeModeByCoordinate = function() {
 /**
  * @return {boolean}
  */
-thin.editor.SvgResizer.prototype.isResizeModeByTransScale = function() {
+thin.core.SvgResizer.prototype.isResizeModeByTransScale = function() {
   return this.enableTransScale_;
 };
 
@@ -251,7 +251,7 @@ thin.editor.SvgResizer.prototype.isResizeModeByTransScale = function() {
 /**
  * @param {goog.math.Coordinate} coord
  */
-thin.editor.SvgResizer.prototype.setResizeTransLate = function(coord) {
+thin.core.SvgResizer.prototype.setResizeTransLate = function(coord) {
   this.transLateX_ = coord.x;
   this.transLateY_ = coord.y;
 };
@@ -260,7 +260,7 @@ thin.editor.SvgResizer.prototype.setResizeTransLate = function(coord) {
 /**
  * @return {goog.math.Coordinate}
  */
-thin.editor.SvgResizer.prototype.getTransLate = function() {
+thin.core.SvgResizer.prototype.getTransLate = function() {
   return new goog.math.Coordinate(this.transLateX_, this.transLateY_);
 };
 
@@ -268,7 +268,7 @@ thin.editor.SvgResizer.prototype.getTransLate = function() {
 /**
  * @return {goog.math.Rect}
  */
-thin.editor.SvgResizer.prototype.getStartShapeBounds = function() {
+thin.core.SvgResizer.prototype.getStartShapeBounds = function() {
   return this.startShapeBounds_;
 };
 
@@ -276,7 +276,7 @@ thin.editor.SvgResizer.prototype.getStartShapeBounds = function() {
 /**
  * @return {goog.math.Rect}
  */
-thin.editor.SvgResizer.prototype.getEndShapeBounds = function() {
+thin.core.SvgResizer.prototype.getEndShapeBounds = function() {
   return this.endShapeBounds_;
 };
 
@@ -284,7 +284,7 @@ thin.editor.SvgResizer.prototype.getEndShapeBounds = function() {
 /**
  * @return {goog.math.Coordinate}
  */
-thin.editor.SvgResizer.prototype.getScale = function() {
+thin.core.SvgResizer.prototype.getScale = function() {
   return new goog.math.Coordinate(this.scaleX_, this.scaleY_);
 };
 
@@ -294,9 +294,9 @@ thin.editor.SvgResizer.prototype.getScale = function() {
  * @return {goog.math.Coordinate}
  * @private
  */
-thin.editor.SvgResizer.prototype.calculatePosition_ = function(e) {
+thin.core.SvgResizer.prototype.calculatePosition_ = function(e) {
   
-  var coordinate = thin.editor.SvgResizer.superClass_.calculatePosition_.call(this, e);
+  var coordinate = thin.core.SvgResizer.superClass_.calculatePosition_.call(this, e);
   var limits = this.limits.toBox();
   return new goog.math.Coordinate(this.isCenter_ ? limits.right : coordinate.x, this.isMiddle_ ? limits.top : coordinate.y);
 };
@@ -306,7 +306,7 @@ thin.editor.SvgResizer.prototype.calculatePosition_ = function(e) {
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.SvgResizer.prototype.initializeDrag_ = function(e) {
+thin.core.SvgResizer.prototype.initializeDrag_ = function(e) {
   delete this.endShapeBounds_;
   var layout = this.getLayout();
   var listHelper = layout.getHelpers().getListHelper();
@@ -319,12 +319,12 @@ thin.editor.SvgResizer.prototype.initializeDrag_ = function(e) {
     this.setResizeModeByCoordinate(false);
     this.setResizeModeByTransScale(true);
   }
-  thin.editor.SvgResizer.superClass_.initializeDrag_.call(this, e);
+  thin.core.SvgResizer.superClass_.initializeDrag_.call(this, e);
 };
 
 
 /** @inheritDoc */
-thin.editor.SvgResizer.prototype.doDrag = function(e, x, y, dragFromScroll) {
+thin.core.SvgResizer.prototype.doDrag = function(e, x, y, dragFromScroll) {
   if (e.shiftKey || this.targetShape.getTargetShape().instanceOfImageShape()) {
     var coordinate = this.onShiftKeyPress_(e, x, y);
     x = coordinate.x;
@@ -332,7 +332,7 @@ thin.editor.SvgResizer.prototype.doDrag = function(e, x, y, dragFromScroll) {
   }
   this.defaultAction(e, x, y);
   
-  this.dispatchEvent(new thin.editor.DragEvent(
+  this.dispatchEvent(new thin.core.DragEvent(
         goog.fx.Dragger.EventType.DRAG, this, e.clientX, e.clientY, e, x, y));
 };
 
@@ -341,8 +341,8 @@ thin.editor.SvgResizer.prototype.doDrag = function(e, x, y, dragFromScroll) {
  * @param {goog.events.BrowserEvent} e
  * @param {boolean=} opt_dragCanceled
  */
-thin.editor.SvgResizer.prototype.endDrag = function(e, opt_dragCanceled) {
-  thin.editor.SvgResizer.superClass_.endDrag.call(this, e, opt_dragCanceled);
+thin.core.SvgResizer.prototype.endDrag = function(e, opt_dragCanceled) {
+  thin.core.SvgResizer.superClass_.endDrag.call(this, e, opt_dragCanceled);
   this.isStandardWidth_ = false;
   this.setResizeTransLate(new goog.math.Coordinate(0, 0));
   this.scaleX_ = 1;
@@ -358,7 +358,7 @@ thin.editor.SvgResizer.prototype.endDrag = function(e, opt_dragCanceled) {
  * @return {goog.math.Coordinate}
  * @private
  */
-thin.editor.SvgResizer.prototype.onShiftKeyPress_ = function(e, x, y) {
+thin.core.SvgResizer.prototype.onShiftKeyPress_ = function(e, x, y) {
 
   if (this.aspect_) {
 
@@ -435,8 +435,8 @@ thin.editor.SvgResizer.prototype.onShiftKeyPress_ = function(e, x, y) {
       }
     }
     
-    this.dispatchEvent(new thin.editor.DragEvent(
-                         thin.editor.AbstractDragger.EventType.SHIFTKEYPRESS,
+    this.dispatchEvent(new thin.core.DragEvent(
+                         thin.core.AbstractDragger.EventType.SHIFTKEYPRESS,
                          this, e.clientX, e.clientY, e, x, y, oldX, oldY));
 
   }
@@ -448,7 +448,7 @@ thin.editor.SvgResizer.prototype.onShiftKeyPress_ = function(e, x, y) {
  * @param {goog.math.Rect} targetShapeBounds
  * @return {goog.math.Coordinate}
  */
-thin.editor.SvgResizer.prototype.calculateTranslateForResize = function(targetShapeBounds) {
+thin.core.SvgResizer.prototype.calculateTranslateForResize = function(targetShapeBounds) {
   
   var targetShapeBox = targetShapeBounds.toBox();
   return new goog.math.Coordinate(this.isLeft_ ? targetShapeBox.right :
@@ -463,7 +463,7 @@ thin.editor.SvgResizer.prototype.calculateTranslateForResize = function(targetSh
  * @param {goog.math.Box} canvasBox
  * @return {goog.math.Rect}
  */
-thin.editor.SvgResizer.prototype.calculateLimitsForResize = function(targetShapeBounds, canvasBox) {
+thin.core.SvgResizer.prototype.calculateLimitsForResize = function(targetShapeBounds, canvasBox) {
 
   var targetShapeBox = targetShapeBounds.toBox();
   this.startShapeBounds_ = targetShapeBounds;
@@ -510,7 +510,7 @@ thin.editor.SvgResizer.prototype.calculateLimitsForResize = function(targetShape
 /**
  * @private
  */
-thin.editor.SvgResizer.prototype.initializeLimits_ = function() {
+thin.core.SvgResizer.prototype.initializeLimits_ = function() {
 
   var layout = this.getLayout();
   var targetShape = this.targetShape;
@@ -524,7 +524,7 @@ thin.editor.SvgResizer.prototype.initializeLimits_ = function() {
     var captureActiveSectionName = listHelper.getActiveSectionName();
       canvasBox = listHelper.getTarget().getSectionShape(captureActiveSectionName).getBounds().toBox();
     } else {
-      if (!targetShape.instanceOfDraggableLine() && targetShape instanceof thin.editor.GuideHelper) {
+      if (!targetShape.instanceOfDraggableLine() && targetShape instanceof thin.core.GuideHelper) {
         var sectionShapeForScope = listHelper.getTarget().getSectionShape(
               targetShape.getTargetShape().getAffiliationSectionName());
         canvasBox = sectionShapeForScope.getBounds().toBox();
@@ -548,7 +548,7 @@ thin.editor.SvgResizer.prototype.initializeLimits_ = function() {
  * @param {number} y
  * @private
  */
-thin.editor.SvgResizer.prototype.initializeStartPosition_ = function(x, y) {
+thin.core.SvgResizer.prototype.initializeStartPosition_ = function(x, y) {
   var transLate = this.getTransLate();
   this.startDragX_ = transLate.x;
   this.startDragY_ = transLate.y;
@@ -564,7 +564,7 @@ thin.editor.SvgResizer.prototype.initializeStartPosition_ = function(x, y) {
  * @param {number} x X-coordinate for target element.
  * @param {number} y Y-coordinate for target element.
  */
-thin.editor.SvgResizer.prototype.defaultAction = function(e, x, y) {
+thin.core.SvgResizer.prototype.defaultAction = function(e, x, y) {
   var startX = this.startDragX_;
   var startY = this.startDragY_;
   var sizeLimit = this.sizeLimitFunction_ || this.defaultSizeLimit_;
@@ -592,7 +592,7 @@ thin.editor.SvgResizer.prototype.defaultAction = function(e, x, y) {
 /**
  * @param {Function} fn
  */
-thin.editor.SvgResizer.prototype.setSizeLimitFunction = function(fn) {
+thin.core.SvgResizer.prototype.setSizeLimitFunction = function(fn) {
   if (goog.isFunction(fn)) {
     this.sizeLimitFunction_ = fn;
   } else {
@@ -601,7 +601,7 @@ thin.editor.SvgResizer.prototype.setSizeLimitFunction = function(fn) {
 };
 
 
-thin.editor.SvgResizer.prototype.initSizeLimitFunction = function() {
+thin.core.SvgResizer.prototype.initSizeLimitFunction = function() {
   delete this.sizeLimitFunction_;
 };
 
@@ -611,7 +611,7 @@ thin.editor.SvgResizer.prototype.initSizeLimitFunction = function() {
  * @return {goog.math.Rect}
  * @private
  */
-thin.editor.SvgResizer.prototype.defaultSizeLimit_ = function(nowBounds) {
+thin.core.SvgResizer.prototype.defaultSizeLimit_ = function(nowBounds) {
   var width = nowBounds.width;
   var height = nowBounds.height;
   return new goog.math.Rect(thin.numberWithPrecision(nowBounds.left),
@@ -622,8 +622,8 @@ thin.editor.SvgResizer.prototype.defaultSizeLimit_ = function(nowBounds) {
 
 
 /** @inheritDoc */
-thin.editor.SvgResizer.prototype.disposeInternal = function() {
-  thin.editor.SvgResizer.superClass_.disposeInternal.call(this);
+thin.core.SvgResizer.prototype.disposeInternal = function() {
+  thin.core.SvgResizer.superClass_.disposeInternal.call(this);
   delete this.startShapeBounds_;
   delete this.endShapeBounds_;
 };

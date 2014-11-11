@@ -13,38 +13,38 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ListHelper');
-goog.provide('thin.editor.ListHelper.SectionName');
+goog.provide('thin.core.ListHelper');
+goog.provide('thin.core.ListHelper.SectionName');
 
 goog.require('goog.dom');
 goog.require('goog.object');
 goog.require('goog.math.Rect');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
-goog.require('thin.editor.ActionLayer');
-goog.require('thin.editor.Component');
-goog.require('thin.editor.HeaderSectionHelper');
-goog.require('thin.editor.DetailSectionHelper');
-goog.require('thin.editor.PageFooterSectionHelper');
-goog.require('thin.editor.FooterSectionHelper');
-goog.require('thin.editor.ListGuideHelper');
+goog.require('thin.core.ActionLayer');
+goog.require('thin.core.Component');
+goog.require('thin.core.HeaderSectionHelper');
+goog.require('thin.core.DetailSectionHelper');
+goog.require('thin.core.PageFooterSectionHelper');
+goog.require('thin.core.FooterSectionHelper');
+goog.require('thin.core.ListGuideHelper');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.Component}
+ * @extends {thin.core.Component}
  */
-thin.editor.ListHelper = function(layout) {
-  thin.editor.Component.call(this, layout);
+thin.core.ListHelper = function(layout) {
+  thin.core.Component.call(this, layout);
 };
-goog.inherits(thin.editor.ListHelper, thin.editor.Component);
+goog.inherits(thin.core.ListHelper, thin.core.Component);
 
 
 /**
  * @enum {string}
  */
-thin.editor.ListHelper.SectionName = {
+thin.core.ListHelper.SectionName = {
   HEADER: 'HEADER',
   DETAIL: 'DETAIL', 
   PAGEFOOTER: 'PAGEFOOTER',
@@ -55,72 +55,72 @@ thin.editor.ListHelper.SectionName = {
 /**
  * @type {string}
  */
-thin.editor.ListHelper.FILL_ = '#AAAAAA';
+thin.core.ListHelper.FILL_ = '#AAAAAA';
 
 
 /**
  * @type {number}
  */
-thin.editor.ListHelper.FILLOPACITY_ = 0.08;
+thin.core.ListHelper.FILLOPACITY_ = 0.08;
 
 
 /**
- * @type {thin.editor.ListShape}
+ * @type {thin.core.ListShape}
  * @private
  */
-thin.editor.ListHelper.prototype.target_;
+thin.core.ListHelper.prototype.target_;
 
 
 /**
- * @type {thin.editor.ListGuideHelper}
+ * @type {thin.core.ListGuideHelper}
  * @private
  */
-thin.editor.ListHelper.prototype.listGuideHelper_;
+thin.core.ListHelper.prototype.listGuideHelper_;
 
 
 /**
- * @type {thin.editor.Layer}
+ * @type {thin.core.Layer}
  * @private
  */
-thin.editor.ListHelper.prototype.blankRangeSelectorLayer_;
+thin.core.ListHelper.prototype.blankRangeSelectorLayer_;
 
 
 /**
- * @type {thin.editor.Layer}
+ * @type {thin.core.Layer}
  * @private
  */
-thin.editor.ListHelper.prototype.blankRangeDrawLayer_;
+thin.core.ListHelper.prototype.blankRangeDrawLayer_;
 
 
 /**
  * @type {Object}
  * @private
  */
-thin.editor.ListHelper.prototype.sectionHelpers_;
+thin.core.ListHelper.prototype.sectionHelpers_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ListHelper.prototype.active_ = false;
+thin.core.ListHelper.prototype.active_ = false;
 
 
 /**
- * @type {thin.editor.ListShape}
+ * @type {thin.core.ListShape}
  * @private
  */
-thin.editor.ListHelper.prototype.changingPageSetshape_;
+thin.core.ListHelper.prototype.changingPageSetshape_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.ListHelper.prototype.activeSectionName_;
+thin.core.ListHelper.prototype.activeSectionName_;
 
 
-thin.editor.ListHelper.prototype.reapplySizeAndStroke = function() {
+thin.core.ListHelper.prototype.reapplySizeAndStroke = function() {
   this.forEachSectionHelper(function(sectionHelperForScope, sectionNameForScope) {
     sectionHelperForScope.getSeparator().reapplySizeAndStroke();
   });
@@ -130,15 +130,15 @@ thin.editor.ListHelper.prototype.reapplySizeAndStroke = function() {
 /**
  * @param {goog.graphics.Element} shape
  */
-thin.editor.ListHelper.prototype.setActiveShape = function(shape) {
+thin.core.ListHelper.prototype.setActiveShape = function(shape) {
   this.target_.getActiveShape().add(shape);
 };
 
 
 /**
- * @return {thin.editor.ActiveShapeManager}
+ * @return {thin.core.ActiveShapeManager}
  */
-thin.editor.ListHelper.prototype.getActiveShape = function() {
+thin.core.ListHelper.prototype.getActiveShape = function() {
   return this.target_.getActiveShape();
 };
 
@@ -146,24 +146,24 @@ thin.editor.ListHelper.prototype.getActiveShape = function() {
 /**
  * @return {boolean}
  */
-thin.editor.ListHelper.prototype.isActive = function() {
+thin.core.ListHelper.prototype.isActive = function() {
   return this.active_;
 };
 
 
 /**
- * @return {thin.editor.ListShape}
+ * @return {thin.core.ListShape}
  */
-thin.editor.ListHelper.prototype.getTarget = function() {
+thin.core.ListHelper.prototype.getTarget = function() {
   return this.target_;
 };
 
 
 /**
- * @param {thin.editor.Layer} drawLayer
+ * @param {thin.core.Layer} drawLayer
  * @return {string|undefined}
  */
-thin.editor.ListHelper.prototype.getSectionNameByDrawLayer = function(drawLayer) {
+thin.core.ListHelper.prototype.getSectionNameByDrawLayer = function(drawLayer) {
   return goog.object.findKey(this.sectionHelpers_, function(sectionHelper, sectionName) {
     return sectionHelper.getDrawLayer() == drawLayer;
   }, this);
@@ -171,10 +171,10 @@ thin.editor.ListHelper.prototype.getSectionNameByDrawLayer = function(drawLayer)
 
 
 /**
- * @param {thin.editor.Layer} selectorLayer
+ * @param {thin.core.Layer} selectorLayer
  * @return {string|undefined}
  */
-thin.editor.ListHelper.prototype.getSectionNameBySelectorLayer = function(selectorLayer) {
+thin.core.ListHelper.prototype.getSectionNameBySelectorLayer = function(selectorLayer) {
   return goog.object.findKey(this.sectionHelpers_, function(sectionHelper, sectionName) {
     return sectionHelper.getSelectorLayer() == selectorLayer;
   }, this);
@@ -183,9 +183,9 @@ thin.editor.ListHelper.prototype.getSectionNameBySelectorLayer = function(select
 
 /**
  * @param {string} sectionName
- * @return {thin.editor.ListSectionHelper}
+ * @return {thin.core.ListSectionHelper}
  */
-thin.editor.ListHelper.prototype.getSectionHelper = function(sectionName) {
+thin.core.ListHelper.prototype.getSectionHelper = function(sectionName) {
   return this.sectionHelpers_[sectionName];
 };
 
@@ -194,24 +194,24 @@ thin.editor.ListHelper.prototype.getSectionHelper = function(sectionName) {
  * @param {goog.graphics.Element} shape
  * @return {boolean}
  */
-thin.editor.ListHelper.prototype.isEnableChangingPage = function(shape) {
+thin.core.ListHelper.prototype.isEnableChangingPage = function(shape) {
   var changingPageSethape = this.changingPageSetshape_;
   return goog.isDef(changingPageSethape) ? shape == changingPageSethape : true;
 };
 
 
 /**
- * @return {thin.editor.Layer}
+ * @return {thin.core.Layer}
  */
-thin.editor.ListHelper.prototype.getBlankRangeSelectorLayer = function() {
+thin.core.ListHelper.prototype.getBlankRangeSelectorLayer = function() {
   return this.blankRangeSelectorLayer_;
 };
 
 
 /**
- * @return {thin.editor.Layer}
+ * @return {thin.core.Layer}
  */
-thin.editor.ListHelper.prototype.getBlankRangeDrawLayer = function() {
+thin.core.ListHelper.prototype.getBlankRangeDrawLayer = function() {
   return this.blankRangeDrawLayer_;
 };
 
@@ -219,10 +219,10 @@ thin.editor.ListHelper.prototype.getBlankRangeDrawLayer = function() {
 /**
  * @return {goog.math.Rect}
  */
-thin.editor.ListHelper.prototype.getBlankRangeBounds = function() {
+thin.core.ListHelper.prototype.getBlankRangeBounds = function() {
   var listShape = this.target_;
   var listShapeBounds = listShape.getBounds();
-  var footerSectionName = thin.editor.ListHelper.SectionName.FOOTER;
+  var footerSectionName = thin.core.ListHelper.SectionName.FOOTER;
   var sectionShapeForScope = listShape.getSectionShape(footerSectionName);
   var draggableLineHeight = this.getSectionHelper(footerSectionName).getSeparator().getLineHeight();
   var listShapeBottom = listShapeBounds.toBox().bottom;
@@ -236,27 +236,27 @@ thin.editor.ListHelper.prototype.getBlankRangeBounds = function() {
 
 
 /**
- * @param {thin.editor.ListShape} shape
+ * @param {thin.core.ListShape} shape
  */
-thin.editor.ListHelper.prototype.setChangingPageSetShape = function(shape) {
+thin.core.ListHelper.prototype.setChangingPageSetShape = function(shape) {
   this.changingPageSetshape_ = shape;
 };
 
 
-thin.editor.ListHelper.prototype.clearChangingPageSetShape = function() {
+thin.core.ListHelper.prototype.clearChangingPageSetShape = function() {
   delete this.changingPageSetshape_;
 };
 
 
 /**
- * @return {thin.editor.ListGuideHelper}
+ * @return {thin.core.ListGuideHelper}
  */
-thin.editor.ListHelper.prototype.getListGuideHelper = function() {
+thin.core.ListHelper.prototype.getListGuideHelper = function() {
   return this.listGuideHelper_;
 };
 
 
-thin.editor.ListHelper.prototype.initActiveSectionName = function() {
+thin.core.ListHelper.prototype.initActiveSectionName = function() {
   delete this.activeSectionName_;
 };
 
@@ -264,7 +264,7 @@ thin.editor.ListHelper.prototype.initActiveSectionName = function() {
 /**
  * @param {string} sectionName
  */
-thin.editor.ListHelper.prototype.setActiveSectionName = function(sectionName) {
+thin.core.ListHelper.prototype.setActiveSectionName = function(sectionName) {
   if(sectionName) {
     this.activeSectionName_ = sectionName;    
   } else {
@@ -276,7 +276,7 @@ thin.editor.ListHelper.prototype.setActiveSectionName = function(sectionName) {
 /**
  * @return {string}
  */
-thin.editor.ListHelper.prototype.getActiveSectionName = function() {
+thin.core.ListHelper.prototype.getActiveSectionName = function() {
   return this.activeSectionName_;
 };
 
@@ -284,15 +284,15 @@ thin.editor.ListHelper.prototype.getActiveSectionName = function() {
 /**
  * @return {string}
  */
-thin.editor.ListHelper.prototype.getDefaultActiveSectionName = function() {
-  return thin.editor.ListHelper.SectionName.HEADER;
+thin.core.ListHelper.prototype.getDefaultActiveSectionName = function() {
+  return thin.core.ListHelper.SectionName.HEADER;
 };
 
 
 /**
  * @param {goog.math.Coordinate} translate
  */
-thin.editor.ListHelper.prototype.setTransLate = function(translate) {
+thin.core.ListHelper.prototype.setTransLate = function(translate) {
   this.target_.forEachSectionShape(function(sectionShapeForEach, sectionNameForEach) {
     sectionShapeForEach.setTransLate(translate);
   }, this);
@@ -303,7 +303,7 @@ thin.editor.ListHelper.prototype.setTransLate = function(translate) {
  * Prohibit the drawing new List into the List.
  * @param {boolean} drawable
  */
-thin.editor.ListHelper.prototype.setDrawable = function(drawable) {
+thin.core.ListHelper.prototype.setDrawable = function(drawable) {
   this.forEachSectionHelper(function(helper, name) {
     helper.getDrawLayer().setDrawable(drawable);
   });
@@ -312,9 +312,9 @@ thin.editor.ListHelper.prototype.setDrawable = function(drawable) {
 
 /**
  * @param {goog.math.Coordinate} translate
- * @param {thin.editor.ListSectionShape} startSectionShape
+ * @param {thin.core.ListSectionShape} startSectionShape
  */
-thin.editor.ListHelper.prototype.setTransLateOfNextSectionShapes = function(translate, startSectionShape) {
+thin.core.ListHelper.prototype.setTransLateOfNextSectionShapes = function(translate, startSectionShape) {
   goog.array.forEach(startSectionShape.getNextSectionShapes(), function(sectionShapeForEach) {
     sectionShapeForEach.setTransLate(translate);
   });
@@ -325,7 +325,7 @@ thin.editor.ListHelper.prototype.setTransLateOfNextSectionShapes = function(tran
  * @param {Function} fn
  * @param {Object=} opt_selfObj
  */
-thin.editor.ListHelper.prototype.forEachSectionHelper = function(fn, opt_selfObj) {
+thin.core.ListHelper.prototype.forEachSectionHelper = function(fn, opt_selfObj) {
   var selfObj = opt_selfObj || this;
   goog.object.forEach(this.sectionHelpers_, goog.bind(function(sectionHelperForEach, sectionNameForEach) {
     fn.call(selfObj, sectionHelperForEach, sectionNameForEach);
@@ -333,7 +333,7 @@ thin.editor.ListHelper.prototype.forEachSectionHelper = function(fn, opt_selfObj
 };
 
 
-thin.editor.ListHelper.prototype.update = function() {
+thin.core.ListHelper.prototype.update = function() {
   var target = this.target_;
   var guide = this.getListGuideHelper();
   var sectionBounds = this.calculateSectionBoundsForUpdate(target);
@@ -349,9 +349,9 @@ thin.editor.ListHelper.prototype.update = function() {
 
 
 /**
- * @param {thin.editor.ListShape} target
+ * @param {thin.core.ListShape} target
  */
-thin.editor.ListHelper.prototype.active = function(target) {
+thin.core.ListHelper.prototype.active = function(target) {
   var layout = this.getLayout();
   
   this.target_ = target;
@@ -368,7 +368,7 @@ thin.editor.ListHelper.prototype.active = function(target) {
   var blankRangeSelectorLayer = this.getBlankRangeSelectorLayer();
   
   goog.dom.insertSiblingBefore(blankRangeSelectorLayer.getElement(),
-    this.getSectionHelper(thin.editor.ListHelper.SectionName.HEADER).getSelectorLayer().getElement());
+    this.getSectionHelper(thin.core.ListHelper.SectionName.HEADER).getSelectorLayer().getElement());
   blankRangeSelectorLayer.setVisibled(true);
   this.getBlankRangeDrawLayer().setVisibled(isDrawLayerVisibled);
   this.getListGuideHelper().setEnableAndTargetShape(target);
@@ -379,7 +379,7 @@ thin.editor.ListHelper.prototype.active = function(target) {
 };
 
 
-thin.editor.ListHelper.prototype.inactive = function() {
+thin.core.ListHelper.prototype.inactive = function() {
   if (this.isActive()) {
     this.forEachSectionHelper(function(sectionHelper, sectionName) {
       sectionHelper.inactive(target);
@@ -402,27 +402,27 @@ thin.editor.ListHelper.prototype.inactive = function() {
 };
 
 
-thin.editor.ListHelper.prototype.setup = function() {
+thin.core.ListHelper.prototype.setup = function() {
   var layout = this.getLayout();
-  var sectionName = thin.editor.ListHelper.SectionName;
+  var sectionName = thin.core.ListHelper.SectionName;
 
   this.sectionHelpers_ = {};
-  this.sectionHelpers_[sectionName.HEADER] = new thin.editor.HeaderSectionHelper(layout, sectionName.HEADER);
-  this.sectionHelpers_[sectionName.DETAIL] = new thin.editor.DetailSectionHelper(layout, sectionName.DETAIL);
-  this.sectionHelpers_[sectionName.PAGEFOOTER] = new thin.editor.PageFooterSectionHelper(layout, sectionName.PAGEFOOTER);
-  this.sectionHelpers_[sectionName.FOOTER] = new thin.editor.FooterSectionHelper(layout, sectionName.FOOTER);
-  this.listGuideHelper_ = new thin.editor.ListGuideHelper(layout);
-  var blankRangeSelecotorLayer = new thin.editor.ActionLayer(layout);
+  this.sectionHelpers_[sectionName.HEADER] = new thin.core.HeaderSectionHelper(layout, sectionName.HEADER);
+  this.sectionHelpers_[sectionName.DETAIL] = new thin.core.DetailSectionHelper(layout, sectionName.DETAIL);
+  this.sectionHelpers_[sectionName.PAGEFOOTER] = new thin.core.PageFooterSectionHelper(layout, sectionName.PAGEFOOTER);
+  this.sectionHelpers_[sectionName.FOOTER] = new thin.core.FooterSectionHelper(layout, sectionName.FOOTER);
+  this.listGuideHelper_ = new thin.core.ListGuideHelper(layout);
+  var blankRangeSelecotorLayer = new thin.core.ActionLayer(layout);
   blankRangeSelecotorLayer.setBounds(new goog.math.Rect(0, 0, 0, 0));
-  blankRangeSelecotorLayer.setFill(new goog.graphics.SolidFill(thin.editor.ListHelper.FILL_, thin.editor.ListHelper.FILLOPACITY_));
+  blankRangeSelecotorLayer.setFill(new goog.graphics.SolidFill(thin.core.ListHelper.FILL_, thin.core.ListHelper.FILLOPACITY_));
   this.blankRangeSelectorLayer_ = blankRangeSelecotorLayer;
-  var blankRangeDrawLayer = new thin.editor.ActionLayer(layout);
+  var blankRangeDrawLayer = new thin.core.ActionLayer(layout);
   blankRangeDrawLayer.setBounds(new goog.math.Rect(0, 0, 0, 0));
   this.blankRangeDrawLayer_ = blankRangeDrawLayer;
 };
 
 
-thin.editor.ListHelper.prototype.init = function() {
+thin.core.ListHelper.prototype.init = function() {
   var scope = this;
   var layout = this.getLayout();
   var helpers = layout.getHelpers();
@@ -501,10 +501,10 @@ thin.editor.ListHelper.prototype.init = function() {
 
 
 /**
- * @param {thin.editor.ListShape} listShape
+ * @param {thin.core.ListShape} listShape
  * @return {Object}
  */
-thin.editor.ListHelper.prototype.calculateSectionBoundsForUpdate = function(listShape) {
+thin.core.ListHelper.prototype.calculateSectionBoundsForUpdate = function(listShape) {
 
   var listShapeBounds = listShape.getBounds();
   var listShapeLeft = listShapeBounds.left;
@@ -512,7 +512,7 @@ thin.editor.ListHelper.prototype.calculateSectionBoundsForUpdate = function(list
   var listShapeHeight = listShapeBounds.height;
   
   var sectionBounds = {};
-  var sectionNameForHeader = thin.editor.ListHelper.SectionName.HEADER;
+  var sectionNameForHeader = thin.core.ListHelper.SectionName.HEADER;
   var sectionShapeForHeader = listShape.getSectionShape(sectionNameForHeader);
   var sectionHeightForHeader = sectionShapeForHeader.getHeight();
   if(!goog.isNumber(sectionHeightForHeader)) {
@@ -542,7 +542,7 @@ thin.editor.ListHelper.prototype.calculateSectionBoundsForUpdate = function(list
 
 
 /** @inheritDoc */
-thin.editor.ListHelper.prototype.disposeInternal = function() {
+thin.core.ListHelper.prototype.disposeInternal = function() {
   this.listGuideHelper_.dispose();
   this.blankRangeSelectorLayer_.dispose();
   this.blankRangeDrawLayer_.dispose();

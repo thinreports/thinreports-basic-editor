@@ -19,9 +19,9 @@ goog.require('goog.object');
 goog.require('goog.ui.Dialog');
 goog.require('goog.ui.Dialog.EventType');
 
-goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
-goog.require('thin.editor.TextStyle.VerticalAlignType');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.VerticalAlignType');
 
 
 /**
@@ -66,7 +66,7 @@ thin.ui.adjustUiStatusToRedo = function(status) {
 
 
 /**
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @param {goog.ui.Component=} opt_toolBar
  */
 thin.ui.adjustUiStatusToBold = function(workspace, opt_toolBar) {
@@ -76,7 +76,7 @@ thin.ui.adjustUiStatusToBold = function(workspace, opt_toolBar) {
 
 
 /**
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @param {goog.ui.Component=} opt_toolBar
  */
 thin.ui.adjustUiStatusToItalic = function(workspace, opt_toolBar) {
@@ -86,7 +86,7 @@ thin.ui.adjustUiStatusToItalic = function(workspace, opt_toolBar) {
 
 
 /**
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @param {goog.ui.Component=} opt_toolBar
  */
 thin.ui.adjustUiStatusToUnderline = function(workspace, opt_toolBar) {
@@ -96,7 +96,7 @@ thin.ui.adjustUiStatusToUnderline = function(workspace, opt_toolBar) {
 
 
 /**
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @param {goog.ui.Component=} opt_toolBar
  */
 thin.ui.adjustUiStatusToLineThrough = function(workspace, opt_toolBar) {
@@ -106,7 +106,7 @@ thin.ui.adjustUiStatusToLineThrough = function(workspace, opt_toolBar) {
 
 
 /**
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @param {goog.ui.Component=} opt_toolBar
  */
 thin.ui.adjustUiStatusToFontSize = function(workspace, opt_toolBar) {
@@ -117,7 +117,7 @@ thin.ui.adjustUiStatusToFontSize = function(workspace, opt_toolBar) {
 
 
 /**
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @param {goog.ui.Component=} opt_toolBar
  */
 thin.ui.adjustUiStatusToFontFamily = function(workspace, opt_toolBar) {
@@ -128,13 +128,13 @@ thin.ui.adjustUiStatusToFontFamily = function(workspace, opt_toolBar) {
 
 
 /**
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @param {goog.ui.Component=} opt_toolBar
  */
 thin.ui.adjustUiStatusToTextAnchor = function(workspace, opt_toolBar) {
   var toolbar = opt_toolBar || thin.ui.getComponent('toolbar');
   
-  var anchorType = thin.editor.TextStyle.HorizonAlignType;
+  var anchorType = thin.core.TextStyle.HorizonAlignType;
   var isLeft = false;
   var isCenter = false;
   var isRight = false;
@@ -157,13 +157,13 @@ thin.ui.adjustUiStatusToTextAnchor = function(workspace, opt_toolBar) {
 
 
 /**
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @param {goog.ui.Component=} opt_toolBar
  */
 thin.ui.adjustUiStatusToVerticalAlign = function(workspace, opt_toolBar) {
   var toolbar = opt_toolBar || thin.ui.getComponent('toolbar');
   
-  var verticalType = thin.editor.TextStyle.VerticalAlignType;
+  var verticalType = thin.core.TextStyle.VerticalAlignType;
   var isTop = false;
   var isCenter = false;
   var isBottom = false;
@@ -187,7 +187,7 @@ thin.ui.adjustUiStatusToVerticalAlign = function(workspace, opt_toolBar) {
 
 
 thin.ui.adjustToUiStatusForWorkspace = function() {
-  var workspace = thin.editor.getActiveWorkspace();
+  var workspace = thin.core.getActiveWorkspace();
   var toolbar = thin.ui.getComponent('toolbar');
   thin.ui.adjustUiStatusToBold(workspace, toolbar);
   thin.ui.adjustUiStatusToItalic(workspace, toolbar);
@@ -237,7 +237,7 @@ thin.ui.setEnabledForFontBaseUi = function(enabled) {
   toolbar.getChild('font-size').setEnabled(enabled);
   toolbar.getChild('font-family').setEnabled(enabled);
   
-  thin.editor.getActiveWorkspace().setUiStatusForFontBaseUi(enabled);
+  thin.core.getActiveWorkspace().setUiStatusForFontBaseUi(enabled);
 };
 
 
@@ -252,7 +252,7 @@ thin.ui.setEnabledForTextStyleUi = function(enabled) {
   toolbar.getChild('font-underline').setEnabled(enabled);
   toolbar.getChild('font-strike').setEnabled(enabled);
   
-  thin.editor.getActiveWorkspace().setUiStatusForTextStyleUi(enabled);
+  thin.core.getActiveWorkspace().setUiStatusForTextStyleUi(enabled);
 };
 
 
@@ -266,7 +266,7 @@ thin.ui.setEnabledForHorizontalAlignTypeUi = function(enabled) {
   toolbar.getChild('text-align-center').setEnabled(enabled);
   toolbar.getChild('text-align-right').setEnabled(enabled);
   
-  thin.editor.getActiveWorkspace().setUiStatusForHorizontalAlignTypeUi(enabled);
+  thin.core.getActiveWorkspace().setUiStatusForHorizontalAlignTypeUi(enabled);
 };
 
 
@@ -280,7 +280,7 @@ thin.ui.setEnabledForVerticalAlignTypeUi = function(enabled) {
   toolbar.getChild('text-valign-center').setEnabled(enabled);
   toolbar.getChild('text-valign-bottom').setEnabled(enabled);
 
-  thin.editor.getActiveWorkspace().setUiStatusForVerticalAlignTypeUi(enabled);
+  thin.core.getActiveWorkspace().setUiStatusForVerticalAlignTypeUi(enabled);
 };
 
 
@@ -290,7 +290,7 @@ thin.ui.setEnabledForVerticalAlignTypeUi = function(enabled) {
 thin.ui.setEnabledForTextEdit = function(enabled) {
   thin.ui.getComponent('toolbar').getChild('text-edit').setEnabled(enabled);
   
-  thin.editor.getActiveWorkspace().setUiStatusForTextEditUi(enabled);
+  thin.core.getActiveWorkspace().setUiStatusForTextEditUi(enabled);
 };
 
 

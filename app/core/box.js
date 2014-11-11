@@ -13,62 +13,62 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Box');
+goog.provide('thin.core.Box');
 
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.ClipPath');
+goog.require('thin.core.Rect');
+goog.require('thin.core.ClipPath');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @param {boolean=} opt_isUseClipPath
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.Box = function(element, layout, 
+thin.core.Box = function(element, layout, 
       stroke, fill, opt_isUseClipPath) {
 
-  thin.editor.Rect.call(this, element, layout, stroke, fill);
+  thin.core.Rect.call(this, element, layout, stroke, fill);
   this.isUseClipPath_ = !!opt_isUseClipPath;
 };
-goog.inherits(thin.editor.Box, thin.editor.Rect);
+goog.inherits(thin.core.Box, thin.core.Rect);
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.Box.prototype.minWidth_ = 0;
+thin.core.Box.prototype.minWidth_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.Box.prototype.minHeight_ = 0;
+thin.core.Box.prototype.minHeight_ = 0;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Box.prototype.isUseClipPath_;
+thin.core.Box.prototype.isUseClipPath_;
 
 
 /**
- * @type {thin.editor.ClipPath}
+ * @type {thin.core.ClipPath}
  * @private
  */
-thin.editor.Box.prototype.clipPath_;
+thin.core.Box.prototype.clipPath_;
 
 
 /**
  * @param {number} minWidth
  */
-thin.editor.Box.prototype.setMinWidth = function(minWidth) {
+thin.core.Box.prototype.setMinWidth = function(minWidth) {
   this.minWidth_ = minWidth;
 };
 
@@ -76,7 +76,7 @@ thin.editor.Box.prototype.setMinWidth = function(minWidth) {
 /**
  * @param {number} minHeight
  */
-thin.editor.Box.prototype.setMinHeight = function(minHeight) {
+thin.core.Box.prototype.setMinHeight = function(minHeight) {
   this.minHeight_ = minHeight;
 };
 
@@ -84,7 +84,7 @@ thin.editor.Box.prototype.setMinHeight = function(minHeight) {
 /**
  * @return {number}
  */
-thin.editor.Box.prototype.getMinWidth = function() {
+thin.core.Box.prototype.getMinWidth = function() {
   return this.minWidth_;
 };
 
@@ -92,7 +92,7 @@ thin.editor.Box.prototype.getMinWidth = function() {
 /**
  * @return {number}
  */
-thin.editor.Box.prototype.getMinHeight = function() {
+thin.core.Box.prototype.getMinHeight = function() {
   return this.minHeight_;
 };
 
@@ -100,7 +100,7 @@ thin.editor.Box.prototype.getMinHeight = function() {
 /**
  * @param {boolean} isUse
  */
-thin.editor.Box.prototype.setUsableClipPath = function(isUse) {
+thin.core.Box.prototype.setUsableClipPath = function(isUse) {
   if (!isUse && this.clipPath_) {
     this.removeClipPath();
   }
@@ -113,9 +113,9 @@ thin.editor.Box.prototype.setUsableClipPath = function(isUse) {
  * @param {goog.graphics.Element=} opt_target
  * @return {void}
  */
-thin.editor.Box.prototype.createClipPath = function(opt_target) {
+thin.core.Box.prototype.createClipPath = function(opt_target) {
   var layout = this.getLayout();
-  this.clipPath_ = layout.createClipPath(new thin.editor.Rect(
+  this.clipPath_ = layout.createClipPath(new thin.core.Rect(
     layout.createSvgElement('rect', {
       'x': this.left_,
       'y': this.top_,
@@ -128,7 +128,7 @@ thin.editor.Box.prototype.createClipPath = function(opt_target) {
 /**
  * @return {void}
  */
-thin.editor.Box.prototype.removeClipPath = function() {
+thin.core.Box.prototype.removeClipPath = function() {
   this.clipPath_.dispose();
   this.getLayout().getDefsElement().removeChild(this.clipPath_.getElement());
   delete this.clipPath_;
@@ -138,8 +138,8 @@ thin.editor.Box.prototype.removeClipPath = function() {
 
 
 /** @inheritDoc */
-thin.editor.Box.prototype.disposeInternal = function() {
-  thin.editor.Box.superClass_.disposeInternal.call(this);
+thin.core.Box.prototype.disposeInternal = function() {
+  thin.core.Box.superClass_.disposeInternal.call(this);
 
   if (goog.isDef(this.clipPath_)) {
     this.removeClipPath();

@@ -16,7 +16,7 @@
 goog.provide('thin.Settings');
 
 goog.require('goog.array');
-goog.require('thin.core.platform');
+goog.require('thin.platform');
 goog.require('thin.ui.InputUnitChanger');
 goog.require('thin.ui.InputUnitChanger.Unit');
 
@@ -76,7 +76,7 @@ thin.Settings.prototype.set = function(key, value) {
 
   var item = {};
   item[key] = value;
-  thin.core.platform.callNativeFunction(
+  thin.platform.callNativeFunction(
     'chrome', 'storage', 'local', 'set', [item]);
 };
 
@@ -93,7 +93,7 @@ thin.Settings.prototype.get = function(key) {
 thin.Settings.prototype.sync = function() {
   var scope = this;
   goog.array.forEach(thin.Settings.DEFINITION, function(key) {
-    thin.core.platform.callNativeFunction(
+    thin.platform.callNativeFunction(
       'chrome', 'storage', 'local', 'get', [[key], function(record) {
         scope.storage[key] = record[key];
     }]);

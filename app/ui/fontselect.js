@@ -22,7 +22,7 @@ goog.require('goog.style');
 goog.require('goog.ui.ControlRenderer');
 goog.require('goog.ui.MenuItemRenderer');
 goog.require('goog.ui.MenuSeparator');
-goog.require('thin.core.Font');
+goog.require('thin.Font');
 goog.require('thin.ui.Select');
 goog.require('thin.ui.Option');
 goog.require('thin.ui.OptionMenu');
@@ -41,7 +41,7 @@ thin.ui.FontSelect = function(fonts, opt_renderer) {
   goog.base(this, '', menu, opt_renderer);
   
   this.addFonts(fonts);
-  this.setValue(thin.core.Font.getDefaultFont());
+  this.setValue(thin.Font.getDefaultFont());
   this.setTextAlignLeft();
 };
 goog.inherits(thin.ui.FontSelect, thin.ui.Select);
@@ -49,7 +49,7 @@ goog.inherits(thin.ui.FontSelect, thin.ui.Select);
 
 /** @inheritDoc */
 thin.ui.FontSelect.prototype.setValue = function(name) {
-  goog.base(this, 'setValue', name || thin.core.Font.getDefaultFont());
+  goog.base(this, 'setValue', name || thin.Font.getDefaultFont());
 };
 
 

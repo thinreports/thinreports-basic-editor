@@ -13,40 +13,40 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ListSectionShape');
-goog.provide('thin.editor.HeaderSectionShape');
-goog.provide('thin.editor.DetailSectionShape');
-goog.provide('thin.editor.PageFooterSectionShape');
-goog.provide('thin.editor.FooterSectionShape');
+goog.provide('thin.core.ListSectionShape');
+goog.provide('thin.core.HeaderSectionShape');
+goog.provide('thin.core.DetailSectionShape');
+goog.provide('thin.core.PageFooterSectionShape');
+goog.provide('thin.core.FooterSectionShape');
 
 goog.require('goog.array');
 goog.require('goog.object');
 goog.require('goog.math.Rect');
 goog.require('goog.Disposable');
 goog.require('goog.graphics.SvgGroupElement');
-goog.require('thin.editor.ShapeManager');
-goog.require('thin.editor.ModuleElement');
-goog.require('thin.editor.ModuleShape');
+goog.require('thin.core.ShapeManager');
+goog.require('thin.core.ModuleElement');
+goog.require('thin.core.ModuleShape');
 
 
 /**
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ListShape} affiliationGroup
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ListShape} affiliationGroup
  * @param {string} sectionName
  * @param {Element=} opt_element
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.ListSectionShape = function(layout, affiliationGroup, sectionName, opt_element) {
+thin.core.ListSectionShape = function(layout, affiliationGroup, sectionName, opt_element) {
   
   /**
-   * @type {thin.editor.Layout}
+   * @type {thin.core.Layout}
    * @private
    */
   this.layout_ = layout;
   
   /**
-   * @type {thin.editor.ListShape}
+   * @type {thin.core.ListShape}
    * @private
    */
   this.affiliationGroup_ = affiliationGroup;
@@ -58,70 +58,70 @@ thin.editor.ListSectionShape = function(layout, affiliationGroup, sectionName, o
   this.sectionName_ = sectionName;
   this.setup(opt_element);
 };
-goog.inherits(thin.editor.ListSectionShape, goog.Disposable);
-goog.mixin(thin.editor.ListSectionShape.prototype, thin.editor.ModuleElement.prototype);
-goog.mixin(thin.editor.ListSectionShape.prototype, thin.editor.ModuleShape.prototype);
+goog.inherits(thin.core.ListSectionShape, goog.Disposable);
+goog.mixin(thin.core.ListSectionShape.prototype, thin.core.ModuleElement.prototype);
+goog.mixin(thin.core.ListSectionShape.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
  * @type {boolean}
  */
-thin.editor.ListSectionShape.DEFAULT_ENABLED = true;
+thin.core.ListSectionShape.DEFAULT_ENABLED = true;
 
 
 /**
  * @type {goog.graphics.SvgGroupElement}
  * @private
  */
-thin.editor.ListSectionShape.prototype.group_;
+thin.core.ListSectionShape.prototype.group_;
 
 
 /**
- * @type {thin.editor.StateManager}
+ * @type {thin.core.StateManager}
  * @private
  */
-thin.editor.ListSectionShape.prototype.manager_;
+thin.core.ListSectionShape.prototype.manager_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.ListSectionShape.prototype.defaultHeightRate_;
+thin.core.ListSectionShape.prototype.defaultHeightRate_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ListSectionShape.prototype.isEnabled_;
+thin.core.ListSectionShape.prototype.isEnabled_;
 
 
 /**
- * @type {thin.editor.ListSectionShape}
+ * @type {thin.core.ListSectionShape}
  * @private
  */
-thin.editor.ListSectionShape.prototype.nextSectionShape_;
+thin.core.ListSectionShape.prototype.nextSectionShape_;
 
 
 /**
- * @type {thin.editor.ListSectionShape}
+ * @type {thin.core.ListSectionShape}
  * @private
  */
-thin.editor.ListSectionShape.prototype.previousSectionShape_;
+thin.core.ListSectionShape.prototype.previousSectionShape_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.ListSectionShape.prototype.lastActiveHeight_;
+thin.core.ListSectionShape.prototype.lastActiveHeight_;
 
 
 /**
  * @return {string}
  */
-thin.editor.ListSectionShape.prototype.getSectionName = function() {
+thin.core.ListSectionShape.prototype.getSectionName = function() {
   return this.sectionName_;
 };
 
@@ -129,26 +129,26 @@ thin.editor.ListSectionShape.prototype.getSectionName = function() {
 /**
  * @param {Element=} opt_element
  */
-thin.editor.ListSectionShape.prototype.setup = function(opt_element) {
+thin.core.ListSectionShape.prototype.setup = function(opt_element) {
   var layout = this.layout_;
-  var classId = thin.editor.ListShape.ClassIds;
+  var classId = thin.core.ListShape.ClassIds;
 
   var group = new goog.graphics.SvgGroupElement(opt_element ||
                       layout.createSvgElement('g', {
-                        'class': thin.editor.ListShape.CLASSID + classId[this.sectionName_]
+                        'class': thin.core.ListShape.CLASSID + classId[this.sectionName_]
                       }), layout);
   group.setTransformation(0, 0, 0, 0, 0);
   
   this.group_ = group;
 
-  this.manager_ = new thin.editor.StateManager(layout);
+  this.manager_ = new thin.core.StateManager(layout);
 };
 
 
 /**
- * @return {thin.editor.StateManager}
+ * @return {thin.core.StateManager}
  */
-thin.editor.ListSectionShape.prototype.getManager = function() {
+thin.core.ListSectionShape.prototype.getManager = function() {
   return this.manager_;
 };
 
@@ -156,7 +156,7 @@ thin.editor.ListSectionShape.prototype.getManager = function() {
 /**
  * @return {goog.graphics.SvgGroupElement}
  */
-thin.editor.ListSectionShape.prototype.getGroup = function() {
+thin.core.ListSectionShape.prototype.getGroup = function() {
   return this.group_;
 };
 
@@ -164,7 +164,7 @@ thin.editor.ListSectionShape.prototype.getGroup = function() {
 /**
  * @param {boolean} enabled
  */
-thin.editor.ListSectionShape.prototype.setEnabled = function(enabled) {
+thin.core.ListSectionShape.prototype.setEnabled = function(enabled) {
   this.isEnabled_ = enabled;
 };
 
@@ -172,16 +172,16 @@ thin.editor.ListSectionShape.prototype.setEnabled = function(enabled) {
 /**
  * @return {boolean}
  */
-thin.editor.ListSectionShape.prototype.isEnabled = function() {
+thin.core.ListSectionShape.prototype.isEnabled = function() {
   return /** @type {boolean} */(thin.getValIfNotDef(this.isEnabled_, 
-             thin.editor.ListSectionShape.DEFAULT_ENABLED));
+             thin.core.ListSectionShape.DEFAULT_ENABLED));
 };
 
 
 /**
  * @param {number} top
  */
-thin.editor.ListSectionShape.prototype.setTop = function(top) {
+thin.core.ListSectionShape.prototype.setTop = function(top) {
   top = thin.numberWithPrecision(top);
   this.top_ = top;
   this.layout_.setElementAttributes(this.group_.getElement(), {
@@ -193,7 +193,7 @@ thin.editor.ListSectionShape.prototype.setTop = function(top) {
 /**
  * @param {number} height
  */
-thin.editor.ListSectionShape.prototype.setHeight = function(height) {
+thin.core.ListSectionShape.prototype.setHeight = function(height) {
   height = thin.numberWithPrecision(height);
   this.height_ = height;
   this.layout_.setElementAttributes(this.group_.getElement(), {
@@ -202,7 +202,7 @@ thin.editor.ListSectionShape.prototype.setHeight = function(height) {
 };
 
 
-thin.editor.ListSectionShape.prototype.initHeightForLastActive = function() {
+thin.core.ListSectionShape.prototype.initHeightForLastActive = function() {
   delete this.lastActiveHeight_;
 };
 
@@ -210,7 +210,7 @@ thin.editor.ListSectionShape.prototype.initHeightForLastActive = function() {
 /**
  * @param {number} height
  */
-thin.editor.ListSectionShape.prototype.setHeightForLastActive = function(height) {
+thin.core.ListSectionShape.prototype.setHeightForLastActive = function(height) {
   this.lastActiveHeight_ = height;
 };
 
@@ -218,7 +218,7 @@ thin.editor.ListSectionShape.prototype.setHeightForLastActive = function(height)
 /**
  * @return {number}
  */
-thin.editor.ListSectionShape.prototype.getHeightForLastActive = function() {
+thin.core.ListSectionShape.prototype.getHeightForLastActive = function() {
   return this.lastActiveHeight_;
 };
 
@@ -226,7 +226,7 @@ thin.editor.ListSectionShape.prototype.getHeightForLastActive = function() {
 /**
  * @return {number}
  */
-thin.editor.ListSectionShape.prototype.getDefaultHeight = function() {
+thin.core.ListSectionShape.prototype.getDefaultHeight = function() {
   return thin.numberWithPrecision(this.affiliationGroup_.getHeight() * this.defaultHeightRate_);
 };
 
@@ -234,7 +234,7 @@ thin.editor.ListSectionShape.prototype.getDefaultHeight = function() {
 /**
  * @return {goog.math.Rect}
  */
-thin.editor.ListSectionShape.prototype.getBounds = function() {
+thin.core.ListSectionShape.prototype.getBounds = function() {
   var listShapeBounds = this.affiliationGroup_.getBounds();
   return new goog.math.Rect(listShapeBounds.left, this.top_,
            listShapeBounds.width, this.height_);
@@ -244,7 +244,7 @@ thin.editor.ListSectionShape.prototype.getBounds = function() {
 /**
  * @param {goog.math.Coordinate} translate
  */
-thin.editor.ListSectionShape.prototype.setTransLate = function(translate) {
+thin.core.ListSectionShape.prototype.setTransLate = function(translate) {
   var group = this.group_;
   var existTransLate = group.getTransform();
   group.setTransformation(
@@ -254,9 +254,9 @@ thin.editor.ListSectionShape.prototype.setTransLate = function(translate) {
 
 
 /**
- * @param {thin.editor.ListSectionShape} nextSectionHelperForScope
+ * @param {thin.core.ListSectionShape} nextSectionHelperForScope
  */
-thin.editor.ListSectionShape.prototype.setNextSectionShape = function(nextSectionHelperForScope) {
+thin.core.ListSectionShape.prototype.setNextSectionShape = function(nextSectionHelperForScope) {
   if (goog.isDefAndNotNull(nextSectionHelperForScope)) {
     this.nextSectionShape_ = nextSectionHelperForScope;
   }
@@ -264,9 +264,9 @@ thin.editor.ListSectionShape.prototype.setNextSectionShape = function(nextSectio
 
 
 /**
- * @param {thin.editor.ListSectionShape} previousSectionHelperForScope
+ * @param {thin.core.ListSectionShape} previousSectionHelperForScope
  */
-thin.editor.ListSectionShape.prototype.setPreviousSectionShape = function(previousSectionHelperForScope) {
+thin.core.ListSectionShape.prototype.setPreviousSectionShape = function(previousSectionHelperForScope) {
   if (goog.isDefAndNotNull(previousSectionHelperForScope)) {
     this.previousSectionShape_ = previousSectionHelperForScope;
   }
@@ -274,21 +274,21 @@ thin.editor.ListSectionShape.prototype.setPreviousSectionShape = function(previo
 
 
 /**
- * @return {thin.editor.ListSectionShape}
+ * @return {thin.core.ListSectionShape}
  */
-thin.editor.ListSectionShape.prototype.getNextSectionShape = function() {
+thin.core.ListSectionShape.prototype.getNextSectionShape = function() {
   return this.nextSectionShape_;
 };
 
 
 /**
- * @return {Array.<thin.editor.ListSectionShape>}
+ * @return {Array.<thin.core.ListSectionShape>}
  */
-thin.editor.ListSectionShape.prototype.getNextSectionShapes = function() {
+thin.core.ListSectionShape.prototype.getNextSectionShapes = function() {
   var sectionShapes = [];
   
   /**
-   * @param {thin.editor.ListSectionShape=} opt_sectionShape
+   * @param {thin.core.ListSectionShape=} opt_sectionShape
    */
   var getNextSectionShape = goog.bind(function(opt_sectionShape) {
     if (goog.isDef(opt_sectionShape)) {
@@ -305,16 +305,16 @@ thin.editor.ListSectionShape.prototype.getNextSectionShapes = function() {
 
 
 /**
- * @return {thin.editor.ListSectionShape}
+ * @return {thin.core.ListSectionShape}
  */
-thin.editor.ListSectionShape.prototype.getPreviousSectionShape = function() {
+thin.core.ListSectionShape.prototype.getPreviousSectionShape = function() {
   return this.previousSectionShape_;
 };
 
 
 /** @inheritDoc */
-thin.editor.ListSectionShape.prototype.disposeInternal = function() {
-  thin.editor.ListSectionShape.superClass_.disposeInternal.call(this);
+thin.core.ListSectionShape.prototype.disposeInternal = function() {
+  thin.core.ListSectionShape.superClass_.disposeInternal.call(this);
   this.group_.dispose();
   this.manager_.dispose();
   
@@ -327,45 +327,45 @@ thin.editor.ListSectionShape.prototype.disposeInternal = function() {
 
 
 /**
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ListShape} affiliationGroup
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ListShape} affiliationGroup
  * @param {string} sectionName
  * @param {Element=} opt_element
  * @constructor
- * @extends {thin.editor.ListSectionShape}
+ * @extends {thin.core.ListSectionShape}
  */
-thin.editor.HeaderSectionShape = function(layout, affiliationGroup, sectionName, opt_element) {
-  thin.editor.ListSectionShape.call(this, layout, affiliationGroup, sectionName, opt_element);
+thin.core.HeaderSectionShape = function(layout, affiliationGroup, sectionName, opt_element) {
+  thin.core.ListSectionShape.call(this, layout, affiliationGroup, sectionName, opt_element);
 };
-goog.inherits(thin.editor.HeaderSectionShape, thin.editor.ListSectionShape);
+goog.inherits(thin.core.HeaderSectionShape, thin.core.ListSectionShape);
 
 
 /**
  * @type {boolean}
  */
-thin.editor.HeaderSectionShape.DEFAULT_ENABLED = true;
+thin.core.HeaderSectionShape.DEFAULT_ENABLED = true;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.HeaderSectionShape.prototype.defaultHeightRate_ = 0.2;
+thin.core.HeaderSectionShape.prototype.defaultHeightRate_ = 0.2;
 
 
 /**
  * @return {boolean}
  */
-thin.editor.HeaderSectionShape.prototype.isEnabled = function() {
+thin.core.HeaderSectionShape.prototype.isEnabled = function() {
   return /** @type {boolean} */(thin.getValIfNotDef(this.isEnabled_, 
-             thin.editor.HeaderSectionShape.DEFAULT_ENABLED));
+             thin.core.HeaderSectionShape.DEFAULT_ENABLED));
 };
 
 
 /**
  * @private
  */
-thin.editor.HeaderSectionShape.prototype.createPropertyComponent_ = function() {
+thin.core.HeaderSectionShape.prototype.createPropertyComponent_ = function() {
 
   var scope = this;
   var listShape = this.affiliationGroup_;
@@ -398,7 +398,7 @@ thin.editor.HeaderSectionShape.prototype.createPropertyComponent_ = function() {
 };
 
 
-thin.editor.HeaderSectionShape.prototype.updateProperties = function() {
+thin.core.HeaderSectionShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
   if (!proppane.isTarget(this)) {
     this.getLayout().updatePropertiesForEmpty();
@@ -411,45 +411,45 @@ thin.editor.HeaderSectionShape.prototype.updateProperties = function() {
 
 
 /**
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ListShape} affiliationGroup
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ListShape} affiliationGroup
  * @param {string} sectionName
  * @param {Element=} opt_element
  * @constructor
- * @extends {thin.editor.ListSectionShape}
+ * @extends {thin.core.ListSectionShape}
  */
-thin.editor.DetailSectionShape = function(layout, affiliationGroup, sectionName, opt_element) {
-  thin.editor.ListSectionShape.call(this, layout, affiliationGroup, sectionName, opt_element);
+thin.core.DetailSectionShape = function(layout, affiliationGroup, sectionName, opt_element) {
+  thin.core.ListSectionShape.call(this, layout, affiliationGroup, sectionName, opt_element);
 };
-goog.inherits(thin.editor.DetailSectionShape, thin.editor.ListSectionShape);
+goog.inherits(thin.core.DetailSectionShape, thin.core.ListSectionShape);
 
 
 /**
  * @type {boolean}
  */
-thin.editor.DetailSectionShape.DEFAULT_ENABLED = true;
+thin.core.DetailSectionShape.DEFAULT_ENABLED = true;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.DetailSectionShape.prototype.defaultHeightRate_ = 0.2;
+thin.core.DetailSectionShape.prototype.defaultHeightRate_ = 0.2;
 
 
 /**
  * @return {boolean}
  */
-thin.editor.DetailSectionShape.prototype.isEnabled = function() {
+thin.core.DetailSectionShape.prototype.isEnabled = function() {
   return /** @type {boolean} */(thin.getValIfNotDef(this.isEnabled_, 
-             thin.editor.DetailSectionShape.DEFAULT_ENABLED));
+             thin.core.DetailSectionShape.DEFAULT_ENABLED));
 };
 
 
 /**
  * @private
  */
-thin.editor.DetailSectionShape.prototype.createPropertyComponent_ = function() {
+thin.core.DetailSectionShape.prototype.createPropertyComponent_ = function() {
 
   var scope = this;
   var listShape = this.affiliationGroup_;
@@ -473,7 +473,7 @@ thin.editor.DetailSectionShape.prototype.createPropertyComponent_ = function() {
 };
 
 
-thin.editor.DetailSectionShape.prototype.updateProperties = function() {
+thin.core.DetailSectionShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
   if (!proppane.isTarget(this)) {
     this.getLayout().updatePropertiesForEmpty();
@@ -485,45 +485,45 @@ thin.editor.DetailSectionShape.prototype.updateProperties = function() {
 
 
 /**
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ListShape} affiliationGroup
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ListShape} affiliationGroup
  * @param {string} sectionName
  * @param {Element=} opt_element
  * @constructor
- * @extends {thin.editor.ListSectionShape}
+ * @extends {thin.core.ListSectionShape}
  */
-thin.editor.PageFooterSectionShape = function(layout, affiliationGroup, sectionName, opt_element) {
-  thin.editor.ListSectionShape.call(this, layout, affiliationGroup, sectionName, opt_element);
+thin.core.PageFooterSectionShape = function(layout, affiliationGroup, sectionName, opt_element) {
+  thin.core.ListSectionShape.call(this, layout, affiliationGroup, sectionName, opt_element);
 };
-goog.inherits(thin.editor.PageFooterSectionShape, thin.editor.ListSectionShape);
+goog.inherits(thin.core.PageFooterSectionShape, thin.core.ListSectionShape);
 
 
 /**
  * @type {boolean}
  */
-thin.editor.PageFooterSectionShape.DEFAULT_ENABLED = true;
+thin.core.PageFooterSectionShape.DEFAULT_ENABLED = true;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.PageFooterSectionShape.prototype.defaultHeightRate_ = 0.15;
+thin.core.PageFooterSectionShape.prototype.defaultHeightRate_ = 0.15;
 
 
 /**
  * @return {boolean}
  */
-thin.editor.PageFooterSectionShape.prototype.isEnabled = function() {
+thin.core.PageFooterSectionShape.prototype.isEnabled = function() {
   return /** @type {boolean} */(thin.getValIfNotDef(this.isEnabled_, 
-             thin.editor.PageFooterSectionShape.DEFAULT_ENABLED));
+             thin.core.PageFooterSectionShape.DEFAULT_ENABLED));
 };
 
 
 /**
  * @private
  */
-thin.editor.PageFooterSectionShape.prototype.createPropertyComponent_ = function() {
+thin.core.PageFooterSectionShape.prototype.createPropertyComponent_ = function() {
 
   var scope = this;
   var listShape = this.affiliationGroup_;
@@ -556,7 +556,7 @@ thin.editor.PageFooterSectionShape.prototype.createPropertyComponent_ = function
 };
 
 
-thin.editor.PageFooterSectionShape.prototype.updateProperties = function() {
+thin.core.PageFooterSectionShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
   if (!proppane.isTarget(this)) {
     this.getLayout().updatePropertiesForEmpty();
@@ -569,45 +569,45 @@ thin.editor.PageFooterSectionShape.prototype.updateProperties = function() {
 
 
 /**
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ListShape} affiliationGroup
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ListShape} affiliationGroup
  * @param {string} sectionName
  * @param {Element=} opt_element
  * @constructor
- * @extends {thin.editor.ListSectionShape}
+ * @extends {thin.core.ListSectionShape}
  */
-thin.editor.FooterSectionShape = function(layout, affiliationGroup, sectionName, opt_element) {
-  thin.editor.ListSectionShape.call(this, layout, affiliationGroup, sectionName, opt_element);
+thin.core.FooterSectionShape = function(layout, affiliationGroup, sectionName, opt_element) {
+  thin.core.ListSectionShape.call(this, layout, affiliationGroup, sectionName, opt_element);
 };
-goog.inherits(thin.editor.FooterSectionShape, thin.editor.ListSectionShape);
+goog.inherits(thin.core.FooterSectionShape, thin.core.ListSectionShape);
 
 
 /**
  * @type {boolean}
  */
-thin.editor.FooterSectionShape.DEFAULT_ENABLED = true;
+thin.core.FooterSectionShape.DEFAULT_ENABLED = true;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.FooterSectionShape.prototype.defaultHeightRate_ = 0.15;
+thin.core.FooterSectionShape.prototype.defaultHeightRate_ = 0.15;
 
 
 /**
  * @return {boolean}
  */
-thin.editor.FooterSectionShape.prototype.isEnabled = function() {
+thin.core.FooterSectionShape.prototype.isEnabled = function() {
   return /** @type {boolean} */(thin.getValIfNotDef(this.isEnabled_, 
-             thin.editor.FooterSectionShape.DEFAULT_ENABLED));
+             thin.core.FooterSectionShape.DEFAULT_ENABLED));
 };
 
 
 /**
  * @private
  */
-thin.editor.FooterSectionShape.prototype.createPropertyComponent_ = function() {
+thin.core.FooterSectionShape.prototype.createPropertyComponent_ = function() {
 
   var scope = this;
   var listShape = this.affiliationGroup_;
@@ -640,7 +640,7 @@ thin.editor.FooterSectionShape.prototype.createPropertyComponent_ = function() {
 };
 
 
-thin.editor.FooterSectionShape.prototype.updateProperties = function() {
+thin.core.FooterSectionShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
   if (!proppane.isTarget(this)) {
     this.getLayout().updatePropertiesForEmpty();

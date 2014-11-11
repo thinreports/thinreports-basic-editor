@@ -13,28 +13,28 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.PageNumberOutline');
+goog.provide('thin.core.PageNumberOutline');
 
 goog.require('goog.math.Rect');
-goog.require('thin.core.Font');
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.ModuleOutline');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
+goog.require('thin.Font');
+goog.require('thin.core.Rect');
+goog.require('thin.core.ModuleOutline');
+goog.require('thin.core.TextStyle.HorizonAlignType');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.PageNumberOutline = function(element, layout, stroke, fill) {
+thin.core.PageNumberOutline = function(element, layout, stroke, fill) {
   goog.base(this, element, layout, stroke, fill);
 };
-goog.inherits(thin.editor.PageNumberOutline, thin.editor.Rect);
-goog.mixin(thin.editor.PageNumberOutline.prototype, thin.editor.ModuleOutline.prototype);
+goog.inherits(thin.core.PageNumberOutline, thin.core.Rect);
+goog.mixin(thin.core.PageNumberOutline.prototype, thin.core.ModuleOutline.prototype);
 
 
 /**
@@ -43,12 +43,12 @@ goog.mixin(thin.editor.PageNumberOutline.prototype, thin.editor.ModuleOutline.pr
  * @param {number} clientPosX
  * @param {number} clientPosY
  */
-thin.editor.PageNumberOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
+thin.core.PageNumberOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
   var workspace = this.getLayout().getWorkspace();
   var bounds = new goog.math.Rect(
         Math.min(startPosX, clientPosX), startPosY,
         thin.numberWithPrecision(Math.abs(startPosX - clientPosX)),
-        thin.core.Font.getHeight(
+        thin.Font.getHeight(
           workspace.getUiStatusForFontFamily(), 
           workspace.getUiStatusForFontSize()));
   this.setBounds(bounds);
@@ -60,7 +60,7 @@ thin.editor.PageNumberOutline.prototype.setBoundsByCoordinate = function(startPo
  * @param {goog.math.Coordinate} transLate
  * @param {boolean} isVertex
  */
-thin.editor.PageNumberOutline.prototype.setBoundsByScale = function(scale, transLate, isVertex) {
+thin.core.PageNumberOutline.prototype.setBoundsByScale = function(scale, transLate, isVertex) {
   var scaleX = scale.x;
   var scaleY = scale.y;
   var deltaX = this.getLeft() - transLate.x;
@@ -78,7 +78,7 @@ thin.editor.PageNumberOutline.prototype.setBoundsByScale = function(scale, trans
 /**
  * @return {goog.graphics.Element}
  */
-thin.editor.PageNumberOutline.prototype.toShape = function() {
+thin.core.PageNumberOutline.prototype.toShape = function() {
   return this.getLayout().createPageNumberShape();
 };
 
@@ -86,7 +86,7 @@ thin.editor.PageNumberOutline.prototype.toShape = function() {
 /**
  * @return {Object}
  */
-thin.editor.PageNumberOutline.prototype.getInitShapeProperties = function() {
+thin.core.PageNumberOutline.prototype.getInitShapeProperties = function() {
   var workspace = this.getLayout().getWorkspace();
   return {
     BOUNDS: this.getBounds(),
@@ -95,14 +95,14 @@ thin.editor.PageNumberOutline.prototype.getInitShapeProperties = function() {
     UNDERLINE: workspace.getUiStatusForUnderlIne(),
     LINETHROUGH: workspace.getUiStatusForLineThrough(),
     FAMILY: workspace.getUiStatusForFontFamily(),
-    ANCHOR: thin.editor.TextStyle.HorizonAlignType.MIDDLE,
+    ANCHOR: thin.core.TextStyle.HorizonAlignType.MIDDLE,
     SIZE: workspace.getUiStatusForFontSize()
   }
 };
 
 
 /** @inheritDoc */
-thin.editor.PageNumberOutline.prototype.disposeInternal = function() {
+thin.core.PageNumberOutline.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   this.disposeInternalForOutline();
 };

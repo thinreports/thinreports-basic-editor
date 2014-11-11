@@ -13,15 +13,15 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.core.platform.String');
+goog.provide('thin.platform.String');
 
-goog.require('thin.core.platform');
+goog.require('thin.platform');
 
 
 /**
  * @param {string} data
  * @return {string}
  */
-thin.core.platform.String.toBase64 = function(data) {
+thin.platform.String.toBase64 = function(data) {
   return goog.global.btoa(unescape(encodeURIComponent(data)));
 };

@@ -13,64 +13,64 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.EllipseShape');
+goog.provide('thin.core.EllipseShape');
 
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
-goog.require('thin.editor.Ellipse');
-goog.require('thin.editor.ModuleShape');
+goog.require('thin.core.Ellipse');
+goog.require('thin.core.ModuleShape');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.Ellipse}
+ * @extends {thin.core.Ellipse}
  */
-thin.editor.EllipseShape = function(element, layout, stroke, fill) {
-  thin.editor.Ellipse.call(this, element, layout, stroke, fill);
-  this.setCss(thin.editor.EllipseShape.CLASSID);
+thin.core.EllipseShape = function(element, layout, stroke, fill) {
+  thin.core.Ellipse.call(this, element, layout, stroke, fill);
+  this.setCss(thin.core.EllipseShape.CLASSID);
 };
-goog.inherits(thin.editor.EllipseShape, thin.editor.Ellipse);
-goog.mixin(thin.editor.EllipseShape.prototype, thin.editor.ModuleShape.prototype);
+goog.inherits(thin.core.EllipseShape, thin.core.Ellipse);
+goog.mixin(thin.core.EllipseShape.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
  * @type {string}
  */
-thin.editor.EllipseShape.CLASSID = 's-ellipse';
+thin.core.EllipseShape.CLASSID = 's-ellipse';
 
 
 /**
  * @type {goog.graphics.SolidFill}
  */
-thin.editor.EllipseShape.DEFAULT_FILL = new goog.graphics.SolidFill('#FFFFFF');
+thin.core.EllipseShape.DEFAULT_FILL = new goog.graphics.SolidFill('#FFFFFF');
 
 
 /**
  * @type {goog.graphics.Stroke}
  */
-thin.editor.EllipseShape.DEFAULT_STROKE = new goog.graphics.Stroke(1, '#000000');
+thin.core.EllipseShape.DEFAULT_STROKE = new goog.graphics.Stroke(1, '#000000');
 
 
 /**
  * @return {string}
  */
-thin.editor.EllipseShape.prototype.getClassId = function() {
-  return thin.editor.EllipseShape.CLASSID;
+thin.core.EllipseShape.prototype.getClassId = function() {
+  return thin.core.EllipseShape.CLASSID;
 };
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.editor.EllipseShape}
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.EllipseShape}
  */
-thin.editor.EllipseShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-  var shape = new thin.editor.EllipseShape(element, layout, 
+thin.core.EllipseShape.createFromElement = function(element, layout, opt_shapeIdManager) {
+  var shape = new thin.core.EllipseShape(element, layout, 
                 new goog.graphics.Stroke(
                       Number(layout.getElementAttribute(element, 'stroke-width')),
                       layout.getElementAttribute(element, 'stroke')),
@@ -84,16 +84,16 @@ thin.editor.EllipseShape.createFromElement = function(element, layout, opt_shape
 };
 
 
-thin.editor.EllipseShape.prototype.setDefaultOutline = function() {
+thin.core.EllipseShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getEllipseOutline());
 };
 
 
 /**
- * @param {thin.editor.Helpers} helpers
- * @param {thin.editor.MultiOutlineHelper} multiOutlineHelper
+ * @param {thin.core.Helpers} helpers
+ * @param {thin.core.MultiOutlineHelper} multiOutlineHelper
  */
-thin.editor.EllipseShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
+thin.core.EllipseShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
   multiOutlineHelper.toEllipseOutline(this, helpers);
 };
 
@@ -101,7 +101,7 @@ thin.editor.EllipseShape.prototype.toOutline = function(helpers, multiOutlineHel
 /**
  * @return {Function}
  */
-thin.editor.EllipseShape.prototype.getCloneCreator = function() {
+thin.core.EllipseShape.prototype.getCloneCreator = function() {
 
   var sourceCoordinate = new goog.math.Coordinate(this.getLeft(), this.getTop());
   var deltaCoordinateForList = this.getDeltaCoordinateForList().clone();
@@ -116,11 +116,11 @@ thin.editor.EllipseShape.prototype.getCloneCreator = function() {
   var isAffiliationListShape = this.isAffiliationListShape();
   
   /**
-   * @param {thin.editor.Layout} layout
+   * @param {thin.core.Layout} layout
    * @param {boolean=} opt_isAdaptDeltaForList
    * @param {goog.graphics.SvgGroupElement=} opt_renderTo
    * @param {goog.math.Coordinate=} opt_basisCoordinate
-   * @return {thin.editor.EllipseShape}
+   * @return {thin.core.EllipseShape}
    */
   return function(layout, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate) {
 
@@ -144,7 +144,7 @@ thin.editor.EllipseShape.prototype.getCloneCreator = function() {
 /**
  * @private
  */
-thin.editor.EllipseShape.prototype.createPropertyComponent_ = function() {
+thin.core.EllipseShape.prototype.createPropertyComponent_ = function() {
   var scope = this;
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
@@ -239,7 +239,7 @@ thin.editor.EllipseShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(strokeWidthCombProperty , shapeGroup, 'stroke-width');
 
-  var strokeDashTypeName = thin.editor.ModuleElement.StrokeTypeName;
+  var strokeDashTypeName = thin.core.ModuleElement.StrokeTypeName;
   var strokeDashSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_stroke_type'));
   var strokeDashSelect = strokeDashSelectProperty.getValueControl();
   strokeDashSelect.setTextAlignLeft();
@@ -272,7 +272,7 @@ thin.editor.EllipseShape.prototype.createPropertyComponent_ = function() {
 /**
  * @return {Object}
  */
-thin.editor.EllipseShape.prototype.getProperties = function() {
+thin.core.EllipseShape.prototype.getProperties = function() {
 
   return {
     'left': this.getLeft(),
@@ -290,7 +290,7 @@ thin.editor.EllipseShape.prototype.getProperties = function() {
 };
 
 
-thin.editor.EllipseShape.prototype.updateProperties = function() {
+thin.core.EllipseShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
   if (!proppane.isTarget(this)) {
     this.getLayout().updatePropertiesForEmpty();
@@ -299,8 +299,8 @@ thin.editor.EllipseShape.prototype.updateProperties = function() {
   }
 
   var properties = this.getProperties();
-  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-  var noneColor = thin.editor.ModuleShape.NONE;
+  var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
+  var noneColor = thin.core.ModuleShape.NONE;
   
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
@@ -318,12 +318,12 @@ thin.editor.EllipseShape.prototype.updateProperties = function() {
   }
   proppane.getPropertyControl('stroke').setValue(stroke);
   var strokeWidth = properties['stroke-width'];
-  if (thin.isExactlyEqual(strokeWidth, thin.editor.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
+  if (thin.isExactlyEqual(strokeWidth, thin.core.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
     strokeWidth = proppaneBlank;
   }
   proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
   
-  proppane.getPropertyControl('stroke-dash-type').setValue(thin.editor.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
+  proppane.getPropertyControl('stroke-dash-type').setValue(thin.core.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
   proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
   proppane.getPropertyControl('desc').setValue(properties['desc']);
 };
@@ -332,7 +332,7 @@ thin.editor.EllipseShape.prototype.updateProperties = function() {
 /**
  * @param {Object} properties
  */
-thin.editor.EllipseShape.prototype.setInitShapeProperties = function(properties) {
+thin.core.EllipseShape.prototype.setInitShapeProperties = function(properties) {
   var radius = properties.RADIUS;
   var center = properties.CENTER;
   this.setRadius(radius.x, radius.y);
@@ -342,7 +342,7 @@ thin.editor.EllipseShape.prototype.setInitShapeProperties = function(properties)
 
 
 /** @inheritDoc */
-thin.editor.EllipseShape.prototype.disposeInternal = function() {
-  thin.editor.EllipseShape.superClass_.disposeInternal.call(this);
+thin.core.EllipseShape.prototype.disposeInternal = function() {
+  thin.core.EllipseShape.superClass_.disposeInternal.call(this);
   this.disposeInternalForShape();
 };

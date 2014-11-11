@@ -13,18 +13,18 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.AbstractManager');
+goog.provide('thin.core.AbstractManager');
 
 goog.require('goog.array');
 goog.require('goog.Disposable');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.AbstractManager = function(layout) {
+thin.core.AbstractManager = function(layout) {
   
   /**
    * @type {Array}
@@ -33,25 +33,25 @@ thin.editor.AbstractManager = function(layout) {
   this.factors_ = [];
   
   /**
-   * @type {thin.editor.Workspace}
+   * @type {thin.core.Workspace}
    * @private
    */
   this.workspace_ = layout.getWorkspace();
   
   /**
-   * @type {thin.editor.Layout}
+   * @type {thin.core.Layout}
    * @private
    */
   this.layout_ = layout;
 };
-goog.inherits(thin.editor.AbstractManager, goog.Disposable);
+goog.inherits(thin.core.AbstractManager, goog.Disposable);
 
 
 /**
  * @param {Object} factor
  * @param {number=} opt_index
  */
-thin.editor.AbstractManager.prototype.add = function(factor, opt_index) {
+thin.core.AbstractManager.prototype.add = function(factor, opt_index) {
   if (goog.isNumber(opt_index)) {
     goog.array.insertAt(this.factors_, factor, opt_index);
   } else {
@@ -63,7 +63,7 @@ thin.editor.AbstractManager.prototype.add = function(factor, opt_index) {
 /**
  * @param {Array} factors
  */
-thin.editor.AbstractManager.prototype.set = function(factors) {
+thin.core.AbstractManager.prototype.set = function(factors) {
   this.factors_ = goog.array.clone(factors);
 };
 
@@ -71,7 +71,7 @@ thin.editor.AbstractManager.prototype.set = function(factors) {
 /**
  * @return {Array}
  */
-thin.editor.AbstractManager.prototype.get = function() {
+thin.core.AbstractManager.prototype.get = function() {
   return this.factors_;
 };
 
@@ -79,7 +79,7 @@ thin.editor.AbstractManager.prototype.get = function() {
 /**
  * @return {Array}
  */
-thin.editor.AbstractManager.prototype.getClone = function() {
+thin.core.AbstractManager.prototype.getClone = function() {
   return goog.array.clone(this.factors_);
 };
 
@@ -87,7 +87,7 @@ thin.editor.AbstractManager.prototype.getClone = function() {
 /**
  * Remove all factors.
  */
-thin.editor.AbstractManager.prototype.clear = function() {
+thin.core.AbstractManager.prototype.clear = function() {
   goog.array.clear(this.factors_);
 };
 
@@ -95,7 +95,7 @@ thin.editor.AbstractManager.prototype.clear = function() {
 /**
  * @param {*} factor
  */
-thin.editor.AbstractManager.prototype.remove = function(factor) {
+thin.core.AbstractManager.prototype.remove = function(factor) {
   goog.array.remove(this.factors_, factor);
 };
 
@@ -103,7 +103,7 @@ thin.editor.AbstractManager.prototype.remove = function(factor) {
 /**
  * @return {number}
  */
-thin.editor.AbstractManager.prototype.getCount = function() {
+thin.core.AbstractManager.prototype.getCount = function() {
   return this.factors_.length;
 };
 
@@ -111,7 +111,7 @@ thin.editor.AbstractManager.prototype.getCount = function() {
 /**
  * @return {boolean}
  */
-thin.editor.AbstractManager.prototype.isEmpty = function() {
+thin.core.AbstractManager.prototype.isEmpty = function() {
   return goog.array.isEmpty(this.factors_);
 };
 
@@ -119,7 +119,7 @@ thin.editor.AbstractManager.prototype.isEmpty = function() {
 /**
  * @return {boolean}
  */
-thin.editor.AbstractManager.prototype.isSingle = function() {
+thin.core.AbstractManager.prototype.isSingle = function() {
   if (!this.isEmpty()) {
     return this.getCount() == 1;
   } else {
@@ -131,7 +131,7 @@ thin.editor.AbstractManager.prototype.isSingle = function() {
 /**
  * @return {boolean}
  */
-thin.editor.AbstractManager.prototype.isMultiple = function() {
+thin.core.AbstractManager.prototype.isMultiple = function() {
   return !this.isEmpty() && !this.isSingle();
 };
 
@@ -140,7 +140,7 @@ thin.editor.AbstractManager.prototype.isMultiple = function() {
  * @param {*} target
  * @return {boolean}
  */
-thin.editor.AbstractManager.prototype.isExist = function(target) {
+thin.core.AbstractManager.prototype.isExist = function(target) {
   return -1 != goog.array.findIndex(this.factors_, function(factor) {
     return factor == target;
   });
@@ -148,8 +148,8 @@ thin.editor.AbstractManager.prototype.isExist = function(target) {
 
 
 /** @inheritDoc */
-thin.editor.AbstractManager.prototype.disposeInternal = function() {
-  thin.editor.AbstractManager.superClass_.disposeInternal.call(this);
+thin.core.AbstractManager.prototype.disposeInternal = function() {
+  thin.core.AbstractManager.superClass_.disposeInternal.call(this);
   delete this.factors_;
   delete this.workspace_;
   delete this.layout_;

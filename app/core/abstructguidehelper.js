@@ -13,38 +13,38 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.AbstractGuideHelper');
-goog.provide('thin.editor.AbstractGuideHelper.PositionName');
+goog.provide('thin.core.AbstractGuideHelper');
+goog.provide('thin.core.AbstractGuideHelper.PositionName');
 
 goog.require('goog.dom');
 goog.require('goog.style');
 goog.require('goog.object');
-goog.require('thin.editor.Component');
-goog.require('thin.editor.Cursor');
-goog.require('thin.editor.Cursor.Type');
+goog.require('thin.core.Component');
+goog.require('thin.core.Cursor');
+goog.require('thin.core.Cursor.Type');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.Component}
+ * @extends {thin.core.Component}
  */
-thin.editor.AbstractGuideHelper = function(layout) {
+thin.core.AbstractGuideHelper = function(layout) {
   
   /**
-   * @type {Object.<thin.editor.GuideResizer|thin.editor.ListGuideResizer>}
+   * @type {Object.<thin.core.GuideResizer|thin.core.ListGuideResizer>}
    * @private
    */
   this.resizers_ = {};
-  thin.editor.Component.call(this, layout);
+  thin.core.Component.call(this, layout);
 };
-goog.inherits(thin.editor.AbstractGuideHelper, thin.editor.Component);
+goog.inherits(thin.core.AbstractGuideHelper, thin.core.Component);
 
 
 /**
  * @enum {string}
  */
-thin.editor.AbstractGuideHelper.PositionName = {
+thin.core.AbstractGuideHelper.PositionName = {
   TLEFT: 'TLEFT',
   TCENTER: 'TCENTER',
   TRIGHT: 'TRIGHT',
@@ -60,42 +60,42 @@ thin.editor.AbstractGuideHelper.PositionName = {
  * @type {goog.graphics.Element}
  * @private
  */
-thin.editor.AbstractGuideHelper.prototype.targetShape_;
+thin.core.AbstractGuideHelper.prototype.targetShape_;
 
 
 /**
- * @type {thin.editor.GuideBody}
+ * @type {thin.core.GuideBody}
  * @private
  */
-thin.editor.AbstractGuideHelper.prototype.body_;
+thin.core.AbstractGuideHelper.prototype.body_;
 
 
-thin.editor.AbstractGuideHelper.prototype.setup = goog.abstractMethod;
+thin.core.AbstractGuideHelper.prototype.setup = goog.abstractMethod;
 
 
-thin.editor.AbstractGuideHelper.prototype.init = goog.abstractMethod;
+thin.core.AbstractGuideHelper.prototype.init = goog.abstractMethod;
 
 
-thin.editor.AbstractGuideHelper.prototype.setBounds = goog.abstractMethod;
+thin.core.AbstractGuideHelper.prototype.setBounds = goog.abstractMethod;
 
 
-thin.editor.AbstractGuideHelper.prototype.adjustToTargetShapeBounds = goog.abstractMethod;
+thin.core.AbstractGuideHelper.prototype.adjustToTargetShapeBounds = goog.abstractMethod;
 
 
 /**
  * @private
  */
-thin.editor.AbstractGuideHelper.prototype.createResizers_ = goog.abstractMethod;
+thin.core.AbstractGuideHelper.prototype.createResizers_ = goog.abstractMethod;
 
 
-thin.editor.AbstractGuideHelper.prototype.reapplySizeAndStroke = goog.abstractMethod;
+thin.core.AbstractGuideHelper.prototype.reapplySizeAndStroke = goog.abstractMethod;
 
 
 /**
  * @param {string} positionName
- * @return {thin.editor.GuideResizer|thin.editor.ListGuideResizer}
+ * @return {thin.core.GuideResizer|thin.core.ListGuideResizer}
  */
-thin.editor.AbstractGuideHelper.prototype.getResizerByPositionName = function(positionName) {
+thin.core.AbstractGuideHelper.prototype.getResizerByPositionName = function(positionName) {
   return this.resizers_[positionName];
 };
 
@@ -103,7 +103,7 @@ thin.editor.AbstractGuideHelper.prototype.getResizerByPositionName = function(po
 /**
  * @param {goog.graphics.Element} shape
  */
-thin.editor.AbstractGuideHelper.prototype.setTargetShape = function(shape) {
+thin.core.AbstractGuideHelper.prototype.setTargetShape = function(shape) {
   this.targetShape_ = shape;
 };
 
@@ -111,7 +111,7 @@ thin.editor.AbstractGuideHelper.prototype.setTargetShape = function(shape) {
 /**
  * @return {goog.graphics.Element}
  */
-thin.editor.AbstractGuideHelper.prototype.getTargetShape = function() {
+thin.core.AbstractGuideHelper.prototype.getTargetShape = function() {
   return this.targetShape_;
 };
 
@@ -119,13 +119,13 @@ thin.editor.AbstractGuideHelper.prototype.getTargetShape = function() {
 /**
  * @param {goog.graphics.Element} target
  */
-thin.editor.AbstractGuideHelper.prototype.setEnableAndTargetShape = function(target) {
+thin.core.AbstractGuideHelper.prototype.setEnableAndTargetShape = function(target) {
   this.setVisibled(true);
   this.setTargetShape(target);
 };
 
 
-thin.editor.AbstractGuideHelper.prototype.setDisable = function() {
+thin.core.AbstractGuideHelper.prototype.setDisable = function() {
   this.setVisibled(false);
 };
 
@@ -133,7 +133,7 @@ thin.editor.AbstractGuideHelper.prototype.setDisable = function() {
 /**
  * @return {boolean}
  */
-thin.editor.AbstractGuideHelper.prototype.isEnable = function() {
+thin.core.AbstractGuideHelper.prototype.isEnable = function() {
   return this.isVisibled();
 };
 
@@ -141,7 +141,7 @@ thin.editor.AbstractGuideHelper.prototype.isEnable = function() {
 /**
  * @return {number}
  */
-thin.editor.AbstractGuideHelper.prototype.getLeft = function() {
+thin.core.AbstractGuideHelper.prototype.getLeft = function() {
   return this.body_.getLeft();
 };
 
@@ -149,7 +149,7 @@ thin.editor.AbstractGuideHelper.prototype.getLeft = function() {
 /**
  * @return {number}
  */
-thin.editor.AbstractGuideHelper.prototype.getTop = function() {
+thin.core.AbstractGuideHelper.prototype.getTop = function() {
   return this.body_.getTop();
 };
 
@@ -157,7 +157,7 @@ thin.editor.AbstractGuideHelper.prototype.getTop = function() {
 /**
  * @return {number}
  */
-thin.editor.AbstractGuideHelper.prototype.getWidth = function() {
+thin.core.AbstractGuideHelper.prototype.getWidth = function() {
   return this.body_.getWidth();
 };
 
@@ -165,7 +165,7 @@ thin.editor.AbstractGuideHelper.prototype.getWidth = function() {
 /**
  * @return {number}
  */
-thin.editor.AbstractGuideHelper.prototype.getHeight = function() {
+thin.core.AbstractGuideHelper.prototype.getHeight = function() {
   return this.body_.getHeight();
 };
 
@@ -173,7 +173,7 @@ thin.editor.AbstractGuideHelper.prototype.getHeight = function() {
 /**
  * @return {goog.math.Rect}
  */
-thin.editor.AbstractGuideHelper.prototype.getBounds = function() {
+thin.core.AbstractGuideHelper.prototype.getBounds = function() {
   return this.body_.getBounds();
 };
 
@@ -181,9 +181,9 @@ thin.editor.AbstractGuideHelper.prototype.getBounds = function() {
 /**
  * @param {string} cursorName
  */
-thin.editor.AbstractGuideHelper.prototype.setResizeCursor = function(cursorName) {
+thin.core.AbstractGuideHelper.prototype.setResizeCursor = function(cursorName) {
   var layout = this.getLayout();
-  var cursor = new thin.editor.Cursor(cursorName);
+  var cursor = new thin.core.Cursor(cursorName);
   var dragLayer = layout.getHelpers().getDragLayer();
   dragLayer.setCursor(cursor);
   layout.setElementCursor(dragLayer.getElement(), cursor);
@@ -192,10 +192,10 @@ thin.editor.AbstractGuideHelper.prototype.setResizeCursor = function(cursorName)
 };
 
 
-thin.editor.AbstractGuideHelper.prototype.removeResizeCursor = function() {
+thin.core.AbstractGuideHelper.prototype.removeResizeCursor = function() {
   var layout = this.getLayout();
-  var defaultType = thin.editor.Cursor.Type.DEFAULT;
-  var cursor = new thin.editor.Cursor(defaultType);
+  var defaultType = thin.core.Cursor.Type.DEFAULT;
+  var cursor = new thin.core.Cursor(defaultType);
   var dragLayer = layout.getHelpers().getDragLayer();
   dragLayer.setCursor(cursor);
   layout.setElementCursor(dragLayer.getElement(), cursor);
@@ -205,7 +205,7 @@ thin.editor.AbstractGuideHelper.prototype.removeResizeCursor = function() {
 
 
 /** @inheritDoc */
-thin.editor.AbstractGuideHelper.prototype.disposeInternal = function() {
+thin.core.AbstractGuideHelper.prototype.disposeInternal = function() {
   this.body_.dispose();
   goog.object.forEach(this.resizers_, function(resizer) {
     resizer.dispose();
@@ -213,5 +213,5 @@ thin.editor.AbstractGuideHelper.prototype.disposeInternal = function() {
   delete this.targetShape_;
   delete this.body_;
   delete this.resizers_;
-  thin.editor.AbstractGuideHelper.superClass_.disposeInternal.call(this);
+  thin.core.AbstractGuideHelper.superClass_.disposeInternal.call(this);
 };

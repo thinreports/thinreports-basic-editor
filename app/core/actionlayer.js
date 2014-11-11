@@ -13,48 +13,48 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ActionLayer');
+goog.provide('thin.core.ActionLayer');
 
-goog.require('thin.editor.Layer');
+goog.require('thin.core.Layer');
 
 
 /**
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.Cursor=} opt_cursor
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.Cursor=} opt_cursor
  * @constructor
- * @extends {thin.editor.Layer}
+ * @extends {thin.core.Layer}
  */
-thin.editor.ActionLayer = function(layout, opt_cursor) {
+thin.core.ActionLayer = function(layout, opt_cursor) {
   goog.base(this, layout, opt_cursor);
 };
-goog.inherits(thin.editor.ActionLayer, thin.editor.Layer);
+goog.inherits(thin.core.ActionLayer, thin.core.Layer);
 
 
 /**
- * @type {thin.editor.SvgDrawer}
+ * @type {thin.core.SvgDrawer}
  * @private
  */
-thin.editor.ActionLayer.prototype.drawer_;
+thin.core.ActionLayer.prototype.drawer_;
 
 
 /**
- * @param {thin.editor.SvgDrawer} drawer
+ * @param {thin.core.SvgDrawer} drawer
  */
-thin.editor.ActionLayer.prototype.setDrawer = function(drawer) {
+thin.core.ActionLayer.prototype.setDrawer = function(drawer) {
   this.drawer_ = drawer;
 };
 
 
 /**
- * @return {thin.editor.SvgDrawer}
+ * @return {thin.core.SvgDrawer}
  */
-thin.editor.ActionLayer.prototype.getDrawer = function() {
+thin.core.ActionLayer.prototype.getDrawer = function() {
   return this.drawer_;
 };
 
 
 /** @inheritDoc */
-thin.editor.ActionLayer.prototype.disposeInternal = function() {
+thin.core.ActionLayer.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
 
   if (this.drawer_) {

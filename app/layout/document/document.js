@@ -22,7 +22,7 @@ goog.require('thin.layout.document.HTML');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  */
 thin.layout.document.generate = function(layout) {
   var fileName = layout.getWorkspace().getSuggestedFileName();
@@ -48,7 +48,7 @@ thin.layout.document.generate = function(layout) {
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @return {string}
  */
 thin.layout.document.generateCSV = function(layout) {
@@ -60,7 +60,7 @@ thin.layout.document.generateCSV = function(layout) {
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @return {string}
  */
 thin.layout.document.generateHTML = function(layout) {

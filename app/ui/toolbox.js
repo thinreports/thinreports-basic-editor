@@ -131,7 +131,7 @@ thin.ui.Toolbox.prototype.disposeInternal = function() {
 
 
 /**
- * @param {thin.editor.toolaction.AbstractAction} toolAction
+ * @param {thin.core.toolaction.AbstractAction} toolAction
  * @param {thin.ui.Icon} icon
  * @constructor
  * @extends {thin.ui.IconButton}

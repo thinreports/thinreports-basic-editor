@@ -16,13 +16,13 @@
 goog.provide('thin.layout.File');
 
 goog.require('goog.Disposable');
-goog.require('thin.core.File');
-goog.require('thin.core.platform');
-goog.require('thin.core.platform.File');
+goog.require('thin.File');
+goog.require('thin.platform');
+goog.require('thin.platform.File');
 
 
 /**
- * @param {thin.core.File=} opt_file
+ * @param {thin.File=} opt_file
  * @constructor
  * @extends {goog.Disposable}
  */
@@ -68,7 +68,7 @@ thin.layout.File.ACCEPTS_ = [{
 
 
 /**
- * @type {thin.core.File}
+ * @type {thin.File}
  * @private
  */
 thin.layout.File.prototype.file_;
@@ -78,7 +78,7 @@ thin.layout.File.prototype.file_;
  * @param {Object.<Function>} callbacks
  */
 thin.layout.File.openDialog = function(callbacks) {
-  thin.core.platform.File.open(thin.layout.File.ACCEPTS_, {
+  thin.platform.File.open(thin.layout.File.ACCEPTS_, {
     success: function(entry) {
       thin.layout.File.handleSelectFileToOpen(callbacks, entry);
     },
@@ -96,8 +96,8 @@ thin.layout.File.handleSelectFileToOpen = function(callbacks, entry) {
   entry.file(function(file) {
     var fileReader = new FileReader();
     fileReader.onload = function(e) {
-      thin.core.platform.File.getPath(entry, function(path) {
-        var coreFile = new thin.core.File(entry, path, e.target.result);
+      thin.platform.File.getPath(entry, function(path) {
+        var coreFile = new thin.File(entry, path, e.target.result);
         callbacks.success(new thin.layout.File(coreFile));
       });
     };
@@ -112,7 +112,7 @@ thin.layout.File.handleSelectFileToOpen = function(callbacks, entry) {
  * @param {Object.<Function>} callbacks
  */
 thin.layout.File.saveDialog = function(fileName, callbacks) {
-  thin.core.platform.File.saveAs(fileName, thin.layout.File.ACCEPTS_, {
+  thin.platform.File.saveAs(fileName, thin.layout.File.ACCEPTS_, {
     success: function(entry) {
       thin.layout.File.handleSelectFileToSave(callbacks, entry);
     },
@@ -127,8 +127,8 @@ thin.layout.File.saveDialog = function(fileName, callbacks) {
  * @param {FileEntry} entry
  */
 thin.layout.File.handleSelectFileToSave = function(callbacks, entry) {
-  thin.core.platform.File.getPath(entry, function(path) {
-    var coreFile = new thin.core.File(entry, path);
+  thin.platform.File.getPath(entry, function(path) {
+    var coreFile = new thin.File(entry, path);
     callbacks.success(new thin.layout.File(coreFile));
   });
 };
@@ -144,7 +144,7 @@ thin.layout.File.prototype.save = function(content) {
 
 
 /**
- * @param {thin.core.File} file
+ * @param {thin.File} file
  */
 thin.layout.File.prototype.setFile = function(file) {
   this.file_ = file;

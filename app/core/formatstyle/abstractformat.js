@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.formatstyles.AbstractFormat');
+goog.provide('thin.core.formatstyles.AbstractFormat');
 
 goog.require('goog.Disposable');
 
@@ -22,9 +22,9 @@ goog.require('goog.Disposable');
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.formatstyles.AbstractFormat = function() {
+thin.core.formatstyles.AbstractFormat = function() {
   goog.base(this);
 };
-goog.inherits(thin.editor.formatstyles.AbstractFormat, goog.Disposable);
+goog.inherits(thin.core.formatstyles.AbstractFormat, goog.Disposable);
 
-thin.editor.formatstyles.AbstractFormat.prototype.inspect = goog.abstractMethod;
+thin.core.formatstyles.AbstractFormat.prototype.inspect = goog.abstractMethod;

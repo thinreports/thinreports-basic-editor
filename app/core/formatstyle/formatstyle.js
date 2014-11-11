@@ -13,19 +13,19 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.formatstyles');
-goog.provide('thin.editor.formatstyles.FormatType');
-goog.provide('thin.editor.formatstyles.FormatTypeName');
+goog.provide('thin.core.formatstyles');
+goog.provide('thin.core.formatstyles.FormatType');
+goog.provide('thin.core.formatstyles.FormatTypeName');
 
-goog.require('thin.editor.formatstyles.NumberFormat');
-goog.require('thin.editor.formatstyles.DatetimeFormat');
-goog.require('thin.editor.formatstyles.PaddingFormat');
+goog.require('thin.core.formatstyles.NumberFormat');
+goog.require('thin.core.formatstyles.DatetimeFormat');
+goog.require('thin.core.formatstyles.PaddingFormat');
 
 
 /**
  * @enum {string}
  */
-thin.editor.formatstyles.FormatType = {
+thin.core.formatstyles.FormatType = {
   NONE: '',
   DATETIME: 'datetime',
   NUMBER: 'number',
@@ -36,7 +36,7 @@ thin.editor.formatstyles.FormatType = {
 /**
  * @enum {string}
  */
-thin.editor.formatstyles.FormatTypeName = {
+thin.core.formatstyles.FormatTypeName = {
   NONE: '　',
   DATETIME: thin.t('label_datetime_format'),
   NUMBER: thin.t('label_number_format'),
@@ -48,10 +48,10 @@ thin.editor.formatstyles.FormatTypeName = {
  * @param {string} formatTypeValue
  * @return {string}
  */
-thin.editor.formatstyles.getFormatNameFromType = function(formatTypeValue) {
+thin.core.formatstyles.getFormatNameFromType = function(formatTypeValue) {
 
-  var formatType = thin.editor.formatstyles.FormatType;
-  var formatTypeName = thin.editor.formatstyles.FormatTypeName;
+  var formatType = thin.core.formatstyles.FormatType;
+  var formatTypeName = thin.core.formatstyles.FormatTypeName;
   
   var typeName;
   
@@ -77,10 +77,10 @@ thin.editor.formatstyles.getFormatNameFromType = function(formatTypeValue) {
  * @param {string} targetTypeName
  * @return {string}
  */
-thin.editor.formatstyles.getFormatTypeFromName = function(targetTypeName) {
+thin.core.formatstyles.getFormatTypeFromName = function(targetTypeName) {
 
-  var formatType = thin.editor.formatstyles.FormatType;
-  var formatTypeName = thin.editor.formatstyles.FormatTypeName;
+  var formatType = thin.core.formatstyles.FormatType;
+  var formatTypeName = thin.core.formatstyles.FormatTypeName;
   
   var type;
   
@@ -103,27 +103,27 @@ thin.editor.formatstyles.getFormatTypeFromName = function(targetTypeName) {
 
 
 /**
- * @param {thin.editor.formatstyles.AbstractFormat} format
+ * @param {thin.core.formatstyles.AbstractFormat} format
  * @return {boolean}
  */
-thin.editor.formatstyles.isNumberFormat = function(format) {
-  return format instanceof thin.editor.formatstyles.NumberFormat;
+thin.core.formatstyles.isNumberFormat = function(format) {
+  return format instanceof thin.core.formatstyles.NumberFormat;
 };
 
 
 /**
- * @param {thin.editor.formatstyles.AbstractFormat} format
+ * @param {thin.core.formatstyles.AbstractFormat} format
  * @return {boolean}
  */
-thin.editor.formatstyles.isDatetimeFormat = function(format) {
-  return format instanceof thin.editor.formatstyles.DatetimeFormat;
+thin.core.formatstyles.isDatetimeFormat = function(format) {
+  return format instanceof thin.core.formatstyles.DatetimeFormat;
 };
 
 
 /**
- * @param {thin.editor.formatstyles.AbstractFormat} format
+ * @param {thin.core.formatstyles.AbstractFormat} format
  * @return {boolean}
  */
-thin.editor.formatstyles.isPaddingFormat = function(format) {
-  return format instanceof thin.editor.formatstyles.PaddingFormat;
+thin.core.formatstyles.isPaddingFormat = function(format) {
+  return format instanceof thin.core.formatstyles.PaddingFormat;
 };

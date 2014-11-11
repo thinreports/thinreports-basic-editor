@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.MultiOutlineHelper');
+goog.provide('thin.core.MultiOutlineHelper');
 
 goog.require('goog.dom');
 goog.require('goog.style');
@@ -21,48 +21,48 @@ goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.fx.Dragger');
 goog.require('goog.fx.Dragger.EventType');
-goog.require('thin.editor.Cursor');
-goog.require('thin.editor.Cursor.Type');
-goog.require('thin.editor.SvgDragger');
-goog.require('thin.editor.Component');
+goog.require('thin.core.Cursor');
+goog.require('thin.core.Cursor.Type');
+goog.require('thin.core.SvgDragger');
+goog.require('thin.core.Component');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.Component}
+ * @extends {thin.core.Component}
  */
-thin.editor.MultiOutlineHelper = function(layout) {
-  thin.editor.Component.call(this, layout);
+thin.core.MultiOutlineHelper = function(layout) {
+  thin.core.Component.call(this, layout);
 };
-goog.inherits(thin.editor.MultiOutlineHelper, thin.editor.Component);
+goog.inherits(thin.core.MultiOutlineHelper, thin.core.Component);
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.MultiOutlineHelper.MULTIPLE_ = true;
+thin.core.MultiOutlineHelper.MULTIPLE_ = true;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.MultiOutlineHelper.COLOR_ = '#94C3F5';
+thin.core.MultiOutlineHelper.COLOR_ = '#94C3F5';
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.MultiOutlineHelper.FILL_ = new goog.graphics.SolidFill(thin.editor.MultiOutlineHelper.COLOR_, 0.3);
+thin.core.MultiOutlineHelper.FILL_ = new goog.graphics.SolidFill(thin.core.MultiOutlineHelper.COLOR_, 0.3);
 
 
 /**
  * @return {boolean}
  */
-thin.editor.MultiOutlineHelper.prototype.canResizeWidth = function() {
+thin.core.MultiOutlineHelper.prototype.canResizeWidth = function() {
   return true;
 };
 
@@ -70,12 +70,12 @@ thin.editor.MultiOutlineHelper.prototype.canResizeWidth = function() {
 /**
  * @return {boolean}
  */
-thin.editor.MultiOutlineHelper.prototype.canResizeHeight = function() {
+thin.core.MultiOutlineHelper.prototype.canResizeHeight = function() {
   return true;
 };
 
 
-thin.editor.MultiOutlineHelper.prototype.init = function() {
+thin.core.MultiOutlineHelper.prototype.init = function() {
   var layout = this.getLayout();
   var helpers = layout.getHelpers();
   var dragLayer = helpers.getDragLayer();
@@ -85,7 +85,7 @@ thin.editor.MultiOutlineHelper.prototype.init = function() {
   var guideOutline = guide.getGuideOutline();
   var body = goog.dom.getDocument().body;
   
-  var dragger = new thin.editor.SvgDragger(guideOutline, this);
+  var dragger = new thin.core.SvgDragger(guideOutline, this);
   dragger.setDragModeByTranslate(true);
   
   var eventType = goog.fx.Dragger.EventType;
@@ -102,8 +102,8 @@ thin.editor.MultiOutlineHelper.prototype.init = function() {
     this.setAdsorptionX(helpers.getAdsorptionX());
     this.setAdsorptionY(helpers.getAdsorptionY());
     
-    var cursorTypeMove = thin.editor.Cursor.Type.MOVE;
-    var cursorMove = new thin.editor.Cursor(cursorTypeMove);
+    var cursorTypeMove = thin.core.Cursor.Type.MOVE;
+    var cursorMove = new thin.core.Cursor(cursorTypeMove);
     goog.style.setStyle(body, 'cursor', cursorTypeMove);
     dragLayer.setCursor(cursorMove);
     layout.setElementCursor(dragLayer.getElement(), cursorMove);
@@ -127,8 +127,8 @@ thin.editor.MultiOutlineHelper.prototype.init = function() {
     var reLocationX = startPositionX - currentPositionX;
     var reLocationY = startPositionY - currentPositionY;
     
-    var cursorTypeDefault = thin.editor.Cursor.Type.DEFAULT;
-    var cursorDefault = new thin.editor.Cursor(cursorTypeDefault);
+    var cursorTypeDefault = thin.core.Cursor.Type.DEFAULT;
+    var cursorDefault = new thin.core.Cursor(cursorTypeDefault);
     goog.style.setStyle(body, 'cursor', cursorTypeDefault);
     dragLayer.setCursor(cursorDefault);
     layout.setElementCursor(dragLayer.getElement(), cursorDefault);
@@ -164,7 +164,7 @@ thin.editor.MultiOutlineHelper.prototype.init = function() {
 /**
  * @param {number} left
  */
-thin.editor.MultiOutlineHelper.prototype.setLeft = function(left) {
+thin.core.MultiOutlineHelper.prototype.setLeft = function(left) {
   this.left_ = thin.numberWithPrecision(
                  left - this.getParentTransLateX());
 };
@@ -173,7 +173,7 @@ thin.editor.MultiOutlineHelper.prototype.setLeft = function(left) {
 /**
  * @param {number} top
  */
-thin.editor.MultiOutlineHelper.prototype.setTop = function(top) {
+thin.core.MultiOutlineHelper.prototype.setTop = function(top) {
   this.top_ = thin.numberWithPrecision(
                 top - this.getParentTransLateY());
 };
@@ -182,7 +182,7 @@ thin.editor.MultiOutlineHelper.prototype.setTop = function(top) {
 /**
  * @param {number} width
  */
-thin.editor.MultiOutlineHelper.prototype.setWidth = function(width) {
+thin.core.MultiOutlineHelper.prototype.setWidth = function(width) {
   this.width_ = thin.numberWithPrecision(width);
 };
 
@@ -190,7 +190,7 @@ thin.editor.MultiOutlineHelper.prototype.setWidth = function(width) {
 /**
  * @param {number} height
  */
-thin.editor.MultiOutlineHelper.prototype.setHeight = function(height) {
+thin.core.MultiOutlineHelper.prototype.setHeight = function(height) {
   this.height_ = thin.numberWithPrecision(height);
 };
 
@@ -200,7 +200,7 @@ thin.editor.MultiOutlineHelper.prototype.setHeight = function(height) {
  * @param {number} transLateY
  * @param {Array.<goog.graphics.Element>} shapes
  */
-thin.editor.MultiOutlineHelper.prototype.setTransLate = function(transLateX, transLateY, shapes) {
+thin.core.MultiOutlineHelper.prototype.setTransLate = function(transLateX, transLateY, shapes) {
   var outline;
   var left;
   var top;
@@ -219,7 +219,7 @@ thin.editor.MultiOutlineHelper.prototype.setTransLate = function(transLateX, tra
 /**
  * @param {goog.graphics.Element} outline
  */
-thin.editor.MultiOutlineHelper.prototype.disable = function(outline) {
+thin.core.MultiOutlineHelper.prototype.disable = function(outline) {
   this.getLayout().setOutlineForSingle(outline.getTargetShape());
   goog.dom.removeNode(outline.getElement());
   outline.dispose();
@@ -230,8 +230,8 @@ thin.editor.MultiOutlineHelper.prototype.disable = function(outline) {
 /**
  * @return {boolean}
  */
-thin.editor.MultiOutlineHelper.prototype.isMultiple = function() {
-  return thin.editor.MultiOutlineHelper.MULTIPLE_;
+thin.core.MultiOutlineHelper.prototype.isMultiple = function() {
+  return thin.core.MultiOutlineHelper.MULTIPLE_;
 };
 
 
@@ -239,9 +239,9 @@ thin.editor.MultiOutlineHelper.prototype.isMultiple = function() {
  * @param {goog.graphics.Element} outline
  * @param {goog.graphics.Element} shape
  */
-thin.editor.MultiOutlineHelper.prototype.setOutlineForMultiple = function(outline, shape) {
+thin.core.MultiOutlineHelper.prototype.setOutlineForMultiple = function(outline, shape) {
   var layout = this.getLayout();
-  var cursorMove = new thin.editor.Cursor(thin.editor.Cursor.Type.MOVE);
+  var cursorMove = new thin.core.Cursor(thin.core.Cursor.Type.MOVE);
   outline.setCursor(cursorMove);
   layout.setElementCursor(outline.getElement(), cursorMove);
   outline.setupMouseDownHandler();
@@ -253,11 +253,11 @@ thin.editor.MultiOutlineHelper.prototype.setOutlineForMultiple = function(outlin
 
 /**
  * @param {goog.graphics.Element} shape
- * @param {thin.editor.Helpers} helpers
+ * @param {thin.core.Helpers} helpers
  */
-thin.editor.MultiOutlineHelper.prototype.toRectOutline = function(shape, helpers) {
+thin.core.MultiOutlineHelper.prototype.toRectOutline = function(shape, helpers) {
   var outline = helpers.createRectOutline(this, shape.getStroke(),
-                    thin.editor.MultiOutlineHelper.FILL_, {
+                    thin.core.MultiOutlineHelper.FILL_, {
                       'stroke-opacity': 0
                     });
   outline.setBounds(shape.getBounds());
@@ -268,13 +268,13 @@ thin.editor.MultiOutlineHelper.prototype.toRectOutline = function(shape, helpers
 
 /**
  * @param {goog.graphics.Element} shape
- * @param {thin.editor.Helpers} helpers
+ * @param {thin.core.Helpers} helpers
  */
-thin.editor.MultiOutlineHelper.prototype.toEllipseOutline = function(shape, helpers) {
+thin.core.MultiOutlineHelper.prototype.toEllipseOutline = function(shape, helpers) {
   var radius = shape.getRadius();
   var center = shape.getCenterCoordinate();
   var outline = helpers.createEllipseOutline(this, null, 
-                    thin.editor.MultiOutlineHelper.FILL_, {
+                    thin.core.MultiOutlineHelper.FILL_, {
                       'stroke-opacity': 0
                     });
   outline.setBounds(shape.getBounds());
@@ -284,11 +284,11 @@ thin.editor.MultiOutlineHelper.prototype.toEllipseOutline = function(shape, help
 
 /**
  * @param {goog.graphics.Element} shape
- * @param {thin.editor.Helpers} helpers
+ * @param {thin.core.Helpers} helpers
  */
-thin.editor.MultiOutlineHelper.prototype.toLineOutline = function(shape, helpers) {
+thin.core.MultiOutlineHelper.prototype.toLineOutline = function(shape, helpers) {
   var coordinate = shape.getCoordinate();
-  var stroke = new goog.graphics.Stroke(shape.getStroke().getWidth(), thin.editor.MultiOutlineHelper.COLOR_);
+  var stroke = new goog.graphics.Stroke(shape.getStroke().getWidth(), thin.core.MultiOutlineHelper.COLOR_);
   var outline = helpers.createLineOutline(this, stroke, {
     'x1': coordinate.x0,
     'y1': coordinate.y0,
@@ -303,11 +303,11 @@ thin.editor.MultiOutlineHelper.prototype.toLineOutline = function(shape, helpers
 
 /**
  * @param {goog.graphics.Element} shape
- * @param {thin.editor.Helpers} helpers
+ * @param {thin.core.Helpers} helpers
  */
-thin.editor.MultiOutlineHelper.prototype.toTextOutline = function(shape, helpers) {
+thin.core.MultiOutlineHelper.prototype.toTextOutline = function(shape, helpers) {
   var outline = helpers.createTextOutline(this, shape.getStroke(), 
-                    thin.editor.MultiOutlineHelper.FILL_, {
+                    thin.core.MultiOutlineHelper.FILL_, {
                       'stroke-opacity': 0
                     });
   outline.setBounds(shape.getBounds());
@@ -317,11 +317,11 @@ thin.editor.MultiOutlineHelper.prototype.toTextOutline = function(shape, helpers
 
 /**
  * @param {goog.graphics.Element} shape
- * @param {thin.editor.Helpers} helpers
+ * @param {thin.core.Helpers} helpers
  */
-thin.editor.MultiOutlineHelper.prototype.toTblockOutline = function(shape, helpers) {
+thin.core.MultiOutlineHelper.prototype.toTblockOutline = function(shape, helpers) {
   var outline = helpers.createTblockOutline(this, shape.getStroke(),
-                    thin.editor.MultiOutlineHelper.FILL_, {
+                    thin.core.MultiOutlineHelper.FILL_, {
                       'stroke-opacity': 0
                     });
   outline.setBounds(shape.getBounds());
@@ -330,12 +330,12 @@ thin.editor.MultiOutlineHelper.prototype.toTblockOutline = function(shape, helpe
 
 
 /**
- * @param {thin.editor.PageNumberShape} shape
- * @param {thin.editor.Helpers} helpers
+ * @param {thin.core.PageNumberShape} shape
+ * @param {thin.core.Helpers} helpers
  */
-thin.editor.MultiOutlineHelper.prototype.toPageNumberOutline = function(shape, helpers) {
+thin.core.MultiOutlineHelper.prototype.toPageNumberOutline = function(shape, helpers) {
   var outline = helpers.createPageNumberOutline(this, shape.getStroke(),
-                    thin.editor.MultiOutlineHelper.FILL_, {
+                    thin.core.MultiOutlineHelper.FILL_, {
                       'stroke-opacity': 0
                     });
   outline.setBounds(shape.getBounds());
@@ -345,11 +345,11 @@ thin.editor.MultiOutlineHelper.prototype.toPageNumberOutline = function(shape, h
 
 /**
  * @param {goog.graphics.Element} shape
- * @param {thin.editor.Helpers} helpers
+ * @param {thin.core.Helpers} helpers
  */
-thin.editor.MultiOutlineHelper.prototype.toImageblockOutline = function(shape, helpers) {
+thin.core.MultiOutlineHelper.prototype.toImageblockOutline = function(shape, helpers) {
   var outline = helpers.createImageblockOutline(this, null, 
-                    thin.editor.MultiOutlineHelper.FILL_, {
+                    thin.core.MultiOutlineHelper.FILL_, {
                       'stroke-opacity': 0
                     });
   outline.setBounds(shape.getBounds());
@@ -359,11 +359,11 @@ thin.editor.MultiOutlineHelper.prototype.toImageblockOutline = function(shape, h
 
 /**
  * @param {goog.graphics.Element} shape
- * @param {thin.editor.Helpers} helpers
+ * @param {thin.core.Helpers} helpers
  */
-thin.editor.MultiOutlineHelper.prototype.toImageOutline = function(shape, helpers) {
+thin.core.MultiOutlineHelper.prototype.toImageOutline = function(shape, helpers) {
   var outline = helpers.createImageOutline(this, null,
-                    thin.editor.MultiOutlineHelper.FILL_, {
+                    thin.core.MultiOutlineHelper.FILL_, {
                       'stroke-opacity': 0
                     });
   outline.setBounds(shape.getBounds());

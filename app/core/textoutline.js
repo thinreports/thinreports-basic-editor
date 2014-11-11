@@ -13,25 +13,25 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.TextOutline');
+goog.provide('thin.core.TextOutline');
 
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.ModuleOutline');
+goog.require('thin.core.Rect');
+goog.require('thin.core.ModuleOutline');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.TextOutline = function(element, layout, stroke, fill) {
-  thin.editor.Rect.call(this, element, layout, stroke, fill);
+thin.core.TextOutline = function(element, layout, stroke, fill) {
+  thin.core.Rect.call(this, element, layout, stroke, fill);
 };
-goog.inherits(thin.editor.TextOutline, thin.editor.Rect);
-goog.mixin(thin.editor.TextOutline.prototype, thin.editor.ModuleOutline.prototype);
+goog.inherits(thin.core.TextOutline, thin.core.Rect);
+goog.mixin(thin.core.TextOutline.prototype, thin.core.ModuleOutline.prototype);
 
 
 /**
@@ -40,7 +40,7 @@ goog.mixin(thin.editor.TextOutline.prototype, thin.editor.ModuleOutline.prototyp
  * @param {goog.math.Coordinate} transLate
  * @param {boolean} isVertex
  */
-thin.editor.TextOutline.prototype.setBoundsByScale = function(scale, transLate, isVertex) {
+thin.core.TextOutline.prototype.setBoundsByScale = function(scale, transLate, isVertex) {
   var scaleX = scale.x;
   var scaleY = scale.y;
   var deltaX = this.getLeft() - transLate.x;
@@ -56,9 +56,9 @@ thin.editor.TextOutline.prototype.setBoundsByScale = function(scale, transLate, 
 
 
 /**
- * @return {thin.editor.TextShape}
+ * @return {thin.core.TextShape}
  */
-thin.editor.TextOutline.prototype.toShape = function() {
+thin.core.TextOutline.prototype.toShape = function() {
   return this.getLayout().createTextShape();
 };
 
@@ -66,7 +66,7 @@ thin.editor.TextOutline.prototype.toShape = function() {
 /**
  * @return {Object}
  */
-thin.editor.TextOutline.prototype.getInitShapeProperties = function() {
+thin.core.TextOutline.prototype.getInitShapeProperties = function() {
   var workspace = this.getLayout().getWorkspace();
   
   return {
@@ -83,7 +83,7 @@ thin.editor.TextOutline.prototype.getInitShapeProperties = function() {
 
 
 /** @inheritDoc */
-thin.editor.TextOutline.prototype.disposeInternal = function() {
-  thin.editor.TextOutline.superClass_.disposeInternal.call(this);
+thin.core.TextOutline.prototype.disposeInternal = function() {
+  thin.core.TextOutline.superClass_.disposeInternal.call(this);
   this.disposeInternalForOutline();
 };

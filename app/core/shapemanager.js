@@ -13,17 +13,17 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ShapeManager');
+goog.provide('thin.core.ShapeManager');
 
-goog.require('thin.editor.AbstractManager');
+goog.require('thin.core.AbstractManager');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.AbstractManager}
+ * @extends {thin.core.AbstractManager}
  */
-thin.editor.ShapeManager = function(layout) {
+thin.core.ShapeManager = function(layout) {
   goog.base(this, layout);
 
   /**
@@ -32,14 +32,14 @@ thin.editor.ShapeManager = function(layout) {
    */
   this.identifiers_ = [];
 };
-goog.inherits(thin.editor.ShapeManager, thin.editor.AbstractManager);
+goog.inherits(thin.core.ShapeManager, thin.core.AbstractManager);
 
 
 /**
  * @param {string} identifier
  * @return {goog.graphics.Element}
  */
-thin.editor.ShapeManager.prototype.getShapeByIdentifier = function(identifier) {
+thin.core.ShapeManager.prototype.getShapeByIdentifier = function(identifier) {
   var index = goog.array.indexOf(this.identifiers_, this.makeKey_(identifier));
   return index != -1 ? this.get()[index] : null;
 };
@@ -48,20 +48,20 @@ thin.editor.ShapeManager.prototype.getShapeByIdentifier = function(identifier) {
 /**
  * @return {Array.<number>}
  */
-thin.editor.ShapeManager.prototype.getIdentifiers = function() {
+thin.core.ShapeManager.prototype.getIdentifiers = function() {
   return this.identifiers_;
 };
 
 
 /** @override */
-thin.editor.ShapeManager.prototype.add = function(shape) {
+thin.core.ShapeManager.prototype.add = function(shape) {
   goog.base(this, 'add', shape);
   this.identifiers_[this.identifiers_.length] = this.makeKey_(shape.getIdentifier());
 };
 
 
 /** @override */
-thin.editor.ShapeManager.prototype.set = function(shapes) {
+thin.core.ShapeManager.prototype.set = function(shapes) {
   goog.base(this, 'set', shapes);
   
   delete this.identifiers_;
@@ -78,7 +78,7 @@ thin.editor.ShapeManager.prototype.set = function(shapes) {
 /**
  * @return {Array}
  */
-thin.editor.ShapeManager.prototype.getCloneIdentifiers = function() {
+thin.core.ShapeManager.prototype.getCloneIdentifiers = function() {
   return goog.array.clone(this.identifiers_);
 };
 
@@ -88,27 +88,27 @@ thin.editor.ShapeManager.prototype.getCloneIdentifiers = function() {
  * @return {number}
  * @private
  */
-thin.editor.ShapeManager.prototype.makeKey_ = function(identifier) {
+thin.core.ShapeManager.prototype.makeKey_ = function(identifier) {
   return Number(identifier.replace(/[^\d]+/g, ''));
 };
 
 
 /** @override */
-thin.editor.ShapeManager.prototype.remove = function(shape) {
+thin.core.ShapeManager.prototype.remove = function(shape) {
   goog.base(this, 'remove', shape);
   goog.array.remove(this.identifiers_, this.makeKey_(shape.getIdentifier()));
 };
 
 
 /** @override */
-thin.editor.ShapeManager.prototype.clear = function() {
+thin.core.ShapeManager.prototype.clear = function() {
   goog.base(this, 'clear');
   goog.array.clear(this.identifiers_);
 };
 
 
 /** @override */
-thin.editor.ShapeManager.prototype.disposeInternal = function() {
+thin.core.ShapeManager.prototype.disposeInternal = function() {
   goog.array.forEach(this.get(), function(shape) {
     shape.dispose();
   });

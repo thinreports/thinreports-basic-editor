@@ -13,20 +13,20 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.IdShape');
+goog.provide('thin.core.IdShape');
 
-goog.require('thin.editor.AbstractText');
+goog.require('thin.core.AbstractText');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.AbstractText}
+ * @extends {thin.core.AbstractText}
  */
-thin.editor.IdShape = function(element, layout, stroke, fill) {
-  thin.editor.AbstractText.call(this, element, layout, stroke, fill);
+thin.core.IdShape = function(element, layout, stroke, fill) {
+  thin.core.AbstractText.call(this, element, layout, stroke, fill);
 };
-goog.inherits(thin.editor.IdShape, thin.editor.AbstractText);
+goog.inherits(thin.core.IdShape, thin.core.AbstractText);

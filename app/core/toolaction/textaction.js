@@ -13,27 +13,27 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.toolaction.TextAction');
+goog.provide('thin.core.toolaction.TextAction');
 
-goog.require('thin.editor.toolaction.DrawAction');
+goog.require('thin.core.toolaction.DrawAction');
 
 
 /**
  * @constructor
- * @extends {thin.editor.toolaction.DrawAction}
+ * @extends {thin.core.toolaction.DrawAction}
  */
-thin.editor.toolaction.TextAction = function() {
-  thin.editor.toolaction.DrawAction.call(this);
+thin.core.toolaction.TextAction = function() {
+  thin.core.toolaction.DrawAction.call(this);
 };
-goog.inherits(thin.editor.toolaction.TextAction, thin.editor.toolaction.DrawAction);
+goog.inherits(thin.core.toolaction.TextAction, thin.core.toolaction.DrawAction);
 
 
 /**
  * @param {goog.events.BrowserEvent} e
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @protected
  */
-thin.editor.toolaction.TextAction.prototype.handleActionInternal = function(e, workspace) {
+thin.core.toolaction.TextAction.prototype.handleActionInternal = function(e, workspace) {
 
   var helpers = this.layout.getHelpers();
   var listHelper = helpers.getListHelper();
@@ -58,12 +58,12 @@ thin.editor.toolaction.TextAction.prototype.handleActionInternal = function(e, w
 /**
  * @param {goog.events.BrowserEvent} e
  * @param {goog.graphics.Element} outline
- * @param {thin.editor.Layer} handler
+ * @param {thin.core.Layer} handler
  * @param {boolean} captureActiveForStart
  * @param {boolean=} opt_isCancelDraw
  * @protected
  */
-thin.editor.toolaction.TextAction.prototype.handleEndAction = function(
+thin.core.toolaction.TextAction.prototype.handleEndAction = function(
     e, outline, handler, captureActiveForStart, opt_isCancelDraw) {
 
   var layout = this.layout;
@@ -88,7 +88,7 @@ thin.editor.toolaction.TextAction.prototype.handleEndAction = function(
     guide.adjustToTargetShapeBounds();
   }
 
-  thin.editor.toolaction.TextAction.superClass_.handleEndAction.call(this, 
+  thin.core.toolaction.TextAction.superClass_.handleEndAction.call(this, 
       e, outline, handler, captureActiveForStart);
   
   layout.getWorkspace().getAction().actionTextEdit(true);

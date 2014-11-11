@@ -18,15 +18,15 @@ goog.provide('thin.layout.document.Base');
 goog.require('goog.Disposable');
 goog.require('goog.string');
 goog.require('goog.array');
-goog.require('thin.core.platform.File');
+goog.require('thin.platform.File');
 goog.require('thin.layout.FormatPage.PaperName');
 goog.require('thin.layout.FormatPage.DirectionType');
-goog.require('thin.editor.ListHelper.SectionName');
-goog.require('thin.editor.formatstyles');
+goog.require('thin.core.ListHelper.SectionName');
+goog.require('thin.core.formatstyles');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
  * @extends {goog.Disposable}
  */
@@ -34,7 +34,7 @@ thin.layout.document.Base = function(layout) {
   goog.base(this);
 
   /**
-   * @type {thin.editor.Layout}
+   * @type {thin.core.Layout}
    * @protected
    */
   this.layout = layout;
@@ -127,7 +127,7 @@ thin.layout.document.Base.prototype.getPaperInfo_ = function() {
 
 
 /**
- * @param {thin.editor.StateManager} manager
+ * @param {thin.core.StateManager} manager
  * @param {Array=} opt_data
  * @private
  */
@@ -157,7 +157,7 @@ thin.layout.document.Base.prototype.createData_ = function(manager, opt_data) {
 
   if (!goog.array.isEmpty(shapes.tblock)) {
     var tblock = {
-      type: thin.editor.TblockShape.CLASSID,
+      type: thin.core.TblockShape.CLASSID,
       name: 'Text Block',
       shapes: []
     };
@@ -167,7 +167,7 @@ thin.layout.document.Base.prototype.createData_ = function(manager, opt_data) {
 
   if (!goog.array.isEmpty(shapes.iblock)) {
     var iblock = {
-      type: thin.editor.ImageblockShape.CLASSID,
+      type: thin.core.ImageblockShape.CLASSID,
       name: 'Image Block',
       shapes: []
     };
@@ -177,7 +177,7 @@ thin.layout.document.Base.prototype.createData_ = function(manager, opt_data) {
 
   if (!goog.array.isEmpty(shapes.pageno)) {
     var pageno = {
-      type: thin.editor.PageNumberShape.CLASSID,
+      type: thin.core.PageNumberShape.CLASSID,
       name: 'Page Number',
       shapes: []
     };
@@ -197,7 +197,7 @@ thin.layout.document.Base.prototype.createData_ = function(manager, opt_data) {
 
   if (!goog.array.isEmpty(shapes.list)) {
     var list = {
-      type: thin.editor.ListShape.CLASSID,
+      type: thin.core.ListShape.CLASSID,
       name: 'List',
       shapes: []
     };
@@ -235,7 +235,7 @@ thin.layout.document.Base.prototype.createBasicData_ = function(shapes, data) {
  */
 thin.layout.document.Base.prototype.createTblockData_ = function(shapes, data) {
   var shapeName = 'Text Block';
-  var shapeType = thin.editor.TblockShape.CLASSID;
+  var shapeType = thin.core.TblockShape.CLASSID;
 
   goog.array.forEach(shapes, function(shape) {
     goog.array.insert(data, {
@@ -247,7 +247,7 @@ thin.layout.document.Base.prototype.createTblockData_ = function(shapes, data) {
       refId: shape.getRefId(),
       value: shape.getDefaultValueOfLink(),
       formatBase: shape.getBaseFormat(),
-      formatType: thin.editor.formatstyles.getFormatNameFromType(shape.getFormatType()),
+      formatType: thin.core.formatstyles.getFormatNameFromType(shape.getFormatType()),
       formatStyle: (shape.getFormatStyle() ? shape.getFormatStyle().inspect() : ''),
       desc: shape.getDesc()
     });
@@ -262,7 +262,7 @@ thin.layout.document.Base.prototype.createTblockData_ = function(shapes, data) {
  */
 thin.layout.document.Base.prototype.createPagenumberData_ = function(shapes, data) {
   var shapeName = 'Page Number';
-  var shapeType = thin.editor.PageNumberShape.CLASSID;
+  var shapeType = thin.core.PageNumberShape.CLASSID;
 
   goog.array.forEach(shapes, function(shape) {
     goog.array.insert(data, {
@@ -285,7 +285,7 @@ thin.layout.document.Base.prototype.createPagenumberData_ = function(shapes, dat
  */
 thin.layout.document.Base.prototype.createImageblockData_ = function(shapes, data) {
   var shapeName = 'Image Block';
-  var shapeType = thin.editor.ImageblockShape.CLASSID;
+  var shapeType = thin.core.ImageblockShape.CLASSID;
 
   goog.array.forEach(shapes, function(shape) {
     goog.array.insert(data, {
@@ -306,8 +306,8 @@ thin.layout.document.Base.prototype.createImageblockData_ = function(shapes, dat
  */
 thin.layout.document.Base.prototype.createListData_ = function(shapes, data) {
   var shapeName = 'List';
-  var shapeType = thin.editor.ListShape.CLASSID;
-  var listSectionName = thin.editor.ListHelper.SectionName;
+  var shapeType = thin.core.ListShape.CLASSID;
+  var listSectionName = thin.core.ListHelper.SectionName;
   var listData, section;
 
   goog.array.forEach(shapes, function(shape) {
@@ -352,7 +352,7 @@ thin.layout.document.Base.prototype.createListData_ = function(shapes, data) {
 
 
 /**
- * @param {thin.editor.ListSectionShape} section
+ * @param {thin.core.ListSectionShape} section
  * @param {string} sectionName
  * @param {Object} listData
  * @return {boolean}
@@ -400,19 +400,19 @@ thin.layout.document.Base.prototype.formatTypeName_ = function(id) {
  */
 thin.layout.document.Base.prototype.formatShapeClassIdName_ = function(classId) {
   switch(classId) {
-    case thin.editor.LineShape.CLASSID:
+    case thin.core.LineShape.CLASSID:
       return thin.t('shape_line');
       break;
-    case thin.editor.RectShape.CLASSID:
+    case thin.core.RectShape.CLASSID:
       return thin.t('shape_rectangle');
       break;
-    case thin.editor.EllipseShape.CLASSID:
+    case thin.core.EllipseShape.CLASSID:
       return thin.t('shape_ellipse');
       break;
-    case thin.editor.TextShape.CLASSID:
+    case thin.core.TextShape.CLASSID:
       return thin.t('shape_text');
       break;
-    case thin.editor.ImageShape.CLASSID:
+    case thin.core.ImageShape.CLASSID:
       return thin.t('shape_image');
       break;
   }

@@ -13,42 +13,42 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.GuideResizer');
-goog.provide('thin.editor.GuideResizer.Fill_');
+goog.provide('thin.core.GuideResizer');
+goog.provide('thin.core.GuideResizer.Fill_');
 
 goog.require('goog.math.Size');
-goog.require('thin.editor.Ellipse');
-goog.require('thin.editor.SvgResizer');
-goog.require('thin.editor.ModuleShape');
+goog.require('thin.core.Ellipse');
+goog.require('thin.core.SvgResizer');
+goog.require('thin.core.ModuleShape');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
- * @param {thin.editor.GuideHelper} affiliationGroup
+ * @param {thin.core.GuideHelper} affiliationGroup
  * @constructor
- * @extends {thin.editor.Ellipse}
+ * @extends {thin.core.Ellipse}
  */
-thin.editor.GuideResizer = function(element, layout, stroke, affiliationGroup) {
-  thin.editor.Ellipse.call(this, element, layout, stroke,
-    thin.editor.GuideResizer.Fill_.DEFAULTFILL);
+thin.core.GuideResizer = function(element, layout, stroke, affiliationGroup) {
+  thin.core.Ellipse.call(this, element, layout, stroke,
+    thin.core.GuideResizer.Fill_.DEFAULTFILL);
   
   /**
-   * @type {thin.editor.GuideHelper}
+   * @type {thin.core.GuideHelper}
    * @private
    */
   this.affiliationGroup_ = affiliationGroup;
 };
-goog.inherits(thin.editor.GuideResizer, thin.editor.Ellipse);
-goog.mixin(thin.editor.GuideResizer.prototype, thin.editor.ModuleShape.prototype);
+goog.inherits(thin.core.GuideResizer, thin.core.Ellipse);
+goog.mixin(thin.core.GuideResizer.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
  * @enum {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.GuideResizer.Fill_ = {
+thin.core.GuideResizer.Fill_ = {
   DEFAULTFILL: new goog.graphics.SolidFill('#FFFFFF'),
   READONLYFILL: new goog.graphics.SolidFill('#DDDDDD')
 };
@@ -58,27 +58,27 @@ thin.editor.GuideResizer.Fill_ = {
  * @type {number}
  * @private
  */
-thin.editor.GuideResizer.RESIZERSIZE_ = 8;
+thin.core.GuideResizer.RESIZERSIZE_ = 8;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.GuideResizer.prototype.readOnly_ = false;
+thin.core.GuideResizer.prototype.readOnly_ = false;
 
 
 /**
- * @type {thin.editor.SvgResizer}
+ * @type {thin.core.SvgResizer}
  * @private
  */
-thin.editor.GuideResizer.prototype.resizer_;
+thin.core.GuideResizer.prototype.resizer_;
 
 
 /**
  * @return {boolean}
  */
-thin.editor.GuideResizer.prototype.isReadOnly = function() {
+thin.core.GuideResizer.prototype.isReadOnly = function() {
   return this.readOnly_;
 };
 
@@ -86,8 +86,8 @@ thin.editor.GuideResizer.prototype.isReadOnly = function() {
 /**
  * @param {boolean} readonly
  */
-thin.editor.GuideResizer.prototype.setReadOnly = function(readonly) {
-  var fillSetting = thin.editor.GuideResizer.Fill_;
+thin.core.GuideResizer.prototype.setReadOnly = function(readonly) {
+  var fillSetting = thin.core.GuideResizer.Fill_;
   this.readOnly_ = readonly;
   this.setFill(readonly ? fillSetting.READONLYFILL : fillSetting.DEFAULTFILL);
   this.getResizer().setEnabled(!readonly);
@@ -101,27 +101,27 @@ thin.editor.GuideResizer.prototype.setReadOnly = function(readonly) {
 
 
 /**
- * @return {thin.editor.SvgResizer}
+ * @return {thin.core.SvgResizer}
  */
-thin.editor.GuideResizer.prototype.getResizer = function() {
+thin.core.GuideResizer.prototype.getResizer = function() {
   if (!goog.isDef(this.resizer_)) {
-    this.resizer_ = new thin.editor.SvgResizer(this.affiliationGroup_, this);
+    this.resizer_ = new thin.core.SvgResizer(this.affiliationGroup_, this);
   }
   return this.resizer_;
 };
 
 
-thin.editor.GuideResizer.prototype.reapplyStrokeAndSize = function() {
-  var size = thin.editor.GuideResizer.RESIZERSIZE_;
+thin.core.GuideResizer.prototype.reapplyStrokeAndSize = function() {
+  var size = thin.core.GuideResizer.RESIZERSIZE_;
   this.getLayout().setSizeByScale(this, new goog.math.Size(size, size));
   this.reapplyStroke();
 };
 
 
 /** @inheritDoc */
-thin.editor.GuideResizer.prototype.disposeInternal = function() {
+thin.core.GuideResizer.prototype.disposeInternal = function() {
   this.resizer_.dispose();
   delete this.affiliationGroup_;
   delete this.resizer_;
-  thin.editor.GuideResizer.superClass_.disposeInternal.call(this);
+  thin.core.GuideResizer.superClass_.disposeInternal.call(this);
 };

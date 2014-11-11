@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ModuleElement');
+goog.provide('thin.core.ModuleElement');
 
 goog.require('goog.dom');
 goog.require('goog.object');
@@ -29,13 +29,13 @@ goog.require('goog.Disposable');
 /**
  * @constructor
  */
-thin.editor.ModuleElement = function() {};
+thin.core.ModuleElement = function() {};
 
 
 /**
  * @enum {string}
  */
-thin.editor.ModuleElement.StrokeType = {
+thin.core.ModuleElement.StrokeType = {
   SOLID: 'solid',
   DASHED: 'dashed',
   DOTTED: 'dotted'
@@ -45,7 +45,7 @@ thin.editor.ModuleElement.StrokeType = {
 /**
  * @enum {string}
  */
-thin.editor.ModuleElement.StrokeTypeName = {
+thin.core.ModuleElement.StrokeTypeName = {
   SOLID: thin.t('label_solid_line'),
   DASHED: thin.t('label_dotted_line'),
   DOTTED: thin.t('label_dashed_line')
@@ -55,7 +55,7 @@ thin.editor.ModuleElement.StrokeTypeName = {
 /**
  * @enum {string}
  */
-thin.editor.ModuleElement.StrokeTypeValue = {
+thin.core.ModuleElement.StrokeTypeValue = {
   SOLID: 'none',
   DASHED: '2,2',
   DOTTED: '1,1'
@@ -65,92 +65,92 @@ thin.editor.ModuleElement.StrokeTypeValue = {
 /**
  * @type {number}
  */
-thin.editor.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE = 0;
+thin.core.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.ModuleElement.prototype.left_;
+thin.core.ModuleElement.prototype.left_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.ModuleElement.prototype.top_;
+thin.core.ModuleElement.prototype.top_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.ModuleElement.prototype.width_;
+thin.core.ModuleElement.prototype.width_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.ModuleElement.prototype.height_;
+thin.core.ModuleElement.prototype.height_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ModuleElement.prototype.visibled_ = true;
+thin.core.ModuleElement.prototype.visibled_ = true;
 
 
 /**
- * @type {thin.editor.Cursor}
+ * @type {thin.core.Cursor}
  * @private
  */
-thin.editor.ModuleElement.prototype.cursor_;
+thin.core.ModuleElement.prototype.cursor_;
 
 
 /**
  * @type {Element}
  */
-thin.editor.ModuleElement.prototype.parentGroup;
+thin.core.ModuleElement.prototype.parentGroup;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.ModuleElement.prototype.dasharray_;
+thin.core.ModuleElement.prototype.dasharray_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ModuleElement.prototype.isAffiliationListShape_ = false;
+thin.core.ModuleElement.prototype.isAffiliationListShape_ = false;
 
 
 /**
- * @type {thin.editor.ListSectionShape}
+ * @type {thin.core.ListSectionShape}
  * @private
  */
-thin.editor.ModuleElement.prototype.affiliationSectionShape_;
+thin.core.ModuleElement.prototype.affiliationSectionShape_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.ModuleElement.prototype.affiliationSectionName_;
+thin.core.ModuleElement.prototype.affiliationSectionName_;
 
 
 /**
  * @param {string} strokeDashType
  * @return {string}
  */
-thin.editor.ModuleElement.getStrokeValueFromType = function(strokeDashType) {
-  var strokeTypeTemp = thin.editor.ModuleElement.StrokeType;
-  var strokeTypeNameTemp = thin.editor.ModuleElement.StrokeTypeName;
+thin.core.ModuleElement.getStrokeValueFromType = function(strokeDashType) {
+  var strokeTypeTemp = thin.core.ModuleElement.StrokeType;
+  var strokeTypeNameTemp = thin.core.ModuleElement.StrokeTypeName;
   
   switch (strokeDashType) {
     case strokeTypeTemp.SOLID:
@@ -172,9 +172,9 @@ thin.editor.ModuleElement.getStrokeValueFromType = function(strokeDashType) {
  * @param {string} strokeDashName
  * @return {string}
  */
-thin.editor.ModuleElement.getStrokeTypeFromValue = function(strokeDashName) {
-  var strokeTypeTemp = thin.editor.ModuleElement.StrokeType;
-  var strokeTypeNameTemp = thin.editor.ModuleElement.StrokeTypeName;
+thin.core.ModuleElement.getStrokeTypeFromValue = function(strokeDashName) {
+  var strokeTypeTemp = thin.core.ModuleElement.StrokeType;
+  var strokeTypeNameTemp = thin.core.ModuleElement.StrokeTypeName;
   
   switch (strokeDashName) {
     case strokeTypeNameTemp.SOLID:
@@ -192,23 +192,23 @@ thin.editor.ModuleElement.getStrokeTypeFromValue = function(strokeDashName) {
 };
 
 
-thin.editor.ModuleElement.prototype.setLeft = goog.abstractMethod;
+thin.core.ModuleElement.prototype.setLeft = goog.abstractMethod;
 
 
-thin.editor.ModuleElement.prototype.setTop = goog.abstractMethod;
+thin.core.ModuleElement.prototype.setTop = goog.abstractMethod;
 
 
-thin.editor.ModuleElement.prototype.setWidth = goog.abstractMethod;
+thin.core.ModuleElement.prototype.setWidth = goog.abstractMethod;
 
 
-thin.editor.ModuleElement.prototype.setHeight = goog.abstractMethod;
+thin.core.ModuleElement.prototype.setHeight = goog.abstractMethod;
 
 
 /**
  * @this {goog.graphics.Element}
  * @param {goog.math.Coordinate} coord
  */
-thin.editor.ModuleElement.prototype.setUpperPosition = function(coord) {
+thin.core.ModuleElement.prototype.setUpperPosition = function(coord) {
   this.setLeft(coord.x);
   this.setTop(coord.y);
 };
@@ -218,7 +218,7 @@ thin.editor.ModuleElement.prototype.setUpperPosition = function(coord) {
  * @this {goog.graphics.Element}
  * @return {number}
  */
-thin.editor.ModuleElement.prototype.getLeft = function() {
+thin.core.ModuleElement.prototype.getLeft = function() {
   return thin.numberWithPrecision(this.left_ + this.getParentTransLateX());
 };
 
@@ -227,7 +227,7 @@ thin.editor.ModuleElement.prototype.getLeft = function() {
  * @this {goog.graphics.Element}
  * @return {number}
  */
-thin.editor.ModuleElement.prototype.getTop = function() {
+thin.core.ModuleElement.prototype.getTop = function() {
   return thin.numberWithPrecision(this.top_ + this.getParentTransLateY());
 };
 
@@ -236,7 +236,7 @@ thin.editor.ModuleElement.prototype.getTop = function() {
  * @this {goog.graphics.Element}
  * @return {number}
  */
-thin.editor.ModuleElement.prototype.getWidth = function() {
+thin.core.ModuleElement.prototype.getWidth = function() {
   return this.width_;
 };
 
@@ -245,7 +245,7 @@ thin.editor.ModuleElement.prototype.getWidth = function() {
  * @this {goog.graphics.Element}
  * @return {number}
  */
-thin.editor.ModuleElement.prototype.getHeight = function() {
+thin.core.ModuleElement.prototype.getHeight = function() {
   return this.height_;
 };
 
@@ -254,7 +254,7 @@ thin.editor.ModuleElement.prototype.getHeight = function() {
  * @this {goog.graphics.Element}
  * @return {goog.math.Size}
  */
-thin.editor.ModuleElement.prototype.getSize = function() {
+thin.core.ModuleElement.prototype.getSize = function() {
   return new goog.math.Size(this.getWidth(), this.getHeight()).clone();
 };
 
@@ -263,7 +263,7 @@ thin.editor.ModuleElement.prototype.getSize = function() {
  * @this {goog.graphics.Element}
  * @return {goog.math.Rect}
  */
-thin.editor.ModuleElement.prototype.getBounds = function() {
+thin.core.ModuleElement.prototype.getBounds = function() {
   return new goog.math.Rect(this.getLeft(), this.getTop(), this.getWidth(), this.getHeight()).clone();
 };
 
@@ -272,7 +272,7 @@ thin.editor.ModuleElement.prototype.getBounds = function() {
  * @this {goog.graphics.Element}
  * @return {goog.math.Box}
  */
-thin.editor.ModuleElement.prototype.getBoxSize = function() {
+thin.core.ModuleElement.prototype.getBoxSize = function() {
   return this.getBounds().toBox();
 };
 
@@ -281,7 +281,7 @@ thin.editor.ModuleElement.prototype.getBoxSize = function() {
  * @this {goog.graphics.Element}
  * @param {goog.math.Rect} bounds
  */
-thin.editor.ModuleElement.prototype.setBounds = function(bounds) {
+thin.core.ModuleElement.prototype.setBounds = function(bounds) {
   this.setWidth(bounds.width);
   this.setHeight(bounds.height);
   this.setLeft(bounds.left);
@@ -293,7 +293,7 @@ thin.editor.ModuleElement.prototype.setBounds = function(bounds) {
  * @this {goog.graphics.Element}
  * @param {boolean} setting
  */
-thin.editor.ModuleElement.prototype.setVisibled = function(setting) {
+thin.core.ModuleElement.prototype.setVisibled = function(setting) {
   this.getLayout().setVisibled(this, setting);
   this.visibled_ = setting;
 };
@@ -303,7 +303,7 @@ thin.editor.ModuleElement.prototype.setVisibled = function(setting) {
  * @this {goog.graphics.Element}
  * @param {boolean} disposed
  */
-thin.editor.ModuleElement.prototype.setDisposed = function(disposed) {
+thin.core.ModuleElement.prototype.setDisposed = function(disposed) {
   this.disposed_ = disposed;
 };
 
@@ -312,7 +312,7 @@ thin.editor.ModuleElement.prototype.setDisposed = function(disposed) {
  * @this {goog.graphics.Element}
  * @return {boolean}
  */
-thin.editor.ModuleElement.prototype.isVisibled = function() {
+thin.core.ModuleElement.prototype.isVisibled = function() {
   return this.visibled_;
 };
 
@@ -321,7 +321,7 @@ thin.editor.ModuleElement.prototype.isVisibled = function() {
  * @this {goog.graphics.Element}
  * @param {number} width
  */
-thin.editor.ModuleElement.prototype.setStrokeWidth_ = function(width) {
+thin.core.ModuleElement.prototype.setStrokeWidth_ = function(width) {
   var captureStroke = this.getStroke();
   if (captureStroke && width) {
     this.setStroke(new goog.graphics.Stroke(width, captureStroke.getColor()));
@@ -333,10 +333,10 @@ thin.editor.ModuleElement.prototype.setStrokeWidth_ = function(width) {
  * @this {goog.graphics.Element}
  * @return {number|string}
  */
-thin.editor.ModuleElement.prototype.getStrokeWidth = function() {
+thin.core.ModuleElement.prototype.getStrokeWidth = function() {
   var strokeOpacity = this.getLayout().getElementAttribute(this.getElement(), 'stroke-opacity');
   if (!goog.isNull(strokeOpacity) && Number(strokeOpacity) == 0) {
-    return thin.editor.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE;
+    return thin.core.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE;
   } else {
     return this.getStroke().getWidth();
   }
@@ -347,9 +347,9 @@ thin.editor.ModuleElement.prototype.getStrokeWidth = function() {
  * @this {goog.graphics.Element}
  * @param {string} strokeType
  */
-thin.editor.ModuleElement.prototype.setStrokeDashFromType = function(strokeType) {
-  var strokeTypeTemp = thin.editor.ModuleElement.StrokeType;
-  var strokeTypeValueTemp = thin.editor.ModuleElement.StrokeTypeValue;
+thin.core.ModuleElement.prototype.setStrokeDashFromType = function(strokeType) {
+  var strokeTypeTemp = thin.core.ModuleElement.StrokeType;
+  var strokeTypeValueTemp = thin.core.ModuleElement.StrokeTypeValue;
   
   switch (strokeType) {
     case strokeTypeTemp.SOLID:
@@ -375,9 +375,9 @@ thin.editor.ModuleElement.prototype.setStrokeDashFromType = function(strokeType)
  * @this {goog.graphics.Element}
  * @return {string}
  */
-thin.editor.ModuleElement.prototype.getStrokeDashType = function() {
+thin.core.ModuleElement.prototype.getStrokeDashType = function() {
   return /** @type {string} */(thin.getValIfNotDef(this.dasharray_, 
-             thin.editor.ModuleElement.StrokeType.SOLID));
+             thin.core.ModuleElement.StrokeType.SOLID));
 };
 
 
@@ -385,7 +385,7 @@ thin.editor.ModuleElement.prototype.getStrokeDashType = function() {
  * @this {goog.graphics.Element}
  * @return {goog.graphics.AffineTransform}
  */
-thin.editor.ModuleElement.prototype.getParentTransform = function() {
+thin.core.ModuleElement.prototype.getParentTransform = function() {
   var parentGroup = goog.object.get(this, 'parentGroup');
   if (goog.isDefAndNotNull(parentGroup)) {
     return parentGroup.getTransform();
@@ -399,7 +399,7 @@ thin.editor.ModuleElement.prototype.getParentTransform = function() {
  * @this {goog.graphics.Element}
  * @return {number} The translation in the x-direction (m02).
  */
-thin.editor.ModuleElement.prototype.getParentTransLateX = function() {
+thin.core.ModuleElement.prototype.getParentTransLateX = function() {
   return this.getParentTransform().getTranslateX();
 };
 
@@ -408,7 +408,7 @@ thin.editor.ModuleElement.prototype.getParentTransLateX = function() {
  * @this {goog.graphics.Element}
  * @return {number} The translation in the y-direction (m12).
  */
-thin.editor.ModuleElement.prototype.getParentTransLateY = function() {
+thin.core.ModuleElement.prototype.getParentTransLateY = function() {
   return this.getParentTransform().getTranslateY();
 };
 
@@ -417,7 +417,7 @@ thin.editor.ModuleElement.prototype.getParentTransLateY = function() {
  * @this {goog.graphics.Element}
  * @return {goog.math.Coordinate}
  */
-thin.editor.ModuleElement.prototype.getParentTransLate = function() {
+thin.core.ModuleElement.prototype.getParentTransLate = function() {
   return new goog.math.Coordinate(this.getParentTransLateX(),
                                   this.getParentTransLateY());
 };
@@ -427,7 +427,7 @@ thin.editor.ModuleElement.prototype.getParentTransLate = function() {
  * @this {goog.graphics.Element}
  * @param {string} className
  */
-thin.editor.ModuleElement.prototype.addCss = function(className) {
+thin.core.ModuleElement.prototype.addCss = function(className) {
   var layout = this.getLayout();
   var element = this.getElement();
   var classes = layout.getElementAttribute(element, 'class');
@@ -441,7 +441,7 @@ thin.editor.ModuleElement.prototype.addCss = function(className) {
  * @this {goog.graphics.Element}
  * @param {string} className
  */
-thin.editor.ModuleElement.prototype.setCss = function(className) {
+thin.core.ModuleElement.prototype.setCss = function(className) {
   this.getLayout().setElementAttributes(this.getElement(), {
     'class': className
   });
@@ -452,7 +452,7 @@ thin.editor.ModuleElement.prototype.setCss = function(className) {
  * @this {goog.graphics.Element}
  * @param {string} className
  */
-thin.editor.ModuleElement.prototype.removeCss = function(className) {
+thin.core.ModuleElement.prototype.removeCss = function(className) {
   var layout = this.getLayout();
   var element = this.getElement();
   var classes = layout.getElementAttribute(element, 'class');
@@ -464,18 +464,18 @@ thin.editor.ModuleElement.prototype.removeCss = function(className) {
 
 /**
  * @this {goog.graphics.Element}
- * @param {thin.editor.Cursor} cursor
+ * @param {thin.core.Cursor} cursor
  */
-thin.editor.ModuleElement.prototype.setCursor = function(cursor) {
+thin.core.ModuleElement.prototype.setCursor = function(cursor) {
   this.cursor_ = cursor;
 };
 
 
 /**
  * @this {goog.graphics.Element}
- * @return {thin.editor.Cursor}
+ * @return {thin.core.Cursor}
  */
-thin.editor.ModuleElement.prototype.getCursor = function() {
+thin.core.ModuleElement.prototype.getCursor = function() {
   return this.cursor_;
 };
 
@@ -484,7 +484,7 @@ thin.editor.ModuleElement.prototype.getCursor = function() {
  * @this {goog.graphics.Element}
  * @return {string}
  */
-thin.editor.ModuleElement.prototype.getCursorName = function() {
+thin.core.ModuleElement.prototype.getCursorName = function() {
   return this.getCursor().getType();
 };
 
@@ -493,7 +493,7 @@ thin.editor.ModuleElement.prototype.getCursorName = function() {
  * @this {goog.graphics.Element}
  * @return {goog.math.Rect}
  */
-thin.editor.ModuleElement.prototype.getAffiliationRegionBounds = function() {
+thin.core.ModuleElement.prototype.getAffiliationRegionBounds = function() {
   if (this.isAffiliationListShape()) {
     var listShape = this.getLayout().getHelpers().getListHelper().getTarget();
     var sectionShapeForScope = listShape.getSectionShape(this.getAffiliationSectionName());
@@ -506,9 +506,9 @@ thin.editor.ModuleElement.prototype.getAffiliationRegionBounds = function() {
 
 /**
  * @this {goog.graphics.Element}
- * @param {thin.editor.ListSectionShape} sectionShape
+ * @param {thin.core.ListSectionShape} sectionShape
  */
-thin.editor.ModuleElement.prototype.setAffiliationSection = function(sectionShape) {
+thin.core.ModuleElement.prototype.setAffiliationSection = function(sectionShape) {
   this.affiliationSectionShape_ = sectionShape;
   this.affiliationSectionName_ = sectionShape.getSectionName();
   this.isAffiliationListShape_ = true;
@@ -519,16 +519,16 @@ thin.editor.ModuleElement.prototype.setAffiliationSection = function(sectionShap
  * @this {goog.graphics.Element}
  * @return {string}
  */
-thin.editor.ModuleElement.prototype.getAffiliationSectionName = function() {
+thin.core.ModuleElement.prototype.getAffiliationSectionName = function() {
   return this.affiliationSectionName_;
 };
 
 
 /**
  * @this {goog.graphics.Element}
- * @return {thin.editor.ListSectionShape}
+ * @return {thin.core.ListSectionShape}
  */
-thin.editor.ModuleElement.prototype.getAffiliationSectionShape = function() {
+thin.core.ModuleElement.prototype.getAffiliationSectionShape = function() {
   return this.affiliationSectionShape_;
 };
 
@@ -537,7 +537,7 @@ thin.editor.ModuleElement.prototype.getAffiliationSectionShape = function() {
  * @this {goog.graphics.Element}
  * @return {goog.graphics.Element}
  */
-thin.editor.ModuleElement.prototype.isAffiliationListShape = function() {
+thin.core.ModuleElement.prototype.isAffiliationListShape = function() {
   return this.isAffiliationListShape_;
 };
 
@@ -547,7 +547,7 @@ thin.editor.ModuleElement.prototype.isAffiliationListShape = function() {
  * @param {number} left
  * @return {number}
  */
-thin.editor.ModuleElement.prototype.getAllowLeft = function(left) {
+thin.core.ModuleElement.prototype.getAllowLeft = function(left) {
   var boxSize = this.getAffiliationRegionBounds().toBox();
   var limitedLeft = boxSize.left;
 
@@ -566,7 +566,7 @@ thin.editor.ModuleElement.prototype.getAllowLeft = function(left) {
  * @param {number} top
  * @return {number}
  */
-thin.editor.ModuleElement.prototype.getAllowTop = function(top) {
+thin.core.ModuleElement.prototype.getAllowTop = function(top) {
   var boxSize = this.getAffiliationRegionBounds().toBox();
   var limitedTop = boxSize.top;
 
@@ -586,7 +586,7 @@ thin.editor.ModuleElement.prototype.getAllowTop = function(top) {
  * @param {number=} opt_left
  * @return {number}
  */
-thin.editor.ModuleElement.prototype.getAllowWidth = function(width, opt_left) {
+thin.core.ModuleElement.prototype.getAllowWidth = function(width, opt_left) {
   var boxSize = this.getAffiliationRegionBounds().toBox();
 
   if (0 > width) {
@@ -614,7 +614,7 @@ thin.editor.ModuleElement.prototype.getAllowWidth = function(width, opt_left) {
  * @param {number=} opt_top
  * @return {number}
  */
-thin.editor.ModuleElement.prototype.getAllowHeight = function(height, opt_top) {
+thin.core.ModuleElement.prototype.getAllowHeight = function(height, opt_top) {
   var boxSize = this.getAffiliationRegionBounds().toBox();
   
   if (0 > height) {
@@ -640,7 +640,7 @@ thin.editor.ModuleElement.prototype.getAllowHeight = function(height, opt_top) {
  * @this {goog.graphics.Element}
  * @private
  */
-thin.editor.ModuleElement.prototype.disposeInternalForDragger_ = function() {
+thin.core.ModuleElement.prototype.disposeInternalForDragger_ = function() {
   var dragger = this.dragger_;
   if (goog.isDefAndNotNull(dragger)) {
     dragger.setEnabled(false);
@@ -653,7 +653,7 @@ thin.editor.ModuleElement.prototype.disposeInternalForDragger_ = function() {
 /**
  * @this {goog.graphics.Element}
  */
-thin.editor.ModuleElement.prototype.remove = function() {
+thin.core.ModuleElement.prototype.remove = function() {
   if (goog.isFunction(this.getElement)) {
     goog.dom.removeNode(this.getElement());
   }
@@ -661,9 +661,9 @@ thin.editor.ModuleElement.prototype.remove = function() {
 
 
 /**
- * @return {thin.editor.Layout}
+ * @return {thin.core.Layout}
  */
-thin.editor.ModuleElement.prototype.getLayout = function() {
+thin.core.ModuleElement.prototype.getLayout = function() {
   return this.layout_ || this.graphics_;
 };
 
@@ -671,47 +671,47 @@ thin.editor.ModuleElement.prototype.getLayout = function() {
 /**
  * @return {boolean}
  */
-thin.editor.ModuleElement.prototype.instanceOfDraggableLine = function() {
-  return this instanceof thin.editor.DraggableLine;
+thin.core.ModuleElement.prototype.instanceOfDraggableLine = function() {
+  return this instanceof thin.core.DraggableLine;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.ModuleElement.prototype.instanceOfListShape = function() {
-  return this instanceof thin.editor.ListShape;
+thin.core.ModuleElement.prototype.instanceOfListShape = function() {
+  return this instanceof thin.core.ListShape;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.ModuleElement.prototype.instanceOfEllipseShape = function() {
-  return this instanceof thin.editor.Ellipse;
+thin.core.ModuleElement.prototype.instanceOfEllipseShape = function() {
+  return this instanceof thin.core.Ellipse;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.ModuleElement.prototype.instanceOfLineShape = function() {
-  return this instanceof thin.editor.Line;
+thin.core.ModuleElement.prototype.instanceOfLineShape = function() {
+  return this instanceof thin.core.Line;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.ModuleElement.prototype.instanceOfTextShape = function() {
-  return this instanceof thin.editor.TextShape;
+thin.core.ModuleElement.prototype.instanceOfTextShape = function() {
+  return this instanceof thin.core.TextShape;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.ModuleElement.prototype.instanceOfBlockShape = function() {
+thin.core.ModuleElement.prototype.instanceOfBlockShape = function() {
   return this.instanceOfTblockShape() || this.instanceOfImageblockShape();
 };
 
@@ -719,30 +719,30 @@ thin.editor.ModuleElement.prototype.instanceOfBlockShape = function() {
 /**
  * @return {boolean}
  */
-thin.editor.ModuleElement.prototype.instanceOfTblockShape = function() {
-  return this instanceof thin.editor.TblockShape;
+thin.core.ModuleElement.prototype.instanceOfTblockShape = function() {
+  return this instanceof thin.core.TblockShape;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.ModuleElement.prototype.instanceOfPageNumberShape = function() {
-  return this instanceof thin.editor.PageNumberShape;
+thin.core.ModuleElement.prototype.instanceOfPageNumberShape = function() {
+  return this instanceof thin.core.PageNumberShape;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.ModuleElement.prototype.instanceOfImageblockShape = function() {
-  return this instanceof thin.editor.ImageblockShape;
+thin.core.ModuleElement.prototype.instanceOfImageblockShape = function() {
+  return this instanceof thin.core.ImageblockShape;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.ModuleElement.prototype.instanceOfImageShape = function() {
-  return this instanceof thin.editor.ImageShape;
+thin.core.ModuleElement.prototype.instanceOfImageShape = function() {
+  return this instanceof thin.core.ImageShape;
 };

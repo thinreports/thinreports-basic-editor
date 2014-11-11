@@ -13,34 +13,34 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.TextHelper');
+goog.provide('thin.core.TextHelper');
 
-goog.require('thin.editor.TextLineShape');
-goog.require('thin.editor.AbstractTextGroup');
+goog.require('thin.core.TextLineShape');
+goog.require('thin.core.AbstractTextGroup');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.AbstractTextGroup}
+ * @extends {thin.core.AbstractTextGroup}
  */
-thin.editor.TextHelper = function(layout) {
+thin.core.TextHelper = function(layout) {
   goog.base(this, this.createElement_(layout), layout);
 };
-goog.inherits(thin.editor.TextHelper, thin.editor.AbstractTextGroup);
+goog.inherits(thin.core.TextHelper, thin.core.AbstractTextGroup);
 
 
 /**
- * @type {thin.editor.TextLineShape}
+ * @type {thin.core.TextLineShape}
  * @private
  */
-thin.editor.TextHelper.prototype.firstLine_ = null;
+thin.core.TextHelper.prototype.firstLine_ = null;
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @private
  */
-thin.editor.TextHelper.prototype.createElement_ = function(layout) {
+thin.core.TextHelper.prototype.createElement_ = function(layout) {
   return layout.createSvgElement('g', {
     'stroke-width': 0
   });
@@ -50,7 +50,7 @@ thin.editor.TextHelper.prototype.createElement_ = function(layout) {
 /**
  * @param {string} content
  */
-thin.editor.TextHelper.prototype.setFirstLine = function(content) {
+thin.core.TextHelper.prototype.setFirstLine = function(content) {
   goog.array.forEachRight(this.getElement().childNodes, function(element) {
     if (element.tagName == 'text') {
       goog.dom.removeNode(element);
@@ -58,7 +58,7 @@ thin.editor.TextHelper.prototype.setFirstLine = function(content) {
   });
 
   var layout = this.getLayout();
-  var firstLine = new thin.editor.TextLineShape(
+  var firstLine = new thin.core.TextLineShape(
     layout.createSvgElement('text'), layout, 0);
   firstLine.setText(content);
   layout.appendChild(firstLine, this);
@@ -73,15 +73,15 @@ thin.editor.TextHelper.prototype.setFirstLine = function(content) {
 
 
 /**
- * @return {thin.editor.TextLineShape}
+ * @return {thin.core.TextLineShape}
  */
-thin.editor.TextHelper.prototype.getFirstLine = function() {
+thin.core.TextHelper.prototype.getFirstLine = function() {
   return this.firstLine_;
 };
 
 
 /** @inheritDoc */
-thin.editor.TextHelper.prototype.disposeInternal = function() {
+thin.core.TextHelper.prototype.disposeInternal = function() {
   this.firstLine_.dispose();
   delete this.firstLine_;
 

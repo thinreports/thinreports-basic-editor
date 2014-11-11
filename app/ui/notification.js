@@ -27,7 +27,7 @@ goog.require('goog.ui.Popup');
 goog.require('goog.fx.dom.FadeInAndShow');
 goog.require('goog.fx.dom.FadeOutAndHide');
 goog.require('goog.fx.Animation.EventType');
-goog.require('thin.editor');
+goog.require('thin.core');
 
 
 /**
@@ -169,7 +169,7 @@ thin.ui.Notification.prototype.createDom_ = function(level) {
   
   goog.events.listen(element, goog.events.EventType.CLICK, function(e) {
     this.setVisible(false);
-    var workspace = thin.editor.getActiveWorkspace();
+    var workspace = thin.core.getActiveWorkspace();
     if (workspace) {
       workspace.focusElement(e);
     }

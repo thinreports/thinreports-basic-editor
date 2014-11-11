@@ -13,25 +13,25 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.core.platform.File');
+goog.provide('thin.platform.File');
 
 goog.require('goog.array');
 goog.require('thin.ui');
-goog.require('thin.core.platform');
+goog.require('thin.platform');
 
 
 /**
  * @param {Object} accepts
  * @param {Object} callbacks
  */
-thin.core.platform.File.open = function(accepts, callbacks) {
+thin.platform.File.open = function(accepts, callbacks) {
   var options = {
     'type': 'openWritableFile',
     'accepts': accepts,
     'acceptsAllTypes': false
   };
 
-  thin.core.platform.callNativeFunction('chrome', 'fileSystem', 'chooseEntry', [
+  thin.platform.callNativeFunction('chrome', 'fileSystem', 'chooseEntry', [
     options, function(fileEntry) {
       if (fileEntry) {
         callbacks.success(fileEntry);
@@ -47,7 +47,7 @@ thin.core.platform.File.open = function(accepts, callbacks) {
  * @param {string} content
  * @param {string} mimeType
  */
-thin.core.platform.File.write = function(fileEntry, content, mimeType) {
+thin.platform.File.write = function(fileEntry, content, mimeType) {
   fileEntry.createWriter(function(fileWriter) {
     fileWriter.onwriteend = function(e) {
       fileWriter.onwriteend = null;
@@ -69,7 +69,7 @@ thin.core.platform.File.write = function(fileEntry, content, mimeType) {
  * @param {Object} accepts
  * @param {Object} callbacks
  */
-thin.core.platform.File.saveAs = function(fileName, accepts, callbacks) {
+thin.platform.File.saveAs = function(fileName, accepts, callbacks) {
   var options = {
     'type': 'saveFile',
     'accepts': accepts,
@@ -77,7 +77,7 @@ thin.core.platform.File.saveAs = function(fileName, accepts, callbacks) {
     'suggestedName': fileName
   };
 
-  thin.core.platform.callNativeFunction('chrome', 'fileSystem', 'chooseEntry', [
+  thin.platform.callNativeFunction('chrome', 'fileSystem', 'chooseEntry', [
     options, function(fileEntry) {
       if (fileEntry) {
         callbacks.success(fileEntry);
@@ -92,7 +92,7 @@ thin.core.platform.File.saveAs = function(fileName, accepts, callbacks) {
  * @param {FileEntry} fileEntry
  * @param {Function} callback
  */
-thin.core.platform.File.getPath = function(fileEntry, callback) {
-  thin.core.platform.callNativeFunction('chrome', 'fileSystem',
+thin.platform.File.getPath = function(fileEntry, callback) {
+  thin.platform.callNativeFunction('chrome', 'fileSystem',
     'getDisplayPath', [fileEntry, callback]);
 };

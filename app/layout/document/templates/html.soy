@@ -215,24 +215,24 @@
 {template .renderShapes private="true"}
 {foreach $shapeGroup in $shapeGroups}
 {switch $shapeGroup.type}
-  {case thin.editor.TblockShape.CLASSID}
+  {case thin.core.TblockShape.CLASSID}
     {call .renderTblockShapes}
       {param shapeGroup: $shapeGroup /}
       {param t: $t /}
       {param inList: $inList /}
     {/call}
-  {case thin.editor.ImageblockShape.CLASSID}
+  {case thin.core.ImageblockShape.CLASSID}
     {call .renderImageblockShapes}
       {param shapeGroup: $shapeGroup /}
       {param t: $t /}
       {param inList: $inList /}
     {/call}
-  {case thin.editor.ListShape.CLASSID}
+  {case thin.core.ListShape.CLASSID}
     {call .renderListShapes}
       {param shapeGroup: $shapeGroup /}
       {param t: $t /}
     {/call}
-  {case thin.editor.PageNumberShape.CLASSID}
+  {case thin.core.PageNumberShape.CLASSID}
     {call .renderPagenumberShapes}
       {param shapeGroup: $shapeGroup /}
       {param t: $t /}

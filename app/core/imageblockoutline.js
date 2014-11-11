@@ -13,31 +13,31 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ImageblockOutline');
+goog.provide('thin.core.ImageblockOutline');
 
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.ModuleOutline');
+goog.require('thin.core.Rect');
+goog.require('thin.core.ModuleOutline');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.ImageblockOutline = function(element, layout, stroke, fill) {
+thin.core.ImageblockOutline = function(element, layout, stroke, fill) {
   goog.base(this, element, layout, stroke, fill);
 };
-goog.inherits(thin.editor.ImageblockOutline, thin.editor.Rect);
-goog.mixin(thin.editor.ImageblockOutline.prototype, thin.editor.ModuleOutline.prototype);
+goog.inherits(thin.core.ImageblockOutline, thin.core.Rect);
+goog.mixin(thin.core.ImageblockOutline.prototype, thin.core.ModuleOutline.prototype);
 
 
 /**
- * @return {thin.editor.ImageblockShape}
+ * @return {thin.core.ImageblockShape}
  */
-thin.editor.ImageblockOutline.prototype.toShape = function() {
+thin.core.ImageblockOutline.prototype.toShape = function() {
   return this.getLayout().createImageblockShape();
 };
 
@@ -45,7 +45,7 @@ thin.editor.ImageblockOutline.prototype.toShape = function() {
 /**
  * @return {Object}
  */
-thin.editor.ImageblockOutline.prototype.getInitShapeProperties = function() {
+thin.core.ImageblockOutline.prototype.getInitShapeProperties = function() {
   return {
     BOUNDS: this.getBounds()
   };
@@ -53,7 +53,7 @@ thin.editor.ImageblockOutline.prototype.getInitShapeProperties = function() {
 
 
 /** @inheritDoc */
-thin.editor.ImageblockOutline.prototype.disposeInternal = function() {
+thin.core.ImageblockOutline.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   this.disposeInternalForOutline();
 };

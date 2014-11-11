@@ -13,54 +13,54 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.DrawActionLayer');
+goog.provide('thin.core.DrawActionLayer');
 
-goog.require('thin.editor.ActionLayer');
-goog.require('thin.editor.Cursor');
-goog.require('thin.editor.Cursor.Type');
+goog.require('thin.core.ActionLayer');
+goog.require('thin.core.Cursor');
+goog.require('thin.core.Cursor.Type');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.ActionLayer}
+ * @extends {thin.core.ActionLayer}
  */
-thin.editor.DrawActionLayer = function(layout) {
+thin.core.DrawActionLayer = function(layout) {
   goog.base(this, layout, this.getDefaultCursor_());
 };
-goog.inherits(thin.editor.DrawActionLayer, thin.editor.ActionLayer);
+goog.inherits(thin.core.DrawActionLayer, thin.core.ActionLayer);
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.DrawActionLayer.prototype.drawable_ = true;
+thin.core.DrawActionLayer.prototype.drawable_ = true;
 
 
-thin.editor.DrawActionLayer.prototype.resetCursor = function() {
+thin.core.DrawActionLayer.prototype.resetCursor = function() {
   this.setCursor(this.getDefaultCursor_());
 };
 
 
 /**
- * @return {thin.editor.Cursor}
+ * @return {thin.core.Cursor}
  * @private
  */
-thin.editor.DrawActionLayer.prototype.getDefaultCursor_ = function() {
-  return new thin.editor.Cursor(
-      thin.editor.Cursor.Type.CROSSHAIR);
+thin.core.DrawActionLayer.prototype.getDefaultCursor_ = function() {
+  return new thin.core.Cursor(
+      thin.core.Cursor.Type.CROSSHAIR);
 };
 
 
 /**
  * @param {boolean} drawable
  */
-thin.editor.DrawActionLayer.prototype.setDrawable = function(drawable) {
+thin.core.DrawActionLayer.prototype.setDrawable = function(drawable) {
   if (drawable) {
     this.resetCursor();
   } else {
-    this.setCursor(new thin.editor.Cursor(thin.editor.Cursor.Type.NOTALLOWED));
+    this.setCursor(new thin.core.Cursor(thin.core.Cursor.Type.NOTALLOWED));
   }
   var drawer = this.getDrawer();
   if (drawer) {
@@ -72,7 +72,7 @@ thin.editor.DrawActionLayer.prototype.setDrawable = function(drawable) {
 /**
  * @param {boolean} visible
  */
-thin.editor.DrawActionLayer.prototype.setVisibled = function(visible) {
+thin.core.DrawActionLayer.prototype.setVisibled = function(visible) {
   goog.base(this, 'setVisibled', visible);
 
   if (visible) {

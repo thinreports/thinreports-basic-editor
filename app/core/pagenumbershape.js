@@ -13,8 +13,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.PageNumberShape');
-goog.provide('thin.editor.PageNumberShape.ClassIds');
+goog.provide('thin.core.PageNumberShape');
+goog.provide('thin.core.PageNumberShape.ClassIds');
 
 goog.require('goog.dom');
 goog.require('goog.array');
@@ -23,43 +23,43 @@ goog.require('goog.object');
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
 goog.require('goog.graphics.Font');
-goog.require('thin.editor.Box');
-goog.require('thin.editor.IdShape');
-goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
-goog.require('thin.editor.TextStyle.OverflowType');
-goog.require('thin.editor.TextStyle.OverflowTypeName');
-goog.require('thin.editor.AbstractTextGroup');
-goog.require('thin.editor.ModuleShape');
-goog.require('thin.core.Font');
+goog.require('thin.core.Box');
+goog.require('thin.core.IdShape');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.OverflowType');
+goog.require('thin.core.TextStyle.OverflowTypeName');
+goog.require('thin.core.AbstractTextGroup');
+goog.require('thin.core.ModuleShape');
+goog.require('thin.Font');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Component.EventType');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.AbstractTextGroup}
+ * @extends {thin.core.AbstractTextGroup}
  */
-thin.editor.PageNumberShape = function(element, layout) {
+thin.core.PageNumberShape = function(element, layout) {
   goog.base(this, element, layout);
-  this.setCss(thin.editor.PageNumberShape.CLASSID);
+  this.setCss(thin.core.PageNumberShape.CLASSID);
 };
-goog.inherits(thin.editor.PageNumberShape, thin.editor.AbstractTextGroup);
-goog.mixin(thin.editor.PageNumberShape.prototype, thin.editor.ModuleShape.prototype);
+goog.inherits(thin.core.PageNumberShape, thin.core.AbstractTextGroup);
+goog.mixin(thin.core.PageNumberShape.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
  * @type {string}
  */
-thin.editor.PageNumberShape.CLASSID = 's-pageno';
+thin.core.PageNumberShape.CLASSID = 's-pageno';
 
 
 /**
  * @enum {string}
  */
-thin.editor.PageNumberShape.ClassIds = {
+thin.core.PageNumberShape.ClassIds = {
   BOX: '-box',
   LABEL: '-label'
 };
@@ -69,76 +69,76 @@ thin.editor.PageNumberShape.ClassIds = {
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.PageNumberShape.DEFAULT_FILL = new goog.graphics.SolidFill('#000000');
+thin.core.PageNumberShape.DEFAULT_FILL = new goog.graphics.SolidFill('#000000');
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.PageNumberShape.BOX_FILL_ = new goog.graphics.SolidFill('#f4e2c4', 0.8);
+thin.core.PageNumberShape.BOX_FILL_ = new goog.graphics.SolidFill('#f4e2c4', 0.8);
 
 
 /**
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.editor.PageNumberShape.BOX_STROKE_ = new goog.graphics.Stroke(0.28, '#7C4007');
+thin.core.PageNumberShape.BOX_STROKE_ = new goog.graphics.Stroke(0.28, '#7C4007');
 
 
 /**
  * @type {string}
  */
-thin.editor.PageNumberShape.DEFAULT_PAGENO_FORMAT = '{page}';
+thin.core.PageNumberShape.DEFAULT_PAGENO_FORMAT = '{page}';
 
 
 /**
- * @type {thin.editor.PageNumberShape.Label_}
+ * @type {thin.core.PageNumberShape.Label_}
  * @private
  */
-thin.editor.PageNumberShape.prototype.label_;
-
-
-/**
- * @type {string}
- * @private
- */
-thin.editor.PageNumberShape.prototype.type_;
+thin.core.PageNumberShape.prototype.label_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.PageNumberShape.prototype.base_;
+thin.core.PageNumberShape.prototype.type_;
 
 
 /**
- * @type {thin.editor.ListShape}
+ * @type {string}
  * @private
  */
-thin.editor.PageNumberShape.prototype.targetShape_;
+thin.core.PageNumberShape.prototype.base_;
+
+
+/**
+ * @type {thin.core.ListShape}
+ * @private
+ */
+thin.core.PageNumberShape.prototype.targetShape_;
 
 
 /**
  * @return {string}
  */
-thin.editor.PageNumberShape.prototype.getClassId = function() {
-  return thin.editor.PageNumberShape.CLASSID;
+thin.core.PageNumberShape.prototype.getClassId = function() {
+  return thin.core.PageNumberShape.CLASSID;
 };
 
 
 /**
- * Override thin.editor.ModuleShape#canResizeHeight.
+ * Override thin.core.ModuleShape#canResizeHeight.
  * @return {boolean}
  */
-thin.editor.PageNumberShape.prototype.canResizeHeight = function() {
+thin.core.PageNumberShape.prototype.canResizeHeight = function() {
   return false;
 };
 
 
 /** @inheritDoc */
-thin.editor.PageNumberShape.prototype.updateToolbarUI = function() {
+thin.core.PageNumberShape.prototype.updateToolbarUI = function() {
   goog.base(this, 'updateToolbarUI');
   thin.ui.enablingFontUIs(true, true, true, false, false);
 };
@@ -146,13 +146,13 @@ thin.editor.PageNumberShape.prototype.updateToolbarUI = function() {
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.editor.PageNumberShape}
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.PageNumberShape}
  */
-thin.editor.PageNumberShape.createFromElement = function(element, layout, opt_shapeIdManager) {
+thin.core.PageNumberShape.createFromElement = function(element, layout, opt_shapeIdManager) {
   element.removeAttribute('clip-path');
-  var shape = new thin.editor.PageNumberShape(element, layout);
+  var shape = new thin.core.PageNumberShape(element, layout);
 
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
@@ -162,8 +162,8 @@ thin.editor.PageNumberShape.createFromElement = function(element, layout, opt_sh
   var decoration = layout.getElementAttribute(element, 'text-decoration');
   var kerning = layout.getElementAttribute(element, 'kerning');
   
-  if (thin.isExactlyEqual(kerning, thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING)) {
-    kerning = thin.editor.TextStyle.DEFAULT_KERNING;
+  if (thin.isExactlyEqual(kerning, thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
+    kerning = thin.core.TextStyle.DEFAULT_KERNING;
   }
   shape.setKerning(/** @type {string} */ (kerning));
   shape.setFontUnderline(/underline/.test(decoration));
@@ -181,20 +181,20 @@ thin.editor.PageNumberShape.createFromElement = function(element, layout, opt_sh
 
 /**
  * @param {Element=} opt_element
- * @return {thin.editor.Box}
+ * @return {thin.core.Box}
  * @private
  */
-thin.editor.PageNumberShape.prototype.createBox_ = function(opt_element) {
+thin.core.PageNumberShape.prototype.createBox_ = function(opt_element) {
   var opt_classId;
   if (!opt_element) {
-    opt_classId = thin.editor.PageNumberShape.CLASSID +
-        thin.editor.PageNumberShape.ClassIds.BOX;
+    opt_classId = thin.core.PageNumberShape.CLASSID +
+        thin.core.PageNumberShape.ClassIds.BOX;
   }
 
   var box = goog.base(this, 'createBox_', opt_element, opt_classId);
   
-  box.setStroke(thin.editor.PageNumberShape.BOX_STROKE_);
-  box.setFill(thin.editor.PageNumberShape.BOX_FILL_);
+  box.setStroke(thin.core.PageNumberShape.BOX_STROKE_);
+  box.setFill(thin.core.PageNumberShape.BOX_FILL_);
   box.setUsableClipPath(true);
   
   return box;
@@ -203,11 +203,11 @@ thin.editor.PageNumberShape.prototype.createBox_ = function(opt_element) {
 
 /**
  * @param {Element=} opt_element
- * @return {thin.editor.PageNumberShape.Label_}
+ * @return {thin.core.PageNumberShape.Label_}
  * @private
  */
-thin.editor.PageNumberShape.prototype.createLabel_ = function(opt_element) {
-  var label = new thin.editor.PageNumberShape.Label_(
+thin.core.PageNumberShape.prototype.createLabel_ = function(opt_element) {
+  var label = new thin.core.PageNumberShape.Label_(
           this, this.getLayout(), opt_element);
   label.setText(this.getFormat());
   return label;
@@ -215,12 +215,12 @@ thin.editor.PageNumberShape.prototype.createLabel_ = function(opt_element) {
 
 
 /** @inheritDoc */
-thin.editor.PageNumberShape.prototype.setup = function() {
+thin.core.PageNumberShape.prototype.setup = function() {
   var element = this.getElement();
-  var classId = thin.editor.PageNumberShape.ClassIds;
+  var classId = thin.core.PageNumberShape.ClassIds;
 
-  var box = thin.editor.getElementByClassNameForChildNodes(
-        thin.editor.PageNumberShape.CLASSID + classId.BOX, element.childNodes);
+  var box = thin.core.getElementByClassNameForChildNodes(
+        thin.core.PageNumberShape.CLASSID + classId.BOX, element.childNodes);
 
   this.box_ = this.createBox_(box);
   if (!box) {
@@ -238,46 +238,46 @@ thin.editor.PageNumberShape.prototype.setup = function() {
 
 
 
-thin.editor.PageNumberShape.prototype.createClipPath = function() {
+thin.core.PageNumberShape.prototype.createClipPath = function() {
   this.box_.createClipPath(this);
 };
 
 
-thin.editor.PageNumberShape.prototype.removeClipPath = function() {
+thin.core.PageNumberShape.prototype.removeClipPath = function() {
   this.box_.removeClipPath();
 };
 
 
-thin.editor.PageNumberShape.prototype.setDefaultOutline = function() {
+thin.core.PageNumberShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getPageNumberOutline());
 };
 
 
 /**
  * @param {string} shapeId
- * @param {thin.editor.ShapeIdManager=} opt_manager
+ * @param {thin.core.ShapeIdManager=} opt_manager
  */
-thin.editor.PageNumberShape.prototype.setShapeId = function(shapeId, opt_manager) {
+thin.core.PageNumberShape.prototype.setShapeId = function(shapeId, opt_manager) {
   this.setShapeId_(shapeId, opt_manager);
 };
 
 
 /** @inheritDoc */
-thin.editor.PageNumberShape.prototype.setLeft = function(left) {
+thin.core.PageNumberShape.prototype.setLeft = function(left) {
   goog.base(this, 'setLeft', left);
   this.label_.repositionX();
 };
 
 
 /** @inheritDoc */
-thin.editor.PageNumberShape.prototype.setHeight = function(height) {
+thin.core.PageNumberShape.prototype.setHeight = function(height) {
   goog.base(this, 'setHeight', height);
   this.label_.repositionY();
 };
 
 
 /** @inheritDoc */
-thin.editor.PageNumberShape.prototype.setTop = function(top) {
+thin.core.PageNumberShape.prototype.setTop = function(top) {
   goog.base(this, 'setTop', top);
   this.label_.repositionY();
 };
@@ -286,7 +286,7 @@ thin.editor.PageNumberShape.prototype.setTop = function(top) {
 /**
  * @param {string} type
  */
-thin.editor.PageNumberShape.prototype.setOverflowType = function(type) {
+thin.core.PageNumberShape.prototype.setOverflowType = function(type) {
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-overflow': type
   });
@@ -296,16 +296,16 @@ thin.editor.PageNumberShape.prototype.setOverflowType = function(type) {
 /**
  * @return {string}
  */
-thin.editor.PageNumberShape.prototype.getOverflowType = function() {
+thin.core.PageNumberShape.prototype.getOverflowType = function() {
   return this.getLayout().getElementAttribute(this.getElement(), 'x-overflow')
-    || thin.editor.TextStyle.DEFAULT_OVERFLOWTYPE;
+    || thin.core.TextStyle.DEFAULT_OVERFLOWTYPE;
 };
 
 
 /**
  * @param {string} format
  */
-thin.editor.PageNumberShape.prototype.setFormat = function(format) {
+thin.core.PageNumberShape.prototype.setFormat = function(format) {
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-format': format
   });
@@ -316,16 +316,16 @@ thin.editor.PageNumberShape.prototype.setFormat = function(format) {
 /**
  * @return {string}
  */
-thin.editor.PageNumberShape.prototype.getFormat = function() {
+thin.core.PageNumberShape.prototype.getFormat = function() {
   return this.getLayout().getElementAttribute(this.getElement(), 
-      'x-format') || thin.editor.PageNumberShape.DEFAULT_PAGENO_FORMAT;
+      'x-format') || thin.core.PageNumberShape.DEFAULT_PAGENO_FORMAT;
 };
 
 
 /**
  * @param {string} targetId
  */
-thin.editor.PageNumberShape.prototype.setTargetId = function(targetId) {
+thin.core.PageNumberShape.prototype.setTargetId = function(targetId) {
   var layout = this.getLayout();
   layout.setElementAttributes(this.getElement(), {
     'x-target': targetId
@@ -339,7 +339,7 @@ thin.editor.PageNumberShape.prototype.setTargetId = function(targetId) {
 /**
  * @return {string}
  */
-thin.editor.PageNumberShape.prototype.getTargetId = function() {
+thin.core.PageNumberShape.prototype.getTargetId = function() {
   return this.getLayout().getElementAttribute(this.getElement(), 
       'x-target') || '';
 };
@@ -349,7 +349,7 @@ thin.editor.PageNumberShape.prototype.getTargetId = function() {
  * @param {goog.graphics.Element} targetShape
  * @private
  */
-thin.editor.PageNumberShape.prototype.setTargetShape_ = function(targetShape) {
+thin.core.PageNumberShape.prototype.setTargetShape_ = function(targetShape) {
   this.targetShape_ = targetShape;
   this.targetShape_.setPageNumberReference(this);
 };
@@ -358,12 +358,12 @@ thin.editor.PageNumberShape.prototype.setTargetShape_ = function(targetShape) {
 /**
  * @return {goog.graphics.Element}
  */
-thin.editor.PageNumberShape.prototype.getTargetShape = function() {
+thin.core.PageNumberShape.prototype.getTargetShape = function() {
   return this.targetShape_;
 };
 
 
-thin.editor.PageNumberShape.prototype.removeTargetShape = function() {
+thin.core.PageNumberShape.prototype.removeTargetShape = function() {
   if (this.targetShape_) {
     this.targetShape_.removePageNumberReference(this);
     this.setTargetId('');
@@ -373,10 +373,10 @@ thin.editor.PageNumberShape.prototype.removeTargetShape = function() {
 
 
 /**
- * @param {thin.editor.Helpers} helpers
- * @param {thin.editor.MultiOutlineHelper} multiOutlineHelper
+ * @param {thin.core.Helpers} helpers
+ * @param {thin.core.MultiOutlineHelper} multiOutlineHelper
  */
-thin.editor.PageNumberShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
+thin.core.PageNumberShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
   multiOutlineHelper.toPageNumberOutline(this, helpers);
 };
 
@@ -384,7 +384,7 @@ thin.editor.PageNumberShape.prototype.toOutline = function(helpers, multiOutline
 /**
  * @return {Function}
  */
-thin.editor.PageNumberShape.prototype.getCloneCreator = function() {
+thin.core.PageNumberShape.prototype.getCloneCreator = function() {
   var sourceCoordinate = new goog.math.Coordinate(this.getLeft(), this.getTop()).clone();
   var deltaCoordinateForList = this.getDeltaCoordinateForList().clone();
   var deltaCoordinateForGuide = this.getDeltaCoordinateForGuide().clone();
@@ -410,12 +410,12 @@ thin.editor.PageNumberShape.prototype.getCloneCreator = function() {
   var format = this.getFormat();
 
   /**
-   * @param {thin.editor.Layout} layout
+   * @param {thin.core.Layout} layout
    * @param {boolean=} opt_isAdaptDeltaForList
    * @param {goog.graphics.SvgGroupElement=} opt_renderTo
    * @param {goog.math.Coordinate=} opt_basisCoordinate
-   * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
-   * @return {thin.editor.PageNumberShape}
+   * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+   * @return {thin.core.PageNumberShape}
    */
   return function(layout, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate, opt_shapeIdManager) {
 
@@ -446,7 +446,7 @@ thin.editor.PageNumberShape.prototype.getCloneCreator = function() {
 /**
  * @private
  */
-thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
+thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
   var scope = this;
   var layout = this.getLayout();
   var workspace = layout.getWorkspace();
@@ -506,8 +506,8 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
       
         var scope = this;
         var layout = this.getLayout();
-        var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-        var fillNone = thin.editor.ModuleShape.NONE;
+        var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
+        var fillNone = thin.core.ModuleShape.NONE;
         //  choose none color returned null.
         var fillColor = /** @type {string} */(thin.getValIfNotDef(e.target.getValue(), proppaneBlank));
         var fill = new goog.graphics.SolidFill(thin.isExactlyEqual(fillColor, proppaneBlank) ?
@@ -544,7 +544,7 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
   fontSizeInput.setValidator(fontSizeInputValidation);
 
   var fontSizeItem;
-  goog.array.forEach(thin.editor.FontStyle.FONTSIZE_LIST, function(fontSizeValue) {
+  goog.array.forEach(thin.core.FontStyle.FONTSIZE_LIST, function(fontSizeValue) {
     fontSizeItem = new thin.ui.ComboBoxItem(fontSizeValue);
     fontSizeItem.setSticky(true);
     fontSizeComb.addItem(fontSizeItem);
@@ -573,7 +573,7 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
   
   var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
-  var textAlignType = thin.editor.TextStyle.HorizonAlignTypeName;
+  var textAlignType = thin.core.TextStyle.HorizonAlignTypeName;
   
   textAlignSelect.setTextAlignLeft();
   textAlignSelect.addItem(new thin.ui.Option(textAlignType.START));
@@ -583,7 +583,7 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
   textAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         workspace.getAction().actionSetTextAnchor(
-            thin.editor.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
+            thin.core.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
       }, false, this);
   
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
@@ -600,7 +600,7 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
         var kerning = e.target.getValue();
         var captureSpacing = scope.getKerning();
         
-        if (kerning !== thin.editor.TextStyle.DEFAULT_KERNING) {
+        if (kerning !== thin.core.TextStyle.DEFAULT_KERNING) {
           kerning = String(Number(kerning));
         }
         
@@ -623,8 +623,8 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
   var textOverflowSelect = textOverflowSelectProperty.getValueControl();
   textOverflowSelect.setTextAlignLeft();
   
-  var overflowName = thin.editor.TextStyle.OverflowTypeName;
-  var overflowType = thin.editor.TextStyle.OverflowType;
+  var overflowName = thin.core.TextStyle.OverflowTypeName;
+  var overflowType = thin.core.TextStyle.OverflowType;
   
   textOverflowSelect.addItem(new thin.ui.Option(overflowName.TRUNCATE, overflowType.TRUNCATE));
   textOverflowSelect.addItem(new thin.ui.Option(overflowName.FIT, overflowType.FIT));
@@ -666,7 +666,7 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
 
   formatInputProperty.addEventListener(propEventType.CHANGE, 
       function(e) {
-        var newFormat = e.target.getValue() || thin.editor.PageNumberShape.DEFAULT_PAGENO_FORMAT;
+        var newFormat = e.target.getValue() || thin.core.PageNumberShape.DEFAULT_PAGENO_FORMAT;
         var oldFormat = scope.getFormat();
 
         workspace.normalVersioning(function(version) {
@@ -770,7 +770,7 @@ thin.editor.PageNumberShape.prototype.createPropertyComponent_ = function() {
 /**
  * @return {Object}
  */
-thin.editor.PageNumberShape.prototype.getProperties = function() {
+thin.core.PageNumberShape.prototype.getProperties = function() {
   var properties = {
     'left': this.getLeft(),
     'top': this.getTop(),
@@ -792,7 +792,7 @@ thin.editor.PageNumberShape.prototype.getProperties = function() {
 };
 
 
-thin.editor.PageNumberShape.prototype.updateProperties = function() {
+thin.core.PageNumberShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
 
   if (!proppane.isTarget(this)) {
@@ -802,7 +802,7 @@ thin.editor.PageNumberShape.prototype.updateProperties = function() {
   }
   
   var properties = this.getProperties();
-  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+  var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
   
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
@@ -810,14 +810,14 @@ thin.editor.PageNumberShape.prototype.updateProperties = function() {
   proppane.getPropertyControl('display').setChecked(properties['display']);
   
   var fontColor = properties['font-color'];
-  if (thin.isExactlyEqual(fontColor, thin.editor.ModuleShape.NONE)) {
+  if (thin.isExactlyEqual(fontColor, thin.core.ModuleShape.NONE)) {
     fontColor = proppaneBlank
   }
   proppane.getPropertyControl('font-color').setValue(fontColor);
   proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
   proppane.getPropertyControl('font-family').setValue(properties['font-family']);
   proppane.getPropertyControl('text-halign').setValue(
-        thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+        thin.core.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
   proppane.getPropertyControl('kerning').setValue(properties['kerning']);
   proppane.getPropertyControl('overflow').setValue(properties['overflow']);
   proppane.getPropertyControl('format').setValue(properties['format']);
@@ -831,8 +831,8 @@ thin.editor.PageNumberShape.prototype.updateProperties = function() {
 /**
  * @param {Object} properties
  */
-thin.editor.PageNumberShape.prototype.setInitShapeProperties = function(properties) {
-  this.setFill(thin.editor.PageNumberShape.DEFAULT_FILL);
+thin.core.PageNumberShape.prototype.setInitShapeProperties = function(properties) {
+  this.setFill(thin.core.PageNumberShape.DEFAULT_FILL);
   this.setFontSize(properties.SIZE);
   this.setFontFamily(properties.FAMILY);
   this.setFontBold(properties.BOLD);
@@ -845,7 +845,7 @@ thin.editor.PageNumberShape.prototype.setInitShapeProperties = function(properti
 
 
 /** @inheritDoc */
-thin.editor.PageNumberShape.prototype.disposeInternal = function() {
+thin.core.PageNumberShape.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   this.disposeInternalForShape();
 
@@ -855,48 +855,48 @@ thin.editor.PageNumberShape.prototype.disposeInternal = function() {
 
 
 /**
- * @param {thin.editor.PageNumberShape} parent
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.PageNumberShape} parent
+ * @param {thin.core.Layout} layout
  * @param {Element=} opt_element
  * @constructor
- * @extends {thin.editor.AbstractText}
+ * @extends {thin.core.AbstractText}
  * @private
  */
-thin.editor.PageNumberShape.Label_ = function(parent, layout, opt_element) {
+thin.core.PageNumberShape.Label_ = function(parent, layout, opt_element) {
   var element = opt_element || layout.createSvgElement('text', 
         {'kerning': 'auto', 'font-size': 11, 'font-family': 'Helvetica', 'text-anchor': 'middle'});
   var fill = new goog.graphics.SolidFill('#666');
 
   /**
-   * @type {thin.editor.PageNumberShape}
+   * @type {thin.core.PageNumberShape}
    * @private
    */
   this.parent_ = parent;
 
   goog.base(this, element, layout, null, fill);
 };
-goog.inherits(thin.editor.PageNumberShape.Label_, thin.editor.AbstractText);
+goog.inherits(thin.core.PageNumberShape.Label_, thin.core.AbstractText);
 
 
-thin.editor.PageNumberShape.Label_.prototype.reposition = function() {
+thin.core.PageNumberShape.Label_.prototype.reposition = function() {
   this.repositionX();
   this.repositionY();
 };
 
 
-thin.editor.PageNumberShape.Label_.prototype.repositionX = function() {
+thin.core.PageNumberShape.Label_.prototype.repositionX = function() {
   this.setLeft(this.parent_.getLeft() + Math.floor(this.parent_.getWidth() / 2));
 };
 
 
-thin.editor.PageNumberShape.Label_.prototype.repositionY = function() {
+thin.core.PageNumberShape.Label_.prototype.repositionY = function() {
   this.setTop(this.parent_.getTop() + 
       Number(this.getLayout().getElementAttribute(this.getElement(), 'font-size')));
 };
 
 
 /** @inheritDoc */
-thin.editor.PageNumberShape.Label_.prototype.disposeInternal = function() {
+thin.core.PageNumberShape.Label_.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   delete this.parent_;
 };

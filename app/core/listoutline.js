@@ -13,29 +13,29 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ListOutline');
+goog.provide('thin.core.ListOutline');
 
-goog.require('thin.editor.RectOutline');
+goog.require('thin.core.RectOutline');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.RectOutline}
+ * @extends {thin.core.RectOutline}
  */
-thin.editor.ListOutline = function(element, layout, stroke, fill) {
-  thin.editor.RectOutline.call(this, element, layout, stroke, fill);
+thin.core.ListOutline = function(element, layout, stroke, fill) {
+  thin.core.RectOutline.call(this, element, layout, stroke, fill);
 };
-goog.inherits(thin.editor.ListOutline, thin.editor.RectOutline);
+goog.inherits(thin.core.ListOutline, thin.core.RectOutline);
 
 
 /**
- * @return {thin.editor.ListShape}
+ * @return {thin.core.ListShape}
  */
-thin.editor.ListOutline.prototype.toShape = function() {
+thin.core.ListOutline.prototype.toShape = function() {
   return this.getLayout().createListShape();
 };
 
@@ -43,7 +43,7 @@ thin.editor.ListOutline.prototype.toShape = function() {
 /**
  * @param {goog.math.Rect} bounds
  */
-thin.editor.ListOutline.prototype.setBoundsForTargetShape = function(bounds) {
+thin.core.ListOutline.prototype.setBoundsForTargetShape = function(bounds) {
   this.getTargetShape().setBounds(bounds);
   this.getLayout().getHelpers().getListHelper().update();
 };
@@ -52,7 +52,7 @@ thin.editor.ListOutline.prototype.setBoundsForTargetShape = function(bounds) {
 /**
  * @param {boolean=} opt_fromDraw
  */
-thin.editor.ListOutline.prototype.enable = function(opt_fromDraw) {
+thin.core.ListOutline.prototype.enable = function(opt_fromDraw) {
   this.enableForCommon_(opt_fromDraw);
 };
 
@@ -60,7 +60,7 @@ thin.editor.ListOutline.prototype.enable = function(opt_fromDraw) {
 /**
  * @return {Object}
  */
-thin.editor.ListOutline.prototype.getInitShapeProperties = function() {
+thin.core.ListOutline.prototype.getInitShapeProperties = function() {
   return {
     BOUNDS: this.getBounds()
   }
@@ -68,7 +68,7 @@ thin.editor.ListOutline.prototype.getInitShapeProperties = function() {
 
 
 /** @inheritDoc */
-thin.editor.ListOutline.prototype.disposeInternal = function() {
-  thin.editor.ListOutline.superClass_.disposeInternal.call(this);
+thin.core.ListOutline.prototype.disposeInternal = function() {
+  thin.core.ListOutline.superClass_.disposeInternal.call(this);
   this.disposeInternalForOutline();
 };

@@ -13,19 +13,19 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Layer');
+goog.provide('thin.core.Layer');
 
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.SvgDrawer');
+goog.require('thin.core.Rect');
+goog.require('thin.core.SvgDrawer');
 
 
 /**
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.Cursor=} opt_cursor
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.Cursor=} opt_cursor
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.Layer = function(layout, opt_cursor) {
+thin.core.Layer = function(layout, opt_cursor) {
   goog.base(this, layout.createSvgElement('rect'),
       layout, null, new goog.graphics.SolidFill('#FFFFFF', 0.01));
   
@@ -38,13 +38,13 @@ thin.editor.Layer = function(layout, opt_cursor) {
   this.setBounds(new goog.math.Rect(0, 0, size.width, size.height));
   this.setVisibled(false);
 };
-goog.inherits(thin.editor.Layer, thin.editor.Rect);
+goog.inherits(thin.core.Layer, thin.core.Rect);
 
 
 /**
- * @param {thin.editor.Cursor} cursor
+ * @param {thin.core.Cursor} cursor
  */
-thin.editor.Layer.prototype.setCursor = function(cursor) {
+thin.core.Layer.prototype.setCursor = function(cursor) {
   delete this.cursor_;
   goog.base(this, 'setCursor', cursor);
   this.getLayout().setElementCursor(this.getElement(), cursor);
@@ -52,7 +52,7 @@ thin.editor.Layer.prototype.setCursor = function(cursor) {
 
 
 /** @inheritDoc */
-thin.editor.Layer.prototype.disposeInternal = function() {
+thin.core.Layer.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
 
   delete this.cursor_;

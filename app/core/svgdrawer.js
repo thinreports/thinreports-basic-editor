@@ -13,55 +13,55 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.SvgDrawer');
+goog.provide('thin.core.SvgDrawer');
 
 goog.require('goog.math.Size');
 goog.require('goog.math.Coordinate');
 goog.require('goog.fx.Dragger');
 goog.require('goog.fx.Dragger.EventType');
-goog.require('thin.editor.DragEvent');
-goog.require('thin.editor.AbstractDragger');
-goog.require('thin.editor.AbstractDragger.EventType');
-goog.require('thin.editor.SvgDragger');
+goog.require('thin.core.DragEvent');
+goog.require('thin.core.AbstractDragger');
+goog.require('thin.core.AbstractDragger.EventType');
+goog.require('thin.core.SvgDragger');
 
 
 /**
  * @param {goog.graphics.Element} target
  * @param {goog.graphics.Element=} opt_handle
  * @constructor
- * @extends {thin.editor.AbstractDragger}
+ * @extends {thin.core.AbstractDragger}
  */
-thin.editor.SvgDrawer = function(target, opt_handle) {
-  thin.editor.AbstractDragger.call(this, target, opt_handle);
+thin.core.SvgDrawer = function(target, opt_handle) {
+  thin.core.AbstractDragger.call(this, target, opt_handle);
 };
-goog.inherits(thin.editor.SvgDrawer, thin.editor.AbstractDragger);
+goog.inherits(thin.core.SvgDrawer, thin.core.AbstractDragger);
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.SvgDragger.prototype.revisionX_ = 0;
+thin.core.SvgDragger.prototype.revisionX_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.SvgDragger.prototype.revisionY_ = 0;
+thin.core.SvgDragger.prototype.revisionY_ = 0;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgDragger.prototype.revision_ = false;
+thin.core.SvgDragger.prototype.revision_ = false;
 
 
 /**
  * @param {goog.math.Coordinate} coordinate
  */
-thin.editor.SvgDrawer.prototype.setRevisionCurrentPosition = function(coordinate) {
+thin.core.SvgDrawer.prototype.setRevisionCurrentPosition = function(coordinate) {
   this.revisionX_ = coordinate ? coordinate.x : 0;
   this.revisionY_ = coordinate ? coordinate.y : 0;
   this.revision_ = coordinate ? true : false;
@@ -73,15 +73,15 @@ thin.editor.SvgDrawer.prototype.setRevisionCurrentPosition = function(coordinate
  * @param {goog.events.BrowserEvent} e Event object.
  * @private
  */
-thin.editor.SvgDrawer.prototype.initializeDrag_ = function(e) {
+thin.core.SvgDrawer.prototype.initializeDrag_ = function(e) {
   var clientX = this.clientX_ = e.clientX;
   var clientY = this.clientY_ = e.clientY;
   
   this.initializeRate_();
 
   var beforerv = this.dispatchEvent(
-                    new thin.editor.DragEvent(
-                       thin.editor.AbstractDragger.EventType.BEFORESTART,
+                    new thin.core.DragEvent(
+                       thin.core.AbstractDragger.EventType.BEFORESTART,
                        this, clientX, clientY, /** @type {goog.events.BrowserEvent} */(e)));
   
   if (beforerv === false) {
@@ -100,7 +100,7 @@ thin.editor.SvgDrawer.prototype.initializeDrag_ = function(e) {
   this.calculateDelta_();
   
   var rv = this.dispatchEvent(
-             new thin.editor.DragEvent(
+             new thin.core.DragEvent(
              goog.fx.Dragger.EventType.START, this, clientX, clientY,
              /** @type {goog.events.BrowserEvent} */(e), startX, startY));
   if (rv !== false) {
@@ -113,8 +113,8 @@ thin.editor.SvgDrawer.prototype.initializeDrag_ = function(e) {
  * @param {goog.events.BrowserEvent} e
  * @param {boolean=} opt_dragCanceled
  */
-thin.editor.SvgDrawer.prototype.endDrag = function(e, opt_dragCanceled) {
-  thin.editor.SvgDrawer.superClass_.endDrag.call(this, e, opt_dragCanceled);
+thin.core.SvgDrawer.prototype.endDrag = function(e, opt_dragCanceled) {
+  thin.core.SvgDrawer.superClass_.endDrag.call(this, e, opt_dragCanceled);
   this.setRevisionCurrentPosition(null);
 };
 
@@ -126,7 +126,7 @@ thin.editor.SvgDrawer.prototype.endDrag = function(e, opt_dragCanceled) {
  * @return {goog.math.Coordinate}
  * @private
  */
-thin.editor.SvgDrawer.prototype.onShiftKeyPress_ = function(e, x, y) {
+thin.core.SvgDrawer.prototype.onShiftKeyPress_ = function(e, x, y) {
   if (this.aspect_) {
     var startPosX = this.startDragX_;
     var startPosY = this.startDragY_;
@@ -166,8 +166,8 @@ thin.editor.SvgDrawer.prototype.onShiftKeyPress_ = function(e, x, y) {
       y = thin.numberWithPrecision(newClientPos.y);
     }
 
-    this.dispatchEvent(new thin.editor.DragEvent(
-                         thin.editor.AbstractDragger.EventType.SHIFTKEYPRESS,
+    this.dispatchEvent(new thin.core.DragEvent(
+                         thin.core.AbstractDragger.EventType.SHIFTKEYPRESS,
                          this, e.clientX, e.clientY, e, x, y, oldX, oldY));
     
     if (this.revision_ == true) {
@@ -185,7 +185,7 @@ thin.editor.SvgDrawer.prototype.onShiftKeyPress_ = function(e, x, y) {
 /**
  * @private
  */
-thin.editor.SvgDrawer.prototype.initializeLimits_ = function() {
+thin.core.SvgDrawer.prototype.initializeLimits_ = function() {
   this.setLimits(this.handleShape.getBounds());
 };
 
@@ -199,6 +199,6 @@ thin.editor.SvgDrawer.prototype.initializeLimits_ = function() {
  * @param {number} x X-coordinate for target element.
  * @param {number} y Y-coordinate for target element.
  */
-thin.editor.SvgDrawer.prototype.defaultAction = function(e, x, y) {
+thin.core.SvgDrawer.prototype.defaultAction = function(e, x, y) {
   this.targetShape.setBoundsByCoordinate(this.startDragX_, this.startDragY_, x, y);
 };

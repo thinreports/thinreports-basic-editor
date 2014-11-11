@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.toolaction.AbstractAction');
+goog.provide('thin.core.toolaction.AbstractAction');
 
 goog.require('goog.Disposable');
 
@@ -22,31 +22,31 @@ goog.require('goog.Disposable');
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.toolaction.AbstractAction = function() {
+thin.core.toolaction.AbstractAction = function() {
   goog.Disposable.call(this);
 };
-goog.inherits(thin.editor.toolaction.AbstractAction, goog.Disposable);
+goog.inherits(thin.core.toolaction.AbstractAction, goog.Disposable);
 
 
 /**
- * @type {thin.editor.Layout}
+ * @type {thin.core.Layout}
  * @protected
  */
-thin.editor.toolaction.AbstractAction.prototype.layout;
+thin.core.toolaction.AbstractAction.prototype.layout;
 
 
 /**
- * @type {thin.editor.Workspace}
+ * @type {thin.core.Workspace}
  * @protected
  */
-thin.editor.toolaction.AbstractAction.prototype.workspace;
+thin.core.toolaction.AbstractAction.prototype.workspace;
 
 
 /**
  * @param {goog.events.BrowserEvent} e
  */
-thin.editor.toolaction.AbstractAction.prototype.handleAction = function(e) {
-  var workspace = thin.editor.getActiveWorkspace();
+thin.core.toolaction.AbstractAction.prototype.handleAction = function(e) {
+  var workspace = thin.core.getActiveWorkspace();
   if (workspace) {
     workspace.setUiStatusForAction(e.target.getId());
     workspace.focusElement(e);
@@ -65,13 +65,13 @@ thin.editor.toolaction.AbstractAction.prototype.handleAction = function(e) {
 /**
  * @protected
  */
-thin.editor.toolaction.AbstractAction.prototype.handleActionInternal = goog.abstractMethod;
+thin.core.toolaction.AbstractAction.prototype.handleActionInternal = goog.abstractMethod;
 
 
 /**
  * @protected
  */
-thin.editor.toolaction.AbstractAction.prototype.disposeZoomLayer = function() {
+thin.core.toolaction.AbstractAction.prototype.disposeZoomLayer = function() {
   var zoomLayer = this.layout.getHelpers().getZoomLayer();
   zoomLayer.dispose();
   zoomLayer.setVisibled(false);
@@ -88,7 +88,7 @@ thin.editor.toolaction.AbstractAction.prototype.disposeZoomLayer = function() {
 /**
  * @protected
  */
-thin.editor.toolaction.AbstractAction.prototype.disposeDrawLayer = function() {
+thin.core.toolaction.AbstractAction.prototype.disposeDrawLayer = function() {
   var helpers = this.layout.getHelpers();
   var listHelper = helpers.getListHelper();
   
@@ -109,7 +109,7 @@ thin.editor.toolaction.AbstractAction.prototype.disposeDrawLayer = function() {
 /**
  * @protected
  */
-thin.editor.toolaction.AbstractAction.prototype.disposeSelectorLayer = function() {
+thin.core.toolaction.AbstractAction.prototype.disposeSelectorLayer = function() {
   var helpers = this.layout.getHelpers();
   var surface = helpers.getSurface();
   surface.dispose();
@@ -126,7 +126,7 @@ thin.editor.toolaction.AbstractAction.prototype.disposeSelectorLayer = function(
  * @param {goog.graphics.Element} outline
  * @protected
  */
-thin.editor.toolaction.AbstractAction.prototype.commonStartAction = function(e, outline) {
+thin.core.toolaction.AbstractAction.prototype.commonStartAction = function(e, outline) {
   this.layout.getHelpers().getGuideHelper().setDisable();
   thin.ui.setEnabledForFontUi(false);
   outline.enable(true);
@@ -137,12 +137,12 @@ thin.editor.toolaction.AbstractAction.prototype.commonStartAction = function(e, 
 /**
  * @param {goog.events.BrowserEvent} e
  * @param {goog.graphics.Element} outline
- * @param {thin.editor.Layer} handler
+ * @param {thin.core.Layer} handler
  * @param {boolean} captureActiveForStart
  * @param {boolean=} opt_isCancelDraw
  * @protected
  */
-thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
+thin.core.toolaction.AbstractAction.prototype.commonEndAction = function(
     e, outline, handler, captureActiveForStart, opt_isCancelDraw) {
 
   var scope = this;
@@ -285,10 +285,10 @@ thin.editor.toolaction.AbstractAction.prototype.commonEndAction = function(
 
 
 /** @inheritDoc */
-thin.editor.toolaction.AbstractAction.prototype.disposeInternal = function() {
+thin.core.toolaction.AbstractAction.prototype.disposeInternal = function() {
   this.disposeZoomLayer();
   this.disposeDrawLayer();
   this.disposeSelectorLayer();
 
-  thin.editor.toolaction.AbstractAction.superClass_.disposeInternal.call(this);
+  thin.core.toolaction.AbstractAction.superClass_.disposeInternal.call(this);
 };

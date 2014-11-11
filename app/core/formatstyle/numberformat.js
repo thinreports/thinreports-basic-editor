@@ -13,9 +13,9 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.formatstyles.NumberFormat');
+goog.provide('thin.core.formatstyles.NumberFormat');
 
-goog.require('thin.editor.formatstyles.AbstractFormat');
+goog.require('thin.core.formatstyles.AbstractFormat');
 
 
 /**
@@ -23,16 +23,16 @@ goog.require('thin.editor.formatstyles.AbstractFormat');
  * @param {number} precision
  * @param {boolean} enabled
  * @constructor
- * @extends {thin.editor.formatstyles.AbstractFormat}
+ * @extends {thin.core.formatstyles.AbstractFormat}
  */
-thin.editor.formatstyles.NumberFormat = function(delimiter, precision, enabled) {
-  thin.editor.formatstyles.AbstractFormat.call(this);
+thin.core.formatstyles.NumberFormat = function(delimiter, precision, enabled) {
+  thin.core.formatstyles.AbstractFormat.call(this);
   
-  var disableDelimiter = thin.editor.formatstyles.NumberFormat.DISABLE_DELIMITER;
+  var disableDelimiter = thin.core.formatstyles.NumberFormat.DISABLE_DELIMITER;
   
   if (enabled) {
     if (thin.isExactlyEqual(delimiter, disableDelimiter)) {
-      delimiter = thin.editor.formatstyles.NumberFormat.DEFAULT_DELIMITER;
+      delimiter = thin.core.formatstyles.NumberFormat.DEFAULT_DELIMITER;
     }
   } else {
     delimiter = disableDelimiter;
@@ -57,37 +57,37 @@ thin.editor.formatstyles.NumberFormat = function(delimiter, precision, enabled) 
    */
   this.enabled_ = enabled;
 };
-goog.inherits(thin.editor.formatstyles.NumberFormat, thin.editor.formatstyles.AbstractFormat);
+goog.inherits(thin.core.formatstyles.NumberFormat, thin.core.formatstyles.AbstractFormat);
 
 
 /**
  * @type {string}
  */
-thin.editor.formatstyles.NumberFormat.DEFAULT_DELIMITER = ',';
+thin.core.formatstyles.NumberFormat.DEFAULT_DELIMITER = ',';
 
 
 /**
  * @type {string}
  */
-thin.editor.formatstyles.NumberFormat.DISABLE_DELIMITER = '';
+thin.core.formatstyles.NumberFormat.DISABLE_DELIMITER = '';
 
 
 /**
  * @type {number}
  */
-thin.editor.formatstyles.NumberFormat.DEFAULT_PRECISION = 0;
+thin.core.formatstyles.NumberFormat.DEFAULT_PRECISION = 0;
 
 
 /**
  * @type {boolean}
  */
-thin.editor.formatstyles.NumberFormat.DEFAULT_ENABLED = true;
+thin.core.formatstyles.NumberFormat.DEFAULT_ENABLED = true;
 
 
 /**
  * @return {boolean}
  */
-thin.editor.formatstyles.NumberFormat.prototype.isDelimitationEnabled = function() {
+thin.core.formatstyles.NumberFormat.prototype.isDelimitationEnabled = function() {
   return this.enabled_;
 };
 
@@ -95,7 +95,7 @@ thin.editor.formatstyles.NumberFormat.prototype.isDelimitationEnabled = function
 /**
  * @return {string}
  */
-thin.editor.formatstyles.NumberFormat.prototype.getDelimiter = function() {
+thin.core.formatstyles.NumberFormat.prototype.getDelimiter = function() {
   return this.delimiter_;
 };
 
@@ -103,7 +103,7 @@ thin.editor.formatstyles.NumberFormat.prototype.getDelimiter = function() {
 /**
  * @return {number}
  */
-thin.editor.formatstyles.NumberFormat.prototype.getPrecision = function() {
+thin.core.formatstyles.NumberFormat.prototype.getPrecision = function() {
   return this.precision_;
 };
 
@@ -111,7 +111,7 @@ thin.editor.formatstyles.NumberFormat.prototype.getPrecision = function() {
 /**
  * @return {string}
  */
-thin.editor.formatstyles.NumberFormat.prototype.inspect = function() {
+thin.core.formatstyles.NumberFormat.prototype.inspect = function() {
   return [
     thin.t('field_delimiter') + '=' + (this.enabled_ ? '[' + this.delimiter_ + ']' : 'none'),
     thin.t('field_decimal_place') + '=' + this.precision_
@@ -120,7 +120,7 @@ thin.editor.formatstyles.NumberFormat.prototype.inspect = function() {
 
 
 /** @inheritDoc */
-thin.editor.formatstyles.NumberFormat.prototype.disposeInternal = function() {
+thin.core.formatstyles.NumberFormat.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   
   delete this.delimiter_;

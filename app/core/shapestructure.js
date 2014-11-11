@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ShapeStructure');
+goog.provide('thin.core.ShapeStructure');
 
 goog.require('goog.dom');
 goog.require('goog.array');
@@ -21,23 +21,23 @@ goog.require('goog.object');
 goog.require('goog.json');
 goog.require('goog.json.Serializer');
 goog.require('goog.math.Coordinate');
-goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
-goog.require('thin.editor.TextStyle.VerticalAlignType');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.VerticalAlignType');
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.ShapeStructure.BLANK_ = '';
+thin.core.ShapeStructure.BLANK_ = '';
 
 
 /**
  * @param {Element} shape
  * @return {string}
  */
-thin.editor.ShapeStructure.serialize = function(shape) {
+thin.core.ShapeStructure.serialize = function(shape) {
   var shapeClassId = shape.getAttribute('class');
   var json = {
     'type': shapeClassId,
@@ -47,24 +47,24 @@ thin.editor.ShapeStructure.serialize = function(shape) {
   };
   
   switch(shapeClassId) {
-    case thin.editor.TblockShape.CLASSID:
-      json = thin.editor.ShapeStructure.serializeForTblock_(shape, json);
+    case thin.core.TblockShape.CLASSID:
+      json = thin.core.ShapeStructure.serializeForTblock_(shape, json);
       break;
-    case thin.editor.ListShape.CLASSID:
-      json = thin.editor.ShapeStructure.serializeForList_(shape, json);
+    case thin.core.ListShape.CLASSID:
+      json = thin.core.ShapeStructure.serializeForList_(shape, json);
       break;
-    case thin.editor.TextShape.CLASSID:
-      json = thin.editor.ShapeStructure.serializeForText_(shape, json);
+    case thin.core.TextShape.CLASSID:
+      json = thin.core.ShapeStructure.serializeForText_(shape, json);
       break;
-    case thin.editor.ImageblockShape.CLASSID:
-      json = thin.editor.ShapeStructure.serializeForImageblock_(shape, json);
+    case thin.core.ImageblockShape.CLASSID:
+      json = thin.core.ShapeStructure.serializeForImageblock_(shape, json);
       break;
-    case thin.editor.PageNumberShape.CLASSID:
-      json = thin.editor.ShapeStructure.serializeForPageNumber_(shape, json);
+    case thin.core.PageNumberShape.CLASSID:
+      json = thin.core.ShapeStructure.serializeForPageNumber_(shape, json);
       break;
     default:
       var attrs = {};
-      thin.editor.ShapeStructure.forEachShapeAttribute_(shape,
+      thin.core.ShapeStructure.forEachShapeAttribute_(shape,
         function(key, value) {
           attrs[key] = value;
         });
@@ -86,9 +86,9 @@ thin.editor.ShapeStructure.serialize = function(shape) {
  * @return {Object}
  * @private
  */
-thin.editor.ShapeStructure.serializeForText_ = function(shape, json) {
+thin.core.ShapeStructure.serializeForText_ = function(shape, json) {
   var attrs = {};
-  var blank = thin.editor.ShapeStructure.BLANK_;
+  var blank = thin.core.ShapeStructure.BLANK_;
 
   if (shape.hasAttribute('x-line-height')) {
     json['line-height'] = Number(shape.getAttribute('x-line-height'));
@@ -105,7 +105,7 @@ thin.editor.ShapeStructure.serializeForText_ = function(shape, json) {
   };
   json['inline-format'] = shape.getAttribute('x-inline-format') == 'true';
 
-  thin.editor.ShapeStructure.forEachShapeAttribute_(shape,
+  thin.core.ShapeStructure.forEachShapeAttribute_(shape,
     function(key, value) {
       if (key == 'space') {
         key = 'xml:space'
@@ -129,7 +129,7 @@ thin.editor.ShapeStructure.serializeForText_ = function(shape, json) {
   json['svg'] = {
     'tag':     shape.tagName,
     'attrs':   attrs,
-    'content': thin.editor.ShapeStructure.serializeToContent(textLineShapes)
+    'content': thin.core.ShapeStructure.serializeToContent(textLineShapes)
   };
   return json;
 };
@@ -141,7 +141,7 @@ thin.editor.ShapeStructure.serializeForText_ = function(shape, json) {
  * @return {Object}
  * @private
  */
-thin.editor.ShapeStructure.serializeForImageblock_ = function(shape, json) {
+thin.core.ShapeStructure.serializeForImageblock_ = function(shape, json) {
   var left = Number(shape.getAttribute('x-left'));
   var top = Number(shape.getAttribute('x-top'));
   var width = Number(shape.getAttribute('x-width'));
@@ -155,9 +155,9 @@ thin.editor.ShapeStructure.serializeForImageblock_ = function(shape, json) {
   };
   
   json['position-x'] = shape.getAttribute('x-position-x')
-    || thin.editor.ImageblockShape.PositionX.DEFAULT;
+    || thin.core.ImageblockShape.PositionX.DEFAULT;
   json['position-y'] = shape.getAttribute('x-position-y')
-    || thin.editor.ImageblockShape.PositionY.DEFAULT;
+    || thin.core.ImageblockShape.PositionY.DEFAULT;
   
   json['svg'] = {
     'tag': 'image',
@@ -179,8 +179,8 @@ thin.editor.ShapeStructure.serializeForImageblock_ = function(shape, json) {
  * @return {Object}
  * @private
  */
-thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
-  var blank = thin.editor.ShapeStructure.BLANK_;
+thin.core.ShapeStructure.serializeForTblock_ = function(shape, json) {
+  var blank = thin.core.ShapeStructure.BLANK_;
   var mutliple = shape.getAttribute('x-multiple') || 'false';
   var isMultiMode = mutliple == 'true';
   var anchor = shape.getAttribute('text-anchor');
@@ -245,15 +245,15 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
 
   if (tag == 'text') {
     switch(anchor) {
-      case thin.editor.TextStyle.HorizonAlignType.MIDDLE:
+      case thin.core.TextStyle.HorizonAlignType.MIDDLE:
         left = thin.numberWithPrecision(left + (width / 2));
         break;
-      case thin.editor.TextStyle.HorizonAlignType.END:
+      case thin.core.TextStyle.HorizonAlignType.END:
         left = thin.numberWithPrecision(left + width);
         break;
     }
     
-    var ascent = thin.core.Font.getAscent(family, fontSize, isBold);
+    var ascent = thin.Font.getAscent(family, fontSize, isBold);
     
     attrs['x'] = left;
     attrs['y'] = thin.numberWithPrecision(top + ascent);
@@ -265,7 +265,7 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
   }
   attrs['xml:space'] = 'preserve';
 
-  thin.editor.ShapeStructure.forEachShapeAttribute_(shape,
+  thin.core.ShapeStructure.forEachShapeAttribute_(shape,
     function(key, value) {
       attrs[key] = value;
     });
@@ -274,7 +274,7 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
   json['value'] = shape.getAttribute('x-value') || blank;
   json['ref-id'] = shape.getAttribute('x-ref-id') || blank;
   json['overflow'] = shape.getAttribute('x-overflow') || blank;
-  json['word-wrap'] = shape.getAttribute('x-word-wrap') || thin.editor.TextStyle.getDefaultWordWrap();
+  json['word-wrap'] = shape.getAttribute('x-word-wrap') || thin.core.TextStyle.getDefaultWordWrap();
   json['svg'] = {
     'tag': tag,
     'attrs': attrs
@@ -289,7 +289,7 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
  * @return {Object}
  * @private
  */
-thin.editor.ShapeStructure.serializeForPageNumber_ = function(shape, json) {
+thin.core.ShapeStructure.serializeForPageNumber_ = function(shape, json) {
   var left = Number(shape.getAttribute('x-left'));
   var top = Number(shape.getAttribute('x-top'));
   var width = Number(shape.getAttribute('x-width'));
@@ -308,10 +308,10 @@ thin.editor.ShapeStructure.serializeForPageNumber_ = function(shape, json) {
   };
 
   switch(shape.getAttribute('text-anchor')) {
-    case thin.editor.TextStyle.HorizonAlignType.MIDDLE:
+    case thin.core.TextStyle.HorizonAlignType.MIDDLE:
       attrs['x'] = thin.numberWithPrecision(left + (width / 2));
       break;
-    case thin.editor.TextStyle.HorizonAlignType.END:
+    case thin.core.TextStyle.HorizonAlignType.END:
       attrs['x'] = thin.numberWithPrecision(left + width);
       break;
     default:
@@ -320,9 +320,9 @@ thin.editor.ShapeStructure.serializeForPageNumber_ = function(shape, json) {
   }
   
   attrs['y'] = thin.numberWithPrecision(top + 
-      thin.core.Font.getAscent(family, fontSize, isBold));
+      thin.Font.getAscent(family, fontSize, isBold));
 
-  thin.editor.ShapeStructure.forEachShapeAttribute_(shape,
+  thin.core.ShapeStructure.forEachShapeAttribute_(shape,
     function(key, value) {
       attrs[key] = value;
     });
@@ -342,7 +342,7 @@ thin.editor.ShapeStructure.serializeForPageNumber_ = function(shape, json) {
  * @param {string} sectionClassId
  * @return {string}
  */
-thin.editor.ShapeStructure.getSectionName = function(sectionClassId) {
+thin.core.ShapeStructure.getSectionName = function(sectionClassId) {
   return sectionClassId.replace(/s\-list\-/, '');
 };
 
@@ -352,9 +352,9 @@ thin.editor.ShapeStructure.getSectionName = function(sectionClassId) {
  * @param {Element} parentElement
  * @return {string}
  */
-thin.editor.ShapeStructure.getEnabledOfSection = function(element, parentElement) {
+thin.core.ShapeStructure.getEnabledOfSection = function(element, parentElement) {
   var sectionClassId = element.getAttribute('class');
-  var sectionName = thin.editor.ShapeStructure.getSectionName(sectionClassId);
+  var sectionName = thin.core.ShapeStructure.getSectionName(sectionClassId);
   return parentElement.getAttribute('x-' + sectionName + '-enabled') || 'true';
 };
 
@@ -365,13 +365,13 @@ thin.editor.ShapeStructure.getEnabledOfSection = function(element, parentElement
  * @return {Object}
  * @private
  */
-thin.editor.ShapeStructure.serializeForList_ = function(shape, json) {
-  var listShapeClassId = thin.editor.ListShape.ClassIds;
-  var classIdPrefix = thin.editor.ListShape.CLASSID;
+thin.core.ShapeStructure.serializeForList_ = function(shape, json) {
+  var listShapeClassId = thin.core.ListShape.ClassIds;
+  var classIdPrefix = thin.core.ListShape.CLASSID;
   var headerClassId = classIdPrefix + listShapeClassId['HEADER'];
   var detailClassId = classIdPrefix + listShapeClassId['DETAIL'];
   var listGroupChildNodes = shape.childNodes;
-  var detailTop = Number(thin.editor.getElementByClassNameForChildNodes(
+  var detailTop = Number(thin.core.getElementByClassNameForChildNodes(
                       detailClassId, listGroupChildNodes).getAttribute('x-top'));
 
   var enabledForSection;
@@ -382,10 +382,10 @@ thin.editor.ShapeStructure.serializeForList_ = function(shape, json) {
   goog.array.forEachRight(listGroupChildNodes, function(childShape) {
     childGroupClassId = childShape.getAttribute('class');
     if (childShape.tagName == 'g') {
-      enabledForSection = thin.editor.ShapeStructure.getEnabledOfSection(childShape, shape);
-      sectionName = thin.editor.ShapeStructure.getSectionName(childGroupClassId);
+      enabledForSection = thin.core.ShapeStructure.getEnabledOfSection(childShape, shape);
+      sectionName = thin.core.ShapeStructure.getSectionName(childGroupClassId);
       isDetailSection = childGroupClassId == detailClassId;
-      json[sectionName] = thin.editor.ShapeStructure.serializeForListForSection_(
+      json[sectionName] = thin.core.ShapeStructure.serializeForListForSection_(
                               childShape, enabledForSection == 'true', 
                               (childGroupClassId == headerClassId || 
                                isDetailSection) ? null : detailTop);
@@ -399,7 +399,7 @@ thin.editor.ShapeStructure.serializeForList_ = function(shape, json) {
     'attrs': {}
   };
   
-  var headerStruct = json[thin.editor.ShapeStructure.getSectionName(headerClassId)];
+  var headerStruct = json[thin.core.ShapeStructure.getSectionName(headerClassId)];
   var headerHeight = 0;
   if (goog.isDef(headerStruct['height'])) {
     headerHeight = Number(headerStruct['height']);
@@ -418,7 +418,7 @@ thin.editor.ShapeStructure.serializeForList_ = function(shape, json) {
  * @return {Object}
  * @private
  */
-thin.editor.ShapeStructure.serializeForListForSection_ = function(
+thin.core.ShapeStructure.serializeForListForSection_ = function(
     sectionGroup, enabled, opt_detailTop) {
 
   if (!enabled) {
@@ -429,13 +429,13 @@ thin.editor.ShapeStructure.serializeForListForSection_ = function(
     'height': Number(sectionGroup.getAttribute('x-height')),
     'svg': {
       'tag': sectionGroup.tagName,
-      'content': thin.editor.ShapeStructure.serializeToContent(
-                    thin.editor.LayoutStructure.serializeShapes(
+      'content': thin.core.ShapeStructure.serializeToContent(
+                    thin.core.LayoutStructure.serializeShapes(
                         sectionGroup.cloneNode(true).childNodes, 1))
     }
   };
 
-  var translate = thin.editor.ShapeStructure.getTransLateCoordinate(sectionGroup);
+  var translate = thin.core.ShapeStructure.getTransLateCoordinate(sectionGroup);
   var isCalculateDiff = goog.isNumber(opt_detailTop);
   if (isCalculateDiff) {
     var diffY = Number(sectionGroup.getAttribute('x-top')) - opt_detailTop;
@@ -454,7 +454,7 @@ thin.editor.ShapeStructure.serializeForListForSection_ = function(
  * @param {Element|Node} transformElement
  * @return {goog.math.Coordinate}
  */
-thin.editor.ShapeStructure.getTransLateCoordinate = function(transformElement) {
+thin.core.ShapeStructure.getTransLateCoordinate = function(transformElement) {
   var affineTransform = transformElement.getAttribute('transform');
   var x = 0;
   var y = 0;
@@ -476,10 +476,10 @@ thin.editor.ShapeStructure.getTransLateCoordinate = function(transformElement) {
  * @param {goog.array.ArrayLike} childNodes
  * @return {string}
  */
-thin.editor.ShapeStructure.serializeToContent = function(childNodes) {
+thin.core.ShapeStructure.serializeToContent = function(childNodes) {
   var content = '';
   goog.array.forEach(childNodes, function(element) {
-    content += thin.editor.serializeToXML(element);
+    content += thin.core.serializeToXML(element);
   });
   
   return content;
@@ -491,7 +491,7 @@ thin.editor.ShapeStructure.serializeToContent = function(childNodes) {
  * @param {Function} f
  * @private
  */
-thin.editor.ShapeStructure.forEachShapeAttribute_ = function(shape, f) {
+thin.core.ShapeStructure.forEachShapeAttribute_ = function(shape, f) {
   var attrName;
   for(var i = 0, attr; attr = shape.attributes[i]; i++) {
     attrName = attr.name;

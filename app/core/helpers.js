@@ -13,194 +13,194 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Helpers');
+goog.provide('thin.core.Helpers');
 
 goog.require('goog.dom');
 goog.require('goog.array');
 goog.require('goog.Disposable');
 goog.require('goog.graphics.SvgGroupElement');
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.Grid');
-goog.require('thin.editor.ActionLayer');
-goog.require('thin.editor.DrawActionLayer');
-goog.require('thin.editor.RectOutline');
-goog.require('thin.editor.EllipseOutline');
-goog.require('thin.editor.LineOutline');
-goog.require('thin.editor.TblockOutline');
-goog.require('thin.editor.PageNumberOutline');
-goog.require('thin.editor.ImageblockOutline');
-goog.require('thin.editor.TextOutline');
-goog.require('thin.editor.ListOutline');
-goog.require('thin.editor.ImageOutline');
-goog.require('thin.editor.GuideHelper');
-goog.require('thin.editor.LayoutGuideHelper');
-goog.require('thin.editor.MarginGuideHelper');
-goog.require('thin.editor.ListHelper');
-goog.require('thin.editor.OutlineHelper');
-goog.require('thin.editor.MultiOutlineHelper');
-goog.require('thin.editor.MultipleShapesHelper');
+goog.require('thin.core.Rect');
+goog.require('thin.core.Grid');
+goog.require('thin.core.ActionLayer');
+goog.require('thin.core.DrawActionLayer');
+goog.require('thin.core.RectOutline');
+goog.require('thin.core.EllipseOutline');
+goog.require('thin.core.LineOutline');
+goog.require('thin.core.TblockOutline');
+goog.require('thin.core.PageNumberOutline');
+goog.require('thin.core.ImageblockOutline');
+goog.require('thin.core.TextOutline');
+goog.require('thin.core.ListOutline');
+goog.require('thin.core.ImageOutline');
+goog.require('thin.core.GuideHelper');
+goog.require('thin.core.LayoutGuideHelper');
+goog.require('thin.core.MarginGuideHelper');
+goog.require('thin.core.ListHelper');
+goog.require('thin.core.OutlineHelper');
+goog.require('thin.core.MultiOutlineHelper');
+goog.require('thin.core.MultipleShapesHelper');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.Helpers = function(layout) {
+thin.core.Helpers = function(layout) {
   
   /**
-   * @type {thin.editor.Layout}
+   * @type {thin.core.Layout}
    * @private
    */
   this.layout_ = layout;
 };
-goog.inherits(thin.editor.Helpers, goog.Disposable);
+goog.inherits(thin.core.Helpers, goog.Disposable);
 
 
 /**
  * @type {string}
  */
-thin.editor.Helpers.HELPERS_CLASS_ID = 'helpers';
+thin.core.Helpers.HELPERS_CLASS_ID = 'helpers';
 
 
 /**
- * @type {thin.editor.Rect}
+ * @type {thin.core.Rect}
  * @private
  */
-thin.editor.Helpers.prototype.canvas_;
+thin.core.Helpers.prototype.canvas_;
 
 
 /**
- * @type {thin.editor.Grid}
+ * @type {thin.core.Grid}
  * @private
  */
-thin.editor.Helpers.prototype.grid_;
+thin.core.Helpers.prototype.grid_;
 
 
 /**
- * @type {thin.editor.Layer}
+ * @type {thin.core.Layer}
  * @private
  */
-thin.editor.Helpers.prototype.gridLayer_;
+thin.core.Helpers.prototype.gridLayer_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Helpers.prototype.visibledGrid_ = false;
+thin.core.Helpers.prototype.visibledGrid_ = false;
 
 
 /**
- * @type {thin.editor.GuideHelper}
+ * @type {thin.core.GuideHelper}
  * @private
  */
-thin.editor.Helpers.prototype.guideHelper_;
+thin.core.Helpers.prototype.guideHelper_;
 
 
 /**
- * @type {thin.editor.OutlineHelper}
+ * @type {thin.core.OutlineHelper}
  * @private
  */
-thin.editor.Helpers.prototype.outlineHelper_;
+thin.core.Helpers.prototype.outlineHelper_;
 
 
 /**
- * @type {thin.editor.LayoutGuideHelper}
+ * @type {thin.core.LayoutGuideHelper}
  * @private
  */
-thin.editor.Helpers.prototype.layoutGuideHelper_;
+thin.core.Helpers.prototype.layoutGuideHelper_;
 
 
 /**
- * @type {thin.editor.MultiOutlineHelper}
+ * @type {thin.core.MultiOutlineHelper}
  * @private
  */
-thin.editor.Helpers.prototype.multiOutlineHelper_;
+thin.core.Helpers.prototype.multiOutlineHelper_;
 
 
 /**
- * @type {thin.editor.MarginGuideHelper}
+ * @type {thin.core.MarginGuideHelper}
  * @private
  */
-thin.editor.Helpers.prototype.marginGuideHelper_;
+thin.core.Helpers.prototype.marginGuideHelper_;
 
 
 /**
- * @type {thin.editor.MultipleShapesHelper}
+ * @type {thin.core.MultipleShapesHelper}
  * @private
  */
-thin.editor.Helpers.prototype.multipleShapesHelper_;
+thin.core.Helpers.prototype.multipleShapesHelper_;
 
 
 /**
- * @type {thin.editor.Layer}
+ * @type {thin.core.Layer}
  * @private
  */
-thin.editor.Helpers.prototype.surface_;
+thin.core.Helpers.prototype.surface_;
 
 
 /**
- * @type {thin.editor.Layer}
+ * @type {thin.core.Layer}
  * @private
  */
-thin.editor.Helpers.prototype.zoomLayer_;
+thin.core.Helpers.prototype.zoomLayer_;
 
 
 /**
- * @type {thin.editor.Layer}
+ * @type {thin.core.Layer}
  * @private
  */
-thin.editor.Helpers.prototype.drawLayer_;
-
-
-/**
- * @type {goog.graphics.SvgGroupElement}
- * @private
- */
-thin.editor.Helpers.prototype.frontContainer_;
+thin.core.Helpers.prototype.drawLayer_;
 
 
 /**
  * @type {goog.graphics.SvgGroupElement}
  * @private
  */
-thin.editor.Helpers.prototype.backContainer_;
+thin.core.Helpers.prototype.frontContainer_;
 
 
 /**
- * @type {thin.editor.Layer}
+ * @type {goog.graphics.SvgGroupElement}
  * @private
  */
-thin.editor.Helpers.prototype.dragLayer_;
+thin.core.Helpers.prototype.backContainer_;
 
 
 /**
- * @type {thin.editor.ListHelper}
+ * @type {thin.core.Layer}
  * @private
  */
-thin.editor.Helpers.prototype.listHelper_;
+thin.core.Helpers.prototype.dragLayer_;
 
 
-thin.editor.Helpers.prototype.setup = function() {
+/**
+ * @type {thin.core.ListHelper}
+ * @private
+ */
+thin.core.Helpers.prototype.listHelper_;
+
+
+thin.core.Helpers.prototype.setup = function() {
   var layout = this.layout_;
-  var cursorType = thin.editor.Cursor.Type;
-  var classId = thin.editor.Helpers.HELPERS_CLASS_ID;
+  var cursorType = thin.core.Cursor.Type;
+  var classId = thin.core.Helpers.HELPERS_CLASS_ID;
   this.frontContainer_ = new goog.graphics.SvgGroupElement(layout.createHelpersElement('g', {
     'class': classId
   }), layout);
   this.backContainer_ = new goog.graphics.SvgGroupElement(layout.createHelpersElement('g', {
     'class': classId
   }), layout);
-  this.guideHelper_ = new thin.editor.GuideHelper(layout);
-  this.outlineHelper_ = new thin.editor.OutlineHelper(layout);
-  this.multiOutlineHelper_ = new thin.editor.MultiOutlineHelper(layout);
-  this.multipleShapesHelper_ = new thin.editor.MultipleShapesHelper(layout);
-  this.layoutGuideHelper_ = new thin.editor.LayoutGuideHelper(layout);
-  this.marginGuideHelper_ = thin.editor.MarginGuideHelper.setup(layout);
+  this.guideHelper_ = new thin.core.GuideHelper(layout);
+  this.outlineHelper_ = new thin.core.OutlineHelper(layout);
+  this.multiOutlineHelper_ = new thin.core.MultiOutlineHelper(layout);
+  this.multipleShapesHelper_ = new thin.core.MultipleShapesHelper(layout);
+  this.layoutGuideHelper_ = new thin.core.LayoutGuideHelper(layout);
+  this.marginGuideHelper_ = thin.core.MarginGuideHelper.setup(layout);
   var canvasBounds = layout.getBounds();
-  var surface = new thin.editor.ActionLayer(layout,
-          new thin.editor.Cursor(cursorType.CROSSHAIR));
+  var surface = new thin.core.ActionLayer(layout,
+          new thin.core.Cursor(cursorType.CROSSHAIR));
   layout.setElementAttributes(surface.getElement(), {
     'fill-opacity': 0
   });
@@ -208,27 +208,27 @@ thin.editor.Helpers.prototype.setup = function() {
 
   this.surface_ = surface;
   
-  var gridLayer = new thin.editor.Layer(layout);
+  var gridLayer = new thin.core.Layer(layout);
   gridLayer.setVisibled(true);
   layout.setElementAttributes(gridLayer.getElement(), {
     'width': '100%',
     'height': '100%'
   });
   this.gridLayer_ = gridLayer;
-  this.grid_ = new thin.editor.Grid(layout);
+  this.grid_ = new thin.core.Grid(layout);
 
-  this.canvas_ = new thin.editor.Rect(layout.createSvgElement('rect'),
+  this.canvas_ = new thin.core.Rect(layout.createSvgElement('rect'),
                     layout, null, null);
   this.canvas_.setBounds(canvasBounds);
   
-  this.drawLayer_ = new thin.editor.DrawActionLayer(layout);
-  this.listHelper_ = new thin.editor.ListHelper(layout);
-  this.dragLayer_ = new thin.editor.ActionLayer(layout);
-  this.zoomLayer_ = new thin.editor.ActionLayer(layout);
+  this.drawLayer_ = new thin.core.DrawActionLayer(layout);
+  this.listHelper_ = new thin.core.ListHelper(layout);
+  this.dragLayer_ = new thin.core.ActionLayer(layout);
+  this.zoomLayer_ = new thin.core.ActionLayer(layout);
 };
 
 
-thin.editor.Helpers.prototype.render = function() {
+thin.core.Helpers.prototype.render = function() {
   this.layout_.addDef(this.grid_.getDefKey(), this.grid_.getElement());
   this.switchGridLayerFill(false);
   this.appendFront(this.canvas_);
@@ -255,7 +255,7 @@ thin.editor.Helpers.prototype.render = function() {
 /**
  * @param {boolean} is_grid
  */
-thin.editor.Helpers.prototype.switchGridLayerFill = function(is_grid) {
+thin.core.Helpers.prototype.switchGridLayerFill = function(is_grid) {
   var fill = null;
   if (is_grid) {
     fill = this.grid_.getPatternFill();
@@ -270,12 +270,12 @@ thin.editor.Helpers.prototype.switchGridLayerFill = function(is_grid) {
 /**
  * @return {boolean}
  */
-thin.editor.Helpers.prototype.isVisibledGrid = function() {
+thin.core.Helpers.prototype.isVisibledGrid = function() {
   return this.visibledGrid_;
 };
 
 
-thin.editor.Helpers.prototype.reapplySizeAndStroke = function() {
+thin.core.Helpers.prototype.reapplySizeAndStroke = function() {
   this.outlineHelper_.reapplyStroke();
   var guide = this.guideHelper_;
   guide.reapplySizeAndStroke();
@@ -297,7 +297,7 @@ thin.editor.Helpers.prototype.reapplySizeAndStroke = function() {
 /**
  * @param {goog.graphics.Element} element
  */
-thin.editor.Helpers.prototype.appendFront = function(element) {
+thin.core.Helpers.prototype.appendFront = function(element) {
   this.layout_.appendChild(element, this.frontContainer_);
 };
 
@@ -305,7 +305,7 @@ thin.editor.Helpers.prototype.appendFront = function(element) {
 /**
  * @param {goog.graphics.Element} element
  */
-thin.editor.Helpers.prototype.appendBack = function(element) {
+thin.core.Helpers.prototype.appendBack = function(element) {
   this.layout_.appendChild(element, this.backContainer_);
 };
 
@@ -313,7 +313,7 @@ thin.editor.Helpers.prototype.appendBack = function(element) {
 /**
  * @return {Array}
  */
-thin.editor.Helpers.prototype.getAdsorptionX = function() {
+thin.core.Helpers.prototype.getAdsorptionX = function() {
   var layoutGuideXPositions = [];
   if (this.layoutGuideHelper_.isEnable()) {
     layoutGuideXPositions = this.layoutGuideHelper_.getXPositions();
@@ -326,7 +326,7 @@ thin.editor.Helpers.prototype.getAdsorptionX = function() {
 /**
  * @return {Array}
  */
-thin.editor.Helpers.prototype.getAdsorptionY = function() {
+thin.core.Helpers.prototype.getAdsorptionY = function() {
   var layoutGuideYPositions = [];
   if (this.layoutGuideHelper_.isEnable()) {
     layoutGuideYPositions = this.layoutGuideHelper_.getYPositions();
@@ -337,189 +337,189 @@ thin.editor.Helpers.prototype.getAdsorptionY = function() {
 
 
 /**
- * @return {thin.editor.Rect}
+ * @return {thin.core.Rect}
  */
-thin.editor.Helpers.prototype.getCanvas = function() {
+thin.core.Helpers.prototype.getCanvas = function() {
   return this.canvas_;
 };
 
 
 /**
- * @return {thin.editor.Layer}
+ * @return {thin.core.Layer}
  */
-thin.editor.Helpers.prototype.getSurface = function() {
+thin.core.Helpers.prototype.getSurface = function() {
   return this.surface_;
 };
 
 
 /**
- * @return {thin.editor.MarginGuideHelper}
+ * @return {thin.core.MarginGuideHelper}
  */
-thin.editor.Helpers.prototype.getMarginGuideHelper = function() {
+thin.core.Helpers.prototype.getMarginGuideHelper = function() {
   return this.marginGuideHelper_;
 };
 
 
 /**
- * @return {thin.editor.MultipleShapesHelper}
+ * @return {thin.core.MultipleShapesHelper}
  */
-thin.editor.Helpers.prototype.getMultipleShapesHelper = function() {
+thin.core.Helpers.prototype.getMultipleShapesHelper = function() {
   return this.multipleShapesHelper_;
 };
 
 
 /**
- * @return {thin.editor.LayoutGuideHelper}
+ * @return {thin.core.LayoutGuideHelper}
  */
-thin.editor.Helpers.prototype.getLayoutGuideHelper = function() {
+thin.core.Helpers.prototype.getLayoutGuideHelper = function() {
   return this.layoutGuideHelper_;
 };
 
 
 /**
- * @return {thin.editor.MultiOutlineHelper}
+ * @return {thin.core.MultiOutlineHelper}
  */
-thin.editor.Helpers.prototype.getMultiOutlineHelper = function() {
+thin.core.Helpers.prototype.getMultiOutlineHelper = function() {
   return this.multiOutlineHelper_;
 };
 
 
 /**
- * @return {thin.editor.OutlineHelper}
+ * @return {thin.core.OutlineHelper}
  */
-thin.editor.Helpers.prototype.getOutlineHelper = function() {
+thin.core.Helpers.prototype.getOutlineHelper = function() {
   return this.outlineHelper_;
 };
 
 
 /**
- * @return {thin.editor.GuideHelper}
+ * @return {thin.core.GuideHelper}
  */
-thin.editor.Helpers.prototype.getGuideHelper = function() {
+thin.core.Helpers.prototype.getGuideHelper = function() {
   return this.guideHelper_;
 };
 
 
 /**
- * @return {thin.editor.ListHelper}
+ * @return {thin.core.ListHelper}
  */
-thin.editor.Helpers.prototype.getListHelper = function() {
+thin.core.Helpers.prototype.getListHelper = function() {
   return this.listHelper_;
 };
 
 
 /**
- * @return {thin.editor.Layer}
+ * @return {thin.core.Layer}
  */
-thin.editor.Helpers.prototype.getZoomLayer = function() {
+thin.core.Helpers.prototype.getZoomLayer = function() {
   return this.zoomLayer_;
 };
 
 
 /**
- * @return {thin.editor.Layer}
+ * @return {thin.core.Layer}
  */
-thin.editor.Helpers.prototype.getDragLayer = function() {
+thin.core.Helpers.prototype.getDragLayer = function() {
   return this.dragLayer_;
 };
 
 
 /**
- * @return {thin.editor.Layer}
+ * @return {thin.core.Layer}
  */
-thin.editor.Helpers.prototype.getDrawLayer = function() {
+thin.core.Helpers.prototype.getDrawLayer = function() {
   return this.drawLayer_;
 };
 
 
 /**
- * @return {thin.editor.RectOutline}
+ * @return {thin.core.RectOutline}
  */
-thin.editor.Helpers.prototype.getRectOutline = function() {
+thin.core.Helpers.prototype.getRectOutline = function() {
   return this.outlineHelper_.getRectOutline();
 };
 
 
 /**
- * @return {thin.editor.EllipseOutline}
+ * @return {thin.core.EllipseOutline}
  */
-thin.editor.Helpers.prototype.getEllipseOutline = function() {
+thin.core.Helpers.prototype.getEllipseOutline = function() {
   return this.outlineHelper_.getEllipseOutline();
 };
 
 
 /**
- * @return {thin.editor.LineOutline}
+ * @return {thin.core.LineOutline}
  */
-thin.editor.Helpers.prototype.getLineOutline = function() {
+thin.core.Helpers.prototype.getLineOutline = function() {
   return this.outlineHelper_.getLineOutline();
 };
 
 
 /**
- * @return {thin.editor.TblockOutline}
+ * @return {thin.core.TblockOutline}
  */
-thin.editor.Helpers.prototype.getTblockOutline = function() {
+thin.core.Helpers.prototype.getTblockOutline = function() {
   return this.outlineHelper_.getTblockOutline();
 };
 
 
 /**
- * @return {thin.editor.PageNumberOutline}
+ * @return {thin.core.PageNumberOutline}
  */
-thin.editor.Helpers.prototype.getPageNumberOutline = function() {
+thin.core.Helpers.prototype.getPageNumberOutline = function() {
   return this.outlineHelper_.getPageNumberOutline();
 };
 
 
 /**
- * @return {thin.editor.ImageblockOutline}
+ * @return {thin.core.ImageblockOutline}
  */
-thin.editor.Helpers.prototype.getImageblockOutline = function() {
+thin.core.Helpers.prototype.getImageblockOutline = function() {
   return this.outlineHelper_.getImageblockOutline();
 };
 
 
 /**
- * @return {thin.editor.TextOutline}
+ * @return {thin.core.TextOutline}
  */
-thin.editor.Helpers.prototype.getTextOutline = function() {
+thin.core.Helpers.prototype.getTextOutline = function() {
   return this.outlineHelper_.getTextOutline();
 };
 
 
 /**
- * @return {thin.editor.ListOutline}
+ * @return {thin.core.ListOutline}
  */
-thin.editor.Helpers.prototype.getListOutline = function() {
+thin.core.Helpers.prototype.getListOutline = function() {
   return this.outlineHelper_.getListOutline();
 };
 
 /**
- * @return {thin.editor.ImageOutline}
+ * @return {thin.core.ImageOutline}
  */
-thin.editor.Helpers.prototype.getImageOutline = function() {
+thin.core.Helpers.prototype.getImageOutline = function() {
   return this.outlineHelper_.getImageOutline();
 };
 
 
 /**
- * @return {thin.editor.SelectorOutline}
+ * @return {thin.core.SelectorOutline}
  */
-thin.editor.Helpers.prototype.getSelectorOutline = function() {
+thin.core.Helpers.prototype.getSelectorOutline = function() {
   return this.outlineHelper_.getSelectorOutline();
 };
 
 
 /**
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {thin.core.OutlineHelper|thin.core.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @param {Object=} opt_attr
- * @return {thin.editor.RectOutline}
+ * @return {thin.core.RectOutline}
  */
-thin.editor.Helpers.prototype.createRectOutline = function(helper, stroke, fill, opt_attr) {
-  var rectOutline = new thin.editor.RectOutline(
+thin.core.Helpers.prototype.createRectOutline = function(helper, stroke, fill, opt_attr) {
+  var rectOutline = new thin.core.RectOutline(
                            this.layout_.createSvgElement('rect', opt_attr),
                            this.layout_, stroke, fill);
   rectOutline.setOutlineHelper(helper);
@@ -528,14 +528,14 @@ thin.editor.Helpers.prototype.createRectOutline = function(helper, stroke, fill,
 
 
 /**
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {thin.core.OutlineHelper|thin.core.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @param {Object=} opt_attr
- * @return {thin.editor.EllipseOutline}
+ * @return {thin.core.EllipseOutline}
  */
-thin.editor.Helpers.prototype.createEllipseOutline = function(helper, stroke, fill, opt_attr) {
-  var ellipseOutline = new thin.editor.EllipseOutline(
+thin.core.Helpers.prototype.createEllipseOutline = function(helper, stroke, fill, opt_attr) {
+  var ellipseOutline = new thin.core.EllipseOutline(
                               this.layout_.createSvgElement('ellipse', opt_attr),
                               this.layout_, stroke, fill);
   ellipseOutline.setOutlineHelper(helper);
@@ -544,13 +544,13 @@ thin.editor.Helpers.prototype.createEllipseOutline = function(helper, stroke, fi
 
 
 /**
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {thin.core.OutlineHelper|thin.core.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {Object=} opt_attr
- * @return {thin.editor.LineOutline}
+ * @return {thin.core.LineOutline}
  */
-thin.editor.Helpers.prototype.createLineOutline = function(helper, stroke, opt_attr) {
-  var lineOutline = new thin.editor.LineOutline(
+thin.core.Helpers.prototype.createLineOutline = function(helper, stroke, opt_attr) {
+  var lineOutline = new thin.core.LineOutline(
                           this.layout_.createSvgElement('line', opt_attr),
                           this.layout_, stroke);
   lineOutline.setOutlineHelper(helper);
@@ -559,15 +559,15 @@ thin.editor.Helpers.prototype.createLineOutline = function(helper, stroke, opt_a
 
 
 /**
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {thin.core.OutlineHelper|thin.core.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @param {Object=} opt_attr
- * @return {thin.editor.TblockOutline}
+ * @return {thin.core.TblockOutline}
  * @private
  */
-thin.editor.Helpers.prototype.createTblockOutline = function(helper, stroke, fill, opt_attr) {
-  var tblockOutline = new thin.editor.TblockOutline(
+thin.core.Helpers.prototype.createTblockOutline = function(helper, stroke, fill, opt_attr) {
+  var tblockOutline = new thin.core.TblockOutline(
                             this.layout_.createSvgElement('rect', opt_attr), 
                             this.layout_, stroke, fill);
   tblockOutline.setOutlineHelper(helper);
@@ -576,15 +576,15 @@ thin.editor.Helpers.prototype.createTblockOutline = function(helper, stroke, fil
 
 
 /**
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {thin.core.OutlineHelper|thin.core.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @param {Object=} opt_attr
- * @return {thin.editor.PageNumberOutline}
+ * @return {thin.core.PageNumberOutline}
  * @private
  */
-thin.editor.Helpers.prototype.createPageNumberOutline = function(helper, stroke, fill, opt_attr) {
-  var pageNumberOutline = new thin.editor.PageNumberOutline(
+thin.core.Helpers.prototype.createPageNumberOutline = function(helper, stroke, fill, opt_attr) {
+  var pageNumberOutline = new thin.core.PageNumberOutline(
                             this.layout_.createSvgElement('rect', opt_attr), 
                             this.layout_, stroke, fill);
   pageNumberOutline.setOutlineHelper(helper);
@@ -593,15 +593,15 @@ thin.editor.Helpers.prototype.createPageNumberOutline = function(helper, stroke,
 
 
 /**
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {thin.core.OutlineHelper|thin.core.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @param {Object=} opt_attr
- * @return {thin.editor.ImageblockOutline}
+ * @return {thin.core.ImageblockOutline}
  * @private
  */
-thin.editor.Helpers.prototype.createImageblockOutline = function(helper, stroke, fill, opt_attr) {
-  var iblockOutline = new thin.editor.ImageblockOutline(
+thin.core.Helpers.prototype.createImageblockOutline = function(helper, stroke, fill, opt_attr) {
+  var iblockOutline = new thin.core.ImageblockOutline(
                             this.layout_.createSvgElement('rect', opt_attr),
                             this.layout_, stroke, fill);
   iblockOutline.setOutlineHelper(helper);
@@ -610,15 +610,15 @@ thin.editor.Helpers.prototype.createImageblockOutline = function(helper, stroke,
 
 
 /**
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {thin.core.OutlineHelper|thin.core.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @param {Object=} opt_attr
- * @return {thin.editor.TextOutline}
+ * @return {thin.core.TextOutline}
  * @private
  */
-thin.editor.Helpers.prototype.createTextOutline = function(helper, stroke, fill, opt_attr) {
-  var textOutline = new thin.editor.TextOutline(
+thin.core.Helpers.prototype.createTextOutline = function(helper, stroke, fill, opt_attr) {
+  var textOutline = new thin.core.TextOutline(
                           this.layout_.createSvgElement('rect', opt_attr),
                           this.layout_, stroke, fill);  
   textOutline.setOutlineHelper(helper);
@@ -627,14 +627,14 @@ thin.editor.Helpers.prototype.createTextOutline = function(helper, stroke, fill,
 
 
 /**
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {thin.core.OutlineHelper|thin.core.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @param {Object=} opt_attr
- * @return {thin.editor.ImageOutline}
+ * @return {thin.core.ImageOutline}
  */
-thin.editor.Helpers.prototype.createImageOutline = function(helper, stroke, fill, opt_attr) {
-  var imageOutline = new thin.editor.ImageOutline(
+thin.core.Helpers.prototype.createImageOutline = function(helper, stroke, fill, opt_attr) {
+  var imageOutline = new thin.core.ImageOutline(
                             this.layout_.createSvgElement('rect', opt_attr),
                             this.layout_, stroke, fill);
   imageOutline.setOutlineHelper(helper);
@@ -642,7 +642,7 @@ thin.editor.Helpers.prototype.createImageOutline = function(helper, stroke, fill
 };
 
 
-thin.editor.Helpers.prototype.disableAll = function() {
+thin.core.Helpers.prototype.disableAll = function() {
   var listHelper = this.listHelper_;
   var activeShapeManager = this.layout_.getManager().getActiveShape();
   if(listHelper.isActive()) {
@@ -662,14 +662,14 @@ thin.editor.Helpers.prototype.disableAll = function() {
 
 
 /**
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {thin.core.OutlineHelper|thin.core.MultiOutlineHelper} helper
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @param {Object=} opt_attr
- * @return {thin.editor.ListOutline}
+ * @return {thin.core.ListOutline}
  */
-thin.editor.Helpers.prototype.createListOutline = function(helper, stroke, fill, opt_attr) {
-  var rect = new thin.editor.ListOutline(
+thin.core.Helpers.prototype.createListOutline = function(helper, stroke, fill, opt_attr) {
+  var rect = new thin.core.ListOutline(
                     this.layout_.createSvgElement('rect', opt_attr),
                     this.layout_, stroke, fill);
   rect.setOutlineHelper(helper);
@@ -678,7 +678,7 @@ thin.editor.Helpers.prototype.createListOutline = function(helper, stroke, fill,
 
 
 /** @inheritDoc */
-thin.editor.Helpers.prototype.disposeInternal = function() {
+thin.core.Helpers.prototype.disposeInternal = function() {
 
   this.guideHelper_.dispose();
   this.listHelper_.dispose();

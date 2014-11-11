@@ -13,38 +13,38 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.LineOutline');
+goog.provide('thin.core.LineOutline');
 
 goog.require('goog.math.Rect');
-goog.require('thin.editor.Line');
-goog.require('thin.editor.ModuleOutline');
+goog.require('thin.core.Line');
+goog.require('thin.core.ModuleOutline');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @constructor
- * @extends {thin.editor.Line}
+ * @extends {thin.core.Line}
  */
-thin.editor.LineOutline = function(element, layout, stroke) {
-  thin.editor.Line.call(this, element, layout, stroke);
+thin.core.LineOutline = function(element, layout, stroke) {
+  thin.core.Line.call(this, element, layout, stroke);
 };
-goog.inherits(thin.editor.LineOutline, thin.editor.Line);
-goog.mixin(thin.editor.LineOutline.prototype, thin.editor.ModuleOutline.prototype);
+goog.inherits(thin.core.LineOutline, thin.core.Line);
+goog.mixin(thin.core.LineOutline.prototype, thin.core.ModuleOutline.prototype);
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.LineOutline.THICK_STROKE_PX_ = 4;
+thin.core.LineOutline.THICK_STROKE_PX_ = 4;
 
 
 /**
  * @param {goog.graphics.Element} shape
  */
-thin.editor.LineOutline.prototype.setTargetShape = function(shape) {
+thin.core.LineOutline.prototype.setTargetShape = function(shape) {
   this.targetShape_ = shape;
   this.direction_ = shape.getDirection();
 };
@@ -56,7 +56,7 @@ thin.editor.LineOutline.prototype.setTargetShape = function(shape) {
  * @param {number} clientPosX
  * @param {number} clientPosY
  */
-thin.editor.LineOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
+thin.core.LineOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
 
   var x1 = Math.min(startPosX, clientPosX);
   var x2 = Math.max(startPosX, clientPosX);
@@ -82,23 +82,23 @@ thin.editor.LineOutline.prototype.setBoundsByCoordinate = function(startPosX, st
 
 
 /**
- * @return {thin.editor.LineShape}
+ * @return {thin.core.LineShape}
  */
-thin.editor.LineOutline.prototype.toShape = function() {
+thin.core.LineOutline.prototype.toShape = function() {
   return this.getLayout().createLineShape();
 };
 
 
 /** @inheritDoc */
-thin.editor.LineOutline.prototype.setStrokeWidth = function(width) {
-  this.setStrokeWidth_(width + thin.editor.LineOutline.THICK_STROKE_PX_);
+thin.core.LineOutline.prototype.setStrokeWidth = function(width) {
+  this.setStrokeWidth_(width + thin.core.LineOutline.THICK_STROKE_PX_);
 };
 
 
 /**
  * @return {Object}
  */
-thin.editor.LineOutline.prototype.getInitShapeProperties = function() {
+thin.core.LineOutline.prototype.getInitShapeProperties = function() {
   return {
     COORDINATE: this.getCoordinate(),
     BOUNDS: this.getBounds()
@@ -107,7 +107,7 @@ thin.editor.LineOutline.prototype.getInitShapeProperties = function() {
 
 
 /** @inheritDoc */
-thin.editor.LineOutline.prototype.disposeInternal = function() {
-  thin.editor.LineOutline.superClass_.disposeInternal.call(this);
+thin.core.LineOutline.prototype.disposeInternal = function() {
+  thin.core.LineOutline.superClass_.disposeInternal.call(this);
   this.disposeInternalForOutline();
 };

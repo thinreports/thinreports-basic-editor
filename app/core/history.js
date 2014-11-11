@@ -13,11 +13,11 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.HistoryManager');
-goog.provide('thin.editor.HistoryManager.Mode');
-goog.provide('thin.editor.HistoryManager.Version');
-goog.provide('thin.editor.HistoryManager.VersionGroup');
-goog.provide('thin.editor.HistoryManager.VersionBuffer');
+goog.provide('thin.core.HistoryManager');
+goog.provide('thin.core.HistoryManager.Mode');
+goog.provide('thin.core.HistoryManager.Version');
+goog.provide('thin.core.HistoryManager.VersionGroup');
+goog.provide('thin.core.HistoryManager.VersionBuffer');
 
 goog.require('goog.array');
 goog.require('goog.object');
@@ -30,21 +30,21 @@ goog.require('goog.Disposable');
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.HistoryManager = function(opt_maxCount) {
+thin.core.HistoryManager = function(opt_maxCount) {
   
   /**
-   * @type {thin.editor.HistoryManager.VersionBuffer}
+   * @type {thin.core.HistoryManager.VersionBuffer}
    * @private
    */
-  this.history_ = new thin.editor.HistoryManager.VersionBuffer(opt_maxCount || 20);
+  this.history_ = new thin.core.HistoryManager.VersionBuffer(opt_maxCount || 20);
 };
-goog.inherits(thin.editor.HistoryManager, goog.Disposable);
+goog.inherits(thin.core.HistoryManager, goog.Disposable);
 
 
 /**
  * @enum {number}
  */
-thin.editor.HistoryManager.Mode = {
+thin.core.HistoryManager.Mode = {
   NORMAL: 0x00, 
   CHAIN: 0x01, 
   GROUP: 0x02
@@ -55,31 +55,31 @@ thin.editor.HistoryManager.Mode = {
  * @type {number}
  * @private
  */
-thin.editor.HistoryManager.DEFAULT_DELAY_MS_ = 1000;
+thin.core.HistoryManager.DEFAULT_DELAY_MS_ = 1000;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.HistoryManager.prototype.current_ = 0;
+thin.core.HistoryManager.prototype.current_ = 0;
 
 
 /**
  * @type {goog.Delay}
  * @private
  */
-thin.editor.HistoryManager.prototype.delay_;
+thin.core.HistoryManager.prototype.delay_;
 
 
 /**
- * @type {thin.editor.HistoryManager.VersionGroup}
+ * @type {thin.core.HistoryManager.VersionGroup}
  * @private
  */
-thin.editor.HistoryManager.prototype.versionGroup_;
+thin.core.HistoryManager.prototype.versionGroup_;
 
 
-thin.editor.HistoryManager.prototype.undo = function() {
+thin.core.HistoryManager.prototype.undo = function() {
   this.fireActivateDelaying_();
   
   if (this.canUndo()) {
@@ -89,7 +89,7 @@ thin.editor.HistoryManager.prototype.undo = function() {
 };
 
 
-thin.editor.HistoryManager.prototype.redo = function() {
+thin.core.HistoryManager.prototype.redo = function() {
   if (this.canRedo()) {    
     this.getNextVersion_().up();
     this.current_++;
@@ -101,9 +101,9 @@ thin.editor.HistoryManager.prototype.redo = function() {
  * @param {number} mode
  * @param {...*} var_args
  */
-thin.editor.HistoryManager.prototype.add = function(mode, var_args) {
+thin.core.HistoryManager.prototype.add = function(mode, var_args) {
   var args = Array.prototype.slice.call(arguments, 1);
-  var historyMode = thin.editor.HistoryManager.Mode;
+  var historyMode = thin.core.HistoryManager.Mode;
 
   switch(mode) {
     case historyMode.NORMAL:
@@ -122,7 +122,7 @@ thin.editor.HistoryManager.prototype.add = function(mode, var_args) {
 /**
  * @param {Function} setupFn
  */
-thin.editor.HistoryManager.prototype.addNormal = function(setupFn) {
+thin.core.HistoryManager.prototype.addNormal = function(setupFn) {
   this.fireActivateDelaying_();
   
   var history = this.history_;
@@ -140,8 +140,8 @@ thin.editor.HistoryManager.prototype.addNormal = function(setupFn) {
  * @param {Function} setupFn
  * @param {number=} opt_delayMs
  */
-thin.editor.HistoryManager.prototype.addChain = function(setupFn, opt_delayMs) {
-  this.initActivateDelaying_(opt_delayMs || thin.editor.HistoryManager.DEFAULT_DELAY_MS_);
+thin.core.HistoryManager.prototype.addChain = function(setupFn, opt_delayMs) {
+  this.initActivateDelaying_(opt_delayMs || thin.core.HistoryManager.DEFAULT_DELAY_MS_);
   this.addGroupVersion_(setupFn);
 };
 
@@ -149,25 +149,25 @@ thin.editor.HistoryManager.prototype.addChain = function(setupFn, opt_delayMs) {
 /**
  * @param {Function} setupFn
  */
-thin.editor.HistoryManager.prototype.addGroup = function(setupFn) {
+thin.core.HistoryManager.prototype.addGroup = function(setupFn) {
   this.fireActivateDelaying_();
   this.addGroupVersion_(setupFn);
 };
 
 
-thin.editor.HistoryManager.prototype.activateGroup = function() {
+thin.core.HistoryManager.prototype.activateGroup = function() {
   this.activateVersionGroup_();
 };
 
 
 /**
  * @param {Function} setupFn
- * @return {thin.editor.HistoryManager.Version}
+ * @return {thin.core.HistoryManager.Version}
  * @private
  */
-thin.editor.HistoryManager.prototype.addGroupVersion_ = function(setupFn) {
+thin.core.HistoryManager.prototype.addGroupVersion_ = function(setupFn) {
   if (!goog.isDef(this.versionGroup_)) {
-    this.versionGroup_ = new thin.editor.HistoryManager.VersionGroup();
+    this.versionGroup_ = new thin.core.HistoryManager.VersionGroup();
   }
   var version = this.createVersion_(setupFn);
   version.up();
@@ -178,11 +178,11 @@ thin.editor.HistoryManager.prototype.addGroupVersion_ = function(setupFn) {
 
 /**
  * @param {Function} setupFn
- * @return {thin.editor.HistoryManager.Version}
+ * @return {thin.core.HistoryManager.Version}
  * @private
  */
-thin.editor.HistoryManager.prototype.createVersion_ = function(setupFn) {
-  var version = new thin.editor.HistoryManager.Version();
+thin.core.HistoryManager.prototype.createVersion_ = function(setupFn) {
+  var version = new thin.core.HistoryManager.Version();
   setupFn.call(this, version);
   return version;
 };
@@ -192,7 +192,7 @@ thin.editor.HistoryManager.prototype.createVersion_ = function(setupFn) {
  * @return {*}
  * @private
  */
-thin.editor.HistoryManager.prototype.getCurrentVersion_ = function() {
+thin.core.HistoryManager.prototype.getCurrentVersion_ = function() {
   return this.history_.get(this.current_ - 1);
 };
 
@@ -201,7 +201,7 @@ thin.editor.HistoryManager.prototype.getCurrentVersion_ = function() {
  * @return {*}
  * @private
  */
-thin.editor.HistoryManager.prototype.getNextVersion_ = function() {
+thin.core.HistoryManager.prototype.getNextVersion_ = function() {
   return this.history_.get(this.current_);
 };
 
@@ -210,7 +210,7 @@ thin.editor.HistoryManager.prototype.getNextVersion_ = function() {
  * @return {*}
  * @private
  */
-thin.editor.HistoryManager.prototype.hasVersionGroup_ = function() {
+thin.core.HistoryManager.prototype.hasVersionGroup_ = function() {
   return goog.isDef(this.versionGroup_);
 };
 
@@ -218,7 +218,7 @@ thin.editor.HistoryManager.prototype.hasVersionGroup_ = function() {
 /**
  * @private
  */
-thin.editor.HistoryManager.prototype.activateVersionGroup_ = function() {
+thin.core.HistoryManager.prototype.activateVersionGroup_ = function() {
   if (this.hasVersionGroup_()) {
     var history = this.history_;
     if (this.canRedo()) {
@@ -235,7 +235,7 @@ thin.editor.HistoryManager.prototype.activateVersionGroup_ = function() {
 /**
  * @return {boolean}
  */
-thin.editor.HistoryManager.prototype.isFirstest = function() {
+thin.core.HistoryManager.prototype.isFirstest = function() {
   return this.current_ == 0;
 };
 
@@ -243,7 +243,7 @@ thin.editor.HistoryManager.prototype.isFirstest = function() {
 /**
  * @return {boolean}
  */
-thin.editor.HistoryManager.prototype.isLatest = function() {
+thin.core.HistoryManager.prototype.isLatest = function() {
   return this.current_ == this.history_.getCount();
 };
 
@@ -251,7 +251,7 @@ thin.editor.HistoryManager.prototype.isLatest = function() {
 /**
  * @return {boolean}
  */
-thin.editor.HistoryManager.prototype.isEmpty = function() {
+thin.core.HistoryManager.prototype.isEmpty = function() {
   return this.history_.isEmpty();
 };
 
@@ -259,7 +259,7 @@ thin.editor.HistoryManager.prototype.isEmpty = function() {
 /**
  * @return {boolean}
  */
-thin.editor.HistoryManager.prototype.canRedo = function() {
+thin.core.HistoryManager.prototype.canRedo = function() {
   return !this.isEmpty() && !this.isLatest();
 };
 
@@ -267,7 +267,7 @@ thin.editor.HistoryManager.prototype.canRedo = function() {
 /**
  * @return {boolean}
  */
-thin.editor.HistoryManager.prototype.canUndo = function() {
+thin.core.HistoryManager.prototype.canUndo = function() {
   return !this.isEmpty() && !this.isFirstest();
 };
 
@@ -276,7 +276,7 @@ thin.editor.HistoryManager.prototype.canUndo = function() {
  * @param {number} ms
  * @private
  */
-thin.editor.HistoryManager.prototype.initActivateDelaying_ = function(ms) {
+thin.core.HistoryManager.prototype.initActivateDelaying_ = function(ms) {
   if (!goog.isDef(this.delay_)) {
     this.delay_ = new goog.Delay(this.activateVersionGroup_, ms, this);
   } else {
@@ -289,7 +289,7 @@ thin.editor.HistoryManager.prototype.initActivateDelaying_ = function(ms) {
 /**
  * @private
  */
-thin.editor.HistoryManager.prototype.fireActivateDelaying_ = function() {
+thin.core.HistoryManager.prototype.fireActivateDelaying_ = function() {
   var delay = this.delay_;
   if (goog.isDef(delay)) {
     delay.fireIfActive();
@@ -300,7 +300,7 @@ thin.editor.HistoryManager.prototype.fireActivateDelaying_ = function() {
 /**
  * @return {boolean}
  */
-thin.editor.HistoryManager.prototype.isMaxSize = function() {
+thin.core.HistoryManager.prototype.isMaxSize = function() {
   return this.history_.getMaxSize() == this.current_;
 };
 
@@ -308,7 +308,7 @@ thin.editor.HistoryManager.prototype.isMaxSize = function() {
 /**
  * @return {number}
  */
-thin.editor.HistoryManager.prototype.nextCurrent_ = function() {
+thin.core.HistoryManager.prototype.nextCurrent_ = function() {
   if (!this.isMaxSize()) {
     return this.current_ + 1;
   } else {
@@ -318,7 +318,7 @@ thin.editor.HistoryManager.prototype.nextCurrent_ = function() {
 
 
 /** @inheritDoc */
-thin.editor.HistoryManager.prototype.disposeInternal = function() {
+thin.core.HistoryManager.prototype.disposeInternal = function() {
   this.activateVersionGroup_();
   this.history_.dispose();
   delete this.history_;
@@ -333,44 +333,44 @@ thin.editor.HistoryManager.prototype.disposeInternal = function() {
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.HistoryManager.Version = function() {
+thin.core.HistoryManager.Version = function() {
 };
-goog.inherits(thin.editor.HistoryManager.Version, goog.Disposable);
+goog.inherits(thin.core.HistoryManager.Version, goog.Disposable);
 
 
 /**
  * @type {Function}
  * @private
  */
-thin.editor.HistoryManager.Version.prototype.up_;
+thin.core.HistoryManager.Version.prototype.up_;
 
 
 /**
  * @type {Function}
  * @private
  */
-thin.editor.HistoryManager.Version.prototype.down_;
+thin.core.HistoryManager.Version.prototype.down_;
 
 
 /**
  * @type {Function}
  * @private
  */
-thin.editor.HistoryManager.Version.prototype.common_;
+thin.core.HistoryManager.Version.prototype.common_;
 
 
 /**
  * @type {Object}
  * @private
  */
-thin.editor.HistoryManager.Version.prototype.works_;
+thin.core.HistoryManager.Version.prototype.works_;
 
 
 /**
  * @param {Function} fn
  * @param {Object=} opt_selfObj
  */
-thin.editor.HistoryManager.Version.prototype.upHandler = function(fn, opt_selfObj) {
+thin.core.HistoryManager.Version.prototype.upHandler = function(fn, opt_selfObj) {
   this.up_ = goog.bind(fn, opt_selfObj);
 };
 
@@ -379,17 +379,17 @@ thin.editor.HistoryManager.Version.prototype.upHandler = function(fn, opt_selfOb
  * @param {Function} fn
  * @param {Object=} opt_selfObj
  */
-thin.editor.HistoryManager.Version.prototype.downHandler = function(fn, opt_selfObj) {
+thin.core.HistoryManager.Version.prototype.downHandler = function(fn, opt_selfObj) {
   this.down_ = goog.bind(fn, opt_selfObj);
 };
 
 
-thin.editor.HistoryManager.Version.prototype.up = function() {
+thin.core.HistoryManager.Version.prototype.up = function() {
   this.up_();
 };
 
 
-thin.editor.HistoryManager.Version.prototype.down = function() {
+thin.core.HistoryManager.Version.prototype.down = function() {
   this.down_();
 };
 
@@ -398,7 +398,7 @@ thin.editor.HistoryManager.Version.prototype.down = function() {
  * @param {string} key
  * @param {*} value
  */
-thin.editor.HistoryManager.Version.prototype.setWork = function(key, value) {
+thin.core.HistoryManager.Version.prototype.setWork = function(key, value) {
   if (!goog.isDef(this.works_)) {
     this.works_ = {};
   }
@@ -410,7 +410,7 @@ thin.editor.HistoryManager.Version.prototype.setWork = function(key, value) {
  * @param {string} key
  * @return {*}
  */
-thin.editor.HistoryManager.Version.prototype.getWork = function(key) {
+thin.core.HistoryManager.Version.prototype.getWork = function(key) {
   if (!goog.isDef(this.works_)) {
     this.works_ = {};
   }
@@ -419,7 +419,7 @@ thin.editor.HistoryManager.Version.prototype.getWork = function(key) {
 
 
 /** @inheritDoc */
-thin.editor.HistoryManager.Version.prototype.disposeInternal = function() {
+thin.core.HistoryManager.Version.prototype.disposeInternal = function() {
   delete this.up_;
   delete this.down_;
   delete this.common_;
@@ -431,25 +431,25 @@ thin.editor.HistoryManager.Version.prototype.disposeInternal = function() {
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.HistoryManager.VersionGroup = function() {
+thin.core.HistoryManager.VersionGroup = function() {
 
   /**
-   * @type {Array.<thin.editor.HistoryManager.Version|thin.editor.HistoryManager.VersionGroup>}
+   * @type {Array.<thin.core.HistoryManager.Version|thin.core.HistoryManager.VersionGroup>}
    * @private
    */
   this.versions_ = [];
 };
-goog.inherits(thin.editor.HistoryManager.VersionGroup, goog.Disposable);
+goog.inherits(thin.core.HistoryManager.VersionGroup, goog.Disposable);
 
 
-thin.editor.HistoryManager.VersionGroup.prototype.up = function() {
+thin.core.HistoryManager.VersionGroup.prototype.up = function() {
   goog.array.forEach(this.versions_, function(version) {
     version.up();
   });
 };
 
 
-thin.editor.HistoryManager.VersionGroup.prototype.down = function() {
+thin.core.HistoryManager.VersionGroup.prototype.down = function() {
   goog.array.forEachRight(this.versions_, function(version) {
     version.down();
   });
@@ -457,15 +457,15 @@ thin.editor.HistoryManager.VersionGroup.prototype.down = function() {
 
 
 /**
- * @param {thin.editor.HistoryManager.Version|thin.editor.HistoryManager.VersionGroup} version
+ * @param {thin.core.HistoryManager.Version|thin.core.HistoryManager.VersionGroup} version
  */
-thin.editor.HistoryManager.VersionGroup.prototype.add = function(version) {
+thin.core.HistoryManager.VersionGroup.prototype.add = function(version) {
   this.versions_[this.versions_.length] = version;
 };
 
 
 /** @inheritDoc */
-thin.editor.HistoryManager.VersionGroup.prototype.disposeInternal = function() {
+thin.core.HistoryManager.VersionGroup.prototype.disposeInternal = function() {
   goog.array.forEach(this.versions_, function(version) {
     version.dispose();
   });
@@ -478,7 +478,7 @@ thin.editor.HistoryManager.VersionGroup.prototype.disposeInternal = function() {
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.HistoryManager.VersionBuffer = function(opt_maxSize) {
+thin.core.HistoryManager.VersionBuffer = function(opt_maxSize) {
   
   /**
    * @type {number}
@@ -492,13 +492,13 @@ thin.editor.HistoryManager.VersionBuffer = function(opt_maxSize) {
    */
   this.buff_ = [];
 };
-goog.inherits(thin.editor.HistoryManager.VersionBuffer, goog.Disposable);
+goog.inherits(thin.core.HistoryManager.VersionBuffer, goog.Disposable);
 
 
 /**
  * @param {*} item The item to add.
  */
-thin.editor.HistoryManager.VersionBuffer.prototype.add = function(item) {
+thin.core.HistoryManager.VersionBuffer.prototype.add = function(item) {
   if (this.getCount() == this.maxSize_) {
     var shifted = this.buff_.shift();
     shifted.dispose();
@@ -513,7 +513,7 @@ thin.editor.HistoryManager.VersionBuffer.prototype.add = function(item) {
  * @param {number} index The index of the item. The index of an item can change
  * @return {*} The item at the specified index.
  */
-thin.editor.HistoryManager.VersionBuffer.prototype.get = function(index) {
+thin.core.HistoryManager.VersionBuffer.prototype.get = function(index) {
   return this.buff_[index];
 };
 
@@ -522,7 +522,7 @@ thin.editor.HistoryManager.VersionBuffer.prototype.get = function(index) {
  * Returns the current number of items in the buffer.
  * @return {number} The current number of items in the buffer.
  */
-thin.editor.HistoryManager.VersionBuffer.prototype.getCount = function() {
+thin.core.HistoryManager.VersionBuffer.prototype.getCount = function() {
   return this.buff_.length;
 };
 
@@ -530,7 +530,7 @@ thin.editor.HistoryManager.VersionBuffer.prototype.getCount = function() {
 /**
  * @return {boolean} Whether the buffer is empty.
  */
-thin.editor.HistoryManager.VersionBuffer.prototype.isEmpty = function() {
+thin.core.HistoryManager.VersionBuffer.prototype.isEmpty = function() {
   return this.getCount() == 0;
 };
 
@@ -538,7 +538,7 @@ thin.editor.HistoryManager.VersionBuffer.prototype.isEmpty = function() {
 /**
  * @return {number}
  */
-thin.editor.HistoryManager.VersionBuffer.prototype.getMaxSize = function() {
+thin.core.HistoryManager.VersionBuffer.prototype.getMaxSize = function() {
   return this.maxSize_;
 };
 
@@ -546,7 +546,7 @@ thin.editor.HistoryManager.VersionBuffer.prototype.getMaxSize = function() {
 /**
  * @param {number} index
  */
-thin.editor.HistoryManager.VersionBuffer.prototype.forceRemove = function(index) {
+thin.core.HistoryManager.VersionBuffer.prototype.forceRemove = function(index) {
   var endIndex = this.buff_.length;
   for (var i = index; i < endIndex; i++) {
     this.buff_[i].dispose();
@@ -556,7 +556,7 @@ thin.editor.HistoryManager.VersionBuffer.prototype.forceRemove = function(index)
 
 
 /** @inheritDoc */
-thin.editor.HistoryManager.VersionBuffer.prototype.disposeInternal = function() {
+thin.core.HistoryManager.VersionBuffer.prototype.disposeInternal = function() {
   goog.array.forEach(this.buff_, function(version) {
     version.dispose();
   });

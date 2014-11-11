@@ -13,47 +13,47 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ImageblockShape');
-goog.provide('thin.editor.ImageblockShape.PositionX');
-goog.provide('thin.editor.ImageblockShape.PositionY');
-goog.provide('thin.editor.ImageblockShape.ClassIds');
+goog.provide('thin.core.ImageblockShape');
+goog.provide('thin.core.ImageblockShape.PositionX');
+goog.provide('thin.core.ImageblockShape.PositionY');
+goog.provide('thin.core.ImageblockShape.ClassIds');
 
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
 goog.require('goog.graphics.SvgImageElement');
-goog.require('thin.editor.IdShape');
-goog.require('thin.editor.AbstractBoxGroup');
-goog.require('thin.editor.ModuleShape');
-goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
-goog.require('thin.editor.TextStyle.VerticalAlignType');
+goog.require('thin.core.IdShape');
+goog.require('thin.core.AbstractBoxGroup');
+goog.require('thin.core.ModuleShape');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.VerticalAlignType');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.AbstractBoxGroup}
+ * @extends {thin.core.AbstractBoxGroup}
  */
-thin.editor.ImageblockShape = function(element, layout) {
+thin.core.ImageblockShape = function(element, layout) {
   goog.base(this, element, layout);
   
-  this.setCss(thin.editor.ImageblockShape.CLASSID);
+  this.setCss(thin.core.ImageblockShape.CLASSID);
 };
-goog.inherits(thin.editor.ImageblockShape, thin.editor.AbstractBoxGroup);
-goog.mixin(thin.editor.ImageblockShape.prototype, thin.editor.ModuleShape.prototype);
+goog.inherits(thin.core.ImageblockShape, thin.core.AbstractBoxGroup);
+goog.mixin(thin.core.ImageblockShape.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
  * @type {string}
  */
-thin.editor.ImageblockShape.CLASSID = 's-iblock';
+thin.core.ImageblockShape.CLASSID = 's-iblock';
 
 
 /**
  * @enum {string}
  */
-thin.editor.ImageblockShape.ClassIds = {
+thin.core.ImageblockShape.ClassIds = {
   BOX: '-box',
   ID: '-id',
   MARK: '-mark'
@@ -64,7 +64,7 @@ thin.editor.ImageblockShape.ClassIds = {
  * @enum {string|number}
  * @private
  */
-thin.editor.ImageblockShape.Mark_ = {
+thin.core.ImageblockShape.Mark_ = {
   SOURCE: 'assets/icons/x-image-mark.png',
   SIZE: 32
 };
@@ -73,7 +73,7 @@ thin.editor.ImageblockShape.Mark_ = {
 /**
  * @enum {string}
  */
-thin.editor.ImageblockShape.PositionX = {
+thin.core.ImageblockShape.PositionX = {
   DEFAULT: 'left',
   LEFT: 'left',
   CENTER: 'center',
@@ -84,7 +84,7 @@ thin.editor.ImageblockShape.PositionX = {
 /**
  * @enum {string}
  */
-thin.editor.ImageblockShape.PositionY = {
+thin.core.ImageblockShape.PositionY = {
   DEFAULT: 'top',
   TOP: 'top',
   CENTER: 'center',
@@ -96,73 +96,73 @@ thin.editor.ImageblockShape.PositionY = {
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.ImageblockShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#7C4007');
+thin.core.ImageblockShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#7C4007');
 
 
 /**
  * @type {goog.graphics.Font}
  * @private
  */
-thin.editor.ImageblockShape.IDSHAPEFONT_ = new goog.graphics.Font(11, 'Helvetica');
+thin.core.ImageblockShape.IDSHAPEFONT_ = new goog.graphics.Font(11, 'Helvetica');
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.ImageblockShape.BOX_FILL_ = new goog.graphics.SolidFill('#f4e2c4', 0.8);
+thin.core.ImageblockShape.BOX_FILL_ = new goog.graphics.SolidFill('#f4e2c4', 0.8);
 
 
 /**
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.editor.ImageblockShape.BOX_STROKE_ = new goog.graphics.Stroke(0.28, '#7C4007');
+thin.core.ImageblockShape.BOX_STROKE_ = new goog.graphics.Stroke(0.28, '#7C4007');
 
 
 /**
- * @type {thin.editor.IdShape}
+ * @type {thin.core.IdShape}
  * @private
  */
-thin.editor.ImageblockShape.prototype.id_;
+thin.core.ImageblockShape.prototype.id_;
 
 
 /**
  * @type {goog.graphics.SvgImageElement}
  * @private
  */
-thin.editor.ImageblockShape.prototype.mark_;
+thin.core.ImageblockShape.prototype.mark_;
 
 
 /**
- * @type {string|thin.editor.ImageblockShape.PositionX}
+ * @type {string|thin.core.ImageblockShape.PositionX}
  * @private
  */
-thin.editor.ImageblockShape.prototype.positionX_ =
-  thin.editor.ImageblockShape.PositionX.DEFAULT;
+thin.core.ImageblockShape.prototype.positionX_ =
+  thin.core.ImageblockShape.PositionX.DEFAULT;
 
 
 /**
- * @type {string|thin.editor.ImageblockShape.PositionY}
+ * @type {string|thin.core.ImageblockShape.PositionY}
  * @private
  */
-thin.editor.ImageblockShape.prototype.positionY_ = 
-  thin.editor.ImageblockShape.PositionY.DEFAULT;
+thin.core.ImageblockShape.prototype.positionY_ = 
+  thin.core.ImageblockShape.PositionY.DEFAULT;
 
 
 /**
  * @return {string}
  */
-thin.editor.ImageblockShape.prototype.getClassId = function() {
-  return thin.editor.ImageblockShape.CLASSID;
+thin.core.ImageblockShape.prototype.getClassId = function() {
+  return thin.core.ImageblockShape.CLASSID;
 };
 
 
 /**
- * @param {string|thin.editor.ImageblockShape.PositionX} position
+ * @param {string|thin.core.ImageblockShape.PositionX} position
  */
-thin.editor.ImageblockShape.prototype.setPositionX = function(position) {
-  this.positionX_ = position || thin.editor.ImageblockShape.PositionX.DEFAULT;
+thin.core.ImageblockShape.prototype.setPositionX = function(position) {
+  this.positionX_ = position || thin.core.ImageblockShape.PositionX.DEFAULT;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-position-x': this.positionX_
   });
@@ -170,10 +170,10 @@ thin.editor.ImageblockShape.prototype.setPositionX = function(position) {
 
 
 /**
- * @param {string|thin.editor.ImageblockShape.PositionY} position
+ * @param {string|thin.core.ImageblockShape.PositionY} position
  */
-thin.editor.ImageblockShape.prototype.setPositionY = function(position) {
-  this.positionY_ = position || thin.editor.ImageblockShape.PositionY.DEFAULT;
+thin.core.ImageblockShape.prototype.setPositionY = function(position) {
+  this.positionY_ = position || thin.core.ImageblockShape.PositionY.DEFAULT;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-position-y': this.positionY_
   });
@@ -181,23 +181,23 @@ thin.editor.ImageblockShape.prototype.setPositionY = function(position) {
 
 
 /**
- * @return {string|thin.editor.ImageblockShape.PositionX}
+ * @return {string|thin.core.ImageblockShape.PositionX}
  */
-thin.editor.ImageblockShape.prototype.getPositionX = function() {
+thin.core.ImageblockShape.prototype.getPositionX = function() {
   return this.positionX_;
 };
 
 
 /**
- * @return {string|thin.editor.ImageblockShape.PositionY}
+ * @return {string|thin.core.ImageblockShape.PositionY}
  */
-thin.editor.ImageblockShape.prototype.getPositionY = function() {
+thin.core.ImageblockShape.prototype.getPositionY = function() {
   return this.positionY_;
 };
 
 
 /** @inheritDoc */
-thin.editor.ImageblockShape.prototype.setLeft = function(left) {
+thin.core.ImageblockShape.prototype.setLeft = function(left) {
   goog.base(this, 'setLeft', left);
   
   this.id_.setLeft(this.left_ + 2);
@@ -206,7 +206,7 @@ thin.editor.ImageblockShape.prototype.setLeft = function(left) {
 
 
 /** @inheritDoc */
-thin.editor.ImageblockShape.prototype.setTop = function(top) {
+thin.core.ImageblockShape.prototype.setTop = function(top) {
   goog.base(this, 'setTop', top);
   
   this.id_.setTop(this.top_ + 11);
@@ -215,14 +215,14 @@ thin.editor.ImageblockShape.prototype.setTop = function(top) {
 
 
 /** @inheritDoc */
-thin.editor.ImageblockShape.prototype.setWidth = function(width) {
+thin.core.ImageblockShape.prototype.setWidth = function(width) {
   goog.base(this, 'setWidth', width);
   this.updateMarkStyle_();
 };
 
 
 /** @inheritDoc */
-thin.editor.ImageblockShape.prototype.setHeight = function(height) {
+thin.core.ImageblockShape.prototype.setHeight = function(height) {
   goog.base(this, 'setHeight', height);
   this.updateMarkStyle_();
 };
@@ -230,12 +230,12 @@ thin.editor.ImageblockShape.prototype.setHeight = function(height) {
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.editor.ImageblockShape}
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.ImageblockShape}
  */
-thin.editor.ImageblockShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-  var shape = new thin.editor.ImageblockShape(element, layout);
+thin.core.ImageblockShape.createFromElement = function(element, layout, opt_shapeIdManager) {
+  var shape = new thin.core.ImageblockShape(element, layout);
   
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
@@ -250,15 +250,15 @@ thin.editor.ImageblockShape.createFromElement = function(element, layout, opt_sh
 
 /**
  * @param {Element=} opt_element
- * @return {thin.editor.Box}
+ * @return {thin.core.Box}
  * @private
  */
-thin.editor.ImageblockShape.prototype.createBox_ = function(opt_element) {
+thin.core.ImageblockShape.prototype.createBox_ = function(opt_element) {
   var box = goog.base(this, 'createBox_', opt_element,
     !opt_element ? this.getBoxClassId_() : undefined);
   
-  box.setStroke(thin.editor.ImageblockShape.BOX_STROKE_);
-  box.setFill(thin.editor.ImageblockShape.BOX_FILL_);
+  box.setStroke(thin.core.ImageblockShape.BOX_STROKE_);
+  box.setFill(thin.core.ImageblockShape.BOX_FILL_);
   
   return box;
 };
@@ -266,12 +266,12 @@ thin.editor.ImageblockShape.prototype.createBox_ = function(opt_element) {
 
 /**
  * @param {Element=} opt_element
- * @return {thin.editor.IdShape}
+ * @return {thin.core.IdShape}
  * @private
  */
-thin.editor.ImageblockShape.prototype.createId_ = function(opt_element) {
+thin.core.ImageblockShape.prototype.createId_ = function(opt_element) {
   var layout = this.getLayout();
-  var font = thin.editor.ImageblockShape.IDSHAPEFONT_;
+  var font = thin.core.ImageblockShape.IDSHAPEFONT_;
   var element = opt_element ||
     layout.createSvgElement('text', {
       'class': this.getIdClassId_(),
@@ -280,12 +280,12 @@ thin.editor.ImageblockShape.prototype.createId_ = function(opt_element) {
       'font-weight': 'normal',
       'font-style': 'normal',
       'text-decoration': 'none',
-      'text-anchor': thin.editor.TextStyle.HorizonAlignType.START,
-      'kerning': thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING
+      'text-anchor': thin.core.TextStyle.HorizonAlignType.START,
+      'kerning': thin.core.TextStyle.DEFAULT_ELEMENT_KERNING
     });
 
-  return new thin.editor.IdShape(element, layout, null, 
-                  thin.editor.ImageblockShape.IDSHAPEFILL_);
+  return new thin.core.IdShape(element, layout, null, 
+                  thin.core.ImageblockShape.IDSHAPEFILL_);
 };
 
 
@@ -294,18 +294,18 @@ thin.editor.ImageblockShape.prototype.createId_ = function(opt_element) {
  * @return {goog.graphics.SvgImageElement}
  * @private
  */
-thin.editor.ImageblockShape.prototype.createMark_ = function(opt_element) {
+thin.core.ImageblockShape.prototype.createMark_ = function(opt_element) {
   var layout = this.getLayout();
   var mark = new goog.graphics.SvgImageElement(
     opt_element || layout.createSvgElement('image'), layout);
   
   if (!opt_element) {
     var element = mark.getElement();
-    var config = thin.editor.ImageblockShape.Mark_;
+    var config = thin.core.ImageblockShape.Mark_;
     
     mark.setSize(/** @type {number} */ (config.SIZE), /** @type {number} */ (config.SIZE));
     layout.setElementAttributes(mark.getElement(), {'class': this.getMarkClassId_(), 'opacity': 0.5});
-    layout.setElementAttributesNS(thin.editor.Layout.SVG_NS_XLINK, mark.getElement(),
+    layout.setElementAttributesNS(thin.core.Layout.SVG_NS_XLINK, mark.getElement(),
       {'xlink:href': config.SOURCE});
   }
   
@@ -313,8 +313,8 @@ thin.editor.ImageblockShape.prototype.createMark_ = function(opt_element) {
 };
 
 
-thin.editor.ImageblockShape.prototype.updateMarkStyle_ = function() {
-  var config = thin.editor.ImageblockShape.Mark_;
+thin.core.ImageblockShape.prototype.updateMarkStyle_ = function() {
+  var config = thin.core.ImageblockShape.Mark_;
   var basis = config.SIZE / 2;
   var layout = this.getLayout();
   
@@ -338,9 +338,9 @@ thin.editor.ImageblockShape.prototype.updateMarkStyle_ = function() {
  * @return {string}
  * @private
  */
-thin.editor.ImageblockShape.prototype.getBoxClassId_ = function() {
-  return thin.editor.ImageblockShape.CLASSID +
-         thin.editor.ImageblockShape.ClassIds.BOX;
+thin.core.ImageblockShape.prototype.getBoxClassId_ = function() {
+  return thin.core.ImageblockShape.CLASSID +
+         thin.core.ImageblockShape.ClassIds.BOX;
 };
 
 
@@ -348,9 +348,9 @@ thin.editor.ImageblockShape.prototype.getBoxClassId_ = function() {
  * @return {string}
  * @private
  */
-thin.editor.ImageblockShape.prototype.getMarkClassId_ = function() {
-  return thin.editor.ImageblockShape.CLASSID +
-         thin.editor.ImageblockShape.ClassIds.MARK;
+thin.core.ImageblockShape.prototype.getMarkClassId_ = function() {
+  return thin.core.ImageblockShape.CLASSID +
+         thin.core.ImageblockShape.ClassIds.MARK;
 };
 
 
@@ -358,19 +358,19 @@ thin.editor.ImageblockShape.prototype.getMarkClassId_ = function() {
  * @return {string}
  * @private
  */
-thin.editor.ImageblockShape.prototype.getIdClassId_ = function() {
-  return thin.editor.ImageblockShape.CLASSID +
-         thin.editor.ImageblockShape.ClassIds.ID;  
+thin.core.ImageblockShape.prototype.getIdClassId_ = function() {
+  return thin.core.ImageblockShape.CLASSID +
+         thin.core.ImageblockShape.ClassIds.ID;  
 };
 
 
 /** @inheritDoc */
-thin.editor.ImageblockShape.prototype.setup = function() {
+thin.core.ImageblockShape.prototype.setup = function() {
   var element = this.getElement();
   var layout = this.getLayout();
   
   // Setup Box element.
-  var boxElement = thin.editor.getElementByClassNameForChildNodes(
+  var boxElement = thin.core.getElementByClassNameForChildNodes(
     this.getBoxClassId_(), element.childNodes);
 
   this.box_ = this.createBox_(boxElement);
@@ -379,7 +379,7 @@ thin.editor.ImageblockShape.prototype.setup = function() {
   }
   
   // Setup Mark element.
-  var markElement = thin.editor.getElementByClassNameForChildNodes(
+  var markElement = thin.core.getElementByClassNameForChildNodes(
     this.getMarkClassId_(), element.childNodes);
   
   this.mark_ = this.createMark_(markElement);
@@ -388,7 +388,7 @@ thin.editor.ImageblockShape.prototype.setup = function() {
   }
   
   // Setup ID element.
-  var idElement = thin.editor.getElementByClassNameForChildNodes(
+  var idElement = thin.core.getElementByClassNameForChildNodes(
     this.getIdClassId_(), element.childNodes);
   
   this.id_ = this.createId_(idElement);
@@ -398,17 +398,17 @@ thin.editor.ImageblockShape.prototype.setup = function() {
 };
 
 
-thin.editor.ImageblockShape.prototype.setDefaultOutline = function() {
+thin.core.ImageblockShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getImageblockOutline());
 };
 
 
 /**
  * @param {string} shapeId
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
  */
-thin.editor.ImageblockShape.prototype.setShapeId = function(shapeId, opt_shapeIdManager) {
-  if (!thin.isExactlyEqual(shapeId, thin.editor.ModuleShape.DEFAULT_SHAPEID)) {
+thin.core.ImageblockShape.prototype.setShapeId = function(shapeId, opt_shapeIdManager) {
+  if (!thin.isExactlyEqual(shapeId, thin.core.ModuleShape.DEFAULT_SHAPEID)) {
     this.id_.setText(shapeId);
     this.setShapeId_(shapeId, opt_shapeIdManager);
   }
@@ -416,10 +416,10 @@ thin.editor.ImageblockShape.prototype.setShapeId = function(shapeId, opt_shapeId
 
 
 /**
- * @param {thin.editor.Helpers} helpers
- * @param {thin.editor.MultiOutlineHelper} multiOutlineHelper
+ * @param {thin.core.Helpers} helpers
+ * @param {thin.core.MultiOutlineHelper} multiOutlineHelper
  */
-thin.editor.ImageblockShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
+thin.core.ImageblockShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
   multiOutlineHelper.toImageblockOutline(this, helpers);
 };
 
@@ -427,7 +427,7 @@ thin.editor.ImageblockShape.prototype.toOutline = function(helpers, multiOutline
 /**
  * @return {Function}
  */
-thin.editor.ImageblockShape.prototype.getCloneCreator = function() {
+thin.core.ImageblockShape.prototype.getCloneCreator = function() {
   var sourceCoordinate = new goog.math.Coordinate(this.getLeft(), this.getTop()).clone();
   var deltaCoordinateForList = this.getDeltaCoordinateForList().clone();
   var deltaCoordinateForGuide = this.getDeltaCoordinateForGuide().clone();
@@ -437,17 +437,17 @@ thin.editor.ImageblockShape.prototype.getCloneCreator = function() {
   var posX = this.getPositionX();
   var posY = this.getPositionY();
   var display = this.getDisplay();
-  var shapeIdPrefix = thin.editor.ShapeIdManager.getShapeIdPrefix(this.getShapeId());
+  var shapeIdPrefix = thin.core.ShapeIdManager.getShapeIdPrefix(this.getShapeId());
   var isAffiliationListShape = this.isAffiliationListShape();
   var deltaCoordinate = this.getDeltaCoordinateForList();
 
   /**
-   * @param {thin.editor.Layout} layout
+   * @param {thin.core.Layout} layout
    * @param {boolean=} opt_isAdaptDeltaForList
    * @param {goog.graphics.SvgGroupElement=} opt_renderTo
    * @param {goog.math.Coordinate=} opt_basisCoordinate
-   * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
-   * @return {thin.editor.ImageblockShape}
+   * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+   * @return {thin.core.ImageblockShape}
    */
   return function(layout, opt_isAdaptDeltaForList, opt_renderTo,
             opt_basisCoordinate, opt_shapeIdManager) {
@@ -474,7 +474,7 @@ thin.editor.ImageblockShape.prototype.getCloneCreator = function() {
 /**
  * @private
  */
-thin.editor.ImageblockShape.prototype.createPropertyComponent_ = function() {
+thin.core.ImageblockShape.prototype.createPropertyComponent_ = function() {
   var scope = this;
   var layout = this.getLayout();
   var workspace = layout.getWorkspace();
@@ -535,7 +535,7 @@ thin.editor.ImageblockShape.prototype.createPropertyComponent_ = function() {
 
   var positionGroup = proppane.addGroup(thin.t('property_group_position'));
   
-  var positionX = thin.editor.ImageblockShape.PositionX;
+  var positionX = thin.core.ImageblockShape.PositionX;
   var posXSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_horizontal_position'));
   var posXSelect = posXSelectProperty.getValueControl();
   
@@ -564,7 +564,7 @@ thin.editor.ImageblockShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(posXSelectProperty , positionGroup, 'position-x');
   
-  var positionY = thin.editor.ImageblockShape.PositionY;
+  var positionY = thin.core.ImageblockShape.PositionY;
   var posYSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_vertical_position'));
   var posYSelect = posYSelectProperty.getValueControl();
   
@@ -614,7 +614,7 @@ thin.editor.ImageblockShape.prototype.createPropertyComponent_ = function() {
 /**
  * @return {Object}
  */
-thin.editor.ImageblockShape.prototype.getProperties = function() {
+thin.core.ImageblockShape.prototype.getProperties = function() {
   return {
     'left': this.getLeft(),
     'top': this.getTop(),
@@ -629,7 +629,7 @@ thin.editor.ImageblockShape.prototype.getProperties = function() {
 };
 
 
-thin.editor.ImageblockShape.prototype.updateProperties = function() {
+thin.core.ImageblockShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
   if (!proppane.isTarget(this)) {
     this.getLayout().updatePropertiesForEmpty();
@@ -638,7 +638,7 @@ thin.editor.ImageblockShape.prototype.updateProperties = function() {
   }
   
   var properties = this.getProperties();
-  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+  var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
   
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
@@ -655,21 +655,21 @@ thin.editor.ImageblockShape.prototype.updateProperties = function() {
 /**
  * @param {Object} properties
  */
-thin.editor.ImageblockShape.prototype.setInitShapeProperties = function(properties) {
+thin.core.ImageblockShape.prototype.setInitShapeProperties = function(properties) {
   var opt_shapeIdManager;
   if (this.isAffiliationListShape()) {
     opt_shapeIdManager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
   }
   
   this.setShapeId(this.getLayout().getNextShapeId(
-        thin.editor.ShapeIdManager.DefaultPrefix.IMAGE_BLOCK, opt_shapeIdManager),
+        thin.core.ShapeIdManager.DefaultPrefix.IMAGE_BLOCK, opt_shapeIdManager),
         opt_shapeIdManager);
   this.setBounds(properties.BOUNDS);
 };
 
 
 /** @inheritDoc */
-thin.editor.ImageblockShape.prototype.disposeInternal = function() {
+thin.core.ImageblockShape.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   this.disposeInternalForShape();
   

@@ -13,28 +13,28 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.toolaction.SelectAction');
+goog.provide('thin.core.toolaction.SelectAction');
 
-goog.require('thin.editor.toolaction.DrawAction');
+goog.require('thin.core.toolaction.DrawAction');
 
 
 /**
  * @constructor
- * @extends {thin.editor.toolaction.DrawAction}
+ * @extends {thin.core.toolaction.DrawAction}
  */
-thin.editor.toolaction.SelectAction = function() {
-  thin.editor.toolaction.DrawAction.call(this);
+thin.core.toolaction.SelectAction = function() {
+  thin.core.toolaction.DrawAction.call(this);
 };
-goog.inherits(thin.editor.toolaction.SelectAction, thin.editor.toolaction.DrawAction);
+goog.inherits(thin.core.toolaction.SelectAction, thin.core.toolaction.DrawAction);
 
 
 /**
- * @param {thin.editor.Layer} handler
+ * @param {thin.core.Layer} handler
  * @param {goog.graphics.Element} outline
  * @private
  */
-thin.editor.toolaction.SelectAction.prototype.selectorLayerSetupFn_ = function(handler, outline) {
-  var drawer = new thin.editor.SvgDrawer(outline, handler);
+thin.core.toolaction.SelectAction.prototype.selectorLayerSetupFn_ = function(handler, outline) {
+  var drawer = new thin.core.SvgDrawer(outline, handler);
   drawer.setAspectObserve(false);
   handler.setDrawer(drawer);
   handler.setDisposed(false);
@@ -45,7 +45,7 @@ thin.editor.toolaction.SelectAction.prototype.selectorLayerSetupFn_ = function(h
   var isGlobalSurface = handler == helpers.getSurface();
   var captureActiveForStart = true;
   
-  drawer.addEventListener(thin.editor.AbstractDragger.EventType.BEFORESTART, function(e) {
+  drawer.addEventListener(thin.core.AbstractDragger.EventType.BEFORESTART, function(e) {
     captureActiveForStart = listHelper.isActive();
     if (isGlobalSurface && captureActiveForStart) {
       helpers.disableAll();
@@ -62,7 +62,7 @@ thin.editor.toolaction.SelectAction.prototype.selectorLayerSetupFn_ = function(h
 
 
 /** @inheritDoc */
-thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
+thin.core.toolaction.SelectAction.prototype.handleEndAction = function(
     e, outline, handle, captureActiveForStart) {
 
   outline.disable();
@@ -226,10 +226,10 @@ thin.editor.toolaction.SelectAction.prototype.handleEndAction = function(
 
 /**
  * @param {goog.events.BrowserEvent} e
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @protected
  */
-thin.editor.toolaction.SelectAction.prototype.handleActionInternal = function(e, workspace) {
+thin.core.toolaction.SelectAction.prototype.handleActionInternal = function(e, workspace) {
   var helpers = this.layout.getHelpers();
   var outline = helpers.getSelectorOutline();
   var surface = helpers.getSurface();

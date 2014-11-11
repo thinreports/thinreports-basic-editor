@@ -13,66 +13,66 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.SvgDragger');
+goog.provide('thin.core.SvgDragger');
 
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
-goog.require('thin.editor.AbstractDragger');
+goog.require('thin.core.AbstractDragger');
 
 
 /**
  * @param {goog.graphics.Element} target
  * @param {goog.graphics.Element=} opt_handle
  * @constructor
- * @extends {thin.editor.AbstractDragger}
+ * @extends {thin.core.AbstractDragger}
  */
-thin.editor.SvgDragger = function(target, opt_handle) {
-  thin.editor.AbstractDragger.call(this, target, opt_handle);
+thin.core.SvgDragger = function(target, opt_handle) {
+  thin.core.AbstractDragger.call(this, target, opt_handle);
 };
-goog.inherits(thin.editor.SvgDragger, thin.editor.AbstractDragger);
+goog.inherits(thin.core.SvgDragger, thin.core.AbstractDragger);
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.SvgDragger.prototype.startTransLateX_ = 0;
+thin.core.SvgDragger.prototype.startTransLateX_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.SvgDragger.prototype.startTransLateY_ = 0;
+thin.core.SvgDragger.prototype.startTransLateY_ = 0;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgDragger.prototype.enableTransLate_ = false;
+thin.core.SvgDragger.prototype.enableTransLate_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgDragger.prototype.enableXCoordinate_ = true;
+thin.core.SvgDragger.prototype.enableXCoordinate_ = true;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.SvgDragger.prototype.enableYCoordinate_ = true;
+thin.core.SvgDragger.prototype.enableYCoordinate_ = true;
 
 
 /**
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.SvgDragger.prototype.initializeDrag_ = function(e) {
-  thin.editor.SvgDragger.superClass_.initializeDrag_.call(this, e);
+thin.core.SvgDragger.prototype.initializeDrag_ = function(e) {
+  thin.core.SvgDragger.superClass_.initializeDrag_.call(this, e);
   var deltaPos = this.getDeltaPosition();
   this.startTransLateX_ = this.startDragX_ + deltaPos.x;
   this.startTransLateY_ = this.startDragY_ + deltaPos.y;
@@ -83,26 +83,26 @@ thin.editor.SvgDragger.prototype.initializeDrag_ = function(e) {
  * @param {goog.events.BrowserEvent} e
  * @param {boolean=} opt_dragCanceled
  */
-thin.editor.SvgDragger.prototype.endDrag = function(e, opt_dragCanceled) {
-  thin.editor.SvgDragger.superClass_.endDrag.call(this, e, opt_dragCanceled);
+thin.core.SvgDragger.prototype.endDrag = function(e, opt_dragCanceled) {
+  thin.core.SvgDragger.superClass_.endDrag.call(this, e, opt_dragCanceled);
   this.startTransLateX_ = 0;
   this.startTransLateY_ = 0;
 };
 
 
 /** @inheritDoc */
-thin.editor.SvgDragger.prototype.setupDragHandlers = function() {
+thin.core.SvgDragger.prototype.setupDragHandlers = function() {
   if (!this.scrollTarget_) {
     this.setScrollTarget(this.getWorkspace().getParent().getParent().getContentElement());
   }
-  thin.editor.SvgDragger.superClass_.setupDragHandlers.call(this);
+  thin.core.SvgDragger.superClass_.setupDragHandlers.call(this);
 };
 
 
 /**
  * @param {boolean} setting
  */
-thin.editor.SvgDragger.prototype.setEnableXCoordinate = function(setting) {
+thin.core.SvgDragger.prototype.setEnableXCoordinate = function(setting) {
   this.enableXCoordinate_ = setting;
 };
 
@@ -110,7 +110,7 @@ thin.editor.SvgDragger.prototype.setEnableXCoordinate = function(setting) {
 /**
  * @param {boolean} setting
  */
-thin.editor.SvgDragger.prototype.setEnableYCoordinate = function(setting) {
+thin.core.SvgDragger.prototype.setEnableYCoordinate = function(setting) {
   this.enableYCoordinate_ = setting;
 };
 
@@ -119,7 +119,7 @@ thin.editor.SvgDragger.prototype.setEnableYCoordinate = function(setting) {
  * @param {boolean} xsetting
  * @param {boolean} ysetting
  */
-thin.editor.SvgDragger.prototype.setDragModeByCoordinate = function(xsetting, ysetting) {
+thin.core.SvgDragger.prototype.setDragModeByCoordinate = function(xsetting, ysetting) {
   this.setEnableXCoordinate(xsetting);
   this.setEnableYCoordinate(ysetting);
 };
@@ -128,7 +128,7 @@ thin.editor.SvgDragger.prototype.setDragModeByCoordinate = function(xsetting, ys
 /**
  * @param {boolean} setting
  */
-thin.editor.SvgDragger.prototype.setDragModeByTranslate = function(setting) {
+thin.core.SvgDragger.prototype.setDragModeByTranslate = function(setting) {
   this.enableTransLate_ = setting;
 };
 
@@ -136,7 +136,7 @@ thin.editor.SvgDragger.prototype.setDragModeByTranslate = function(setting) {
 /**
  * @return {goog.math.Coordinate}
  */
-thin.editor.SvgDragger.prototype.getStartTransLatePosition = function() {
+thin.core.SvgDragger.prototype.getStartTransLatePosition = function() {
   return new goog.math.Coordinate(this.startTransLateX_, this.startTransLateY_);
 };
 
@@ -148,7 +148,7 @@ thin.editor.SvgDragger.prototype.getStartTransLatePosition = function() {
  * @return {goog.math.Coordinate}
  * @private
  */
-thin.editor.SvgDragger.prototype.onShiftKeyPress_ = function(e, x, y) {
+thin.core.SvgDragger.prototype.onShiftKeyPress_ = function(e, x, y) {
   return new goog.math.Coordinate(x, y);
 };
 
@@ -157,7 +157,7 @@ thin.editor.SvgDragger.prototype.onShiftKeyPress_ = function(e, x, y) {
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.SvgDragger.prototype.onScroll_ = function(e) {
+thin.core.SvgDragger.prototype.onScroll_ = function(e) {
 
   var clientX = e.clientX = this.clientX_;
   var clientY = e.clientY = this.clientY_;
@@ -165,7 +165,7 @@ thin.editor.SvgDragger.prototype.onScroll_ = function(e) {
   var x = pos.x;
   var y = pos.y;
   
-  var rv = this.dispatchEvent(new thin.editor.DragEvent(
+  var rv = this.dispatchEvent(new thin.core.DragEvent(
            goog.fx.Dragger.EventType.BEFOREDRAG, this, clientX, clientY, e, x, y));
   
   if (rv !== false) {
@@ -177,7 +177,7 @@ thin.editor.SvgDragger.prototype.onScroll_ = function(e) {
 /**
  * @private
  */
-thin.editor.SvgDragger.prototype.initializeDelta_ = function() {
+thin.core.SvgDragger.prototype.initializeDelta_ = function() {
   if (this.isEmptyRect(this.deltaRect_)) {
     var target = this.targetShape;
     if (target.isForMultiple && !target.isForMultiple()) {
@@ -190,7 +190,7 @@ thin.editor.SvgDragger.prototype.initializeDelta_ = function() {
 /**
  * @private
  */
-thin.editor.SvgDragger.prototype.initializeLimits_ = function() {
+thin.core.SvgDragger.prototype.initializeLimits_ = function() {
   if (this.isEmptyRect(this.limits)) {
     var layout = this.getLayout();
     var helpers = layout.getHelpers();
@@ -222,7 +222,7 @@ thin.editor.SvgDragger.prototype.initializeLimits_ = function() {
  * @param {number} x X-coordinate for target element.
  * @param {number} y Y-coordinate for target element.
  */
-thin.editor.SvgDragger.prototype.defaultAction = function(e, x, y) {
+thin.core.SvgDragger.prototype.defaultAction = function(e, x, y) {
   if (this.enableXCoordinate_) {
     this.targetShape.setLeft(x);
   }

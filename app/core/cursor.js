@@ -13,8 +13,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Cursor');
-goog.provide('thin.editor.Cursor.Type');
+goog.provide('thin.core.Cursor');
+goog.provide('thin.core.Cursor.Type');
 
 goog.require('goog.Disposable');
 
@@ -25,7 +25,7 @@ goog.require('goog.Disposable');
  * @extends {goog.Disposable}
  * @constructor
  */
-thin.editor.Cursor = function(type, opt_isUri) {
+thin.core.Cursor = function(type, opt_isUri) {
   goog.base(this);
 
   if (opt_isUri) {
@@ -34,13 +34,13 @@ thin.editor.Cursor = function(type, opt_isUri) {
     this.setType(type);
   }
 };
-goog.inherits(thin.editor.Cursor, goog.Disposable);
+goog.inherits(thin.core.Cursor, goog.Disposable);
 
 
 /**
  * @enum {string}
  */
-thin.editor.Cursor.Type = {
+thin.core.Cursor.Type = {
   DEFAULT: 'default',
   CROSSHAIR: 'crosshair',
   MOVE: 'cell',
@@ -58,11 +58,11 @@ thin.editor.Cursor.Type = {
 
 /**
  * @param {string} name
- * @return {thin.editor.Cursor}
+ * @return {thin.core.Cursor}
  */
-thin.editor.Cursor.getCursorByName = function(name) {
+thin.core.Cursor.getCursorByName = function(name) {
   var cursor;
-  var type = thin.editor.Cursor.Type;
+  var type = thin.core.Cursor.Type;
   switch(name) {
     case 'DEFAULT':
       cursor = type.DEFAULT;
@@ -104,7 +104,7 @@ thin.editor.Cursor.getCursorByName = function(name) {
       throw new thin.Error('Unknown Cursor Name');
       break;
   }
-  return new thin.editor.Cursor(cursor);
+  return new thin.core.Cursor(cursor);
 };
 
 
@@ -112,34 +112,34 @@ thin.editor.Cursor.getCursorByName = function(name) {
  * @type {string}
  * @private
  */
-thin.editor.Cursor.prototype.default_ = thin.editor.Cursor.Type.DEFAULT;
+thin.core.Cursor.prototype.default_ = thin.core.Cursor.Type.DEFAULT;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.Cursor.prototype.type_;
+thin.core.Cursor.prototype.type_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.Cursor.prototype.uri_;
+thin.core.Cursor.prototype.uri_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Cursor.prototype.isUri_ = false;
+thin.core.Cursor.prototype.isUri_ = false;
 
 
 /**
  * @param {string} type
  */
-thin.editor.Cursor.prototype.setType = function(type) {
+thin.core.Cursor.prototype.setType = function(type) {
   this.type_ = type;
   this.isUri_ = false;
 };
@@ -148,7 +148,7 @@ thin.editor.Cursor.prototype.setType = function(type) {
 /**
  * @return {string}
  */
-thin.editor.Cursor.prototype.getType = function() {
+thin.core.Cursor.prototype.getType = function() {
   if (this.isUri_ === true) {
     return 'url(' + this.uri_ + '), ' + this.default_;
   } else {
@@ -160,7 +160,7 @@ thin.editor.Cursor.prototype.getType = function() {
 /**
  * @param {string} uri
  */
-thin.editor.Cursor.prototype.setUri = function(uri) {
+thin.core.Cursor.prototype.setUri = function(uri) {
   this.uri_ = uri;
   this.isUri_ = true;
 };
@@ -169,7 +169,7 @@ thin.editor.Cursor.prototype.setUri = function(uri) {
 /**
  * @param {string} type
  */
-thin.editor.Cursor.prototype.setDefault = function(type) {
+thin.core.Cursor.prototype.setDefault = function(type) {
   this.default_ = type;
 };
 
@@ -177,12 +177,12 @@ thin.editor.Cursor.prototype.setDefault = function(type) {
 /**
  * @return {string}
  */
-thin.editor.Cursor.prototype.getDefault = function() {
+thin.core.Cursor.prototype.getDefault = function() {
   return this.default_;
 };
 
 
-thin.editor.Cursor.prototype.disposeInternal = function() {
+thin.core.Cursor.prototype.disposeInternal = function() {
   delete this.default_;
   delete this.type_;
   delete this.uri_;

@@ -13,21 +13,21 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Rect');
+goog.provide('thin.core.Rect');
 
 goog.require('goog.graphics.SvgRectElement');
-goog.require('thin.editor.ModuleElement');
+goog.require('thin.core.ModuleElement');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
  * @extends {goog.graphics.SvgRectElement}
  */
-thin.editor.Rect = function(element, layout, stroke, fill) {
+thin.core.Rect = function(element, layout, stroke, fill) {
   goog.graphics.SvgRectElement.call(this, element, layout, stroke, fill);
   
   /**
@@ -54,27 +54,27 @@ thin.editor.Rect = function(element, layout, stroke, fill) {
    */
   this.height_ = Number(layout.getElementAttribute(element, 'height'));
 };
-goog.inherits(thin.editor.Rect, goog.graphics.SvgRectElement);
-goog.mixin(thin.editor.Rect.prototype, thin.editor.ModuleElement.prototype);  
+goog.inherits(thin.core.Rect, goog.graphics.SvgRectElement);
+goog.mixin(thin.core.Rect.prototype, thin.core.ModuleElement.prototype);  
 
 
 /**
  * @type {number}
  */
-thin.editor.Rect.DEFAULT_RADIUS = 0;
+thin.core.Rect.DEFAULT_RADIUS = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.Rect.prototype.radius_;
+thin.core.Rect.prototype.radius_;
 
 
 /**
  * @param {number} left
  */
-thin.editor.Rect.prototype.setLeft = function(left) {
+thin.core.Rect.prototype.setLeft = function(left) {
   left = thin.numberWithPrecision(left - this.getParentTransLateX());
   this.left_ = left;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -86,7 +86,7 @@ thin.editor.Rect.prototype.setLeft = function(left) {
 /**
  * @param {number} top
  */
-thin.editor.Rect.prototype.setTop = function(top) {
+thin.core.Rect.prototype.setTop = function(top) {
   top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -98,7 +98,7 @@ thin.editor.Rect.prototype.setTop = function(top) {
 /**
  * @param {number} width
  */
-thin.editor.Rect.prototype.setWidth = function(width) {
+thin.core.Rect.prototype.setWidth = function(width) {
   width = thin.numberWithPrecision(width);
   this.width_ = width;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -110,7 +110,7 @@ thin.editor.Rect.prototype.setWidth = function(width) {
 /**
  * @param {number} height
  */
-thin.editor.Rect.prototype.setHeight = function(height) {
+thin.core.Rect.prototype.setHeight = function(height) {
   height = thin.numberWithPrecision(height);
   this.height_ = height;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -122,7 +122,7 @@ thin.editor.Rect.prototype.setHeight = function(height) {
 /**
  * @param {number} radius
  */
-thin.editor.Rect.prototype.setRounded = function(radius) {
+thin.core.Rect.prototype.setRounded = function(radius) {
   this.getLayout().setElementAttributes(this.getElement(), {
     'rx': radius,
     'ry': radius
@@ -134,7 +134,7 @@ thin.editor.Rect.prototype.setRounded = function(radius) {
 /**
  * @return {number}
  */
-thin.editor.Rect.prototype.getRounded = function() {
+thin.core.Rect.prototype.getRounded = function() {
   return /** @type {number} */(thin.getValIfNotDef(this.radius_, 
-             thin.editor.Rect.DEFAULT_RADIUS));
+             thin.core.Rect.DEFAULT_RADIUS));
 };

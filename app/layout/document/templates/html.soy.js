@@ -36,16 +36,16 @@ thin.layout.document.HTMLRenderer.renderShapes = function(opt_data, opt_sb) {
     for (var shapeGroupIndex55 = 0; shapeGroupIndex55 < shapeGroupListLen55; shapeGroupIndex55++) {
       var shapeGroupData55 = shapeGroupList55[shapeGroupIndex55];
       switch (shapeGroupData55.type) {
-        case thin.editor.TblockShape.CLASSID:
+        case thin.core.TblockShape.CLASSID:
           thin.layout.document.HTMLRenderer.renderTblockShapes({shapeGroup: shapeGroupData55, t: opt_data.t, inList: opt_data.inList}, output);
           break;
-        case thin.editor.ImageblockShape.CLASSID:
+        case thin.core.ImageblockShape.CLASSID:
           thin.layout.document.HTMLRenderer.renderImageblockShapes({shapeGroup: shapeGroupData55, t: opt_data.t, inList: opt_data.inList}, output);
           break;
-        case thin.editor.ListShape.CLASSID:
+        case thin.core.ListShape.CLASSID:
           thin.layout.document.HTMLRenderer.renderListShapes({shapeGroup: shapeGroupData55, t: opt_data.t}, output);
           break;
-        case thin.editor.PageNumberShape.CLASSID:
+        case thin.core.PageNumberShape.CLASSID:
           thin.layout.document.HTMLRenderer.renderPagenumberShapes({shapeGroup: shapeGroupData55, t: opt_data.t, inList: opt_data.inList}, output);
           break;
         default:

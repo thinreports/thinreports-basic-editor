@@ -13,29 +13,29 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.SelectorOutline');
+goog.provide('thin.core.SelectorOutline');
 
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.ModuleOutline');
+goog.require('thin.core.Rect');
+goog.require('thin.core.ModuleOutline');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.SelectorOutline = function(element, layout, stroke, fill) {
-  thin.editor.Rect.call(this, element, layout, stroke, fill);
+thin.core.SelectorOutline = function(element, layout, stroke, fill) {
+  thin.core.Rect.call(this, element, layout, stroke, fill);
 };
-goog.inherits(thin.editor.SelectorOutline, thin.editor.Rect);
-goog.mixin(thin.editor.SelectorOutline.prototype, thin.editor.ModuleOutline.prototype);
+goog.inherits(thin.core.SelectorOutline, thin.core.Rect);
+goog.mixin(thin.core.SelectorOutline.prototype, thin.core.ModuleOutline.prototype);
 
 
 /** @inheritDoc */
-thin.editor.SelectorOutline.prototype.disposeInternal = function() {
-  thin.editor.SelectorOutline.superClass_.disposeInternal.call(this);
+thin.core.SelectorOutline.prototype.disposeInternal = function() {
+  thin.core.SelectorOutline.superClass_.disposeInternal.call(this);
   this.disposeInternalForOutline();
 };

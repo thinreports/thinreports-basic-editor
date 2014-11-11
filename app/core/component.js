@@ -13,39 +13,39 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Component');
+goog.provide('thin.core.Component');
 
 goog.require('goog.graphics.SvgGroupElement');
-goog.require('thin.editor.ModuleElement');
+goog.require('thin.core.ModuleElement');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {Element=} opt_element
  * @constructor
  * @extends {goog.graphics.SvgGroupElement}
  */
-thin.editor.Component = function(layout, opt_element) {
+thin.core.Component = function(layout, opt_element) {
   goog.graphics.SvgGroupElement.call(this, 
     opt_element || layout.createSvgElement('g'), layout);
   
   /**
-   * @type {thin.editor.Workspace}
+   * @type {thin.core.Workspace}
    * @private
    */
   this.workspace_ = layout.getWorkspace();
   
   this.setup();
 };
-goog.inherits(thin.editor.Component, goog.graphics.SvgGroupElement);
-goog.mixin(thin.editor.Component.prototype, thin.editor.ModuleElement.prototype);
+goog.inherits(thin.core.Component, goog.graphics.SvgGroupElement);
+goog.mixin(thin.core.Component.prototype, thin.core.ModuleElement.prototype);
 
 
-thin.editor.Component.prototype.setup = goog.nullFunction;
+thin.core.Component.prototype.setup = goog.nullFunction;
 
 
 /** @inheritDoc */
-thin.editor.Component.prototype.disposeInternal = function() {
-  thin.editor.Component.superClass_.disposeInternal.call(this);
+thin.core.Component.prototype.disposeInternal = function() {
+  thin.core.Component.superClass_.disposeInternal.call(this);
   delete this.workspace_;
 };

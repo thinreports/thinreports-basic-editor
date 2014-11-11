@@ -30,7 +30,7 @@ goog.require('goog.array');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Separator');
 goog.require('goog.ui.ControlRenderer');
-goog.require('thin.core.Font');
+goog.require('thin.Font');
 goog.require('thin.ui.Component');
 goog.require('thin.ui.Button');
 goog.require('thin.ui.ButtonRenderer');
@@ -249,7 +249,7 @@ goog.inherits(thin.ui.ToolbarSelect, thin.ui.Select);
  * @extends {thin.ui.FontSelect}
  */
 thin.ui.ToolbarFontSelect = function() {
-  thin.ui.FontSelect.call(this, thin.core.Font.getBuiltinFonts());
+  thin.ui.FontSelect.call(this, thin.Font.getBuiltinFonts());
   this.addClassName(thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'select'));
 };
 goog.inherits(thin.ui.ToolbarFontSelect, thin.ui.FontSelect);

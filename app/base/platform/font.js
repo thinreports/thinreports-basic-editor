@@ -13,18 +13,18 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.core.platform.Font');
+goog.provide('thin.platform.Font');
 
 goog.require('goog.dom');
-goog.require('thin.core.platform');
-goog.require('thin.editor.TextHelper');
+goog.require('thin.platform');
+goog.require('thin.core.TextHelper');
 
 
 /**
  * @type {string}
  * @private
  */
-thin.core.platform.FIRST_LINE_TEXT_ = 'Agjぽ';
+thin.platform.FIRST_LINE_TEXT_ = 'Agjぽ';
 
 
 /**
@@ -33,15 +33,15 @@ thin.core.platform.FIRST_LINE_TEXT_ = 'Agjぽ';
  * @param {boolean} isBold
  * @return {Object}
  */
-thin.core.platform.Font.getTextLineSpec = function(family, fontSize, isBold) {
-  var layout = thin.editor.getActiveWorkspace().getLayout();
+thin.platform.Font.getTextLineSpec = function(family, fontSize, isBold) {
+  var layout = thin.core.getActiveWorkspace().getLayout();
 
-  var textHelper = new thin.editor.TextHelper(layout);
+  var textHelper = new thin.core.TextHelper(layout);
   textHelper.setFontSize(fontSize);
   textHelper.setFontFamily(family);
   textHelper.setFontBold(isBold);
   textHelper.setVisibled(false);
-  textHelper.setFirstLine(thin.core.platform.FIRST_LINE_TEXT_);
+  textHelper.setFirstLine(thin.platform.FIRST_LINE_TEXT_);
 
   var helper = layout.getHelpers();
   helper.appendBack(textHelper);
@@ -66,8 +66,8 @@ thin.core.platform.Font.getTextLineSpec = function(family, fontSize, isBold) {
  * @param {number} fontSize
  * @return {number}
  */
-thin.core.platform.Font.getHeight = function(family, fontSize) {
-  var spec = thin.core.platform.Font.getTextLineSpec(family, fontSize, false);
+thin.platform.Font.getHeight = function(family, fontSize) {
+  var spec = thin.platform.Font.getTextLineSpec(family, fontSize, false);
   return spec.height;
 };
 
@@ -78,9 +78,9 @@ thin.core.platform.Font.getHeight = function(family, fontSize) {
  * @param {boolean} isBold
  * @return {number}
  */
-thin.core.platform.Font.getAscent = function(
+thin.platform.Font.getAscent = function(
       family, fontSize, isBold) {
 
-  var spec = thin.core.platform.Font.getTextLineSpec(family, fontSize, isBold);
+  var spec = thin.platform.Font.getTextLineSpec(family, fontSize, isBold);
   return spec.ascent;
 };

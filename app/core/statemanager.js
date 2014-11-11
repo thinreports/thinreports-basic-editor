@@ -13,72 +13,72 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.StateManager');
+goog.provide('thin.core.StateManager');
 
 goog.require('goog.Disposable');
-goog.require('thin.editor.ShapeManager');
-goog.require('thin.editor.ActiveShapeManager');
-goog.require('thin.editor.ShapeIdManager');
+goog.require('thin.core.ShapeManager');
+goog.require('thin.core.ActiveShapeManager');
+goog.require('thin.core.ShapeIdManager');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.StateManager = function(layout) {
+thin.core.StateManager = function(layout) {
   
   /**
-   * @type {thin.editor.Workspace}
+   * @type {thin.core.Workspace}
    * @private
    */
   this.workspace_ = layout.getWorkspace();
   
   /**
-   * @type {thin.editor.Layout}
+   * @type {thin.core.Layout}
    * @private
    */
   this.layout_ = layout;
   
   this.setup();
 };
-goog.inherits(thin.editor.StateManager, goog.Disposable);
+goog.inherits(thin.core.StateManager, goog.Disposable);
 
 
 /**
- * @type {thin.editor.ShapeManager}
+ * @type {thin.core.ShapeManager}
  * @private
  */
-thin.editor.StateManager.prototype.shapes_;
+thin.core.StateManager.prototype.shapes_;
 
 
 /**
- * @type {thin.editor.ActiveShapeManager}
+ * @type {thin.core.ActiveShapeManager}
  * @private
  */
-thin.editor.StateManager.prototype.activeShapes_;
+thin.core.StateManager.prototype.activeShapes_;
 
 
 /**
- * @type {thin.editor.ShapeIdManager}
+ * @type {thin.core.ShapeIdManager}
  * @private
  */
-thin.editor.StateManager.prototype.shapeIds_;
+thin.core.StateManager.prototype.shapeIds_;
 
 
-thin.editor.StateManager.prototype.setup = function() {
+thin.core.StateManager.prototype.setup = function() {
   var layout = this.layout_;
-  this.shapes_ = new thin.editor.ShapeManager(layout);
-  this.activeShapes_ = new thin.editor.ActiveShapeManager(layout);
-  this.shapeIds_ = new thin.editor.ShapeIdManager(layout);
+  this.shapes_ = new thin.core.ShapeManager(layout);
+  this.activeShapes_ = new thin.core.ActiveShapeManager(layout);
+  this.shapeIds_ = new thin.core.ShapeIdManager(layout);
 };
 
 
 /**
  * @param {goog.graphics.Element} shape
- * @param {thin.editor.ListSectionShape=} opt_sectionShapeForScope
+ * @param {thin.core.ListSectionShape=} opt_sectionShapeForScope
  */
-thin.editor.StateManager.prototype.addShape = function(shape, opt_sectionShapeForScope) {
+thin.core.StateManager.prototype.addShape = function(shape, opt_sectionShapeForScope) {
   if(opt_sectionShapeForScope) {
     shape.setAffiliationSection(opt_sectionShapeForScope);
   }
@@ -89,23 +89,23 @@ thin.editor.StateManager.prototype.addShape = function(shape, opt_sectionShapeFo
 /**
  * @param {goog.graphics.Element} shape
  */
-thin.editor.StateManager.prototype.setActiveShape = function(shape) {
+thin.core.StateManager.prototype.setActiveShape = function(shape) {
   this.activeShapes_.add(shape);
 };
 
 
 /**
- * @return {thin.editor.ShapeManager}
+ * @return {thin.core.ShapeManager}
  */
-thin.editor.StateManager.prototype.getShapesManager = function() {
+thin.core.StateManager.prototype.getShapesManager = function() {
   return this.shapes_;
 };
 
 
 /**
- * @return {thin.editor.ActiveShapeManager}
+ * @return {thin.core.ActiveShapeManager}
  */
-thin.editor.StateManager.prototype.getActiveShape = function() {
+thin.core.StateManager.prototype.getActiveShape = function() {
   return this.activeShapes_;
 };
 
@@ -113,7 +113,7 @@ thin.editor.StateManager.prototype.getActiveShape = function() {
 /**
  * @return {Array}
  */
-thin.editor.StateManager.prototype.getAllShapesWithId = function() {
+thin.core.StateManager.prototype.getAllShapesWithId = function() {
   var shapes = this.shapeIds_.getAll();
   var compare = goog.array.defaultCompare;
   goog.array.sort(shapes, function(a, b) {
@@ -127,7 +127,7 @@ thin.editor.StateManager.prototype.getAllShapesWithId = function() {
  * @param {Function} fn
  * @param {Object=} opt_obj
  */
-thin.editor.StateManager.prototype.forEachShapeWithId = function(fn, opt_obj) {
+thin.core.StateManager.prototype.forEachShapeWithId = function(fn, opt_obj) {
   goog.array.forEach(this.getAllShapesWithId(), function(shape) {
     fn.call(opt_obj, shape.getShapeId(), shape);
   });
@@ -135,9 +135,9 @@ thin.editor.StateManager.prototype.forEachShapeWithId = function(fn, opt_obj) {
 
 
 /**
- * @return {thin.editor.ActiveShapeManager}
+ * @return {thin.core.ActiveShapeManager}
  */
-thin.editor.StateManager.prototype.getActiveShapeByIncludeList = function() {
+thin.core.StateManager.prototype.getActiveShapeByIncludeList = function() {
   var listHelper = this.layout_.getHelpers().getListHelper();
   if (listHelper.isActive()) {
     var activeShapeManagerForList = listHelper.getActiveShape();
@@ -150,16 +150,16 @@ thin.editor.StateManager.prototype.getActiveShapeByIncludeList = function() {
 
 
 /**
- * @return {thin.editor.ShapeIdManager}
+ * @return {thin.core.ShapeIdManager}
  */
-thin.editor.StateManager.prototype.getShapeIdManager = function() {
+thin.core.StateManager.prototype.getShapeIdManager = function() {
   return this.shapeIds_;
 };
 
 
 /** @inheritDoc */
-thin.editor.StateManager.prototype.disposeInternal = function() {
-  thin.editor.StateManager.superClass_.disposeInternal.call(this);
+thin.core.StateManager.prototype.disposeInternal = function() {
+  thin.core.StateManager.superClass_.disposeInternal.call(this);
   
   this.shapes_.dispose();
   this.activeShapes_.dispose();

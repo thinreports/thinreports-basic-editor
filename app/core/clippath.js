@@ -13,21 +13,21 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ClipPath');
+goog.provide('thin.core.ClipPath');
 
 goog.require('goog.graphics.Element');
-goog.require('thin.editor.ModuleElement');
+goog.require('thin.core.ModuleElement');
 
 
 /**
  * @param {Element} element
  * @param {goog.graphics.Element} model
  * @param {goog.graphics.Element} target
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
  * @extends {goog.graphics.Element}
  */
-thin.editor.ClipPath = function(element, model, target, layout) {
+thin.core.ClipPath = function(element, model, target, layout) {
   element.appendChild(model.getElement());
   goog.graphics.Element.call(this, element, layout);
   
@@ -47,16 +47,16 @@ thin.editor.ClipPath = function(element, model, target, layout) {
     'clip-path': 'url(#' + layout.getElementAttribute(element, 'id') + ')'
   });
 };
-goog.inherits(thin.editor.ClipPath, goog.graphics.Element);
+goog.inherits(thin.core.ClipPath, goog.graphics.Element);
 
 
 /** @inheritDoc */
-thin.editor.ClipPath.prototype.disposeInternal = function() {
+thin.core.ClipPath.prototype.disposeInternal = function() {
   this.target_.getElement().removeAttribute('clip-path');
   this.model_.dispose();
 
   delete this.target_;
   delete this.model_;
 
-  thin.editor.ClipPath.superClass_.disposeInternal.call(this);
+  thin.core.ClipPath.superClass_.disposeInternal.call(this);
 };

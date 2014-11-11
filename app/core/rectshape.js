@@ -13,65 +13,65 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.RectShape');
+goog.provide('thin.core.RectShape');
 
 goog.require('goog.string');
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.ModuleShape');
+goog.require('thin.core.Rect');
+goog.require('thin.core.ModuleShape');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.RectShape = function(element, layout, stroke, fill) {
-  thin.editor.Rect.call(this, element, layout, stroke, fill);
-  this.setCss(thin.editor.RectShape.CLASSID);
+thin.core.RectShape = function(element, layout, stroke, fill) {
+  thin.core.Rect.call(this, element, layout, stroke, fill);
+  this.setCss(thin.core.RectShape.CLASSID);
 };
-goog.inherits(thin.editor.RectShape, thin.editor.Rect);
-goog.mixin(thin.editor.RectShape.prototype, thin.editor.ModuleShape.prototype);
+goog.inherits(thin.core.RectShape, thin.core.Rect);
+goog.mixin(thin.core.RectShape.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
  * @type {string}
  */
-thin.editor.RectShape.CLASSID = 's-rect';
+thin.core.RectShape.CLASSID = 's-rect';
 
 
 /**
  * @type {goog.graphics.SolidFill}
  */
-thin.editor.RectShape.DEFAULT_FILL = new goog.graphics.SolidFill('#FFFFFF');
+thin.core.RectShape.DEFAULT_FILL = new goog.graphics.SolidFill('#FFFFFF');
 
 
 /**
  * @type {goog.graphics.Stroke}
  */
-thin.editor.RectShape.DEFAULT_STROKE = new goog.graphics.Stroke(1, '#000000');
+thin.core.RectShape.DEFAULT_STROKE = new goog.graphics.Stroke(1, '#000000');
 
 
 /**
  * @return {string}
  */
-thin.editor.RectShape.prototype.getClassId = function() {
-  return thin.editor.RectShape.CLASSID;
+thin.core.RectShape.prototype.getClassId = function() {
+  return thin.core.RectShape.CLASSID;
 };
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.editor.RectShape}
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.RectShape}
  */
-thin.editor.RectShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-  var shape = new thin.editor.RectShape(element, layout,
+thin.core.RectShape.createFromElement = function(element, layout, opt_shapeIdManager) {
+  var shape = new thin.core.RectShape(element, layout,
                     new goog.graphics.Stroke(
                        Number(layout.getElementAttribute(element, 'stroke-width')), 
                        layout.getElementAttribute(element, 'stroke')),
@@ -87,16 +87,16 @@ thin.editor.RectShape.createFromElement = function(element, layout, opt_shapeIdM
 };
 
 
-thin.editor.RectShape.prototype.setDefaultOutline = function() {
+thin.core.RectShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getRectOutline());
 };
 
 
 /**
- * @param {thin.editor.Helpers} helpers
- * @param {thin.editor.MultiOutlineHelper} multiOutlineHelper
+ * @param {thin.core.Helpers} helpers
+ * @param {thin.core.MultiOutlineHelper} multiOutlineHelper
  */
-thin.editor.RectShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
+thin.core.RectShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
   multiOutlineHelper.toRectOutline(this, helpers);
 };
 
@@ -104,7 +104,7 @@ thin.editor.RectShape.prototype.toOutline = function(helpers, multiOutlineHelper
 /**
  * @return {Function}
  */
-thin.editor.RectShape.prototype.getCloneCreator = function() {
+thin.core.RectShape.prototype.getCloneCreator = function() {
 
   var sourceCoordinate = new goog.math.Coordinate(this.getLeft(), this.getTop()).clone();
   var deltaCoordinateForList = this.getDeltaCoordinateForList().clone();
@@ -122,11 +122,11 @@ thin.editor.RectShape.prototype.getCloneCreator = function() {
   var deltaCoordinate = this.getDeltaCoordinateForList();
 
   /**
-   * @param {thin.editor.Layout} layout
+   * @param {thin.core.Layout} layout
    * @param {boolean=} opt_isAdaptDeltaForList
    * @param {goog.graphics.SvgGroupElement=} opt_renderTo
    * @param {goog.math.Coordinate=} opt_basisCoordinate
-   * @return {thin.editor.RectShape}
+   * @return {thin.core.RectShape}
    */
   return function(layout, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate) {
     
@@ -153,7 +153,7 @@ thin.editor.RectShape.prototype.getCloneCreator = function() {
 /**
  * @private
  */
-thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
+thin.core.RectShape.prototype.createPropertyComponent_ = function() {
   
   var scope = this;
   var layout = this.getLayout();
@@ -251,7 +251,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(strokeWidthCombProperty , shapeGroup, 'stroke-width');
   
   
-  var strokeDashTypeName = thin.editor.ModuleElement.StrokeTypeName;
+  var strokeDashTypeName = thin.core.ModuleElement.StrokeTypeName;
   var strokeDashSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_stroke_type'));
   var strokeDashSelect = strokeDashSelectProperty.getValueControl();
   strokeDashSelect.setTextAlignLeft();
@@ -308,7 +308,7 @@ thin.editor.RectShape.prototype.createPropertyComponent_ = function() {
 /**
  * @return {Object}
  */
-thin.editor.RectShape.prototype.getProperties = function() {
+thin.core.RectShape.prototype.getProperties = function() {
 
   return {
     'left': this.getLeft(),
@@ -327,7 +327,7 @@ thin.editor.RectShape.prototype.getProperties = function() {
 };
 
 
-thin.editor.RectShape.prototype.updateProperties = function() {
+thin.core.RectShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
   if (!proppane.isTarget(this)) {
     this.getLayout().updatePropertiesForEmpty();
@@ -336,8 +336,8 @@ thin.editor.RectShape.prototype.updateProperties = function() {
   }
   
   var properties = this.getProperties();
-  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-  var noneColor = thin.editor.ModuleShape.NONE;
+  var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
+  var noneColor = thin.core.ModuleShape.NONE;
   
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
@@ -356,12 +356,12 @@ thin.editor.RectShape.prototype.updateProperties = function() {
   }
   proppane.getPropertyControl('stroke').setValue(stroke);
   var strokeWidth = properties['stroke-width'];
-  if (thin.isExactlyEqual(strokeWidth, thin.editor.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
+  if (thin.isExactlyEqual(strokeWidth, thin.core.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
     strokeWidth = proppaneBlank;
   }
   proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
   
-  proppane.getPropertyControl('stroke-dash-type').setValue(thin.editor.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
+  proppane.getPropertyControl('stroke-dash-type').setValue(thin.core.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
   proppane.getPropertyControl('radius').setValue(properties['radius']);
   
   proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
@@ -372,13 +372,13 @@ thin.editor.RectShape.prototype.updateProperties = function() {
 /**
  * @param {Object} properties
  */
-thin.editor.RectShape.prototype.setInitShapeProperties = function(properties) {
+thin.core.RectShape.prototype.setInitShapeProperties = function(properties) {
   this.setBounds(properties.BOUNDS);
 };
 
 
 /** @inheritDoc */
-thin.editor.RectShape.prototype.disposeInternal = function() {
-  thin.editor.RectShape.superClass_.disposeInternal.call(this);
+thin.core.RectShape.prototype.disposeInternal = function() {
+  thin.core.RectShape.superClass_.disposeInternal.call(this);
   this.disposeInternalForShape();
 };

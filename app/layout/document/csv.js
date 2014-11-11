@@ -21,7 +21,7 @@ goog.require('thin.layout.document.Base');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
  * @extends {thin.layout.document.Base}
  */
@@ -116,16 +116,16 @@ thin.layout.document.CSV.prototype.appendPaperInfo_ = function() {
 thin.layout.document.CSV.prototype.appendShapes_ = function(opt_data) {
   goog.array.forEach(opt_data || this.data_, function(data) {
     switch(data.type) {
-      case thin.editor.TblockShape.CLASSID:
+      case thin.core.TblockShape.CLASSID:
         this.appendTblockShape_(data);
         break;
-      case thin.editor.ImageblockShape.CLASSID:
+      case thin.core.ImageblockShape.CLASSID:
         this.appendImageblockShape_(data);
         break;
-      case thin.editor.PageNumberShape.CLASSID:
+      case thin.core.PageNumberShape.CLASSID:
         this.appendPagenumberShape_(data);
         break;
-      case thin.editor.ListShape.CLASSID:
+      case thin.core.ListShape.CLASSID:
         this.appendListShape_(data);
         break;
       default:

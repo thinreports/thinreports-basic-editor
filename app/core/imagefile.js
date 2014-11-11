@@ -13,91 +13,91 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ImageFile');
+goog.provide('thin.core.ImageFile');
 
 goog.require('goog.Disposable');
-goog.require('thin.core.File');
-goog.require('thin.core.platform');
-goog.require('thin.core.platform.File');
+goog.require('thin.File');
+goog.require('thin.platform');
+goog.require('thin.platform.File');
 
 
 /**
- * @param {thin.core.File} file
+ * @param {thin.File} file
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.ImageFile = function(file) {
+thin.core.ImageFile = function(file) {
   this.file_ = file;
   this.setSize();
 
   goog.base(this);
 };
-goog.inherits(thin.editor.ImageFile, goog.Disposable);
+goog.inherits(thin.core.ImageFile, goog.Disposable);
 
 
 /**
  * @type {Array.<string>}
  * @private
  */
-thin.editor.ImageFile.EXT_NAME_ = ['jpg', 'png'];
+thin.core.ImageFile.EXT_NAME_ = ['jpg', 'png'];
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.ImageFile.EXT_DESCRIPTION_ = 'Images';
+thin.core.ImageFile.EXT_DESCRIPTION_ = 'Images';
 
 
 /**
  * @type {Array.<string>}
  * @private
  */
-thin.editor.ImageFile.MIMETYPE_ = ['image/jpeg', 'image/png'];
+thin.core.ImageFile.MIMETYPE_ = ['image/jpeg', 'image/png'];
 
 
 /**
  * @type {Array.<Object>}
  * @private
  */
-thin.editor.ImageFile.ACCEPTS_ = [{
-  'extensions': thin.editor.ImageFile.EXT_NAME_,
-  'description': thin.editor.ImageFile.EXT_DESCRIPTION_,
-  'mimeTypes': thin.editor.ImageFile.MIMETYPE_
+thin.core.ImageFile.ACCEPTS_ = [{
+  'extensions': thin.core.ImageFile.EXT_NAME_,
+  'description': thin.core.ImageFile.EXT_DESCRIPTION_,
+  'mimeTypes': thin.core.ImageFile.MIMETYPE_
 }];
 
 
 /**
- * @type {thin.core.File}
+ * @type {thin.File}
  * @private
  */
-thin.editor.ImageFile.prototype.file_;
+thin.core.ImageFile.prototype.file_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.ImageFile.prototype.width_;
+thin.core.ImageFile.prototype.width_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.ImageFile.prototype.height_;
+thin.core.ImageFile.prototype.height_;
 
 
 /**
  * @param {Object.<Function>} callbacks
  */
-thin.editor.ImageFile.openDialog = function(callbacks) {
-  thin.core.platform.File.open(thin.editor.ImageFile.ACCEPTS_, {
+thin.core.ImageFile.openDialog = function(callbacks) {
+  thin.platform.File.open(thin.core.ImageFile.ACCEPTS_, {
     success: function(entry) {
-      thin.editor.ImageFile.handleSelectFileToOpen(callbacks, entry);
+      thin.core.ImageFile.handleSelectFileToOpen(callbacks, entry);
     },
     cancel: function() {
-      thin.editor.ImageFile.handleCancelFileToOpen(callbacks);
+      thin.core.ImageFile.handleCancelFileToOpen(callbacks);
     },
     error: goog.nullFunction
   });
@@ -107,7 +107,7 @@ thin.editor.ImageFile.openDialog = function(callbacks) {
 /**
  * @param {Object.<Function>} callbacks
  */
-thin.editor.ImageFile.handleCancelFileToOpen = function(callbacks) {
+thin.core.ImageFile.handleCancelFileToOpen = function(callbacks) {
   callbacks.cancel();
 };
 
@@ -116,13 +116,13 @@ thin.editor.ImageFile.handleCancelFileToOpen = function(callbacks) {
  * @param {Object.<Function>} callbacks
  * @param {FileEntry} entry
  */
-thin.editor.ImageFile.handleSelectFileToOpen = function(callbacks, entry) {
+thin.core.ImageFile.handleSelectFileToOpen = function(callbacks, entry) {
   entry.file(function(file) {
     var fileReader = new FileReader();
     fileReader.onload = function(e) {
-      thin.core.platform.File.getPath(entry, function(path) {
-        var coreFile = new thin.core.File(entry, path, e.target.result);
-        callbacks.success(new thin.editor.ImageFile(coreFile));
+      thin.platform.File.getPath(entry, function(path) {
+        var coreFile = new thin.File(entry, path, e.target.result);
+        callbacks.success(new thin.core.ImageFile(coreFile));
       });
     };
     fileReader.onerror = callbacks.error;
@@ -133,25 +133,25 @@ thin.editor.ImageFile.handleSelectFileToOpen = function(callbacks, entry) {
 
 /**
  * @param {Element} element
- * @return {thin.editor.ImageFile}
+ * @return {thin.core.ImageFile}
  */
-thin.editor.ImageFile.createFromElement = function(element) {
-  var entry = thin.core.File.createDummyEntry('DummyImageFile');
-  var coreFile = new thin.core.File(entry, '', element.href.baseVal);
+thin.core.ImageFile.createFromElement = function(element) {
+  var entry = thin.File.createDummyEntry('DummyImageFile');
+  var coreFile = new thin.File(entry, '', element.href.baseVal);
 
-  return new thin.editor.ImageFile(coreFile);
+  return new thin.core.ImageFile(coreFile);
 };
 
 
 /**
  * @return {string}
  */
-thin.editor.ImageFile.prototype.getPath = function() {
+thin.core.ImageFile.prototype.getPath = function() {
   return this.file_.getPath();
 };
 
 
-thin.editor.ImageFile.prototype.setSize = function() {
+thin.core.ImageFile.prototype.setSize = function() {
   var tmpImg = new Image();
   tmpImg.src = this.file_.getContent();
 
@@ -166,7 +166,7 @@ thin.editor.ImageFile.prototype.setSize = function() {
 /**
  * @return {number}
  */
-thin.editor.ImageFile.prototype.getWidth = function() {
+thin.core.ImageFile.prototype.getWidth = function() {
   return this.width_;
 };
 
@@ -174,7 +174,7 @@ thin.editor.ImageFile.prototype.getWidth = function() {
 /**
  * @return {number}
  */
-thin.editor.ImageFile.prototype.getHeight = function() {
+thin.core.ImageFile.prototype.getHeight = function() {
   return this.height_;
 };
 
@@ -182,21 +182,21 @@ thin.editor.ImageFile.prototype.getHeight = function() {
 /**
  * @return {string?}
  */
-thin.editor.ImageFile.prototype.getContent = function() {
+thin.core.ImageFile.prototype.getContent = function() {
   return this.file_.getContent();
 };
 
 
 /**
- * @return {thin.editor.ImageFile}
+ * @return {thin.core.ImageFile}
  */
-thin.editor.ImageFile.prototype.clone = function() {
-  return new thin.editor.ImageFile(this.file_.clone());
+thin.core.ImageFile.prototype.clone = function() {
+  return new thin.core.ImageFile(this.file_.clone());
 };
 
 
 /** @inheritDoc */
-thin.editor.ImageFile.prototype.disposeInternal = function() {
+thin.core.ImageFile.prototype.disposeInternal = function() {
   this.file_.dispose();
   delete this.file_;
 

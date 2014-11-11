@@ -13,56 +13,56 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.TextShape');
-goog.provide('thin.editor.TextShape.ClassIds');
+goog.provide('thin.core.TextShape');
+goog.provide('thin.core.TextShape.ClassIds');
 
 goog.require('goog.array');
 goog.require('goog.string');
 goog.require('goog.math.Coordinate');
-goog.require('thin.editor.TextLineShape');
-goog.require('thin.editor.AbstractTextGroup');
-goog.require('thin.editor.ModuleShape');
-goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
-goog.require('thin.editor.TextStyle.VerticalAlignType');
-goog.require('thin.core.Font');
+goog.require('thin.core.TextLineShape');
+goog.require('thin.core.AbstractTextGroup');
+goog.require('thin.core.ModuleShape');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.VerticalAlignType');
+goog.require('thin.Font');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.AbstractTextGroup}
+ * @extends {thin.core.AbstractTextGroup}
  */
-thin.editor.TextShape = function(element, layout) {
-  thin.editor.AbstractTextGroup.call(this, element, layout);
-  this.setCss(thin.editor.TextShape.CLASSID);
+thin.core.TextShape = function(element, layout) {
+  thin.core.AbstractTextGroup.call(this, element, layout);
+  this.setCss(thin.core.TextShape.CLASSID);
   layout.setElementAttributes(element, {
     'stroke-width': 0
   });
 
   /**
-   * @type {Array.<thin.editor.TextLineShape>}
+   * @type {Array.<thin.core.TextLineShape>}
    * @private
    */
   this.textLineContainer_ = [];
 
   //this.setFactors_();
 };
-goog.inherits(thin.editor.TextShape, thin.editor.AbstractTextGroup);
-goog.mixin(thin.editor.TextShape.prototype, thin.editor.ModuleShape.prototype);
+goog.inherits(thin.core.TextShape, thin.core.AbstractTextGroup);
+goog.mixin(thin.core.TextShape.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
  * @type {string}
  */
-thin.editor.TextShape.CLASSID = 's-text';
+thin.core.TextShape.CLASSID = 's-text';
 
 
 /**
  * @enum {string}
  */
-thin.editor.TextShape.ClassIds = {
+thin.core.TextShape.ClassIds = {
   LINE: '-l',
   BOX: '-box'
 };
@@ -71,61 +71,61 @@ thin.editor.TextShape.ClassIds = {
 /**
  * @type {goog.graphics.SolidFill}
  */
-thin.editor.TextShape.DEFAULT_FILL = new goog.graphics.SolidFill('#000000');
+thin.core.TextShape.DEFAULT_FILL = new goog.graphics.SolidFill('#000000');
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.TextShape.BOX_FILL_ = new goog.graphics.SolidFill('#000000', 0.001);
+thin.core.TextShape.BOX_FILL_ = new goog.graphics.SolidFill('#000000', 0.001);
 
 
 /**
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.editor.TextShape.BOX_STROKE_ = null;
+thin.core.TextShape.BOX_STROKE_ = null;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.TextShape.MIN_WIDTH_ = 6;
+thin.core.TextShape.MIN_WIDTH_ = 6;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.TextShape.prototype.isWidthUpdated_ = true;
+thin.core.TextShape.prototype.isWidthUpdated_ = true;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.TextShape.prototype.isHeightUpdated_ = true;
+thin.core.TextShape.prototype.isHeightUpdated_ = true;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.TextShape.prototype.textContent_;
+thin.core.TextShape.prototype.textContent_;
 
 
 /**
  * @return {string}
  */
-thin.editor.TextShape.prototype.getClassId = function() {
-  return thin.editor.TextShape.CLASSID;
+thin.core.TextShape.prototype.getClassId = function() {
+  return thin.core.TextShape.CLASSID;
 };
 
 
 /** @inheritDoc */
-thin.editor.TextShape.prototype.updateToolbarUI = function() {
+thin.core.TextShape.prototype.updateToolbarUI = function() {
   goog.base(this, 'updateToolbarUI');
   thin.ui.setEnabledForFontUi(true);
 };
@@ -133,16 +133,16 @@ thin.editor.TextShape.prototype.updateToolbarUI = function() {
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.editor.TextShape}
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.TextShape}
  */
-thin.editor.TextShape.createFromElement = function(element, layout, opt_shapeIdManager) {
+thin.core.TextShape.createFromElement = function(element, layout, opt_shapeIdManager) {
 
   var deco = layout.getElementAttribute(element, 'text-decoration');
   var lineHeightRatio = layout.getElementAttribute(element, 'x-line-height-ratio');
   var kerning = layout.getElementAttribute(element, 'kerning');
-  var shape = new thin.editor.TextShape(element, layout);
+  var shape = new thin.core.TextShape(element, layout);
 
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
@@ -163,8 +163,8 @@ thin.editor.TextShape.createFromElement = function(element, layout, opt_shapeIdM
     shape.setVerticalAlign(layout.getElementAttribute(element, 'x-valign'));
   }
   if (thin.isExactlyEqual(kerning, 
-        thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING)) {
-    kerning = thin.editor.TextStyle.DEFAULT_KERNING;
+        thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
+    kerning = thin.core.TextStyle.DEFAULT_KERNING;
   }
   shape.setKerning(/** @type {string} */ (kerning));
   if (!goog.isNull(lineHeightRatio)) {
@@ -178,22 +178,22 @@ thin.editor.TextShape.createFromElement = function(element, layout, opt_shapeIdM
 
 /**
  * @param {Element=} opt_element
- * @return {thin.editor.Box}
+ * @return {thin.core.Box}
  * @private
  */
-thin.editor.TextShape.prototype.createBox_ = function(opt_element) {
+thin.core.TextShape.prototype.createBox_ = function(opt_element) {
   var opt_classId;
   if (!opt_element) {
-    var classId = thin.editor.TextShape.ClassIds;
-    opt_classId = thin.editor.TextShape.CLASSID + classId.BOX;
+    var classId = thin.core.TextShape.ClassIds;
+    opt_classId = thin.core.TextShape.CLASSID + classId.BOX;
   }
 
-  var box = thin.editor.TblockShape.superClass_.
+  var box = thin.core.TblockShape.superClass_.
                 createBox_.call(this, opt_element, opt_classId);
   
-  box.setMinWidth(thin.editor.TextShape.MIN_WIDTH_);
-  box.setStroke(thin.editor.TextShape.BOX_STROKE_);
-  box.setFill(thin.editor.TextShape.BOX_FILL_);
+  box.setMinWidth(thin.core.TextShape.MIN_WIDTH_);
+  box.setStroke(thin.core.TextShape.BOX_STROKE_);
+  box.setFill(thin.core.TextShape.BOX_FILL_);
   box.setUsableClipPath(false);
   
   return box;
@@ -201,11 +201,11 @@ thin.editor.TextShape.prototype.createBox_ = function(opt_element) {
 
 
 /** @inheritDoc */
-thin.editor.TextShape.prototype.setup = function() {
+thin.core.TextShape.prototype.setup = function() {
   var element = this.getElement();
-  var classId = thin.editor.TextShape.ClassIds;
-  var boxClassId = thin.editor.TextShape.CLASSID + classId.BOX;
-  var opt_rectElement = thin.editor.getElementByClassNameForChildNodes(
+  var classId = thin.core.TextShape.ClassIds;
+  var boxClassId = thin.core.TextShape.CLASSID + classId.BOX;
+  var opt_rectElement = thin.core.getElementByClassNameForChildNodes(
                                         boxClassId, element.childNodes);
   this.box_ = this.createBox_(opt_rectElement);
   
@@ -218,8 +218,8 @@ thin.editor.TextShape.prototype.setup = function() {
 /**
  * @param {number} left
  */
-thin.editor.TextShape.prototype.setLeft = function(left) {
-  thin.editor.TextShape.superClass_.setLeft.call(this, left);
+thin.core.TextShape.prototype.setLeft = function(left) {
+  thin.core.TextShape.superClass_.setLeft.call(this, left);
   
   var xLeft = thin.numberWithPrecision(this.left_ + this.getShiftValueByTextAnchor());
   goog.array.forEach(this.getTextLineShapes(), function(textline) {
@@ -231,14 +231,14 @@ thin.editor.TextShape.prototype.setLeft = function(left) {
 /**
  * @param {number} top
  */
-thin.editor.TextShape.prototype.setTop = function(top) {
-  thin.editor.TextShape.superClass_.setTop.call(this, top);
+thin.core.TextShape.prototype.setTop = function(top) {
+  thin.core.TextShape.superClass_.setTop.call(this, top);
 
   var xTop = thin.numberWithPrecision(this.top_ + this.getShiftValueByVerticalAlign());
   var ratio = this.getTextLineHeightRatio();
 
-  if (thin.isExactlyEqual(ratio, thin.editor.TextStyle.DEFAULT_LINEHEIGHT)) {
-    ratio = thin.editor.TextStyle.DEFAULT_LINEHEIGHT_INTERNAL;
+  if (thin.isExactlyEqual(ratio, thin.core.TextStyle.DEFAULT_LINEHEIGHT)) {
+    ratio = thin.core.TextStyle.DEFAULT_LINEHEIGHT_INTERNAL;
   }
 
   ratio = Number(ratio);
@@ -246,8 +246,8 @@ thin.editor.TextShape.prototype.setTop = function(top) {
   var fontSize = this.getFontSize();
   var isBold = this.isFontBold();
   
-  var ascent = thin.core.Font.getAscent(family, fontSize, isBold);
-  var heightAt = thin.core.Font.getHeight(family, fontSize);
+  var ascent = thin.Font.getAscent(family, fontSize, isBold);
+  var heightAt = thin.Font.getHeight(family, fontSize);
   var translateY = thin.numberWithPrecision(heightAt * ratio, 2);
   var y = thin.numberWithPrecision(xTop + ascent, 2);
 
@@ -264,7 +264,7 @@ thin.editor.TextShape.prototype.setTop = function(top) {
  * @return {number}
  * @private
  */
-thin.editor.TextShape.prototype.getWidthInternal = function() {
+thin.core.TextShape.prototype.getWidthInternal = function() {
   var captureVisibled = this.isVisibled();
   if (!captureVisibled) {
     this.setVisibled(true);
@@ -290,19 +290,19 @@ thin.editor.TextShape.prototype.getWidthInternal = function() {
  * @return {number}
  * @private
  */
-thin.editor.TextShape.prototype.getHeightInternal = function() {
+thin.core.TextShape.prototype.getHeightInternal = function() {
   var captureVisibled = this.isVisibled();
   if (!captureVisibled) {
     this.setVisibled(true);
   }
   
   var ratio = this.getTextLineHeightRatio();  
-  if (thin.isExactlyEqual(ratio, thin.editor.TextStyle.DEFAULT_LINEHEIGHT)) {
-    ratio = thin.editor.TextStyle.DEFAULT_LINEHEIGHT_INTERNAL;
+  if (thin.isExactlyEqual(ratio, thin.core.TextStyle.DEFAULT_LINEHEIGHT)) {
+    ratio = thin.core.TextStyle.DEFAULT_LINEHEIGHT_INTERNAL;
   }
 
   ratio = Number(ratio);
-  var heightAt = thin.core.Font.getHeight(this.getFontFamily(), this.getFontSize());
+  var heightAt = thin.Font.getHeight(this.getFontFamily(), this.getFontSize());
   var lineCount = this.getTextLineShapes().length;
 
   if (ratio >= 1) {
@@ -326,7 +326,7 @@ thin.editor.TextShape.prototype.getHeightInternal = function() {
 /**
  * @param {boolean} updated
  */
-thin.editor.TextShape.prototype.setWidthUpdated = function(updated) {
+thin.core.TextShape.prototype.setWidthUpdated = function(updated) {
   this.isWidthUpdated_ = updated;
 };
 
@@ -334,7 +334,7 @@ thin.editor.TextShape.prototype.setWidthUpdated = function(updated) {
 /**
  * @param {boolean} updated
  */
-thin.editor.TextShape.prototype.setHeightUpdated = function(updated) {
+thin.core.TextShape.prototype.setHeightUpdated = function(updated) {
   this.isHeightUpdated_ = updated;
 };
 
@@ -342,7 +342,7 @@ thin.editor.TextShape.prototype.setHeightUpdated = function(updated) {
 /**
  * @return {number}
  */
-thin.editor.TextShape.prototype.getMinWidth = function() {
+thin.core.TextShape.prototype.getMinWidth = function() {
   return Math.max(this.box_.getMinWidth(), this.getWidthInternal());
 };
 
@@ -350,7 +350,7 @@ thin.editor.TextShape.prototype.getMinWidth = function() {
 /**
  * @return {number}
  */
-thin.editor.TextShape.prototype.getMinHeight = function() {
+thin.core.TextShape.prototype.getMinHeight = function() {
   return Math.max(this.box_.getMinHeight(), this.getHeightInternal());
 };
 
@@ -358,7 +358,7 @@ thin.editor.TextShape.prototype.getMinHeight = function() {
 /**
  * @return {number}
  */
-thin.editor.TextShape.prototype.getWidth = function() {
+thin.core.TextShape.prototype.getWidth = function() {
   if (!this.isWidthUpdated_) {
     this.setWidth(Math.max(this.getMinWidth(), this.width_));
     this.setWidthUpdated(true);
@@ -371,7 +371,7 @@ thin.editor.TextShape.prototype.getWidth = function() {
 /**
  * @return {number}
  */
-thin.editor.TextShape.prototype.getHeight = function() {
+thin.core.TextShape.prototype.getHeight = function() {
   if (!this.isHeightUpdated_) {
     this.setHeight(Math.max(this.getMinHeight(), this.height_));
     this.setHeightUpdated(true);
@@ -384,11 +384,11 @@ thin.editor.TextShape.prototype.getHeight = function() {
 /**
  * @param {number} size
  */
-thin.editor.TextShape.prototype.setFontSize = function(size) {
-  thin.editor.TextShape.superClass_.setFontSize.call(this, size);
+thin.core.TextShape.prototype.setFontSize = function(size) {
+  thin.core.TextShape.superClass_.setFontSize.call(this, size);
 
   var ratio = this.getTextLineHeightRatio();
-  if (!thin.isExactlyEqual(ratio, thin.editor.TextStyle.DEFAULT_LINEHEIGHT)) {
+  if (!thin.isExactlyEqual(ratio, thin.core.TextStyle.DEFAULT_LINEHEIGHT)) {
     this.setTextLineHeightRatio(ratio);
   }
   this.setWidthUpdated(false);
@@ -399,11 +399,11 @@ thin.editor.TextShape.prototype.setFontSize = function(size) {
 /**
  * @param {string} family
  */
-thin.editor.TextShape.prototype.setFontFamily = function (family) {
-  thin.editor.TextShape.superClass_.setFontFamily.call(this, family);
+thin.core.TextShape.prototype.setFontFamily = function (family) {
+  thin.core.TextShape.superClass_.setFontFamily.call(this, family);
   
   var ratio = this.getTextLineHeightRatio();
-  if (!thin.isExactlyEqual(ratio, thin.editor.TextStyle.DEFAULT_LINEHEIGHT)) {
+  if (!thin.isExactlyEqual(ratio, thin.core.TextStyle.DEFAULT_LINEHEIGHT)) {
     this.setTextLineHeightRatio(ratio);
   }
   this.setWidthUpdated(false);
@@ -414,8 +414,8 @@ thin.editor.TextShape.prototype.setFontFamily = function (family) {
 /**
  * @param {string} anchor
  */
-thin.editor.TextShape.prototype.setTextAnchor = function(anchor) {
-  thin.editor.TextShape.superClass_.setTextAnchor.call(this, anchor);
+thin.core.TextShape.prototype.setTextAnchor = function(anchor) {
+  thin.core.TextShape.superClass_.setTextAnchor.call(this, anchor);
   this.setWidthUpdated(false);
 };
 
@@ -423,8 +423,8 @@ thin.editor.TextShape.prototype.setTextAnchor = function(anchor) {
 /**
  * @param {string} valign
  */
-thin.editor.TextShape.prototype.setVerticalAlign = function(valign) {
-  thin.editor.TextShape.superClass_.setVerticalAlign.call(this, valign);
+thin.core.TextShape.prototype.setVerticalAlign = function(valign) {
+  thin.core.TextShape.superClass_.setVerticalAlign.call(this, valign);
   this.setHeightUpdated(false);
 };
 
@@ -432,8 +432,8 @@ thin.editor.TextShape.prototype.setVerticalAlign = function(valign) {
 /**
  * @param {string} ratio
  */
-thin.editor.TextShape.prototype.setTextLineHeightRatio = function(ratio) {
-  thin.editor.TextShape.superClass_.setTextLineHeightRatio.call(this, ratio);
+thin.core.TextShape.prototype.setTextLineHeightRatio = function(ratio) {
+  thin.core.TextShape.superClass_.setTextLineHeightRatio.call(this, ratio);
   this.setHeightUpdated(false);
 };
 
@@ -441,8 +441,8 @@ thin.editor.TextShape.prototype.setTextLineHeightRatio = function(ratio) {
 /**
  * @param {string} spacing
  */
-thin.editor.TextShape.prototype.setKerning = function(spacing) {
-  thin.editor.TextShape.superClass_.setKerning.call(this, spacing);
+thin.core.TextShape.prototype.setKerning = function(spacing) {
+  thin.core.TextShape.superClass_.setKerning.call(this, spacing);
   this.setWidthUpdated(false);
 };
 
@@ -450,8 +450,8 @@ thin.editor.TextShape.prototype.setKerning = function(spacing) {
 /**
  * @param {boolean} bold
  */
-thin.editor.TextShape.prototype.setFontBold = function(bold) {
-  thin.editor.TextShape.superClass_.setFontBold.call(this, bold);
+thin.core.TextShape.prototype.setFontBold = function(bold) {
+  thin.core.TextShape.superClass_.setFontBold.call(this, bold);
   this.setWidthUpdated(false);
 };
 
@@ -459,8 +459,8 @@ thin.editor.TextShape.prototype.setFontBold = function(bold) {
 /**
  * @param {boolean} italic
  */
-thin.editor.TextShape.prototype.setFontItalic = function(italic) {
-  thin.editor.TextShape.superClass_.setFontItalic.call(this, italic);
+thin.core.TextShape.prototype.setFontItalic = function(italic) {
+  thin.core.TextShape.superClass_.setFontItalic.call(this, italic);
   this.setWidthUpdated(false);
 };
 
@@ -469,8 +469,8 @@ thin.editor.TextShape.prototype.setFontItalic = function(italic) {
  * @param {boolean} underline
  * @param {boolean} linethrough
  */
-thin.editor.TextShape.prototype.setTextDecoration = function(underline, linethrough) {
-  thin.editor.TextShape.superClass_.setTextDecoration.call(this, underline, linethrough);
+thin.core.TextShape.prototype.setTextDecoration = function(underline, linethrough) {
+  thin.core.TextShape.superClass_.setTextDecoration.call(this, underline, linethrough);
 
   var decoration = this.fontStyle_.decoration;
   var layout = this.getLayout();
@@ -487,7 +487,7 @@ thin.editor.TextShape.prototype.setTextDecoration = function(underline, linethro
  * @param {boolean=} opt_onlyFirstLine
  * @return {string}
  */
-thin.editor.TextShape.prototype.getTextContent = function(opt_onlyFirstLine) {
+thin.core.TextShape.prototype.getTextContent = function(opt_onlyFirstLine) {
   if (!goog.isString(this.textContent_)) {
     var newTextContent = '';
     goog.array.forEach(this.getTextLineShapes(), 
@@ -512,7 +512,7 @@ thin.editor.TextShape.prototype.getTextContent = function(opt_onlyFirstLine) {
 /**
  * @return {string}
  */
-thin.editor.TextShape.prototype.getFirstTextLine = function() {
+thin.core.TextShape.prototype.getFirstTextLine = function() {
   return this.getTextContent(true);
 };
 
@@ -520,7 +520,7 @@ thin.editor.TextShape.prototype.getFirstTextLine = function() {
 /**
  * @param {string} textLine
  */
-thin.editor.TextShape.prototype.updateFirstTextLine = function(textLine) {
+thin.core.TextShape.prototype.updateFirstTextLine = function(textLine) {
   this.setTextContent(textLine, true);
 };
 
@@ -529,7 +529,7 @@ thin.editor.TextShape.prototype.updateFirstTextLine = function(textLine) {
  * @param {string} textContent
  * @param {boolean=} opt_toFirstLine
  */
-thin.editor.TextShape.prototype.setTextContent = function(textContent, opt_toFirstLine) {
+thin.core.TextShape.prototype.setTextContent = function(textContent, opt_toFirstLine) {
   if (opt_toFirstLine) {
     var content = this.getTextContent().split("\n");
     content.shift();
@@ -547,7 +547,7 @@ thin.editor.TextShape.prototype.setTextContent = function(textContent, opt_toFir
 }
 
 
-thin.editor.TextShape.prototype.updateDecoration = function() {
+thin.core.TextShape.prototype.updateDecoration = function() {
   this.setTextDecoration(this.isFontUnderline(), 
                          this.isFontLinethrough());
 };
@@ -557,7 +557,7 @@ thin.editor.TextShape.prototype.updateDecoration = function() {
  * @param {number=} opt_baseWidth
  * @param {number=} opt_baseHeight
  */
-thin.editor.TextShape.prototype.updateSize = function(opt_baseWidth, opt_baseHeight) {
+thin.core.TextShape.prototype.updateSize = function(opt_baseWidth, opt_baseHeight) {
   var width = opt_baseWidth || this.getWidth();
   var height = opt_baseHeight || this.getHeight();
   this.setWidth(this.getAllowWidth(width));
@@ -565,7 +565,7 @@ thin.editor.TextShape.prototype.updateSize = function(opt_baseWidth, opt_baseHei
 };
 
 
-thin.editor.TextShape.prototype.updatePosition = function() {
+thin.core.TextShape.prototype.updatePosition = function() {
   this.setLeft(this.getLeft());
   this.setTop(this.getTop());
 };
@@ -574,7 +574,7 @@ thin.editor.TextShape.prototype.updatePosition = function() {
 /**
  * @param {string} textContent
  */
-thin.editor.TextShape.prototype.createTextContent = function(textContent) {
+thin.core.TextShape.prototype.createTextContent = function(textContent) {
   goog.array.forEachRight(this.getElement().childNodes, function(element) {
     if (element.tagName == 'text') {
       goog.dom.removeNode(element);
@@ -587,7 +587,7 @@ thin.editor.TextShape.prototype.createTextContent = function(textContent) {
   
   var textlineShape;
   goog.array.forEach(textContent.split(/\n/), goog.bind(function(content, lineCount) {
-    textlineShape = new thin.editor.TextLineShape(
+    textlineShape = new thin.core.TextLineShape(
                             layout.createSvgElement('text'), layout, lineCount);
     textlineShape.setText(content);
     layout.appendChild(textlineShape, this);
@@ -599,21 +599,21 @@ thin.editor.TextShape.prototype.createTextContent = function(textContent) {
 /**
  * @param {NodeList} elements
  */
-thin.editor.TextShape.prototype.createTextContentFromElement = function(elements) {
+thin.core.TextShape.prototype.createTextContentFromElement = function(elements) {
   var layout = this.getLayout();
   goog.array.forEach(elements, goog.bind(function(element) {
     if (element.tagName == 'text') {
       goog.array.insert(this.textLineContainer_, 
-            new thin.editor.TextLineShape(element, layout));
+            new thin.core.TextLineShape(element, layout));
     }
   }, this));
 };
 
 
 /**
- * @return {Array.<thin.editor.TextLineShape>}
+ * @return {Array.<thin.core.TextLineShape>}
  */
-thin.editor.TextShape.prototype.getTextLineShapes = function() {
+thin.core.TextShape.prototype.getTextLineShapes = function() {
   return this.textLineContainer_;
 };
 
@@ -621,7 +621,7 @@ thin.editor.TextShape.prototype.getTextLineShapes = function() {
 /**
  * @return {number}
  */
-thin.editor.TextShape.prototype.getShiftValueByTextAnchor = function() {
+thin.core.TextShape.prototype.getShiftValueByTextAnchor = function() {
   if (this.isAnchorEnd()) {
     return this.getWidth();
   }
@@ -635,7 +635,7 @@ thin.editor.TextShape.prototype.getShiftValueByTextAnchor = function() {
 /**
  * @return {number}
  */
-thin.editor.TextShape.prototype.getShiftValueByVerticalAlign = function() {
+thin.core.TextShape.prototype.getShiftValueByVerticalAlign = function() {
   if (this.isVerticalBottom()) {
     return this.getHeight() - this.getHeightInternal();
   }
@@ -647,15 +647,15 @@ thin.editor.TextShape.prototype.getShiftValueByVerticalAlign = function() {
 
 
 /**
- * @param {thin.editor.Helpers} helpers
- * @param {thin.editor.MultiOutlineHelper} multiOutlineHelper
+ * @param {thin.core.Helpers} helpers
+ * @param {thin.core.MultiOutlineHelper} multiOutlineHelper
  */
-thin.editor.TextShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
+thin.core.TextShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
   multiOutlineHelper.toTextOutline(this, helpers);
 };
 
 
-thin.editor.TextShape.prototype.setDefaultOutline = function() {
+thin.core.TextShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getTextOutline());
 };
 
@@ -663,7 +663,7 @@ thin.editor.TextShape.prototype.setDefaultOutline = function() {
 /**
  * @return {Function}
  */
-thin.editor.TextShape.prototype.getCloneCreator = function() {
+thin.core.TextShape.prototype.getCloneCreator = function() {
 
   var sourceCoordinate = new goog.math.Coordinate(this.getLeft(), this.getTop()).clone();
   var deltaCoordinateForList = this.getDeltaCoordinateForList().clone();
@@ -691,11 +691,11 @@ thin.editor.TextShape.prototype.getCloneCreator = function() {
   var inlineFormat = this.getInlineFormatAllowed();
 
   /**
-   * @param {thin.editor.Layout} layout
+   * @param {thin.core.Layout} layout
    * @param {boolean=} opt_isAdaptDeltaForList
    * @param {goog.graphics.SvgGroupElement=} opt_renderTo
    * @param {goog.math.Coordinate=} opt_basisCoordinate
-   * @return {thin.editor.TextShape}
+   * @return {thin.core.TextShape}
    */
   return function(layout, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate) {
 
@@ -732,7 +732,7 @@ thin.editor.TextShape.prototype.getCloneCreator = function() {
 /**
  * @private
  */
-thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
+thin.core.TextShape.prototype.createPropertyComponent_ = function() {
   
   var scope = this;
   var layout = this.getLayout();
@@ -804,8 +804,8 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
         
         var scope = this;
         var layout = this.getLayout();
-        var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-        var fillNone = thin.editor.ModuleShape.NONE;
+        var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
+        var fillNone = thin.core.ModuleShape.NONE;
         //  choose none color returned null.
         var fillColor = /** @type {string} */(thin.getValIfNotDef(e.target.getValue(), proppaneBlank));
         var fill = new goog.graphics.SolidFill(thin.isExactlyEqual(fillColor, proppaneBlank) ?
@@ -841,7 +841,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   fontSizeInput.setValidator(fontSizeInputValidation);
   
   var fontSizeItem;
-  goog.array.forEach(thin.editor.FontStyle.FONTSIZE_LIST, function(fontSizeValue) {
+  goog.array.forEach(thin.core.FontStyle.FONTSIZE_LIST, function(fontSizeValue) {
     fontSizeItem = new thin.ui.ComboBoxItem(fontSizeValue);
     fontSizeItem.setSticky(true);
     fontSizeComb.addItem(fontSizeItem);
@@ -870,7 +870,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
   textAlignSelect.setTextAlignLeft();
-  var textAlignType = thin.editor.TextStyle.HorizonAlignTypeName;
+  var textAlignType = thin.core.TextStyle.HorizonAlignTypeName;
   
   textAlignSelect.addItem(new thin.ui.Option(textAlignType.START));
   textAlignSelect.addItem(new thin.ui.Option(textAlignType.MIDDLE));
@@ -879,7 +879,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   textAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         workspace.getAction().actionSetTextAnchor(
-            thin.editor.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
+            thin.core.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
       }, false, this);
   
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
@@ -888,7 +888,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_vertical_align'));
   var textVerticalAlignSelect = textVerticalAlignSelectProperty.getValueControl();
   textVerticalAlignSelect.setTextAlignLeft();
-  var verticalAlignType = thin.editor.TextStyle.VerticalAlignTypeName;
+  var verticalAlignType = thin.core.TextStyle.VerticalAlignTypeName;
   
   textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.TOP));
   textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.CENTER));
@@ -897,7 +897,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   textVerticalAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         workspace.getAction().actionSetVerticalAlign(
-            thin.editor.TextStyle.getVerticalAlignTypeFromTypeName(e.target.getValue()));
+            thin.core.TextStyle.getVerticalAlignTypeFromTypeName(e.target.getValue()));
       }, false, this);
   
   proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
@@ -913,7 +913,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   lineHeightInput.setValidator(lineHeightInputValidation);  
   
   var lineHeightItem;
-  goog.array.forEach(thin.editor.TextStyle.LINEHEIGHT_LIST, function(lineHeightValue) {
+  goog.array.forEach(thin.core.TextStyle.LINEHEIGHT_LIST, function(lineHeightValue) {
     lineHeightItem = new thin.ui.ComboBoxItem(lineHeightValue);
     lineHeightItem.setSticky(true);
     lineHeightComb.addItem(lineHeightItem);
@@ -958,7 +958,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         var kerning = e.target.getValue();
         
-        if (kerning === thin.editor.TextStyle.DEFAULT_KERNING) {
+        if (kerning === thin.core.TextStyle.DEFAULT_KERNING) {
           kerning = goog.string.padNumber(Number(kerning), 0);
         }
         
@@ -1026,7 +1026,7 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
 /**
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.TextShape.prototype.setTextContentPropertyUpdate = function(e) {
+thin.core.TextShape.prototype.setTextContentPropertyUpdate = function(e) {
   var scope = this;
   var proppane = thin.ui.getComponent('proppane');
   var text = e.target.getValue();
@@ -1049,7 +1049,7 @@ thin.editor.TextShape.prototype.setTextContentPropertyUpdate = function(e) {
 /**
  * @return {Object}
  */
-thin.editor.TextShape.prototype.getProperties = function() {
+thin.core.TextShape.prototype.getProperties = function() {
   return {
     'left': this.getLeft(),
     'top': this.getTop(),
@@ -1071,7 +1071,7 @@ thin.editor.TextShape.prototype.getProperties = function() {
 };
 
 
-thin.editor.TextShape.prototype.updateProperties = function() {
+thin.core.TextShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
 
   if (!proppane.isTarget(this)) {
@@ -1081,7 +1081,7 @@ thin.editor.TextShape.prototype.updateProperties = function() {
   }
   
   var properties = this.getProperties();
-  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+  var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
   
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
@@ -1091,7 +1091,7 @@ thin.editor.TextShape.prototype.updateProperties = function() {
   proppane.getPropertyControl('text-content').setValue(properties['text-content']);
   
   var fontColor = properties['font-color'];
-  if (thin.isExactlyEqual(fontColor, thin.editor.ModuleShape.NONE)) {
+  if (thin.isExactlyEqual(fontColor, thin.core.ModuleShape.NONE)) {
     fontColor = proppaneBlank
   }
   proppane.getPropertyControl('font-color').setValue(fontColor);
@@ -1099,9 +1099,9 @@ thin.editor.TextShape.prototype.updateProperties = function() {
   proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
   proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
   proppane.getPropertyControl('text-halign').setValue(
-        thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+        thin.core.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
   proppane.getPropertyControl('text-valign').setValue(
-        thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
+        thin.core.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
   proppane.getPropertyControl('kerning').setValue(properties['kerning']);
   proppane.getPropertyControl('inline-format').setChecked(properties['inline-format']);
   proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
@@ -1112,7 +1112,7 @@ thin.editor.TextShape.prototype.updateProperties = function() {
 /**
  * @param {Object} properties
  */
-thin.editor.TextShape.prototype.setInitShapeProperties = function(properties) {
+thin.core.TextShape.prototype.setInitShapeProperties = function(properties) {
   this.setFontSize(properties.SIZE);
   this.setFontFamily(properties.FAMILY);
   this.setFontBold(properties.BOLD);
@@ -1125,8 +1125,8 @@ thin.editor.TextShape.prototype.setInitShapeProperties = function(properties) {
 
 
 /** @inheritDoc */
-thin.editor.TextShape.prototype.disposeInternal = function() {
-  thin.editor.TextShape.superClass_.disposeInternal.call(this);
+thin.core.TextShape.prototype.disposeInternal = function() {
+  thin.core.TextShape.superClass_.disposeInternal.call(this);
   this.disposeInternalForShape();
   goog.array.forEach(this.textLineContainer_, function(textline) {
     textline.dispose();

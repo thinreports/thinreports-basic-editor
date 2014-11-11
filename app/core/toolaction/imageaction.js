@@ -13,31 +13,31 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.toolaction.ImageAction');
+goog.provide('thin.core.toolaction.ImageAction');
 
 goog.require('goog.Delay');
-goog.require('thin.editor.toolaction.AbstractAction');
-goog.require('thin.editor.ImageFile');
+goog.require('thin.core.toolaction.AbstractAction');
+goog.require('thin.core.ImageFile');
 
 
 /**
  * @constructor
- * @extends {thin.editor.toolaction.AbstractAction}
+ * @extends {thin.core.toolaction.AbstractAction}
  */
-thin.editor.toolaction.ImageAction = function() {
-  thin.editor.toolaction.AbstractAction.call(this);
+thin.core.toolaction.ImageAction = function() {
+  thin.core.toolaction.AbstractAction.call(this);
 };
-goog.inherits(thin.editor.toolaction.ImageAction, thin.editor.toolaction.AbstractAction);
+goog.inherits(thin.core.toolaction.ImageAction, thin.core.toolaction.AbstractAction);
 
 
 /**
  * @param {goog.events.BrowserEvent} e
- * @param {thin.editor.Layer} handler
+ * @param {thin.core.Layer} handler
  * @param {goog.graphics.Element} outline
  * @param {boolean} captureActiveForStart
  * @private
  */
-thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
+thin.core.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
     e, handler, outline, captureActiveForStart) {
 
   var scope = this;
@@ -69,7 +69,7 @@ thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
       });
   };
 
-  thin.editor.ImageFile.openDialog({
+  thin.core.ImageFile.openDialog({
     success: function(file) {
       scope.commonEndAction(e, outline, handler, captureActiveForStart, false);
       var singleShape = layout.getManager().getActiveShapeByIncludeList().getIfSingle();
@@ -108,7 +108,7 @@ thin.editor.toolaction.ImageAction.prototype.handleMouseDownAction_ = function(
  * @return {goog.math.Coordinate}
  * @private
  */
-thin.editor.toolaction.ImageAction.prototype.calculatePosition_ = function(e) {
+thin.core.toolaction.ImageAction.prototype.calculatePosition_ = function(e) {
   var layout = this.layout;
   var bounds = layout.getOffsetTarget().getBoundingClientRect();
   var rate = layout.getPixelScale();
@@ -121,10 +121,10 @@ thin.editor.toolaction.ImageAction.prototype.calculatePosition_ = function(e) {
 
 /**
  * @param {goog.events.BrowserEvent} e
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @protected
  */
-thin.editor.toolaction.ImageAction.prototype.handleActionInternal = function(e, workspace) {
+thin.core.toolaction.ImageAction.prototype.handleActionInternal = function(e, workspace) {
 
   var helpers = this.layout.getHelpers();
   var outline = helpers.getImageOutline();

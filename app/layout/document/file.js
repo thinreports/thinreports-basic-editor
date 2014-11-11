@@ -17,11 +17,11 @@ goog.provide('thin.layout.document.File');
 
 goog.require('thin.ui');
 goog.require('thin.layout.File');
-goog.require('thin.core.platform.File');
+goog.require('thin.platform.File');
 
 
 /**
- * @param {thin.core.File} file
+ * @param {thin.File} file
  * @constructor
  * @extends {goog.Disposable}
  */
@@ -69,7 +69,7 @@ thin.layout.document.File.MIME_TYPES = {
 
 
 /**
- * @type {thin.core.File}
+ * @type {thin.File}
  * @private
  */
 thin.layout.document.File.prototype.file_;
@@ -80,7 +80,7 @@ thin.layout.document.File.prototype.file_;
  * @param {Object.<Function>} callbacks
  */
 thin.layout.document.File.saveDialog = function(fileName, callbacks) {
-  thin.core.platform.File.saveAs(fileName, thin.layout.document.File.ACCEPTS_, {
+  thin.platform.File.saveAs(fileName, thin.layout.document.File.ACCEPTS_, {
     success: function(entry) {
       thin.layout.document.File.handleSelectFileToSave(callbacks, entry);
     },
@@ -97,8 +97,8 @@ thin.layout.document.File.saveDialog = function(fileName, callbacks) {
  * @param {FileEntry} entry
  */
 thin.layout.document.File.handleSelectFileToSave = function(callbacks, entry) {
-  thin.core.platform.File.getPath(entry, function(path) {
-    var coreFile = new thin.core.File(entry, path);
+  thin.platform.File.getPath(entry, function(path) {
+    var coreFile = new thin.File(entry, path);
     callbacks.success(new thin.layout.document.File(coreFile));
   });
 };

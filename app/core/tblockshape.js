@@ -13,9 +13,9 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.TblockShape');
-goog.provide('thin.editor.TblockShape.ClassIds');
-goog.provide('thin.editor.TblockShape.Delta_');
+goog.provide('thin.core.TblockShape');
+goog.provide('thin.core.TblockShape.ClassIds');
+goog.provide('thin.core.TblockShape.Delta_');
 
 goog.require('goog.dom');
 goog.require('goog.array');
@@ -25,22 +25,22 @@ goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
 goog.require('goog.graphics.Font');
 goog.require('thin.ui');
-goog.require('thin.editor.Box');
-goog.require('thin.editor.IdShape');
-goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
-goog.require('thin.editor.TextStyle.VerticalAlignType');
-goog.require('thin.editor.TextStyle.OverflowType');
-goog.require('thin.editor.TextStyle.OverflowTypeName');
-goog.require('thin.editor.TextStyle.WordWrapTypeName');
-goog.require('thin.editor.AbstractTextGroup');
-goog.require('thin.editor.ModuleShape');
-goog.require('thin.editor.formatstyles');
-goog.require('thin.editor.formatstyles.FormatType');
-goog.require('thin.editor.formatstyles.NumberFormat');
-goog.require('thin.editor.formatstyles.DatetimeFormat');
-goog.require('thin.editor.formatstyles.PaddingFormat');
-goog.require('thin.core.Font');
+goog.require('thin.core.Box');
+goog.require('thin.core.IdShape');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.VerticalAlignType');
+goog.require('thin.core.TextStyle.OverflowType');
+goog.require('thin.core.TextStyle.OverflowTypeName');
+goog.require('thin.core.TextStyle.WordWrapTypeName');
+goog.require('thin.core.AbstractTextGroup');
+goog.require('thin.core.ModuleShape');
+goog.require('thin.core.formatstyles');
+goog.require('thin.core.formatstyles.FormatType');
+goog.require('thin.core.formatstyles.NumberFormat');
+goog.require('thin.core.formatstyles.DatetimeFormat');
+goog.require('thin.core.formatstyles.PaddingFormat');
+goog.require('thin.Font');
 
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Component.EventType');
@@ -48,36 +48,36 @@ goog.require('goog.ui.Component.EventType');
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.AbstractTextGroup}
+ * @extends {thin.core.AbstractTextGroup}
  */
-thin.editor.TblockShape = function(element, layout) {
-  thin.editor.AbstractTextGroup.call(this, element, layout);
-  this.setCss(thin.editor.TblockShape.CLASSID);
+thin.core.TblockShape = function(element, layout) {
+  thin.core.AbstractTextGroup.call(this, element, layout);
+  this.setCss(thin.core.TblockShape.CLASSID);
 
   //this.setFactors_();
 
   /**
-   * @type {Array.<thin.editor.TblockShape>}
+   * @type {Array.<thin.core.TblockShape>}
    * @private
    */
   this.referringShapes_ = [];
 };
-goog.inherits(thin.editor.TblockShape, thin.editor.AbstractTextGroup);
-goog.mixin(thin.editor.TblockShape.prototype, thin.editor.ModuleShape.prototype);
+goog.inherits(thin.core.TblockShape, thin.core.AbstractTextGroup);
+goog.mixin(thin.core.TblockShape.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
  * @type {string}
  */
-thin.editor.TblockShape.CLASSID = 's-tblock';
+thin.core.TblockShape.CLASSID = 's-tblock';
 
 
 /**
  * @enum {string}
  */
-thin.editor.TblockShape.ClassIds = {
+thin.core.TblockShape.ClassIds = {
   BOX: '-box',
   ID: '-id'
 };
@@ -87,7 +87,7 @@ thin.editor.TblockShape.ClassIds = {
  * @enum {number}
  * @private
  */
-thin.editor.TblockShape.Delta_ = {
+thin.core.TblockShape.Delta_ = {
   X: 2,
   Y: 11
 };
@@ -97,155 +97,155 @@ thin.editor.TblockShape.Delta_ = {
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.TblockShape.DEFAULT_FILL = new goog.graphics.SolidFill('#000000');
+thin.core.TblockShape.DEFAULT_FILL = new goog.graphics.SolidFill('#000000');
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.TblockShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#7C4007');
+thin.core.TblockShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#7C4007');
 
 
 /**
  * @type {goog.graphics.Font}
  * @private
  */
-thin.editor.TblockShape.IDSHAPEFONT_ = new goog.graphics.Font(11, 'Helvetica');
+thin.core.TblockShape.IDSHAPEFONT_ = new goog.graphics.Font(11, 'Helvetica');
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.TblockShape.BOX_FILL_ = new goog.graphics.SolidFill('#f4e2c4', 0.8);
+thin.core.TblockShape.BOX_FILL_ = new goog.graphics.SolidFill('#f4e2c4', 0.8);
 
 
 /**
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.editor.TblockShape.BOX_STROKE_ = new goog.graphics.Stroke(0.28, '#7C4007');
+thin.core.TblockShape.BOX_STROKE_ = new goog.graphics.Stroke(0.28, '#7C4007');
 
 
 /**
  * @type {boolean}
  */
-thin.editor.TblockShape.DEFAULT_MULTIPLE = false;
+thin.core.TblockShape.DEFAULT_MULTIPLE = false;
 
 
 /**
  * @type {string}
  */
-thin.editor.TblockShape.DEFAULT_REFID = '';
+thin.core.TblockShape.DEFAULT_REFID = '';
 
 
 /**
  * @type {string}
  */
-thin.editor.TblockShape.DEFAULT_VALUE = '';
+thin.core.TblockShape.DEFAULT_VALUE = '';
 
 
 /**
  * @type {string}
  */
-thin.editor.TblockShape.DEFAULT_FORMAT_BASE = '';
+thin.core.TblockShape.DEFAULT_FORMAT_BASE = '';
 
 
 /**
  * @type {string}
  */
-thin.editor.TblockShape.DEFAULT_FORMAT_TYPE = thin.editor.formatstyles.FormatType.NONE;
+thin.core.TblockShape.DEFAULT_FORMAT_TYPE = thin.core.formatstyles.FormatType.NONE;
 
 
 /**
- * @type {thin.editor.IdShape}
+ * @type {thin.core.IdShape}
  * @private
  */
-thin.editor.TblockShape.prototype.id_;
-
-
-/**
- * @type {string}
- * @private
- */
-thin.editor.TblockShape.prototype.defaultValue_;
+thin.core.TblockShape.prototype.id_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.TblockShape.prototype.type_;
+thin.core.TblockShape.prototype.defaultValue_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.TblockShape.prototype.base_;
+thin.core.TblockShape.prototype.type_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.TblockShape.prototype.refId_;
+thin.core.TblockShape.prototype.base_;
 
 
 /**
- * @type {boolean}
+ * @type {string}
  * @private
  */
-thin.editor.TblockShape.prototype.isReferring_ = false;
+thin.core.TblockShape.prototype.refId_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.TblockShape.prototype.isReferences_ = false;
+thin.core.TblockShape.prototype.isReferring_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.TblockShape.prototype.multiMode_;
+thin.core.TblockShape.prototype.isReferences_ = false;
 
 
 /**
- * @type {thin.editor.formatstyles.AbstractFormat}
+ * @type {boolean}
+ * @private
  */
-thin.editor.TblockShape.prototype.formatStyle_ = null;
+thin.core.TblockShape.prototype.multiMode_;
+
+
+/**
+ * @type {thin.core.formatstyles.AbstractFormat}
+ */
+thin.core.TblockShape.prototype.formatStyle_ = null;
 
 
 /**
  * @type {goog.graphics.Element}
  * @private
  */
-thin.editor.TblockShape.prototype.referenceShape_;
+thin.core.TblockShape.prototype.referenceShape_;
 
 
 /**
  * @return {string}
  */
-thin.editor.TblockShape.prototype.getClassId = function() {
-  return thin.editor.TblockShape.CLASSID;
+thin.core.TblockShape.prototype.getClassId = function() {
+  return thin.core.TblockShape.CLASSID;
 };
 
 
 /**
- * Override thin.editor.ModuleShape#canResizeHeight.
+ * Override thin.core.ModuleShape#canResizeHeight.
  * @return {boolean}
  */
-thin.editor.TblockShape.prototype.canResizeHeight = function() {
+thin.core.TblockShape.prototype.canResizeHeight = function() {
   return this.isMultiMode();
 };
 
 
 /** @inheritDoc */
-thin.editor.TblockShape.prototype.updateToolbarUI = function() {
+thin.core.TblockShape.prototype.updateToolbarUI = function() {
   goog.base(this, 'updateToolbarUI');
   thin.ui.enablingFontUIs(true, true, true, this.isMultiMode(), false);
 };
@@ -253,13 +253,13 @@ thin.editor.TblockShape.prototype.updateToolbarUI = function() {
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.editor.TblockShape}
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.TblockShape}
  */
-thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeIdManager) {
+thin.core.TblockShape.createFromElement = function(element, layout, opt_shapeIdManager) {
   element.removeAttribute('clip-path');
-  var shape = new thin.editor.TblockShape(element, layout);
+  var shape = new thin.core.TblockShape(element, layout);
 
   shape.setMultiModeInternal(layout.getElementAttribute(element, 'x-multiple') == 'true');
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
@@ -276,8 +276,8 @@ thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeI
     shape.setVerticalAlign(layout.getElementAttribute(element, 'x-valign'));
   }
   if (thin.isExactlyEqual(kerning,
-        thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING)) {
-    kerning = thin.editor.TextStyle.DEFAULT_KERNING;
+        thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
+    kerning = thin.core.TextStyle.DEFAULT_KERNING;
   }
   shape.setKerning(/** @type {string} */ (kerning));
   if (!goog.isNull(lineHeightRatio)) {
@@ -297,7 +297,7 @@ thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeI
   shape.setBaseFormat(layout.getElementAttribute(element, 'x-format-base'));
 
   var formatType = layout.getElementAttribute(element, 'x-format-type');
-  var formatTypeTemp = thin.editor.formatstyles.FormatType;
+  var formatTypeTemp = thin.core.formatstyles.FormatType;
 
   switch (formatType) {
     case formatTypeTemp.NONE:
@@ -305,16 +305,16 @@ thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeI
       break;
     case formatTypeTemp.NUMBER:
       var delimiter = layout.getElementAttribute(element, 'x-format-number-delimiter');
-      shape.setFormatStyle(new thin.editor.formatstyles.NumberFormat(
+      shape.setFormatStyle(new thin.core.formatstyles.NumberFormat(
         delimiter, Number(layout.getElementAttribute(element, 'x-format-number-precision')),
-        !thin.isExactlyEqual(delimiter, thin.editor.formatstyles.NumberFormat.DISABLE_DELIMITER)));
+        !thin.isExactlyEqual(delimiter, thin.core.formatstyles.NumberFormat.DISABLE_DELIMITER)));
       break;
     case formatTypeTemp.DATETIME:
-      shape.setFormatStyle(new thin.editor.formatstyles.DatetimeFormat(
+      shape.setFormatStyle(new thin.core.formatstyles.DatetimeFormat(
         layout.getElementAttribute(element, 'x-format-datetime-format')));
       break;
     case formatTypeTemp.PADDING:
-      shape.setFormatStyle(new thin.editor.formatstyles.PaddingFormat(
+      shape.setFormatStyle(new thin.core.formatstyles.PaddingFormat(
         layout.getElementAttribute(element, 'x-format-padding-direction'),
         layout.getElementAttribute(element, 'x-format-padding-char'),
         Number(layout.getElementAttribute(element, 'x-format-padding-length'))));
@@ -328,21 +328,21 @@ thin.editor.TblockShape.createFromElement = function(element, layout, opt_shapeI
 
 /**
  * @param {Element=} opt_element
- * @return {thin.editor.Box}
+ * @return {thin.core.Box}
  * @private
  */
-thin.editor.TblockShape.prototype.createBox_ = function(opt_element) {
+thin.core.TblockShape.prototype.createBox_ = function(opt_element) {
   var opt_classId;
   if (!opt_element) {
-    var classId = thin.editor.TblockShape.ClassIds;
-    opt_classId = thin.editor.TblockShape.CLASSID + classId.BOX;
+    var classId = thin.core.TblockShape.ClassIds;
+    opt_classId = thin.core.TblockShape.CLASSID + classId.BOX;
   }
 
-  var box = thin.editor.TblockShape.superClass_.
+  var box = thin.core.TblockShape.superClass_.
                 createBox_.call(this, opt_element, opt_classId);
 
-  box.setStroke(thin.editor.TblockShape.BOX_STROKE_);
-  box.setFill(thin.editor.TblockShape.BOX_FILL_);
+  box.setStroke(thin.core.TblockShape.BOX_STROKE_);
+  box.setFill(thin.core.TblockShape.BOX_FILL_);
   box.setUsableClipPath(true);
 
   return box;
@@ -351,45 +351,45 @@ thin.editor.TblockShape.prototype.createBox_ = function(opt_element) {
 
 /**
  * @param {Element=} opt_element
- * @return {thin.editor.IdShape}
+ * @return {thin.core.IdShape}
  * @private
  */
-thin.editor.TblockShape.prototype.createId_ = function(opt_element) {
+thin.core.TblockShape.prototype.createId_ = function(opt_element) {
   var layout = this.getLayout();
-  var classId = thin.editor.TblockShape.ClassIds;
-  var font = thin.editor.TblockShape.IDSHAPEFONT_;
+  var classId = thin.core.TblockShape.ClassIds;
+  var font = thin.core.TblockShape.IDSHAPEFONT_;
   var element = opt_element ||
   layout.createSvgElement('text', {
-    'class': thin.editor.TblockShape.CLASSID + classId.ID,
+    'class': thin.core.TblockShape.CLASSID + classId.ID,
     'font-size': font.size,
     'font-family': font.family,
     'font-weight': 'normal',
     'font-style': 'normal',
     'text-decoration': 'none',
-    'text-anchor': thin.editor.TextStyle.HorizonAlignType.START,
-    'kerning': thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING
+    'text-anchor': thin.core.TextStyle.HorizonAlignType.START,
+    'kerning': thin.core.TextStyle.DEFAULT_ELEMENT_KERNING
   });
 
-  return new thin.editor.IdShape(element, layout, null,
-                  thin.editor.TblockShape.IDSHAPEFILL_);
+  return new thin.core.IdShape(element, layout, null,
+                  thin.core.TblockShape.IDSHAPEFILL_);
 };
 
 
 /** @inheritDoc */
-thin.editor.TblockShape.prototype.setup = function() {
+thin.core.TblockShape.prototype.setup = function() {
   var element = this.getElement();
-  var classId = thin.editor.TblockShape.ClassIds;
+  var classId = thin.core.TblockShape.ClassIds;
 
-  var opt_boxElement = thin.editor.getElementByClassNameForChildNodes((
-                          thin.editor.TblockShape.CLASSID + classId.BOX), element.childNodes);
+  var opt_boxElement = thin.core.getElementByClassNameForChildNodes((
+                          thin.core.TblockShape.CLASSID + classId.BOX), element.childNodes);
 
   this.box_ = this.createBox_(opt_boxElement);
   if (!opt_boxElement) {
     this.getLayout().appendChild(this.box_, this);
   }
 
-  var opt_idElement = thin.editor.getElementByClassNameForChildNodes((
-                          thin.editor.TblockShape.CLASSID + classId.ID), element.childNodes);
+  var opt_idElement = thin.core.getElementByClassNameForChildNodes((
+                          thin.core.TblockShape.CLASSID + classId.ID), element.childNodes);
 
   this.id_ = this.createId_(opt_idElement);
   if (!opt_idElement) {
@@ -399,25 +399,25 @@ thin.editor.TblockShape.prototype.setup = function() {
 
 
 
-thin.editor.TblockShape.prototype.createClipPath = function() {
+thin.core.TblockShape.prototype.createClipPath = function() {
   this.box_.createClipPath(this);
 };
 
 
-thin.editor.TblockShape.prototype.removeClipPath = function() {
+thin.core.TblockShape.prototype.removeClipPath = function() {
   this.box_.removeClipPath();
 };
 
 
-thin.editor.TblockShape.prototype.setDefaultOutline = function() {
+thin.core.TblockShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getTblockOutline());
 };
 
 
 /**
- * @param {thin.editor.formatstyles.AbstractFormat?} formatStyle
+ * @param {thin.core.formatstyles.AbstractFormat?} formatStyle
  */
-thin.editor.TblockShape.prototype.setFormatStyle = function(formatStyle) {
+thin.core.TblockShape.prototype.setFormatStyle = function(formatStyle) {
   if (formatStyle) {
     this.clearFormatStyle_(formatStyle);
 
@@ -425,7 +425,7 @@ thin.editor.TblockShape.prototype.setFormatStyle = function(formatStyle) {
     var element = this.getElement();
 
     switch (true) {
-      case thin.editor.formatstyles.isNumberFormat(formatStyle):
+      case thin.core.formatstyles.isNumberFormat(formatStyle):
         var isDelimitation = formatStyle.isDelimitationEnabled();
         layout.setElementAttributes(element, {
           'x-format-number-delimiter': formatStyle.getDelimiter()
@@ -434,12 +434,12 @@ thin.editor.TblockShape.prototype.setFormatStyle = function(formatStyle) {
           'x-format-number-precision': formatStyle.getPrecision()
         });
         break;
-      case thin.editor.formatstyles.isDatetimeFormat(formatStyle):
+      case thin.core.formatstyles.isDatetimeFormat(formatStyle):
         layout.setElementAttributes(element, {
           'x-format-datetime-format': formatStyle.getFormat()
         });
         break;
-      case thin.editor.formatstyles.isPaddingFormat(formatStyle):
+      case thin.core.formatstyles.isPaddingFormat(formatStyle):
         layout.setElementAttributes(element, {
           'x-format-padding-char': formatStyle.getChar()
         });
@@ -459,9 +459,9 @@ thin.editor.TblockShape.prototype.setFormatStyle = function(formatStyle) {
 
 
 /**
- * @param {thin.editor.formatstyles.AbstractFormat=} opt_newFormat
+ * @param {thin.core.formatstyles.AbstractFormat=} opt_newFormat
  */
-thin.editor.TblockShape.prototype.clearFormatStyle_ = function(opt_newFormat) {
+thin.core.TblockShape.prototype.clearFormatStyle_ = function(opt_newFormat) {
   if (opt_newFormat && this.formatStyle_ &&
   this.formatStyle_.constructor == opt_newFormat.constructor) {
     // Skip clear;
@@ -473,14 +473,14 @@ thin.editor.TblockShape.prototype.clearFormatStyle_ = function(opt_newFormat) {
 
   if (captureFormatStyle) {
     switch (true) {
-      case thin.editor.formatstyles.isNumberFormat(captureFormatStyle):
+      case thin.core.formatstyles.isNumberFormat(captureFormatStyle):
         element.removeAttribute('x-format-number-delimiter');
         element.removeAttribute('x-format-number-precision');
         break;
-      case thin.editor.formatstyles.isDatetimeFormat(captureFormatStyle):
+      case thin.core.formatstyles.isDatetimeFormat(captureFormatStyle):
         element.removeAttribute('x-format-datetime-format');
         break;
-      case thin.editor.formatstyles.isPaddingFormat(captureFormatStyle):
+      case thin.core.formatstyles.isPaddingFormat(captureFormatStyle):
         element.removeAttribute('x-format-padding-direction');
         element.removeAttribute('x-format-padding-char');
         element.removeAttribute('x-format-padding-length');
@@ -491,21 +491,21 @@ thin.editor.TblockShape.prototype.clearFormatStyle_ = function(opt_newFormat) {
   }
 
   if (opt_newFormat) {
-    var formatTypeTemp = thin.editor.formatstyles.FormatType;
+    var formatTypeTemp = thin.core.formatstyles.FormatType;
 
     switch (true) {
-      case thin.editor.formatstyles.isNumberFormat(opt_newFormat):
+      case thin.core.formatstyles.isNumberFormat(opt_newFormat):
         this.setFormatTypeInternal(formatTypeTemp.NUMBER);
         break;
-      case thin.editor.formatstyles.isDatetimeFormat(opt_newFormat):
+      case thin.core.formatstyles.isDatetimeFormat(opt_newFormat):
         this.setFormatTypeInternal(formatTypeTemp.DATETIME);
         break;
-      case thin.editor.formatstyles.isPaddingFormat(opt_newFormat):
+      case thin.core.formatstyles.isPaddingFormat(opt_newFormat):
         this.setFormatTypeInternal(formatTypeTemp.PADDING);
         break;
     }
   } else {
-    this.setFormatTypeInternal(thin.editor.TblockShape.DEFAULT_FORMAT_TYPE);
+    this.setFormatTypeInternal(thin.core.TblockShape.DEFAULT_FORMAT_TYPE);
   }
 };
 
@@ -513,7 +513,7 @@ thin.editor.TblockShape.prototype.clearFormatStyle_ = function(opt_newFormat) {
 /**
  * @param {string} formatType
  */
-thin.editor.TblockShape.prototype.setFormatTypeInternal = function(formatType) {
+thin.core.TblockShape.prototype.setFormatTypeInternal = function(formatType) {
   this.type_ = formatType;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-format-type': formatType
@@ -524,29 +524,29 @@ thin.editor.TblockShape.prototype.setFormatTypeInternal = function(formatType) {
 /**
  * @param {string} formatType
  */
-thin.editor.TblockShape.prototype.setFormatType = function(formatType) {
+thin.core.TblockShape.prototype.setFormatType = function(formatType) {
   this.setFormatTypeInternal(formatType);
 
-  var formatTypeTemp = thin.editor.formatstyles.FormatType;
+  var formatTypeTemp = thin.core.formatstyles.FormatType;
   switch (formatType) {
     case formatTypeTemp.NONE:
       this.setFormatStyle(null);
       break;
     case formatTypeTemp.NUMBER:
-      this.setFormatStyle(new thin.editor.formatstyles.NumberFormat(
-        thin.editor.formatstyles.NumberFormat.DEFAULT_DELIMITER,
-        thin.editor.formatstyles.NumberFormat.DEFAULT_PRECISION,
-        thin.editor.formatstyles.NumberFormat.DEFAULT_ENABLED));
+      this.setFormatStyle(new thin.core.formatstyles.NumberFormat(
+        thin.core.formatstyles.NumberFormat.DEFAULT_DELIMITER,
+        thin.core.formatstyles.NumberFormat.DEFAULT_PRECISION,
+        thin.core.formatstyles.NumberFormat.DEFAULT_ENABLED));
       break;
     case formatTypeTemp.DATETIME:
-      this.setFormatStyle(new thin.editor.formatstyles.DatetimeFormat(
-        thin.editor.formatstyles.DatetimeFormat.DEFAULT_FORMAT));
+      this.setFormatStyle(new thin.core.formatstyles.DatetimeFormat(
+        thin.core.formatstyles.DatetimeFormat.DEFAULT_FORMAT));
       break;
     case formatTypeTemp.PADDING:
-      this.setFormatStyle(new thin.editor.formatstyles.PaddingFormat(
-          thin.editor.formatstyles.PaddingFormat.DEFAULT_DIRECTION,
-          thin.editor.formatstyles.PaddingFormat.DEFAULT_CHAR,
-          thin.editor.formatstyles.PaddingFormat.DEFAULT_LENGTH));
+      this.setFormatStyle(new thin.core.formatstyles.PaddingFormat(
+          thin.core.formatstyles.PaddingFormat.DEFAULT_DIRECTION,
+          thin.core.formatstyles.PaddingFormat.DEFAULT_CHAR,
+          thin.core.formatstyles.PaddingFormat.DEFAULT_LENGTH));
       break;
   }
 };
@@ -555,25 +555,25 @@ thin.editor.TblockShape.prototype.setFormatType = function(formatType) {
 /**
  * @return {string}
  */
-thin.editor.TblockShape.prototype.getFormatType = function() {
+thin.core.TblockShape.prototype.getFormatType = function() {
   return /** @type {string} */ (thin.getValIfNotDef(this.type_,
-             thin.editor.TblockShape.DEFAULT_FORMAT_TYPE));
+             thin.core.TblockShape.DEFAULT_FORMAT_TYPE));
 };
 
 
 /**
  * @return {string}
  */
-thin.editor.TblockShape.prototype.getDefaultValueOfLink = function() {
+thin.core.TblockShape.prototype.getDefaultValueOfLink = function() {
   return /** @type {string} */ (thin.getValIfNotDef(this.defaultValue_,
-             thin.editor.TblockShape.DEFAULT_VALUE));
+             thin.core.TblockShape.DEFAULT_VALUE));
 };
 
 
 /**
  * @param {string} value
  */
-thin.editor.TblockShape.prototype.setDefaultValueOfLink = function(value) {
+thin.core.TblockShape.prototype.setDefaultValueOfLink = function(value) {
   this.defaultValue_ = value;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-value': value
@@ -584,16 +584,16 @@ thin.editor.TblockShape.prototype.setDefaultValueOfLink = function(value) {
 /**
  * @return {string}
  */
-thin.editor.TblockShape.prototype.getBaseFormat = function() {
+thin.core.TblockShape.prototype.getBaseFormat = function() {
   return /** @type {string} */ (thin.getValIfNotDef(this.base_,
-             thin.editor.TblockShape.DEFAULT_FORMAT_BASE));
+             thin.core.TblockShape.DEFAULT_FORMAT_BASE));
 };
 
 
 /**
  * @param {string} formatBase
  */
-thin.editor.TblockShape.prototype.setBaseFormat = function(formatBase) {
+thin.core.TblockShape.prototype.setBaseFormat = function(formatBase) {
   this.base_ = formatBase;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-format-base': formatBase
@@ -603,10 +603,10 @@ thin.editor.TblockShape.prototype.setBaseFormat = function(formatBase) {
 
 /**
  * @param {string} shapeId
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
  */
-thin.editor.TblockShape.prototype.setShapeId = function(shapeId, opt_shapeIdManager) {
-  if (!thin.isExactlyEqual(shapeId, thin.editor.ModuleShape.DEFAULT_SHAPEID)) {
+thin.core.TblockShape.prototype.setShapeId = function(shapeId, opt_shapeIdManager) {
+  if (!thin.isExactlyEqual(shapeId, thin.core.ModuleShape.DEFAULT_SHAPEID)) {
     this.id_.setText(shapeId);
     this.setShapeId_(shapeId, opt_shapeIdManager);
   }
@@ -616,7 +616,7 @@ thin.editor.TblockShape.prototype.setShapeId = function(shapeId, opt_shapeIdMana
 /**
  * @return {boolean}
  */
-thin.editor.TblockShape.prototype.isReferring = function() {
+thin.core.TblockShape.prototype.isReferring = function() {
   return this.isReferring_;
 };
 
@@ -624,7 +624,7 @@ thin.editor.TblockShape.prototype.isReferring = function() {
 /**
  * @return {boolean}
  */
-thin.editor.TblockShape.prototype.isReferences = function() {
+thin.core.TblockShape.prototype.isReferences = function() {
   return this.isReferences_;
 };
 
@@ -632,26 +632,26 @@ thin.editor.TblockShape.prototype.isReferences = function() {
 /**
  * @param {goog.graphics.Element} referenceShape
  */
-thin.editor.TblockShape.prototype.setReferenceShape = function(referenceShape) {
+thin.core.TblockShape.prototype.setReferenceShape = function(referenceShape) {
   this.referenceShape_ = referenceShape;
   this.isReferring_ = true;
 };
 
 
-thin.editor.TblockShape.prototype.removeReferenceShape = function() {
+thin.core.TblockShape.prototype.removeReferenceShape = function() {
   if (this.isReferring()) {
     this.referenceShape_.removeReferringShape(this);
   }
   delete this.referenceShape_;
   this.isReferring_ = false;
-  this.setInternalRefId(thin.editor.TblockShape.DEFAULT_REFID);
+  this.setInternalRefId(thin.core.TblockShape.DEFAULT_REFID);
 };
 
 
 /**
  * @return {goog.graphics.Element}
  */
-thin.editor.TblockShape.prototype.getReferenceShape = function() {
+thin.core.TblockShape.prototype.getReferenceShape = function() {
   return this.referenceShape_;
 };
 
@@ -660,7 +660,7 @@ thin.editor.TblockShape.prototype.getReferenceShape = function() {
  * @param {string} refId
  * @param {goog.graphics.Element} referenceShape
  */
-thin.editor.TblockShape.prototype.setRefId = function(refId, referenceShape) {
+thin.core.TblockShape.prototype.setRefId = function(refId, referenceShape) {
   if (this.refId_ == refId) {
     // Skip setRefId;
     return;
@@ -678,7 +678,7 @@ thin.editor.TblockShape.prototype.setRefId = function(refId, referenceShape) {
 /**
  * @param {string} refId
  */
-thin.editor.TblockShape.prototype.setInternalRefId = function(refId) {
+thin.core.TblockShape.prototype.setInternalRefId = function(refId) {
   this.refId_ = refId;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-ref-id': refId
@@ -689,25 +689,25 @@ thin.editor.TblockShape.prototype.setInternalRefId = function(refId) {
 /**
  * @return {string}
  */
-thin.editor.TblockShape.prototype.getRefId = function() {
+thin.core.TblockShape.prototype.getRefId = function() {
   return /** @type {string} */ (thin.getValIfNotDef(this.refId_,
-             thin.editor.TblockShape.DEFAULT_REFID));
+             thin.core.TblockShape.DEFAULT_REFID));
 };
 
 
 /**
  * @param {goog.graphics.Element} referringShape
  */
-thin.editor.TblockShape.prototype.setReferringShape = function(referringShape) {
+thin.core.TblockShape.prototype.setReferringShape = function(referringShape) {
   goog.array.insert(this.referringShapes_, referringShape);
   this.isReferences_ = true;
 };
 
 
 /**
- * @return {Array.<thin.editor.TblockShape>}
+ * @return {Array.<thin.core.TblockShape>}
  */
-thin.editor.TblockShape.prototype.getReferringShapes = function() {
+thin.core.TblockShape.prototype.getReferringShapes = function() {
   return goog.array.clone(this.referringShapes_);
 };
 
@@ -715,7 +715,7 @@ thin.editor.TblockShape.prototype.getReferringShapes = function() {
 /**
  * @param {goog.graphics.Element} referringShape
  */
-thin.editor.TblockShape.prototype.removeReferringShape = function(referringShape) {
+thin.core.TblockShape.prototype.removeReferringShape = function(referringShape) {
   goog.array.remove(this.referringShapes_, referringShape);
   if (goog.array.isEmpty(this.referringShapes_)) {
     this.isReferences_ = false;
@@ -726,34 +726,34 @@ thin.editor.TblockShape.prototype.removeReferringShape = function(referringShape
 /**
  * @param {number} left
  */
-thin.editor.TblockShape.prototype.setLeft = function(left) {
-  thin.editor.TblockShape.superClass_.setLeft.call(this, left);
-  this.id_.setLeft(this.left_ + thin.editor.TblockShape.Delta_.X);
+thin.core.TblockShape.prototype.setLeft = function(left) {
+  thin.core.TblockShape.superClass_.setLeft.call(this, left);
+  this.id_.setLeft(this.left_ + thin.core.TblockShape.Delta_.X);
 };
 
 
 /**
  * @param {number} top
  */
-thin.editor.TblockShape.prototype.setTop = function(top) {
-  thin.editor.TblockShape.superClass_.setTop.call(this, top);
-  this.id_.setTop(this.top_ + thin.editor.TblockShape.Delta_.Y);
+thin.core.TblockShape.prototype.setTop = function(top) {
+  thin.core.TblockShape.superClass_.setTop.call(this, top);
+  this.id_.setTop(this.top_ + thin.core.TblockShape.Delta_.Y);
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.TblockShape.prototype.isMultiMode = function() {
+thin.core.TblockShape.prototype.isMultiMode = function() {
   return /** @type {boolean} */ (thin.getValIfNotDef(this.multiMode_,
-             thin.editor.TblockShape.DEFAULT_MULTIPLE));
+             thin.core.TblockShape.DEFAULT_MULTIPLE));
 };
 
 
 /**
  * @param {boolean} multipleMode
  */
-thin.editor.TblockShape.prototype.setMultiModeInternal = function(multipleMode) {
+thin.core.TblockShape.prototype.setMultiModeInternal = function(multipleMode) {
   this.multiMode_ = multipleMode;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-multiple': multipleMode
@@ -764,12 +764,12 @@ thin.editor.TblockShape.prototype.setMultiModeInternal = function(multipleMode) 
 /**
  * @param {boolean} multipleMode
  */
-thin.editor.TblockShape.prototype.setMultiMode = function(multipleMode) {
+thin.core.TblockShape.prototype.setMultiMode = function(multipleMode) {
   this.setMultiModeInternal(multipleMode);
 
   if (multipleMode) {
     var ratio = this.getTextLineHeightRatio();
-    if (!thin.isExactlyEqual(ratio, thin.editor.TextStyle.DEFAULT_LINEHEIGHT)) {
+    if (!thin.isExactlyEqual(ratio, thin.core.TextStyle.DEFAULT_LINEHEIGHT)) {
       this.setTextLineHeightRatio(ratio);
     }
     this.setVerticalAlign(this.getVerticalAlign());
@@ -785,9 +785,9 @@ thin.editor.TblockShape.prototype.setMultiMode = function(multipleMode) {
 /**
  * @param {string} valign
  */
-thin.editor.TblockShape.prototype.setVerticalAlign = function(valign) {
+thin.core.TblockShape.prototype.setVerticalAlign = function(valign) {
   if (this.isMultiMode()) {
-    thin.editor.TblockShape.superClass_.setVerticalAlign.call(this, valign);
+    thin.core.TblockShape.superClass_.setVerticalAlign.call(this, valign);
   }
 };
 
@@ -795,9 +795,9 @@ thin.editor.TblockShape.prototype.setVerticalAlign = function(valign) {
 /**
  * @param {string} ratio
  */
-thin.editor.TblockShape.prototype.setTextLineHeightRatio = function(ratio) {
+thin.core.TblockShape.prototype.setTextLineHeightRatio = function(ratio) {
   if (this.isMultiMode()) {
-    thin.editor.TblockShape.superClass_.setTextLineHeightRatio.call(this, ratio);
+    thin.core.TblockShape.superClass_.setTextLineHeightRatio.call(this, ratio);
   }
 };
 
@@ -805,11 +805,11 @@ thin.editor.TblockShape.prototype.setTextLineHeightRatio = function(ratio) {
 /**
  * @param {number} size
  */
-thin.editor.TblockShape.prototype.setFontSize = function(size) {
-  thin.editor.TblockShape.superClass_.setFontSize.call(this, size);
+thin.core.TblockShape.prototype.setFontSize = function(size) {
+  thin.core.TblockShape.superClass_.setFontSize.call(this, size);
 
   var ratio = this.getTextLineHeightRatio();
-  if (!thin.isExactlyEqual(ratio, thin.editor.TextStyle.DEFAULT_LINEHEIGHT)) {
+  if (!thin.isExactlyEqual(ratio, thin.core.TextStyle.DEFAULT_LINEHEIGHT)) {
     this.setTextLineHeightRatio(ratio);
   }
 };
@@ -818,7 +818,7 @@ thin.editor.TblockShape.prototype.setFontSize = function(size) {
 /**
  * @param {string} wrap
  */
-thin.editor.TblockShape.prototype.setTextWordWrap = function(wrap) {
+thin.core.TblockShape.prototype.setTextWordWrap = function(wrap) {
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-word-wrap': wrap
   });
@@ -828,16 +828,16 @@ thin.editor.TblockShape.prototype.setTextWordWrap = function(wrap) {
 /**
  * @return {string}
  */
-thin.editor.TblockShape.prototype.getTextWordWrap = function() {
+thin.core.TblockShape.prototype.getTextWordWrap = function() {
   return this.getLayout().getElementAttribute(this.getElement(), 'x-word-wrap')
-    || thin.editor.TextStyle.getDefaultWordWrap();
+    || thin.core.TextStyle.getDefaultWordWrap();
 };
 
 
 /**
  * @param {string} type
  */
-thin.editor.TblockShape.prototype.setOverflowType = function(type) {
+thin.core.TblockShape.prototype.setOverflowType = function(type) {
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-overflow': type
   });
@@ -847,25 +847,25 @@ thin.editor.TblockShape.prototype.setOverflowType = function(type) {
 /**
  * @return {string}
  */
-thin.editor.TblockShape.prototype.getOverflowType = function() {
+thin.core.TblockShape.prototype.getOverflowType = function() {
   return this.getLayout().getElementAttribute(this.getElement(), 'x-overflow')
-    || thin.editor.TextStyle.DEFAULT_OVERFLOWTYPE;
+    || thin.core.TextStyle.DEFAULT_OVERFLOWTYPE;
 };
 
 
 /**
- * @param {thin.editor.Helpers} helpers
- * @param {thin.editor.MultiOutlineHelper} multiOutlineHelper
+ * @param {thin.core.Helpers} helpers
+ * @param {thin.core.MultiOutlineHelper} multiOutlineHelper
  */
-thin.editor.TblockShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
+thin.core.TblockShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
   multiOutlineHelper.toTblockOutline(this, helpers);
 };
 
 
 /**
- * @return {thin.editor.formatstyles.AbstractFormat}
+ * @return {thin.core.formatstyles.AbstractFormat}
  */
-thin.editor.TblockShape.prototype.getFormatStyle = function() {
+thin.core.TblockShape.prototype.getFormatStyle = function() {
   return this.formatStyle_;
 };
 
@@ -873,7 +873,7 @@ thin.editor.TblockShape.prototype.getFormatStyle = function() {
 /**
  * @return {Function}
  */
-thin.editor.TblockShape.prototype.getCloneCreator = function() {
+thin.core.TblockShape.prototype.getCloneCreator = function() {
 
   var sourceCoordinate = new goog.math.Coordinate(this.getLeft(), this.getTop()).clone();
   var deltaCoordinateForList = this.getDeltaCoordinateForList().clone();
@@ -900,7 +900,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
   var defvalue = this.getDefaultValueOfLink();
   var formatBase = this.getBaseFormat();
   var formatStyle = this.getFormatStyle();
-  var shapeIdPrefix = thin.editor.ShapeIdManager.getShapeIdPrefix(this.getShapeId());
+  var shapeIdPrefix = thin.core.ShapeIdManager.getShapeIdPrefix(this.getShapeId());
   var isAffiliationListShape = this.isAffiliationListShape();
   var deltaCoordinate = this.getDeltaCoordinateForList();
   var overflow = this.getOverflowType();
@@ -908,12 +908,12 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
   var inlineFormat = this.getInlineFormatAllowed();
 
   /**
-   * @param {thin.editor.Layout} layout
+   * @param {thin.core.Layout} layout
    * @param {boolean=} opt_isAdaptDeltaForList
    * @param {goog.graphics.SvgGroupElement=} opt_renderTo
    * @param {goog.math.Coordinate=} opt_basisCoordinate
-   * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
-   * @return {thin.editor.TblockShape}
+   * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+   * @return {thin.core.TblockShape}
    */
   return function(layout, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate, opt_shapeIdManager) {
 
@@ -956,7 +956,7 @@ thin.editor.TblockShape.prototype.getCloneCreator = function() {
 /**
  * @private
  */
-thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
+thin.core.TblockShape.prototype.createPropertyComponent_ = function() {
   var scope = this;
   var layout = this.getLayout();
   var workspace = layout.getWorkspace();
@@ -1026,8 +1026,8 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
 
         var scope = this;
         var layout = this.getLayout();
-        var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-        var fillNone = thin.editor.ModuleShape.NONE;
+        var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
+        var fillNone = thin.core.ModuleShape.NONE;
         //  choose none color returned null.
         var fillColor = /** @type {string} */(thin.getValIfNotDef(e.target.getValue(), proppaneBlank));
         var fill = new goog.graphics.SolidFill(thin.isExactlyEqual(fillColor, proppaneBlank) ?
@@ -1064,7 +1064,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   fontSizeInput.setValidator(fontSizeInputValidation);
 
   var fontSizeItem;
-  goog.array.forEach(thin.editor.FontStyle.FONTSIZE_LIST, function(fontSizeValue) {
+  goog.array.forEach(thin.core.FontStyle.FONTSIZE_LIST, function(fontSizeValue) {
     fontSizeItem = new thin.ui.ComboBoxItem(fontSizeValue);
     fontSizeItem.setSticky(true);
     fontSizeComb.addItem(fontSizeItem);
@@ -1094,7 +1094,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
 
   var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
-  var textAlignType = thin.editor.TextStyle.HorizonAlignTypeName;
+  var textAlignType = thin.core.TextStyle.HorizonAlignTypeName;
 
   textAlignSelect.setTextAlignLeft();
   textAlignSelect.addItem(new thin.ui.Option(textAlignType.START));
@@ -1104,7 +1104,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   textAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         workspace.getAction().actionSetTextAnchor(
-            thin.editor.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
+            thin.core.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
       }, false, this);
 
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
@@ -1113,7 +1113,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_vertical_align'));
   var textVerticalAlignSelect = textVerticalAlignSelectProperty.getValueControl();
   textVerticalAlignSelect.setTextAlignLeft();
-  var verticalAlignType = thin.editor.TextStyle.VerticalAlignTypeName;
+  var verticalAlignType = thin.core.TextStyle.VerticalAlignTypeName;
 
   textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.TOP));
   textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.CENTER));
@@ -1122,7 +1122,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   textVerticalAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         workspace.getAction().actionSetVerticalAlign(
-            thin.editor.TextStyle.getVerticalAlignTypeFromTypeName(e.target.getValue()));
+            thin.core.TextStyle.getVerticalAlignTypeFromTypeName(e.target.getValue()));
       }, false, this);
 
   proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
@@ -1138,7 +1138,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   lineHeightInput.setValidator(lineHeightInputValidation);
 
   var lineHeightItem;
-  goog.array.forEach(thin.editor.TextStyle.LINEHEIGHT_LIST, function(lineHeightValue) {
+  goog.array.forEach(thin.core.TextStyle.LINEHEIGHT_LIST, function(lineHeightValue) {
     lineHeightItem = new thin.ui.ComboBoxItem(lineHeightValue);
     lineHeightItem.setSticky(true);
     lineHeightComb.addItem(lineHeightItem);
@@ -1176,7 +1176,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         var kerning = e.target.getValue();
         var captureSpacing = scope.getKerning();
 
-        if (kerning !== thin.editor.TextStyle.DEFAULT_KERNING) {
+        if (kerning !== thin.core.TextStyle.DEFAULT_KERNING) {
           kerning = String(Number(kerning));
         }
 
@@ -1201,7 +1201,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         var multipleMode = e.target.isChecked();
         var captureMultipleMode = scope.isMultiMode();
-        var anchorStart = thin.editor.TextStyle.HorizonAlignType.START;
+        var anchorStart = thin.core.TextStyle.HorizonAlignType.START;
         var captureTextAnchor = scope.getTextAnchor();
         var captureHeight = scope.getHeight();
 
@@ -1219,7 +1219,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
           if(isMultiple) {
             scope.setHeight(captureHeight);
           } else {
-            scope.setHeight(thin.core.Font.getHeight(
+            scope.setHeight(thin.Font.getHeight(
                     scope.getFontFamily(), scope.getFontSize()));
           }
 
@@ -1246,8 +1246,8 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var textOverflowSelect = textOverflowSelectProperty.getValueControl();
   textOverflowSelect.setTextAlignLeft();
 
-  var overflowName = thin.editor.TextStyle.OverflowTypeName;
-  var overflowType = thin.editor.TextStyle.OverflowType;
+  var overflowName = thin.core.TextStyle.OverflowTypeName;
+  var overflowType = thin.core.TextStyle.OverflowType;
 
   textOverflowSelect.addItem(new thin.ui.Option(overflowName.TRUNCATE, overflowType.TRUNCATE));
   textOverflowSelect.addItem(new thin.ui.Option(overflowName.FIT, overflowType.FIT));
@@ -1277,9 +1277,9 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var textWordWrapSelect = textWordWrapSelectProperty.getValueControl();
   textWordWrapSelect.setTextAlignLeft();
 
-  var wordWrapTypeName = thin.editor.TextStyle.WordWrapTypeName;
+  var wordWrapTypeName = thin.core.TextStyle.WordWrapTypeName;
 
-  goog.object.forEach(thin.editor.TextStyle.WordWrapType, function(value, key) {
+  goog.object.forEach(thin.core.TextStyle.WordWrapType, function(value, key) {
     textWordWrapSelect.addItem(
         new thin.ui.Option(goog.object.get(wordWrapTypeName, key), value));
   });
@@ -1329,14 +1329,14 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var formatTypeSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_format_type'));
   var formatTypeSelect = formatTypeSelectProperty.getValueControl();
   formatTypeSelect.setTextAlignLeft();
-  goog.object.forEach(thin.editor.formatstyles.FormatTypeName, function(formatName) {
+  goog.object.forEach(thin.core.formatstyles.FormatTypeName, function(formatName) {
     formatTypeSelect.addItem(new thin.ui.Option(formatName));
   });
   formatTypeSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var formatValue = e.target.getValue();
-        var formatType = thin.editor.formatstyles.getFormatTypeFromName(formatValue);
-        var captureFormatValue = thin.editor.formatstyles.getFormatNameFromType(scope.getFormatType());
+        var formatType = thin.core.formatstyles.getFormatTypeFromName(formatValue);
+        var captureFormatValue = thin.core.formatstyles.getFormatNameFromType(scope.getFormatType());
         var captureFormatStyle = scope.getFormatStyle();
 
         workspace.normalVersioning(function(version) {
@@ -1382,7 +1382,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var dateTimeCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_datetime_format'));
   var dateTimeComb = dateTimeCombProperty.getValueControl();
   var dateTimeItem;
-  goog.object.forEach(thin.editor.formatstyles.DatetimeFormat.DateFormatTemplate, function(dateTimeFormat) {
+  goog.object.forEach(thin.core.formatstyles.DatetimeFormat.DateFormatTemplate, function(dateTimeFormat) {
     dateTimeItem = new thin.ui.ComboBoxItem(dateTimeFormat);
     dateTimeItem.setSticky(true);
     dateTimeComb.addItem(dateTimeItem);
@@ -1392,7 +1392,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
       function(e) {
 
         var dateTimeFormat = e.target.getValue();
-        var dateTimeFormatStyle = new thin.editor.formatstyles.DatetimeFormat(dateTimeFormat);
+        var dateTimeFormatStyle = new thin.core.formatstyles.DatetimeFormat(dateTimeFormat);
         var captureDateTimeFormatStyle = scope.getFormatStyle();
         var captureDateTimeFormat = captureDateTimeFormatStyle.getFormat();
 
@@ -1425,7 +1425,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         }
 
         var captureFormatStyle = scope.getFormatStyle();
-        var numberFormatStyle = new thin.editor.formatstyles.NumberFormat(
+        var numberFormatStyle = new thin.core.formatstyles.NumberFormat(
                                       captureFormatStyle.getDelimiter(),
                                       captureFormatStyle.getPrecision(), e.target.isChecked());
 
@@ -1450,7 +1450,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         }
 
         var captureFormatStyle = scope.getFormatStyle();
-        var numberFormatStyle = new thin.editor.formatstyles.NumberFormat(
+        var numberFormatStyle = new thin.core.formatstyles.NumberFormat(
                                       e.target.getValue(), captureFormatStyle.getPrecision(),
                                       captureFormatStyle.isDelimitationEnabled());
 
@@ -1480,7 +1480,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         var precision = Number(e.target.getValue());
         var captureFormatStyle = scope.getFormatStyle();
         var capturePrecision = captureFormatStyle.getPrecision();
-        var numberFormatStyle = new thin.editor.formatstyles.NumberFormat(
+        var numberFormatStyle = new thin.core.formatstyles.NumberFormat(
                                       captureFormatStyle.getDelimiter(), precision,
                                       captureFormatStyle.isDelimitationEnabled());
 
@@ -1510,7 +1510,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         var paddingLength = Number(e.target.getValue());
         var captureFormatStyle = scope.getFormatStyle();
         var capturePaddingLen = captureFormatStyle.getLength();
-        var paddingFormat = new thin.editor.formatstyles.PaddingFormat(
+        var paddingFormat = new thin.core.formatstyles.PaddingFormat(
                               captureFormatStyle.getDirection(), captureFormatStyle.getChar(), paddingLength);
 
         workspace.normalVersioning(function(version) {
@@ -1536,7 +1536,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
         var paddingChar = e.target.getValue();
         var captureFormatStyle = scope.getFormatStyle();
         var capturePaddingChar = captureFormatStyle.getChar();
-        var paddingFormat = new thin.editor.formatstyles.PaddingFormat(
+        var paddingFormat = new thin.core.formatstyles.PaddingFormat(
                               captureFormatStyle.getDirection(), paddingChar,
                               captureFormatStyle.getLength());
 
@@ -1558,7 +1558,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
   var directionSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_fill_direction'));
   var directionSelect = directionSelectProperty.getValueControl();
   directionSelect.setTextAlignLeft();
-  goog.object.forEach(thin.editor.formatstyles.PaddingFormat.DirectionTypeName, function(directionTypeName) {
+  goog.object.forEach(thin.core.formatstyles.PaddingFormat.DirectionTypeName, function(directionTypeName) {
     directionSelect.addItem(new thin.ui.Option(directionTypeName));
   });
 
@@ -1566,10 +1566,10 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         var directionValue = e.target.getValue();
         var captureFormatStyle = scope.getFormatStyle();
-        var direction = thin.editor.formatstyles.PaddingFormat.getDirectionTypeFromName(directionValue);
+        var direction = thin.core.formatstyles.PaddingFormat.getDirectionTypeFromName(directionValue);
         var captureDirection = captureFormatStyle.getDirection();
-        var captureDirectionValue = thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(captureDirection);
-        var paddingFormat = new thin.editor.formatstyles.PaddingFormat(direction,
+        var captureDirectionValue = thin.core.formatstyles.PaddingFormat.getDirectionNameFromType(captureDirection);
+        var paddingFormat = new thin.core.formatstyles.PaddingFormat(direction,
                                   captureFormatStyle.getChar(),
                                   captureFormatStyle.getLength());
 
@@ -1669,7 +1669,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
       function(e) {
 
         var refId = e.target.getValue();
-        var isDefaultValue = thin.isExactlyEqual(refId, thin.editor.TblockShape.DEFAULT_REFID);
+        var isDefaultValue = thin.isExactlyEqual(refId, thin.core.TblockShape.DEFAULT_REFID);
         var captureRefId = scope.getRefId();
         var captureIsReferring = scope.isReferring();
         var captureReferenceShape = scope.getReferenceShape();
@@ -1741,7 +1741,7 @@ thin.editor.TblockShape.prototype.createPropertyComponent_ = function() {
 /**
  * @return {Object}
  */
-thin.editor.TblockShape.prototype.getProperties = function() {
+thin.core.TblockShape.prototype.getProperties = function() {
   var properties = {
     'left': this.getLeft(),
     'top': this.getTop(),
@@ -1770,19 +1770,19 @@ thin.editor.TblockShape.prototype.getProperties = function() {
   var formatStyle = this.getFormatStyle();
 
   switch (true) {
-    case thin.editor.formatstyles.isNumberFormat(formatStyle):
+    case thin.core.formatstyles.isNumberFormat(formatStyle):
       properties['format-number-delimiter'] = formatStyle.getDelimiter();
       properties['format-number-delimitation'] = formatStyle.isDelimitationEnabled();
       properties['format-number-precision'] = formatStyle.getPrecision();
       break;
 
-    case thin.editor.formatstyles.isPaddingFormat(formatStyle):
+    case thin.core.formatstyles.isPaddingFormat(formatStyle):
       properties['format-padding-length'] = formatStyle.getLength();
       properties['format-padding-char'] = formatStyle.getChar();
       properties['format-padding-direction'] = formatStyle.getDirection();
       break;
 
-    case thin.editor.formatstyles.isDatetimeFormat(formatStyle):
+    case thin.core.formatstyles.isDatetimeFormat(formatStyle):
       properties['format-datetime-format'] = formatStyle.getFormat();
       break;
   };
@@ -1791,7 +1791,7 @@ thin.editor.TblockShape.prototype.getProperties = function() {
 };
 
 
-thin.editor.TblockShape.prototype.updateProperties = function() {
+thin.core.TblockShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
   if (!proppane.isTarget(this)) {
     this.getLayout().updatePropertiesForEmpty();
@@ -1802,7 +1802,7 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
   var properties = this.getProperties();
   var formatStyle = this.getFormatStyle();
   var isMultiple = this.isMultiMode();
-  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+  var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
 
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
@@ -1811,31 +1811,31 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
   proppane.getPropertyControl('display').setChecked(properties['display']);
 
   var fontColor = properties['font-color'];
-  if (thin.isExactlyEqual(fontColor, thin.editor.ModuleShape.NONE)) {
+  if (thin.isExactlyEqual(fontColor, thin.core.ModuleShape.NONE)) {
     fontColor = proppaneBlank
   }
   proppane.getPropertyControl('font-color').setValue(fontColor);
   proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
   proppane.getPropertyControl('font-family').setValue(properties['font-family']);
   proppane.getPropertyControl('text-halign').setValue(
-        thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+        thin.core.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
   proppane.getPropertyControl('text-valign').setValue(
-        thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
+        thin.core.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
   proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
   proppane.getPropertyControl('kerning').setValue(properties['kerning']);
   proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
   proppane.getPropertyControl('overflow').setValue(properties['overflow']);
 
   proppane.getPropertyControl('word-wrap').setValue(
-      properties['word-wrap'] || thin.editor.TextStyle.getDefaultWordWrap());
+      properties['word-wrap'] || thin.core.TextStyle.getDefaultWordWrap());
   proppane.getPropertyControl('inline-format').setChecked(properties['inline-format']);
 
   var formatType = properties['format-type'];
-  proppane.getPropertyControl('format-type').setValue(thin.editor.formatstyles.getFormatNameFromType(formatType));
+  proppane.getPropertyControl('format-type').setValue(thin.core.formatstyles.getFormatNameFromType(formatType));
   proppane.getPropertyControl('format-base').setValue(properties['format-base']);
 
   switch (true) {
-    case thin.editor.formatstyles.isNumberFormat(formatStyle):
+    case thin.core.formatstyles.isNumberFormat(formatStyle):
       var delimiterProperty = proppane.getChild('format-number-delimiter');
       delimiterProperty.setValue(properties['format-number-delimiter']);
       var isDelimitationEnabled = properties['format-number-delimitation'];
@@ -1843,14 +1843,14 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
       proppane.getPropertyControl('format-number-precision').setValue(properties['format-number-precision']);
       break;
 
-    case thin.editor.formatstyles.isPaddingFormat(formatStyle):
+    case thin.core.formatstyles.isPaddingFormat(formatStyle):
       proppane.getPropertyControl('format-padding-length').setValue(properties['format-padding-length']);
       proppane.getPropertyControl('format-padding-char').setValue(properties['format-padding-char']);
       proppane.getPropertyControl('format-padding-direction').setValue(
-          thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(properties['format-padding-direction']));
+          thin.core.formatstyles.PaddingFormat.getDirectionNameFromType(properties['format-padding-direction']));
       break;
 
-    case thin.editor.formatstyles.isDatetimeFormat(formatStyle):
+    case thin.core.formatstyles.isDatetimeFormat(formatStyle):
       proppane.getPropertyControl('format-datetime-format').setInternalValue(properties['format-datetime-format']);
       break;
   };
@@ -1871,10 +1871,10 @@ thin.editor.TblockShape.prototype.updateProperties = function() {
 /**
  * @param {string} formatType
  */
-thin.editor.TblockShape.prototype.setDisplayForPropPane = function(formatType) {
+thin.core.TblockShape.prototype.setDisplayForPropPane = function(formatType) {
 
   var proppane = thin.ui.getComponent('proppane');
-  var formatTypeTemplate = thin.editor.formatstyles.FormatType;
+  var formatTypeTemplate = thin.core.formatstyles.FormatType;
   var baselist = ['format-datetime-format',
                   'format-number-delimiter',
                   'format-number-precision',
@@ -1912,16 +1912,16 @@ thin.editor.TblockShape.prototype.setDisplayForPropPane = function(formatType) {
 /**
  * @param {Object} properties
  */
-thin.editor.TblockShape.prototype.setInitShapeProperties = function(properties) {
+thin.core.TblockShape.prototype.setInitShapeProperties = function(properties) {
   var opt_shapeIdManager;
   if (this.isAffiliationListShape()) {
     opt_shapeIdManager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
   }
 
   this.setShapeId(this.getLayout().getNextShapeId(
-        thin.editor.ShapeIdManager.DefaultPrefix.TEXT_BLOCK,
+        thin.core.ShapeIdManager.DefaultPrefix.TEXT_BLOCK,
         opt_shapeIdManager), opt_shapeIdManager);
-  this.setFill(thin.editor.TblockShape.DEFAULT_FILL);
+  this.setFill(thin.core.TblockShape.DEFAULT_FILL);
   this.setFontSize(properties.SIZE);
   this.setFontFamily(properties.FAMILY);
   this.setFontBold(properties.BOLD);
@@ -1934,8 +1934,8 @@ thin.editor.TblockShape.prototype.setInitShapeProperties = function(properties) 
 
 
 /** @inheritDoc */
-thin.editor.TblockShape.prototype.disposeInternal = function() {
-  thin.editor.TblockShape.superClass_.disposeInternal.call(this);
+thin.core.TblockShape.prototype.disposeInternal = function() {
+  thin.core.TblockShape.superClass_.disposeInternal.call(this);
   this.disposeInternalForShape();
 
   this.id_.dispose();

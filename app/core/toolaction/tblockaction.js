@@ -13,19 +13,19 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.toolaction.TblockAction');
+goog.provide('thin.core.toolaction.TblockAction');
 
-goog.require('thin.editor.toolaction.DrawAction');
+goog.require('thin.core.toolaction.DrawAction');
 
 
 /**
  * @constructor
- * @extends {thin.editor.toolaction.DrawAction}
+ * @extends {thin.core.toolaction.DrawAction}
  */
-thin.editor.toolaction.TblockAction = function() {
-  thin.editor.toolaction.DrawAction.call(this);
+thin.core.toolaction.TblockAction = function() {
+  thin.core.toolaction.DrawAction.call(this);
 };
-goog.inherits(thin.editor.toolaction.TblockAction, thin.editor.toolaction.DrawAction);
+goog.inherits(thin.core.toolaction.TblockAction, thin.core.toolaction.DrawAction);
 
 
 /**
@@ -36,7 +36,7 @@ goog.inherits(thin.editor.toolaction.TblockAction, thin.editor.toolaction.DrawAc
  * @return {boolean}
  * @private
  */
-thin.editor.toolaction.TblockAction.prototype.compareFn_ = function(startX, startY, clientX, clientY) {
+thin.core.toolaction.TblockAction.prototype.compareFn_ = function(startX, startY, clientX, clientY) {
   var diff = goog.math.Coordinate.difference(
                new goog.math.Coordinate(startX, startY), 
                new goog.math.Coordinate(clientX, clientY));
@@ -45,20 +45,20 @@ thin.editor.toolaction.TblockAction.prototype.compareFn_ = function(startX, star
 
 
 /** @inheritDoc */
-thin.editor.toolaction.TblockAction.prototype.handleStartAction = function(e, outline) {
+thin.core.toolaction.TblockAction.prototype.handleStartAction = function(e, outline) {
   var workspace = this.workspace;
   workspace.setUiStatusForFontSize(18);
   thin.ui.adjustUiStatusToFontSize(workspace);
-  thin.editor.toolaction.TblockAction.superClass_.handleStartAction.call(this, e, outline);
+  thin.core.toolaction.TblockAction.superClass_.handleStartAction.call(this, e, outline);
 };
 
 
 /**
  * @param {goog.events.BrowserEvent} e
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @protected
  */
-thin.editor.toolaction.TblockAction.prototype.handleActionInternal = function(e, workspace) {
+thin.core.toolaction.TblockAction.prototype.handleActionInternal = function(e, workspace) {
 
   var helpers = this.layout.getHelpers();
   var listHelper = helpers.getListHelper();

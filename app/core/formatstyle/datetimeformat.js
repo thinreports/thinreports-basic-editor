@@ -13,18 +13,18 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.formatstyles.DatetimeFormat');
+goog.provide('thin.core.formatstyles.DatetimeFormat');
 
-goog.require('thin.editor.formatstyles.AbstractFormat');
+goog.require('thin.core.formatstyles.AbstractFormat');
 
 
 /**
  * @param {string} datetimeFormat
  * @constructor
- * @extends {thin.editor.formatstyles.AbstractFormat}
+ * @extends {thin.core.formatstyles.AbstractFormat}
  */
-thin.editor.formatstyles.DatetimeFormat = function(datetimeFormat) {
-  thin.editor.formatstyles.AbstractFormat.call(this);
+thin.core.formatstyles.DatetimeFormat = function(datetimeFormat) {
+  thin.core.formatstyles.AbstractFormat.call(this);
   
   /**
    * @type {string}
@@ -32,24 +32,24 @@ thin.editor.formatstyles.DatetimeFormat = function(datetimeFormat) {
    */
   this.format_ = datetimeFormat;
 };
-goog.inherits(thin.editor.formatstyles.DatetimeFormat, thin.editor.formatstyles.AbstractFormat);
+goog.inherits(thin.core.formatstyles.DatetimeFormat, thin.core.formatstyles.AbstractFormat);
 
 
 /**
  * @enum {string}
  */
-thin.editor.formatstyles.DatetimeFormat.DateFormatTemplate = {
+thin.core.formatstyles.DatetimeFormat.DateFormatTemplate = {
   YMDHMS: '%Y/%m/%d %H:%M:%S'
 };
 
 
-thin.editor.formatstyles.DatetimeFormat.DEFAULT_FORMAT = '';
+thin.core.formatstyles.DatetimeFormat.DEFAULT_FORMAT = '';
 
 
 /**
  * @return {string}
  */
-thin.editor.formatstyles.DatetimeFormat.prototype.getFormat = function() {
+thin.core.formatstyles.DatetimeFormat.prototype.getFormat = function() {
   return this.format_;
 };
 
@@ -57,13 +57,13 @@ thin.editor.formatstyles.DatetimeFormat.prototype.getFormat = function() {
 /**
  * @return {string}
  */
-thin.editor.formatstyles.DatetimeFormat.prototype.inspect = function() {
+thin.core.formatstyles.DatetimeFormat.prototype.inspect = function() {
   return this.format_;
 };
 
 
 /** @inheritDoc */
-thin.editor.formatstyles.DatetimeFormat.prototype.disposeInternal = function() {
+thin.core.formatstyles.DatetimeFormat.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   
   delete this.format_;

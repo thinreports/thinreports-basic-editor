@@ -13,58 +13,58 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.MultipleShapesHelper');
+goog.provide('thin.core.MultipleShapesHelper');
 
 goog.require('goog.object');
 goog.require('goog.array');
 goog.require('goog.string');
 goog.require('goog.Disposable');
-goog.require('thin.core.Font');
-goog.require('thin.editor.ModuleElement');
-goog.require('thin.editor.FontStyle');
-goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
-goog.require('thin.editor.TextStyle.VerticalAlignType');
-goog.require('thin.editor.TextStyle.OverflowType');
-goog.require('thin.editor.TextStyle.OverflowTypeName');
-goog.require('thin.editor.HistoryManager');
-goog.require('thin.editor.HistoryManager.Mode');
+goog.require('thin.Font');
+goog.require('thin.core.ModuleElement');
+goog.require('thin.core.FontStyle');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.VerticalAlignType');
+goog.require('thin.core.TextStyle.OverflowType');
+goog.require('thin.core.TextStyle.OverflowTypeName');
+goog.require('thin.core.HistoryManager');
+goog.require('thin.core.HistoryManager.Mode');
 
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Component.EventType');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.editor.MultipleShapesHelper = function(layout) {
+thin.core.MultipleShapesHelper = function(layout) {
   
   /**
-   * @type {thin.editor.Layout}
+   * @type {thin.core.Layout}
    * @private
    */
   this.layout_ = layout;
 
   this.initializeProperties();
 };
-goog.inherits(thin.editor.MultipleShapesHelper, goog.Disposable);
-goog.mixin(thin.editor.MultipleShapesHelper.prototype, thin.editor.ModuleElement.prototype);  
+goog.inherits(thin.core.MultipleShapesHelper, goog.Disposable);
+goog.mixin(thin.core.MultipleShapesHelper.prototype, thin.core.ModuleElement.prototype);  
 
 
 /**
  * @type {Object}
  * @private
  */
-thin.editor.MultipleShapesHelper.prototype.properties_;
+thin.core.MultipleShapesHelper.prototype.properties_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.MultipleShapesHelper.prototype.isCapture_ = false;
+thin.core.MultipleShapesHelper.prototype.isCapture_ = false;
 
 
 /**
@@ -72,7 +72,7 @@ thin.editor.MultipleShapesHelper.prototype.isCapture_ = false;
  * @param {string} key
  * @param {string|number} value
  */
-thin.editor.MultipleShapesHelper.prototype.setPropertyForNonDestructive = function(tempprop, key, value) {
+thin.core.MultipleShapesHelper.prototype.setPropertyForNonDestructive = function(tempprop, key, value) {
   var prop = goog.object.clone(tempprop);
   prop[key] = value;
   this.setCloneProperties(prop);
@@ -82,7 +82,7 @@ thin.editor.MultipleShapesHelper.prototype.setPropertyForNonDestructive = functi
 /**
  * @param {Object} props
  */
-thin.editor.MultipleShapesHelper.prototype.setCloneProperties = function(props) {
+thin.core.MultipleShapesHelper.prototype.setCloneProperties = function(props) {
   this.setClonePropertiesInternal_(props);
   this.captureProperties();
 };
@@ -92,7 +92,7 @@ thin.editor.MultipleShapesHelper.prototype.setCloneProperties = function(props) 
  * @param {Object} props
  * @private
  */
-thin.editor.MultipleShapesHelper.prototype.setClonePropertiesInternal_ = function(props) {
+thin.core.MultipleShapesHelper.prototype.setClonePropertiesInternal_ = function(props) {
   this.properties_ = goog.object.clone(props);
 };
 
@@ -100,48 +100,48 @@ thin.editor.MultipleShapesHelper.prototype.setClonePropertiesInternal_ = functio
 /**
  * @return {Object}
  */
-thin.editor.MultipleShapesHelper.prototype.getCloneProperties = function() {
+thin.core.MultipleShapesHelper.prototype.getCloneProperties = function() {
   return goog.object.clone(this.properties_);
 };
 
 
-thin.editor.MultipleShapesHelper.prototype.captureProperties = function() {
+thin.core.MultipleShapesHelper.prototype.captureProperties = function() {
   this.isCapture_ = true;
 };
 
 
-thin.editor.MultipleShapesHelper.prototype.initializeProperties = function() {
-  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+thin.core.MultipleShapesHelper.prototype.initializeProperties = function() {
+  var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
   this.setClonePropertiesInternal_({
     'left': proppaneBlank,
     'top': proppaneBlank,
     'width': proppaneBlank,
     'height': proppaneBlank,
-    'display': thin.editor.ModuleShape.DEFAULT_DISPLAY,
+    'display': thin.core.ModuleShape.DEFAULT_DISPLAY,
     'fill': proppaneBlank,
     'stroke': proppaneBlank,
     'stroke-width': proppaneBlank,
-    'stroke-dash-type': thin.editor.ModuleElement.StrokeType.SOLID,
-    'radius': thin.editor.Rect.DEFAULT_RADIUS,
+    'stroke-dash-type': thin.core.ModuleElement.StrokeType.SOLID,
+    'radius': thin.core.Rect.DEFAULT_RADIUS,
     'font-color': proppaneBlank,
     'font-size': proppaneBlank,
-    'text-halign': thin.editor.TextStyle.HorizonAlignType.START,
-    'text-valign': thin.editor.TextStyle.VerticalAlignType.TOP,
+    'text-halign': thin.core.TextStyle.HorizonAlignType.START,
+    'text-valign': thin.core.TextStyle.VerticalAlignType.TOP,
     'font-family': proppaneBlank,
-    'multiple': thin.editor.TblockShape.DEFAULT_MULTIPLE,
-    'line-height': thin.editor.TextStyle.DEFAULT_LINEHEIGHT,
-    'kerning': thin.editor.TextStyle.DEFAULT_KERNING,
-    'inline-format': thin.editor.AbstractTextGroup.DEFAULT_INLINE_FORMAT_ALLOWED,
-    'format-type': thin.editor.TblockShape.DEFAULT_FORMAT_TYPE,
-    'format-base': thin.editor.TblockShape.DEFAULT_FORMAT_BASE,
-    'format-datetime-format': thin.editor.formatstyles.DatetimeFormat.DEFAULT_FORMAT,
-    'format-number-delimiter': thin.editor.formatstyles.NumberFormat.DEFAULT_DELIMITER,
-    'format-number-delimitation': thin.editor.formatstyles.NumberFormat.DEFAULT_ENABLED,
-    'format-number-precision': thin.editor.formatstyles.NumberFormat.DEFAULT_PRECISION,
-    'format-padding-length': thin.editor.formatstyles.PaddingFormat.DEFAULT_LENGTH,
-    'format-padding-char': thin.editor.formatstyles.PaddingFormat.DEFAULT_CHAR,
-    'format-padding-direction': thin.editor.formatstyles.PaddingFormat.DEFAULT_DIRECTION,
-    'default-value': thin.editor.TblockShape.DEFAULT_VALUE,
+    'multiple': thin.core.TblockShape.DEFAULT_MULTIPLE,
+    'line-height': thin.core.TextStyle.DEFAULT_LINEHEIGHT,
+    'kerning': thin.core.TextStyle.DEFAULT_KERNING,
+    'inline-format': thin.core.AbstractTextGroup.DEFAULT_INLINE_FORMAT_ALLOWED,
+    'format-type': thin.core.TblockShape.DEFAULT_FORMAT_TYPE,
+    'format-base': thin.core.TblockShape.DEFAULT_FORMAT_BASE,
+    'format-datetime-format': thin.core.formatstyles.DatetimeFormat.DEFAULT_FORMAT,
+    'format-number-delimiter': thin.core.formatstyles.NumberFormat.DEFAULT_DELIMITER,
+    'format-number-delimitation': thin.core.formatstyles.NumberFormat.DEFAULT_ENABLED,
+    'format-number-precision': thin.core.formatstyles.NumberFormat.DEFAULT_PRECISION,
+    'format-padding-length': thin.core.formatstyles.PaddingFormat.DEFAULT_LENGTH,
+    'format-padding-char': thin.core.formatstyles.PaddingFormat.DEFAULT_CHAR,
+    'format-padding-direction': thin.core.formatstyles.PaddingFormat.DEFAULT_DIRECTION,
+    'default-value': thin.core.TblockShape.DEFAULT_VALUE,
     'position-x': proppaneBlank,
     'position-y': proppaneBlank
   });
@@ -151,12 +151,12 @@ thin.editor.MultipleShapesHelper.prototype.initializeProperties = function() {
 /**
  * @private
  */
-thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
+thin.core.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
   var scope = this;
   var layout = this.layout_;
   var workspace = layout.getWorkspace();
   var guide = layout.getHelpers().getGuideHelper();
-  var groupMode = thin.editor.HistoryManager.Mode.GROUP;
+  var groupMode = thin.core.HistoryManager.Mode.GROUP;
   var manager = layout.getManager();
   
   var propEventType = thin.ui.PropertyPane.Property.EventType;
@@ -445,11 +445,11 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   var fillInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_fill_color'));
   fillInputProperty.getValueControl().getInput().setLabel('none');
   fillInputProperty.addEventListener(propEventType.CHANGE, function(e) {
-    var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+    var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
     //  choose none color returned null.
     var fillColor = thin.getValIfNotDef(e.target.getValue(), proppaneBlank);
     if(thin.isExactlyEqual(fillColor, proppaneBlank)) {
-      fillColor = thin.editor.ModuleShape.NONE
+      fillColor = thin.core.ModuleShape.NONE
     }
     var fill = new goog.graphics.SolidFill(/** @type {string} */(fillColor));
     var captureProperties = scope.getCloneProperties();
@@ -493,11 +493,11 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   var strokeInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_stroke_color'));
   strokeInputProperty.getValueControl().getInput().setLabel('none');
   strokeInputProperty.addEventListener(propEventType.CHANGE, function(e) {
-    var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+    var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
     //  choose none color returned null.
     var strokeColor = thin.getValIfNotDef(e.target.getValue(), proppaneBlank);
     if(thin.isExactlyEqual(strokeColor, proppaneBlank)) {
-      strokeColor = thin.editor.ModuleShape.NONE;
+      strokeColor = thin.core.ModuleShape.NONE;
     }
     var captureProperties = scope.getCloneProperties();
     var shapes = manager.getActiveShapeByIncludeList().getClone();
@@ -645,7 +645,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   proppane.addProperty(radiusInputProperty, shapeGroup, 'radius');
   
   
-  var strokeDashTypeName = thin.editor.ModuleElement.StrokeTypeName;
+  var strokeDashTypeName = thin.core.ModuleElement.StrokeTypeName;
   var strokeDashSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_stroke_type'));
   var strokeDashSelect = strokeDashSelectProperty.getValueControl();
   strokeDashSelect.setTextAlignLeft();
@@ -655,7 +655,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
 
   strokeDashSelectProperty.addEventListener(propEventType.CHANGE, function(e) {
 
-    var strokeDash = thin.editor.ModuleElement.getStrokeTypeFromValue(e.target.getValue());
+    var strokeDash = thin.core.ModuleElement.getStrokeTypeFromValue(e.target.getValue());
     var captureProperties = scope.getCloneProperties();
     var shapes = manager.getActiveShapeByIncludeList().getClone();
     var targetShapes = [];
@@ -709,7 +709,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   lineHeightInputValidation.setAllowDecimal(true, 1);
   lineHeightInput.setValidator(lineHeightInputValidation);
   var lineHeightItem;
-  goog.array.forEach(thin.editor.TextStyle.LINEHEIGHT_LIST, function(lineHeightValue) {
+  goog.array.forEach(thin.core.TextStyle.LINEHEIGHT_LIST, function(lineHeightValue) {
     lineHeightItem = new thin.ui.ComboBoxItem(lineHeightValue);
     lineHeightItem.setSticky(true);
     lineHeightComb.addItem(lineHeightItem);
@@ -776,7 +776,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   kerningInputProperty.addEventListener(propEventType.CHANGE, function(e) {
     var kerning = e.target.getValue();
     if (!thin.isExactlyEqual(kerning, 
-            thin.editor.TextStyle.DEFAULT_KERNING)) {
+            thin.core.TextStyle.DEFAULT_KERNING)) {
       kerning = goog.string.padNumber(Number(kerning), 0);
     }
     var captureProperties = scope.getCloneProperties();
@@ -865,7 +865,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
           if (shape.instanceOfTblockShape()) {
             shape.setMultiMode(multipleMode);
             if (!multipleMode) {
-              shape.setHeight(thin.core.Font.getHeight(
+              shape.setHeight(thin.Font.getHeight(
                       shape.getFontFamily(), shape.getFontSize()));
               shape.getTargetOutline().setHeight(shape.getHeight());
             }
@@ -900,8 +900,8 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   var textOverflowSelect = textOverflowSelectProperty.getValueControl();
   textOverflowSelect.setTextAlignLeft();
   
-  var overflowName = thin.editor.TextStyle.OverflowTypeName;
-  var overflowType = thin.editor.TextStyle.OverflowType;
+  var overflowName = thin.core.TextStyle.OverflowTypeName;
+  var overflowType = thin.core.TextStyle.OverflowType;
   
   textOverflowSelect.addItem(new thin.ui.Option(overflowName.TRUNCATE, overflowType.TRUNCATE));
   textOverflowSelect.addItem(new thin.ui.Option(overflowName.FIT, overflowType.FIT));
@@ -994,7 +994,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   fontSizeInputValidation.setAllowDecimal(true, 1);
   fontSizeInput.setValidator(fontSizeInputValidation);
   var fontSizeItem;
-  goog.array.forEach(thin.editor.FontStyle.FONTSIZE_LIST, function(fontSizeValue) {
+  goog.array.forEach(thin.core.FontStyle.FONTSIZE_LIST, function(fontSizeValue) {
     fontSizeItem = new thin.ui.ComboBoxItem(fontSizeValue);
     fontSizeItem.setSticky(true);
     fontSizeComb.addItem(fontSizeItem);
@@ -1022,11 +1022,11 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   colorInputProperty.getValueControl().getInput().setLabel('none');
   colorInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
+        var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
         //  choose none color returned null.
         var fontColor = thin.getValIfNotDef(e.target.getValue(), proppaneBlank);
         if (thin.isExactlyEqual(fontColor, proppaneBlank)) {
-          fontColor = thin.editor.ModuleShape.NONE;
+          fontColor = thin.core.ModuleShape.NONE;
         }
         var captureProperties = scope.getCloneProperties();
         var shapes = manager.getActiveShapeByIncludeList().getClone();
@@ -1069,7 +1069,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
 
   var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
-  var textAlignType = thin.editor.TextStyle.HorizonAlignTypeName;
+  var textAlignType = thin.core.TextStyle.HorizonAlignTypeName;
   
   textAlignSelect.setTextAlignLeft();
   textAlignSelect.addItem(new thin.ui.Option(textAlignType.START));
@@ -1079,7 +1079,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   textAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         workspace.getAction().actionSetTextAnchor(
-            thin.editor.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
+            thin.core.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
       }, false, this);
   
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
@@ -1088,7 +1088,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_vertical_align'));
   var textVerticalAlignSelect = textVerticalAlignSelectProperty.getValueControl();
   textVerticalAlignSelect.setTextAlignLeft();
-  var verticalAlignType = thin.editor.TextStyle.VerticalAlignTypeName;
+  var verticalAlignType = thin.core.TextStyle.VerticalAlignTypeName;
   
   textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.TOP));
   textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.CENTER));
@@ -1097,7 +1097,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   textVerticalAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         workspace.getAction().actionSetVerticalAlign(
-            thin.editor.TextStyle.getVerticalAlignTypeFromTypeName(e.target.getValue()));
+            thin.core.TextStyle.getVerticalAlignTypeFromTypeName(e.target.getValue()));
       }, false, this);
   
   proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
@@ -1110,13 +1110,13 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   var formatTypeSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_format_type'));
   var formatTypeSelect = formatTypeSelectProperty.getValueControl();
   formatTypeSelect.setTextAlignLeft();
-  goog.object.forEach(thin.editor.formatstyles.FormatTypeName, function(formatName) {
+  goog.object.forEach(thin.core.formatstyles.FormatTypeName, function(formatName) {
     formatTypeSelect.addItem(new thin.ui.Option(formatName));
   });
   
   
   formatTypeSelectProperty.addEventListener(propEventType.CHANGE, function(e) {
-    var formatType = thin.editor.formatstyles.getFormatTypeFromName(e.target.getValue());
+    var formatType = thin.core.formatstyles.getFormatTypeFromName(e.target.getValue());
     var captureProperties = scope.getCloneProperties();
     var captureFormatType = captureProperties['format-type'];
     var shapes = manager.getActiveShapeByIncludeList().getClone();
@@ -1141,27 +1141,27 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
 
         this.setPropertyForNonDestructive(captureProperties, 'format-type', formatType);
 
-        var formatTypeTemp = thin.editor.formatstyles.FormatType;
+        var formatTypeTemp = thin.core.formatstyles.FormatType;
         switch (captureFormatType) {
           case formatTypeTemp.NUMBER:
             this.setPropertyForNonDestructive(this.getCloneProperties(), 'format-number-delimiter', 
-                thin.editor.formatstyles.NumberFormat.DEFAULT_DELIMITER);
+                thin.core.formatstyles.NumberFormat.DEFAULT_DELIMITER);
             this.setPropertyForNonDestructive(this.getCloneProperties(), 'format-number-precision',
-                thin.editor.formatstyles.NumberFormat.DEFAULT_PRECISION);
+                thin.core.formatstyles.NumberFormat.DEFAULT_PRECISION);
             this.setPropertyForNonDestructive(this.getCloneProperties(), 'format-number-delimitation',
-                thin.editor.formatstyles.NumberFormat.DEFAULT_ENABLED);
+                thin.core.formatstyles.NumberFormat.DEFAULT_ENABLED);
             break;
           case formatTypeTemp.DATETIME:
             this.setPropertyForNonDestructive(this.getCloneProperties(), 'format-datetime-format', 
-                thin.editor.formatstyles.DatetimeFormat.DEFAULT_FORMAT);
+                thin.core.formatstyles.DatetimeFormat.DEFAULT_FORMAT);
             break;
           case formatTypeTemp.PADDING:
             this.setPropertyForNonDestructive(this.getCloneProperties(), 'format-padding-length', 
-                thin.editor.formatstyles.PaddingFormat.DEFAULT_LENGTH);
+                thin.core.formatstyles.PaddingFormat.DEFAULT_LENGTH);
             this.setPropertyForNonDestructive(this.getCloneProperties(), 'format-padding-char', 
-                thin.editor.formatstyles.PaddingFormat.DEFAULT_CHAR);
+                thin.core.formatstyles.PaddingFormat.DEFAULT_CHAR);
             this.setPropertyForNonDestructive(this.getCloneProperties(), 'format-padding-direction', 
-                thin.editor.formatstyles.PaddingFormat.DEFAULT_DIRECTION);
+                thin.core.formatstyles.PaddingFormat.DEFAULT_DIRECTION);
             break;
         }
 
@@ -1228,7 +1228,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   var dateTimeCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_datetime_format'));
   var dateTimeComb = dateTimeCombProperty.getValueControl();
   var dateTimeItem;
-  goog.object.forEach(thin.editor.formatstyles.DatetimeFormat.DateFormatTemplate, function(dateTimeFormat) {
+  goog.object.forEach(thin.core.formatstyles.DatetimeFormat.DateFormatTemplate, function(dateTimeFormat) {
     dateTimeItem = new thin.ui.ComboBoxItem(dateTimeFormat);
     dateTimeItem.setSticky(true);
     dateTimeComb.addItem(dateTimeItem);
@@ -1255,7 +1255,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       version.upHandler(function() {
       
         goog.array.forEach(targetShapes, function(shape) {
-          shape.setFormatStyle(new thin.editor.formatstyles.DatetimeFormat(dateTimeFormatValue));
+          shape.setFormatStyle(new thin.core.formatstyles.DatetimeFormat(dateTimeFormatValue));
         });
         this.setPropertyForNonDestructive(captureProperties, 'format-datetime-format', dateTimeFormatValue);
         updateGuideAndProperties(shapes);
@@ -1301,21 +1301,21 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       
         goog.array.forEach(targetShapes, function(shape, count) {
           var captureNumberFormatStyle = captureFormatStyleArray[count];
-          shape.setFormatStyle(new thin.editor.formatstyles.NumberFormat(
+          shape.setFormatStyle(new thin.core.formatstyles.NumberFormat(
             captureNumberFormatStyle.getDelimiter(), 
             captureNumberFormatStyle.getPrecision(), isEnabled));
         });
         this.setPropertyForNonDestructive(captureProperties, 'format-number-delimitation', isEnabled);
         if (isEnabled) {
           if (thin.isExactlyEqual(captureProperties['format-number-delimiter'], 
-              thin.editor.formatstyles.NumberFormat.DISABLE_DELIMITER)) {
+              thin.core.formatstyles.NumberFormat.DISABLE_DELIMITER)) {
 
             this.setPropertyForNonDestructive(this.getCloneProperties(), 'format-number-delimiter', 
-                thin.editor.formatstyles.NumberFormat.DEFAULT_DELIMITER);
+                thin.core.formatstyles.NumberFormat.DEFAULT_DELIMITER);
           }
         } else {
           this.setPropertyForNonDestructive(this.getCloneProperties(), 'format-number-delimiter', 
-              thin.editor.formatstyles.NumberFormat.DISABLE_DELIMITER);
+              thin.core.formatstyles.NumberFormat.DISABLE_DELIMITER);
         }
         updateGuideAndProperties(shapes);
       }, scope);
@@ -1336,7 +1336,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
 
     var delimiter = e.target.getValue();
     if (delimiter == '') {
-      delimiter = thin.editor.formatstyles.NumberFormat.DEFAULT_DELIMITER;
+      delimiter = thin.core.formatstyles.NumberFormat.DEFAULT_DELIMITER;
     }
     var captureProperties = scope.getCloneProperties();
     var shapes = manager.getActiveShapeByIncludeList().getClone();
@@ -1357,7 +1357,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       
         goog.array.forEach(targetShapes, function(shape, count) {
           var captureNumberFormatStyle = captureFormatStyleArray[count];
-          shape.setFormatStyle(new thin.editor.formatstyles.NumberFormat(
+          shape.setFormatStyle(new thin.core.formatstyles.NumberFormat(
               delimiter, captureNumberFormatStyle.getPrecision(), 
               captureNumberFormatStyle.isDelimitationEnabled()));
         });
@@ -1405,7 +1405,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       
         goog.array.forEach(targetShapes, function(shape, count) {
           var captureNumberFormatStyle = captureFormatStyleArray[count];
-          shape.setFormatStyle(new thin.editor.formatstyles.NumberFormat(
+          shape.setFormatStyle(new thin.core.formatstyles.NumberFormat(
                                         captureNumberFormatStyle.getDelimiter(), precision, 
                                         captureNumberFormatStyle.isDelimitationEnabled()));
         });
@@ -1452,7 +1452,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       
         goog.array.forEach(targetShapes, function(shape, count) {
           var capturePaddingFormatStyle = captureFormatStyleArray[count];
-          shape.setFormatStyle(new thin.editor.formatstyles.PaddingFormat(
+          shape.setFormatStyle(new thin.core.formatstyles.PaddingFormat(
                                         capturePaddingFormatStyle.getDirection(),
                                         capturePaddingFormatStyle.getChar(), paddingLength));
         });
@@ -1497,7 +1497,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       
         goog.array.forEach(targetShapes, function(shape, count) {
           var capturePaddingFormatStyle = captureFormatStyleArray[count];
-          shape.setFormatStyle(new thin.editor.formatstyles.PaddingFormat(
+          shape.setFormatStyle(new thin.core.formatstyles.PaddingFormat(
                                         capturePaddingFormatStyle.getDirection(),
                                         paddingChar, capturePaddingFormatStyle.getLength()));
         });
@@ -1522,12 +1522,12 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   var directionSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_fill_direction'));
   var directionSelect = directionSelectProperty.getValueControl();
   directionSelect.setTextAlignLeft();
-  goog.object.forEach(thin.editor.formatstyles.PaddingFormat.DirectionTypeName, function(directionTypeName) {
+  goog.object.forEach(thin.core.formatstyles.PaddingFormat.DirectionTypeName, function(directionTypeName) {
     directionSelect.addItem(new thin.ui.Option(directionTypeName));
   });
 
   directionSelectProperty.addEventListener(propEventType.CHANGE, function(e) {
-    var direction = thin.editor.formatstyles.PaddingFormat.getDirectionTypeFromName(e.target.getValue());
+    var direction = thin.core.formatstyles.PaddingFormat.getDirectionTypeFromName(e.target.getValue());
     var captureProperties = scope.getCloneProperties();
     var shapes = manager.getActiveShapeByIncludeList().getClone();
     var targetShapes = [];
@@ -1547,7 +1547,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
       
         goog.array.forEach(targetShapes, function(shape, count) {
           var capturePaddingFormatStyle = captureFormatStyleArray[count];
-          shape.setFormatStyle(new thin.editor.formatstyles.PaddingFormat(
+          shape.setFormatStyle(new thin.core.formatstyles.PaddingFormat(
                                         direction, capturePaddingFormatStyle.getChar(),
                                         capturePaddingFormatStyle.getLength()));
         });
@@ -1571,7 +1571,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   var positionGroup = proppane.addGroup(thin.t('property_group_image'));
   
   
-  var positionX = thin.editor.ImageblockShape.PositionX;
+  var positionX = thin.core.ImageblockShape.PositionX;
   var posXSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_horizontal_position'));
   var posXSelect = posXSelectProperty.getValueControl();
   
@@ -1617,7 +1617,7 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
   
   proppane.addProperty(posXSelectProperty , positionGroup, 'position-x');
   
-  var positionY = thin.editor.ImageblockShape.PositionY;
+  var positionY = thin.core.ImageblockShape.PositionY;
   var posYSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_vertical_position'));
   var posYSelect = posYSelectProperty.getValueControl();
   
@@ -1717,11 +1717,11 @@ thin.editor.MultipleShapesHelper.prototype.createPropertyComponent_ = function()
 /**
  * @param {string} formatType
  */
-thin.editor.MultipleShapesHelper.prototype.setDisplayForPropPane = function(formatType) {
+thin.core.MultipleShapesHelper.prototype.setDisplayForPropPane = function(formatType) {
 
   var proppane = thin.ui.getComponent('proppane');
 
-  var formatTypeTemplate = thin.editor.formatstyles.FormatType;
+  var formatTypeTemplate = thin.core.formatstyles.FormatType;
   var baselist = ['format-datetime-format', 'format-number-delimiter', 'format-number-precision', 'format-padding-length', 'format-padding-char', 'format-padding-direction'];
   var targetlist = [];
   
@@ -1751,7 +1751,7 @@ thin.editor.MultipleShapesHelper.prototype.setDisplayForPropPane = function(form
 };
 
 
-thin.editor.MultipleShapesHelper.prototype.updateProperties = function() {
+thin.core.MultipleShapesHelper.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
 
   if (!proppane.isTarget(this)) {
@@ -1764,8 +1764,8 @@ thin.editor.MultipleShapesHelper.prototype.updateProperties = function() {
   }
   
   var properties = this.getCloneProperties();
-  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-  var noneColor = thin.editor.ModuleShape.NONE;
+  var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
+  var noneColor = thin.core.ModuleShape.NONE;
   
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
@@ -1783,11 +1783,11 @@ thin.editor.MultipleShapesHelper.prototype.updateProperties = function() {
   }
   proppane.getPropertyControl('stroke').setValue(stroke);
   var strokeWidth = properties['stroke-width'];
-  if (thin.isExactlyEqual(strokeWidth, thin.editor.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
+  if (thin.isExactlyEqual(strokeWidth, thin.core.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
     strokeWidth = proppaneBlank;
   }
   proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
-  proppane.getPropertyControl('stroke-dash-type').setValue(thin.editor.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
+  proppane.getPropertyControl('stroke-dash-type').setValue(thin.core.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
   proppane.getPropertyControl('radius').setValue(properties['radius']);
   var fontColor = properties['font-color'];
   if (thin.isExactlyEqual(fontColor, noneColor)) {
@@ -1796,8 +1796,8 @@ thin.editor.MultipleShapesHelper.prototype.updateProperties = function() {
   proppane.getPropertyControl('font-color').setValue(fontColor);
   proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
   proppane.getPropertyControl('font-family').setValue(properties['font-family']);
-  proppane.getPropertyControl('text-halign').setValue(thin.editor.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
-  proppane.getPropertyControl('text-valign').setValue(thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
+  proppane.getPropertyControl('text-halign').setValue(thin.core.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+  proppane.getPropertyControl('text-valign').setValue(thin.core.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
   proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
   proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
   
@@ -1807,7 +1807,7 @@ thin.editor.MultipleShapesHelper.prototype.updateProperties = function() {
 
   var formatType = properties['format-type'];
 
-  proppane.getPropertyControl('format-type').setValue(thin.editor.formatstyles.getFormatNameFromType(formatType));
+  proppane.getPropertyControl('format-type').setValue(thin.core.formatstyles.getFormatNameFromType(formatType));
   proppane.getPropertyControl('format-base').setValue(properties['format-base']);
   proppane.getPropertyControl('format-datetime-format').setInternalValue(properties['format-datetime-format']);
  
@@ -1818,7 +1818,7 @@ thin.editor.MultipleShapesHelper.prototype.updateProperties = function() {
   proppane.getPropertyControl('format-number-precision').setValue(properties['format-number-precision']);
   proppane.getPropertyControl('format-padding-length').setValue(properties['format-padding-length']);
   proppane.getPropertyControl('format-padding-char').setValue(properties['format-padding-char']);
-  proppane.getPropertyControl('format-padding-direction').setValue(thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(properties['format-padding-direction']));
+  proppane.getPropertyControl('format-padding-direction').setValue(thin.core.formatstyles.PaddingFormat.getDirectionNameFromType(properties['format-padding-direction']));
   proppane.getPropertyControl('default-value').setValue(properties['default-value']);
   
   this.setDisplayForPropPane(formatType);
@@ -1828,8 +1828,8 @@ thin.editor.MultipleShapesHelper.prototype.updateProperties = function() {
 
 
 /** @inheritDoc */
-thin.editor.MultipleShapesHelper.prototype.disposeInternal = function() {
-  thin.editor.MultipleShapesHelper.superClass_.disposeInternal.call(this);
+thin.core.MultipleShapesHelper.prototype.disposeInternal = function() {
+  thin.core.MultipleShapesHelper.superClass_.disposeInternal.call(this);
   delete this.layout_;
   delete this.properties_;
 };

@@ -24,9 +24,8 @@ goog.require('goog.ui.Textarea');
 goog.require('thin');
 goog.require('thin.Settings');
 goog.require('thin.i18n');
-goog.require('thin.core');
-goog.require('thin.core.platform');
-goog.require('thin.core.Font');
+goog.require('thin.platform');
+goog.require('thin.Font');
 goog.require('thin.Error');
 goog.require('thin.Compatibility');
 goog.require('thin.ui');
@@ -70,28 +69,28 @@ goog.require('thin.ui.ComboBox');
 goog.require('thin.ui.ComboBoxItem');
 goog.require('thin.ui.InputUnitChanger');
 
-goog.require('thin.editor');
-goog.require('thin.editor.Component');
-goog.require('thin.editor.Workspace');
-goog.require('thin.editor.toolaction.SelectAction');
-goog.require('thin.editor.toolaction.ZoomAction');
-goog.require('thin.editor.toolaction.RectAction');
-goog.require('thin.editor.toolaction.EllipseAction');
-goog.require('thin.editor.toolaction.LineAction');
-goog.require('thin.editor.toolaction.TextAction');
-goog.require('thin.editor.toolaction.TblockAction');
-goog.require('thin.editor.toolaction.ListAction');
-goog.require('thin.editor.toolaction.ImageAction');
-goog.require('thin.editor.toolaction.ImageblockAction');
-goog.require('thin.editor.toolaction.PageNumberAction');
-goog.require('thin.editor.LayoutStructure');
-goog.require('thin.editor.ListHelper');
-goog.require('thin.editor.ListHelper.SectionName');
-goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
-goog.require('thin.editor.TextStyle.VerticalAlignType');
-goog.require('thin.editor.HistoryManager');
-goog.require('thin.editor.HistoryManager.Mode');
+goog.require('thin.core');
+goog.require('thin.core.Component');
+goog.require('thin.core.Workspace');
+goog.require('thin.core.toolaction.SelectAction');
+goog.require('thin.core.toolaction.ZoomAction');
+goog.require('thin.core.toolaction.RectAction');
+goog.require('thin.core.toolaction.EllipseAction');
+goog.require('thin.core.toolaction.LineAction');
+goog.require('thin.core.toolaction.TextAction');
+goog.require('thin.core.toolaction.TblockAction');
+goog.require('thin.core.toolaction.ListAction');
+goog.require('thin.core.toolaction.ImageAction');
+goog.require('thin.core.toolaction.ImageblockAction');
+goog.require('thin.core.toolaction.PageNumberAction');
+goog.require('thin.core.LayoutStructure');
+goog.require('thin.core.ListHelper');
+goog.require('thin.core.ListHelper.SectionName');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.VerticalAlignType');
+goog.require('thin.core.HistoryManager');
+goog.require('thin.core.HistoryManager.Mode');
 goog.require('thin.layout');
 goog.require('thin.layout.CompatibilityState');
 goog.require('thin.layout.Format');
@@ -120,7 +119,7 @@ thin.boot = function() {
    * @param {e} goog.events.Event
    */
   var focusWorkspace = function(e) {
-    var workspace = thin.editor.getActiveWorkspace();
+    var workspace = thin.core.getActiveWorkspace();
     if (workspace) {
       workspace.focusElement(e);
     }
@@ -439,7 +438,7 @@ thin.boot = function() {
             'title': pageTitleInput.getValue(),
             'page': formatConfig
           });
-          var workspace = new thin.editor.Workspace(format);
+          var workspace = new thin.core.Workspace(format);
           tabpane.addPage(new thin.ui.TabPane.TabPage(workspace.getTabName(), workspace));
           workspace.setup();
         }
@@ -473,7 +472,7 @@ thin.boot = function() {
         dom.getElement('tbar-report-save'));
 
     toolSave.getButton().addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.save();
         focusWorkspace(e);
@@ -485,7 +484,7 @@ thin.boot = function() {
           new thin.ui.Icon('report-saveas'));
     toolSave.addItem(toolSaveAs);
     toolSaveAs.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.saveAs();
         focusWorkspace(e);
@@ -499,7 +498,7 @@ thin.boot = function() {
           new thin.ui.Icon('export-layout-doc'));
     toolSave.addItem(toolExportIds);
     toolExportIds.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.generateLayoutDocument();
         focusWorkspace(e);
@@ -535,7 +534,7 @@ thin.boot = function() {
           }
 
           try {
-            var workspace = thin.editor.Workspace.create(file);
+            var workspace = thin.core.Workspace.create(file);
             if (workspace) {
               var targetVersion = workspace.getLayout().getFormat().getVersion();
               var compatibilityState = thin.layout.CompatibilityState;
@@ -582,7 +581,7 @@ thin.boot = function() {
 
             thin.ui.Message.alert(message, 'Error',
               function(er) {
-                var activeWorkspace = thin.editor.getActiveWorkspace();
+                var activeWorkspace = thin.core.getActiveWorkspace();
                 if (activeWorkspace) {
                   activeWorkspace.focusElement(er);
                 }
@@ -594,7 +593,7 @@ thin.boot = function() {
           var message = thin.t('error_unknown');
           thin.ui.Message.alert(message, 'Error',
             function(er) {
-              var activeWorkspace = thin.editor.getActiveWorkspace();
+              var activeWorkspace = thin.core.getActiveWorkspace();
               if (activeWorkspace) {
                 activeWorkspace.focusElement(er);
               }
@@ -609,7 +608,7 @@ thin.boot = function() {
         dom.getElement('tbar-undo'));
 
     toolUndo.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.undo();
         focusWorkspace(e);
@@ -621,7 +620,7 @@ thin.boot = function() {
         dom.getElement('tbar-redo'));
 
     toolRedo.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.redo();
         focusWorkspace(e);
@@ -634,7 +633,7 @@ thin.boot = function() {
         dom.getElement('tbar-report-config'));
 
     toolConfig.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
 
       if (workspace) {
         // Create dialog.
@@ -740,7 +739,7 @@ thin.boot = function() {
                                 pageMarginRight.getValue(),
                                 pageMarginBottom.getValue(),
                                 pageMarginLeft.getValue());
-            thin.editor.getActiveWorkspace().updateFormatPage(margins, paperTypeValue,
+            thin.core.getActiveWorkspace().updateFormatPage(margins, paperTypeValue,
                 pageDirectionSelectbox.getValue(), pageTitleInput.getValue(), opt_width, opt_height);
           }
           return true;
@@ -782,7 +781,7 @@ thin.boot = function() {
         dom.getElement('tbar-zoom-in'));
 
     toolZoomIn.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionSetZoom(workspace.getUiStatusForZoom() + 10);
         focusWorkspace(e);
@@ -795,7 +794,7 @@ thin.boot = function() {
         dom.getElement('tbar-zoom-out'));
 
     toolZoomOut.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionSetZoom(workspace.getUiStatusForZoom() - 10);
         focusWorkspace(e);
@@ -818,7 +817,7 @@ thin.boot = function() {
         });
 
     toolZoomRate.addEventListener(componentEventType.CHANGE, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionSetZoom(Number(toolZoomRate.getValue()));
         focusWorkspace(e);
@@ -831,7 +830,7 @@ thin.boot = function() {
             new thin.ui.Icon('grid')), dom.getElement('tbar-grid'));
 
     toolGrid.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getLayout().getHelpers().switchGridLayerFill(e.target.isChecked());
         focusWorkspace(e);
@@ -845,7 +844,7 @@ thin.boot = function() {
         dom.getElement('tbar-guide'));
 
     toolGuide.getButton().addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionShowLayoutGuide(e.target.isChecked());
         focusWorkspace(e);
@@ -855,7 +854,7 @@ thin.boot = function() {
     var toolGuideAddHorizontal = new thin.ui.MenuItem(thin.t('button_add_horizontal_guide'), new thin.ui.Icon('guide-add'));
     toolGuide.addItem(toolGuideAddHorizontal);
     toolGuideAddHorizontal.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionAddYLayoutGuide();
         focusWorkspace(e);
@@ -865,7 +864,7 @@ thin.boot = function() {
     var toolGuideAddVertical = new thin.ui.MenuItem(thin.t('button_add_vertical_guide'), new thin.ui.Icon('guide-add'));
     toolGuide.addItem(toolGuideAddVertical);
     toolGuideAddVertical.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionAddXLayoutGuide();
         focusWorkspace(e);
@@ -878,7 +877,7 @@ thin.boot = function() {
     var toolGuideRemove = new thin.ui.MenuItem(thin.t('button_remove_guide'), new thin.ui.Icon('guide-delete'));
     toolGuide.addItem(toolGuideRemove);
     toolGuideRemove.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionRemoveLayoutGuide();
         focusWorkspace(e);
@@ -894,7 +893,7 @@ thin.boot = function() {
         });
 
     toolFamily.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         var selectedFamily = toolFamily.getValue();
         if (!goog.string.isEmpty(selectedFamily)) {
@@ -909,7 +908,7 @@ thin.boot = function() {
         new thin.ui.ComboBox(), dom.getElement('tbar-font-size'),
         function(combobox) {
           var comboboxItem;
-          goog.array.forEach(thin.editor.FontStyle.FONTSIZE_LIST, function(fontSize) {
+          goog.array.forEach(thin.core.FontStyle.FONTSIZE_LIST, function(fontSize) {
             comboboxItem = new thin.ui.ComboBoxItem(fontSize);
             comboboxItem.setSticky(true);
             combobox.addItem(comboboxItem);
@@ -925,7 +924,7 @@ thin.boot = function() {
         });
 
     toolSize.addEventListener(componentEventType.CHANGE, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if(workspace) {
         var selectedSize = Number(toolSize.getValue());
         if(goog.isNumber(selectedSize) && selectedSize > 0) {
@@ -944,7 +943,7 @@ thin.boot = function() {
         styleElement);
 
     toolBold.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionSetFontBold(toolBold.isChecked());
         focusWorkspace(e);
@@ -957,7 +956,7 @@ thin.boot = function() {
         styleElement);
 
     toolItalic.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionSetFontItalic(toolItalic.isChecked());
         focusWorkspace(e);
@@ -970,7 +969,7 @@ thin.boot = function() {
         styleElement);
 
     toolUnderline.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionSetFontUnderline(toolUnderline.isChecked());
         focusWorkspace(e);
@@ -983,7 +982,7 @@ thin.boot = function() {
         styleElement);
 
     toolStrike.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionSetFontLinethrough(toolStrike.isChecked());
         focusWorkspace(e);
@@ -999,7 +998,7 @@ thin.boot = function() {
         styleElement);
 
     toolTextEdit.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionTextEdit();
       }
@@ -1016,9 +1015,9 @@ thin.boot = function() {
 
     halignGroup.addMember(/** @type {thin.ui.ToolbarToggleIconButton} */ (halignLeft));
     halignLeft.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
-        workspace.getAction().actionSetTextAnchor(thin.editor.TextStyle.HorizonAlignType.START);
+        workspace.getAction().actionSetTextAnchor(thin.core.TextStyle.HorizonAlignType.START);
         focusWorkspace(e)
       }
     });
@@ -1030,9 +1029,9 @@ thin.boot = function() {
 
     halignGroup.addMember(/** @type {thin.ui.ToolbarToggleIconButton} */ (halignCenter));
     halignCenter.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
-        workspace.getAction().actionSetTextAnchor(thin.editor.TextStyle.HorizonAlignType.MIDDLE);
+        workspace.getAction().actionSetTextAnchor(thin.core.TextStyle.HorizonAlignType.MIDDLE);
         focusWorkspace(e);
       }
     });
@@ -1044,9 +1043,9 @@ thin.boot = function() {
 
     halignGroup.addMember(/** @type {thin.ui.ToolbarToggleIconButton} */ (halignRight));
     halignRight.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
-        workspace.getAction().actionSetTextAnchor(thin.editor.TextStyle.HorizonAlignType.END);
+        workspace.getAction().actionSetTextAnchor(thin.core.TextStyle.HorizonAlignType.END);
         focusWorkspace(e);
       }
     });
@@ -1062,9 +1061,9 @@ thin.boot = function() {
 
     valignGroup.addMember(/** @type {thin.ui.ToolbarToggleIconButton} */ (valignTop));
     valignTop.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
-        workspace.getAction().actionSetVerticalAlign(thin.editor.TextStyle.VerticalAlignType.TOP);
+        workspace.getAction().actionSetVerticalAlign(thin.core.TextStyle.VerticalAlignType.TOP);
         focusWorkspace(e)
       }
     });
@@ -1076,9 +1075,9 @@ thin.boot = function() {
 
     valignGroup.addMember(/** @type {thin.ui.ToolbarToggleIconButton} */ (valignMiddle));
     valignMiddle.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
-        workspace.getAction().actionSetVerticalAlign(thin.editor.TextStyle.VerticalAlignType.CENTER);
+        workspace.getAction().actionSetVerticalAlign(thin.core.TextStyle.VerticalAlignType.CENTER);
         focusWorkspace(e);
       }
     });
@@ -1090,9 +1089,9 @@ thin.boot = function() {
 
     valignGroup.addMember(/** @type {thin.ui.ToolbarToggleIconButton} */ (valignBottom));
     valignBottom.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
-        workspace.getAction().actionSetVerticalAlign(thin.editor.TextStyle.VerticalAlignType.BOTTOM);
+        workspace.getAction().actionSetVerticalAlign(thin.core.TextStyle.VerticalAlignType.BOTTOM);
         focusWorkspace(e);
       }
     });
@@ -1107,7 +1106,7 @@ thin.boot = function() {
           new thin.ui.Icon('shape-align-left'));
     toolAlignments.addItem(toolAlignmentsLeft);
     toolAlignmentsLeft.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionAdjustToLeft();
         focusWorkspace(e);
@@ -1118,7 +1117,7 @@ thin.boot = function() {
           new thin.ui.Icon('shape-align-center'));
     toolAlignments.addItem(toolAlignmentsCenter);
     toolAlignmentsCenter.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionAdjustToCenter();
         focusWorkspace(e);
@@ -1129,7 +1128,7 @@ thin.boot = function() {
           new thin.ui.Icon('shape-align-right'));
     toolAlignments.addItem(toolAlignmentsRight);
     toolAlignmentsRight.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionAdjustToRight();
         focusWorkspace(e);
@@ -1142,7 +1141,7 @@ thin.boot = function() {
           new thin.ui.Icon('shape-align-top'));
     toolAlignments.addItem(toolAlignmentsTop);
     toolAlignmentsTop.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionAdjustToTop();
         focusWorkspace(e);
@@ -1153,7 +1152,7 @@ thin.boot = function() {
           new thin.ui.Icon('shape-align-middle'));
     toolAlignments.addItem(toolAlignmentsMiddle);
     toolAlignmentsMiddle.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionAdjustToMiddle();
         focusWorkspace(e);
@@ -1164,7 +1163,7 @@ thin.boot = function() {
           new thin.ui.Icon('shape-align-bottom'));
     toolAlignments.addItem(toolAlignmentsBottom);
     toolAlignmentsBottom.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionAdjustToBottom();
         focusWorkspace(e);
@@ -1173,14 +1172,14 @@ thin.boot = function() {
 
     toolAlignments.addItem(new thin.ui.MenuSeparator());
 
-    var versioningModeIsNormal = thin.editor.HistoryManager.Mode.NORMAL;
+    var versioningModeIsNormal = thin.core.HistoryManager.Mode.NORMAL;
 
     var toolAlignmentsWidth = new thin.ui.MenuItem(thin.t('button_fit_same_width'),
           new thin.ui.Icon('shape-align-width'));
 
     toolAlignments.addItem(toolAlignmentsWidth);
     toolAlignmentsWidth.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionAdjustToWidth(versioningModeIsNormal);
         focusWorkspace(e);
@@ -1192,7 +1191,7 @@ thin.boot = function() {
 
     toolAlignments.addItem(toolAlignmentsHeight);
     toolAlignmentsHeight.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionAdjustToHeight(versioningModeIsNormal);
         focusWorkspace(e);
@@ -1204,7 +1203,7 @@ thin.boot = function() {
           new thin.ui.Icon('shape-align-size'));
     toolAlignments.addItem(toolAlignmentsSize);
     toolAlignmentsSize.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionAdjustToAspect();
         focusWorkspace(e);
@@ -1218,7 +1217,7 @@ thin.boot = function() {
         dom.getElement('tbar-layer-front'));
 
     toolLayerFrontButton.getButton().addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionLayerInsertBefore();
         focusWorkspace(e);
@@ -1229,7 +1228,7 @@ thin.boot = function() {
           new thin.ui.Icon('shape-layer-front'));
     toolLayerFrontButton.addItem(toolLayerBefore);
     toolLayerBefore.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionLayerInsertBefore();
         focusWorkspace(e);
@@ -1240,7 +1239,7 @@ thin.boot = function() {
           new thin.ui.Icon('shape-layer-foreground'));
     toolLayerFrontButton.addItem(toolLayerFront);
     toolLayerFront.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionLayerInsertFront();
         focusWorkspace(e);
@@ -1254,7 +1253,7 @@ thin.boot = function() {
         dom.getElement('tbar-layer-back'));
 
     toolLayerBackButton.getButton().addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionLayerInsertAfter();
         focusWorkspace(e);
@@ -1266,7 +1265,7 @@ thin.boot = function() {
           new thin.ui.Icon('shape-layer-back'));
     toolLayerBackButton.addItem(toolLayerAfter);
     toolLayerAfter.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionLayerInsertAfter();
         focusWorkspace(e);
@@ -1277,7 +1276,7 @@ thin.boot = function() {
           new thin.ui.Icon('shape-layer-backtop'));
     toolLayerBackButton.addItem(toolLayerBack);
     toolLayerBack.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         workspace.getAction().actionLayerInsertBack();
         focusWorkspace(e);
@@ -1348,7 +1347,7 @@ thin.boot = function() {
               thin.t('label_confirmation'),
               function(e) {
                 if (e.isYes()) {
-                  thin.core.platform.callNativeFunction('chrome', 'runtime', 'reload');
+                  thin.platform.callNativeFunction('chrome', 'runtime', 'reload');
                 }
               },
               thin.ui.Dialog.ButtonSet.typeYesNo());
@@ -1439,13 +1438,13 @@ thin.boot = function() {
 
     // Select
     var toolSelect = toolbox.addItem(
-        new thin.ui.ToolboxButton(new thin.editor.toolaction.SelectAction(),
+        new thin.ui.ToolboxButton(new thin.core.toolaction.SelectAction(),
           new thin.ui.Icon('tool-select')), 'selector');
     toolSelect.setTooltip(thin.t('button_selection_tool'));
 
     // Zoom
     var toolZoom = toolbox.addItem(
-        new thin.ui.ToolboxButton(new thin.editor.toolaction.ZoomAction(),
+        new thin.ui.ToolboxButton(new thin.core.toolaction.ZoomAction(),
           new thin.ui.Icon('tool-zoom')), 'zoom');
     toolZoom.setTooltip(thin.t('button_zoom_tool'));
 
@@ -1454,31 +1453,31 @@ thin.boot = function() {
 
     // Rectangle
     var toolRect = toolbox.addItem(
-        new thin.ui.ToolboxButton(new thin.editor.toolaction.RectAction(),
+        new thin.ui.ToolboxButton(new thin.core.toolaction.RectAction(),
           new thin.ui.Icon('tool-rect')), 'rect');
     toolRect.setTooltip(thin.t('button_rectangle_tool'));
 
     // Ellipse
     var toolEllipse = toolbox.addItem(
-        new thin.ui.ToolboxButton(new thin.editor.toolaction.EllipseAction(),
+        new thin.ui.ToolboxButton(new thin.core.toolaction.EllipseAction(),
           new thin.ui.Icon('tool-ellipse')), 'ellipse');
     toolEllipse.setTooltip(thin.t('button_ellipse_tool'));
 
     // Line
     var toolLine = toolbox.addItem(
-          new thin.ui.ToolboxButton(new thin.editor.toolaction.LineAction(),
+          new thin.ui.ToolboxButton(new thin.core.toolaction.LineAction(),
             new thin.ui.Icon('tool-line')), 'line');
     toolLine.setTooltip(thin.t('button_line_tool'));
 
     // Text
     var toolText = toolbox.addItem(
-        new thin.ui.ToolboxButton(new thin.editor.toolaction.TextAction(),
+        new thin.ui.ToolboxButton(new thin.core.toolaction.TextAction(),
           new thin.ui.Icon('tool-text')), 'text');
     toolText.setTooltip(thin.t('button_text_tool'));
 
     // Image
     var toolImage = toolbox.addItem(
-        new thin.ui.ToolboxButton(new thin.editor.toolaction.ImageAction(),
+        new thin.ui.ToolboxButton(new thin.core.toolaction.ImageAction(),
           new thin.ui.Icon('tool-image')), 'image');
     toolImage.setTooltip(thin.t('button_image_tool'));
 
@@ -1487,19 +1486,19 @@ thin.boot = function() {
 
     // Tblock
     var toolTblock = toolbox.addItem(
-        new thin.ui.ToolboxButton(new thin.editor.toolaction.TblockAction(),
+        new thin.ui.ToolboxButton(new thin.core.toolaction.TblockAction(),
           new thin.ui.Icon('tool-tblock')), 'tblock');
     toolTblock.setTooltip(thin.t('button_text_block_tool'));
 
     // Imageblock
     var toolIblock = toolbox.addItem(
-        new thin.ui.ToolboxButton(new thin.editor.toolaction.ImageblockAction(),
+        new thin.ui.ToolboxButton(new thin.core.toolaction.ImageblockAction(),
           new thin.ui.Icon('tool-iblock')), 'iblock');
     toolIblock.setTooltip(thin.t('button_image_block_tool'));
 
     // PageNumber
     var toolPageNumber = toolbox.addItem(
-        new thin.ui.ToolboxButton(new thin.editor.toolaction.PageNumberAction(),
+        new thin.ui.ToolboxButton(new thin.core.toolaction.PageNumberAction(),
           new thin.ui.Icon('tool-pageno')), 'pagenumber');
     toolPageNumber.setTooltip(thin.t('button_page_number_tool'));
 
@@ -1508,7 +1507,7 @@ thin.boot = function() {
 
     // List
     var toolList = toolbox.addItem(
-        new thin.ui.ToolboxButton(new thin.editor.toolaction.ListAction(),
+        new thin.ui.ToolboxButton(new thin.core.toolaction.ListAction(),
           new thin.ui.Icon('tool-list')), 'list');
     toolList.setTooltip(thin.t('button_list_tool'));
 
@@ -1569,7 +1568,7 @@ thin.boot = function() {
 
             if(!e.isCancel()) {
               goog.global['onbeforeclose'] = null;
-              thin.core.platform.callNativeFunction('platform', 'Window', 'forceClose', []);
+              thin.platform.callNativeFunction('platform', 'Window', 'forceClose', []);
             }
 
           }, thin.ui.Dialog.ButtonSet.typeYesNoCancel());
@@ -1592,7 +1591,7 @@ thin.boot = function() {
 
   goog.events.listen(goog.global, goog.events.EventType.KEYDOWN,
     function(e) {
-      var workspace = thin.editor.getActiveWorkspace();
+      var workspace = thin.core.getActiveWorkspace();
       if (workspace && e.ctrlKey) {
         if (e.keyCode == goog.events.KeyCodes.S) {
           if (e.shiftKey) {

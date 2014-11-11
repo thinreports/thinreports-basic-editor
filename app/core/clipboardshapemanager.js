@@ -13,58 +13,58 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ClipboardShapeManager');
+goog.provide('thin.core.ClipboardShapeManager');
 
-goog.require('thin.editor.AbstractManager');
+goog.require('thin.core.AbstractManager');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.AbstractManager}
+ * @extends {thin.core.AbstractManager}
  */
-thin.editor.ClipboardShapeManager = function(layout) {
-  thin.editor.AbstractManager.call(this, layout);
+thin.core.ClipboardShapeManager = function(layout) {
+  thin.core.AbstractManager.call(this, layout);
 };
-goog.inherits(thin.editor.ClipboardShapeManager, thin.editor.AbstractManager);
+goog.inherits(thin.core.ClipboardShapeManager, thin.core.AbstractManager);
 
 
 /**
- * @type {thin.editor.ClipboardShapeManager}
+ * @type {thin.core.ClipboardShapeManager}
  * @private
  */
-thin.editor.ClipboardShapeManager.instance_;
+thin.core.ClipboardShapeManager.instance_;
 
 
 /**
  * @type {goog.math.Rect}
  * @private
  */
-thin.editor.ClipboardShapeManager.prototype.shapeBounds_;
+thin.core.ClipboardShapeManager.prototype.shapeBounds_;
 
 
 /**
  * @type {goog.math.Coordinate}
  * @private
  */
-thin.editor.ClipboardShapeManager.prototype.deltaCoordinate_;
+thin.core.ClipboardShapeManager.prototype.deltaCoordinate_;
 
 
 /**
- * @return {thin.editor.ClipboardShapeManager}
+ * @return {thin.core.ClipboardShapeManager}
  */
-thin.editor.ClipboardShapeManager.getInstance = function() {
-  if (!goog.isDef(thin.editor.ClipboardShapeManager.instance_)) {
-    thin.editor.ClipboardShapeManager.instance_ = new thin.editor.ClipboardShapeManager(thin.editor.getActiveWorkspace().getLayout());
+thin.core.ClipboardShapeManager.getInstance = function() {
+  if (!goog.isDef(thin.core.ClipboardShapeManager.instance_)) {
+    thin.core.ClipboardShapeManager.instance_ = new thin.core.ClipboardShapeManager(thin.core.getActiveWorkspace().getLayout());
   }
-  return thin.editor.ClipboardShapeManager.instance_;
+  return thin.core.ClipboardShapeManager.instance_;
 };
 
 
 /**
  * @param {goog.math.Rect} bounds
  */
-thin.editor.ClipboardShapeManager.prototype.setShapeBounds = function(bounds) {
+thin.core.ClipboardShapeManager.prototype.setShapeBounds = function(bounds) {
   this.shapeBounds_ = bounds;
 };
 
@@ -72,7 +72,7 @@ thin.editor.ClipboardShapeManager.prototype.setShapeBounds = function(bounds) {
 /**
  * @return {goog.math.Rect}
  */
-thin.editor.ClipboardShapeManager.prototype.getShapeBounds = function() {
+thin.core.ClipboardShapeManager.prototype.getShapeBounds = function() {
   return this.shapeBounds_;
 };
 
@@ -80,7 +80,7 @@ thin.editor.ClipboardShapeManager.prototype.getShapeBounds = function() {
 /**
  * @param {goog.math.Coordinate} coordinate
  */
-thin.editor.ClipboardShapeManager.prototype.setDeltaCoordinate = function(coordinate) {
+thin.core.ClipboardShapeManager.prototype.setDeltaCoordinate = function(coordinate) {
   this.deltaCoordinate_ = coordinate;
 };
 
@@ -88,11 +88,11 @@ thin.editor.ClipboardShapeManager.prototype.setDeltaCoordinate = function(coordi
 /**
  * @return {goog.math.Coordinate}
  */
-thin.editor.ClipboardShapeManager.prototype.getDeltaCoordinate = function() {
+thin.core.ClipboardShapeManager.prototype.getDeltaCoordinate = function() {
   return this.deltaCoordinate_;
 };
 
 
-thin.editor.ClipboardShapeManager.prototype.initDeltaCoordinate = function() {
+thin.core.ClipboardShapeManager.prototype.initDeltaCoordinate = function() {
   delete this.deltaCoordinate_;
 };

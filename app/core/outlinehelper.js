@@ -13,115 +13,115 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.OutlineHelper');
+goog.provide('thin.core.OutlineHelper');
 
-goog.require('thin.editor.Component');
-goog.require('thin.editor.SelectorOutline');
+goog.require('thin.core.Component');
+goog.require('thin.core.SelectorOutline');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.Component}
+ * @extends {thin.core.Component}
  */
-thin.editor.OutlineHelper = function(layout) {
-  thin.editor.Component.call(this, layout);
+thin.core.OutlineHelper = function(layout) {
+  thin.core.Component.call(this, layout);
 };
-goog.inherits(thin.editor.OutlineHelper, thin.editor.Component);
+goog.inherits(thin.core.OutlineHelper, thin.core.Component);
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.OutlineHelper.FILL_ = new goog.graphics.SolidFill('none');
+thin.core.OutlineHelper.FILL_ = new goog.graphics.SolidFill('none');
 
 
 /**
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.editor.OutlineHelper.STROKE_ = new goog.graphics.Stroke('1px', '#0000FF');
+thin.core.OutlineHelper.STROKE_ = new goog.graphics.Stroke('1px', '#0000FF');
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.OutlineHelper.MULTIPLE_ = false;
+thin.core.OutlineHelper.MULTIPLE_ = false;
 
 
 /**
- * @type {thin.editor.RectOutline}
+ * @type {thin.core.RectOutline}
  * @private
  */
-thin.editor.OutlineHelper.prototype.rectOutline_;
+thin.core.OutlineHelper.prototype.rectOutline_;
 
 
 /**
- * @type {thin.editor.EllipseOutline}
+ * @type {thin.core.EllipseOutline}
  * @private
  */
-thin.editor.OutlineHelper.prototype.ellipseOutline_;
+thin.core.OutlineHelper.prototype.ellipseOutline_;
 
 
 /**
- * @type {thin.editor.LineOutline}
+ * @type {thin.core.LineOutline}
  * @private
  */
-thin.editor.OutlineHelper.prototype.lineOutline_;
+thin.core.OutlineHelper.prototype.lineOutline_;
 
 
 /**
- * @type {thin.editor.TblockOutline}
+ * @type {thin.core.TblockOutline}
  * @private
  */
-thin.editor.OutlineHelper.prototype.tblockOutline_;
+thin.core.OutlineHelper.prototype.tblockOutline_;
 
 
 /**
- * @type {thin.editor.PageNumberOutline}
+ * @type {thin.core.PageNumberOutline}
  * @private
  */
-thin.editor.OutlineHelper.prototype.pageNumberOutline_;
+thin.core.OutlineHelper.prototype.pageNumberOutline_;
 
 
 /**
- * @type {thin.editor.ImageblockOutline}
+ * @type {thin.core.ImageblockOutline}
  * @private
  */
-thin.editor.OutlineHelper.prototype.imageblockOutline_;
+thin.core.OutlineHelper.prototype.imageblockOutline_;
 
 
 /**
- * @type {thin.editor.TextOutline}
+ * @type {thin.core.TextOutline}
  * @private
  */
-thin.editor.OutlineHelper.prototype.textOutline_;
+thin.core.OutlineHelper.prototype.textOutline_;
 
 
 /**
- * @type {thin.editor.ListOutline}
+ * @type {thin.core.ListOutline}
  * @private
  */
-thin.editor.OutlineHelper.prototype.listOutline_;
+thin.core.OutlineHelper.prototype.listOutline_;
 
 
 /**
- * @type {thin.editor.SelectorOutline}
+ * @type {thin.core.SelectorOutline}
  * @private
  */
-thin.editor.OutlineHelper.prototype.selectorOutline_;
+thin.core.OutlineHelper.prototype.selectorOutline_;
 
 
 /**
- * @type {thin.editor.ImageOutline}
+ * @type {thin.core.ImageOutline}
  * @private
  */
-thin.editor.OutlineHelper.prototype.imageOutline_;
+thin.core.OutlineHelper.prototype.imageOutline_;
 
 
-thin.editor.OutlineHelper.prototype.reapplyStroke = function() {
+thin.core.OutlineHelper.prototype.reapplyStroke = function() {
   this.listOutline_.reapplyStroke();
   this.ellipseOutline_.reapplyStroke();
   this.rectOutline_.reapplyStroke();
@@ -135,81 +135,81 @@ thin.editor.OutlineHelper.prototype.reapplyStroke = function() {
 
 
 /**
- * @return {thin.editor.RectOutline}
+ * @return {thin.core.RectOutline}
  */
-thin.editor.OutlineHelper.prototype.getRectOutline = function() {
+thin.core.OutlineHelper.prototype.getRectOutline = function() {
   return this.rectOutline_;
 };
 
 
 /**
- * @return {thin.editor.EllipseOutline}
+ * @return {thin.core.EllipseOutline}
  */
-thin.editor.OutlineHelper.prototype.getEllipseOutline = function() {
+thin.core.OutlineHelper.prototype.getEllipseOutline = function() {
   return this.ellipseOutline_;
 };
 
 
 /**
- * @return {thin.editor.LineOutline}
+ * @return {thin.core.LineOutline}
  */
-thin.editor.OutlineHelper.prototype.getLineOutline = function() {
+thin.core.OutlineHelper.prototype.getLineOutline = function() {
   return this.lineOutline_;
 };
 
 
 /**
- * @return {thin.editor.TblockOutline}
+ * @return {thin.core.TblockOutline}
  */
-thin.editor.OutlineHelper.prototype.getTblockOutline = function() {
+thin.core.OutlineHelper.prototype.getTblockOutline = function() {
   return this.tblockOutline_;
 };
 
 
 /**
- * @return {thin.editor.PageNumberOutline}
+ * @return {thin.core.PageNumberOutline}
  */
-thin.editor.OutlineHelper.prototype.getPageNumberOutline = function() {
+thin.core.OutlineHelper.prototype.getPageNumberOutline = function() {
   return this.pageNumberOutline_;
 };
 
 
 /**
- * @return {thin.editor.ImageblockOutline}
+ * @return {thin.core.ImageblockOutline}
  */
-thin.editor.OutlineHelper.prototype.getImageblockOutline = function() {
+thin.core.OutlineHelper.prototype.getImageblockOutline = function() {
   return this.imageblockOutline_;
 };
 
 
 /**
- * @return {thin.editor.TextOutline}
+ * @return {thin.core.TextOutline}
  */
-thin.editor.OutlineHelper.prototype.getTextOutline = function() {
+thin.core.OutlineHelper.prototype.getTextOutline = function() {
   return this.textOutline_;
 };
 
 
 /**
- * @return {thin.editor.ListOutline}
+ * @return {thin.core.ListOutline}
  */
-thin.editor.OutlineHelper.prototype.getListOutline = function() {
+thin.core.OutlineHelper.prototype.getListOutline = function() {
   return this.listOutline_;
 };
 
 
 /**
- * @return {thin.editor.ImageOutline}
+ * @return {thin.core.ImageOutline}
  */
-thin.editor.OutlineHelper.prototype.getImageOutline = function() {
+thin.core.OutlineHelper.prototype.getImageOutline = function() {
   return this.imageOutline_;
 };
 
 
 /**
- * @return {thin.editor.SelectorOutline}
+ * @return {thin.core.SelectorOutline}
  */
-thin.editor.OutlineHelper.prototype.getSelectorOutline = function() {
+thin.core.OutlineHelper.prototype.getSelectorOutline = function() {
   return this.selectorOutline_;
 };
 
@@ -217,7 +217,7 @@ thin.editor.OutlineHelper.prototype.getSelectorOutline = function() {
 /**
  * @param {goog.graphics.Element} outline
  */
-thin.editor.OutlineHelper.prototype.disable = function(outline) {
+thin.core.OutlineHelper.prototype.disable = function(outline) {
   outline.setVisibled(false);
 };
 
@@ -225,7 +225,7 @@ thin.editor.OutlineHelper.prototype.disable = function(outline) {
 /**
  * @param {goog.graphics.Element} outline
  */
-thin.editor.OutlineHelper.prototype.enable = function(outline) {
+thin.core.OutlineHelper.prototype.enable = function(outline) {
   outline.setVisibled(true);
 };
 
@@ -233,16 +233,16 @@ thin.editor.OutlineHelper.prototype.enable = function(outline) {
 /**
  * @return {boolean}
  */
-thin.editor.OutlineHelper.prototype.isMultiple = function() {
-  return thin.editor.OutlineHelper.MULTIPLE_;
+thin.core.OutlineHelper.prototype.isMultiple = function() {
+  return thin.core.OutlineHelper.MULTIPLE_;
 };
 
 
-thin.editor.OutlineHelper.prototype.setup = function() {
+thin.core.OutlineHelper.prototype.setup = function() {
   var layout = this.getLayout();
   var helpers = layout.getHelpers();
-  var fill = thin.editor.OutlineHelper.FILL_;
-  var stroke = thin.editor.OutlineHelper.STROKE_;
+  var fill = thin.core.OutlineHelper.FILL_;
+  var stroke = thin.core.OutlineHelper.STROKE_;
 
   var list = helpers.createListOutline(this, stroke, fill);
   var rect = helpers.createRectOutline(this, stroke, fill);
@@ -253,7 +253,7 @@ thin.editor.OutlineHelper.prototype.setup = function() {
   var ellipse = helpers.createEllipseOutline(this, stroke, fill);
   var line = helpers.createLineOutline(this, stroke);
   var text = helpers.createTextOutline(this, stroke, fill);
-  var selector = new thin.editor.SelectorOutline(
+  var selector = new thin.core.SelectorOutline(
         layout.createSvgElement('rect'), layout, stroke, null);
   selector.setOutlineHelper(this);
   
@@ -291,7 +291,7 @@ thin.editor.OutlineHelper.prototype.setup = function() {
 
 
 /** @inheritDoc */
-thin.editor.OutlineHelper.prototype.disposeInternal = function() {
+thin.core.OutlineHelper.prototype.disposeInternal = function() {
 
   this.rectOutline_.dispose();
   this.ellipseOutline_.dispose();
@@ -315,5 +315,5 @@ thin.editor.OutlineHelper.prototype.disposeInternal = function() {
   delete this.listOutline_;
   delete this.imageOutline_;
   
-  thin.editor.OutlineHelper.superClass_.disposeInternal.call(this);
+  thin.core.OutlineHelper.superClass_.disposeInternal.call(this);
 };

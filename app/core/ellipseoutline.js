@@ -13,31 +13,31 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.EllipseOutline');
+goog.provide('thin.core.EllipseOutline');
 
-goog.require('thin.editor.Ellipse');
-goog.require('thin.editor.ModuleOutline');
+goog.require('thin.core.Ellipse');
+goog.require('thin.core.ModuleOutline');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.Ellipse}
+ * @extends {thin.core.Ellipse}
  */
-thin.editor.EllipseOutline = function(element, layout, stroke, fill) {
-  thin.editor.Ellipse.call(this, element, layout, stroke, fill);
+thin.core.EllipseOutline = function(element, layout, stroke, fill) {
+  thin.core.Ellipse.call(this, element, layout, stroke, fill);
 };
-goog.inherits(thin.editor.EllipseOutline, thin.editor.Ellipse);
-goog.mixin(thin.editor.EllipseOutline.prototype, thin.editor.ModuleOutline.prototype);
+goog.inherits(thin.core.EllipseOutline, thin.core.Ellipse);
+goog.mixin(thin.core.EllipseOutline.prototype, thin.core.ModuleOutline.prototype);
 
 
 /**
- * @return {thin.editor.EllipseShape}
+ * @return {thin.core.EllipseShape}
  */
-thin.editor.EllipseOutline.prototype.toShape = function() {
+thin.core.EllipseOutline.prototype.toShape = function() {
   return this.getLayout().createEllipseShape();
 };
 
@@ -45,7 +45,7 @@ thin.editor.EllipseOutline.prototype.toShape = function() {
 /**
  * @return {Object}
  */
-thin.editor.EllipseOutline.prototype.getInitShapeProperties = function() {
+thin.core.EllipseOutline.prototype.getInitShapeProperties = function() {
   return {
     RADIUS: this.getRadius(),
     CENTER: this.getCenterCoordinate(),
@@ -55,7 +55,7 @@ thin.editor.EllipseOutline.prototype.getInitShapeProperties = function() {
 
 
 /** @inheritDoc */
-thin.editor.EllipseOutline.prototype.disposeInternal = function() {
-  thin.editor.EllipseOutline.superClass_.disposeInternal.call(this);
+thin.core.EllipseOutline.prototype.disposeInternal = function() {
+  thin.core.EllipseOutline.superClass_.disposeInternal.call(this);
   this.disposeInternalForOutline();
 };

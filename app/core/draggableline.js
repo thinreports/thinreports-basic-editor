@@ -13,35 +13,35 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.DraggableLine');
-goog.provide('thin.editor.DraggableLine.Direction');
+goog.provide('thin.core.DraggableLine');
+goog.provide('thin.core.DraggableLine.Direction');
 
 goog.require('goog.dom');
 goog.require('goog.style');
 goog.require('goog.events');
 goog.require('goog.fx.Dragger');
 goog.require('goog.fx.Dragger.EventType');
-goog.require('thin.editor.Cursor');
-goog.require('thin.editor.Cursor.Type');
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.AbstractDragger');
-goog.require('thin.editor.AbstractDragger.EventType');
-goog.require('thin.editor.DragEvent');
-goog.require('thin.editor.SvgDragger');
-goog.require('thin.editor.Layer');
+goog.require('thin.core.Cursor');
+goog.require('thin.core.Cursor.Type');
+goog.require('thin.core.Rect');
+goog.require('thin.core.AbstractDragger');
+goog.require('thin.core.AbstractDragger.EventType');
+goog.require('thin.core.DragEvent');
+goog.require('thin.core.SvgDragger');
+goog.require('thin.core.Layer');
 
 
 /**
  * @param {number} direction
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Fill} fill
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.DraggableLine = function(direction, layout, fill) {
+thin.core.DraggableLine = function(direction, layout, fill) {
   
-  var stroke = thin.editor.DraggableLine.STROKE;
-  thin.editor.Rect.call(this, layout.createSvgElement('rect', {
+  var stroke = thin.core.DraggableLine.STROKE;
+  thin.core.Rect.call(this, layout.createSvgElement('rect', {
     'stroke-opacity': 0
   }), layout, stroke, fill);
   
@@ -51,13 +51,13 @@ thin.editor.DraggableLine = function(direction, layout, fill) {
    */
   this.direction_ = direction;
 };
-goog.inherits(thin.editor.DraggableLine, thin.editor.Rect);
+goog.inherits(thin.core.DraggableLine, thin.core.Rect);
 
 
 /**
  * @enum {number}
  */
-thin.editor.DraggableLine.Direction = {
+thin.core.DraggableLine.Direction = {
   HORIZONTAL: 0x01,
   VERTICAL: 0x02
 };
@@ -66,31 +66,31 @@ thin.editor.DraggableLine.Direction = {
 /**
  * @type {goog.graphics.Stroke}
  */
-thin.editor.DraggableLine.STROKE = new goog.graphics.Stroke('4px', '#FFFFFF');
+thin.core.DraggableLine.STROKE = new goog.graphics.Stroke('4px', '#FFFFFF');
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.DraggableLine.TOLERANCE_ = 10;
+thin.core.DraggableLine.TOLERANCE_ = 10;
 
 
 /**
- * @type {thin.editor.SvgDragger}
+ * @type {thin.core.SvgDragger}
  * @private
  */
-thin.editor.DraggableLine.prototype.dragger_;
+thin.core.DraggableLine.prototype.dragger_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.DraggableLine.prototype.position_ = 0;
+thin.core.DraggableLine.prototype.position_ = 0;
 
 
-thin.editor.DraggableLine.prototype.reapplySizeAndStroke = function() {
+thin.core.DraggableLine.prototype.reapplySizeAndStroke = function() {
   var layout = this.getLayout();
   this.reapplyStroke();
   if (this.isHorizontal()) {
@@ -105,8 +105,8 @@ thin.editor.DraggableLine.prototype.reapplySizeAndStroke = function() {
 /**
  * @param {number} left
  */
-thin.editor.DraggableLine.prototype.setLeft = function(left) {
-  thin.editor.DraggableLine.superClass_.setLeft.call(this, left);
+thin.core.DraggableLine.prototype.setLeft = function(left) {
+  thin.core.DraggableLine.superClass_.setLeft.call(this, left);
   if(this.isVertical()) {
     this.position_ = this.getLeft();
   }
@@ -116,8 +116,8 @@ thin.editor.DraggableLine.prototype.setLeft = function(left) {
 /**
  * @param {number} top
  */
-thin.editor.DraggableLine.prototype.setTop = function(top) {
-  thin.editor.DraggableLine.superClass_.setTop.call(this, top);
+thin.core.DraggableLine.prototype.setTop = function(top) {
+  thin.core.DraggableLine.superClass_.setTop.call(this, top);
   if(this.isHorizontal()) {
     this.position_ = this.getTop();
   }
@@ -127,32 +127,32 @@ thin.editor.DraggableLine.prototype.setTop = function(top) {
 /**
  * @return {boolean}
  */
-thin.editor.DraggableLine.prototype.isHorizontal = function() {
-  return this.direction_ == thin.editor.DraggableLine.Direction.HORIZONTAL;
+thin.core.DraggableLine.prototype.isHorizontal = function() {
+  return this.direction_ == thin.core.DraggableLine.Direction.HORIZONTAL;
 };
 
 
 /**
  * @return {boolean}
  */
-thin.editor.DraggableLine.prototype.isVertical = function() {
-  return this.direction_ == thin.editor.DraggableLine.Direction.VERTICAL;
+thin.core.DraggableLine.prototype.isVertical = function() {
+  return this.direction_ == thin.core.DraggableLine.Direction.VERTICAL;
 };
 
 
-thin.editor.DraggableLine.prototype.init = function() {
+thin.core.DraggableLine.prototype.init = function() {
   
   var scope = this;
   var layout = this.getLayout();
   var body = goog.dom.getDocument().body;
   var dragLayer = layout.getHelpers().getDragLayer();
-  var dragger = new thin.editor.SvgDragger(this);
+  var dragger = new thin.core.SvgDragger(this);
   dragger.setDragModeByCoordinate(this.isVertical(), this.isHorizontal());
   var cursor = this.getCursor();
   var eventType = goog.fx.Dragger.EventType;
 
   goog.events.listen(dragger,
-    thin.editor.AbstractDragger.EventType.BEFORESTART, function(e) {
+    thin.core.AbstractDragger.EventType.BEFORESTART, function(e) {
     dragLayer.setCursor(cursor);
     layout.setElementCursor(dragLayer.getElement(), cursor);
     goog.style.setStyle(body, 'cursor', cursor.getType());
@@ -160,8 +160,8 @@ thin.editor.DraggableLine.prototype.init = function() {
   }, false, dragger);
 
   goog.events.listen(dragger, eventType.END, function(e) {
-    var defaultType = thin.editor.Cursor.Type.DEFAULT;
-    var defaultCursor = new thin.editor.Cursor(defaultType);
+    var defaultType = thin.core.Cursor.Type.DEFAULT;
+    var defaultCursor = new thin.core.Cursor(defaultType);
     dragLayer.setCursor(defaultCursor);
     layout.setElementCursor(dragLayer.getElement(), defaultCursor);
     goog.style.setStyle(body, 'cursor', defaultType);
@@ -172,9 +172,9 @@ thin.editor.DraggableLine.prototype.init = function() {
 
 
 /**
- * @return {thin.editor.SvgDragger}
+ * @return {thin.core.SvgDragger}
  */
-thin.editor.DraggableLine.prototype.getDragger = function() {
+thin.core.DraggableLine.prototype.getDragger = function() {
   return this.dragger_;
 };
 
@@ -182,7 +182,7 @@ thin.editor.DraggableLine.prototype.getDragger = function() {
 /**
  * @private
  */
-thin.editor.DraggableLine.prototype.createPropertyComponent_ = function() {
+thin.core.DraggableLine.prototype.createPropertyComponent_ = function() {
   var shape = this;
   var layout = this.getLayout();
 
@@ -212,7 +212,7 @@ thin.editor.DraggableLine.prototype.createPropertyComponent_ = function() {
 };
 
 
-thin.editor.DraggableLine.prototype.updateProperties = function() {
+thin.core.DraggableLine.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
   if (!proppane.isTarget(this)) {
     this.getLayout().updatePropertiesForEmpty();
@@ -224,7 +224,7 @@ thin.editor.DraggableLine.prototype.updateProperties = function() {
 
 
 /** @inheritDoc */
-thin.editor.DraggableLine.prototype.disposeInternal = function() {
-  thin.editor.DraggableLine.superClass_.disposeInternal.call(this);
+thin.core.DraggableLine.prototype.disposeInternal = function() {
+  thin.core.DraggableLine.superClass_.disposeInternal.call(this);
   this.disposeInternalForDragger_();
 };

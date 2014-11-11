@@ -13,31 +13,31 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.RectOutline');
+goog.provide('thin.core.RectOutline');
 
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.ModuleOutline');
+goog.require('thin.core.Rect');
+goog.require('thin.core.ModuleOutline');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.RectOutline = function(element, layout, stroke, fill) {
-  thin.editor.Rect.call(this, element, layout, stroke, fill);
+thin.core.RectOutline = function(element, layout, stroke, fill) {
+  thin.core.Rect.call(this, element, layout, stroke, fill);
 };
-goog.inherits(thin.editor.RectOutline, thin.editor.Rect);
-goog.mixin(thin.editor.RectOutline.prototype, thin.editor.ModuleOutline.prototype);
+goog.inherits(thin.core.RectOutline, thin.core.Rect);
+goog.mixin(thin.core.RectOutline.prototype, thin.core.ModuleOutline.prototype);
 
 
 /**
- * @return {thin.editor.RectShape}
+ * @return {thin.core.RectShape}
  */
-thin.editor.RectOutline.prototype.toShape = function() {
+thin.core.RectOutline.prototype.toShape = function() {
   return this.getLayout().createRectShape();
 };
 
@@ -45,7 +45,7 @@ thin.editor.RectOutline.prototype.toShape = function() {
 /**
  * @return {Object}
  */
-thin.editor.RectOutline.prototype.getInitShapeProperties = function() {
+thin.core.RectOutline.prototype.getInitShapeProperties = function() {
   return {
     BOUNDS: this.getBounds()
   };
@@ -53,7 +53,7 @@ thin.editor.RectOutline.prototype.getInitShapeProperties = function() {
 
 
 /** @inheritDoc */
-thin.editor.RectOutline.prototype.disposeInternal = function() {
-  thin.editor.RectOutline.superClass_.disposeInternal.call(this);
+thin.core.RectOutline.prototype.disposeInternal = function() {
+  thin.core.RectOutline.superClass_.disposeInternal.call(this);
   this.disposeInternalForOutline();
 };

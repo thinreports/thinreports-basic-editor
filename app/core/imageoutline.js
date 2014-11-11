@@ -13,26 +13,26 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ImageOutline');
+goog.provide('thin.core.ImageOutline');
 
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.ModuleOutline');
+goog.require('thin.core.Rect');
+goog.require('thin.core.ModuleOutline');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.ImageOutline = function(element, layout, stroke, fill) {
-  thin.editor.Rect.call(this, element, layout, stroke, fill);
+thin.core.ImageOutline = function(element, layout, stroke, fill) {
+  thin.core.Rect.call(this, element, layout, stroke, fill);
   this.setRounded(Number(layout.getElementAttribute(element, 'rx')) || 0);
 };
-goog.inherits(thin.editor.ImageOutline, thin.editor.Rect);
-goog.mixin(thin.editor.ImageOutline.prototype, thin.editor.ModuleOutline.prototype);
+goog.inherits(thin.core.ImageOutline, thin.core.Rect);
+goog.mixin(thin.core.ImageOutline.prototype, thin.core.ModuleOutline.prototype);
 
 
 /**
@@ -41,7 +41,7 @@ goog.mixin(thin.editor.ImageOutline.prototype, thin.editor.ModuleOutline.prototy
  * @param {number} clientPosX
  * @param {number} clientPosY
  */
-thin.editor.ImageOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
+thin.core.ImageOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
   this.setLeft(clientPosX);
   this.setTop(thin.numberWithPrecision(clientPosY - this.getHeight()));
 };
@@ -52,7 +52,7 @@ thin.editor.ImageOutline.prototype.setBoundsByCoordinate = function(startPosX, s
  * @param {goog.math.Coordinate} transLate
  * @param {boolean} isVertex
  */
-thin.editor.ImageOutline.prototype.setBoundsByScale = function(scale, transLate, isVertex) {
+thin.core.ImageOutline.prototype.setBoundsByScale = function(scale, transLate, isVertex) {
 
   var scaleX = scale.x;
   var scaleY = scale.y;
@@ -83,9 +83,9 @@ thin.editor.ImageOutline.prototype.setBoundsByScale = function(scale, transLate,
 
 
 /**
- * @return {thin.editor.ImageShape}
+ * @return {thin.core.ImageShape}
  */
-thin.editor.ImageOutline.prototype.toShape = function() {
+thin.core.ImageOutline.prototype.toShape = function() {
   return this.getLayout().createImageShape();
 };
 
@@ -93,7 +93,7 @@ thin.editor.ImageOutline.prototype.toShape = function() {
 /**
  * @return {Object}
  */
-thin.editor.ImageOutline.prototype.getInitShapeProperties = function() {
+thin.core.ImageOutline.prototype.getInitShapeProperties = function() {
   return {
     POSITION: new goog.math.Coordinate(
         this.getLeft(),
@@ -103,7 +103,7 @@ thin.editor.ImageOutline.prototype.getInitShapeProperties = function() {
 
 
 /** @inheritDoc */
-thin.editor.ImageOutline.prototype.disposeInternal = function() {
-  thin.editor.ImageOutline.superClass_.disposeInternal.call(this);
+thin.core.ImageOutline.prototype.disposeInternal = function() {
+  thin.core.ImageOutline.superClass_.disposeInternal.call(this);
   this.disposeInternalForOutline();
 };

@@ -13,21 +13,21 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ShapeIdManager');
-goog.provide('thin.editor.ShapeIdManager.DefaultPrefix');
+goog.provide('thin.core.ShapeIdManager');
+goog.provide('thin.core.ShapeIdManager.DefaultPrefix');
 
 goog.require('goog.array');
 goog.require('goog.object');
-goog.require('thin.editor.AbstractManager');
+goog.require('thin.core.AbstractManager');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.AbstractManager}
+ * @extends {thin.core.AbstractManager}
  */
-thin.editor.ShapeIdManager = function(layout) {
-  thin.editor.AbstractManager.call(this, layout);
+thin.core.ShapeIdManager = function(layout) {
+  thin.core.AbstractManager.call(this, layout);
   
   /**
    * @type {Object}
@@ -35,13 +35,13 @@ thin.editor.ShapeIdManager = function(layout) {
    */
   this.indexes_ = {};
 };
-goog.inherits(thin.editor.ShapeIdManager, thin.editor.AbstractManager);
+goog.inherits(thin.core.ShapeIdManager, thin.core.AbstractManager);
 
 
 /**
  * @enum {string}
  */
-thin.editor.ShapeIdManager.DefaultPrefix = {
+thin.core.ShapeIdManager.DefaultPrefix = {
   TEXT_BLOCK: 'text',
   IMAGE_BLOCK: 'image',
   LIST: 'default'
@@ -52,29 +52,29 @@ thin.editor.ShapeIdManager.DefaultPrefix = {
  * @type {string}
  * @private
  */
-thin.editor.ShapeIdManager.DEFAULT_CONNECT_ = '#';
+thin.core.ShapeIdManager.DEFAULT_CONNECT_ = '#';
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.ShapeIdManager.DEFAULT_INDEX_ = 0;
+thin.core.ShapeIdManager.DEFAULT_INDEX_ = 0;
 
 
 /**
  * @type {RegExp}
  * @private
  */
-thin.editor.ShapeIdManager.PATTERN_ = /#[1-9]?\d+$/;
+thin.core.ShapeIdManager.PATTERN_ = /#[1-9]?\d+$/;
 
 
 /**
  * @param {string} shapeId
  * @return {string}
  */
-thin.editor.ShapeIdManager.getShapeIdPrefix = function(shapeId) {
-  return shapeId ? shapeId.replace(thin.editor.ShapeIdManager.PATTERN_, '') : '';
+thin.core.ShapeIdManager.getShapeIdPrefix = function(shapeId) {
+  return shapeId ? shapeId.replace(thin.core.ShapeIdManager.PATTERN_, '') : '';
 };
 
 
@@ -82,8 +82,8 @@ thin.editor.ShapeIdManager.getShapeIdPrefix = function(shapeId) {
  * @param {string} shapeId
  * @return {number}
  */
-thin.editor.ShapeIdManager.getShapeIdIndexes = function(shapeId) {
-  var result = shapeId.match(thin.editor.ShapeIdManager.PATTERN_);
+thin.core.ShapeIdManager.getShapeIdIndexes = function(shapeId) {
+  var result = shapeId.match(thin.core.ShapeIdManager.PATTERN_);
   if(goog.isDefAndNotNull(result)) {
     return Number(result[0].replace(/#/, ''));
   } else {
@@ -96,7 +96,7 @@ thin.editor.ShapeIdManager.getShapeIdIndexes = function(shapeId) {
  * @param {string} prefix
  * @return {string}
  */
-thin.editor.ShapeIdManager.prototype.getNextId = function(prefix) {
+thin.core.ShapeIdManager.prototype.getNextId = function(prefix) {
   var suffixes = this.get(prefix);
   
   if (goog.array.isEmpty(suffixes)) {
@@ -104,7 +104,7 @@ thin.editor.ShapeIdManager.prototype.getNextId = function(prefix) {
   } else {
     var suffix = 1;
     var suffixeIndexes = goog.array.map(suffixes, goog.bind(function(shape, count) {
-      return thin.editor.ShapeIdManager.getShapeIdIndexes(shape.getShapeId());
+      return thin.core.ShapeIdManager.getShapeIdIndexes(shape.getShapeId());
     }, this));
     goog.array.sort(suffixeIndexes);
     goog.array.forEach(suffixeIndexes, function(existSuffix) {
@@ -112,7 +112,7 @@ thin.editor.ShapeIdManager.prototype.getNextId = function(prefix) {
         suffix = existSuffix + 1;
       }
     });
-    return prefix + thin.editor.ShapeIdManager.DEFAULT_CONNECT_ + suffix;
+    return prefix + thin.core.ShapeIdManager.DEFAULT_CONNECT_ + suffix;
   }
 };
 
@@ -121,8 +121,8 @@ thin.editor.ShapeIdManager.prototype.getNextId = function(prefix) {
  * @param {string} shapeId
  * @return {goog.graphics.Element?}
  */
-thin.editor.ShapeIdManager.prototype.getShapeForShapeId = function(shapeId) {
-  var targetArray = this.get(thin.editor.ShapeIdManager.getShapeIdPrefix(shapeId));
+thin.core.ShapeIdManager.prototype.getShapeForShapeId = function(shapeId) {
+  var targetArray = this.get(thin.core.ShapeIdManager.getShapeIdPrefix(shapeId));
   var resultIndex = goog.array.findIndex(targetArray, function(shape) {
     return shape.getShapeId() == shapeId;
   });
@@ -135,7 +135,7 @@ thin.editor.ShapeIdManager.prototype.getShapeForShapeId = function(shapeId) {
  * @param {string} oldPrefix
  * @param {string} newPrefix
  */
-thin.editor.ShapeIdManager.prototype.changePrefix = function(shape, oldPrefix, newPrefix) {
+thin.core.ShapeIdManager.prototype.changePrefix = function(shape, oldPrefix, newPrefix) {
   this.remove(shape, oldPrefix);
   if (!goog.string.isEmpty(newPrefix)) {
     this.add(shape, newPrefix);
@@ -146,7 +146,7 @@ thin.editor.ShapeIdManager.prototype.changePrefix = function(shape, oldPrefix, n
 /**
  * @return {Array.<Object>}
  */
-thin.editor.ShapeIdManager.prototype.getAll = function() {
+thin.core.ShapeIdManager.prototype.getAll = function() {
   return goog.array.flatten(goog.object.getValues(this.indexes_));
 };
 
@@ -155,7 +155,7 @@ thin.editor.ShapeIdManager.prototype.getAll = function() {
  * @param {string} prefix
  * @return {Array}
  */
-thin.editor.ShapeIdManager.prototype.get = function(prefix) {
+thin.core.ShapeIdManager.prototype.get = function(prefix) {
   if(!goog.isDef(goog.object.get(this.indexes_, prefix))) {
     goog.object.set(this.indexes_, prefix, []);
   }
@@ -167,7 +167,7 @@ thin.editor.ShapeIdManager.prototype.get = function(prefix) {
  * @param {string} prefix
  * @return {number}
  */
-thin.editor.ShapeIdManager.prototype.getCount = function(prefix) {
+thin.core.ShapeIdManager.prototype.getCount = function(prefix) {
   return this.get(prefix).length;
 };
 
@@ -176,13 +176,13 @@ thin.editor.ShapeIdManager.prototype.getCount = function(prefix) {
  * @param {goog.graphics.Element} shape
  * @param {string=} opt_prefix
  */
-thin.editor.ShapeIdManager.prototype.remove = function(shape, opt_prefix) {
+thin.core.ShapeIdManager.prototype.remove = function(shape, opt_prefix) {
   if (goog.isDefAndNotNull(opt_prefix)) {
     this.remove_(shape, opt_prefix);
   } else {
     var shapeId = shape.getShapeId();
     if (goog.isDefAndNotNull(shapeId)) {
-      this.remove_(shape, thin.editor.ShapeIdManager.getShapeIdPrefix(shapeId));
+      this.remove_(shape, thin.core.ShapeIdManager.getShapeIdPrefix(shapeId));
     }
   }
 };
@@ -193,7 +193,7 @@ thin.editor.ShapeIdManager.prototype.remove = function(shape, opt_prefix) {
  * @param {string} prefix
  * @private
  */
-thin.editor.ShapeIdManager.prototype.remove_ = function(shape, prefix) {
+thin.core.ShapeIdManager.prototype.remove_ = function(shape, prefix) {
   goog.array.remove(this.get(prefix), shape);
 };
 
@@ -202,14 +202,14 @@ thin.editor.ShapeIdManager.prototype.remove_ = function(shape, prefix) {
  * @param {goog.graphics.Element} shape
  * @param {string} prefix
  */
-thin.editor.ShapeIdManager.prototype.add = function(shape, prefix) {
+thin.core.ShapeIdManager.prototype.add = function(shape, prefix) {
   goog.array.insert(this.get(prefix), shape);
 };
 
 
 /** @inheritDoc */
-thin.editor.ShapeIdManager.prototype.disposeInternal = function() {
-  thin.editor.ShapeIdManager.superClass_.disposeInternal.call(this);
+thin.core.ShapeIdManager.prototype.disposeInternal = function() {
+  thin.core.ShapeIdManager.superClass_.disposeInternal.call(this);
   
   delete this.indexes_;
 };

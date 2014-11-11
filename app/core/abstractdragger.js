@@ -13,9 +13,9 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.AbstractDragger');
-goog.provide('thin.editor.AbstractDragger.EventType');
-goog.provide('thin.editor.DragEvent');
+goog.provide('thin.core.AbstractDragger');
+goog.provide('thin.core.AbstractDragger.EventType');
+goog.provide('thin.core.DragEvent');
 
 goog.require('goog.dom');
 goog.require('goog.array');
@@ -37,7 +37,7 @@ goog.require('goog.fx.DragEvent');
  * @constructor
  * @extends {goog.fx.Dragger}
  */
-thin.editor.AbstractDragger = function(target, opt_handle) {
+thin.core.AbstractDragger = function(target, opt_handle) {
   goog.events.EventTarget.call(this);
   
   /**
@@ -102,14 +102,14 @@ thin.editor.AbstractDragger = function(target, opt_handle) {
   // used for listeners added and removed during the drag operation.
   goog.events.listen(handle, goog.events.EventType.MOUSEDOWN, this.startDrag, false, this);
 };
-goog.inherits(thin.editor.AbstractDragger, goog.fx.Dragger);
+goog.inherits(thin.core.AbstractDragger, goog.fx.Dragger);
 
 
 /**
  * Constants for event names.
  * @enum {string}
  */
-thin.editor.AbstractDragger.EventType = {
+thin.core.AbstractDragger.EventType = {
   BEFORESTART: 'beforestart',
   SHIFTKEYPRESS: 'shiftkeypress'
 };
@@ -119,97 +119,97 @@ thin.editor.AbstractDragger.EventType = {
  * @type {number}
  * @private
  */
-thin.editor.AbstractDragger.ABSORPTION_RANGE_ = 10;
+thin.core.AbstractDragger.ABSORPTION_RANGE_ = 10;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.AbstractDragger.prototype.aspect_ = false;
+thin.core.AbstractDragger.prototype.aspect_ = false;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.AbstractDragger.prototype.clientX_ = 0;
+thin.core.AbstractDragger.prototype.clientX_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.AbstractDragger.prototype.clientY_ = 0;
+thin.core.AbstractDragger.prototype.clientY_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.AbstractDragger.prototype.startDragX_ = 0;
+thin.core.AbstractDragger.prototype.startDragX_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.AbstractDragger.prototype.startDragY_ = 0;
+thin.core.AbstractDragger.prototype.startDragY_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.AbstractDragger.prototype.deltaX_ = 0;
+thin.core.AbstractDragger.prototype.deltaX_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.AbstractDragger.prototype.deltaY_ = 0;
+thin.core.AbstractDragger.prototype.deltaY_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.AbstractDragger.prototype.rate_ = 1;
+thin.core.AbstractDragger.prototype.rate_ = 1;
 
 
 /**
- * @type {thin.editor.Layout}
+ * @type {thin.core.Layout}
  * @private
  */
-thin.editor.AbstractDragger.prototype.layout_;
+thin.core.AbstractDragger.prototype.layout_;
 
 
 /**
- * @type {thin.editor.Workspace}
+ * @type {thin.core.Workspace}
  * @private
  */
-thin.editor.AbstractDragger.prototype.workspace_;
+thin.core.AbstractDragger.prototype.workspace_;
 
 
 /**
  * @type {Element}
  * @private
  */
-thin.editor.AbstractDragger.prototype.offsetTarget_;
+thin.core.AbstractDragger.prototype.offsetTarget_;
 
 
 /**
  * @type {EventTarget}
  * @private
  */
-thin.editor.AbstractDragger.prototype.scrollTarget_;
+thin.core.AbstractDragger.prototype.scrollTarget_;
 
 
 /**
- * @return {thin.editor.Workspace}
+ * @return {thin.core.Workspace}
  */
-thin.editor.AbstractDragger.prototype.getWorkspace = function() {
+thin.core.AbstractDragger.prototype.getWorkspace = function() {
   if (!this.workspace_) {
     this.workspace_ = this.getLayout().getWorkspace();
   }
@@ -219,9 +219,9 @@ thin.editor.AbstractDragger.prototype.getWorkspace = function() {
 
 
 /**
- * @return {thin.editor.Layout}
+ * @return {thin.core.Layout}
  */
-thin.editor.AbstractDragger.prototype.getLayout = function() {
+thin.core.AbstractDragger.prototype.getLayout = function() {
   if (!this.layout_) {
     this.layout_ = this.targetShape.getLayout();
   }
@@ -233,7 +233,7 @@ thin.editor.AbstractDragger.prototype.getLayout = function() {
 /**
  * @return {Element}
  */
-thin.editor.AbstractDragger.prototype.getOffsetTarget = function() {
+thin.core.AbstractDragger.prototype.getOffsetTarget = function() {
   if (!this.offsetTarget_) {
     this.offsetTarget_ = this.getLayout().getOffsetTarget();
   }
@@ -246,7 +246,7 @@ thin.editor.AbstractDragger.prototype.getOffsetTarget = function() {
  * @param {goog.math.Rect} rect
  * @return {boolean}
  */
-thin.editor.AbstractDragger.prototype.isEmptyRect = function(rect) {
+thin.core.AbstractDragger.prototype.isEmptyRect = function(rect) {
   return isNaN(rect.left) && isNaN(rect.top) &&
   isNaN(rect.width) &&
   isNaN(rect.height);
@@ -256,7 +256,7 @@ thin.editor.AbstractDragger.prototype.isEmptyRect = function(rect) {
 /**
  * @param {boolean} setting
  */
-thin.editor.AbstractDragger.prototype.setAspectObserve = function(setting) {
+thin.core.AbstractDragger.prototype.setAspectObserve = function(setting) {
   this.aspect_ = setting;
 };
 
@@ -264,7 +264,7 @@ thin.editor.AbstractDragger.prototype.setAspectObserve = function(setting) {
 /**
  * @param {goog.graphics.Element} target
  */
-thin.editor.AbstractDragger.prototype.setTarget = function(target) {
+thin.core.AbstractDragger.prototype.setTarget = function(target) {
   this.targetShape = target;
   var targetElement = this.target = target.getElement();
   this.document_ = goog.dom.getOwnerDocument(targetElement);
@@ -274,7 +274,7 @@ thin.editor.AbstractDragger.prototype.setTarget = function(target) {
 /**
  * @param {goog.math.Rect?} delta
  */
-thin.editor.AbstractDragger.prototype.setDelta = function(delta) {
+thin.core.AbstractDragger.prototype.setDelta = function(delta) {
   this.deltaRect_ = delta || new goog.math.Rect(NaN, NaN, NaN, NaN);
   this.calculateDelta_();
 };
@@ -283,7 +283,7 @@ thin.editor.AbstractDragger.prototype.setDelta = function(delta) {
 /**
  * @param {Array} pos
  */
-thin.editor.AbstractDragger.prototype.setAdsorptionX = function(pos) {
+thin.core.AbstractDragger.prototype.setAdsorptionX = function(pos) {
   this.adsorptionX_ = pos;
 };
 
@@ -291,7 +291,7 @@ thin.editor.AbstractDragger.prototype.setAdsorptionX = function(pos) {
 /**
  * @param {Array} pos
  */
-thin.editor.AbstractDragger.prototype.setAdsorptionY = function(pos) {
+thin.core.AbstractDragger.prototype.setAdsorptionY = function(pos) {
   this.adsorptionY_ = pos;
 };
 
@@ -299,7 +299,7 @@ thin.editor.AbstractDragger.prototype.setAdsorptionY = function(pos) {
 /**
  * @param {number} rate
  */
-thin.editor.AbstractDragger.prototype.setRate = function(rate) {
+thin.core.AbstractDragger.prototype.setRate = function(rate) {
   this.rate_ = rate;
 };
 
@@ -307,7 +307,7 @@ thin.editor.AbstractDragger.prototype.setRate = function(rate) {
 /**
  * @return {goog.math.Coordinate}
  */
-thin.editor.AbstractDragger.prototype.getDeltaPosition = function() {
+thin.core.AbstractDragger.prototype.getDeltaPosition = function() {
   return new goog.math.Coordinate(this.deltaX_, this.deltaY_);
 };
 
@@ -315,7 +315,7 @@ thin.editor.AbstractDragger.prototype.getDeltaPosition = function() {
 /**
  * @return {goog.math.Coordinate}
  */
-thin.editor.AbstractDragger.prototype.getStartPosition = function() {
+thin.core.AbstractDragger.prototype.getStartPosition = function() {
   return new goog.math.Coordinate(this.startDragX_, this.startDragY_);
 };
 
@@ -327,8 +327,8 @@ thin.editor.AbstractDragger.prototype.getStartPosition = function() {
  * @param {boolean} cancelAbsorption
  * @return {number} The 'real' X-coordinate after limits are applied.
  */
-thin.editor.AbstractDragger.prototype.limitX = function(x, cancelAbsorption) {
-  var clientX = thin.editor.AbstractDragger.superClass_.limitX.call(this, x);
+thin.core.AbstractDragger.prototype.limitX = function(x, cancelAbsorption) {
+  var clientX = thin.core.AbstractDragger.superClass_.limitX.call(this, x);
   var adsorptionX = this.adsorptionX_;
   
   if (!cancelAbsorption && !goog.array.isEmpty(adsorptionX)) {
@@ -361,7 +361,7 @@ thin.editor.AbstractDragger.prototype.limitX = function(x, cancelAbsorption) {
     }
     goog.array.sort(resultX);
     var tempClientX = resultX[0];
-    if (thin.editor.AbstractDragger.ABSORPTION_RANGE_ >= tempClientX) {
+    if (thin.core.AbstractDragger.ABSORPTION_RANGE_ >= tempClientX) {
       clientX = lineLeft[tempClientX];
     }
   }
@@ -375,8 +375,8 @@ thin.editor.AbstractDragger.prototype.limitX = function(x, cancelAbsorption) {
  * @param {number} y Y-coordinate to limit.
  * @return {number} The 'real' Y-coordinate after limits are applied.
  */
-thin.editor.AbstractDragger.prototype.limitY = function(y, cancelAbsorption) {
-  var clientY = thin.editor.AbstractDragger.superClass_.limitY.call(this, y);
+thin.core.AbstractDragger.prototype.limitY = function(y, cancelAbsorption) {
+  var clientY = thin.core.AbstractDragger.superClass_.limitY.call(this, y);
   var adsorptionY = this.adsorptionY_;
   
   if (!cancelAbsorption && !goog.array.isEmpty(adsorptionY)) {
@@ -409,7 +409,7 @@ thin.editor.AbstractDragger.prototype.limitY = function(y, cancelAbsorption) {
     }
     goog.array.sort(resultY);
     var tempclientY = resultY[0];
-    if (thin.editor.AbstractDragger.ABSORPTION_RANGE_ >= tempclientY) {
+    if (thin.core.AbstractDragger.ABSORPTION_RANGE_ >= tempclientY) {
       clientY = lineTop[tempclientY];
     }
   }
@@ -421,7 +421,7 @@ thin.editor.AbstractDragger.prototype.limitY = function(y, cancelAbsorption) {
  * Event handler that is used to start the drag
  * @param {goog.events.BrowserEvent} e Event object.
  */
-thin.editor.AbstractDragger.prototype.startDrag = function(e) {
+thin.core.AbstractDragger.prototype.startDrag = function(e) {
   var isMouseDown = e.type == goog.events.EventType.MOUSEDOWN;
 
   // Dragger.startDrag() can be called by AbstractDragDrop with a mousemove
@@ -467,7 +467,7 @@ thin.editor.AbstractDragger.prototype.startDrag = function(e) {
  * @return {goog.math.Coordinate} The newly calculated drag element position.
  * @private
  */
-thin.editor.AbstractDragger.prototype.calculateUnlimitedPosition_ = function() {
+thin.core.AbstractDragger.prototype.calculateUnlimitedPosition_ = function() {
 
   var bounds = this.getOffsetTarget().getBoundingClientRect();
 
@@ -487,7 +487,7 @@ thin.editor.AbstractDragger.prototype.calculateUnlimitedPosition_ = function() {
  * @return {goog.math.Coordinate} The newly calculated drag element position.
  * @private
  */
-thin.editor.AbstractDragger.prototype.calculatePosition_ = function(e) {
+thin.core.AbstractDragger.prototype.calculatePosition_ = function(e) {
   var coordinate = this.calculateUnlimitedPosition_();
   var deltaPos = this.getDeltaPosition();
 
@@ -502,7 +502,7 @@ thin.editor.AbstractDragger.prototype.calculatePosition_ = function(e) {
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.AbstractDragger.prototype.onScroll_ = goog.nullFunction;
+thin.core.AbstractDragger.prototype.onScroll_ = goog.nullFunction;
 
 
 /**
@@ -510,14 +510,14 @@ thin.editor.AbstractDragger.prototype.onScroll_ = goog.nullFunction;
  * @param {goog.events.BrowserEvent} e Event object.
  * @private
  */
-thin.editor.AbstractDragger.prototype.initializeDrag_ = function(e) {
+thin.core.AbstractDragger.prototype.initializeDrag_ = function(e) {
 
   var clientX = this.clientX_ = e.clientX;
   var clientY = this.clientY_ = e.clientY;
   
   this.initializeRate_();
 
-  var beforerv = this.dispatchEvent(new thin.editor.DragEvent(thin.editor.AbstractDragger.EventType.BEFORESTART, this, clientX, clientY,  /** @type {goog.events.BrowserEvent} */
+  var beforerv = this.dispatchEvent(new thin.core.DragEvent(thin.core.AbstractDragger.EventType.BEFORESTART, this, clientX, clientY,  /** @type {goog.events.BrowserEvent} */
   (e)));
   
   if (beforerv === false) {
@@ -535,7 +535,7 @@ thin.editor.AbstractDragger.prototype.initializeDrag_ = function(e) {
   this.initializeDelta_();
   this.calculateDelta_();
   
-  var rv = this.dispatchEvent(new thin.editor.DragEvent(goog.fx.Dragger.EventType.START, this, clientX, clientY,  /** @type {goog.events.BrowserEvent} */
+  var rv = this.dispatchEvent(new thin.core.DragEvent(goog.fx.Dragger.EventType.START, this, clientX, clientY,  /** @type {goog.events.BrowserEvent} */
   (e), startX, startY));
   if (rv !== false) {
     this.dragging_ = true;
@@ -548,7 +548,7 @@ thin.editor.AbstractDragger.prototype.initializeDrag_ = function(e) {
  * @param {goog.events.BrowserEvent} e Event object.
  * @param {boolean=} opt_dragCanceled Whether the drag has been canceled.
  */
-thin.editor.AbstractDragger.prototype.endDrag = function(e, opt_dragCanceled) {
+thin.core.AbstractDragger.prototype.endDrag = function(e, opt_dragCanceled) {
   this.eventHandler_.removeAll();
   
   if (goog.fx.Dragger.HAS_SET_CAPTURE_) {
@@ -567,7 +567,7 @@ thin.editor.AbstractDragger.prototype.endDrag = function(e, opt_dragCanceled) {
     var dragCancelled = opt_dragCanceled ||
                         e.type == goog.events.EventType.TOUCHCANCEL;
     
-    this.dispatchEvent(new thin.editor.DragEvent(
+    this.dispatchEvent(new thin.core.DragEvent(
         goog.fx.Dragger.EventType.END, this, clientX, clientY, e, pos.x, pos.y, 0, 0,
         dragCancelled));
     this.setLimits(new goog.math.Rect(NaN, NaN, NaN, NaN));
@@ -593,7 +593,7 @@ thin.editor.AbstractDragger.prototype.endDrag = function(e, opt_dragCanceled) {
  * @param {goog.events.BrowserEvent} e Event object.
  * @private
  */
-thin.editor.AbstractDragger.prototype.handleMove_ = function(e) {
+thin.core.AbstractDragger.prototype.handleMove_ = function(e) {
   if (this.enabled_) {
     
     var dx = e.clientX - this.clientX;
@@ -623,7 +623,7 @@ thin.editor.AbstractDragger.prototype.handleMove_ = function(e) {
     var y = pos.y;
     
     if (this.dragging_) {
-      var rv = this.dispatchEvent(new thin.editor.DragEvent(goog.fx.Dragger.EventType.BEFOREDRAG, this, clientX, clientY, e, x, y));
+      var rv = this.dispatchEvent(new thin.core.DragEvent(goog.fx.Dragger.EventType.BEFOREDRAG, this, clientX, clientY, e, x, y));
       if (rv !== false) {
         this.doDrag(e, x, y, false);
         e.preventDefault();
@@ -642,7 +642,7 @@ thin.editor.AbstractDragger.prototype.handleMove_ = function(e) {
  *     the associated scroll target.
  * @protected
  */
-thin.editor.AbstractDragger.prototype.doDrag = function(e, x, y, dragFromScroll) {
+thin.core.AbstractDragger.prototype.doDrag = function(e, x, y, dragFromScroll) {
   if (e.shiftKey) {
     var coordinate = this.onShiftKeyPress_(e, x, y);
     x = coordinate.x;
@@ -650,20 +650,20 @@ thin.editor.AbstractDragger.prototype.doDrag = function(e, x, y, dragFromScroll)
   }
   this.defaultAction(e, x, y);
   
-  this.dispatchEvent(new thin.editor.DragEvent(goog.fx.Dragger.EventType.DRAG, this, e.clientX, e.clientY, e, x, y));
+  this.dispatchEvent(new thin.core.DragEvent(goog.fx.Dragger.EventType.DRAG, this, e.clientX, e.clientY, e, x, y));
 };
 
 
 /**
  * @private
  */
-thin.editor.AbstractDragger.prototype.onShiftKeyPress_ = goog.abstractMethod;
+thin.core.AbstractDragger.prototype.onShiftKeyPress_ = goog.abstractMethod;
 
 
 /**
  * @private
  */
-thin.editor.AbstractDragger.prototype.initializeRate_ = function() {
+thin.core.AbstractDragger.prototype.initializeRate_ = function() {
   this.setRate(this.getLayout().getPixelScale());
 };
 
@@ -671,13 +671,13 @@ thin.editor.AbstractDragger.prototype.initializeRate_ = function() {
 /**
  * @private
  */
-thin.editor.AbstractDragger.prototype.initializeDelta_ = goog.nullFunction;
+thin.core.AbstractDragger.prototype.initializeDelta_ = goog.nullFunction;
 
 
 /**
  * @private
  */
-thin.editor.AbstractDragger.prototype.calculateDelta_ = function() {
+thin.core.AbstractDragger.prototype.calculateDelta_ = function() {
   var delta = this.deltaRect_;
   var left = delta.left;
   var top = delta.top;
@@ -692,7 +692,7 @@ thin.editor.AbstractDragger.prototype.calculateDelta_ = function() {
  * @param {number} y
  * @private
  */
-thin.editor.AbstractDragger.prototype.initializeStartPosition_ = function(x, y) {
+thin.core.AbstractDragger.prototype.initializeStartPosition_ = function(x, y) {
   this.startDragX_ = x;
   this.startDragY_ = y;
 };
@@ -701,7 +701,7 @@ thin.editor.AbstractDragger.prototype.initializeStartPosition_ = function(x, y) 
 /**
  * @private
  */
-thin.editor.AbstractDragger.prototype.initializeLimits_ = goog.abstractMethod;
+thin.core.AbstractDragger.prototype.initializeLimits_ = goog.abstractMethod;
 
 
 /**
@@ -713,12 +713,12 @@ thin.editor.AbstractDragger.prototype.initializeLimits_ = goog.abstractMethod;
  * @param {number} x X-coordinate for target element.
  * @param {number} y Y-coordinate for target element.
  */
-thin.editor.AbstractDragger.prototype.defaultAction = function(e, x, y) {};
+thin.core.AbstractDragger.prototype.defaultAction = function(e, x, y) {};
 
 
 /** @inheritDoc */
-thin.editor.AbstractDragger.prototype.disposeInternal = function() {
-  thin.editor.AbstractDragger.superClass_.disposeInternal.call(this);
+thin.core.AbstractDragger.prototype.disposeInternal = function() {
+  thin.core.AbstractDragger.superClass_.disposeInternal.call(this);
 
   delete this.layout_;
   delete this.scrollTarget_;
@@ -735,7 +735,7 @@ thin.editor.AbstractDragger.prototype.disposeInternal = function() {
 
 /**
  * @param {string} type
- * @param {thin.editor.AbstractDragger} dragobj
+ * @param {thin.core.AbstractDragger} dragobj
  * @param {number} clientX
  * @param {number} clientY
  * @param {goog.events.BrowserEvent} browserEvent
@@ -747,7 +747,7 @@ thin.editor.AbstractDragger.prototype.disposeInternal = function() {
  * @constructor 
  * @extends {goog.fx.DragEvent}
  */
-thin.editor.DragEvent = function(type, dragobj, clientX, clientY, browserEvent,
+thin.core.DragEvent = function(type, dragobj, clientX, clientY, browserEvent,
                              opt_actX, opt_actY, opt_oldactX, opt_oldactY, opt_dragCanceled) {
   goog.fx.DragEvent.call(this, type, dragobj, clientX, clientY, browserEvent,
                              opt_actX, opt_actY, opt_dragCanceled);
@@ -784,4 +784,4 @@ thin.editor.DragEvent = function(type, dragobj, clientX, clientY, browserEvent,
    */
   this.oldY = opt_oldactY;
 };
-goog.inherits(thin.editor.DragEvent, goog.fx.DragEvent);
+goog.inherits(thin.core.DragEvent, goog.fx.DragEvent);

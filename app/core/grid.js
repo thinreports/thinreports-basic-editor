@@ -13,78 +13,78 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Grid');
+goog.provide('thin.core.Grid');
 
 goog.require('goog.graphics.Element');
-goog.require('thin.editor.ModuleElement');
+goog.require('thin.core.ModuleElement');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
  * @extends {goog.graphics.Element}
  */
-thin.editor.Grid = function(layout) {
+thin.core.Grid = function(layout) {
   goog.base(this, this.createElement_(layout), layout);
 };
-goog.inherits(thin.editor.Grid, goog.graphics.Element);
-goog.mixin(thin.editor.Grid.prototype, thin.editor.ModuleElement.prototype);
+goog.inherits(thin.core.Grid, goog.graphics.Element);
+goog.mixin(thin.core.Grid.prototype, thin.core.ModuleElement.prototype);
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.Grid.DEF_KEY_ = 'grid';
+thin.core.Grid.DEF_KEY_ = 'grid';
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.editor.Grid.BG_FILL_ = new goog.graphics.SolidFill('#FFFFFF');
+thin.core.Grid.BG_FILL_ = new goog.graphics.SolidFill('#FFFFFF');
 
 
 /**
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.editor.Grid.BG_STROKE_ = new goog.graphics.Stroke(0.5, '#666666');
+thin.core.Grid.BG_STROKE_ = new goog.graphics.Stroke(0.5, '#666666');
 
 
 /**
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.editor.Grid.LINE_STROKE_ = new goog.graphics.Stroke(0.3, '#666666');
+thin.core.Grid.LINE_STROKE_ = new goog.graphics.Stroke(0.3, '#666666');
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.Grid.BG_SIZE_ = 50;
+thin.core.Grid.BG_SIZE_ = 50;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.Grid.LINE_INTERVAL_ = 10;
+thin.core.Grid.LINE_INTERVAL_ = 10;
 
 
 /**
  * @return {string}
  */
-thin.editor.Grid.prototype.getDefKey = function() {
-  return thin.editor.Grid.DEF_KEY_;
+thin.core.Grid.prototype.getDefKey = function() {
+  return thin.core.Grid.DEF_KEY_;
 };
 
 
 /**
  * @return {string}
  */
-thin.editor.Grid.prototype.getDefId = function() {
+thin.core.Grid.prototype.getDefId = function() {
   return this.getLayout().getElementAttribute(this.element_, 'id');
 };
 
@@ -92,23 +92,23 @@ thin.editor.Grid.prototype.getDefId = function() {
 /**
  * @return {goog.graphics.SolidFill}
  */
-thin.editor.Grid.prototype.getPatternFill = function() {
+thin.core.Grid.prototype.getPatternFill = function() {
   return new goog.graphics.SolidFill('url(#' + this.getDefId() + ')');
 };
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @return {Element}
  * @private
  */
-thin.editor.Grid.prototype.createElement_ = function(layout) {
+thin.core.Grid.prototype.createElement_ = function(layout) {
   var pattern = this.createPattern_(layout);
   var bg = this.createRect_(layout);
   pattern.appendChild(bg.getElement());
 
-  var bg_size = thin.editor.Grid.BG_SIZE_;
-  var interval = thin.editor.Grid.LINE_INTERVAL_;
+  var bg_size = thin.core.Grid.BG_SIZE_;
+  var interval = thin.core.Grid.LINE_INTERVAL_;
   for (var pos = interval; pos < bg_size; pos += interval) {
     var line_x = this.createLine_(layout, {
       'x1': 0,
@@ -132,14 +132,14 @@ thin.editor.Grid.prototype.createElement_ = function(layout) {
 
 
 /**
- * @param {thin.editor.Layout} layout
- * @return {thin.editor.Rect}
+ * @param {thin.core.Layout} layout
+ * @return {thin.core.Rect}
  * @private
  */
-thin.editor.Grid.prototype.createRect_ = function(layout) {
-  var rect = new thin.editor.Rect(layout.createSvgElement('rect'),
-    layout, thin.editor.Grid.BG_STROKE_, thin.editor.Grid.BG_FILL_);
-  var bg_size = thin.editor.Grid.BG_SIZE_;
+thin.core.Grid.prototype.createRect_ = function(layout) {
+  var rect = new thin.core.Rect(layout.createSvgElement('rect'),
+    layout, thin.core.Grid.BG_STROKE_, thin.core.Grid.BG_FILL_);
+  var bg_size = thin.core.Grid.BG_SIZE_;
   rect.setBounds(new goog.math.Rect(0, 0, bg_size, bg_size));
 
   return rect;
@@ -147,27 +147,27 @@ thin.editor.Grid.prototype.createRect_ = function(layout) {
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {Object} attrs
- * @return {thin.editor.Line}
+ * @return {thin.core.Line}
  * @private
  */
-thin.editor.Grid.prototype.createLine_ = function(layout, attrs) {
-  var line = new thin.editor.Line(layout.createSvgElement('line', attrs),
-    layout, thin.editor.Grid.LINE_STROKE_);
-  line.setStrokeDashFromType(thin.editor.ModuleElement.StrokeType.DOTTED);
+thin.core.Grid.prototype.createLine_ = function(layout, attrs) {
+  var line = new thin.core.Line(layout.createSvgElement('line', attrs),
+    layout, thin.core.Grid.LINE_STROKE_);
+  line.setStrokeDashFromType(thin.core.ModuleElement.StrokeType.DOTTED);
 
   return line;
 };
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @return {Element}
  * @private
  */
-thin.editor.Grid.prototype.createPattern_ = function(layout) {
-  var bg_size = thin.editor.Grid.BG_SIZE_;
+thin.core.Grid.prototype.createPattern_ = function(layout) {
+  var bg_size = thin.core.Grid.BG_SIZE_;
   return layout.createSvgElement('pattern', {
     'patternUnits': 'userSpaceOnUse',
     'x': 0,

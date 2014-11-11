@@ -13,20 +13,20 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.GuideBody');
+goog.provide('thin.core.GuideBody');
 
-goog.require('thin.editor.Rect');
+goog.require('thin.core.Rect');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.editor.Rect}
+ * @extends {thin.core.Rect}
  */
-thin.editor.GuideBody = function(element, layout, stroke, fill) {
-  thin.editor.Rect.call(this, element, layout, stroke, fill);
+thin.core.GuideBody = function(element, layout, stroke, fill) {
+  thin.core.Rect.call(this, element, layout, stroke, fill);
 };
-goog.inherits(thin.editor.GuideBody, thin.editor.Rect);
+goog.inherits(thin.core.GuideBody, thin.core.Rect);

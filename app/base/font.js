@@ -13,17 +13,17 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.core.Font');
+goog.provide('thin.Font');
 
 goog.require('goog.array');
-goog.require('thin.core.platform.Font');
+goog.require('thin.platform.Font');
 
 
 /**
  * @type {Object.<Object>}
  * @private
  */
-thin.core.Font.infoRegistry_ = {
+thin.Font.infoRegistry_ = {
   ascent: {},
   height: {}
 };
@@ -34,7 +34,7 @@ thin.core.Font.infoRegistry_ = {
  * @return {string}
  * @private
  */
-thin.core.Font.generateRegistryKey_ = function(var_args) {
+thin.Font.generateRegistryKey_ = function(var_args) {
   return goog.array.clone(arguments).join(':');
 };
 
@@ -45,12 +45,12 @@ thin.core.Font.generateRegistryKey_ = function(var_args) {
  * @param {boolean} isBold
  * @return {number}
  */
-thin.core.Font.getAscent = function(family, fontSize, isBold) {
-  var registryKey = thin.core.Font.generateRegistryKey_(family, fontSize, isBold);
-  var ascent = thin.core.Font.infoRegistry_.ascent[registryKey];
+thin.Font.getAscent = function(family, fontSize, isBold) {
+  var registryKey = thin.Font.generateRegistryKey_(family, fontSize, isBold);
+  var ascent = thin.Font.infoRegistry_.ascent[registryKey];
   if (!goog.isDef(ascent)) {
-    ascent = thin.core.platform.Font.getAscent(family, fontSize, isBold);
-    thin.core.Font.infoRegistry_.ascent[registryKey] = ascent;
+    ascent = thin.platform.Font.getAscent(family, fontSize, isBold);
+    thin.Font.infoRegistry_.ascent[registryKey] = ascent;
   }
   return ascent;
 };
@@ -61,12 +61,12 @@ thin.core.Font.getAscent = function(family, fontSize, isBold) {
  * @param {number} fontSize
  * @return {number}
  */
-thin.core.Font.getHeight = function(family, fontSize) {
-  var registryKey = thin.core.Font.generateRegistryKey_(family, fontSize);
-  var height = thin.core.Font.infoRegistry_.height[registryKey];
+thin.Font.getHeight = function(family, fontSize) {
+  var registryKey = thin.Font.generateRegistryKey_(family, fontSize);
+  var height = thin.Font.infoRegistry_.height[registryKey];
   if (!goog.isDef(height)) {
-    height = thin.core.platform.Font.getHeight(family, fontSize);
-    thin.core.Font.infoRegistry_.height[registryKey] = height;
+    height = thin.platform.Font.getHeight(family, fontSize);
+    thin.Font.infoRegistry_.height[registryKey] = height;
   }
   return height;
 };
@@ -76,7 +76,7 @@ thin.core.Font.getHeight = function(family, fontSize) {
  * @type {Array.<Array>}
  * @private
  */
-thin.core.Font.BUILTIN_FONTS_ = [
+thin.Font.BUILTIN_FONTS_ = [
   ['Helvetica', 'Helvetica'],
   ['Courier New', 'Courier New'],
   ['Times New Roman', 'Times New Roman'],
@@ -90,7 +90,7 @@ thin.core.Font.BUILTIN_FONTS_ = [
 /**
  * @return {string}
  */
-thin.core.Font.getDefaultFont = function() {
+thin.Font.getDefaultFont = function() {
   return 'Helvetica';
 };
 
@@ -98,8 +98,8 @@ thin.core.Font.getDefaultFont = function() {
 /**
  * @return {Array.<Array>}
  */
-thin.core.Font.getBuiltinFonts = function() {
-  return thin.core.Font.BUILTIN_FONTS_;
+thin.Font.getBuiltinFonts = function() {
+  return thin.Font.BUILTIN_FONTS_;
 };
 
 
@@ -107,8 +107,8 @@ thin.core.Font.getBuiltinFonts = function() {
  * @param {string} font
  * @return {boolean}
  */
-thin.core.Font.isBuiltinFont = function(font) {
-  return goog.array.findIndex(thin.core.Font.BUILTIN_FONTS_, function(f) {
+thin.Font.isBuiltinFont = function(font) {
+  return goog.array.findIndex(thin.Font.BUILTIN_FONTS_, function(f) {
     return f[1] == font;
   }) != -1;
 };

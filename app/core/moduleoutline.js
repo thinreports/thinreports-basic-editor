@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ModuleOutline');
+goog.provide('thin.core.ModuleOutline');
 
 goog.require('goog.array');
 goog.require('goog.math.Rect');
@@ -24,34 +24,34 @@ goog.require('goog.events.EventType');
 /**
  * @constructor
  */
-thin.editor.ModuleOutline = function() {};
+thin.core.ModuleOutline = function() {};
 
 
 /**
  * @type {goog.graphics.Element}
  * @private
  */
-thin.editor.ModuleOutline.prototype.targetShape_ ;
+thin.core.ModuleOutline.prototype.targetShape_ ;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ModuleOutline.prototype.enable_ = false;
+thin.core.ModuleOutline.prototype.enable_ = false;
 
 
 /**
- * @type {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper}
+ * @type {thin.core.OutlineHelper|thin.core.MultiOutlineHelper}
  * @private
  */
-thin.editor.ModuleOutline.prototype.outlineHelper_;
+thin.core.ModuleOutline.prototype.outlineHelper_;
 
 
-thin.editor.ModuleOutline.prototype.toShape = goog.abstractMethod; 
+thin.core.ModuleOutline.prototype.toShape = goog.abstractMethod; 
 
 
-thin.editor.ModuleOutline.prototype.getInitShapeProperties = goog.abstractMethod;
+thin.core.ModuleOutline.prototype.getInitShapeProperties = goog.abstractMethod;
 
 
 /**
@@ -61,7 +61,7 @@ thin.editor.ModuleOutline.prototype.getInitShapeProperties = goog.abstractMethod
  * @param {number} clientPosX
  * @param {number} clientPosY
  */
-thin.editor.ModuleOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
+thin.core.ModuleOutline.prototype.setBoundsByCoordinate = function(startPosX, startPosY, clientPosX, clientPosY) {
   this.setBounds(new goog.math.Rect(
     Math.min(startPosX, clientPosX), Math.min(startPosY, clientPosY),
     thin.numberWithPrecision(Math.abs(startPosX - clientPosX)),
@@ -75,7 +75,7 @@ thin.editor.ModuleOutline.prototype.setBoundsByCoordinate = function(startPosX, 
  * @param {goog.math.Coordinate} transLate
  * @param {boolean} isVertex
  */
-thin.editor.ModuleOutline.prototype.setBoundsByScale = function(scale, transLate, isVertex) {
+thin.core.ModuleOutline.prototype.setBoundsByScale = function(scale, transLate, isVertex) {
   var scaleX = scale.x;
   var scaleY = scale.y;
   var deltaX = this.getLeft() - transLate.x;
@@ -93,7 +93,7 @@ thin.editor.ModuleOutline.prototype.setBoundsByScale = function(scale, transLate
  * @this {goog.graphics.Element}
  * @param {goog.graphics.Element} shape
  */
-thin.editor.ModuleOutline.prototype.setTargetShape = function(shape) {
+thin.core.ModuleOutline.prototype.setTargetShape = function(shape) {
   this.targetShape_ = shape;
 };
 
@@ -102,16 +102,16 @@ thin.editor.ModuleOutline.prototype.setTargetShape = function(shape) {
  * @this {goog.graphics.Element}
  * @return {goog.graphics.Element}
  */
-thin.editor.ModuleOutline.prototype.getTargetShape = function() {
+thin.core.ModuleOutline.prototype.getTargetShape = function() {
   return this.targetShape_;
 };
 
 
 /**
  * @this {goog.graphics.Element}
- * @param {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper} helper
+ * @param {thin.core.OutlineHelper|thin.core.MultiOutlineHelper} helper
  */
-thin.editor.ModuleOutline.prototype.setOutlineHelper = function(helper) {
+thin.core.ModuleOutline.prototype.setOutlineHelper = function(helper) {
   this.outlineHelper_ = helper;
   this.forMultiple_ = helper.isMultiple();
 };
@@ -119,9 +119,9 @@ thin.editor.ModuleOutline.prototype.setOutlineHelper = function(helper) {
 
 /**
  * @this {goog.graphics.Element}
- * @return {thin.editor.OutlineHelper|thin.editor.MultiOutlineHelper}
+ * @return {thin.core.OutlineHelper|thin.core.MultiOutlineHelper}
  */
-thin.editor.ModuleOutline.prototype.getOutlineHelper = function() {
+thin.core.ModuleOutline.prototype.getOutlineHelper = function() {
   return this.outlineHelper_;
 };
 
@@ -130,7 +130,7 @@ thin.editor.ModuleOutline.prototype.getOutlineHelper = function() {
  * @this {goog.graphics.Element}
  * @return {boolean}
  */
-thin.editor.ModuleOutline.prototype.isEnable = function() {
+thin.core.ModuleOutline.prototype.isEnable = function() {
   return this.enable_;
 };
 
@@ -138,7 +138,7 @@ thin.editor.ModuleOutline.prototype.isEnable = function() {
 /**
  * @this {goog.graphics.Element}
  */
-thin.editor.ModuleOutline.prototype.disable = function() {
+thin.core.ModuleOutline.prototype.disable = function() {
   this.getOutlineHelper().disable(this);
   this.enable_ = false;
 };
@@ -149,7 +149,7 @@ thin.editor.ModuleOutline.prototype.disable = function() {
  * @param {boolean=} opt_fromDraw
  * @private
  */
-thin.editor.ModuleOutline.prototype.enableForCommon_ = function(opt_fromDraw) {
+thin.core.ModuleOutline.prototype.enableForCommon_ = function(opt_fromDraw) {
   if (!opt_fromDraw) {
     this.setBounds(this.getTargetShape().getBounds());
   }
@@ -162,7 +162,7 @@ thin.editor.ModuleOutline.prototype.enableForCommon_ = function(opt_fromDraw) {
  * @this {goog.graphics.Element}
  * @param {boolean=} opt_fromDraw
  */
-thin.editor.ModuleOutline.prototype.enable = function(opt_fromDraw) {
+thin.core.ModuleOutline.prototype.enable = function(opt_fromDraw) {
   this.getLayout().getHelpers().disableAll();
   this.enableForCommon_(opt_fromDraw);
 };
@@ -172,7 +172,7 @@ thin.editor.ModuleOutline.prototype.enable = function(opt_fromDraw) {
  * @this {goog.graphics.Element}
  * @return {boolean}
  */
-thin.editor.ModuleOutline.prototype.isForMultiple = function() {
+thin.core.ModuleOutline.prototype.isForMultiple = function() {
   return this.getOutlineHelper().isMultiple();
 };
 
@@ -181,7 +181,7 @@ thin.editor.ModuleOutline.prototype.isForMultiple = function() {
  * @this {goog.graphics.Element}
  * @private
  */
-thin.editor.ModuleOutline.prototype.disposeInternalForOutline = function() {
+thin.core.ModuleOutline.prototype.disposeInternalForOutline = function() {
   delete this.targetShape_;
   delete this.outlineHelper_;
 };
@@ -191,7 +191,7 @@ thin.editor.ModuleOutline.prototype.disposeInternalForOutline = function() {
  * @this {goog.graphics.Element}
  * @param {number} width
  */
-thin.editor.ModuleOutline.prototype.setStrokeWidth = function(width) {
+thin.core.ModuleOutline.prototype.setStrokeWidth = function(width) {
   this.setStrokeWidth_(width);
 };
 
@@ -199,7 +199,7 @@ thin.editor.ModuleOutline.prototype.setStrokeWidth = function(width) {
 /**
  * @this {goog.graphics.Element}
  */
-thin.editor.ModuleOutline.prototype.setupMouseDownHandler = function() {
+thin.core.ModuleOutline.prototype.setupMouseDownHandler = function() {
   var scope = this;
   var layout = this.getLayout();
   var helpers = layout.getHelpers();

@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Layout');
+goog.provide('thin.core.Layout');
 
 goog.require('goog.dom');
 goog.require('goog.array');
@@ -24,32 +24,32 @@ goog.require('goog.math.Coordinate');
 goog.require('goog.graphics.SvgGraphics');
 goog.require('goog.graphics.SolidFill');
 goog.require('goog.graphics.SvgGroupElement');
-goog.require('thin.editor.TextShape');
-goog.require('thin.editor.TblockShape');
-goog.require('thin.editor.PageNumberShape');
-goog.require('thin.editor.ListShape');
-goog.require('thin.editor.RectShape');
-goog.require('thin.editor.LineShape');
-goog.require('thin.editor.EllipseShape');
-goog.require('thin.editor.ImageShape');
-goog.require('thin.editor.ImageblockShape');
-goog.require('thin.editor.ClipPath');
-goog.require('thin.editor.Helpers');
-goog.require('thin.editor.StateManager');
-goog.require('thin.editor.ShapeIdManager');
-goog.require('thin.editor.ShapeIdManager.DefaultPrefix');
-goog.require('thin.editor.LayoutStructure');
-goog.require('thin.editor.ClipboardShapeManager');
+goog.require('thin.core.TextShape');
+goog.require('thin.core.TblockShape');
+goog.require('thin.core.PageNumberShape');
+goog.require('thin.core.ListShape');
+goog.require('thin.core.RectShape');
+goog.require('thin.core.LineShape');
+goog.require('thin.core.EllipseShape');
+goog.require('thin.core.ImageShape');
+goog.require('thin.core.ImageblockShape');
+goog.require('thin.core.ClipPath');
+goog.require('thin.core.Helpers');
+goog.require('thin.core.StateManager');
+goog.require('thin.core.ShapeIdManager');
+goog.require('thin.core.ShapeIdManager.DefaultPrefix');
+goog.require('thin.core.LayoutStructure');
+goog.require('thin.core.ClipboardShapeManager');
 
 
 /**
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @constructor
  * @extends {goog.graphics.SvgGraphics}
  */
-thin.editor.Layout = function(workspace) {
+thin.core.Layout = function(workspace) {
   /**
-   * @type {thin.editor.Workspace}
+   * @type {thin.core.Workspace}
    * @private
    */
   this.workspace_ = workspace;
@@ -57,33 +57,33 @@ thin.editor.Layout = function(workspace) {
   goog.graphics.SvgGraphics.call(this, size.width, size.height);
 
   /**
-   * @type {thin.editor.StateManager}
+   * @type {thin.core.StateManager}
    * @private
    */
-  this.manager_ = new thin.editor.StateManager(this);
+  this.manager_ = new thin.core.StateManager(this);
   
-  var helpers = new thin.editor.Helpers(this);
+  var helpers = new thin.core.Helpers(this);
   
   /**
-   * @type {thin.editor.Helpers}
+   * @type {thin.core.Helpers}
    * @private
    */
   this.helpers_ = helpers;
   helpers.setup();
 };
-goog.inherits(thin.editor.Layout, goog.graphics.SvgGraphics);
+goog.inherits(thin.core.Layout, goog.graphics.SvgGraphics);
 
 
 /**
  * @type {string}
  */
-thin.editor.Layout.CANVAS_CLASS_ID = 'canvas';
+thin.core.Layout.CANVAS_CLASS_ID = 'canvas';
 
 
 /**
  * @type {string}
  */
-thin.editor.Layout.SVG_NS_XLINK = 'http://www.w3.org/1999/xlink';
+thin.core.Layout.SVG_NS_XLINK = 'http://www.w3.org/1999/xlink';
 
 
 /**
@@ -91,14 +91,14 @@ thin.editor.Layout.SVG_NS_XLINK = 'http://www.w3.org/1999/xlink';
  * @type {goog.graphics.SvgGroupElement?}
  * @protected
  */
-thin.editor.Layout.prototype.canvasElement = null;
+thin.core.Layout.prototype.canvasElement = null;
 
 
 /**
  * @param {Element} element
  */
-thin.editor.Layout.prototype.drawListShapeFromElement = function(element) {
-  var shape = thin.editor.ListShape.createFromElement(element, this);
+thin.core.Layout.prototype.drawListShapeFromElement = function(element) {
+  var shape = thin.core.ListShape.createFromElement(element, this);
   this.setOutlineForSingle(shape);
   this.manager_.addShape(shape);
   this.appendChild(shape);
@@ -107,9 +107,9 @@ thin.editor.Layout.prototype.drawListShapeFromElement = function(element) {
 
 /**
  * @param {Element} element
- * @param {thin.editor.ListSectionShape=} opt_sectionShape
+ * @param {thin.core.ListSectionShape=} opt_sectionShape
  */
-thin.editor.Layout.prototype.drawBasicShapeFromElement = function(element, opt_sectionShape) {
+thin.core.Layout.prototype.drawBasicShapeFromElement = function(element, opt_sectionShape) {
   element = /** @type {Element} */(goog.dom.getDocument().importNode(element, true));
   var opt_shapeIdManager;
   var opt_group;
@@ -124,36 +124,36 @@ thin.editor.Layout.prototype.drawBasicShapeFromElement = function(element, opt_s
   }
   
   switch (this.getElementAttribute(element, 'class')) {
-    case thin.editor.RectShape.CLASSID:
-      shape = thin.editor.RectShape.createFromElement(element, this, opt_shapeIdManager);
+    case thin.core.RectShape.CLASSID:
+      shape = thin.core.RectShape.createFromElement(element, this, opt_shapeIdManager);
       break;
       
-    case thin.editor.EllipseShape.CLASSID:
-      shape = thin.editor.EllipseShape.createFromElement(element, this, opt_shapeIdManager);
+    case thin.core.EllipseShape.CLASSID:
+      shape = thin.core.EllipseShape.createFromElement(element, this, opt_shapeIdManager);
       break;
       
-    case thin.editor.LineShape.CLASSID:
-      shape = thin.editor.LineShape.createFromElement(element, this, opt_shapeIdManager);
+    case thin.core.LineShape.CLASSID:
+      shape = thin.core.LineShape.createFromElement(element, this, opt_shapeIdManager);
       break;
       
-    case thin.editor.TblockShape.CLASSID:
-      shape = thin.editor.TblockShape.createFromElement(element, this, opt_shapeIdManager);
+    case thin.core.TblockShape.CLASSID:
+      shape = thin.core.TblockShape.createFromElement(element, this, opt_shapeIdManager);
       break;
 
-    case thin.editor.PageNumberShape.CLASSID:
-      shape = thin.editor.PageNumberShape.createFromElement(element, this, opt_shapeIdManager);
+    case thin.core.PageNumberShape.CLASSID:
+      shape = thin.core.PageNumberShape.createFromElement(element, this, opt_shapeIdManager);
       break;
 
-    case thin.editor.TextShape.CLASSID:
-      shape = thin.editor.TextShape.createFromElement(element, this, opt_shapeIdManager);
+    case thin.core.TextShape.CLASSID:
+      shape = thin.core.TextShape.createFromElement(element, this, opt_shapeIdManager);
       break;
     
-    case thin.editor.ImageShape.CLASSID:
-      shape = thin.editor.ImageShape.createFromElement(element, this, opt_shapeIdManager);
+    case thin.core.ImageShape.CLASSID:
+      shape = thin.core.ImageShape.createFromElement(element, this, opt_shapeIdManager);
       break;
     
-    case thin.editor.ImageblockShape.CLASSID:
-      shape = thin.editor.ImageblockShape.createFromElement(element, this, opt_shapeIdManager);
+    case thin.core.ImageblockShape.CLASSID:
+      shape = thin.core.ImageblockShape.createFromElement(element, this, opt_shapeIdManager);
       break;
     
     default:
@@ -169,11 +169,11 @@ thin.editor.Layout.prototype.drawBasicShapeFromElement = function(element, opt_s
 
 /**
  * @param {NodeList} elements
- * @param {thin.editor.ListSectionShape=} opt_sectionShape
+ * @param {thin.core.ListSectionShape=} opt_sectionShape
  */
-thin.editor.Layout.prototype.drawShapeFromElements = function(elements, opt_sectionShape) {
+thin.core.Layout.prototype.drawShapeFromElements = function(elements, opt_sectionShape) {
   var layout = this;
-  var listClassId = thin.editor.ListShape.CLASSID;
+  var listClassId = thin.core.ListShape.CLASSID;
 
   goog.array.forEach(elements, function(element) {
     if (layout.getElementAttribute(element, 'class') == listClassId) {
@@ -186,41 +186,41 @@ thin.editor.Layout.prototype.drawShapeFromElements = function(elements, opt_sect
 
 
 /**
- * @return {thin.editor.Workspace}
+ * @return {thin.core.Workspace}
  */
-thin.editor.Layout.prototype.getWorkspace = function() {
+thin.core.Layout.prototype.getWorkspace = function() {
   return this.workspace_;
 };
 
 
 /**
- * @return {thin.editor.StateManager}
+ * @return {thin.core.StateManager}
  */
-thin.editor.Layout.prototype.getManager = function() {
+thin.core.Layout.prototype.getManager = function() {
   return this.manager_;
 };
 
 
 /**
- * @return {thin.editor.Helpers}
+ * @return {thin.core.Helpers}
  */
-thin.editor.Layout.prototype.getHelpers = function() {
+thin.core.Layout.prototype.getHelpers = function() {
   return this.helpers_;
 };
 
 
 /**
- * @return {thin.editor.ListHelper}
+ * @return {thin.core.ListHelper}
  */
-thin.editor.Layout.prototype.getListHelper = function() {
+thin.core.Layout.prototype.getListHelper = function() {
   return this.getHelpers().getListHelper();
 };
 
 
 /**
- * @return {thin.editor.ActiveShapeManager}
+ * @return {thin.core.ActiveShapeManager}
  */
-thin.editor.Layout.prototype.getActiveShapeManager = function() {
+thin.core.Layout.prototype.getActiveShapeManager = function() {
   var listHelper = this.getListHelper();
 
   if (listHelper.isActive()) {
@@ -235,7 +235,7 @@ thin.editor.Layout.prototype.getActiveShapeManager = function() {
  * @param {goog.graphics.Element} shape
  * @param {boolean} setting
  */
-thin.editor.Layout.prototype.setVisibled = function(shape, setting) {
+thin.core.Layout.prototype.setVisibled = function(shape, setting) {
   if (setting) {
     shape.getElement().removeAttribute('display');
   } else {
@@ -251,7 +251,7 @@ thin.editor.Layout.prototype.setVisibled = function(shape, setting) {
  * @param {Element} element
  * @param {Object} attributes
  */
-thin.editor.Layout.prototype.setElementAttributesNS = function(ns, element,
+thin.core.Layout.prototype.setElementAttributesNS = function(ns, element,
     attributes) {
   for (var key in attributes) {
     element.setAttributeNS(ns, key, attributes[key]);
@@ -264,16 +264,16 @@ thin.editor.Layout.prototype.setElementAttributesNS = function(ns, element,
  * @param {string} attrName
  * @return {string}
  */
-thin.editor.Layout.prototype.getElementAttribute = function(element, attrName) {
+thin.core.Layout.prototype.getElementAttribute = function(element, attrName) {
   return element.getAttribute(attrName);
 };
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Cursor} cursor
+ * @param {thin.core.Cursor} cursor
  */
-thin.editor.Layout.prototype.setElementCursor = function(element, cursor) {
+thin.core.Layout.prototype.setElementCursor = function(element, cursor) {
   this.setElementAttributes(element, {
     'cursor': cursor.getType()
   });
@@ -283,23 +283,23 @@ thin.editor.Layout.prototype.setElementCursor = function(element, cursor) {
 /**
  * @param {Element} element
  */
-thin.editor.Layout.prototype.removeElementCursor = function(element) {
+thin.core.Layout.prototype.removeElementCursor = function(element) {
   this.setElementAttributes(element, {'cursor': null});
 };
 
 
 /** @inheritDoc */
-thin.editor.Layout.prototype.createDom = function() {
-  thin.editor.Layout.superClass_.createDom.call(this);
+thin.core.Layout.prototype.createDom = function() {
+  thin.core.Layout.superClass_.createDom.call(this);
   
   this.setElementAttributes(this.element_, {
     'xmlns': goog.graphics.SvgGraphics.SVG_NS_,
-    'xmlns:xlink': thin.editor.Layout.SVG_NS_XLINK
+    'xmlns:xlink': thin.core.Layout.SVG_NS_XLINK
   });
   this.element_.removeAttribute('overflow');
   
   this.setElementAttributes(this.canvasElement.getElement(), {
-    'class': thin.editor.Layout.CANVAS_CLASS_ID
+    'class': thin.core.Layout.CANVAS_CLASS_ID
   });
 
   this.setCoordOrigin(0, 0);
@@ -312,7 +312,7 @@ thin.editor.Layout.prototype.createDom = function() {
 /**
  * @return {Element}
  */
-thin.editor.Layout.prototype.getOffsetTarget = function() {
+thin.core.Layout.prototype.getOffsetTarget = function() {
   var user = goog.userAgent;
   if (user.GECKO) {
     return this.helpers_.getSurface().getElement();
@@ -327,7 +327,7 @@ thin.editor.Layout.prototype.getOffsetTarget = function() {
 /**
  * @return {thin.layout.Format}
  */
-thin.editor.Layout.prototype.getFormat = function() {
+thin.core.Layout.prototype.getFormat = function() {
   return this.workspace_.format;
 };
 
@@ -335,7 +335,7 @@ thin.editor.Layout.prototype.getFormat = function() {
 /**
  * @return {thin.layout.FormatPage}
  */
-thin.editor.Layout.prototype.getFormatPage = function() {
+thin.core.Layout.prototype.getFormatPage = function() {
   return this.workspace_.format.page;
 };
 
@@ -344,7 +344,7 @@ thin.editor.Layout.prototype.getFormatPage = function() {
  * @param {goog.graphics.Element} element
  * @param {goog.graphics.SvgGroupElement=} opt_group
  */
-thin.editor.Layout.prototype.appendChild = function(element, opt_group) {
+thin.core.Layout.prototype.appendChild = function(element, opt_group) {
   var parent = opt_group || this.canvasElement;
   goog.object.set(element, 'parentGroup', parent);
   this.append_(element, parent);
@@ -356,7 +356,7 @@ thin.editor.Layout.prototype.appendChild = function(element, opt_group) {
  * @param {Object=} opt_attributes
  * @return {Element}
  */
-thin.editor.Layout.prototype.createSvgElement = function(tagName, opt_attributes) {
+thin.core.Layout.prototype.createSvgElement = function(tagName, opt_attributes) {
   return this.createSvgElement_(tagName, opt_attributes);
 };
 
@@ -365,7 +365,7 @@ thin.editor.Layout.prototype.createSvgElement = function(tagName, opt_attributes
  * @return {goog.graphics.SvgGroupElement} The root level canvas element.
  * @override
  */
-thin.editor.Layout.prototype.getCanvasElement = function() {
+thin.core.Layout.prototype.getCanvasElement = function() {
   return this.canvasElement;
 };
 
@@ -373,7 +373,7 @@ thin.editor.Layout.prototype.getCanvasElement = function() {
 /**
  * @return {Element}
  */
-thin.editor.Layout.prototype.getDefsElement = function() {
+thin.core.Layout.prototype.getDefsElement = function() {
   return this.defsElement_;
 };
 
@@ -383,7 +383,7 @@ thin.editor.Layout.prototype.getDefsElement = function() {
  * @param {Object} attrs
  * @return {Element}
  */
-thin.editor.Layout.prototype.createHelpersElement = function(tagName, attrs) {
+thin.core.Layout.prototype.createHelpersElement = function(tagName, attrs) {
   var element = this.createSvgElement(tagName, attrs);
   this.setElementAttributes(element, {
     'shape-rendering': 'optimizeSpeed',
@@ -397,8 +397,8 @@ thin.editor.Layout.prototype.createHelpersElement = function(tagName, attrs) {
 /**
  * @return {string}
  */
-thin.editor.Layout.prototype.toXML = function() {
-  return thin.editor.LayoutStructure.serialize(this);
+thin.core.Layout.prototype.toXML = function() {
+  return thin.core.LayoutStructure.serialize(this);
 };
 
 
@@ -406,7 +406,7 @@ thin.editor.Layout.prototype.toXML = function() {
  * @param {number} pixelWidth
  * @param {number} pixelHeight
  */
-thin.editor.Layout.prototype.setSize = function(pixelWidth, pixelHeight) {
+thin.core.Layout.prototype.setSize = function(pixelWidth, pixelHeight) {
   this.setElementAttributes(this.getElement(), {
     'width': pixelWidth,
     'height': pixelHeight
@@ -420,7 +420,7 @@ thin.editor.Layout.prototype.setSize = function(pixelWidth, pixelHeight) {
  * @param {goog.graphics.Element} shape
  * @param {goog.math.Size} size
  */
-thin.editor.Layout.prototype.setSizeByScale = function(shape, size) {
+thin.core.Layout.prototype.setSizeByScale = function(shape, size) {
   this.setWidthByScale(shape, size.width);
   this.setHeightByScale(shape, size.height);
 };
@@ -430,7 +430,7 @@ thin.editor.Layout.prototype.setSizeByScale = function(shape, size) {
  * @param {goog.graphics.Element} shape
  * @param {number} width
  */
-thin.editor.Layout.prototype.setWidthByScale = function(shape, width) {
+thin.core.Layout.prototype.setWidthByScale = function(shape, width) {
   shape.setWidth(width / this.getPixelScale());
 };
 
@@ -439,7 +439,7 @@ thin.editor.Layout.prototype.setWidthByScale = function(shape, width) {
  * @param {goog.graphics.Element} shape
  * @param {number} height
  */
-thin.editor.Layout.prototype.setHeightByScale = function(shape, height) {
+thin.core.Layout.prototype.setHeightByScale = function(shape, height) {
   shape.setHeight(height / this.getPixelScale());
 };
 
@@ -447,7 +447,7 @@ thin.editor.Layout.prototype.setHeightByScale = function(shape, height) {
 /**
  * @return {number}
  */
-thin.editor.Layout.prototype.getPixelScale = function() {
+thin.core.Layout.prototype.getPixelScale = function() {
   return this.getPixelScaleX();
 };
 
@@ -455,7 +455,7 @@ thin.editor.Layout.prototype.getPixelScale = function() {
 /**
  * @return {number}
  */
-thin.editor.Layout.prototype.getLeft = function() {
+thin.core.Layout.prototype.getLeft = function() {
   return this.coordLeft;
 };
 
@@ -463,7 +463,7 @@ thin.editor.Layout.prototype.getLeft = function() {
 /**
  * @return {number}
  */
-thin.editor.Layout.prototype.getTop = function() {
+thin.core.Layout.prototype.getTop = function() {
   return this.coordTop;
 };
 
@@ -471,7 +471,7 @@ thin.editor.Layout.prototype.getTop = function() {
 /**
  * @return {goog.math.Size}
  */
-thin.editor.Layout.prototype.getNormalLayoutSize = function() {
+thin.core.Layout.prototype.getNormalLayoutSize = function() {
   return this.getFormatPage().getPaperSize();
 };
 
@@ -479,7 +479,7 @@ thin.editor.Layout.prototype.getNormalLayoutSize = function() {
 /**
  * @return {goog.math.Rect}
  */
-thin.editor.Layout.prototype.getBounds = function() {
+thin.core.Layout.prototype.getBounds = function() {
   var size = this.getNormalLayoutSize();
   return new goog.math.Rect(
            this.getLeft(), this.getTop(), size.width, size.height);
@@ -489,7 +489,7 @@ thin.editor.Layout.prototype.getBounds = function() {
 /**
  * @return {goog.math.Box}
  */
-thin.editor.Layout.prototype.getBoxSize = function() {
+thin.core.Layout.prototype.getBoxSize = function() {
   return this.getBounds().toBox();
 };
 
@@ -499,7 +499,7 @@ thin.editor.Layout.prototype.getBoxSize = function() {
  * @param {goog.graphics.SvgGroupElement} parentGroup
  * @return {Array}
  */
-thin.editor.Layout.prototype.getTargetIndexOfShapes = function(shapes, parentGroup) {
+thin.core.Layout.prototype.getTargetIndexOfShapes = function(shapes, parentGroup) {
       
   var childNodes = parentGroup.getElement().childNodes;
   var shapeIndexArr = [];
@@ -518,7 +518,7 @@ thin.editor.Layout.prototype.getTargetIndexOfShapes = function(shapes, parentGro
  * @param {Array} shapes
  * @return {Array}
  */
-thin.editor.Layout.prototype.getPreviousTarget = function(shapes) {
+thin.core.Layout.prototype.getPreviousTarget = function(shapes) {
   return goog.array.map(shapes, function(shape) {
     return goog.dom.getPreviousElementSibling(shape.getElement());
   });
@@ -529,7 +529,7 @@ thin.editor.Layout.prototype.getPreviousTarget = function(shapes) {
  * @param {Array} shapes
  * @return {Array}
  */
-thin.editor.Layout.prototype.getNextTarget = function(shapes) {
+thin.core.Layout.prototype.getNextTarget = function(shapes) {
   return goog.array.map(shapes, function(shape) {
     return goog.dom.getNextElementSibling(shape.getElement());
   });
@@ -542,7 +542,7 @@ thin.editor.Layout.prototype.getNextTarget = function(shapes) {
  * @param {Function} fn
  * @param {Object=} opt_selfObj
  */
-thin.editor.Layout.prototype.forEachByChildNodesIndex = function(shapes, targetIndexByShapes, fn, opt_selfObj) {
+thin.core.Layout.prototype.forEachByChildNodesIndex = function(shapes, targetIndexByShapes, fn, opt_selfObj) {
   goog.array.forEach(targetIndexByShapes, function(shapeIndex) {
     fn.call(opt_selfObj, shapes[shapeIndex], shapeIndex);
   });
@@ -555,7 +555,7 @@ thin.editor.Layout.prototype.forEachByChildNodesIndex = function(shapes, targetI
  * @param {Function} fn
  * @param {Object=} opt_selfObj
  */
-thin.editor.Layout.prototype.forEachRightByChildNodesIndex = function(shapes, targetIndexByShapes, fn, opt_selfObj) {
+thin.core.Layout.prototype.forEachRightByChildNodesIndex = function(shapes, targetIndexByShapes, fn, opt_selfObj) {
   goog.array.forEachRight(targetIndexByShapes, function(shapeIndex) {
     fn.call(opt_selfObj, shapes[shapeIndex], shapeIndex);
   });
@@ -566,7 +566,7 @@ thin.editor.Layout.prototype.forEachRightByChildNodesIndex = function(shapes, ta
  * @param {Array} shapes
  * @param {Array} targetIndexByShapes
  */
-thin.editor.Layout.prototype.moveShapeToBefore = function(shapes, targetIndexByShapes) {
+thin.core.Layout.prototype.moveShapeToBefore = function(shapes, targetIndexByShapes) {
   this.forEachRightByChildNodesIndex(shapes, targetIndexByShapes, function(shape) {
     var element = shape.getElement();
     var nextElement = goog.dom.getNextElementSibling(element);
@@ -589,7 +589,7 @@ thin.editor.Layout.prototype.moveShapeToBefore = function(shapes, targetIndexByS
  * @param {Array} shapes
  * @param {Array} targetIndexByShapes
  */
-thin.editor.Layout.prototype.moveShapeToAfter = function(shapes, targetIndexByShapes) {
+thin.core.Layout.prototype.moveShapeToAfter = function(shapes, targetIndexByShapes) {
   this.forEachByChildNodesIndex(shapes, targetIndexByShapes, function(shape) {
     var element = shape.getElement();
     var previousElement = goog.dom.getPreviousElementSibling(element);
@@ -614,7 +614,7 @@ thin.editor.Layout.prototype.moveShapeToAfter = function(shapes, targetIndexBySh
  * @param {Array} previousTarget
  * @param {goog.graphics.SvgGroupElement} parentGroup
  */
-thin.editor.Layout.prototype.moveShapeByPreviousElement = function(shapes, targetIndexByShapes, previousTarget, parentGroup) {
+thin.core.Layout.prototype.moveShapeByPreviousElement = function(shapes, targetIndexByShapes, previousTarget, parentGroup) {
   
   this.forEachByChildNodesIndex(shapes, targetIndexByShapes, function(shape, count) {
     var previousElement = previousTarget[count];
@@ -634,7 +634,7 @@ thin.editor.Layout.prototype.moveShapeByPreviousElement = function(shapes, targe
  * @param {Array} nextTarget
  * @param {goog.graphics.SvgGroupElement} parentGroup
  */
-thin.editor.Layout.prototype.moveShapeByNextElement = function(shapes, targetIndexByShapes, nextTarget, parentGroup) {
+thin.core.Layout.prototype.moveShapeByNextElement = function(shapes, targetIndexByShapes, nextTarget, parentGroup) {
 
   this.forEachRightByChildNodesIndex(shapes, targetIndexByShapes, function(shape, count) {
     var nextElement = nextTarget[count];
@@ -653,7 +653,7 @@ thin.editor.Layout.prototype.moveShapeByNextElement = function(shapes, targetInd
  * @param {Array} targetIndexByShapes
  * @param {goog.graphics.SvgGroupElement} parentGroup
  */
-thin.editor.Layout.prototype.moveShapeToFront = function(shapes, targetIndexByShapes, parentGroup) {
+thin.core.Layout.prototype.moveShapeToFront = function(shapes, targetIndexByShapes, parentGroup) {
   var parentNode = parentGroup.getElement();
   this.forEachByChildNodesIndex(shapes, targetIndexByShapes, function(shape, count) {
     parentNode.appendChild(shape.getElement());
@@ -666,7 +666,7 @@ thin.editor.Layout.prototype.moveShapeToFront = function(shapes, targetIndexBySh
  * @param {Array} targetIndexByShapes
  * @param {goog.graphics.SvgGroupElement} parentGroup
  */
-thin.editor.Layout.prototype.moveShapeToBack = function(shapes, targetIndexByShapes, parentGroup) {
+thin.core.Layout.prototype.moveShapeToBack = function(shapes, targetIndexByShapes, parentGroup) {
   var parentNode = parentGroup.getElement();
   var firstChild = goog.dom.getFirstElementChild(parentNode);
   var currentFirstChild = firstChild;
@@ -691,7 +691,7 @@ thin.editor.Layout.prototype.moveShapeToBack = function(shapes, targetIndexBySha
 /**
  * @param {goog.graphics.Element} shape
  */
-thin.editor.Layout.prototype.setOutlineForSingle = function(shape) {
+thin.core.Layout.prototype.setOutlineForSingle = function(shape) {
   shape.setDefaultOutline();
   shape.getTargetOutline().setTargetShape(shape);
 };
@@ -700,7 +700,7 @@ thin.editor.Layout.prototype.setOutlineForSingle = function(shape) {
 /**
  * @param {Array} shapes
  */
-thin.editor.Layout.prototype.setOutlineForMultiple = function(shapes) {
+thin.core.Layout.prototype.setOutlineForMultiple = function(shapes) {
 
   var helpers = this.helpers_;
   var multiOutlineHelper = helpers.getMultiOutlineHelper();
@@ -712,11 +712,11 @@ thin.editor.Layout.prototype.setOutlineForMultiple = function(shapes) {
 
 /**
  * @param {goog.graphics.Element} shape
- * @param {thin.editor.Helpers} helpers
- * @param {thin.editor.MultiOutlineHelper} multiOutlineHelper
+ * @param {thin.core.Helpers} helpers
+ * @param {thin.core.MultiOutlineHelper} multiOutlineHelper
  * @private
  */
-thin.editor.Layout.prototype.setOutlineForMultiple_ = function(shape,
+thin.core.Layout.prototype.setOutlineForMultiple_ = function(shape,
     helpers, multiOutlineHelper) {
 
   if (!shape.getTargetOutline().isForMultiple()) {
@@ -725,7 +725,7 @@ thin.editor.Layout.prototype.setOutlineForMultiple_ = function(shape,
 };
 
 
-thin.editor.Layout.prototype.updatePropertiesForEmpty = function() {
+thin.core.Layout.prototype.updatePropertiesForEmpty = function() {
   thin.ui.getComponent('proppane').clear();
 };
 
@@ -740,7 +740,7 @@ thin.editor.Layout.prototype.updatePropertiesForEmpty = function() {
  * @param {goog.math.Coordinate=} opt_basisCoordinate
  * @return {goog.math.Coordinate}
  */
-thin.editor.Layout.prototype.calculatePasteCoordinate = function(
+thin.core.Layout.prototype.calculatePasteCoordinate = function(
     isAffiliationListShape, deltaCoordinateForList,
     deltaCoordinateForGuide, sourceCoordinate,
     opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate) {
@@ -766,9 +766,9 @@ thin.editor.Layout.prototype.calculatePasteCoordinate = function(
 };
 
 
-thin.editor.Layout.prototype.pasteShapes = function() {
+thin.core.Layout.prototype.pasteShapes = function() {
 
-  var clipBoardManager = thin.editor.ClipboardShapeManager.getInstance();
+  var clipBoardManager = thin.core.ClipboardShapeManager.getInstance();
   if (clipBoardManager.isEmpty()) {
     // Skip pasteShapes;
     return;
@@ -822,13 +822,13 @@ thin.editor.Layout.prototype.pasteShapes = function() {
   var pasteShapes = [];
   var captureShapeIdArray = [];
   var captureRefIdArray = [];
-  var defaultRefId = thin.editor.TblockShape.DEFAULT_REFID;
+  var defaultRefId = thin.core.TblockShape.DEFAULT_REFID;
   
   /**
    * @param {boolean=} opt_isAdaptDeltaForList
    * @param {goog.graphics.SvgGroupElement=} opt_captureRenderTo
    * @param {goog.math.Coordinate=} opt_basisCoordinate
-   * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
+   * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
    */
   var createCloneShapes = function(opt_isAdaptDeltaForList,
         opt_captureRenderTo, opt_basisCoordinate, opt_shapeIdManager) {
@@ -981,9 +981,9 @@ thin.editor.Layout.prototype.pasteShapes = function() {
 /**
  * @param {Array} shapes
  */
-thin.editor.Layout.prototype.getCloneShapes = function(shapes) {
+thin.core.Layout.prototype.getCloneShapes = function(shapes) {
   
-  var clipBoardManager = thin.editor.ClipboardShapeManager.getInstance();
+  var clipBoardManager = thin.core.ClipboardShapeManager.getInstance();
   clipBoardManager.clear();
   clipBoardManager.setShapeBounds(this.calculateActiveShapeBounds(shapes));
   var helper = this.helpers_;
@@ -1009,7 +1009,7 @@ thin.editor.Layout.prototype.getCloneShapes = function(shapes) {
 /**
  * @param {goog.graphics.Element} shape
  */
-thin.editor.Layout.prototype.remove = function(shape) {
+thin.core.Layout.prototype.remove = function(shape) {
   if (goog.isFunction(shape.remove)) {
     shape.remove();
   } else if (goog.isFunction(shape.getElement)) {
@@ -1021,7 +1021,7 @@ thin.editor.Layout.prototype.remove = function(shape) {
 /**
  * @param {goog.graphics.Element} shape
  */
-thin.editor.Layout.prototype.removeShape = function(shape) {
+thin.core.Layout.prototype.removeShape = function(shape) {
   var listHelper = this.helpers_.getListHelper();
   
   if (shape.instanceOfListShape()) {
@@ -1070,7 +1070,7 @@ thin.editor.Layout.prototype.removeShape = function(shape) {
 /**
  * @param {Array} shapes
  */
-thin.editor.Layout.prototype.removeShapes = function(shapes) {
+thin.core.Layout.prototype.removeShapes = function(shapes) {
   goog.array.forEachRight(shapes, goog.bind(function(shape) {
     this.removeShape(shape);
   }, this));
@@ -1080,7 +1080,7 @@ thin.editor.Layout.prototype.removeShapes = function(shapes) {
 /**
  * @param {Array.<goog.graphics.Element>=} opt_shapes
  */
-thin.editor.Layout.prototype.calculateGuideBounds = function(opt_shapes) {
+thin.core.Layout.prototype.calculateGuideBounds = function(opt_shapes) {
 
   if (goog.isArray(opt_shapes) && !goog.array.isEmpty(opt_shapes)) {
     var shapes = opt_shapes;
@@ -1096,7 +1096,7 @@ thin.editor.Layout.prototype.calculateGuideBounds = function(opt_shapes) {
  * @param {Array} shapes
  * @return {goog.math.Rect}
  */
-thin.editor.Layout.prototype.calculateActiveShapeBounds = function(shapes) {
+thin.core.Layout.prototype.calculateActiveShapeBounds = function(shapes) {
   var minX = [];
   var minY = [];
   var maxX = [];
@@ -1134,7 +1134,7 @@ thin.editor.Layout.prototype.calculateActiveShapeBounds = function(shapes) {
  * @param {Array} shapes
  * @return {Array}
  */
-thin.editor.Layout.prototype.getActiveShapeFromSelectRange = function(boxSize, shapes) {
+thin.core.Layout.prototype.getActiveShapeFromSelectRange = function(boxSize, shapes) {
   var newShapes = [];
   goog.array.forEach(shapes, function(shape, i) {
     if (!shape.instanceOfListShape() && shape.isIntersects(boxSize)) {
@@ -1147,10 +1147,10 @@ thin.editor.Layout.prototype.getActiveShapeFromSelectRange = function(boxSize, s
 
 /**
  * @param {string} prefix
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
  * @return {string}
  */
-thin.editor.Layout.prototype.getNextShapeId = function(prefix, opt_shapeIdManager) {
+thin.core.Layout.prototype.getNextShapeId = function(prefix, opt_shapeIdManager) {
   return (opt_shapeIdManager || this.manager_.getShapeIdManager()).getNextId(prefix);
 };
 
@@ -1160,7 +1160,7 @@ thin.editor.Layout.prototype.getNextShapeId = function(prefix, opt_shapeIdManage
  * @param {goog.graphics.Element} target
  * @return {boolean}
  */
-thin.editor.Layout.prototype.isUsableShapeId = function(id, target) {
+thin.core.Layout.prototype.isUsableShapeId = function(id, target) {
   var manager;
   if (target.isAffiliationListShape()) {
     manager = target.getAffiliationSectionShape().getManager().getShapeIdManager();
@@ -1171,10 +1171,10 @@ thin.editor.Layout.prototype.isUsableShapeId = function(id, target) {
 
 /**
  * @param {string} shapeId
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
  * @return {goog.graphics.Element}
  */
-thin.editor.Layout.prototype.getShapeForShapeId = function(shapeId, opt_shapeIdManager) {
+thin.core.Layout.prototype.getShapeForShapeId = function(shapeId, opt_shapeIdManager) {
   return (opt_shapeIdManager || this.manager_.getShapeIdManager()).getShapeForShapeId(shapeId);
 };
 
@@ -1183,72 +1183,72 @@ thin.editor.Layout.prototype.getShapeForShapeId = function(shapeId, opt_shapeIdM
  * @param {goog.graphics.Element} model
  * @param {goog.graphics.Element} target
  */
-thin.editor.Layout.prototype.createClipPath = function(model, target) {
+thin.core.Layout.prototype.createClipPath = function(model, target) {
   var element = this.createSvgElement('clipPath');
   this.addDef(String(goog.graphics.SvgGraphics.nextDefId_), element);
-  return new thin.editor.ClipPath(element, model, target, this);
+  return new thin.core.ClipPath(element, model, target, this);
 };
 
 
 /**
- * @return {thin.editor.EllipseShape}
+ * @return {thin.core.EllipseShape}
  */
-thin.editor.Layout.prototype.createEllipseShape = function() {
-  var shape = new thin.editor.EllipseShape(
+thin.core.Layout.prototype.createEllipseShape = function() {
+  var shape = new thin.core.EllipseShape(
     this.createSvgElement('ellipse'),
-    this, thin.editor.EllipseShape.DEFAULT_STROKE,
-    thin.editor.EllipseShape.DEFAULT_FILL);
-  shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
-  shape.setStrokeDashFromType(thin.editor.ModuleElement.StrokeType.SOLID);
-  shape.setShapeId(thin.editor.ModuleShape.DEFAULT_SHAPEID);
+    this, thin.core.EllipseShape.DEFAULT_STROKE,
+    thin.core.EllipseShape.DEFAULT_FILL);
+  shape.setDisplay(thin.core.ModuleShape.DEFAULT_DISPLAY);
+  shape.setStrokeDashFromType(thin.core.ModuleElement.StrokeType.SOLID);
+  shape.setShapeId(thin.core.ModuleShape.DEFAULT_SHAPEID);
   shape.initIdentifier();
   return shape;
 };
 
 
 /**
- * @return {thin.editor.LineShape}
+ * @return {thin.core.LineShape}
  */
-thin.editor.Layout.prototype.createLineShape = function() {
-  var shape = new thin.editor.LineShape(
+thin.core.Layout.prototype.createLineShape = function() {
+  var shape = new thin.core.LineShape(
     this.createSvgElement('line'),
-    this, thin.editor.LineShape.DEFAULT_STROKE);
-  shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
-  shape.setStrokeDashFromType(thin.editor.ModuleElement.StrokeType.SOLID);
-  shape.setShapeId(thin.editor.ModuleShape.DEFAULT_SHAPEID);
+    this, thin.core.LineShape.DEFAULT_STROKE);
+  shape.setDisplay(thin.core.ModuleShape.DEFAULT_DISPLAY);
+  shape.setStrokeDashFromType(thin.core.ModuleElement.StrokeType.SOLID);
+  shape.setShapeId(thin.core.ModuleShape.DEFAULT_SHAPEID);
   shape.initIdentifier();
   return shape;
 };
 
 
 /**
- * @return {thin.editor.RectShape}
+ * @return {thin.core.RectShape}
  */
-thin.editor.Layout.prototype.createRectShape = function() {
-  var shape = new thin.editor.RectShape(
+thin.core.Layout.prototype.createRectShape = function() {
+  var shape = new thin.core.RectShape(
     this.createSvgElement('rect'),
-    this, thin.editor.RectShape.DEFAULT_STROKE,
-    thin.editor.RectShape.DEFAULT_FILL);
-  shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
-  shape.setStrokeDashFromType(thin.editor.ModuleElement.StrokeType.SOLID);
-  shape.setShapeId(thin.editor.ModuleShape.DEFAULT_SHAPEID);
-  shape.setRounded(thin.editor.Rect.DEFAULT_RADIUS);
+    this, thin.core.RectShape.DEFAULT_STROKE,
+    thin.core.RectShape.DEFAULT_FILL);
+  shape.setDisplay(thin.core.ModuleShape.DEFAULT_DISPLAY);
+  shape.setStrokeDashFromType(thin.core.ModuleElement.StrokeType.SOLID);
+  shape.setShapeId(thin.core.ModuleShape.DEFAULT_SHAPEID);
+  shape.setRounded(thin.core.Rect.DEFAULT_RADIUS);
   shape.initIdentifier();
   return shape;
 };
 
 
 /**
- * @return {thin.editor.ListShape}
+ * @return {thin.core.ListShape}
  */
-thin.editor.Layout.prototype.createListShape = function() {
-  var shape = new thin.editor.ListShape(this);
-  var listClassId = thin.editor.ListShape.ClassIds;
+thin.core.Layout.prototype.createListShape = function() {
+  var shape = new thin.core.ListShape(this);
+  var listClassId = thin.core.ListShape.ClassIds;
   shape.setIdShape(
-      this.getNextShapeId(thin.editor.ShapeIdManager.DefaultPrefix.LIST));
-  shape.setEnabledForSectionInternal(thin.editor.HeaderSectionShape.DEFAULT_ENABLED, listClassId['HEADER']);
-  shape.setEnabledForSectionInternal(thin.editor.PageFooterSectionShape.DEFAULT_ENABLED, listClassId['PAGEFOOTER']);
-  shape.setEnabledForSectionInternal(thin.editor.FooterSectionShape.DEFAULT_ENABLED, listClassId['FOOTER']);
+      this.getNextShapeId(thin.core.ShapeIdManager.DefaultPrefix.LIST));
+  shape.setEnabledForSectionInternal(thin.core.HeaderSectionShape.DEFAULT_ENABLED, listClassId['HEADER']);
+  shape.setEnabledForSectionInternal(thin.core.PageFooterSectionShape.DEFAULT_ENABLED, listClassId['PAGEFOOTER']);
+  shape.setEnabledForSectionInternal(thin.core.FooterSectionShape.DEFAULT_ENABLED, listClassId['FOOTER']);
   var listHelper = this.helpers_.getListHelper();
   if (listHelper.isEnableChangingPage(shape)) {
     shape.setChangingPage(true);
@@ -1256,77 +1256,77 @@ thin.editor.Layout.prototype.createListShape = function() {
   } else {
     shape.setChangingPage(false);
   }
-  shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
+  shape.setDisplay(thin.core.ModuleShape.DEFAULT_DISPLAY);
   shape.initIdentifier();
   return shape;
 };
 
 
 /**
- * @return {thin.editor.ImageblockShape}
+ * @return {thin.core.ImageblockShape}
  */
-thin.editor.Layout.prototype.createImageblockShape = function() {
-  var shape = new thin.editor.ImageblockShape(this.createSvgElement('g'), this);
-  shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
+thin.core.Layout.prototype.createImageblockShape = function() {
+  var shape = new thin.core.ImageblockShape(this.createSvgElement('g'), this);
+  shape.setDisplay(thin.core.ModuleShape.DEFAULT_DISPLAY);
   shape.initIdentifier();
   return shape;
 };
 
 
 /**
- * @return {thin.editor.TblockShape}
+ * @return {thin.core.TblockShape}
  */
-thin.editor.Layout.prototype.createTblockShape = function() {
-  var shape = new thin.editor.TblockShape(this.createSvgElement('g'), this);
-  shape.setFormatType(thin.editor.TblockShape.DEFAULT_FORMAT_TYPE);
-  shape.setDefaultValueOfLink(thin.editor.TblockShape.DEFAULT_VALUE);
-  shape.setBaseFormat(thin.editor.TblockShape.DEFAULT_FORMAT_BASE);
-  shape.setInternalRefId(thin.editor.TblockShape.DEFAULT_REFID);
-  shape.setKerning(thin.editor.TextStyle.DEFAULT_KERNING);
-  shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
-  shape.setMultiModeInternal(thin.editor.TblockShape.DEFAULT_MULTIPLE);
+thin.core.Layout.prototype.createTblockShape = function() {
+  var shape = new thin.core.TblockShape(this.createSvgElement('g'), this);
+  shape.setFormatType(thin.core.TblockShape.DEFAULT_FORMAT_TYPE);
+  shape.setDefaultValueOfLink(thin.core.TblockShape.DEFAULT_VALUE);
+  shape.setBaseFormat(thin.core.TblockShape.DEFAULT_FORMAT_BASE);
+  shape.setInternalRefId(thin.core.TblockShape.DEFAULT_REFID);
+  shape.setKerning(thin.core.TextStyle.DEFAULT_KERNING);
+  shape.setDisplay(thin.core.ModuleShape.DEFAULT_DISPLAY);
+  shape.setMultiModeInternal(thin.core.TblockShape.DEFAULT_MULTIPLE);
   shape.initIdentifier();
   return shape;
 };
 
 
 /**
- * @return {thin.editor.PageNumberShape}
+ * @return {thin.core.PageNumberShape}
  */
-thin.editor.Layout.prototype.createPageNumberShape = function() {
-  var shape = new thin.editor.PageNumberShape(this.createSvgElement('g'), this);
-  shape.setKerning(thin.editor.TextStyle.DEFAULT_KERNING);
-  shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
-  shape.setFormat(thin.editor.PageNumberShape.DEFAULT_PAGENO_FORMAT);
+thin.core.Layout.prototype.createPageNumberShape = function() {
+  var shape = new thin.core.PageNumberShape(this.createSvgElement('g'), this);
+  shape.setKerning(thin.core.TextStyle.DEFAULT_KERNING);
+  shape.setDisplay(thin.core.ModuleShape.DEFAULT_DISPLAY);
+  shape.setFormat(thin.core.PageNumberShape.DEFAULT_PAGENO_FORMAT);
   shape.initIdentifier();
   return shape;
 };
 
 /**
- * @return {thin.editor.TextShape}
+ * @return {thin.core.TextShape}
  */
-thin.editor.Layout.prototype.createTextShape = function() {
-  var shape = new thin.editor.TextShape(this.createSvgElement('g'), this);
-  shape.setFill(thin.editor.TextShape.DEFAULT_FILL);
-  shape.setKerning(thin.editor.TextStyle.DEFAULT_KERNING);
-  shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
-  shape.setShapeId(thin.editor.ModuleShape.DEFAULT_SHAPEID);
+thin.core.Layout.prototype.createTextShape = function() {
+  var shape = new thin.core.TextShape(this.createSvgElement('g'), this);
+  shape.setFill(thin.core.TextShape.DEFAULT_FILL);
+  shape.setKerning(thin.core.TextStyle.DEFAULT_KERNING);
+  shape.setDisplay(thin.core.ModuleShape.DEFAULT_DISPLAY);
+  shape.setShapeId(thin.core.ModuleShape.DEFAULT_SHAPEID);
   shape.initIdentifier();
   return shape;
 };
 
 
 /**
- * @return {thin.editor.ImageShape}
+ * @return {thin.core.ImageShape}
  */
-thin.editor.Layout.prototype.createImageShape = function() {
-  var shape = new thin.editor.ImageShape(this.createSvgElement('image', {
+thin.core.Layout.prototype.createImageShape = function() {
+  var shape = new thin.core.ImageShape(this.createSvgElement('image', {
     'image-rendering': 'optimizeQuality',
     'preserveAspectRatio': 'none'
   }), this);
 
-  shape.setDisplay(thin.editor.ModuleShape.DEFAULT_DISPLAY);
-  shape.setShapeId(thin.editor.ModuleShape.DEFAULT_SHAPEID);
+  shape.setDisplay(thin.core.ModuleShape.DEFAULT_DISPLAY);
+  shape.setShapeId(thin.core.ModuleShape.DEFAULT_SHAPEID);
   shape.initIdentifier();
 
   return shape;
@@ -1338,7 +1338,7 @@ thin.editor.Layout.prototype.createImageShape = function() {
  * @param {Function} fn
  * @param {Object=} opt_selfObj
  */
-thin.editor.Layout.prototype.forTextShapesEach = function(shapes, fn, opt_selfObj) {
+thin.core.Layout.prototype.forTextShapesEach = function(shapes, fn, opt_selfObj) {
   var selfObj = opt_selfObj || this;
   var textShapeCount = 0;
   goog.array.forEach(shapes, function(shape, i) {
@@ -1355,7 +1355,7 @@ thin.editor.Layout.prototype.forTextShapesEach = function(shapes, fn, opt_selfOb
  * @param {Function} fn
  * @param {Object=} opt_selfObj
  */
-thin.editor.Layout.prototype.forTblockShapesEach = function(shapes, fn, opt_selfObj) {
+thin.core.Layout.prototype.forTblockShapesEach = function(shapes, fn, opt_selfObj) {
   var selfObj = opt_selfObj || this;
   var tblockShapeCount = 0;
   goog.array.forEach(shapes, function(shape, i) {
@@ -1372,7 +1372,7 @@ thin.editor.Layout.prototype.forTblockShapesEach = function(shapes, fn, opt_self
  * @param {Function} fn
  * @param {Object=} opt_selfObj
  */
-thin.editor.Layout.prototype.forPageNumberShapesEach = function(shapes, fn, opt_selfObj) {
+thin.core.Layout.prototype.forPageNumberShapesEach = function(shapes, fn, opt_selfObj) {
   var selfObj = opt_selfObj || this;
   var count = 0;
   goog.array.forEach(shapes, function(shape, i) {
@@ -1387,7 +1387,7 @@ thin.editor.Layout.prototype.forPageNumberShapesEach = function(shapes, fn, opt_
  * @param {Array} shapes
  * @return {goog.graphics.Element}
  */
-thin.editor.Layout.prototype.getUpperLeftShape = function(shapes) {
+thin.core.Layout.prototype.getUpperLeftShape = function(shapes) {
   var upperPos = [];
   var shapeIndexes = [];
   var upperLeft;
@@ -1403,11 +1403,11 @@ thin.editor.Layout.prototype.getUpperLeftShape = function(shapes) {
 
 
 /** @inheritDoc */
-thin.editor.Layout.prototype.disposeInternal = function() {
+thin.core.Layout.prototype.disposeInternal = function() {
   this.manager_.dispose();
   this.helpers_.dispose();
   delete this.workspace_;
   delete this.manager_;
   delete this.helpers_;
-  thin.editor.Layout.superClass_.disposeInternal.call(this);
+  thin.core.Layout.superClass_.disposeInternal.call(this);
 };

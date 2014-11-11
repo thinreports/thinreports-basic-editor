@@ -13,19 +13,19 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.toolaction.PageNumberAction');
+goog.provide('thin.core.toolaction.PageNumberAction');
 
-goog.require('thin.editor.toolaction.DrawAction');
+goog.require('thin.core.toolaction.DrawAction');
 
 
 /**
  * @constructor
- * @extends {thin.editor.toolaction.DrawAction}
+ * @extends {thin.core.toolaction.DrawAction}
  */
-thin.editor.toolaction.PageNumberAction = function() {
+thin.core.toolaction.PageNumberAction = function() {
   goog.base(this);
 };
-goog.inherits(thin.editor.toolaction.PageNumberAction, thin.editor.toolaction.DrawAction);
+goog.inherits(thin.core.toolaction.PageNumberAction, thin.core.toolaction.DrawAction);
 
 
 /**
@@ -36,7 +36,7 @@ goog.inherits(thin.editor.toolaction.PageNumberAction, thin.editor.toolaction.Dr
  * @return {boolean}
  * @private
  */
-thin.editor.toolaction.PageNumberAction.prototype.compareFn_ = function(startX, startY, clientX, clientY) {
+thin.core.toolaction.PageNumberAction.prototype.compareFn_ = function(startX, startY, clientX, clientY) {
   var diff = goog.math.Coordinate.difference(
                new goog.math.Coordinate(startX, startY), 
                new goog.math.Coordinate(clientX, clientY));
@@ -45,7 +45,7 @@ thin.editor.toolaction.PageNumberAction.prototype.compareFn_ = function(startX, 
 
 
 /** @inheritDoc */
-thin.editor.toolaction.PageNumberAction.prototype.handleStartAction = function(e, outline) {
+thin.core.toolaction.PageNumberAction.prototype.handleStartAction = function(e, outline) {
   var workspace = this.workspace;
   workspace.setUiStatusForFontSize(18);
   thin.ui.adjustUiStatusToFontSize(workspace);
@@ -55,10 +55,10 @@ thin.editor.toolaction.PageNumberAction.prototype.handleStartAction = function(e
 
 /**
  * @param {goog.events.BrowserEvent} e
- * @param {thin.editor.Workspace} workspace
+ * @param {thin.core.Workspace} workspace
  * @protected
  */
-thin.editor.toolaction.PageNumberAction.prototype.handleActionInternal = function(e, workspace) {
+thin.core.toolaction.PageNumberAction.prototype.handleActionInternal = function(e, workspace) {
 
   var helpers = this.layout.getHelpers();
   var listHelper = helpers.getListHelper();

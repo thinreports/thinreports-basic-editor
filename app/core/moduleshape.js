@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ModuleShape');
+goog.provide('thin.core.ModuleShape');
 
 goog.require('goog.dom');
 goog.require('goog.string');
@@ -23,104 +23,104 @@ goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.fx.Dragger');
 goog.require('goog.fx.Dragger.EventType');
-goog.require('thin.editor.Cursor');
-goog.require('thin.editor.Cursor.Type');
-goog.require('thin.editor.AbstractDragger');
-goog.require('thin.editor.AbstractDragger.EventType');
-goog.require('thin.editor.SvgDragger');
+goog.require('thin.core.Cursor');
+goog.require('thin.core.Cursor.Type');
+goog.require('thin.core.AbstractDragger');
+goog.require('thin.core.AbstractDragger.EventType');
+goog.require('thin.core.SvgDragger');
 
 
 /**
  * @constructor
  */
-thin.editor.ModuleShape = function() {};
+thin.core.ModuleShape = function() {};
 
 
 /**
  * @type {string}
  */
-thin.editor.ModuleShape.DEFAULT_SHAPEID = '';
+thin.core.ModuleShape.DEFAULT_SHAPEID = '';
 
 
 /**
  * @type {boolean}
  */
-thin.editor.ModuleShape.DEFAULT_DISPLAY = true;
+thin.core.ModuleShape.DEFAULT_DISPLAY = true;
 
 
 /**
  * @type {string}
  */
-thin.editor.ModuleShape.PROPPANE_SHOW_BLANK = '';
+thin.core.ModuleShape.PROPPANE_SHOW_BLANK = '';
 
 
 /**
  * @type {string}
  */
-thin.editor.ModuleShape.NONE = 'none';
+thin.core.ModuleShape.NONE = 'none';
 
 
 /**
  * @type {goog.graphics.Element}
  * @private
  */
-thin.editor.ModuleShape.prototype.targetOutline_;
+thin.core.ModuleShape.prototype.targetOutline_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.ModuleShape.prototype.shapeId_;
+thin.core.ModuleShape.prototype.shapeId_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ModuleShape.prototype.display_;
+thin.core.ModuleShape.prototype.display_;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.ModuleShape.prototype.identifier_;
+thin.core.ModuleShape.prototype.identifier_;
 
 
 /**
- * @type {thin.editor.SvgDragger}
+ * @type {thin.core.SvgDragger}
  * @private
  */
-thin.editor.ModuleShape.prototype.dragger_;
+thin.core.ModuleShape.prototype.dragger_;
 
 
-thin.editor.ModuleShape.prototype.getClassId = goog.abstractMethod;
+thin.core.ModuleShape.prototype.getClassId = goog.abstractMethod;
 
 
-thin.editor.ModuleShape.prototype.setDefaultOutline = goog.abstractMethod;
+thin.core.ModuleShape.prototype.setDefaultOutline = goog.abstractMethod;
 
 
-thin.editor.ModuleShape.prototype.getCloneCreator = goog.abstractMethod;
+thin.core.ModuleShape.prototype.getCloneCreator = goog.abstractMethod;
 
 
-thin.editor.ModuleShape.prototype.setInitShapeProperties = goog.abstractMethod;
+thin.core.ModuleShape.prototype.setInitShapeProperties = goog.abstractMethod;
 
 
-thin.editor.ModuleShape.prototype.toOutline = goog.abstractMethod;
+thin.core.ModuleShape.prototype.toOutline = goog.abstractMethod;
 
 
-thin.editor.ModuleShape.prototype.createPropertyComponent_ = goog.abstractMethod;
+thin.core.ModuleShape.prototype.createPropertyComponent_ = goog.abstractMethod;
 
 
-thin.editor.ModuleShape.prototype.updateProperties = goog.abstractMethod;
+thin.core.ModuleShape.prototype.updateProperties = goog.abstractMethod;
 
 
 /**
  * @this {goog.graphics.Element}
  * @return {boolean}
  */
-thin.editor.ModuleShape.prototype.canResizeWidth = function() {
+thin.core.ModuleShape.prototype.canResizeWidth = function() {
   return true;
 };
 
@@ -129,12 +129,12 @@ thin.editor.ModuleShape.prototype.canResizeWidth = function() {
  * @this {goog.graphics.Element}
  * @return {boolean}
  */
-thin.editor.ModuleShape.prototype.canResizeHeight = function() {
+thin.core.ModuleShape.prototype.canResizeHeight = function() {
   return true;
 };
 
 
-thin.editor.ModuleShape.prototype.initIdentifier = function() {
+thin.core.ModuleShape.prototype.initIdentifier = function() {
   var layout = this.getLayout();
   this.identifier_ = layout.getElementAttribute(this.getElement(), 'id');
 
@@ -151,7 +151,7 @@ thin.editor.ModuleShape.prototype.initIdentifier = function() {
 /**
  * @return {string}
  */
-thin.editor.ModuleShape.prototype.getIdentifier = function() {
+thin.core.ModuleShape.prototype.getIdentifier = function() {
   return this.identifier_;
 };
 
@@ -160,8 +160,8 @@ thin.editor.ModuleShape.prototype.getIdentifier = function() {
  * @this {goog.graphics.Element}
  * @param {number} width
  */
-thin.editor.ModuleShape.prototype.setStrokeWidth = function(width) {
-  if (thin.isExactlyEqual(width, thin.editor.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
+thin.core.ModuleShape.prototype.setStrokeWidth = function(width) {
+  if (thin.isExactlyEqual(width, thin.core.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE)) {
     this.getLayout().setElementAttributes(this.getElement(), {
       'stroke-opacity': 0
     });
@@ -176,7 +176,7 @@ thin.editor.ModuleShape.prototype.setStrokeWidth = function(width) {
  * @this {goog.graphics.Element}
  * @param {string} shapeId
  */
-thin.editor.ModuleShape.prototype.setShapeIdInternal = function(shapeId) {
+thin.core.ModuleShape.prototype.setShapeIdInternal = function(shapeId) {
   this.shapeId_ = shapeId;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-id': shapeId
@@ -187,16 +187,16 @@ thin.editor.ModuleShape.prototype.setShapeIdInternal = function(shapeId) {
 /**
  * @this {goog.graphics.Element}
  * @param {string} newShapeId
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
  * @private
  */
-thin.editor.ModuleShape.prototype.setShapeId_ = function(newShapeId, opt_shapeIdManager) {
+thin.core.ModuleShape.prototype.setShapeId_ = function(newShapeId, opt_shapeIdManager) {
   if (!opt_shapeIdManager && this.isAffiliationListShape()) {
     opt_shapeIdManager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
   }
   
   var shapeIdManager = opt_shapeIdManager || this.getLayout().getManager().getShapeIdManager();
-  var newPrefix = thin.editor.ShapeIdManager.getShapeIdPrefix(newShapeId);
+  var newPrefix = thin.core.ShapeIdManager.getShapeIdPrefix(newShapeId);
   this.deleteShapeId_(shapeIdManager);
   shapeIdManager.add(this, newPrefix);
   this.setShapeIdInternal(newShapeId);
@@ -205,18 +205,18 @@ thin.editor.ModuleShape.prototype.setShapeId_ = function(newShapeId, opt_shapeId
 
 /**
  * @this {goog.graphics.Element}
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
  * @private
  */
-thin.editor.ModuleShape.prototype.deleteShapeId_ = function(opt_shapeIdManager) {
+thin.core.ModuleShape.prototype.deleteShapeId_ = function(opt_shapeIdManager) {
   var oldShapeId = this.getShapeId();
-  var defaultShapeId = thin.editor.ModuleShape.DEFAULT_SHAPEID;
+  var defaultShapeId = thin.core.ModuleShape.DEFAULT_SHAPEID;
   if (!thin.isExactlyEqual(oldShapeId, defaultShapeId)) {
     if (!opt_shapeIdManager && this.isAffiliationListShape()) {
       opt_shapeIdManager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
     }
     var shapeIdManager = opt_shapeIdManager || this.getLayout().getManager().getShapeIdManager();
-    shapeIdManager.remove(this, thin.editor.ShapeIdManager.getShapeIdPrefix(oldShapeId));
+    shapeIdManager.remove(this, thin.core.ShapeIdManager.getShapeIdPrefix(oldShapeId));
   }
   this.setShapeIdInternal(defaultShapeId);
 };
@@ -225,14 +225,14 @@ thin.editor.ModuleShape.prototype.deleteShapeId_ = function(opt_shapeIdManager) 
 /**
  * @this {goog.graphics.Element}
  * @param {string} newShapeId
- * @param {thin.editor.ShapeIdManager=} opt_shapeIdManager
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
  */
-thin.editor.ModuleShape.prototype.setShapeId = function(newShapeId, opt_shapeIdManager) {
+thin.core.ModuleShape.prototype.setShapeId = function(newShapeId, opt_shapeIdManager) {
   if (!opt_shapeIdManager && this.isAffiliationListShape()) {
     opt_shapeIdManager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
   }
   
-  if (thin.isExactlyEqual(newShapeId, thin.editor.ModuleShape.DEFAULT_SHAPEID)) {
+  if (thin.isExactlyEqual(newShapeId, thin.core.ModuleShape.DEFAULT_SHAPEID)) {
     this.deleteShapeId_(opt_shapeIdManager);
   } else {
     this.setShapeId_(newShapeId, opt_shapeIdManager);
@@ -244,9 +244,9 @@ thin.editor.ModuleShape.prototype.setShapeId = function(newShapeId, opt_shapeIdM
  * @this {goog.graphics.Element}
  * @return {string}
  */
-thin.editor.ModuleShape.prototype.getShapeId = function() {
+thin.core.ModuleShape.prototype.getShapeId = function() {
   return /** @type {string} */(thin.getValIfNotDef(this.shapeId_,
-             thin.editor.ModuleShape.DEFAULT_SHAPEID));
+             thin.core.ModuleShape.DEFAULT_SHAPEID));
 };
 
 
@@ -254,7 +254,7 @@ thin.editor.ModuleShape.prototype.getShapeId = function() {
  * @this {goog.graphics.Element}
  * @param {string} desc
  */
-thin.editor.ModuleShape.prototype.setDesc = function(desc) {
+thin.core.ModuleShape.prototype.setDesc = function(desc) {
   if (desc) {
     this.getLayout().
       setElementAttributes(this.getElement(), {'x-desc': desc});
@@ -268,7 +268,7 @@ thin.editor.ModuleShape.prototype.setDesc = function(desc) {
  * @this {goog.graphics.Element}
  * @return {string}
  */
-thin.editor.ModuleShape.prototype.getDesc = function() {
+thin.core.ModuleShape.prototype.getDesc = function() {
   return this.getLayout().getElementAttribute(this.getElement(), 'x-desc') || '';
 };
 
@@ -277,7 +277,7 @@ thin.editor.ModuleShape.prototype.getDesc = function() {
  * @this {goog.graphics.Element}
  * @param {boolean} setting
  */
-thin.editor.ModuleShape.prototype.setDisplay = function(setting) {
+thin.core.ModuleShape.prototype.setDisplay = function(setting) {
   this.display_ = setting === true;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-display': setting
@@ -289,16 +289,16 @@ thin.editor.ModuleShape.prototype.setDisplay = function(setting) {
  * @this {goog.graphics.Element}
  * @return {boolean}
  */
-thin.editor.ModuleShape.prototype.getDisplay = function() {
+thin.core.ModuleShape.prototype.getDisplay = function() {
   return /** @type {boolean} */(thin.getValIfNotDef(this.display_,
-             thin.editor.ModuleShape.DEFAULT_DISPLAY));
+             thin.core.ModuleShape.DEFAULT_DISPLAY));
 };
 
 
 /**
  * @this {goog.graphics.Element}
  */
-thin.editor.ModuleShape.prototype.disposeInternalForShape = function() {
+thin.core.ModuleShape.prototype.disposeInternalForShape = function() {
   this.disposeInternalForDragger_();
   var outline = this.getTargetOutline();
   if (goog.isDefAndNotNull(outline)) {
@@ -313,7 +313,7 @@ thin.editor.ModuleShape.prototype.disposeInternalForShape = function() {
 /**
  * @this {goog.graphics.Element}
  */
-thin.editor.ModuleShape.prototype.setupEventHandlers = function() {
+thin.core.ModuleShape.prototype.setupEventHandlers = function() {
   this.setMouseDownHandlers();
   this.setupDragHandlers();
   this.setDisposed(false);
@@ -324,7 +324,7 @@ thin.editor.ModuleShape.prototype.setupEventHandlers = function() {
  * @this {goog.graphics.Element}
  * @param {goog.graphics.Element} outline
  */
-thin.editor.ModuleShape.prototype.setTargetOutline = function(outline) {
+thin.core.ModuleShape.prototype.setTargetOutline = function(outline) {
   this.targetOutline_ = outline;
 };
 
@@ -333,7 +333,7 @@ thin.editor.ModuleShape.prototype.setTargetOutline = function(outline) {
  * @this {goog.graphics.Element}
  * @return {goog.graphics.Element}
  */
-thin.editor.ModuleShape.prototype.getTargetOutline = function() {
+thin.core.ModuleShape.prototype.getTargetOutline = function() {
   return this.targetOutline_;
 };
 
@@ -342,7 +342,7 @@ thin.editor.ModuleShape.prototype.getTargetOutline = function() {
  * @this {goog.graphics.Element}
  * @return {goog.math.Coordinate}
  */
-thin.editor.ModuleShape.prototype.getDeltaCoordinateForList = function() {
+thin.core.ModuleShape.prototype.getDeltaCoordinateForList = function() {
 
   if (this.isAffiliationListShape()) {
     var affiliationRegionBounds = this.getAffiliationRegionBounds();
@@ -359,7 +359,7 @@ thin.editor.ModuleShape.prototype.getDeltaCoordinateForList = function() {
  * @this {goog.graphics.Element}
  * @return {goog.math.Coordinate}
  */
-thin.editor.ModuleShape.prototype.getDeltaCoordinateForGuide = function() {
+thin.core.ModuleShape.prototype.getDeltaCoordinateForGuide = function() {
 
   if (this.getTargetOutline().isForMultiple()) {
     var guide = this.getLayout().getHelpers().getGuideHelper();
@@ -372,7 +372,7 @@ thin.editor.ModuleShape.prototype.getDeltaCoordinateForGuide = function() {
 };
 
 
-thin.editor.ModuleShape.prototype.updateToolbarUI = function() {
+thin.core.ModuleShape.prototype.updateToolbarUI = function() {
   thin.ui.setEnabledForFontUi(false);
 };
 
@@ -380,7 +380,7 @@ thin.editor.ModuleShape.prototype.updateToolbarUI = function() {
 /**
  * @this {goog.graphics.Element}
  */
-thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
+thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
   var proppane = thin.ui.getComponent('proppane');
   var scope = this;
   var layout = this.getLayout();
@@ -391,9 +391,9 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
   var multiOutlineHelper = helpers.getMultiOutlineHelper();
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var guide = helpers.getGuideHelper();
-  var listShapeClassIdTemp = thin.editor.ListShape.ClassIds;
+  var listShapeClassIdTemp = thin.core.ListShape.ClassIds;
   var isListShapeFace = layout.getElementAttribute(this.getElement(), 'class') ==
-        thin.editor.ListShape.CLASSID + goog.object.get(listShapeClassIdTemp, 'FACE');
+        thin.core.ListShape.CLASSID + goog.object.get(listShapeClassIdTemp, 'FACE');
   var isAffiliationListShape = this.isAffiliationListShape();
   var affiliationSectionName = this.getAffiliationSectionName();
   
@@ -783,7 +783,7 @@ thin.editor.ModuleShape.prototype.setMouseDownHandlers = function() {
 /**
  * @this {goog.graphics.Element}
  */
-thin.editor.ModuleShape.prototype.setupDragHandlers = function() {
+thin.core.ModuleShape.prototype.setupDragHandlers = function() {
   var scope = this;
   var layout = this.getLayout();
   var helpers = layout.getHelpers();
@@ -792,18 +792,18 @@ thin.editor.ModuleShape.prototype.setupDragHandlers = function() {
   var dragLayer = helpers.getDragLayer();
   var eventType = goog.fx.Dragger.EventType;
   
-  var dragger = new thin.editor.SvgDragger(this.getTargetOutline(), this);
+  var dragger = new thin.core.SvgDragger(this.getTargetOutline(), this);
   this.dragger_ = dragger;
   
-  goog.events.listen(dragger, thin.editor.AbstractDragger.EventType.BEFORESTART, function(e) {
+  goog.events.listen(dragger, thin.core.AbstractDragger.EventType.BEFORESTART, function(e) {
     this.getTargetOutline().setBounds(this.getBounds());
   }, false, this);
   
   goog.events.listen(dragger, eventType.START, function(e) {
     dragger.setAdsorptionX(helpers.getAdsorptionX());
     dragger.setAdsorptionY(helpers.getAdsorptionY());
-    var cursorTypeMove = thin.editor.Cursor.Type.MOVE;
-    var cursorMove = new thin.editor.Cursor(cursorTypeMove);
+    var cursorTypeMove = thin.core.Cursor.Type.MOVE;
+    var cursorMove = new thin.core.Cursor(cursorTypeMove);
     goog.style.setStyle(body, 'cursor', cursorTypeMove);
     dragLayer.setCursor(cursorMove);
     layout.setElementCursor(dragLayer.getElement(), cursorMove);
@@ -818,8 +818,8 @@ thin.editor.ModuleShape.prototype.setupDragHandlers = function() {
   }, false, this);
   goog.events.listen(dragger, eventType.END, function(e) {
   
-    var cursorTypeDefault = thin.editor.Cursor.Type.DEFAULT;
-    var cursorDefault = new thin.editor.Cursor(cursorTypeDefault);
+    var cursorTypeDefault = thin.core.Cursor.Type.DEFAULT;
+    var cursorDefault = new thin.core.Cursor(cursorTypeDefault);
     goog.style.setStyle(body, 'cursor', cursorTypeDefault);
     dragLayer.setCursor(cursorDefault);
     layout.setElementCursor(dragLayer.getElement(), cursorDefault);
@@ -859,7 +859,7 @@ thin.editor.ModuleShape.prototype.setupDragHandlers = function() {
  * @this {goog.graphics.Element}
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.ModuleShape.prototype.setLeftForPropertyUpdate = function(e) {
+thin.core.ModuleShape.prototype.setLeftForPropertyUpdate = function(e) {
   
   var scope = this;
   var layout = this.getLayout();
@@ -889,7 +889,7 @@ thin.editor.ModuleShape.prototype.setLeftForPropertyUpdate = function(e) {
  * @this {goog.graphics.Element}
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.ModuleShape.prototype.setTopForPropertyUpdate = function(e) {
+thin.core.ModuleShape.prototype.setTopForPropertyUpdate = function(e) {
   var scope = this;
   var layout = this.getLayout();
   var guide = layout.getHelpers().getGuideHelper();
@@ -918,7 +918,7 @@ thin.editor.ModuleShape.prototype.setTopForPropertyUpdate = function(e) {
  * @this {goog.graphics.Element}
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.ModuleShape.prototype.setWidthForPropertyUpdate = function(e) {
+thin.core.ModuleShape.prototype.setWidthForPropertyUpdate = function(e) {
   var scope = this;
   var layout = this.getLayout();
   var guide = layout.getHelpers().getGuideHelper();
@@ -950,7 +950,7 @@ thin.editor.ModuleShape.prototype.setWidthForPropertyUpdate = function(e) {
  * @this {goog.graphics.Element}
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.ModuleShape.prototype.setHeightForPropertyUpdate = function(e) {
+thin.core.ModuleShape.prototype.setHeightForPropertyUpdate = function(e) {
   var scope = this;
   var layout = this.getLayout();
   var guide = layout.getHelpers().getGuideHelper();
@@ -982,11 +982,11 @@ thin.editor.ModuleShape.prototype.setHeightForPropertyUpdate = function(e) {
  * @this {goog.graphics.Element}
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.ModuleShape.prototype.setFillForPropertyUpdate = function(e) {
+thin.core.ModuleShape.prototype.setFillForPropertyUpdate = function(e) {
   var scope = this;
   var proppane = thin.ui.getComponent('proppane');
-  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-  var fillNone = thin.editor.ModuleShape.NONE;
+  var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
+  var fillNone = thin.core.ModuleShape.NONE;
   //  choose none color returned null.
   var fillColor = /** @type {string} */(thin.getValIfNotDef(e.target.getValue(), proppaneBlank));
   var fill = new goog.graphics.SolidFill(thin.isExactlyEqual(fillColor, proppaneBlank) ?
@@ -1016,11 +1016,11 @@ thin.editor.ModuleShape.prototype.setFillForPropertyUpdate = function(e) {
  * @this {goog.graphics.Element}
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.ModuleShape.prototype.setStrokeForPropertyUpdate = function(e) {
+thin.core.ModuleShape.prototype.setStrokeForPropertyUpdate = function(e) {
   var scope = this;
   var proppane = thin.ui.getComponent('proppane');
-  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-  var strokeNone = thin.editor.ModuleShape.NONE;
+  var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
+  var strokeNone = thin.core.ModuleShape.NONE;
   var captureStroke = this.getStroke();
   var captureStrokeColor = captureStroke.getColor();
   //  choose none color returned null.
@@ -1051,11 +1051,11 @@ thin.editor.ModuleShape.prototype.setStrokeForPropertyUpdate = function(e) {
  * @this {goog.graphics.Element}
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.ModuleShape.prototype.setStrokeWidthForPropertyUpdate = function(e) {
+thin.core.ModuleShape.prototype.setStrokeWidthForPropertyUpdate = function(e) {
   var scope = this;
   var proppane = thin.ui.getComponent('proppane');
-  var proppaneBlank = thin.editor.ModuleShape.PROPPANE_SHOW_BLANK;
-  var propStrokeWidth = thin.editor.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE;
+  var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
+  var propStrokeWidth = thin.core.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE;
   var strokeWidth = Number(e.target.getValue());
   var captureStrokeWidth = this.getStroke().getWidth();
   var showStrokeWidth = thin.isExactlyEqual(strokeWidth, propStrokeWidth) ? 
@@ -1081,13 +1081,13 @@ thin.editor.ModuleShape.prototype.setStrokeWidthForPropertyUpdate = function(e) 
  * @this {goog.graphics.Element}
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.ModuleShape.prototype.setStrokeDashTypeForPropertyUpdate = function(e) {
+thin.core.ModuleShape.prototype.setStrokeDashTypeForPropertyUpdate = function(e) {
   var scope = this;
   var proppane = thin.ui.getComponent('proppane');
   var strokeValue = e.target.getValue();
-  var strokeDashType = thin.editor.ModuleElement.getStrokeTypeFromValue(strokeValue);
+  var strokeDashType = thin.core.ModuleElement.getStrokeTypeFromValue(strokeValue);
   var captureStrokeDashType = this.getStrokeDashType();
-  var captureStrokeValue = thin.editor.ModuleElement.getStrokeValueFromType(captureStrokeDashType);
+  var captureStrokeValue = thin.core.ModuleElement.getStrokeValueFromType(captureStrokeDashType);
   
   this.getLayout().getWorkspace().normalVersioning(function(version) {
   
@@ -1108,7 +1108,7 @@ thin.editor.ModuleShape.prototype.setStrokeDashTypeForPropertyUpdate = function(
  * @this {goog.graphics.Element}
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.ModuleShape.prototype.setShapeIdForPropertyUpdate = function(e) {
+thin.core.ModuleShape.prototype.setShapeIdForPropertyUpdate = function(e) {
   var scope = this;
   var proppane = thin.ui.getComponent('proppane');
   var shapeId = e.target.getValue();
@@ -1133,7 +1133,7 @@ thin.editor.ModuleShape.prototype.setShapeIdForPropertyUpdate = function(e) {
  * @this {goog.graphics.Element}
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.ModuleShape.prototype.setDescPropertyUpdate = function(e) {
+thin.core.ModuleShape.prototype.setDescPropertyUpdate = function(e) {
   var scope = this;
   var proppane = thin.ui.getComponent('proppane');
   var desc = e.target.getValue();
@@ -1157,7 +1157,7 @@ thin.editor.ModuleShape.prototype.setDescPropertyUpdate = function(e) {
  * @this {goog.graphics.Element}
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
-thin.editor.ModuleShape.prototype.setDisplayForPropertyUpdate = function(e) {
+thin.core.ModuleShape.prototype.setDisplayForPropertyUpdate = function(e) {
   var scope = this;
   var proppane = thin.ui.getComponent('proppane');
   var display = e.target.isChecked();
@@ -1183,7 +1183,7 @@ thin.editor.ModuleShape.prototype.setDisplayForPropertyUpdate = function(e) {
  * @param {boolean} enabled
  * @param {string} sectionName
  */
-thin.editor.ModuleShape.prototype.setSectionEnabled = function(
+thin.core.ModuleShape.prototype.setSectionEnabled = function(
       enabled, sectionName) {
 
   var scope = this;
@@ -1217,6 +1217,6 @@ thin.editor.ModuleShape.prototype.setSectionEnabled = function(
  * @param {judgement_box} goog.math.Rect
  * @return {boolean}
  */
-thin.editor.ModuleShape.prototype.isIntersects = function(judgement_box) {
+thin.core.ModuleShape.prototype.isIntersects = function(judgement_box) {
   return goog.math.Box.intersects(judgement_box, this.getBoxSize());
 };

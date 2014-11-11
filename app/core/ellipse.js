@@ -13,21 +13,21 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Ellipse');
+goog.provide('thin.core.Ellipse');
 
 goog.require('goog.math.Coordinate');
 goog.require('goog.graphics.SvgEllipseElement');
-goog.require('thin.editor.ModuleElement');
+goog.require('thin.core.ModuleElement');
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
  * @extends {goog.graphics.SvgEllipseElement}
  */
-thin.editor.Ellipse = function(element, layout, stroke, fill) {
+thin.core.Ellipse = function(element, layout, stroke, fill) {
   goog.graphics.SvgEllipseElement.call(this,
     element, layout, stroke, fill);
 
@@ -84,14 +84,14 @@ thin.editor.Ellipse = function(element, layout, stroke, fill) {
    */
   this.ry_ = ry;
 };
-goog.inherits(thin.editor.Ellipse, goog.graphics.SvgEllipseElement);
-goog.mixin(thin.editor.Ellipse.prototype, thin.editor.ModuleElement.prototype);
+goog.inherits(thin.core.Ellipse, goog.graphics.SvgEllipseElement);
+goog.mixin(thin.core.Ellipse.prototype, thin.core.ModuleElement.prototype);
 
 
 /**
  * @param {number} left
  */
-thin.editor.Ellipse.prototype.setLeft = function(left) {
+thin.core.Ellipse.prototype.setLeft = function(left) {
   left = thin.numberWithPrecision(left - this.getParentTransLateX());
   this.left_ = left;
   var cx = thin.numberWithPrecision(left + this.rx_, 2);
@@ -105,7 +105,7 @@ thin.editor.Ellipse.prototype.setLeft = function(left) {
 /**
  * @param {number} top
  */
-thin.editor.Ellipse.prototype.setTop = function(top) {
+thin.core.Ellipse.prototype.setTop = function(top) {
   top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
   var cy = thin.numberWithPrecision(top + this.ry_, 2);
@@ -119,7 +119,7 @@ thin.editor.Ellipse.prototype.setTop = function(top) {
 /**
  * @param {number} width
  */
-thin.editor.Ellipse.prototype.setWidth = function(width) {
+thin.core.Ellipse.prototype.setWidth = function(width) {
   width = thin.numberWithPrecision(width);
   this.width_ = width;
   var rx = thin.numberWithPrecision(width / 2, 2);
@@ -133,7 +133,7 @@ thin.editor.Ellipse.prototype.setWidth = function(width) {
 /**
  * @param {number} height
  */
-thin.editor.Ellipse.prototype.setHeight = function(height) {
+thin.core.Ellipse.prototype.setHeight = function(height) {
   height = thin.numberWithPrecision(height);
   this.height_ = height;
   var ry = thin.numberWithPrecision(height / 2, 2);
@@ -147,7 +147,7 @@ thin.editor.Ellipse.prototype.setHeight = function(height) {
 /**
  * @return {goog.math.Coordinate}
  */
-thin.editor.Ellipse.prototype.getCenterCoordinate = function() {
+thin.core.Ellipse.prototype.getCenterCoordinate = function() {
   return new goog.math.Coordinate(this.cx_ + this.getParentTransLateX(), 
                                   this.cy_ + this.getParentTransLateY());
 };
@@ -156,7 +156,7 @@ thin.editor.Ellipse.prototype.getCenterCoordinate = function() {
 /**
  * @return {goog.math.Coordinate}
  */
-thin.editor.Ellipse.prototype.getRadius = function() {
+thin.core.Ellipse.prototype.getRadius = function() {
   return new goog.math.Coordinate(this.rx_, this.ry_);
 };
 
@@ -166,7 +166,7 @@ thin.editor.Ellipse.prototype.getRadius = function() {
  * @param {number} cx Center X coordinate.
  * @param {number} cy Center Y coordinate.
  */
-thin.editor.Ellipse.prototype.setCenter = function(cx, cy) {
+thin.core.Ellipse.prototype.setCenter = function(cx, cy) {
   this.setLeft(cx - this.rx_);
   this.setTop(cy - this.ry_);
 };
@@ -177,7 +177,7 @@ thin.editor.Ellipse.prototype.setCenter = function(cx, cy) {
  * @param {number} rx Radius length for the x-axis.
  * @param {number} ry Radius length for the y-axis.
  */
-thin.editor.Ellipse.prototype.setRadius = function(rx, ry) {
+thin.core.Ellipse.prototype.setRadius = function(rx, ry) {
   this.setWidth(rx * 2);
   this.setHeight(ry * 2);
   this.setLeft(this.getLeft());

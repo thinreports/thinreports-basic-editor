@@ -13,11 +13,11 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.formatstyles.PaddingFormat');
-goog.provide('thin.editor.formatstyles.PaddingFormat.DirectionType');
-goog.provide('thin.editor.formatstyles.PaddingFormat.DirectionTypeName');
+goog.provide('thin.core.formatstyles.PaddingFormat');
+goog.provide('thin.core.formatstyles.PaddingFormat.DirectionType');
+goog.provide('thin.core.formatstyles.PaddingFormat.DirectionTypeName');
 
-goog.require('thin.editor.formatstyles.AbstractFormat');
+goog.require('thin.core.formatstyles.AbstractFormat');
 
 
 /**
@@ -25,10 +25,10 @@ goog.require('thin.editor.formatstyles.AbstractFormat');
  * @param {string} chars
  * @param {number} len
  * @constructor
- * @extends {thin.editor.formatstyles.AbstractFormat}
+ * @extends {thin.core.formatstyles.AbstractFormat}
  */
-thin.editor.formatstyles.PaddingFormat = function(direction, chars, len) {
-  thin.editor.formatstyles.AbstractFormat.call(this);
+thin.core.formatstyles.PaddingFormat = function(direction, chars, len) {
+  thin.core.formatstyles.AbstractFormat.call(this);
   
   /**
    * @type {string}
@@ -48,13 +48,13 @@ thin.editor.formatstyles.PaddingFormat = function(direction, chars, len) {
    */
   this.len_ = len;
 };
-goog.inherits(thin.editor.formatstyles.PaddingFormat, thin.editor.formatstyles.AbstractFormat);
+goog.inherits(thin.core.formatstyles.PaddingFormat, thin.core.formatstyles.AbstractFormat);
 
 
 /**
  * @enum {string}
  */
-thin.editor.formatstyles.PaddingFormat.DirectionType = {
+thin.core.formatstyles.PaddingFormat.DirectionType = {
   L: 'L',
   R: 'R'
 };
@@ -63,7 +63,7 @@ thin.editor.formatstyles.PaddingFormat.DirectionType = {
 /**
  * @enum {string}
  */
-thin.editor.formatstyles.PaddingFormat.DirectionTypeName = {
+thin.core.formatstyles.PaddingFormat.DirectionTypeName = {
   L: thin.t('label_fill_left'),
   R: thin.t('label_fill_right')
 };
@@ -72,29 +72,29 @@ thin.editor.formatstyles.PaddingFormat.DirectionTypeName = {
 /**
  * @type {string}
  */
-thin.editor.formatstyles.PaddingFormat.DEFAULT_DIRECTION = thin.editor.formatstyles.PaddingFormat.DirectionType.L;
+thin.core.formatstyles.PaddingFormat.DEFAULT_DIRECTION = thin.core.formatstyles.PaddingFormat.DirectionType.L;
 
 
 /**
  * @type {string}
  */
-thin.editor.formatstyles.PaddingFormat.DEFAULT_CHAR = '0';
+thin.core.formatstyles.PaddingFormat.DEFAULT_CHAR = '0';
 
 
 /**
  * @type {number}
  */
-thin.editor.formatstyles.PaddingFormat.DEFAULT_LENGTH = 0;
+thin.core.formatstyles.PaddingFormat.DEFAULT_LENGTH = 0;
 
 
 /**
  * @param {string} targetName
  * @return {string}
  */
-thin.editor.formatstyles.PaddingFormat.getDirectionTypeFromName = function(targetName) {
+thin.core.formatstyles.PaddingFormat.getDirectionTypeFromName = function(targetName) {
   
-  var directionType = thin.editor.formatstyles.PaddingFormat.DirectionType;
-  var directionTypeName = thin.editor.formatstyles.PaddingFormat.DirectionTypeName;
+  var directionType = thin.core.formatstyles.PaddingFormat.DirectionType;
+  var directionTypeName = thin.core.formatstyles.PaddingFormat.DirectionTypeName;
 
   var type;
   switch (targetName) {
@@ -113,10 +113,10 @@ thin.editor.formatstyles.PaddingFormat.getDirectionTypeFromName = function(targe
  * @param {string} targetDirection
  * @return {string}
  */
-thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType = function(targetDirection) {
+thin.core.formatstyles.PaddingFormat.getDirectionNameFromType = function(targetDirection) {
   
-  var directionType = thin.editor.formatstyles.PaddingFormat.DirectionType;
-  var directionTypeName = thin.editor.formatstyles.PaddingFormat.DirectionTypeName;
+  var directionType = thin.core.formatstyles.PaddingFormat.DirectionType;
+  var directionTypeName = thin.core.formatstyles.PaddingFormat.DirectionTypeName;
 
   var typeName;
   switch (targetDirection) {
@@ -134,7 +134,7 @@ thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType = function(targe
 /**
  * @return {string}
  */
-thin.editor.formatstyles.PaddingFormat.prototype.getDirection = function() {
+thin.core.formatstyles.PaddingFormat.prototype.getDirection = function() {
   return this.direction_;
 };
 
@@ -142,7 +142,7 @@ thin.editor.formatstyles.PaddingFormat.prototype.getDirection = function() {
 /**
  * @return {number}
  */
-thin.editor.formatstyles.PaddingFormat.prototype.getLength = function() {
+thin.core.formatstyles.PaddingFormat.prototype.getLength = function() {
   return this.len_;
 };
 
@@ -150,7 +150,7 @@ thin.editor.formatstyles.PaddingFormat.prototype.getLength = function() {
 /**
  * @return {string}
  */
-thin.editor.formatstyles.PaddingFormat.prototype.getChar = function() {
+thin.core.formatstyles.PaddingFormat.prototype.getChar = function() {
   return this.char_;
 };
 
@@ -158,17 +158,17 @@ thin.editor.formatstyles.PaddingFormat.prototype.getChar = function() {
 /**
  * @return {string}
  */
-thin.editor.formatstyles.PaddingFormat.prototype.inspect = function() {
+thin.core.formatstyles.PaddingFormat.prototype.inspect = function() {
   return [
     thin.t('field_fill_length') + '=' + this.len_, 
     thin.t('field_fill_character') + '=[' + this.char_ + ']', 
-    thin.t('field_fill_direction') + '=' + thin.editor.formatstyles.PaddingFormat.getDirectionNameFromType(this.direction_)
+    thin.t('field_fill_direction') + '=' + thin.core.formatstyles.PaddingFormat.getDirectionNameFromType(this.direction_)
   ].join('/');
 };
 
 
 /** @inheritDoc */
-thin.editor.formatstyles.PaddingFormat.prototype.disposeInternal = function() {
+thin.core.formatstyles.PaddingFormat.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   
   delete this.direction_;

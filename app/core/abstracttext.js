@@ -13,37 +13,37 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.AbstractText');
+goog.provide('thin.core.AbstractText');
 
 goog.require('goog.graphics.SvgTextElement');
-goog.require('thin.editor.ModuleElement');
+goog.require('thin.core.ModuleElement');
 
 
 /**
  * @param {Element} element
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
  * @param {goog.graphics.Fill?} fill
  * @constructor
  * @extends {goog.graphics.SvgTextElement}
  */
-thin.editor.AbstractText = function(element, layout, stroke, fill) {
+thin.core.AbstractText = function(element, layout, stroke, fill) {
   goog.graphics.SvgTextElement.call(this, element, layout, stroke, fill);
 };
-goog.inherits(thin.editor.AbstractText, goog.graphics.SvgTextElement);
-goog.mixin(thin.editor.AbstractText.prototype, thin.editor.ModuleElement.prototype);
+goog.inherits(thin.core.AbstractText, goog.graphics.SvgTextElement);
+goog.mixin(thin.core.AbstractText.prototype, thin.core.ModuleElement.prototype);
 
 
 /**
  * @type {string}
  */
-thin.editor.AbstractText.DEFAULT_TEXTCONTENT = '';
+thin.core.AbstractText.DEFAULT_TEXTCONTENT = '';
 
 
 /**
  * @return {boolean}
  */
-thin.editor.AbstractText.prototype.isExistsData = function() {
+thin.core.AbstractText.prototype.isExistsData = function() {
   var firstChild = this.getElement().firstChild;
   if (firstChild) {
     return goog.isString(firstChild.data);
@@ -56,23 +56,23 @@ thin.editor.AbstractText.prototype.isExistsData = function() {
 /**
  * @param {string} text
  */
-thin.editor.AbstractText.prototype.setText = function(text) {
+thin.core.AbstractText.prototype.setText = function(text) {
   if (!this.isExistsData()) {
     this.getElement().appendChild(goog.dom.getDocument().createTextNode(
-        thin.editor.AbstractText.DEFAULT_TEXTCONTENT));
+        thin.core.AbstractText.DEFAULT_TEXTCONTENT));
   }
-  thin.editor.AbstractText.superClass_.setText.call(this, text);
+  thin.core.AbstractText.superClass_.setText.call(this, text);
 };
 
 
 /**
  * @return {string}
  */
-thin.editor.AbstractText.prototype.getText = function() {
+thin.core.AbstractText.prototype.getText = function() {
   if (this.isExistsData()) {
     return this.getElement().firstChild.data;
   } else {
-    return thin.editor.AbstractText.DEFAULT_TEXTCONTENT;
+    return thin.core.AbstractText.DEFAULT_TEXTCONTENT;
   }
 };
 
@@ -80,7 +80,7 @@ thin.editor.AbstractText.prototype.getText = function() {
 /**
  * @param {number} left
  */
-thin.editor.AbstractText.prototype.setLeft = function(left) {
+thin.core.AbstractText.prototype.setLeft = function(left) {
   left = thin.numberWithPrecision(left - this.getParentTransLateX());
   this.left_ = left;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -92,7 +92,7 @@ thin.editor.AbstractText.prototype.setLeft = function(left) {
 /**
  * @param {number} top
  */
-thin.editor.AbstractText.prototype.setTop = function(top) {
+thin.core.AbstractText.prototype.setTop = function(top) {
   top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
   this.getLayout().setElementAttributes(this.getElement(), {
@@ -104,7 +104,7 @@ thin.editor.AbstractText.prototype.setTop = function(top) {
 /**
  * @return {number}
  */
-thin.editor.AbstractText.prototype.getHeight = function() {
+thin.core.AbstractText.prototype.getHeight = function() {
   this.height_ = this.getElement()['getBBox']().height;
   return this.height_;
 };
@@ -113,7 +113,7 @@ thin.editor.AbstractText.prototype.getHeight = function() {
 /**
  * @return {number}
  */
-thin.editor.AbstractText.prototype.getWidth = function() {
+thin.core.AbstractText.prototype.getWidth = function() {
   this.width_ = this.getElement()['getBBox']().width;
   return this.width_;
 };
@@ -122,7 +122,7 @@ thin.editor.AbstractText.prototype.getWidth = function() {
 /**
  * @return {number}
  */
-thin.editor.AbstractText.prototype.getBaseLine = function() {
+thin.core.AbstractText.prototype.getBaseLine = function() {
   var element = this.getElement();
   if (element.hasAttribute('y')) {
     return Number(this.getLayout().getElementAttribute(element, 'y'));
@@ -135,7 +135,7 @@ thin.editor.AbstractText.prototype.getBaseLine = function() {
 /**
  * @return {number}
  */
-thin.editor.AbstractText.prototype.getOffsetTop = function() {
+thin.core.AbstractText.prototype.getOffsetTop = function() {
   return this.getElement()['offsetTop'];
 };
 
@@ -143,7 +143,7 @@ thin.editor.AbstractText.prototype.getOffsetTop = function() {
 /**
  * @return {number}
  */
-thin.editor.AbstractText.prototype.getAscent = function() {
+thin.core.AbstractText.prototype.getAscent = function() {
   return Math.round(this.getBaseLine() - this.getOffsetTop());
 };
 
@@ -151,6 +151,6 @@ thin.editor.AbstractText.prototype.getAscent = function() {
 /**
  * @return {number}
  */
-thin.editor.AbstractText.prototype.getDescent = function() {
+thin.core.AbstractText.prototype.getDescent = function() {
   return this.getHeight() - this.getAscent();
 };

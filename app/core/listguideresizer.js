@@ -13,34 +13,34 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ListGuideResizer');
-goog.provide('thin.editor.ListGuideResizer.DefaultSize_');
+goog.provide('thin.core.ListGuideResizer');
+goog.provide('thin.core.ListGuideResizer.DefaultSize_');
 
 goog.require('goog.array');
 goog.require('goog.math.Rect');
 goog.require('goog.math.Size');
-goog.require('thin.editor.Cursor');
-goog.require('thin.editor.Cursor.Type');
-goog.require('thin.editor.Component');
-goog.require('thin.editor.Ellipse');
-goog.require('thin.editor.Rect');
-goog.require('thin.editor.Component');
-goog.require('thin.editor.SvgResizer');
-goog.require('thin.editor.AbstractGuideHelper');
-goog.require('thin.editor.AbstractGuideHelper.PositionName');
+goog.require('thin.core.Cursor');
+goog.require('thin.core.Cursor.Type');
+goog.require('thin.core.Component');
+goog.require('thin.core.Ellipse');
+goog.require('thin.core.Rect');
+goog.require('thin.core.Component');
+goog.require('thin.core.SvgResizer');
+goog.require('thin.core.AbstractGuideHelper');
+goog.require('thin.core.AbstractGuideHelper.PositionName');
 
 
 /**
- * @param {thin.editor.Layout} layout
- * @param {thin.editor.ListGuideHelper} affiliationGroup
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ListGuideHelper} affiliationGroup
  * @param {string} positionName
  * @constructor
- * @extends {thin.editor.Component}
+ * @extends {thin.core.Component}
  */
-thin.editor.ListGuideResizer = function(layout, affiliationGroup, positionName) {
+thin.core.ListGuideResizer = function(layout, affiliationGroup, positionName) {
 
   /**
-   * @type {Array.<thin.editor.Ellipse>}
+   * @type {Array.<thin.core.Ellipse>}
    */
   this.decorations_ = [];
   
@@ -50,98 +50,98 @@ thin.editor.ListGuideResizer = function(layout, affiliationGroup, positionName) 
    */
   this.positionName_ = positionName;
   this.init_();
-  thin.editor.Component.call(this, layout);
+  thin.core.Component.call(this, layout);
   this.setVisibled(true);
   
   /**
-   * @type {thin.editor.ListGuideHelper}
+   * @type {thin.core.ListGuideHelper}
    * @private
    */
   this.affiliationGroup_ = affiliationGroup;
 };
-goog.inherits(thin.editor.ListGuideResizer, thin.editor.Component);
+goog.inherits(thin.core.ListGuideResizer, thin.core.Component);
 
 
 /**
  * @enum {number}
  * @private
  */
-thin.editor.ListGuideResizer.DefaultSize_ = {
+thin.core.ListGuideResizer.DefaultSize_ = {
   HANDLERSIZE: 15,
   ELEMENTSIZE: 2
 };
 
 
 /**
- * @type {thin.editor.Component}
+ * @type {thin.core.Component}
  * @private
  */
-thin.editor.ListGuideResizer.prototype.decorationsContainer_;
+thin.core.ListGuideResizer.prototype.decorationsContainer_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.ListGuideResizer.prototype.rotate_;
+thin.core.ListGuideResizer.prototype.rotate_;
 
 
 /**
- * @type {thin.editor.Rect}
+ * @type {thin.core.Rect}
  * @private
  */
-thin.editor.ListGuideResizer.prototype.handler_;
+thin.core.ListGuideResizer.prototype.handler_;
 
 
 /**
- * @type {thin.editor.SvgResizer}
+ * @type {thin.core.SvgResizer}
  * @private
  */
-thin.editor.ListGuideResizer.prototype.resizer_;
-
-
-/**
- * @type {boolean}
- * @private
- */
-thin.editor.ListGuideResizer.prototype.isRightPosition_ = false;
+thin.core.ListGuideResizer.prototype.resizer_;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ListGuideResizer.prototype.isBottomPosition_ = false;
+thin.core.ListGuideResizer.prototype.isRightPosition_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ListGuideResizer.prototype.isVertical_ = false;
+thin.core.ListGuideResizer.prototype.isBottomPosition_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ListGuideResizer.prototype.isHorizon_ = false;
+thin.core.ListGuideResizer.prototype.isVertical_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.ListGuideResizer.prototype.isCorner_ = false;
+thin.core.ListGuideResizer.prototype.isHorizon_ = false;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.core.ListGuideResizer.prototype.isCorner_ = false;
 
 
 /**
  * @private
  */
-thin.editor.ListGuideResizer.prototype.init_ = function() {
+thin.core.ListGuideResizer.prototype.init_ = function() {
   
   var positionName = this.positionName_;
-  var positionNameTemp = thin.editor.AbstractGuideHelper.PositionName;
+  var positionNameTemp = thin.core.AbstractGuideHelper.PositionName;
   
   var tleft = positionNameTemp.TLEFT;
   var tright = positionNameTemp.TRIGHT;
@@ -185,16 +185,16 @@ thin.editor.ListGuideResizer.prototype.init_ = function() {
 };
 
 
-thin.editor.ListGuideResizer.prototype.setup = function() {
+thin.core.ListGuideResizer.prototype.setup = function() {
   var layout = this.getLayout();
-  var container = new thin.editor.Component(layout);
+  var container = new thin.core.Component(layout);
   this.decorationsContainer_ = container;
   this.createResizers_();
   var element = layout.createSvgElement('rect', {
     'stroke-opacity': 0
   });
-  var handler = new thin.editor.Rect(element, layout, null, new goog.graphics.SolidFill('#FFFFFF', 0.0001));
-  var cursor = thin.editor.Cursor.getCursorByName(
+  var handler = new thin.core.Rect(element, layout, null, new goog.graphics.SolidFill('#FFFFFF', 0.0001));
+  var cursor = thin.core.Cursor.getCursorByName(
         /** @type {string} */ (this.positionName_));
 
   handler.setCursor(cursor);
@@ -208,13 +208,13 @@ thin.editor.ListGuideResizer.prototype.setup = function() {
 /**
  * @private
  */
-thin.editor.ListGuideResizer.prototype.createResizers_ = function() {
+thin.core.ListGuideResizer.prototype.createResizers_ = function() {
   var layout = this.getLayout();
   var stroke = new goog.graphics.Stroke('0.8px', '#FFFFFF');
   var fill = new goog.graphics.SolidFill('#FFFFFF');
   
   var createResizer = goog.bind(function() {
-    var decoration = new thin.editor.Ellipse(layout.createSvgElement('ellipse'), layout, stroke, fill);
+    var decoration = new thin.core.Ellipse(layout.createSvgElement('ellipse'), layout, stroke, fill);
     decoration.setVisibled(true);
     layout.appendChild(decoration, this.decorationsContainer_);
     goog.array.insert(this.decorations_, decoration);
@@ -230,10 +230,10 @@ thin.editor.ListGuideResizer.prototype.createResizers_ = function() {
  * @param {number} y
  * @param {number} strokeWidth
  */
-thin.editor.ListGuideResizer.prototype.adjustToResizerBounds = function(x, y, strokeWidth) {
+thin.core.ListGuideResizer.prototype.adjustToResizerBounds = function(x, y, strokeWidth) {
 
   var layout = this.getLayout();
-  var handlerSize = thin.editor.ListGuideResizer.DefaultSize_.HANDLERSIZE / layout.getPixelScale();
+  var handlerSize = thin.core.ListGuideResizer.DefaultSize_.HANDLERSIZE / layout.getPixelScale();
   
   if (this.isCorner_) {
     var bounds = new goog.math.Rect(x, y, strokeWidth, strokeWidth);
@@ -272,7 +272,7 @@ thin.editor.ListGuideResizer.prototype.adjustToResizerBounds = function(x, y, st
 /**
  * @param {goog.math.Rect} bounds
  */
-thin.editor.ListGuideResizer.prototype.adjustToResizerBoundsForCorner = function(bounds) {
+thin.core.ListGuideResizer.prototype.adjustToResizerBoundsForCorner = function(bounds) {
   var boxSize = bounds.toBox();
   var left = bounds.left;
   var top = bounds.top;
@@ -294,7 +294,7 @@ thin.editor.ListGuideResizer.prototype.adjustToResizerBoundsForCorner = function
 /**
  * @param {goog.math.Rect} bounds
  */
-thin.editor.ListGuideResizer.prototype.adjustToResizerBoundsForVertical = function(bounds) {
+thin.core.ListGuideResizer.prototype.adjustToResizerBoundsForVertical = function(bounds) {
 
   var left = bounds.left + bounds.width / 2;
   var top = bounds.top;
@@ -313,7 +313,7 @@ thin.editor.ListGuideResizer.prototype.adjustToResizerBoundsForVertical = functi
 /**
  * @param {goog.math.Rect} bounds
  */
-thin.editor.ListGuideResizer.prototype.adjustToResizerBoundsForHorizon = function(bounds) {
+thin.core.ListGuideResizer.prototype.adjustToResizerBoundsForHorizon = function(bounds) {
 
   var left = bounds.left;
   var top = bounds.top + bounds.height / 2;
@@ -329,8 +329,8 @@ thin.editor.ListGuideResizer.prototype.adjustToResizerBoundsForHorizon = functio
 };
 
 
-thin.editor.ListGuideResizer.prototype.reapplyStrokeAndSize = function() {
-  var size = thin.editor.ListGuideResizer.DefaultSize_.ELEMENTSIZE;
+thin.core.ListGuideResizer.prototype.reapplyStrokeAndSize = function() {
+  var size = thin.core.ListGuideResizer.DefaultSize_.ELEMENTSIZE;
   var sizeForScale = new goog.math.Size(size, size);
   var layout = this.getLayout();
   goog.array.forEach(this.decorations_, function(decoration, count) {
@@ -341,18 +341,18 @@ thin.editor.ListGuideResizer.prototype.reapplyStrokeAndSize = function() {
 
 
 /**
- * @return {thin.editor.SvgResizer}
+ * @return {thin.core.SvgResizer}
  */
-thin.editor.ListGuideResizer.prototype.getResizer = function() {
+thin.core.ListGuideResizer.prototype.getResizer = function() {
   if (!goog.isDef(this.resizer_)) {
-    this.resizer_ = new thin.editor.SvgResizer(this.affiliationGroup_, this);
+    this.resizer_ = new thin.core.SvgResizer(this.affiliationGroup_, this);
   }
   return this.resizer_;
 };
 
 
 /** @inheritDoc */
-thin.editor.ListGuideResizer.prototype.disposeInternal = function() {
+thin.core.ListGuideResizer.prototype.disposeInternal = function() {
   this.resizer_.dispose();
   goog.array.forEach(this.decorations_, function(decoration) {
     decoration.dispose();
@@ -364,5 +364,5 @@ thin.editor.ListGuideResizer.prototype.disposeInternal = function() {
   delete this.affiliationGroup_;
   delete this.resizer_;
   delete this.decorations_;
-  thin.editor.ListGuideResizer.superClass_.disposeInternal.call(this);
+  thin.core.ListGuideResizer.superClass_.disposeInternal.call(this);
 };

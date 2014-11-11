@@ -13,26 +13,26 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.ActiveShapeManager');
+goog.provide('thin.core.ActiveShapeManager');
 
-goog.require('thin.editor.AbstractManager');
+goog.require('thin.core.AbstractManager');
 
 
 /**
- * @param {thin.editor.Layout} layout
+ * @param {thin.core.Layout} layout
  * @constructor
- * @extends {thin.editor.AbstractManager}
+ * @extends {thin.core.AbstractManager}
  */
-thin.editor.ActiveShapeManager = function(layout) {
-  thin.editor.AbstractManager.call(this, layout);
+thin.core.ActiveShapeManager = function(layout) {
+  thin.core.AbstractManager.call(this, layout);
 };
-goog.inherits(thin.editor.ActiveShapeManager, thin.editor.AbstractManager);
+goog.inherits(thin.core.ActiveShapeManager, thin.core.AbstractManager);
 
 
 /**
  * @return {goog.graphics.Element?}
  */
-thin.editor.ActiveShapeManager.prototype.getIfSingle = function() {
+thin.core.ActiveShapeManager.prototype.getIfSingle = function() {
   if (this.isSingle()) {
     return /** @type {goog.graphics.Element} */ (this.factors_[0]);
   } else {
@@ -44,6 +44,6 @@ thin.editor.ActiveShapeManager.prototype.getIfSingle = function() {
 /**
  * @return {boolean}
  */
-thin.editor.ActiveShapeManager.prototype.isAllSelected = function() {
+thin.core.ActiveShapeManager.prototype.isAllSelected = function() {
   return this.layout_.getManager().getShapesManager().getCount() == this.getCount();
 };

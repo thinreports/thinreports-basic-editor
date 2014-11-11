@@ -13,7 +13,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.editor.Workspace');
+goog.provide('thin.core.Workspace');
 
 goog.require('goog.ui.Component');
 goog.require('goog.math.Box');
@@ -23,20 +23,20 @@ goog.require('goog.events.KeyCodes');
 goog.require('goog.events.EventType');
 goog.require('goog.userAgent');
 goog.require('thin.ui.Message');
-goog.require('thin.editor.HistoryManager');
-goog.require('thin.editor.HistoryManager.Mode');
-goog.require('thin.editor.Action');
-goog.require('thin.editor.Layout');
-goog.require('thin.editor.LayoutStructure');
-goog.require('thin.editor.TextStyle');
-goog.require('thin.editor.TextStyle.HorizonAlignType');
-goog.require('thin.editor.TextStyle.VerticalAlignType');
+goog.require('thin.core.HistoryManager');
+goog.require('thin.core.HistoryManager.Mode');
+goog.require('thin.core.Action');
+goog.require('thin.core.Layout');
+goog.require('thin.core.LayoutStructure');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.VerticalAlignType');
 goog.require('thin.layout.File');
 goog.require('thin.layout.FormatPage.PaperType');
 goog.require('thin.layout.FormatPage.PaperName');
 goog.require('thin.layout.FormatPage.DirectionType');
 goog.require('thin.layout.document');
-goog.require('thin.core.Font');
+goog.require('thin.Font');
 
 
 /**
@@ -45,7 +45,7 @@ goog.require('thin.core.Font');
  * @constructor
  * @extends {goog.ui.Component}
  */
-thin.editor.Workspace = function(format, opt_file) {
+thin.core.Workspace = function(format, opt_file) {
   goog.base(this);
 
   /**
@@ -63,151 +63,151 @@ thin.editor.Workspace = function(format, opt_file) {
    * @type {string}
    * @private
    */
-  this.anchorType_ = thin.editor.TextStyle.HorizonAlignType.START;
+  this.anchorType_ = thin.core.TextStyle.HorizonAlignType.START;
 
   /**
    * @type {string}
    * @private
    */
-  this.verticalAlignType_ = thin.editor.TextStyle.VerticalAlignType.TOP;
+  this.verticalAlignType_ = thin.core.TextStyle.VerticalAlignType.TOP;
 
   /**
-   * @type {thin.editor.Layout}
+   * @type {thin.core.Layout}
    * @private
    */
-  this.layout_ = new thin.editor.Layout(this);
+  this.layout_ = new thin.core.Layout(this);
 
   /**
-   * @type {thin.editor.Action}
+   * @type {thin.core.Action}
    * @private
    */
-  this.action_ = new thin.editor.Action(this);
+  this.action_ = new thin.core.Action(this);
 
   /**
-   * @type {thin.editor.HistoryManager}
+   * @type {thin.core.HistoryManager}
    * @private
    */
-  this.history_ = new thin.editor.HistoryManager();
+  this.history_ = new thin.core.HistoryManager();
 
   /**
    * @type {string}
    * @private
    */
-  this.fontFamily_ = thin.core.Font.getDefaultFont();
+  this.fontFamily_ = thin.Font.getDefaultFont();
 };
-goog.inherits(thin.editor.Workspace, goog.ui.Component);
+goog.inherits(thin.core.Workspace, goog.ui.Component);
 
 
 /**
  * @type {thin.layout.File}
  * @private
  */
-thin.editor.Workspace.prototype.file_;
+thin.core.Workspace.prototype.file_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.Workspace.prototype.fingerPrint_;
+thin.core.Workspace.prototype.fingerPrint_;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.Workspace.prototype.zoomValue_ = 100;
+thin.core.Workspace.prototype.zoomValue_ = 100;
 
 
 /**
  * @type {number}
  * @private
  */
-thin.editor.Workspace.prototype.fontSize_ = 18;
+thin.core.Workspace.prototype.fontSize_ = 18;
 
 
 /**
  * @type {string}
  * @private
  */
-thin.editor.Workspace.prototype.actionName_ = 'selector';
+thin.core.Workspace.prototype.actionName_ = 'selector';
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Workspace.prototype.boldPressed_ = false;
+thin.core.Workspace.prototype.boldPressed_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Workspace.prototype.underlinePressed_ = false;
+thin.core.Workspace.prototype.underlinePressed_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Workspace.prototype.linethroughPressed_ = false;
+thin.core.Workspace.prototype.linethroughPressed_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Workspace.prototype.italicPressed_ = false;
+thin.core.Workspace.prototype.italicPressed_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Workspace.prototype.isEnabledFontBaseUi_ = false;
+thin.core.Workspace.prototype.isEnabledFontBaseUi_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Workspace.prototype.isEnabledTextEditUi_ = false;
+thin.core.Workspace.prototype.isEnabledTextEditUi_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Workspace.prototype.isEnabledTextStyleUi_ = false;
+thin.core.Workspace.prototype.isEnabledTextStyleUi_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Workspace.prototype.isEnabledHorizontalAlignTypeUi_ = false;
+thin.core.Workspace.prototype.isEnabledHorizontalAlignTypeUi_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Workspace.prototype.isEnabledVerticalAlignTypeUi_ = false;
+thin.core.Workspace.prototype.isEnabledVerticalAlignTypeUi_ = false;
 
 
 /**
  * @type {boolean}
  * @private
  */
-thin.editor.Workspace.prototype.handlingOnceKeyEvent_ = false;
+thin.core.Workspace.prototype.handlingOnceKeyEvent_ = false;
 
 
 /**
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.Workspace.prototype.handleKeyEvent_ = function(e) {
+thin.core.Workspace.prototype.handleKeyEvent_ = function(e) {
   var keyCode = e.keyCode;
   var keyCodes = goog.events.KeyCodes;
 
@@ -228,12 +228,12 @@ thin.editor.Workspace.prototype.handleKeyEvent_ = function(e) {
       this.action_.restfulF2Action();
       break;
     case keyCodes.DELETE:
-      this.action_.actionDeleteShapes(thin.editor.HistoryManager.Mode.NORMAL);
+      this.action_.actionDeleteShapes(thin.core.HistoryManager.Mode.NORMAL);
       break;
     // MAC platform only.
     case keyCodes.BACKSPACE:
       if (goog.userAgent.MAC) {
-        this.action_.actionDeleteShapes(thin.editor.HistoryManager.Mode.NORMAL);
+        this.action_.actionDeleteShapes(thin.core.HistoryManager.Mode.NORMAL);
         e.preventDefault();
       }
       break;
@@ -251,7 +251,7 @@ thin.editor.Workspace.prototype.handleKeyEvent_ = function(e) {
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.Workspace.prototype.handleUndoRedoKeyEvent_ = function(e) {
+thin.core.Workspace.prototype.handleUndoRedoKeyEvent_ = function(e) {
   var keyCode = e.keyCode;
   var keyCodes = goog.events.KeyCodes;
 
@@ -274,7 +274,7 @@ thin.editor.Workspace.prototype.handleUndoRedoKeyEvent_ = function(e) {
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.Workspace.prototype.handleCopyPasteKeyEvent_ = function(e) {
+thin.core.Workspace.prototype.handleCopyPasteKeyEvent_ = function(e) {
   var keyCode = e.keyCode;
   var keyCodes = goog.events.KeyCodes;
 
@@ -301,7 +301,7 @@ thin.editor.Workspace.prototype.handleCopyPasteKeyEvent_ = function(e) {
  * @param {goog.events.BrowserEvent} e
  * @private
  */
-thin.editor.Workspace.prototype.releaseOnceKeyEventHandling_ = function(e) {
+thin.core.Workspace.prototype.releaseOnceKeyEventHandling_ = function(e) {
   this.enablingOnceKeyEventHandling_(false);
 };
 
@@ -310,16 +310,16 @@ thin.editor.Workspace.prototype.releaseOnceKeyEventHandling_ = function(e) {
  * @param {boolean} enable
  * @private
  */
-thin.editor.Workspace.prototype.enablingOnceKeyEventHandling_ = function(enable) {
+thin.core.Workspace.prototype.enablingOnceKeyEventHandling_ = function(enable) {
   this.handlingOnceKeyEvent_ = enable;
 };
 
 
 /**
  * @param {thin.layout.File} file
- * @return {thin.editor.Workspace?}
+ * @return {thin.core.Workspace?}
  */
-thin.editor.Workspace.create = function(file) {
+thin.core.Workspace.create = function(file) {
   try {
     var format = thin.layout.Format.parse(file.getContent());
     var version = format.getVersion();
@@ -332,14 +332,14 @@ thin.editor.Workspace.create = function(file) {
     thin.Compatibility.applyIf(version, '=', '0.7.7', userTypeCompatibilityFn);
     thin.Compatibility.applyIf(version, '=', '0.7.7.1', userTypeCompatibilityFn);
 
-    var workspace = new thin.editor.Workspace(format, file);
+    var workspace = new thin.core.Workspace(format, file);
     workspace.createDom();
 
     return workspace;
   } catch (er) {
     thin.ui.Message.alert(thin.t('error_invalid_layout_file'), 'Error',
         function(e) {
-          var activeWorkspace = thin.editor.getActiveWorkspace();
+          var activeWorkspace = thin.core.getActiveWorkspace();
           if (activeWorkspace) {
             activeWorkspace.focusElement(e);
           }
@@ -361,16 +361,16 @@ thin.editor.Workspace.create = function(file) {
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.draw = function() {
+thin.core.Workspace.prototype.draw = function() {
   try {
     var layout = this.getLayout();
     var format = layout.getFormat();
     var file = this.getFile();
-    var xmlString = thin.editor.LayoutStructure.restoreStructure(format.getSvg());
+    var xmlString = thin.core.LayoutStructure.restoreStructure(format.getSvg());
 
     thin.Compatibility.applyIf(format.getVersion(), '=', '0.6.0.pre3',
       function() {
-        xmlString = thin.editor.LayoutStructure.restoreKerningFromLetterSpacing(xmlString);
+        xmlString = thin.core.LayoutStructure.restoreKerningFromLetterSpacing(xmlString);
       });
 
     var doc = new DOMParser().parseFromString(xmlString, "application/xml");
@@ -381,7 +381,7 @@ thin.editor.Workspace.prototype.draw = function() {
 
     /**
      * @param {Array} shapes
-     * @param {thin.editor.ListSectionShape=} opt_shapeIdManager
+     * @param {thin.core.ListSectionShape=} opt_shapeIdManager
      */
     var setupHandlers = function(shapes, opt_shapeIdManager) {
       goog.array.forEach(shapes, function(shape) {
@@ -395,7 +395,7 @@ thin.editor.Workspace.prototype.draw = function() {
           shape.setupEventHandlers();
           if (shape.instanceOfTblockShape()) {
             var refId = layout.getElementAttribute(shape.getElement(), 'x-ref-id');
-            if (!thin.isExactlyEqual(refId, thin.editor.TblockShape.DEFAULT_REFID)) {
+            if (!thin.isExactlyEqual(refId, thin.core.TblockShape.DEFAULT_REFID)) {
               shape.setRefId(refId, layout.getShapeForShapeId(refId, opt_shapeIdManager));
             }
           }
@@ -411,9 +411,9 @@ thin.editor.Workspace.prototype.draw = function() {
 
 
 /**
- * @return {thin.editor.HistoryManager}
+ * @return {thin.core.HistoryManager}
  */
-thin.editor.Workspace.prototype.getHistory = function() {
+thin.core.Workspace.prototype.getHistory = function() {
   return this.history_;
 };
 
@@ -421,7 +421,7 @@ thin.editor.Workspace.prototype.getHistory = function() {
 /**
  * @param {Function} setupFn
  */
-thin.editor.Workspace.prototype.normalVersioning = function(setupFn) {
+thin.core.Workspace.prototype.normalVersioning = function(setupFn) {
   this.history_.addNormal(setupFn);
 };
 
@@ -430,7 +430,7 @@ thin.editor.Workspace.prototype.normalVersioning = function(setupFn) {
  * @param {Function} setupFn
  * @param {number=} opt_delayMs
  */
-thin.editor.Workspace.prototype.chainVersioning = function(setupFn, opt_delayMs) {
+thin.core.Workspace.prototype.chainVersioning = function(setupFn, opt_delayMs) {
   this.history_.addChain(setupFn, opt_delayMs);
 };
 
@@ -438,7 +438,7 @@ thin.editor.Workspace.prototype.chainVersioning = function(setupFn, opt_delayMs)
 /**
  * @param {Function} setupFn
  */
-thin.editor.Workspace.prototype.groupVersioning = function(setupFn) {
+thin.core.Workspace.prototype.groupVersioning = function(setupFn) {
   this.history_.addGroup(setupFn);
 };
 
@@ -447,24 +447,24 @@ thin.editor.Workspace.prototype.groupVersioning = function(setupFn) {
  * @param {number} mode
  * @param {...*} var_args
  */
-thin.editor.Workspace.prototype.versioning = function(mode, var_args) {
+thin.core.Workspace.prototype.versioning = function(mode, var_args) {
   this.history_.add(mode, var_args);
 };
 
 
-thin.editor.Workspace.prototype.activateGroupVersioning = function() {
+thin.core.Workspace.prototype.activateGroupVersioning = function() {
   this.history_.activateGroup();
 };
 
 
-thin.editor.Workspace.prototype.undo = function() {
+thin.core.Workspace.prototype.undo = function() {
   var historyManager = this.history_;
   historyManager.undo();
   thin.ui.adjustUiStatusToRedo(historyManager.isLatest());
 };
 
 
-thin.editor.Workspace.prototype.redo = function() {
+thin.core.Workspace.prototype.redo = function() {
   var historyManager = this.history_;
   historyManager.redo();
   thin.ui.adjustUiStatusToRedo(historyManager.isLatest());
@@ -479,7 +479,7 @@ thin.editor.Workspace.prototype.redo = function() {
  * @param {number=} opt_newWidth
  * @param {number=} opt_newHeight
  */
-thin.editor.Workspace.prototype.updateFormatPage = function(newMargins, newPaperType, newDirectionType, newTitle, opt_newWidth, opt_newHeight) {
+thin.core.Workspace.prototype.updateFormatPage = function(newMargins, newPaperType, newDirectionType, newTitle, opt_newWidth, opt_newHeight) {
 
   var formatPage = thin.layout.FormatPage;
   var page = this.format.page;
@@ -572,7 +572,7 @@ thin.editor.Workspace.prototype.updateFormatPage = function(newMargins, newPaper
 };
 
 
-thin.editor.Workspace.prototype.save = function() {
+thin.core.Workspace.prototype.save = function() {
   if (this.isNew()) {
     this.saveAs();
   } else {
@@ -583,12 +583,12 @@ thin.editor.Workspace.prototype.save = function() {
 };
 
 
-thin.editor.Workspace.prototype.save_ = function() {
+thin.core.Workspace.prototype.save_ = function() {
   this.getFile().save(this.getSaveFormat_());
 };
 
 
-thin.editor.Workspace.prototype.saveAs = function() {
+thin.core.Workspace.prototype.saveAs = function() {
   thin.layout.File.saveDialog(this.getSuggestedFileName(), {
     success: goog.bind(this.saveAs_, this),
     cancel: goog.nullFunction,
@@ -600,7 +600,7 @@ thin.editor.Workspace.prototype.saveAs = function() {
 /**
  * @param {thin.layout.File} file
  */
-thin.editor.Workspace.prototype.saveAs_ = function(file) {
+thin.core.Workspace.prototype.saveAs_ = function(file) {
   this.setFile(file);
   this.save_();
 
@@ -610,7 +610,7 @@ thin.editor.Workspace.prototype.saveAs_ = function(file) {
 };
 
 
-thin.editor.Workspace.prototype.generateLayoutDocument = function() {
+thin.core.Workspace.prototype.generateLayoutDocument = function() {
   thin.layout.document.generate(this.getLayout());
 };
 
@@ -618,7 +618,7 @@ thin.editor.Workspace.prototype.generateLayoutDocument = function() {
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.isNew = function() {
+thin.core.Workspace.prototype.isNew = function() {
   return this.getFile().isNew();
 };
 
@@ -626,7 +626,7 @@ thin.editor.Workspace.prototype.isNew = function() {
 /**
  * @param {thin.layout.Format} format
  */
-thin.editor.Workspace.prototype.setFormat = function(format) {
+thin.core.Workspace.prototype.setFormat = function(format) {
   this.format = format;
 };
 
@@ -635,7 +635,7 @@ thin.editor.Workspace.prototype.setFormat = function(format) {
  * @return {string}
  * @private
  */
-thin.editor.Workspace.prototype.getSaveFormat_ = function() {
+thin.core.Workspace.prototype.getSaveFormat_ = function() {
   var layout = this.layout_;
   var format = this.format;
   format.setSvg(layout.toXML());
@@ -648,7 +648,7 @@ thin.editor.Workspace.prototype.getSaveFormat_ = function() {
 /**
  * @param {thin.layout.File} file
  */
-thin.editor.Workspace.prototype.setFile = function(file) {
+thin.core.Workspace.prototype.setFile = function(file) {
   if (goog.isDef(this.file_)) {
     this.file_.dispose();
   }
@@ -660,7 +660,7 @@ thin.editor.Workspace.prototype.setFile = function(file) {
 /**
  * @return {thin.layout.File}
  */
-thin.editor.Workspace.prototype.getFile = function() {
+thin.core.Workspace.prototype.getFile = function() {
   return this.file_;
 };
 
@@ -668,7 +668,7 @@ thin.editor.Workspace.prototype.getFile = function() {
 /**
  * @return {string}
  */
-thin.editor.Workspace.prototype.getTabName = function() {
+thin.core.Workspace.prototype.getTabName = function() {
   if (this.file_.isNew()) {
     return 'NoName';
   } else {
@@ -680,7 +680,7 @@ thin.editor.Workspace.prototype.getTabName = function() {
 /**
  * @return {string}
  */
-thin.editor.Workspace.prototype.getSuggestedFileName = function() {
+thin.core.Workspace.prototype.getSuggestedFileName = function() {
   if (this.file_.isNew()) {
     return this.layout_.getFormatPage().getTitle();
   } else {
@@ -692,7 +692,7 @@ thin.editor.Workspace.prototype.getSuggestedFileName = function() {
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.isChanged = function() {
+thin.core.Workspace.prototype.isChanged = function() {
   return this.fingerPrint_ != this.getFingerPrint_();
 };
 
@@ -700,7 +700,7 @@ thin.editor.Workspace.prototype.isChanged = function() {
 /**
  * @private
  */
-thin.editor.Workspace.prototype.initFingerPrint_ = function() {
+thin.core.Workspace.prototype.initFingerPrint_ = function() {
   if (!goog.isDef(this.fingerPrint_)) {
     if (this.isNew()) {
       this.updateFingerPrint_();
@@ -714,7 +714,7 @@ thin.editor.Workspace.prototype.initFingerPrint_ = function() {
 /**
  * @private
  */
-thin.editor.Workspace.prototype.updateFingerPrint_ = function() {
+thin.core.Workspace.prototype.updateFingerPrint_ = function() {
   this.fingerPrint_ = this.getFingerPrint_();
   this.layout_.getFormat().setFingerPrint(this.fingerPrint_);
 };
@@ -724,19 +724,19 @@ thin.editor.Workspace.prototype.updateFingerPrint_ = function() {
  * @return {number}
  * @private
  */
-thin.editor.Workspace.prototype.getFingerPrint_ = function() {
+thin.core.Workspace.prototype.getFingerPrint_ = function() {
   var layout = this.layout_;
 
-  return thin.editor.hash32(
-    thin.editor.LayoutStructure.serializeForFingerPrint(layout) +
+  return thin.core.hash32(
+    thin.core.LayoutStructure.serializeForFingerPrint(layout) +
     goog.json.serialize(this.format.page.toHash()) +
     goog.json.serialize(layout.getHelpers().getLayoutGuideHelper().getGuides()));
 };
 
 
 /** @inheritDoc */
-thin.editor.Workspace.prototype.createDom = function() {
-  thin.editor.Workspace.superClass_.createDom.call(this);
+thin.core.Workspace.prototype.createDom = function() {
+  thin.core.Workspace.superClass_.createDom.call(this);
   this.layout_.setElementAttributes(this.element_, {
     'class': 'workspace'
   });
@@ -745,7 +745,7 @@ thin.editor.Workspace.prototype.createDom = function() {
 };
 
 
-thin.editor.Workspace.prototype.setup = function() {
+thin.core.Workspace.prototype.setup = function() {
   var layout = this.layout_;
   var helper = layout.getHelpers();
   helper.getMultiOutlineHelper().init();
@@ -757,17 +757,17 @@ thin.editor.Workspace.prototype.setup = function() {
 
 
 /**
- * @return {thin.editor.Layout}
+ * @return {thin.core.Layout}
  */
-thin.editor.Workspace.prototype.getLayout = function() {
+thin.core.Workspace.prototype.getLayout = function() {
   return this.layout_;
 };
 
 
 /**
- * @return {thin.editor.Action}
+ * @return {thin.core.Action}
  */
-thin.editor.Workspace.prototype.getAction = function() {
+thin.core.Workspace.prototype.getAction = function() {
   return this.action_;
 };
 
@@ -775,7 +775,7 @@ thin.editor.Workspace.prototype.getAction = function() {
 /**
  * @return {number}
  */
-thin.editor.Workspace.prototype.getUiStatusForZoom = function() {
+thin.core.Workspace.prototype.getUiStatusForZoom = function() {
   return this.zoomValue_;
 };
 
@@ -783,7 +783,7 @@ thin.editor.Workspace.prototype.getUiStatusForZoom = function() {
 /**
  * @return {number}
  */
-thin.editor.Workspace.prototype.getUiStatusForFontSize = function() {
+thin.core.Workspace.prototype.getUiStatusForFontSize = function() {
   return this.fontSize_;
 };
 
@@ -791,7 +791,7 @@ thin.editor.Workspace.prototype.getUiStatusForFontSize = function() {
 /**
  * @return {string}
  */
-thin.editor.Workspace.prototype.getUiStatusForFontFamily = function() {
+thin.core.Workspace.prototype.getUiStatusForFontFamily = function() {
   return this.fontFamily_;
 };
 
@@ -799,7 +799,7 @@ thin.editor.Workspace.prototype.getUiStatusForFontFamily = function() {
 /**
  * @return {string}
  */
-thin.editor.Workspace.prototype.getUiStatusForHorizonAlignType = function() {
+thin.core.Workspace.prototype.getUiStatusForHorizonAlignType = function() {
   return this.anchorType_;
 };
 
@@ -807,7 +807,7 @@ thin.editor.Workspace.prototype.getUiStatusForHorizonAlignType = function() {
 /**
  * @return {string}
  */
-thin.editor.Workspace.prototype.getUiStatusForVerticalAlignType = function() {
+thin.core.Workspace.prototype.getUiStatusForVerticalAlignType = function() {
   return this.verticalAlignType_;
 };
 
@@ -815,7 +815,7 @@ thin.editor.Workspace.prototype.getUiStatusForVerticalAlignType = function() {
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.getUiStatusForBold = function() {
+thin.core.Workspace.prototype.getUiStatusForBold = function() {
   return this.boldPressed_;
 };
 
@@ -823,7 +823,7 @@ thin.editor.Workspace.prototype.getUiStatusForBold = function() {
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.getUiStatusForUnderlIne = function() {
+thin.core.Workspace.prototype.getUiStatusForUnderlIne = function() {
   return this.underlinePressed_;
 };
 
@@ -831,7 +831,7 @@ thin.editor.Workspace.prototype.getUiStatusForUnderlIne = function() {
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.getUiStatusForLineThrough = function() {
+thin.core.Workspace.prototype.getUiStatusForLineThrough = function() {
   return this.linethroughPressed_;
 };
 
@@ -839,7 +839,7 @@ thin.editor.Workspace.prototype.getUiStatusForLineThrough = function() {
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.getUiStatusForItalic = function() {
+thin.core.Workspace.prototype.getUiStatusForItalic = function() {
   return this.italicPressed_;
 };
 
@@ -847,7 +847,7 @@ thin.editor.Workspace.prototype.getUiStatusForItalic = function() {
 /**
  * @return {string}
  */
-thin.editor.Workspace.prototype.getUiStatusForAction = function() {
+thin.core.Workspace.prototype.getUiStatusForAction = function() {
   return this.actionName_;
 };
 
@@ -855,7 +855,7 @@ thin.editor.Workspace.prototype.getUiStatusForAction = function() {
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.getUiStatusForFontBaseUi = function() {
+thin.core.Workspace.prototype.getUiStatusForFontBaseUi = function() {
   return this.isEnabledFontBaseUi_;
 };
 
@@ -863,7 +863,7 @@ thin.editor.Workspace.prototype.getUiStatusForFontBaseUi = function() {
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.getUiStatusForTextEditUi = function() {
+thin.core.Workspace.prototype.getUiStatusForTextEditUi = function() {
   return this.isEnabledTextEditUi_;
 };
 
@@ -871,7 +871,7 @@ thin.editor.Workspace.prototype.getUiStatusForTextEditUi = function() {
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.getUiStatusForTextStyleUi = function() {
+thin.core.Workspace.prototype.getUiStatusForTextStyleUi = function() {
   return this.isEnabledTextStyleUi_;
 };
 
@@ -879,7 +879,7 @@ thin.editor.Workspace.prototype.getUiStatusForTextStyleUi = function() {
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.getUiStatusForHorizontalAlignTypeUi = function() {
+thin.core.Workspace.prototype.getUiStatusForHorizontalAlignTypeUi = function() {
   return this.isEnabledHorizontalAlignTypeUi_;
 };
 
@@ -887,7 +887,7 @@ thin.editor.Workspace.prototype.getUiStatusForHorizontalAlignTypeUi = function()
 /**
  * @return {boolean}
  */
-thin.editor.Workspace.prototype.getUiStatusForVerticalAlignTypeUi = function() {
+thin.core.Workspace.prototype.getUiStatusForVerticalAlignTypeUi = function() {
   return this.isEnabledVerticalAlignTypeUi_;
 };
 
@@ -895,7 +895,7 @@ thin.editor.Workspace.prototype.getUiStatusForVerticalAlignTypeUi = function() {
 /**
  * @param {number} zoomValue
  */
-thin.editor.Workspace.prototype.setUiStatusForZoom = function(zoomValue) {
+thin.core.Workspace.prototype.setUiStatusForZoom = function(zoomValue) {
   this.zoomValue_ = zoomValue;
 };
 
@@ -903,7 +903,7 @@ thin.editor.Workspace.prototype.setUiStatusForZoom = function(zoomValue) {
 /**
  * @param {number} fontSize
  */
-thin.editor.Workspace.prototype.setUiStatusForFontSize = function(fontSize) {
+thin.core.Workspace.prototype.setUiStatusForFontSize = function(fontSize) {
   this.fontSize_ = fontSize;
 };
 
@@ -911,7 +911,7 @@ thin.editor.Workspace.prototype.setUiStatusForFontSize = function(fontSize) {
 /**
  * @param {string} fontFamily
  */
-thin.editor.Workspace.prototype.setUiStatusForFontFamily = function(fontFamily) {
+thin.core.Workspace.prototype.setUiStatusForFontFamily = function(fontFamily) {
   this.fontFamily_ = fontFamily;
 };
 
@@ -919,7 +919,7 @@ thin.editor.Workspace.prototype.setUiStatusForFontFamily = function(fontFamily) 
 /**
  * @param {string} anchorType
  */
-thin.editor.Workspace.prototype.setUiStatusForHorizonAlignType = function(anchorType) {
+thin.core.Workspace.prototype.setUiStatusForHorizonAlignType = function(anchorType) {
   this.anchorType_ = anchorType;
 };
 
@@ -927,7 +927,7 @@ thin.editor.Workspace.prototype.setUiStatusForHorizonAlignType = function(anchor
 /**
  * @param {string} valign
  */
-thin.editor.Workspace.prototype.setUiStatusForVerticalAlignType = function(valign) {
+thin.core.Workspace.prototype.setUiStatusForVerticalAlignType = function(valign) {
   this.verticalAlignType_ = valign;
 };
 
@@ -935,7 +935,7 @@ thin.editor.Workspace.prototype.setUiStatusForVerticalAlignType = function(valig
 /**
  * @param {boolean} pressed
  */
-thin.editor.Workspace.prototype.setUiStatusForBold = function(pressed) {
+thin.core.Workspace.prototype.setUiStatusForBold = function(pressed) {
   this.boldPressed_ = pressed;
 };
 
@@ -943,7 +943,7 @@ thin.editor.Workspace.prototype.setUiStatusForBold = function(pressed) {
 /**
  * @param {boolean} pressed
  */
-thin.editor.Workspace.prototype.setUiStatusForUnderlIne = function(pressed) {
+thin.core.Workspace.prototype.setUiStatusForUnderlIne = function(pressed) {
   this.underlinePressed_ = pressed;
 };
 
@@ -951,7 +951,7 @@ thin.editor.Workspace.prototype.setUiStatusForUnderlIne = function(pressed) {
 /**
  * @param {boolean} pressed
  */
-thin.editor.Workspace.prototype.setUiStatusForLineThrough = function(pressed) {
+thin.core.Workspace.prototype.setUiStatusForLineThrough = function(pressed) {
   this.linethroughPressed_ = pressed;
 };
 
@@ -959,7 +959,7 @@ thin.editor.Workspace.prototype.setUiStatusForLineThrough = function(pressed) {
 /**
  * @param {boolean} pressed
  */
-thin.editor.Workspace.prototype.setUiStatusForItalic = function(pressed) {
+thin.core.Workspace.prototype.setUiStatusForItalic = function(pressed) {
   this.italicPressed_ = pressed;
 };
 
@@ -967,7 +967,7 @@ thin.editor.Workspace.prototype.setUiStatusForItalic = function(pressed) {
 /**
  * @param {string} actionName
  */
-thin.editor.Workspace.prototype.setUiStatusForAction = function(actionName) {
+thin.core.Workspace.prototype.setUiStatusForAction = function(actionName) {
   this.actionName_ = actionName;
 };
 
@@ -975,7 +975,7 @@ thin.editor.Workspace.prototype.setUiStatusForAction = function(actionName) {
 /**
  * @param {boolean} enabled
  */
-thin.editor.Workspace.prototype.setUiStatusForFontBaseUi = function(enabled) {
+thin.core.Workspace.prototype.setUiStatusForFontBaseUi = function(enabled) {
   this.isEnabledFontBaseUi_ = enabled;
 };
 
@@ -983,7 +983,7 @@ thin.editor.Workspace.prototype.setUiStatusForFontBaseUi = function(enabled) {
 /**
  * @param {boolean} enabled
  */
-thin.editor.Workspace.prototype.setUiStatusForTextEditUi = function(enabled) {
+thin.core.Workspace.prototype.setUiStatusForTextEditUi = function(enabled) {
   this.isEnabledTextEditUi_ = enabled;
 };
 
@@ -991,7 +991,7 @@ thin.editor.Workspace.prototype.setUiStatusForTextEditUi = function(enabled) {
 /**
  * @param {boolean} enabled
  */
-thin.editor.Workspace.prototype.setUiStatusForTextStyleUi = function(enabled) {
+thin.core.Workspace.prototype.setUiStatusForTextStyleUi = function(enabled) {
   this.isEnabledTextStyleUi_= enabled;
 };
 
@@ -999,7 +999,7 @@ thin.editor.Workspace.prototype.setUiStatusForTextStyleUi = function(enabled) {
 /**
  * @param {boolean} enabled
  */
-thin.editor.Workspace.prototype.setUiStatusForHorizontalAlignTypeUi = function(enabled) {
+thin.core.Workspace.prototype.setUiStatusForHorizontalAlignTypeUi = function(enabled) {
   this.isEnabledHorizontalAlignTypeUi_= enabled;
 };
 
@@ -1007,14 +1007,14 @@ thin.editor.Workspace.prototype.setUiStatusForHorizontalAlignTypeUi = function(e
 /**
  * @param {boolean} enabled
  */
-thin.editor.Workspace.prototype.setUiStatusForVerticalAlignTypeUi = function(enabled) {
+thin.core.Workspace.prototype.setUiStatusForVerticalAlignTypeUi = function(enabled) {
   this.isEnabledVerticalAlignTypeUi_= enabled;
 };
 
 
 /** @inheritDoc */
-thin.editor.Workspace.prototype.enterDocument = function() {
-  thin.editor.Workspace.superClass_.enterDocument.call(this);
+thin.core.Workspace.prototype.enterDocument = function() {
+  thin.core.Workspace.superClass_.enterDocument.call(this);
 
   var eventHandler = this.getHandler();
   var eventType = goog.events.EventType;
@@ -1028,8 +1028,8 @@ thin.editor.Workspace.prototype.enterDocument = function() {
 
 
 /** @inheritDoc */
-thin.editor.Workspace.prototype.exitDocument = function() {
-  thin.editor.Workspace.superClass_.exitDocument.call(this);
+thin.core.Workspace.prototype.exitDocument = function() {
+  thin.core.Workspace.superClass_.exitDocument.call(this);
 
   var eventHandler = this.getHandler();
   var eventType = goog.events.EventType;
@@ -1055,7 +1055,7 @@ thin.editor.Workspace.prototype.exitDocument = function() {
 /**
  * @param {goog.events.Event} e
  */
-thin.editor.Workspace.prototype.focusElement = function(e) {
+thin.core.Workspace.prototype.focusElement = function(e) {
 
   var scrollTarget = this.getParent().getParent().getContentElement();
   var captureLeft = scrollTarget.scrollLeft;
@@ -1069,7 +1069,7 @@ thin.editor.Workspace.prototype.focusElement = function(e) {
 
 
 /** @inheritDoc */
-thin.editor.Workspace.prototype.disposeInternal = function() {
+thin.core.Workspace.prototype.disposeInternal = function() {
   this.format.dispose();
 
   if (goog.isDef(this.file_)) {
