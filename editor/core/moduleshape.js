@@ -1084,21 +1084,19 @@ thin.core.ModuleShape.prototype.setStrokeWidthForPropertyUpdate = function(e) {
 thin.core.ModuleShape.prototype.setStrokeDashTypeForPropertyUpdate = function(e) {
   var scope = this;
   var proppane = thin.ui.getComponent('proppane');
-  var strokeValue = e.target.getValue();
-  var strokeDashType = thin.core.ModuleElement.getStrokeTypeFromValue(strokeValue);
-  var captureStrokeDashType = this.getStrokeDashType();
-  var captureStrokeValue = thin.core.ModuleElement.getStrokeValueFromType(captureStrokeDashType);
+  var strokeType = e.target.getValue();
+  var captureStrokeType = this.getStrokeDashType();
   
   this.getLayout().getWorkspace().normalVersioning(function(version) {
   
     version.upHandler(function() {
-      this.setStrokeDashFromType(strokeDashType);
-      proppane.getPropertyControl('stroke-dash-type').setValue(strokeValue);
+      this.setStrokeDashFromType(strokeType);
+      proppane.getPropertyControl('stroke-dash-type').setValue(strokeType);
     }, scope);
     
     version.downHandler(function() {
       this.setStrokeDashFromType(captureStrokeDashType);
-      proppane.getPropertyControl('stroke-dash-type').setValue(captureStrokeValue);
+      proppane.getPropertyControl('stroke-dash-type').setValue(captureStrokeType);
     }, scope);
   });
 };

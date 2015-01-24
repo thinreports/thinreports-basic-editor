@@ -26,7 +26,6 @@ goog.require('thin.core.TextStyle');
 goog.require('thin.core.TextStyle.HorizonAlignType');
 goog.require('thin.core.TextStyle.VerticalAlignType');
 goog.require('thin.core.TextStyle.OverflowType');
-goog.require('thin.core.TextStyle.OverflowTypeName');
 goog.require('thin.core.HistoryManager');
 goog.require('thin.core.HistoryManager.Mode');
 
@@ -645,17 +644,21 @@ thin.core.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(radiusInputProperty, shapeGroup, 'radius');
   
   
-  var strokeDashTypeName = thin.core.ModuleElement.StrokeTypeName;
+  var strokeType = thin.core.ModuleElement.StrokeType;
   var strokeDashSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_stroke_type'));
   var strokeDashSelect = strokeDashSelectProperty.getValueControl();
+
   strokeDashSelect.setTextAlignLeft();
-  strokeDashSelect.addItem(new thin.ui.Option(strokeDashTypeName.SOLID));
-  strokeDashSelect.addItem(new thin.ui.Option(strokeDashTypeName.DASHED));
-  strokeDashSelect.addItem(new thin.ui.Option(strokeDashTypeName.DOTTED));
+  strokeDashSelect.addItem(
+      new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.SOLID), strokeType.SOLID));
+  strokeDashSelect.addItem(
+      new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DASHED), strokeType.DASHED));
+  strokeDashSelect.addItem(
+      new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DOTTED), strokeType.DOTTED));
 
   strokeDashSelectProperty.addEventListener(propEventType.CHANGE, function(e) {
 
-    var strokeDash = thin.core.ModuleElement.getStrokeTypeFromValue(e.target.getValue());
+    var strokeType = e.target.getValue();
     var captureProperties = scope.getCloneProperties();
     var shapes = manager.getActiveShapeByIncludeList().getClone();
     var targetShapes = [];
@@ -674,10 +677,10 @@ thin.core.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
       version.upHandler(function() {
       
         goog.array.forEach(targetShapes, function(shape) {
-          shape.setStrokeDashFromType(strokeDash);
-          shape.getTargetOutline().setStrokeDashFromType(strokeDash);
+          shape.setStrokeDashFromType(strokeType);
+          shape.getTargetOutline().setStrokeDashFromType(strokeType);
         });
-        this.setPropertyForNonDestructive(captureProperties, 'stroke-dash-type', strokeDash);
+        this.setPropertyForNonDestructive(captureProperties, 'stroke-dash-type', strokeType);
         updateGuideAndProperties(shapes);
       }, scope);
       
@@ -900,12 +903,12 @@ thin.core.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
   var textOverflowSelect = textOverflowSelectProperty.getValueControl();
   textOverflowSelect.setTextAlignLeft();
   
-  var overflowName = thin.core.TextStyle.OverflowTypeName;
   var overflowType = thin.core.TextStyle.OverflowType;
-  
-  textOverflowSelect.addItem(new thin.ui.Option(overflowName.TRUNCATE, overflowType.TRUNCATE));
-  textOverflowSelect.addItem(new thin.ui.Option(overflowName.FIT, overflowType.FIT));
-  textOverflowSelect.addItem(new thin.ui.Option(overflowName.EXPAND, overflowType.EXPAND));
+
+  goog.array.forEach([overflowType.TRUNCATE, overflowType.FIT, overflowType.EXPAND], function(type) {
+    textOverflowSelect.addItem(
+        new thin.ui.Option(thin.core.TextStyle.getOverflowName(type), type));
+  });
   
   textOverflowSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
@@ -1069,17 +1072,17 @@ thin.core.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
 
   var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
-  var textAlignType = thin.core.TextStyle.HorizonAlignTypeName;
-  
+  var textAlignType = thin.core.TextStyle.HorizonAlignType;
+
   textAlignSelect.setTextAlignLeft();
-  textAlignSelect.addItem(new thin.ui.Option(textAlignType.START));
-  textAlignSelect.addItem(new thin.ui.Option(textAlignType.MIDDLE));
-  textAlignSelect.addItem(new thin.ui.Option(textAlignType.END));
+  goog.array.forEach([textAlignType.START, textAlignType.MIDDLE, textAlignType.END], function(type) {
+    textAlignSelect.addItem(
+        new thin.ui.Option(thin.core.TextStyle.getHorizonAlignName(type), type));
+  });
 
   textAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        workspace.getAction().actionSetTextAnchor(
-            thin.core.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
+        workspace.getAction().actionSetTextAnchor(e.target.getValue());
       }, false, this);
   
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
@@ -1087,17 +1090,17 @@ thin.core.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
 
   var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_vertical_align'));
   var textVerticalAlignSelect = textVerticalAlignSelectProperty.getValueControl();
-  textVerticalAlignSelect.setTextAlignLeft();
-  var verticalAlignType = thin.core.TextStyle.VerticalAlignTypeName;
+  var verticalAlignType = thin.core.TextStyle.VerticalAlignType;
   
-  textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.TOP));
-  textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.CENTER));
-  textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.BOTTOM));
+  textVerticalAlignSelect.setTextAlignLeft();
+  goog.array.forEach([verticalAlignType.TOP, verticalAlignType.CENTER, verticalAlignType.BOTTOM], function(type) {
+    textVerticalAlignSelect.addItem(
+        new thin.ui.Option(thin.core.TextStyle.getVerticalAlignName(type), type));
+  });
   
   textVerticalAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        workspace.getAction().actionSetVerticalAlign(
-            thin.core.TextStyle.getVerticalAlignTypeFromTypeName(e.target.getValue()));
+        workspace.getAction().actionSetVerticalAlign(e.target.getValue());
       }, false, this);
   
   proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
@@ -1110,13 +1113,14 @@ thin.core.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
   var formatTypeSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_format_type'));
   var formatTypeSelect = formatTypeSelectProperty.getValueControl();
   formatTypeSelect.setTextAlignLeft();
-  goog.object.forEach(thin.core.formatstyles.FormatTypeName, function(formatName) {
-    formatTypeSelect.addItem(new thin.ui.Option(formatName));
+  goog.object.forEach(thin.core.formatstyles.FormatType, function(formatType) {
+    formatTypeSelect.addItem(
+        new thin.ui.Option(thin.core.formatstyles.getFormatNameFromType(formatType), formatType));
   });
   
   
   formatTypeSelectProperty.addEventListener(propEventType.CHANGE, function(e) {
-    var formatType = thin.core.formatstyles.getFormatTypeFromName(e.target.getValue());
+    var formatType = e.target.getValue();
     var captureProperties = scope.getCloneProperties();
     var captureFormatType = captureProperties['format-type'];
     var shapes = manager.getActiveShapeByIncludeList().getClone();
@@ -1521,13 +1525,16 @@ thin.core.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
 
   var directionSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_fill_direction'));
   var directionSelect = directionSelectProperty.getValueControl();
+  var directionType = thin.core.formatstyles.PaddingFormat.DirectionType;
+
   directionSelect.setTextAlignLeft();
-  goog.object.forEach(thin.core.formatstyles.PaddingFormat.DirectionTypeName, function(directionTypeName) {
-    directionSelect.addItem(new thin.ui.Option(directionTypeName));
+  goog.array.forEach([directionType.L, directionType.R], function(type) {
+    directionSelect.addItem(
+        new thin.ui.Option(thin.core.formatstyles.PaddingFormat.getDirectionName(type), type));
   });
 
   directionSelectProperty.addEventListener(propEventType.CHANGE, function(e) {
-    var direction = thin.core.formatstyles.PaddingFormat.getDirectionTypeFromName(e.target.getValue());
+    var directionType = e.target.getValue();
     var captureProperties = scope.getCloneProperties();
     var shapes = manager.getActiveShapeByIncludeList().getClone();
     var targetShapes = [];
@@ -1548,10 +1555,10 @@ thin.core.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
         goog.array.forEach(targetShapes, function(shape, count) {
           var capturePaddingFormatStyle = captureFormatStyleArray[count];
           shape.setFormatStyle(new thin.core.formatstyles.PaddingFormat(
-                                        direction, capturePaddingFormatStyle.getChar(),
+                                        directionType, capturePaddingFormatStyle.getChar(),
                                         capturePaddingFormatStyle.getLength()));
         });
-        this.setPropertyForNonDestructive(captureProperties, 'format-padding-direction', direction);
+        this.setPropertyForNonDestructive(captureProperties, 'format-padding-direction', directionType);
         updateGuideAndProperties(shapes);
       }, scope);
       
@@ -1787,7 +1794,7 @@ thin.core.MultipleShapesHelper.prototype.updateProperties = function() {
     strokeWidth = proppaneBlank;
   }
   proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
-  proppane.getPropertyControl('stroke-dash-type').setValue(thin.core.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
+  proppane.getPropertyControl('stroke-dash-type').setValue(properties['stroke-dash-type']);
   proppane.getPropertyControl('radius').setValue(properties['radius']);
   var fontColor = properties['font-color'];
   if (thin.isExactlyEqual(fontColor, noneColor)) {
@@ -1796,8 +1803,8 @@ thin.core.MultipleShapesHelper.prototype.updateProperties = function() {
   proppane.getPropertyControl('font-color').setValue(fontColor);
   proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
   proppane.getPropertyControl('font-family').setValue(properties['font-family']);
-  proppane.getPropertyControl('text-halign').setValue(thin.core.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
-  proppane.getPropertyControl('text-valign').setValue(thin.core.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
+  proppane.getPropertyControl('text-halign').setValue(properties['text-halign']);
+  proppane.getPropertyControl('text-valign').setValue(properties['text-valign']);
   proppane.getPropertyControl('multiple').setChecked(properties['multiple']);
   proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
   
@@ -1807,7 +1814,7 @@ thin.core.MultipleShapesHelper.prototype.updateProperties = function() {
 
   var formatType = properties['format-type'];
 
-  proppane.getPropertyControl('format-type').setValue(thin.core.formatstyles.getFormatNameFromType(formatType));
+  proppane.getPropertyControl('format-type').setValue(formatType);
   proppane.getPropertyControl('format-base').setValue(properties['format-base']);
   proppane.getPropertyControl('format-datetime-format').setInternalValue(properties['format-datetime-format']);
  
@@ -1818,7 +1825,7 @@ thin.core.MultipleShapesHelper.prototype.updateProperties = function() {
   proppane.getPropertyControl('format-number-precision').setValue(properties['format-number-precision']);
   proppane.getPropertyControl('format-padding-length').setValue(properties['format-padding-length']);
   proppane.getPropertyControl('format-padding-char').setValue(properties['format-padding-char']);
-  proppane.getPropertyControl('format-padding-direction').setValue(thin.core.formatstyles.PaddingFormat.getDirectionNameFromType(properties['format-padding-direction']));
+  proppane.getPropertyControl('format-padding-direction').setValue(properties['format-padding-direction']);
   proppane.getPropertyControl('default-value').setValue(properties['default-value']);
   
   this.setDisplayForPropPane(formatType);

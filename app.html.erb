@@ -20,9 +20,10 @@
   <head>
     <title>ThinReportsEditor</title>
     <meta charset="UTF-8">
-    <script src="editor.js"></script>
+    <script src="app.js"></script>
     <script src="locales/ja.js"></script>
-  <%- @dependencies_js.each do |js| -%>
+    <script src="locales/en.js"></script>
+  <% @dependencies_js.each do |js| -%>
     <%= js %>
   <%- end -%>
     <link rel="stylesheet" href="assets/workspace.css">

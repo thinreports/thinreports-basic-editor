@@ -23,6 +23,7 @@ goog.require('goog.ui.ControlRenderer');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Component.State');
+goog.require('thin.Settings');
 goog.require('thin.ui.Input');
 goog.require('thin.ui.Button');
 goog.require('thin.ui.ButtonRenderer');
@@ -41,7 +42,7 @@ thin.ui.InputUnitChanger = function(opt_label) {
    * @type {thin.ui.InputUnitChanger.Unit}
    * @private
    */
-  this.unit_ = /** @type {thin.ui.InputUnitChanger.Unit} */ (thin.settings.get('default_unit'))
+  this.unit_ = /** @type {thin.ui.InputUnitChanger.Unit} */ (thin.Settings.getDefaultUnit())
       || thin.ui.InputUnitChanger.Unit.PX;
   
   this.initControls_(opt_label);

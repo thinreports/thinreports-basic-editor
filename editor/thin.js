@@ -20,28 +20,12 @@ goog.require('goog.array');
 
 
 /**
- * @param {string} path
- * @param {...string} var_args
+ * @param {string} appMethodName
  * @return {*}
  */
-thin.$ = function(path, var_args) {
-  var reg = new RegExp(/\(\)$/);
-  var obj = goog.array.reduce(path.replace(reg, '').split('.'), 
-      function(r, o) { return r[o]; }, goog.global['Thin']);
-
-  if (reg.test(path)) {
-    return obj.apply(goog.global, 
-        goog.array.slice(arguments, 1));
-  } else {
-    return obj;
-  }
+thin.callApp = function(appMethodName) {
+  return goog.global['App'][appMethodName]();
 };
-
-
-/**
- * @type {thin.Settings}
- */
-thin.settings;
 
 
 /**

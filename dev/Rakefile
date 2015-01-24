@@ -49,10 +49,9 @@ module ThinReportsEditor
   end
 
   class CommandBuilder
-    ROOT = File.join('..', '..')
+    ROOT = File.join('..')
     LIB_ROOT = File.join(ROOT, 'lib')
-    CORE_ROOT = File.join(ROOT, 'core')
-    TOOLS_ROOT = File.join(LIB_ROOT, 'devtools', 'tools')
+    TOOLS_ROOT = File.join(ROOT, 'dev', 'tools')
     CLOSURE_COMPILER = File.join(TOOLS_ROOT, 'closure-compiler-latest', 'compiler.jar')
     CLOSURE_STYLESHEETS = File.join(TOOLS_ROOT, 'closure-stylesheets-latest', 'stylesheets.jar')
     TEMPLATE_COMPILER = File.join(TOOLS_ROOT, 'template-compiler-latest', 'SoyToJsSrcCompiler.jar')

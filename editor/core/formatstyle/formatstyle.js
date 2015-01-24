@@ -15,7 +15,6 @@
 
 goog.provide('thin.core.formatstyles');
 goog.provide('thin.core.formatstyles.FormatType');
-goog.provide('thin.core.formatstyles.FormatTypeName');
 
 goog.require('thin.core.formatstyles.NumberFormat');
 goog.require('thin.core.formatstyles.DatetimeFormat');
@@ -34,71 +33,28 @@ thin.core.formatstyles.FormatType = {
 
 
 /**
- * @enum {string}
- */
-thin.core.formatstyles.FormatTypeName = {
-  NONE: '　',
-  DATETIME: thin.t('label_datetime_format'),
-  NUMBER: thin.t('label_number_format'),
-  PADDING: thin.t('label_character_fill_format')
-};
-
-
-/**
- * @param {string} formatTypeValue
+ * @param {string} formatType
  * @return {string}
  */
-thin.core.formatstyles.getFormatNameFromType = function(formatTypeValue) {
-
-  var formatType = thin.core.formatstyles.FormatType;
-  var formatTypeName = thin.core.formatstyles.FormatTypeName;
+thin.core.formatstyles.getFormatNameFromType = function(formatType) {
+  var type = thin.core.formatstyles.FormatType;
+  var name;
   
-  var typeName;
-  
-  switch (formatTypeValue) {
-    case formatType.NONE:
-      typeName = formatTypeName.NONE;
+  switch (formatType) {
+    case type.NONE:
+      name = '　';
       break;
-    case formatType.DATETIME:
-      typeName = formatTypeName.DATETIME;
+    case type.DATETIME:
+      name = thin.t('label_datetime_format');
       break;
-    case formatType.NUMBER:
-      typeName = formatTypeName.NUMBER;
+    case type.NUMBER:
+      name = thin.t('label_number_format');
       break;
-    case formatType.PADDING:
-      typeName = formatTypeName.PADDING;
+    case type.PADDING:
+      name = thin.t('label_character_fill_format');
       break;
   }
-  return /** @type{string} */(typeName);
-};
-
-
-/**
- * @param {string} targetTypeName
- * @return {string}
- */
-thin.core.formatstyles.getFormatTypeFromName = function(targetTypeName) {
-
-  var formatType = thin.core.formatstyles.FormatType;
-  var formatTypeName = thin.core.formatstyles.FormatTypeName;
-  
-  var type;
-  
-  switch (targetTypeName) {
-    case formatTypeName.NONE:
-      type = formatType.NONE;
-      break;
-    case formatTypeName.DATETIME:
-      type = formatType.DATETIME;
-      break;
-    case formatTypeName.NUMBER:
-      type = formatType.NUMBER;
-      break;
-    case formatTypeName.PADDING:
-      type = formatType.PADDING;
-      break;
-  }
-  return /** @type{string} */(type);
+  return /** @type {string} */(name);
 };
 
 

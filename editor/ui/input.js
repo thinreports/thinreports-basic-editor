@@ -571,7 +571,13 @@ goog.inherits(thin.ui.InputEvent, goog.events.Event);
  */
 thin.ui.Input.Validator = function(opt_target) {
   goog.events.EventTarget.call(this);
-  
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.message_ = thin.t('error_invalid_value');
+
   if (opt_target) {
     this.setTarget(opt_target);
   }
@@ -593,13 +599,6 @@ thin.ui.Input.Validator.EventType = {
  * @private
  */
 thin.ui.Input.Validator.prototype.method_;
-
-
-/**
- * @type {string}
- * @private
- */
-thin.ui.Input.Validator.prototype.message_ = thin.t('error_invalid_value');
 
 
 /**

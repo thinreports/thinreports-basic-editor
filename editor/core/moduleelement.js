@@ -45,16 +45,6 @@ thin.core.ModuleElement.StrokeType = {
 /**
  * @enum {string}
  */
-thin.core.ModuleElement.StrokeTypeName = {
-  SOLID: thin.t('label_solid_line'),
-  DASHED: thin.t('label_dotted_line'),
-  DOTTED: thin.t('label_dashed_line')
-};
-
-
-/**
- * @enum {string}
- */
 thin.core.ModuleElement.StrokeTypeValue = {
   SOLID: 'none',
   DASHED: '2,2',
@@ -145,26 +135,25 @@ thin.core.ModuleElement.prototype.affiliationSectionName_;
 
 
 /**
- * @param {string} strokeDashType
+ * @param {thin.core.ModuleElement.StrokeType} type
  * @return {string}
  */
-thin.core.ModuleElement.getStrokeValueFromType = function(strokeDashType) {
-  var strokeTypeTemp = thin.core.ModuleElement.StrokeType;
-  var strokeTypeNameTemp = thin.core.ModuleElement.StrokeTypeName;
-  
-  switch (strokeDashType) {
-    case strokeTypeTemp.SOLID:
-      var strokeValue = strokeTypeNameTemp.SOLID;
+thin.core.ModuleElement.getStrokeName = function(type) {
+  var strokeType = thin.core.ModuleElement.StrokeType;
+  var strokeName;
+
+  switch(type) {
+    case strokeType.SOLID:
+      strokeName = thin.t('label_solid_line');
       break;
-    case strokeTypeTemp.DASHED:
-      var strokeValue = strokeTypeNameTemp.DASHED;
+    case strokeType.DASHED:
+      strokeName = thin.t('label_dashed_line');
       break;
-    case strokeTypeTemp.DOTTED:
-      var strokeValue = strokeTypeNameTemp.DOTTED;
+    case strokeType.DOTTED:
+      strokeName = thin.t('label_dotted_line');
       break;
   }
-  
-  return /** @type {string} */(strokeValue);
+  return strokeName;
 };
 
 

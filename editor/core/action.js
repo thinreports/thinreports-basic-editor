@@ -478,10 +478,6 @@ thin.core.Action.prototype.actionSetFontFamily = function(newFontFamily) {
   var currentFontFamily = workspace.getUiStatusForFontFamily();
   var activeShapeManager = layout.getActiveShapeManager();
 
-  if (!thin.Font.isBuiltinFont(newFontFamily)) {
-    thin.ui.Notification.info(thin.t('info_non_standard_font', {'font': newFontFamily}));
-  }
-
   var singleShape = activeShapeManager.getIfSingle();
   var shapes = activeShapeManager.getClone();
   var isMultipleSelect = activeShapeManager.isMultiple();

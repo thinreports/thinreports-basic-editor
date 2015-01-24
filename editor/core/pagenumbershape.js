@@ -28,7 +28,6 @@ goog.require('thin.core.IdShape');
 goog.require('thin.core.TextStyle');
 goog.require('thin.core.TextStyle.HorizonAlignType');
 goog.require('thin.core.TextStyle.OverflowType');
-goog.require('thin.core.TextStyle.OverflowTypeName');
 goog.require('thin.core.AbstractTextGroup');
 goog.require('thin.core.ModuleShape');
 goog.require('thin.Font');
@@ -573,17 +572,17 @@ thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
   
   var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
-  var textAlignType = thin.core.TextStyle.HorizonAlignTypeName;
+  var textAlignType = thin.core.TextStyle.HorizonAlignType;
   
   textAlignSelect.setTextAlignLeft();
-  textAlignSelect.addItem(new thin.ui.Option(textAlignType.START));
-  textAlignSelect.addItem(new thin.ui.Option(textAlignType.MIDDLE));
-  textAlignSelect.addItem(new thin.ui.Option(textAlignType.END));
+  goog.array.forEach([textAlignType.START, textAlignType.MIDDLE, textAlignType.END], function(type) {
+    textAlignSelect.addItem(
+        new thin.ui.Option(thin.core.TextStyle.getHorizonAlignName(type), type));
+  });
 
   textAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        workspace.getAction().actionSetTextAnchor(
-            thin.core.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
+        workspace.getAction().actionSetTextAnchor(e.target.getValue());
       }, false, this);
   
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
@@ -623,12 +622,12 @@ thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
   var textOverflowSelect = textOverflowSelectProperty.getValueControl();
   textOverflowSelect.setTextAlignLeft();
   
-  var overflowName = thin.core.TextStyle.OverflowTypeName;
   var overflowType = thin.core.TextStyle.OverflowType;
-  
-  textOverflowSelect.addItem(new thin.ui.Option(overflowName.TRUNCATE, overflowType.TRUNCATE));
-  textOverflowSelect.addItem(new thin.ui.Option(overflowName.FIT, overflowType.FIT));
-  textOverflowSelect.addItem(new thin.ui.Option(overflowName.EXPAND, overflowType.EXPAND));
+
+  goog.array.forEach([overflowType.TRUNCATE, overflowType.FIT, overflowType.EXPAND], function(type) {
+    textOverflowSelect.addItem(
+        new thin.ui.Option(thin.core.TextStyle.getOverflowName(type), type));
+  });  
   
   textOverflowSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
@@ -816,8 +815,7 @@ thin.core.PageNumberShape.prototype.updateProperties = function() {
   proppane.getPropertyControl('font-color').setValue(fontColor);
   proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
   proppane.getPropertyControl('font-family').setValue(properties['font-family']);
-  proppane.getPropertyControl('text-halign').setValue(
-        thin.core.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
+  proppane.getPropertyControl('text-halign').setValue(properties['text-halign']);
   proppane.getPropertyControl('kerning').setValue(properties['kerning']);
   proppane.getPropertyControl('overflow').setValue(properties['overflow']);
   proppane.getPropertyControl('format').setValue(properties['format']);

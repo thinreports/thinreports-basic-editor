@@ -20,6 +20,90 @@ goog.require('thin.platform.Font');
 
 
 /**
+ * @param {string} family
+ * @param {string=} opt_name
+ * @param {boolean=} opt_builtin
+ * @constructor
+ */
+thin.Font = function(family, opt_name, opt_builtin) {
+  /**
+   * @type {string}
+   * @private
+   */
+  this.family_ = family;
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.name_ = opt_name || family;
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.builtin_ = opt_builtin || false;
+};
+
+
+/**
+ * @type {Array.<thin.Font>}
+ * @private
+ */
+thin.Font.fontRegistry_ = [];
+
+
+/**
+ * @type {thin.Font}
+ * @private
+ */
+thin.Font.defaultFont_;
+
+
+/**
+ * @param {string} family
+ * @param {string=} opt_name
+ * @param {boolean=} opt_builtin
+ * @return {thin.Font}
+ */
+thin.Font.register = function(family, opt_name, opt_builtin) {
+  var font = new thin.Font(family, opt_name || family, opt_builtin);
+  thin.Font.fontRegistry_.push(font);
+  return font;
+};
+
+
+thin.Font.init = function() {
+  var font = thin.Font;
+
+  font.defaultFont_ = font.register('Helvetica', null, true);
+
+  font.register('Courier New', null, true);
+  font.register('Times New Roman', null, true);
+  font.register('IPAMincho', 'IPA ' + thin.t('font_mincho'), true);
+  font.register('IPAPMincho', 'IPA P' + thin.t('font_mincho'), true);
+  font.register('IPAGothic', 'IPA ' + thin.t('font_gothic'), true);
+  font.register('IPAPGothic', 'IPA P' + thin.t('font_gothic'), true);
+};
+
+
+/**
+ * @return {string}
+ */
+thin.Font.getDefaultFontFamily = function() {
+  return thin.Font.defaultFont_.getFamily();
+};
+
+
+/**
+ * @return {Array.<thin.Font>}
+ */
+thin.Font.getFonts = function() {
+  return thin.Font.fontRegistry_;
+};
+
+
+/**
  * @type {Object.<Object>}
  * @private
  */
@@ -73,42 +157,24 @@ thin.Font.getHeight = function(family, fontSize) {
 
 
 /**
- * @type {Array.<Array>}
- * @private
+ * @return {string}
  */
-thin.Font.BUILTIN_FONTS_ = [
-  ['Helvetica', 'Helvetica'],
-  ['Courier New', 'Courier New'],
-  ['Times New Roman', 'Times New Roman'],
-  ['IPA ' + thin.t('font_mincho'), 'IPAMincho'],
-  ['IPA P' + thin.t('font_mincho'), 'IPAPMincho'],
-  ['IPA ' + thin.t('font_gothic'), 'IPAGothic'],
-  ['IPA P' + thin.t('font_gothic'), 'IPAPGothic']
-];
+thin.Font.prototype.getFamily = function() {
+  return this.family_;
+};
 
 
 /**
  * @return {string}
  */
-thin.Font.getDefaultFont = function() {
-  return 'Helvetica';
+thin.Font.prototype.getName = function() {
+  return this.name_;
 };
 
 
 /**
- * @return {Array.<Array>}
- */
-thin.Font.getBuiltinFonts = function() {
-  return thin.Font.BUILTIN_FONTS_;
-};
-
-
-/**
- * @param {string} font
  * @return {boolean}
  */
-thin.Font.isBuiltinFont = function(font) {
-  return goog.array.findIndex(thin.Font.BUILTIN_FONTS_, function(f) {
-    return f[1] == font;
-  }) != -1;
+thin.Font.prototype.isBuiltin = function() {
+  return this.builtin_;
 };

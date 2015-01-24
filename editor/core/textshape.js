@@ -869,17 +869,17 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
   
   var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
-  textAlignSelect.setTextAlignLeft();
-  var textAlignType = thin.core.TextStyle.HorizonAlignTypeName;
+  var textAlignType = thin.core.TextStyle.HorizonAlignType;
   
-  textAlignSelect.addItem(new thin.ui.Option(textAlignType.START));
-  textAlignSelect.addItem(new thin.ui.Option(textAlignType.MIDDLE));
-  textAlignSelect.addItem(new thin.ui.Option(textAlignType.END));
+  textAlignSelect.setTextAlignLeft();
+  goog.array.forEach([textAlignType.START, textAlignType.MIDDLE, textAlignType.END], function(type) {
+    textAlignSelect.addItem(
+        new thin.ui.Option(thin.core.TextStyle.getHorizonAlignName(type), type));
+  });
 
   textAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        workspace.getAction().actionSetTextAnchor(
-            thin.core.TextStyle.getHorizonAlignTypeFromTypeName(e.target.getValue()));
+        workspace.getAction().actionSetTextAnchor(e.target.getValue());
       }, false, this);
   
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
@@ -887,17 +887,17 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
 
   var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_vertical_align'));
   var textVerticalAlignSelect = textVerticalAlignSelectProperty.getValueControl();
-  textVerticalAlignSelect.setTextAlignLeft();
-  var verticalAlignType = thin.core.TextStyle.VerticalAlignTypeName;
+  var verticalAlignType = thin.core.TextStyle.VerticalAlignType;
   
-  textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.TOP));
-  textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.CENTER));
-  textVerticalAlignSelect.addItem(new thin.ui.Option(verticalAlignType.BOTTOM));
+  textVerticalAlignSelect.setTextAlignLeft();
+  goog.array.forEach([verticalAlignType.TOP, verticalAlignType.CENTER, verticalAlignType.BOTTOM], function(type) {
+    textVerticalAlignSelect.addItem(
+        new thin.ui.Option(thin.core.TextStyle.getVerticalAlignName(type), type));
+  });
   
   textVerticalAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        workspace.getAction().actionSetVerticalAlign(
-            thin.core.TextStyle.getVerticalAlignTypeFromTypeName(e.target.getValue()));
+        workspace.getAction().actionSetVerticalAlign(e.target.getValue());
       }, false, this);
   
   proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
@@ -1098,10 +1098,8 @@ thin.core.TextShape.prototype.updateProperties = function() {
   proppane.getPropertyControl('font-family').setValue(properties['font-family']);
   proppane.getPropertyControl('font-size').setInternalValue(properties['font-size']);
   proppane.getPropertyControl('line-height').setInternalValue(properties['line-height']);
-  proppane.getPropertyControl('text-halign').setValue(
-        thin.core.TextStyle.getHorizonAlignValueFromType(properties['text-halign']));
-  proppane.getPropertyControl('text-valign').setValue(
-        thin.core.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
+  proppane.getPropertyControl('text-halign').setValue(properties['text-halign']);
+  proppane.getPropertyControl('text-valign').setValue(properties['text-valign']);
   proppane.getPropertyControl('kerning').setValue(properties['kerning']);
   proppane.getPropertyControl('inline-format').setChecked(properties['inline-format']);
   proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);

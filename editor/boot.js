@@ -16,6 +16,7 @@
 goog.provide('thin.boot');
 
 goog.require('goog.dom');
+goog.require('goog.style');
 goog.require('goog.a11y.aria');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Component.EventType');
@@ -102,9 +103,31 @@ goog.require('thin.layout.FormatPage.DirectionType');
 goog.require('thin.layout.File');
 
 
+/**
+ * Launch ThinreportsEditor!
+ */
 thin.boot = function() {
+  thin.Settings.init(
+    function() {
+      // thin.i18n.init();
+      thin.Font.init();
+
+      thin.run_();
+    });
+};
+
+
+/**
+ * @private
+ */
+thin.run_ = function() {
   (function() {
     var i18n = thin.i18n;
+    var bodyElement = goog.dom.getElementsByTagNameAndClass('body')[0];
+
+    goog.style.setStyle(bodyElement,
+          {'font-family': i18n.getFontFamily() + ', sans-serif'});
+
     Array.prototype.forEach.call(
       goog.dom.getDocument().querySelectorAll('body *[data-i18n]'),
       function(elm) {
@@ -1296,21 +1319,19 @@ thin.boot = function() {
       dialog.setWidth(400);
       dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOkCancel());
 
-      var languageSelectbox = new thin.ui.Select();
-      languageSelectbox.setTextAlignLeft();
-      dialog.addChild(languageSelectbox, false);
+      var localeSelectBox = new thin.ui.Select();
+      localeSelectBox.setTextAlignLeft();
+      dialog.addChild(localeSelectBox, false);
 
-      var langs = /** @type {Object} */ (thin.$('LOCALES'));
-      var langKeys = goog.object.getKeys(langs);
+      var locales = /** @type {Array} */ (thin.callApp('getLocales'));
 
-      goog.array.sort(langKeys);
-      goog.array.forEach(langKeys, function(key) {
-        languageSelectbox.addItem(
-            new thin.ui.Option(goog.object.get(langs, key) + ' (' + key + ')', key));
+      goog.array.forEach(locales, function(locale) {
+        localeSelectBox.addItem(
+            new thin.ui.Option(locale['name'] + ' (' + locale['id'] + ')', locale['id']));
       });
 
-      languageSelectbox.setWidth(152);
-      languageSelectbox.render(goog.dom.getElement('dialog-preference-language'));
+      localeSelectBox.setWidth(152);
+      localeSelectBox.render(goog.dom.getElement('dialog-preference-language'));
 
       var defaultUnitSelectbox = new thin.ui.Select();
       defaultUnitSelectbox.setTextAlignLeft();
@@ -1323,21 +1344,20 @@ thin.boot = function() {
       });
 
       defaultUnitSelectbox.setWidth(60);
-      defaultUnitSelectbox.setValue(thin.settings.getDefaultUnit());
+      defaultUnitSelectbox.setValue(thin.Settings.getDefaultUnit());
       defaultUnitSelectbox.render(goog.dom.getElement('dialog-preference-default-unit'));
 
       dialog.decorate(goog.dom.getElement('dialog-preference'));
       dialog.addEventListener(goog.ui.Dialog.EventType.SELECT, function(e) {
         if (e.isOk()) {
-          // update locale
-          var rawLocale = thin.settings.get('locale');
-          thin.settings.set('locale', /** @type {string} */ (languageSelectbox.getValue()));
+          // Default unit
+          thin.Settings.setDefaultUnit(/** @type {string} */ (defaultUnitSelectbox.getValue()));
 
-          // update default unit
-          thin.settings.setDefaultUnit(/** @type {string} */ (defaultUnitSelectbox.getValue()));
+          // Locale
+          var rawLocale = thin.Settings.getLocale();
+          var newLocale = /** @type {string} */ (localeSelectBox.getValue());
 
-          // when has been changed
-          if (thin.$('getCurrentInternalLocale()') != thin.settings.get('locale')) {
+          if (rawLocale != newLocale) {
             thin.ui.Message.confirm(thin.t('text_apply_locale_setting') +
               '<div class="warnings">' +
               '<div class="warnings-caption">WARNING</div>' +
@@ -1347,7 +1367,12 @@ thin.boot = function() {
               thin.t('label_confirmation'),
               function(e) {
                 if (e.isYes()) {
-                  thin.platform.callNativeFunction('chrome', 'runtime', 'reload');
+                  // Update locale
+                  thin.Settings.setLocale(newLocale);
+                  // Flush all settings to local-storage
+                  thin.Settings.flush(function() {
+                    thin.platform.callNativeFunction('chrome', 'runtime', 'reload');
+                  });
                 }
               },
               thin.ui.Dialog.ButtonSet.typeYesNo());
@@ -1356,7 +1381,7 @@ thin.boot = function() {
         return true;
       });
 
-      languageSelectbox.setValue(thin.$('getCurrentLocale()'));
+      localeSelectBox.setValue(thin.i18n.getLocaleId());
 
       dialog.addEventListener(goog.ui.Dialog.EventType.AFTER_HIDE, focusWorkspace);
       dialog.setVisible(true);
@@ -1621,7 +1646,5 @@ thin.boot = function() {
 
   initUiStatus();
 };
-
-goog.exportProperty(goog.global['Thin'], 'boot', thin.boot);
 
 goog.events.listen(goog.global, goog.events.EventType.LOAD, thin.boot, false, this);

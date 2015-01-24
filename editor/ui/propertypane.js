@@ -1017,7 +1017,7 @@ thin.ui.PropertyPane.FontSelectProperty = function(opt_label) {
         thin.ui.MenuButtonRenderer, 
         thin.ui.getCssName(thin.ui.PropertyPane.PropertyRenderer.CSS_CLASS, 'select'));
   
-  var control = new thin.ui.FontSelect(thin.Font.getBuiltinFonts(),
+  var control = new thin.ui.FontSelect(thin.Font.getFonts(),
                   /** @type {thin.ui.MenuButtonRenderer} */ (renderer));
   
   control.getMenu().setMaxHeight(250);

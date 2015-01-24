@@ -251,13 +251,17 @@ thin.core.RectShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(strokeWidthCombProperty , shapeGroup, 'stroke-width');
   
   
-  var strokeDashTypeName = thin.core.ModuleElement.StrokeTypeName;
+  var strokeType = thin.core.ModuleElement.StrokeType;
   var strokeDashSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_stroke_type'));
   var strokeDashSelect = strokeDashSelectProperty.getValueControl();
+
   strokeDashSelect.setTextAlignLeft();
-  strokeDashSelect.addItem(new thin.ui.Option(strokeDashTypeName.SOLID));
-  strokeDashSelect.addItem(new thin.ui.Option(strokeDashTypeName.DASHED));
-  strokeDashSelect.addItem(new thin.ui.Option(strokeDashTypeName.DOTTED));
+  strokeDashSelect.addItem(
+      new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.SOLID), strokeType.SOLID));
+  strokeDashSelect.addItem(
+      new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DASHED), strokeType.DASHED));
+  strokeDashSelect.addItem(
+      new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DOTTED), strokeType.DOTTED));
   
   strokeDashSelectProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeDashTypeForPropertyUpdate, false, this);
@@ -361,7 +365,7 @@ thin.core.RectShape.prototype.updateProperties = function() {
   }
   proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
   
-  proppane.getPropertyControl('stroke-dash-type').setValue(thin.core.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
+  proppane.getPropertyControl('stroke-dash-type').setValue(properties['stroke-dash-type']);
   proppane.getPropertyControl('radius').setValue(properties['radius']);
   
   proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);

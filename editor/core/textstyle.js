@@ -16,14 +16,8 @@
 goog.provide('thin.core.TextStyle');
 goog.provide('thin.core.TextStyle.HorizonAlignType');
 goog.provide('thin.core.TextStyle.VerticalAlignType');
-goog.provide('thin.core.TextStyle.HorizonAlignTypeName');
-goog.provide('thin.core.TextStyle.VerticalAlignTypeName');
 goog.provide('thin.core.TextStyle.OverflowType');
-goog.provide('thin.core.TextStyle.OverflowTypeName');
 goog.provide('thin.core.TextStyle.WordWrapType');
-goog.provide('thin.core.TextStyle.WordWrapTypeName');
-
-goog.require('thin.i18n');
 
 
 /**
@@ -38,15 +32,6 @@ thin.core.TextStyle = function() {};
 thin.core.TextStyle.WordWrapType = {
   NONE: 'none',
   BREAK_WORD: 'break-word'
-};
-
-
-/**
- * @enum {string}
- */
-thin.core.TextStyle.WordWrapTypeName = {
-  NONE: thin.t('label_word_wrap_none'),
-  BREAK_WORD: thin.t('label_word_wrap_break_word')
 };
 
 
@@ -73,40 +58,10 @@ thin.core.TextStyle.VerticalAlignType = {
 /**
  * @enum {string}
  */
-thin.core.TextStyle.HorizonAlignTypeName = {
-  START: thin.t('label_left_align'),
-  MIDDLE: thin.t('label_center_align'),
-  END: thin.t('label_right_align')
-};
-
-
-/**
- * @enum {string}
- */
-thin.core.TextStyle.VerticalAlignTypeName = {
-  TOP: thin.t('label_top_align'),
-  CENTER: thin.t('label_middle_align'),
-  BOTTOM: thin.t('label_bottom_align')
-};
-
-
-/**
- * @enum {string}
- */
 thin.core.TextStyle.OverflowType = {
   TRUNCATE: 'truncate',
   FIT: 'fit',
   EXPAND: 'expand'
-};
-
-
-/**
- * @enum {string}
- */
-thin.core.TextStyle.OverflowTypeName = {
-  TRUNCATE: thin.t('label_overflow_truncate'),
-  FIT: thin.t('label_overflow_fit'),
-  EXPAND: thin.t('label_overflow_expand')
 };
 
 
@@ -150,17 +105,96 @@ thin.core.TextStyle.LINEHEIGHT_LIST = ['1', '1.5', '2.0', '2.5', '3.0'];
  * @return {string}
  */
 thin.core.TextStyle.getDefaultWordWrap = function() {
-  var wordWrapType = thin.core.TextStyle.WordWrapType;
-  var defaultWordWrapCaption = thin.t('field_default_text_word_wrap');
+  return /** @type {string} */(thin.s('text_word_wrap'));
+};
 
-  var defaultType = wordWrapType.NONE;
-  goog.object.forEach(thin.core.TextStyle.WordWrapTypeName, function(caption, type) {
-    if (caption == defaultWordWrapCaption) {
-      defaultType = goog.object.get(wordWrapType, type);
-      return;
-    }
-  });
-  return defaultType;
+
+/**
+ * @param {string} wordWrapType
+ * @return {string}
+ */
+thin.core.TextStyle.getWordWrapName = function(wordWrapType) {
+  var type = thin.core.TextStyle.WordWrapType;
+  var name;
+
+  switch(wordWrapType) {
+    case type.NONE:
+      name = thin.t('label_word_wrap_none');
+      break;
+    case type.BREAK_WORD:
+      name = thin.t('label_word_wrap_break_word');
+      break;
+  }
+  return /** type {string} */(name);
+};
+
+
+/**
+ * @param {string} vAlignType
+ * @return {string}
+ */
+thin.core.TextStyle.getVerticalAlignName = function(vAlignType) {
+  var type = thin.core.TextStyle.VerticalAlignType;
+  var name;
+
+  switch(vAlignType) {
+    case type.TOP:
+      name = thin.t('label_top_align');
+      break;
+    case type.CENTER:
+      name = thin.t('label_middle_align');
+      break;
+    case type.BOTTOM:
+      name = thin.t('label_bottom_align');
+      break;
+  }
+  return /** @type {string} */(name);
+};
+
+
+/**
+ * @param {string} hAlignType
+ * @return {string}
+ */
+thin.core.TextStyle.getHorizonAlignName = function(hAlignType) {
+  var type = thin.core.TextStyle.HorizonAlignType;
+  var name;
+
+  switch(hAlignType) {
+    case type.START:
+      name = thin.t('label_left_align');
+      break;
+    case type.MIDDLE:
+      name = thin.t('label_center_align');
+      break;
+    case type.END:
+      name = thin.t('label_right_align');
+      break;
+  }
+  return /** @type {string} */(name);
+};
+
+
+/**
+ * @param {string} overflowType
+ * @return {string}
+ */
+thin.core.TextStyle.getOverflowName = function(overflowType) {
+  var type = thin.core.TextStyle.OverflowType;
+  var name;
+
+  switch(overflowType) {
+    case type.TRUNCATE:
+      name = thin.t('label_overflow_truncate');
+      break;
+    case type.FIT:
+      name = thin.t('label_overflow_fit');
+      break;
+    case type.EXPAND:
+      name = thin.t('label_overflow_expand');
+      break;
+  }
+  return /** @type {string} */(name);
 };
 
 
@@ -190,100 +224,6 @@ thin.core.TextStyle.prototype.kerning_;
  * @private
  */
 thin.core.TextStyle.prototype.lineHeightRatio_;
-
-
-/**
- * @param {string} textAnchor
- * @return {string}
- */
-thin.core.TextStyle.getHorizonAlignValueFromType = function(textAnchor) {
-
-  var anchorType = thin.core.TextStyle.HorizonAlignType;
-  var anchorTypeName = thin.core.TextStyle.HorizonAlignTypeName;
-  
-  switch (textAnchor) {
-    case anchorType.START:
-      var alignValue = anchorTypeName.START;
-      break;
-    case anchorType.MIDDLE:
-      var alignValue = anchorTypeName.MIDDLE;
-      break;
-    case anchorType.END:
-      var alignValue = anchorTypeName.END;
-      break;
-  }
-  return /** @type {string} */ (alignValue);
-};
-
-
-/**
- * @param {string} valign
- * @return {string}
- */
-thin.core.TextStyle.getVerticalAlignValueFromType = function(valign) {
-
-  var valignType = thin.core.TextStyle.VerticalAlignType;
-  var valignTypeName = thin.core.TextStyle.VerticalAlignTypeName;
-  
-  switch (valign) {
-    case valignType.TOP:
-      var valignValue = valignTypeName.TOP;
-      break;
-    case valignType.CENTER:
-      var valignValue = valignTypeName.CENTER;
-      break;
-    case valignType.BOTTOM:
-      var valignValue = valignTypeName.BOTTOM;
-      break;
-  }
-  return /** @type {string} */ (valignValue);
-};
-
-
-/**
- * @return {string}
- */
-thin.core.TextStyle.getHorizonAlignTypeFromTypeName = function(targetName) {
-  
-  var anchorType = thin.core.TextStyle.HorizonAlignType;
-  var anchorTypeName = thin.core.TextStyle.HorizonAlignTypeName;
-  
-  switch (targetName) {
-    case anchorTypeName.START:
-      var alignValue = anchorType.START;
-      break;
-    case anchorTypeName.MIDDLE:
-      var alignValue = anchorType.MIDDLE;
-      break;
-    case anchorTypeName.END:
-      var alignValue = anchorType.END;
-      break;
-  }
-  return /** @type {string} */ (alignValue);
-};
-
-
-/**
- * @return {string}
- */
-thin.core.TextStyle.getVerticalAlignTypeFromTypeName = function(targetName) {
-  
-  var valignType = thin.core.TextStyle.VerticalAlignType;
-  var valignTypeName = thin.core.TextStyle.VerticalAlignTypeName;
-  
-  switch (targetName) {
-    case valignTypeName.TOP:
-      var valignValue = valignType.TOP;
-      break;
-    case valignTypeName.CENTER:
-      var valignValue = valignType.CENTER;
-      break;
-    case valignTypeName.BOTTOM:
-      var valignValue = valignType.BOTTOM;
-      break;
-  }
-  return /** @type {string} */ (valignValue);
-};
 
 
 /**

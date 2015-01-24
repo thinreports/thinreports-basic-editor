@@ -13,12 +13,11 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.core.LineShape');
+goog.provide('thin.core.EllipseShape');
 
-goog.require('goog.string');
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
-goog.require('thin.core.Line');
+goog.require('thin.core.Ellipse');
 goog.require('thin.core.ModuleShape');
 
 
@@ -26,35 +25,41 @@ goog.require('thin.core.ModuleShape');
  * @param {Element} element
  * @param {thin.core.Layout} layout
  * @param {goog.graphics.Stroke?} stroke
+ * @param {goog.graphics.Fill?} fill
  * @constructor
- * @extends {thin.core.Line}
+ * @extends {thin.core.Ellipse}
  */
-thin.core.LineShape = function(element, layout, stroke) {
-  thin.core.Line.call(this, element, layout, stroke);
-  this.setCss(thin.core.LineShape.CLASSID);
-  this.calculateDirection(this.y1_, this.y2_);
+thin.core.EllipseShape = function(element, layout, stroke, fill) {
+  thin.core.Ellipse.call(this, element, layout, stroke, fill);
+  this.setCss(thin.core.EllipseShape.CLASSID);
 };
-goog.inherits(thin.core.LineShape, thin.core.Line);
-goog.mixin(thin.core.LineShape.prototype, thin.core.ModuleShape.prototype);
+goog.inherits(thin.core.EllipseShape, thin.core.Ellipse);
+goog.mixin(thin.core.EllipseShape.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
  * @type {string}
  */
-thin.core.LineShape.CLASSID = 's-line';
+thin.core.EllipseShape.CLASSID = 's-ellipse';
+
+
+/**
+ * @type {goog.graphics.SolidFill}
+ */
+thin.core.EllipseShape.DEFAULT_FILL = new goog.graphics.SolidFill('#FFFFFF');
 
 
 /**
  * @type {goog.graphics.Stroke}
  */
-thin.core.LineShape.DEFAULT_STROKE = new goog.graphics.Stroke(1, '#000000');
+thin.core.EllipseShape.DEFAULT_STROKE = new goog.graphics.Stroke(1, '#000000');
 
 
 /**
  * @return {string}
  */
-thin.core.LineShape.prototype.getClassId = function() {
-  return thin.core.LineShape.CLASSID;
+thin.core.EllipseShape.prototype.getClassId = function() {
+  return thin.core.EllipseShape.CLASSID;
 };
 
 
@@ -62,15 +67,14 @@ thin.core.LineShape.prototype.getClassId = function() {
  * @param {Element} element
  * @param {thin.core.Layout} layout
  * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.core.LineShape}
+ * @return {thin.core.EllipseShape}
  */
-thin.core.LineShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-
-  var shape = new thin.core.LineShape(element, layout, 
-                  new goog.graphics.Stroke(
+thin.core.EllipseShape.createFromElement = function(element, layout, opt_shapeIdManager) {
+  var shape = new thin.core.EllipseShape(element, layout, 
+                new goog.graphics.Stroke(
                       Number(layout.getElementAttribute(element, 'stroke-width')),
-                      layout.getElementAttribute(element, 'stroke')));
-  
+                      layout.getElementAttribute(element, 'stroke')),
+                new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
   shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
@@ -80,8 +84,8 @@ thin.core.LineShape.createFromElement = function(element, layout, opt_shapeIdMan
 };
 
 
-thin.core.LineShape.prototype.setDefaultOutline = function() {
-  this.setTargetOutline(this.getLayout().getHelpers().getLineOutline());
+thin.core.EllipseShape.prototype.setDefaultOutline = function() {
+  this.setTargetOutline(this.getLayout().getHelpers().getEllipseOutline());
 };
 
 
@@ -89,51 +93,43 @@ thin.core.LineShape.prototype.setDefaultOutline = function() {
  * @param {thin.core.Helpers} helpers
  * @param {thin.core.MultiOutlineHelper} multiOutlineHelper
  */
-thin.core.LineShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
-  multiOutlineHelper.toLineOutline(this, helpers);
+thin.core.EllipseShape.prototype.toOutline = function(helpers, multiOutlineHelper) {
+  multiOutlineHelper.toEllipseOutline(this, helpers);
 };
 
 
 /**
  * @return {Function}
  */
-thin.core.LineShape.prototype.getCloneCreator = function() {
+thin.core.EllipseShape.prototype.getCloneCreator = function() {
 
-  var sourceCoordinate = new goog.math.Coordinate(this.getLeft(), this.getTop()).clone();
+  var sourceCoordinate = new goog.math.Coordinate(this.getLeft(), this.getTop());
   var deltaCoordinateForList = this.getDeltaCoordinateForList().clone();
   var deltaCoordinateForGuide = this.getDeltaCoordinateForGuide().clone();
-
-  var y1 = this.y1_;
-  var y2 = this.y2_;
   var width = this.getWidth();
   var height = this.getHeight();
+  var strokeDashType = this.getStrokeDashType();
   var stroke = this.getStroke();
   var strokeWidth = this.getStrokeWidth();
   var fill = this.getFill();
-  var strokeDashType = this.getStrokeDashType();
   var display = this.getDisplay();
-  
   var isAffiliationListShape = this.isAffiliationListShape();
-  var deltaCoordinate = this.getDeltaCoordinateForList();
-
+  
   /**
    * @param {thin.core.Layout} layout
    * @param {boolean=} opt_isAdaptDeltaForList
    * @param {goog.graphics.SvgGroupElement=} opt_renderTo
    * @param {goog.math.Coordinate=} opt_basisCoordinate
-   * @return {thin.core.LineShape}
+   * @return {thin.core.EllipseShape}
    */
   return function(layout, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate) {
-  
-    var shape = layout.createLineShape();
-    layout.appendChild(shape, opt_renderTo);
-    
-    var pasteCoordinate = layout.calculatePasteCoordinate(isAffiliationListShape,
-          deltaCoordinateForList, deltaCoordinateForGuide, sourceCoordinate,
-          opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate);
 
-    shape.calculateDirection(y1, y2);
-    shape.setBounds(new goog.math.Rect(pasteCoordinate.x, pasteCoordinate.y, width, height));
+    var shape = layout.createEllipseShape();
+    layout.appendChild(shape, opt_renderTo);
+    var pasteCoordinate = layout.calculatePasteCoordinate(
+                            isAffiliationListShape, deltaCoordinateForList, deltaCoordinateForGuide,
+                            sourceCoordinate, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate);
+    shape.setBounds(new goog.math.Rect(pasteCoordinate.x, pasteCoordinate.y, width, height).clone());
 
     shape.setStrokeDashFromType(strokeDashType);
     shape.setStroke(stroke);
@@ -148,10 +144,8 @@ thin.core.LineShape.prototype.getCloneCreator = function() {
 /**
  * @private
  */
-thin.core.LineShape.prototype.createPropertyComponent_ = function() {
-  
+thin.core.EllipseShape.prototype.createPropertyComponent_ = function() {
   var scope = this;
-  var layout = this.getLayout();
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
   
@@ -171,7 +165,7 @@ thin.core.LineShape.prototype.createPropertyComponent_ = function() {
   var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
   
@@ -206,8 +200,16 @@ thin.core.LineShape.prototype.createPropertyComponent_ = function() {
 
   
   var shapeGroup = proppane.addGroup(thin.t('property_group_shape'));
-
-
+  
+  
+  var fillInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_fill_color'));
+  fillInputProperty.getValueControl().getInput().setLabel('none');
+  fillInputProperty.addEventListener(propEventType.CHANGE,
+      this.setFillForPropertyUpdate, false, this);
+  
+  proppane.addProperty(fillInputProperty , shapeGroup, 'fill');
+  
+  
   var strokeInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_stroke_color'));
   strokeInputProperty.getValueControl().getInput().setLabel('none');
   strokeInputProperty.addEventListener(propEventType.CHANGE,
@@ -237,14 +239,18 @@ thin.core.LineShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(strokeWidthCombProperty , shapeGroup, 'stroke-width');
 
-  
-  var strokeDashTypeName = thin.core.ModuleElement.StrokeTypeName;
+  var strokeType = thin.core.ModuleElement.StrokeType;
   var strokeDashSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_stroke_type'));
   var strokeDashSelect = strokeDashSelectProperty.getValueControl();
+
   strokeDashSelect.setTextAlignLeft();
-  strokeDashSelect.addItem(new thin.ui.Option(strokeDashTypeName.SOLID));
-  strokeDashSelect.addItem(new thin.ui.Option(strokeDashTypeName.DASHED));
-  strokeDashSelect.addItem(new thin.ui.Option(strokeDashTypeName.DOTTED));
+
+  strokeDashSelect.addItem(
+      new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.SOLID), strokeType.SOLID));
+  strokeDashSelect.addItem(
+      new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DASHED), strokeType.DASHED));
+  strokeDashSelect.addItem(
+      new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DOTTED), strokeType.DOTTED));
   
   strokeDashSelectProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeDashTypeForPropertyUpdate, false, this);
@@ -271,7 +277,7 @@ thin.core.LineShape.prototype.createPropertyComponent_ = function() {
 /**
  * @return {Object}
  */
-thin.core.LineShape.prototype.getProperties = function() {
+thin.core.EllipseShape.prototype.getProperties = function() {
 
   return {
     'left': this.getLeft(),
@@ -279,6 +285,7 @@ thin.core.LineShape.prototype.getProperties = function() {
     'width': this.getWidth(),
     'height': this.getHeight(),
     'display': this.getDisplay(),
+    'fill': this.getFill().getColor(),
     'stroke': this.getStroke().getColor(),
     'stroke-width': this.getStrokeWidth(),
     'stroke-dash-type': this.getStrokeDashType(),
@@ -288,26 +295,30 @@ thin.core.LineShape.prototype.getProperties = function() {
 };
 
 
-thin.core.LineShape.prototype.updateProperties = function() {
+thin.core.EllipseShape.prototype.updateProperties = function() {
   var proppane = thin.ui.getComponent('proppane');
-
   if (!proppane.isTarget(this)) {
     this.getLayout().updatePropertiesForEmpty();
     proppane.setTarget(this);
     this.createPropertyComponent_();
   }
-  
+
   var properties = this.getProperties();
   var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
+  var noneColor = thin.core.ModuleShape.NONE;
   
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
   proppane.getPropertyControl('width').setValue(properties['width']);
   proppane.getPropertyControl('height').setValue(properties['height']);
   proppane.getPropertyControl('display').setChecked(properties['display']);
-  
+  var fill = properties['fill'];
+  if (thin.isExactlyEqual(fill, noneColor)) {
+    fill = proppaneBlank
+  }
+  proppane.getPropertyControl('fill').setValue(fill);
   var stroke = properties['stroke'];
-  if (thin.isExactlyEqual(stroke, thin.core.ModuleShape.NONE)) {
+  if (thin.isExactlyEqual(stroke, noneColor)) {
     stroke = proppaneBlank
   }
   proppane.getPropertyControl('stroke').setValue(stroke);
@@ -317,8 +328,7 @@ thin.core.LineShape.prototype.updateProperties = function() {
   }
   proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
   
-  proppane.getPropertyControl('stroke-dash-type').setValue(thin.core.ModuleElement.getStrokeValueFromType(properties['stroke-dash-type']));
-  
+  proppane.getPropertyControl('stroke-dash-type').setValue(properties['stroke-dash-type']);
   proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
   proppane.getPropertyControl('desc').setValue(properties['desc']);
 };
@@ -327,22 +337,17 @@ thin.core.LineShape.prototype.updateProperties = function() {
 /**
  * @param {Object} properties
  */
-thin.core.LineShape.prototype.setInitShapeProperties = function(properties) {
-
-  var coordinate = properties.COORDINATE;
-  var y1 = coordinate.y0;
-  var y2 = coordinate.y1;
-  this.setX1(coordinate.x0);
-  this.setX2(coordinate.x1);
-  this.setY1(y1);
-  this.setY2(y2);
-  this.calculateDirection(y1, y2);
+thin.core.EllipseShape.prototype.setInitShapeProperties = function(properties) {
+  var radius = properties.RADIUS;
+  var center = properties.CENTER;
+  this.setRadius(radius.x, radius.y);
+  this.setCenter(center.x, center.y);
   this.setBounds(properties.BOUNDS);
 };
 
 
 /** @inheritDoc */
-thin.core.LineShape.prototype.disposeInternal = function() {
-  thin.core.LineShape.superClass_.disposeInternal.call(this);
+thin.core.EllipseShape.prototype.disposeInternal = function() {
+  thin.core.EllipseShape.superClass_.disposeInternal.call(this);
   this.disposeInternalForShape();
 };

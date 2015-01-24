@@ -93,7 +93,7 @@ thin.core.Workspace = function(format, opt_file) {
    * @type {string}
    * @private
    */
-  this.fontFamily_ = thin.Font.getDefaultFont();
+  this.fontFamily_ = thin.Font.getDefaultFontFamily();
 };
 goog.inherits(thin.core.Workspace, goog.ui.Component);
 
