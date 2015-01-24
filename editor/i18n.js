@@ -48,8 +48,6 @@ thin.i18n.translations_;
  */
 thin.i18n.translate = function(name, opt_values) {
   var i18n = thin.i18n;
-  i18n.init_();
-
   var msg = i18n.makeMessage_(
       i18n.getMessages()[name], opt_values) || '';
   return goog.string.newLineToBr(goog.string.htmlEscape(msg));
@@ -69,10 +67,7 @@ thin.t = thin.i18n.translate;
  * @return {string}
  */
 thin.i18n.getDefaultSetting = function(setting) {
-  var i18n = thin.i18n;
-  i18n.init_();
-
-  return /** @type {string} */(i18n.currentLocale_['default_settings'][setting]);
+  return /** @type {string} */(thin.i18n.currentLocale_['default_settings'][setting]);
 };
 
 
@@ -88,7 +83,6 @@ thin.s = thin.i18n.getDefaultSetting;
  */
 thin.i18n.getMessages = function() {
   var i18n = thin.i18n;
-  i18n.init_();
 
   if (!i18n.translations_) {
     i18n.translations_ = /** @type {Object} */(i18n.currentLocale_['messages']);
@@ -101,7 +95,6 @@ thin.i18n.getMessages = function() {
  * @return {string}
  */
 thin.i18n.getFontFamily = function() {
-  thin.i18n.init_();
   return thin.i18n.currentLocale_.font_family;
 };
 
@@ -110,15 +103,11 @@ thin.i18n.getFontFamily = function() {
  * @return {string}
  */
 thin.i18n.getLocaleId = function() {
-  thin.i18n.init_();
   return thin.i18n.currentLocale_.id;
 };
 
 
-/**
- * @private
- */
-thin.i18n.init_ = function() {
+thin.i18n.init = function() {
   var i18n = thin.i18n;
 
   if (i18n.currentLocaleId_) {

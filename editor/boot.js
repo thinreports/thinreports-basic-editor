@@ -109,7 +109,7 @@ goog.require('thin.layout.File');
 thin.boot = function() {
   thin.Settings.init(
     function() {
-      // thin.i18n.init();
+      thin.i18n.init();
       thin.Font.init();
 
       thin.run_();
