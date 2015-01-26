@@ -31,13 +31,13 @@ It can be generated automatically the specifications that contains the definitio
 ## Install
 
 Please download the files for your platform from [here](http://www.thinreports.org/download/).
-Then, please see the [Installation Guide](http://www.thinreports.org/documentation/getting-started/installation.html#googtrans(ja|en) about how to install editor for each platform.
+Then, please see the [Installation Guide](http://www.thinreports.org/documentation/getting-started/installation.html#googtrans) about how to install editor for each platform.
 
 ## For more information
 
 ### Release information
 
-  * [News](http://www.thinreports.org/news/)
+  * [News](http://www.thinreports.org/news/#googtrans)
   * [Changelog](https://github.com/thinreports/thinreports-editor/blob/master/doc/CHANGELOG.md)
 
 ### Community
@@ -46,7 +46,7 @@ Then, please see the [Installation Guide](http://www.thinreports.org/documentati
   
 ### Documentation
 
-  * [Getting Started](http://www.thinreports.org/documentation/getting-started/quickstart.html#googtrans(ja|en) 
+  * [Getting Started](http://www.thinreports.org/documentation/getting-started/quickstart.html#googtrans)
   * [Examples](https://github.com/thinreports/thinreports-examples)
 
 ## Contributing
