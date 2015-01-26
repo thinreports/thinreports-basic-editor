@@ -1,2 +1,5 @@
+dev/tmp/*
+package/*
 *.pyc
-dev/tmp/depslist
+
+!.keep
