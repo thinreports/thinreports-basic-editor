@@ -23,6 +23,12 @@ namespace :dev do
     html.write html.read.sub(/<!\-\-SCRIPTS begin\-\->.*<!\-\-SCRIPTS end\-\->/m,
                              "<!--SCRIPTS begin-->\n#{ script_tags.join "\n" }\n<!--SCRIPTS end-->")
   end
+
+  desc 'Check structure and syntax of scripts by testing compilation'
+  task :check do
+    out, warnings, status = compile_scripts
+    puts warnings
+  end
 end
 task default: 'dev:calcdeps'
 
@@ -36,7 +42,6 @@ namespace :package do
 
   desc 'Build a release package'
   task build: :cleanup do
-    require 'open3'
     require 'yaml'
 
     # Initializing package directory
@@ -69,7 +74,7 @@ namespace :package do
     compile_document_html
 
     # Building package/app.js file
-    compiled_js, warnings, status = Open3.capture3 javascript_compilation
+    compiled_js, warnings, status = compile_scripts
 
     warning_log = dev.join 'tmp', 'javascript-compile.log'
     warning_log.write warnings
@@ -103,19 +108,20 @@ def compile_document_html
          " #{ app.join 'layout', 'document', 'templates', 'html.soy' }"
 end
 
-def javascript_compilation(verbose: false)
+def compile_scripts(verbose: false)
+  require 'open3'
   warning_level = verbose ? 'VERBOSE' : 'DEFAULT'
 
-  "python #{ closure_builder_py }" +
-    " --root=#{ closure_library }" +
-    " --root=#{ closure_templates }" +
-    " --root=#{ app }" +
-    " -n thin.boot" +
-    " -o compiled" +
-    " -c #{ closure_compiler_jar }" +
-    %| -f "--compilation_level=ADVANCED_OPTIMIZATIONS"| +
-    %| -f "--warning_level=#{ warning_level }"| +
-    %| -f "--output_wrapper=(function(){%output%})();"|
+  Open3.capture3 "python #{ closure_builder_py }" +
+                 " --root=#{ closure_library }" +
+                 " --root=#{ closure_templates }" +
+                 " --root=#{ app }" +
+                 " -n thin.boot" +
+                 " -o compiled" +
+                 " -c #{ closure_compiler_jar }" +
+                 %| -f "--compilation_level=ADVANCED_OPTIMIZATIONS"| +
+                 %| -f "--warning_level=#{ warning_level }"| +
+                 %| -f "--output_wrapper=(function(){%output%})();"|
 end
 
 
