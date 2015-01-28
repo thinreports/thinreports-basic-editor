@@ -29,6 +29,11 @@ namespace :dev do
     out, warnings, status = compile_scripts
     puts warnings
   end
+
+  desc 'Compile template of the specification sheet to JavaScript'
+  task :build_template do
+    compile_document_html
+  end
 end
 task default: 'dev:calcdeps'
 
