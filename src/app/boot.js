@@ -1411,23 +1411,13 @@ thin.run_ = function() {
 
     // Doc Getting Started
     var toolHelpGettingStarted = new thin.ui.MenuLinkItem(
-          'Getting Started', 'http://osc.matsukei.net/projects/thinreports/wiki/Getting_Started');
+          'Getting Started', 'http://www.thinreports.org/documentation/getting-started/quickstart.html#googtrans');
     toolHelp.addItem(toolHelpGettingStarted);
-
-    // Doc Guide
-    var toolHelpGuide = new thin.ui.MenuLinkItem(
-          'Guide', 'http://osc.matsukei.net/projects/thinreports/wiki/Guide');
-    toolHelp.addItem(toolHelpGuide);
 
     // Doc Examples
     var toolHelpExamples = new thin.ui.MenuLinkItem(
-          'Examples', 'http://osc.matsukei.net/projects/thinreports/wiki/Examples');
+          'Examples', 'https://github.com/thinreports/thinreports-examples');
     toolHelp.addItem(toolHelpExamples);
-
-    // Doc Howtos
-    var toolHelpHowTos = new thin.ui.MenuLinkItem(
-          'HowTos', 'http://osc.matsukei.net/projects/thinreports/wiki/HowTos');
-    toolHelp.addItem(toolHelpHowTos);
 
     toolHelp.addItem(new thin.ui.MenuSeparator());
 
@@ -1446,7 +1436,7 @@ thin.run_ = function() {
     toolHelp.addItem(toolHelpFeedBack);
 
     var toolHelpTranslation = new thin.ui.MenuLinkItem(
-          thin.t('button_translation'), 'https://github.com/thinreports/thinreports-editor/blob/master/TRANSLATION.md');
+          thin.t('button_translation'), 'https://github.com/thinreports/thinreports-editor/blob/master/doc/TRANSLATION.md');
     toolHelp.addItem(toolHelpTranslation);
 
     toolbar.decorate(goog.dom.getElement('thin-toolbar'));

@@ -57,7 +57,8 @@ thin.ui.MenuItemRenderer.prototype.createDom = function(item) {
   if (goog.isFunction(item.getTarget)) {
     body = domHelper.createDom('a', {
       'class': thin.ui.getCssName(cssClass, 'body'),
-      'href': item.getTarget()
+      'href': item.getTarget(),
+      'target': '_blank'
     });
   } else {
     body = domHelper.createDom('div', thin.ui.getCssName(cssClass, 'body'));
