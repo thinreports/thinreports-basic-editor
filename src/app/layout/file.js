@@ -47,7 +47,7 @@ thin.layout.File.EXT_NAME_ = 'tlf';
  * @type {string}
  * @private
  */
-thin.layout.File.EXT_DESCRIPTION_ = 'ThinReports Layout Format';
+thin.layout.File.EXT_DESCRIPTION_ = 'Thinreports Layout Format';
 
 
 /**

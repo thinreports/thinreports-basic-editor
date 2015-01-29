@@ -107,13 +107,11 @@ goog.require('thin.layout.File');
  * Launch ThinreportsEditor!
  */
 thin.boot = function() {
-  thin.Settings.init(
-    function() {
-      thin.i18n.init();
-      thin.Font.init();
-
-      thin.run_();
-    });
+  thin.Settings.init(function() {
+    thin.i18n.init();
+    thin.Font.init();
+    thin.run_();
+  });
 };
 
 
@@ -1392,7 +1390,7 @@ thin.run_ = function() {
         new thin.ui.ToolbarMenuButton(thin.t('button_help'), new thin.ui.Icon('help')),
         dom.getElement('tbar-help'));
 
-    // About ThinReports
+    // About Thinreports
     var toolHelpAbout = new thin.ui.MenuItem(thin.t('button_about'), new thin.ui.Icon('information'));
     toolHelp.addItem(toolHelpAbout);
     toolHelpAbout.addEventListener(componentEventType.ACTION, function(e) {

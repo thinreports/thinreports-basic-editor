@@ -5,7 +5,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
   var height = 600;
 
   chrome.app.window.create('app.html', {
-    id: 'ThinReportsEditor',
+    id: 'ThinreportsEditor',
     bounds: {
       width: width,
       height: height,
