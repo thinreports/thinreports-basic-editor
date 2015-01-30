@@ -69,7 +69,7 @@ namespace :package do
 
     css_files = YAML.load_file src.join('assets', 'config.yml')
     css_files.map! {|filename| src.join 'assets', filename }
-    
+
     system "java -jar #{ closure_stylesheets_jar }" +
            " #{ css_files.join ' ' }" +
            " --output-file #{ assets.join 'style.css' }" +
@@ -166,7 +166,7 @@ def closure_stylesheets_jar
 end
 
 def soy_to_js_compiler_jar
-  dev.join 'bin', 'template-compiler', 'SoyToJsSrcCompiler.jar'
+  src.join 'lib', 'closure-templates', 'SoyToJsSrcCompiler.jar'
 end
 
 def app
