@@ -1,9 +1,5 @@
-*.swp
-*.pro.user
+package/
+dev/tmp/*
 *.pyc
-/base.js
-/base-compile.log
-/deps.log
-/assets/app.css
 
-release/
+!dev/tmp/.keep

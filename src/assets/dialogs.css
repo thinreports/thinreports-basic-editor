@@ -1,0 +1,266 @@
+/**
+ * Copyright (C) 2011 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Base styles.
+ */
+.thin-dialogs .thin-dialog-content {
+  color: #444;
+  font-size: 1.1em;
+}
+
+.thin-dialogs a {
+  color: #444 !important;
+  outline: none;
+}
+
+.thin-dialogs .thin-dialog-content textarea {
+  border : 1px solid #aaa;
+  padding: 5px !important;
+  font-size: 12px;
+}
+
+.thin-dialogs .thin-dialog-content fieldset {
+  border: 1px solid #ccc;
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: 0 0 2px #ccc;
+  padding-top: 7px;
+  margin-bottom: 5px;
+}
+
+.thin-dialogs .thin-dialog-content legend {
+  padding: 0 10px;
+  font-weight: bold;
+  background-color: #eee;
+}
+
+.thin-dialogs .thin-dialogs-setting {
+  display: -webkit-box;
+  width: 100%;
+}
+
+.thin-dialogs .thin-dialogs-setting-caption {
+  width: 30%;
+  text-align: right;
+  padding-right: 15px;
+  line-height: 22px;
+}
+
+.thin-dialogs .thin-dialogs-setting-control {
+  -webkit-box-flex: 1;
+}
+
+/**
+ * TextEditor
+ */
+.thin-dialog-text-editor .goog-textarea {
+  resize : none;
+  overflow-y: scroll !important;
+  width: 300px !important;
+  height: 150px !important;
+  font-family: IPAGothic, monospace, serif !important;
+  font-size: 13px !important;
+}
+
+/**
+ * Page Configuration
+ */
+#edit-config-page-direction label, 
+#new-config-page-direction label {
+  vertical-align: middle;
+  padding-right: 2em;
+}
+
+#edit-config-page-direction input[type="radio"], 
+#new-config-page-direction input[type="radio"] {
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+#edit-config-page-title input, 
+#new-config-page-title input {
+  width: 90%;
+}
+
+/* thin.ui.MenuButton */
+.thin-dialog-report-config .thin-menu-button-button {
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+}
+
+/* thin.ui.InputUnitChanger */
+.thin-dialog-report-config .thin-input-unit-changer {
+  margin: 1px;
+  font-size: 12px;
+  line-height: 1.2em;
+}
+
+.thin-dialog-report-config .thin-input-unit-changer-body {
+  padding: 1px;
+}
+
+/* thin.ui.Input */
+.thin-dialogs .thin-dialogs-setting-control > .thin-input {
+  padding: 2px;
+  font-size: 12px;
+  line-height: 1.2em;
+  border: 1px solid #aaa;
+  margin: 1px;
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: 0 0 1px rgba(180, 180, 180, 0.8);
+}
+
+.thin-dialogs .thin-dialogs-setting-control > .thin-input:disabled {
+  background-color: #eee !important;
+}
+
+/**
+ * Preference
+ */
+.thin-dialog-preference .thin-dialogs-setting {
+  margin-bottom: 5px;
+}
+
+/**
+ * About
+ */
+.thin-dialog-about .thin-dialog-content {
+  background-color: #fff !important;
+  padding: 13px !important;
+}
+
+.thin-dialog-about .thin-dialog-buttons {
+  border-top: 1px solid #ccc;
+  -webkit-box-shadow: inset 0 1px 0 #fff;
+}
+
+.thin-dialog-about-appinfo {
+  margin: 12px 0 20px 0;
+  color: #222 !important;
+}
+
+.thin-dialog-about-appinfo h1 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  margin: 0;
+  font-size: 24px;
+  font-weight: normal;
+  text-shadow: #eee 1px 1px 1px; 
+}
+
+.thin-dialog-about-version-info {
+  margin: 3px 0 0 2px;
+}
+
+.thin-dialog-about-version-info a {
+  display: inline-block;
+  margin-left: 1em;
+}
+
+#about-dialog-version {
+  font-size: 14px;
+}
+
+.thin-dialog-about-details {
+  border-top: 1px solid #ccc;
+  color: #666;
+  font-size: 12px;
+  padding-top: 5px;
+  margin: 15px 0 5px 0;
+}
+
+.thin-dialog-about-details p {
+  margin: 3px 0;
+}
+
+.thin-dialog-about-copyright {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  margin-bottom: 15px !important;
+  color: #444 !important;
+}
+
+.thin-dialog-about-resources {
+  padding-left: 10px;
+  font-family: Helvetica, Arial, sans-serif;
+}
+.thin-dialog-about-resources dl,
+.thin-dialog-about-resources dt {
+  margin: 0;
+  padding: 0;
+}
+.thin-dialog-about-resources dd {
+  margin: 3px 0 5px 20px;
+}
+.thin-dialog-about-resources dd strong {
+  display: inline-block;
+  min-width: 65px;
+}
+.thin-dialog-about-resources dt {
+  font-weight: bold;
+  color: #333 !important;
+}
+
+.thin-dialog-about-description {
+  margin-bottom: 10px !important;
+  font-size: 10px !important;
+  line-height: 1.4em;
+}
+
+/**
+ * Error
+ */
+.thin-dialog-app-error .thin-dialog-content p:first-child {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.thin-dialog-app-error-links {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.thin-dialog-app-error-links a {
+  width: 120px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7),
+      0 0 1px rgba(180, 180, 180, 0.8);
+  background: -webkit-gradient(linear, left top, left bottom, 
+      from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
+  padding: 8px 10px;
+  border: 1px solid rgb(180, 180, 180);
+  text-decoration: none !important;
+  color: rgb(90, 90, 90);
+  text-shadow: 1px 1px 0 rgb(250, 250, 250);
+}
+
+.thin-dialog-app-error-links a:first-child {
+  margin-right: 5px;
+}
+
+.thin-dialog-app-error-links a:active {
+  background: rgb(210, 210, 210) !important;
+}
+
+.thin-dialog-app-error-links a:hover {
+  border-color: rgb(140, 140, 140) !important;
+}
+
+.thin-dialog-app-error-links a:focus {
+  color: rgb(0, 0, 0) !important;
+}
+

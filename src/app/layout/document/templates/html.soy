@@ -1,0 +1,444 @@
+{namespace thin.layout.document.HTMLRenderer}
+
+/**
+ * @param meta
+ * @param paper
+ * @param screenShot
+ * @param shapeGroups
+ * @param t
+ */
+{template .render}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>{$meta.title} | Thinreports Layout Definition</title>
+    <style>{literal}
+      .clearfix:after {
+        content: ".";
+        display: block;
+        clear: both;
+        height: 0;
+        font-size: 1px;
+        visibility: hidden;
+      }
+      .clearfix {
+        min-height: 1px;
+      }
+      * html .clearfix {
+        height: 1%;
+      }
+      body {
+        margin: 1em;
+        color: #000;
+        font-size: 12px;
+        font-family: Helvetica, Arial, freesans, Meiryo, "Hiragino Kaku Gothic Pro", "MS PGothic", sans-serif;
+      }
+      #header, #footer {
+        color: #aaa;
+        font-size: 16px;
+      }
+      #footer a, #header a {
+        color: inherit;
+        text-decoration: none;
+      }
+      #header {
+        border-bottom: 1px solid #ccc;
+        padding: 0 0 5px 0;
+        margin: 0 0 20px 0;
+        text-align: right;
+      }
+      #header button {
+        float: left;
+        width: 80px;
+        margin: 0;
+        border: 1px solid #ddd;
+        background: #eee;
+        color: #888;
+        font-size: 14px;
+        font-family: Helvetica;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+      }
+      #header button:hover {
+        border-color: #bbb !important;
+      }
+      #header a {
+        float: right;
+      }
+      #footer {
+        border-top: 1px solid #ccc;
+        padding: 10px 0 0 0;
+        margin: 25px 0 15px 0;
+        text-align: center;
+      }
+      h1 {
+        border-bottom: 5px solid #000;
+        font-size: 36px;
+        height: 52px;
+        line-height: 52px;
+        margin: 0;
+        padding: 0;
+      }
+      h2 {
+        margin: 20px 0;
+        padding: 0 0 3px 0;
+        font-size: 22px;
+        border-bottom: 3px solid #555;
+      }
+      h3 {
+        font-size: 18px;
+        border-bottom: 1px solid #888;
+        padding: 0 0 3px 0;
+        margin: 10px 0;
+      }
+      h4 {
+        font-size: 16px;
+        border-bottom: 1px dotted #888;
+        padding: 0 0 3px 0;
+        margin: 10px 0;
+      }
+      h5 {
+        font-size: 16px;
+        padding: 0;
+        margin: 5px 0;
+      }
+      #meta-filename {
+        font-size: 16px;
+        font-style: italic;
+        text-align: right;
+        margin: 0.7em 0 0 0;
+      }
+      .noshapes {
+        margin: 0;
+        padding: 0.7em;
+        background-color: #eee;
+        border: 1px solid #ddd;
+        color: #666;
+        text-align: center;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-raidus: 4px;
+      }
+      .section-shapes {
+        padding-left: 1.5em;
+      }
+      table {
+        width: 100%;
+      }
+      table, table td, table th {
+        border: 1px solid #bbb;
+        border-collapse: collapse;
+      }
+      table th {
+        background-color: #eee;
+        padding: 2px 3px;
+      }
+      table td {
+        padding: 2px 3px;
+      }
+      table tbody tr:hover {
+        background-color: #EDF7FC;
+      }
+      #layout {
+        text-align: center;
+        page-break-after: always;
+      }
+      #layout img {
+        width: 75%;
+        box-shadow: 0px 0px 0.8em #333;
+      }
+      @media print {
+        body {margin: 0 !important}
+        table, table td, table th {border-color: #555 !important}
+        #header button {display: none}
+        #layout img {border: 1px solid #aaa; box-shadow: none !important}
+      }
+    {/literal}</style>
+  </head>
+  <body>
+    <div id="header" class="clearfix">
+      <button onclick="window.print()">Print</button>
+      <a href="http://www.thinreports.org/">Thinreports Layout Difinition</a>
+    </div>
+    <h1>{$meta.title}</h1>
+    <p id="meta-filename">{$meta.fileName}</p>
+    <h2>{$t['label_layout']}</h2>
+    <div id="layout">
+      <img src="data:image/svg+xml;base64,{$screenShot}" alt="Screen Shot">
+    </div>
+    <h2>{$t['label_page_setting']}</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>{$t['field_paper_type']}</th>
+        <th>{$t['field_paper_width']}</th>
+        <th>{$t['field_paper_height']}</th>
+        <th>{$t['field_paper_direction']}</th>
+        <th>{$t['field_margin_top']}</th>
+        <th>{$t['field_margin_bottom']}</th>
+        <th>{$t['field_margin_left']}</th>
+        <th>{$t['field_margin_right']}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>{$paper.type}</td>
+        <td>{$paper.width}</td>
+        <td>{$paper.height}</td>
+        <td>{$paper.orientation}</td>
+        <td>{$paper.margin.top}</td>
+        <td>{$paper.margin.bottom}</td>
+        <td>{$paper.margin.left}</td>
+        <td>{$paper.margin.right}</td>
+      </tr>
+      </tbody>
+    </table>
+    <h2>{$t['label_shapes']}</h2>
+    {call .renderShapes}
+      {param shapeGroups: $shapeGroups /}
+      {param t: $t /}
+    {/call}
+    <div id="footer">
+      <a href="http://www.thinreports.org">http://www.thinreports.org/</a>
+    </div>
+  </body>
+</html>
+{/template}
+
+/**
+ * @param shapeGroups
+ * @param t
+ * @param? inList
+ */
+{template .renderShapes private="true"}
+{foreach $shapeGroup in $shapeGroups}
+{switch $shapeGroup.type}
+  {case thin.core.TblockShape.CLASSID}
+    {call .renderTblockShapes}
+      {param shapeGroup: $shapeGroup /}
+      {param t: $t /}
+      {param inList: $inList /}
+    {/call}
+  {case thin.core.ImageblockShape.CLASSID}
+    {call .renderImageblockShapes}
+      {param shapeGroup: $shapeGroup /}
+      {param t: $t /}
+      {param inList: $inList /}
+    {/call}
+  {case thin.core.ListShape.CLASSID}
+    {call .renderListShapes}
+      {param shapeGroup: $shapeGroup /}
+      {param t: $t /}
+    {/call}
+  {case thin.core.PageNumberShape.CLASSID}
+    {call .renderPagenumberShapes}
+      {param shapeGroup: $shapeGroup /}
+      {param t: $t /}
+      {param inList: $inList /}
+    {/call}
+  {default}
+    {call .renderBasicShapes}
+      {param shapeGroup: $shapeGroup /}
+      {param t: $t /}
+      {param inList: $inList /}
+    {/call}
+{/switch}
+{ifempty}
+  <p class="noshapes">{$t['notice_no_shapes']}</p>
+{/foreach}
+{/template}
+
+/**
+ * @param shapeName
+ * @param? inList
+ */
+{template .renderShapeTitle private="true"}
+{if $inList}<h5>{else}<h3>{/if}{$shapeName}{if $inList}</h5>{else}</h3>{/if}
+{/template}
+
+/**
+ * @param shapeGroup
+ * @param t
+ * @param? inList
+ */
+{template .renderTblockShapes private="true"}
+{call .renderShapeTitle}
+  {param shapeName: $shapeGroup.name /}
+  {param inList: $inList /}
+{/call}
+<table>
+  <thead>
+  <tr>
+    <th rowspan="2">ID</th>
+    <th rowspan="2">{$t['field_reference_id']}</th>
+    <th rowspan="2">{$t['field_display']}</th>
+    <th rowspan="2">{$t['field_multiple_line']}</th>
+    <th rowspan="2">{$t['field_default_value']}</th>
+    <th colspan="3">{$t['label_format']}</th>
+    <th rowspan="2">{$t['field_description']}</th>
+  </tr>
+  <tr>
+    <th>{$t['label_format_basic']}</th>
+    <th>{$t['label_format_type']}</th>
+    <th>{$t['label_format_value']}</th>
+  </tr>
+  </thead>
+  <tbody>
+  {foreach $shape in $shapeGroup.shapes}
+  <tr>
+    <td>{$shape.id}</td>
+    <td>{$shape.refId}</td>
+    <td>{$shape.display}</td>
+    <td>{$shape.multiple}</td>
+    <td>{$shape.value}</td>
+    <td>{$shape.formatBase}</td>
+    <td>{$shape.formatType}</td>
+    <td>{$shape.formatStyle}</td>
+    <td>{$shape.desc}</td>
+  </tr>
+  {/foreach}
+  </tbody>
+</table>
+{/template}
+
+/**
+ * @param shapeGroup
+ * @param t
+ * @param? inList
+ */
+{template .renderImageblockShapes private="true"}
+{call .renderShapeTitle}
+  {param shapeName: $shapeGroup.name /}
+  {param inList: $inList /}
+{/call}
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>{$t['field_display']}</th>
+    <th>{$t['field_description']}</th>
+  </tr>
+  </thead>
+  <tbody>
+  {foreach $shape in $shapeGroup.shapes}
+  <tr>
+    <td>{$shape.id}</td>
+    <td>{$shape.display}</td>
+    <td>{$shape.desc}</td>
+  </tr>
+  {/foreach}
+  </tbody>
+</table>
+{/template}
+
+/**
+ * @param shapeGroup
+ * @param t
+ * @param? inList
+ */
+{template .renderPagenumberShapes private="true"}
+{call .renderShapeTitle}
+  {param shapeName: $shapeGroup.name /}
+  {param inList: $inList /}
+{/call}
+<table>
+  <thead>
+  <tr>
+    <th>{$t['field_pageno_format']}</th>
+    <th>ID</th>
+    <th>{$t['field_display']}</th>
+    <th>{$t['field_counted_page_target']}</th>
+    <th>{$t['field_description']}</th>
+  </tr>
+  </thead>
+  <tbody>
+  {foreach $shape in $shapeGroup.shapes}
+  <tr>
+    <td>{$shape.format}</td>
+    <td>{$shape.id}</td>
+    <td>{$shape.display}</td>
+    <td>{$shape.target}</td>
+    <td>{$shape.desc}</td>
+  </tr>
+  {/foreach}
+  </tbody>
+</table>
+{/template}
+
+/**
+ * @param shapeGroup
+ * @param t
+ * @param? inList
+ */
+{template .renderBasicShapes private="true"}
+{call .renderShapeTitle}
+  {param shapeName: $shapeGroup.name /}
+  {param inList: $inList /}
+{/call}
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>{$t['label_shape_type']}</th>
+    <th>{$t['field_display']}</th>
+    <th>{$t['field_description']}</th>
+  </tr>
+  </thead>
+  <tbody>
+  {foreach $shape in $shapeGroup.shapes}
+  <tr>
+    <td>{$shape.id}</td>
+    <td>{$shape.typeName}</td>
+    <td>{$shape.display}</td>
+    <td>{$shape.desc}</td>
+  </tr>
+  {/foreach}
+  </tbody>
+</table>
+{/template}
+
+/**
+ * @param shapeGroup
+ * @param t
+ */
+{template .renderListShapes private="true"}
+{foreach $list in $shapeGroup.shapes}
+<h3>{$shapeGroup.name}</h3>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>{$t['field_display']}</th>
+    <th>{$t['field_auto_page_break']}</th>
+    <th>{$t['field_list_header']}</th>
+    <th>{$t['field_list_page_footer']}</th>
+    <th>{$t['field_list_footer']}</th>
+    <th>{$t['field_description']}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>{$list.id}</td>
+    <td>{$list.display}</td>
+    <td>{$list.pageBreak}</td>
+    <td>{$list.header}</td>
+    <td>{$list.pageFooter}</td>
+    <td>{$list.footer}</td>
+    <td>{$list.desc}</td>
+  </tr>
+  </tbody>
+</table>
+{foreach $section in $list.sections}
+<h4>{$section.name}</h4>
+<div class="section-shapes">
+{call .renderShapes}
+  {param shapeGroups: $section.shapes /}
+  {param t: $t /}
+  {param inList: true /}
+{/call}
+</div>
+{/foreach}
+{/foreach}
+{/template}

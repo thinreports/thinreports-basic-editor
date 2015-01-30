@@ -1,0 +1,1089 @@
+//  Copyright (C) 2011 Matsukei Co.,Ltd.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+goog.provide('thin.core.Workspace');
+
+goog.require('goog.ui.Component');
+goog.require('goog.math.Box');
+goog.require('goog.json');
+goog.require('goog.events');
+goog.require('goog.events.KeyCodes');
+goog.require('goog.events.EventType');
+goog.require('goog.userAgent');
+goog.require('thin.ui.Message');
+goog.require('thin.core.HistoryManager');
+goog.require('thin.core.HistoryManager.Mode');
+goog.require('thin.core.Action');
+goog.require('thin.core.Layout');
+goog.require('thin.core.LayoutStructure');
+goog.require('thin.core.TextStyle');
+goog.require('thin.core.TextStyle.HorizonAlignType');
+goog.require('thin.core.TextStyle.VerticalAlignType');
+goog.require('thin.layout.File');
+goog.require('thin.layout.FormatPage.PaperType');
+goog.require('thin.layout.FormatPage.PaperName');
+goog.require('thin.layout.FormatPage.DirectionType');
+goog.require('thin.layout.document');
+goog.require('thin.Font');
+
+
+/**
+ * @param {thin.layout.Format} format
+ * @param {thin.layout.File=} opt_file
+ * @constructor
+ * @extends {goog.ui.Component}
+ */
+thin.core.Workspace = function(format, opt_file) {
+  goog.base(this);
+
+  /**
+   * @type {thin.layout.Format}
+   */
+  this.format = format;
+
+  if (goog.isDefAndNotNull(opt_file)) {
+    this.setFile(opt_file);
+  } else {
+    this.setFile(new thin.layout.File());
+  }
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.anchorType_ = thin.core.TextStyle.HorizonAlignType.START;
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.verticalAlignType_ = thin.core.TextStyle.VerticalAlignType.TOP;
+
+  /**
+   * @type {thin.core.Layout}
+   * @private
+   */
+  this.layout_ = new thin.core.Layout(this);
+
+  /**
+   * @type {thin.core.Action}
+   * @private
+   */
+  this.action_ = new thin.core.Action(this);
+
+  /**
+   * @type {thin.core.HistoryManager}
+   * @private
+   */
+  this.history_ = new thin.core.HistoryManager();
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.fontFamily_ = thin.Font.getDefaultFontFamily();
+};
+goog.inherits(thin.core.Workspace, goog.ui.Component);
+
+
+/**
+ * @type {thin.layout.File}
+ * @private
+ */
+thin.core.Workspace.prototype.file_;
+
+
+/**
+ * @type {number}
+ * @private
+ */
+thin.core.Workspace.prototype.fingerPrint_;
+
+
+/**
+ * @type {number}
+ * @private
+ */
+thin.core.Workspace.prototype.zoomValue_ = 100;
+
+
+/**
+ * @type {number}
+ * @private
+ */
+thin.core.Workspace.prototype.fontSize_ = 18;
+
+
+/**
+ * @type {string}
+ * @private
+ */
+thin.core.Workspace.prototype.actionName_ = 'selector';
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.core.Workspace.prototype.boldPressed_ = false;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.core.Workspace.prototype.underlinePressed_ = false;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.core.Workspace.prototype.linethroughPressed_ = false;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.core.Workspace.prototype.italicPressed_ = false;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.core.Workspace.prototype.isEnabledFontBaseUi_ = false;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.core.Workspace.prototype.isEnabledTextEditUi_ = false;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.core.Workspace.prototype.isEnabledTextStyleUi_ = false;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.core.Workspace.prototype.isEnabledHorizontalAlignTypeUi_ = false;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.core.Workspace.prototype.isEnabledVerticalAlignTypeUi_ = false;
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+thin.core.Workspace.prototype.handlingOnceKeyEvent_ = false;
+
+
+/**
+ * @param {goog.events.BrowserEvent} e
+ * @private
+ */
+thin.core.Workspace.prototype.handleKeyEvent_ = function(e) {
+  var keyCode = e.keyCode;
+  var keyCodes = goog.events.KeyCodes;
+
+  switch(keyCode) {
+    case keyCodes.LEFT:
+      this.action_.actionShiftLeft(e);
+      break;
+    case keyCodes.UP:
+      this.action_.actionShiftUp(e);
+      break;
+    case keyCodes.RIGHT:
+      this.action_.actionShiftRight(e);
+      break;
+    case keyCodes.DOWN:
+      this.action_.actionShiftDown(e);
+      break;
+    case keyCodes.F2:
+      this.action_.restfulF2Action();
+      break;
+    case keyCodes.DELETE:
+      this.action_.actionDeleteShapes(thin.core.HistoryManager.Mode.NORMAL);
+      break;
+    // MAC platform only.
+    case keyCodes.BACKSPACE:
+      if (goog.userAgent.MAC) {
+        this.action_.actionDeleteShapes(thin.core.HistoryManager.Mode.NORMAL);
+        e.preventDefault();
+      }
+      break;
+    default:
+      this.handleUndoRedoKeyEvent_(e);
+      if (!this.handlingOnceKeyEvent_) {
+        this.handleCopyPasteKeyEvent_(e);
+      }
+      break;
+  }
+};
+
+
+/**
+ * @param {goog.events.BrowserEvent} e
+ * @private
+ */
+thin.core.Workspace.prototype.handleUndoRedoKeyEvent_ = function(e) {
+  var keyCode = e.keyCode;
+  var keyCodes = goog.events.KeyCodes;
+
+  if (e.ctrlKey) {
+    switch(keyCode) {
+      case keyCodes.Z:
+        this.undo();
+        this.enablingOnceKeyEventHandling_(true);
+        break;
+      case keyCodes.Y:
+        this.redo();
+        this.enablingOnceKeyEventHandling_(true);
+        break;
+    }
+  }
+};
+
+
+/**
+ * @param {goog.events.BrowserEvent} e
+ * @private
+ */
+thin.core.Workspace.prototype.handleCopyPasteKeyEvent_ = function(e) {
+  var keyCode = e.keyCode;
+  var keyCodes = goog.events.KeyCodes;
+
+  if (e.ctrlKey) {
+    switch(keyCode) {
+      case keyCodes.C:
+        this.action_.actionCopyShapes();
+        this.enablingOnceKeyEventHandling_(true);
+        break;
+      case keyCodes.X:
+        this.action_.actionCutShapes();
+        this.enablingOnceKeyEventHandling_(true);
+        break;
+      case keyCodes.V:
+        this.action_.actionPasteShapes();
+        this.enablingOnceKeyEventHandling_(true);
+        break;
+    }
+  }
+};
+
+
+/**
+ * @param {goog.events.BrowserEvent} e
+ * @private
+ */
+thin.core.Workspace.prototype.releaseOnceKeyEventHandling_ = function(e) {
+  this.enablingOnceKeyEventHandling_(false);
+};
+
+
+/**
+ * @param {boolean} enable
+ * @private
+ */
+thin.core.Workspace.prototype.enablingOnceKeyEventHandling_ = function(enable) {
+  this.handlingOnceKeyEvent_ = enable;
+};
+
+
+/**
+ * @param {thin.layout.File} file
+ * @return {thin.core.Workspace?}
+ */
+thin.core.Workspace.create = function(file) {
+  try {
+    var format = thin.layout.Format.parse(file.getContent());
+    var version = format.getVersion();
+    var userTypeCompatibilityFn = function() {
+      var formatPage = format.page;
+      if (thin.layout.FormatPage.isUserType(formatPage.getPaperType().toLowerCase())) {
+        formatPage.setPaperType(thin.layout.FormatPage.PaperType['USER']);
+      }
+    };
+    thin.Compatibility.applyIf(version, '=', '0.7.7', userTypeCompatibilityFn);
+    thin.Compatibility.applyIf(version, '=', '0.7.7.1', userTypeCompatibilityFn);
+
+    var workspace = new thin.core.Workspace(format, file);
+    workspace.createDom();
+
+    return workspace;
+  } catch (er) {
+    thin.ui.Message.alert(thin.t('error_invalid_layout_file'), 'Error',
+        function(e) {
+          var activeWorkspace = thin.core.getActiveWorkspace();
+          if (activeWorkspace) {
+            activeWorkspace.focusElement(e);
+          }
+        });
+    if (workspace) {
+      workspace.dispose();
+    } else {
+      file.dispose();
+      if (format) {
+        format.dispose();
+      }
+    }
+
+    return null;
+  }
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.draw = function() {
+  try {
+    var layout = this.getLayout();
+    var format = layout.getFormat();
+    var file = this.getFile();
+    var xmlString = thin.core.LayoutStructure.restoreStructure(format.getSvg());
+
+    thin.Compatibility.applyIf(format.getVersion(), '=', '0.6.0.pre3',
+      function() {
+        xmlString = thin.core.LayoutStructure.restoreKerningFromLetterSpacing(xmlString);
+      });
+
+    var doc = new DOMParser().parseFromString(xmlString, "application/xml");
+    var canvasNode = goog.dom.getLastElementChild(doc.documentElement);
+
+    layout.drawShapeFromElements(canvasNode.childNodes);
+    this.setup();
+
+    /**
+     * @param {Array} shapes
+     * @param {thin.core.ListSectionShape=} opt_shapeIdManager
+     */
+    var setupHandlers = function(shapes, opt_shapeIdManager) {
+      goog.array.forEach(shapes, function(shape) {
+        if (shape.instanceOfListShape()) {
+          shape.setupEventHandlers();
+          shape.forEachSectionShape(function(sectionShapeForEach, sectionNameForEach) {
+            var managerForList = sectionShapeForEach.getManager();
+            setupHandlers(managerForList.getShapesManager().get(), managerForList.getShapeIdManager());
+          });
+        } else {
+          shape.setupEventHandlers();
+          if (shape.instanceOfTblockShape()) {
+            var refId = layout.getElementAttribute(shape.getElement(), 'x-ref-id');
+            if (!thin.isExactlyEqual(refId, thin.core.TblockShape.DEFAULT_REFID)) {
+              shape.setRefId(refId, layout.getShapeForShapeId(refId, opt_shapeIdManager));
+            }
+          }
+        }
+      });
+    };
+    setupHandlers(layout.getManager().getShapesManager().get());
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+
+/**
+ * @return {thin.core.HistoryManager}
+ */
+thin.core.Workspace.prototype.getHistory = function() {
+  return this.history_;
+};
+
+
+/**
+ * @param {Function} setupFn
+ */
+thin.core.Workspace.prototype.normalVersioning = function(setupFn) {
+  this.history_.addNormal(setupFn);
+};
+
+
+/**
+ * @param {Function} setupFn
+ * @param {number=} opt_delayMs
+ */
+thin.core.Workspace.prototype.chainVersioning = function(setupFn, opt_delayMs) {
+  this.history_.addChain(setupFn, opt_delayMs);
+};
+
+
+/**
+ * @param {Function} setupFn
+ */
+thin.core.Workspace.prototype.groupVersioning = function(setupFn) {
+  this.history_.addGroup(setupFn);
+};
+
+
+/**
+ * @param {number} mode
+ * @param {...*} var_args
+ */
+thin.core.Workspace.prototype.versioning = function(mode, var_args) {
+  this.history_.add(mode, var_args);
+};
+
+
+thin.core.Workspace.prototype.activateGroupVersioning = function() {
+  this.history_.activateGroup();
+};
+
+
+thin.core.Workspace.prototype.undo = function() {
+  var historyManager = this.history_;
+  historyManager.undo();
+  thin.ui.adjustUiStatusToRedo(historyManager.isLatest());
+};
+
+
+thin.core.Workspace.prototype.redo = function() {
+  var historyManager = this.history_;
+  historyManager.redo();
+  thin.ui.adjustUiStatusToRedo(historyManager.isLatest());
+};
+
+
+/**
+ * @param {goog.math.Box} newMargins
+ * @param {thin.layout.FormatPage.PaperType|string} newPaperType
+ * @param {thin.layout.FormatPage.DirectionType|string} newDirectionType
+ * @param {string} newTitle
+ * @param {number=} opt_newWidth
+ * @param {number=} opt_newHeight
+ */
+thin.core.Workspace.prototype.updateFormatPage = function(newMargins, newPaperType, newDirectionType, newTitle, opt_newWidth, opt_newHeight) {
+
+  var formatPage = thin.layout.FormatPage;
+  var page = this.format.page;
+  var layout = this.layout_;
+  var currentTitle = page.getTitle();
+  var currentPageSize = layout.getNormalLayoutSize();
+  var isUserType = page.isUserType();
+  var currentPaperType = page.getPaperType();
+  var currentDirection = page.getOrientation();
+  var currentMargins = new goog.math.Box(page.getMarginTop(), page.getMarginRight(), page.getMarginBottom(), page.getMarginLeft());
+
+  var helpers = layout.getHelpers();
+  var surface = helpers.getSurface();
+  var canvas = helpers.getCanvas();
+  var drawLayer = helpers.getDrawLayer();
+  var zoomLayer = helpers.getZoomLayer();
+  var marginGuideHelper = helpers.getMarginGuideHelper();
+
+  var marginGuideTop = marginGuideHelper.getTopGuide();
+  var marginGuideLeft = marginGuideHelper.getLeftGuide();
+  var marginGuideBottom = marginGuideHelper.getBottomGuide();
+  var marginGuideRight = marginGuideHelper.getRightGuide();
+  var workspaceScope = this;
+
+
+  /**
+   * @param {goog.math.Box} margins
+   * @param {thin.layout.FormatPage.PaperType|string} paperType
+   * @param {thin.layout.FormatPage.DirectionType|string} directionType
+   * @param {string} title
+   * @param {number=} opt_width
+   * @param {number=} opt_height
+   */
+  var updateLayoutSize = function(margins, paperType, directionType, title, opt_width, opt_height) {
+
+    if (formatPage.isUserType(paperType)) {
+      var size = formatPage.getPaperSize(paperType, directionType, opt_width, opt_height);
+      page.setWidth(opt_width);
+      page.setHeight(opt_height);
+    } else {
+      var size = formatPage.getPaperSize(paperType, directionType);
+    }
+
+    var width = size.width;
+    var height = size.height;
+    page.setTitle(title);
+    page.setPaperType(paperType);
+    page.setOrientation(directionType);
+    layout.setSize(width, height);
+    layout.setCoordSize(width, height);
+    surface.setWidth(width);
+    surface.setHeight(height);
+    canvas.setWidth(width);
+    canvas.setHeight(height);
+    drawLayer.setWidth(width);
+    drawLayer.setHeight(height);
+    zoomLayer.setWidth(width);
+    zoomLayer.setHeight(height);
+
+    var mLeft = margins.left;
+    var mTop = margins.top;
+    var mRight = margins.right;
+    var mBottom = margins.bottom;
+    page.setMargin(mTop, mRight, mBottom, mLeft);
+
+    marginGuideLeft.setLeft(mLeft);
+    marginGuideLeft.setHeight(height);
+
+    marginGuideTop.setTop(mTop);
+    marginGuideTop.setWidth(width);
+
+    marginGuideBottom.setTop(height - mBottom);
+    marginGuideBottom.setWidth(width);
+
+    marginGuideRight.setLeft(width - mRight);
+    marginGuideRight.setHeight(height);
+    helpers.getLayoutGuideHelper().updateLayoutGuideSize(width, height);
+    this.action_.actionSetZoom(100);
+  };
+
+  workspaceScope.normalVersioning(function(version) {
+
+    version.upHandler(function() {
+      updateLayoutSize.call(this, newMargins, newPaperType, newDirectionType, newTitle, opt_newWidth, opt_newHeight);
+    }, workspaceScope);
+    version.downHandler(function() {
+      updateLayoutSize.call(this, currentMargins, currentPaperType, currentDirection, currentTitle, isUserType ? currentPageSize.width : null, isUserType ? currentPageSize.height : null);
+    }, workspaceScope);
+  });
+};
+
+
+thin.core.Workspace.prototype.save = function() {
+  if (this.isNew()) {
+    this.saveAs();
+  } else {
+    if (this.isChanged()) {
+      this.save_();
+    }
+  }
+};
+
+
+thin.core.Workspace.prototype.save_ = function() {
+  this.getFile().save(this.getSaveFormat_());
+};
+
+
+thin.core.Workspace.prototype.saveAs = function() {
+  thin.layout.File.saveDialog(this.getSuggestedFileName(), {
+    success: goog.bind(this.saveAs_, this),
+    cancel: goog.nullFunction,
+    error: goog.nullFunction
+  });
+};
+
+
+/**
+ * @param {thin.layout.File} file
+ */
+thin.core.Workspace.prototype.saveAs_ = function(file) {
+  this.setFile(file);
+  this.save_();
+
+  var page = thin.ui.getComponent('tabpane').getSelectedPage();
+  page.setTitle(this.getTabName());
+  page.setTooltip(file.getPath());
+};
+
+
+thin.core.Workspace.prototype.generateLayoutDocument = function() {
+  thin.layout.document.generate(this.getLayout());
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.isNew = function() {
+  return this.getFile().isNew();
+};
+
+
+/**
+ * @param {thin.layout.Format} format
+ */
+thin.core.Workspace.prototype.setFormat = function(format) {
+  this.format = format;
+};
+
+
+/**
+ * @return {string}
+ * @private
+ */
+thin.core.Workspace.prototype.getSaveFormat_ = function() {
+  var layout = this.layout_;
+  var format = this.format;
+  format.setSvg(layout.toXML());
+  format.setLayoutGuides(layout.getHelpers().getLayoutGuideHelper().getGuides());
+  this.updateFingerPrint_();
+  return format.toJSON();
+};
+
+
+/**
+ * @param {thin.layout.File} file
+ */
+thin.core.Workspace.prototype.setFile = function(file) {
+  if (goog.isDef(this.file_)) {
+    this.file_.dispose();
+  }
+
+  this.file_ = file;
+};
+
+
+/**
+ * @return {thin.layout.File}
+ */
+thin.core.Workspace.prototype.getFile = function() {
+  return this.file_;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.Workspace.prototype.getTabName = function() {
+  if (this.file_.isNew()) {
+    return 'NoName';
+  } else {
+    return this.file_.getName();
+  }
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.Workspace.prototype.getSuggestedFileName = function() {
+  if (this.file_.isNew()) {
+    return this.layout_.getFormatPage().getTitle();
+  } else {
+    return this.file_.getName();
+  }
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.isChanged = function() {
+  return this.fingerPrint_ != this.getFingerPrint_();
+};
+
+
+/**
+ * @private
+ */
+thin.core.Workspace.prototype.initFingerPrint_ = function() {
+  if (!goog.isDef(this.fingerPrint_)) {
+    if (this.isNew()) {
+      this.updateFingerPrint_();
+    } else {
+      this.fingerPrint_ = this.layout_.getFormat().getFingerPrint();
+    }
+  }
+};
+
+
+/**
+ * @private
+ */
+thin.core.Workspace.prototype.updateFingerPrint_ = function() {
+  this.fingerPrint_ = this.getFingerPrint_();
+  this.layout_.getFormat().setFingerPrint(this.fingerPrint_);
+};
+
+
+/**
+ * @return {number}
+ * @private
+ */
+thin.core.Workspace.prototype.getFingerPrint_ = function() {
+  var layout = this.layout_;
+
+  return thin.core.hash32(
+    thin.core.LayoutStructure.serializeForFingerPrint(layout) +
+    goog.json.serialize(this.format.page.toHash()) +
+    goog.json.serialize(layout.getHelpers().getLayoutGuideHelper().getGuides()));
+};
+
+
+/** @inheritDoc */
+thin.core.Workspace.prototype.createDom = function() {
+  thin.core.Workspace.superClass_.createDom.call(this);
+  this.layout_.setElementAttributes(this.element_, {
+    'class': 'workspace'
+  });
+  this.addChild(this.layout_, true);
+  goog.dom.setFocusableTabIndex(this.element_, true);
+};
+
+
+thin.core.Workspace.prototype.setup = function() {
+  var layout = this.layout_;
+  var helper = layout.getHelpers();
+  helper.getMultiOutlineHelper().init();
+  helper.getGuideHelper().init();
+  helper.getListHelper().init();
+  helper.getLayoutGuideHelper().createFromHelperConfig();
+  this.initFingerPrint_();
+};
+
+
+/**
+ * @return {thin.core.Layout}
+ */
+thin.core.Workspace.prototype.getLayout = function() {
+  return this.layout_;
+};
+
+
+/**
+ * @return {thin.core.Action}
+ */
+thin.core.Workspace.prototype.getAction = function() {
+  return this.action_;
+};
+
+
+/**
+ * @return {number}
+ */
+thin.core.Workspace.prototype.getUiStatusForZoom = function() {
+  return this.zoomValue_;
+};
+
+
+/**
+ * @return {number}
+ */
+thin.core.Workspace.prototype.getUiStatusForFontSize = function() {
+  return this.fontSize_;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.Workspace.prototype.getUiStatusForFontFamily = function() {
+  return this.fontFamily_;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.Workspace.prototype.getUiStatusForHorizonAlignType = function() {
+  return this.anchorType_;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.Workspace.prototype.getUiStatusForVerticalAlignType = function() {
+  return this.verticalAlignType_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.getUiStatusForBold = function() {
+  return this.boldPressed_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.getUiStatusForUnderlIne = function() {
+  return this.underlinePressed_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.getUiStatusForLineThrough = function() {
+  return this.linethroughPressed_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.getUiStatusForItalic = function() {
+  return this.italicPressed_;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.Workspace.prototype.getUiStatusForAction = function() {
+  return this.actionName_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.getUiStatusForFontBaseUi = function() {
+  return this.isEnabledFontBaseUi_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.getUiStatusForTextEditUi = function() {
+  return this.isEnabledTextEditUi_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.getUiStatusForTextStyleUi = function() {
+  return this.isEnabledTextStyleUi_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.getUiStatusForHorizontalAlignTypeUi = function() {
+  return this.isEnabledHorizontalAlignTypeUi_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.core.Workspace.prototype.getUiStatusForVerticalAlignTypeUi = function() {
+  return this.isEnabledVerticalAlignTypeUi_;
+};
+
+
+/**
+ * @param {number} zoomValue
+ */
+thin.core.Workspace.prototype.setUiStatusForZoom = function(zoomValue) {
+  this.zoomValue_ = zoomValue;
+};
+
+
+/**
+ * @param {number} fontSize
+ */
+thin.core.Workspace.prototype.setUiStatusForFontSize = function(fontSize) {
+  this.fontSize_ = fontSize;
+};
+
+
+/**
+ * @param {string} fontFamily
+ */
+thin.core.Workspace.prototype.setUiStatusForFontFamily = function(fontFamily) {
+  this.fontFamily_ = fontFamily;
+};
+
+
+/**
+ * @param {string} anchorType
+ */
+thin.core.Workspace.prototype.setUiStatusForHorizonAlignType = function(anchorType) {
+  this.anchorType_ = anchorType;
+};
+
+
+/**
+ * @param {string} valign
+ */
+thin.core.Workspace.prototype.setUiStatusForVerticalAlignType = function(valign) {
+  this.verticalAlignType_ = valign;
+};
+
+
+/**
+ * @param {boolean} pressed
+ */
+thin.core.Workspace.prototype.setUiStatusForBold = function(pressed) {
+  this.boldPressed_ = pressed;
+};
+
+
+/**
+ * @param {boolean} pressed
+ */
+thin.core.Workspace.prototype.setUiStatusForUnderlIne = function(pressed) {
+  this.underlinePressed_ = pressed;
+};
+
+
+/**
+ * @param {boolean} pressed
+ */
+thin.core.Workspace.prototype.setUiStatusForLineThrough = function(pressed) {
+  this.linethroughPressed_ = pressed;
+};
+
+
+/**
+ * @param {boolean} pressed
+ */
+thin.core.Workspace.prototype.setUiStatusForItalic = function(pressed) {
+  this.italicPressed_ = pressed;
+};
+
+
+/**
+ * @param {string} actionName
+ */
+thin.core.Workspace.prototype.setUiStatusForAction = function(actionName) {
+  this.actionName_ = actionName;
+};
+
+
+/**
+ * @param {boolean} enabled
+ */
+thin.core.Workspace.prototype.setUiStatusForFontBaseUi = function(enabled) {
+  this.isEnabledFontBaseUi_ = enabled;
+};
+
+
+/**
+ * @param {boolean} enabled
+ */
+thin.core.Workspace.prototype.setUiStatusForTextEditUi = function(enabled) {
+  this.isEnabledTextEditUi_ = enabled;
+};
+
+
+/**
+ * @param {boolean} enabled
+ */
+thin.core.Workspace.prototype.setUiStatusForTextStyleUi = function(enabled) {
+  this.isEnabledTextStyleUi_= enabled;
+};
+
+
+/**
+ * @param {boolean} enabled
+ */
+thin.core.Workspace.prototype.setUiStatusForHorizontalAlignTypeUi = function(enabled) {
+  this.isEnabledHorizontalAlignTypeUi_= enabled;
+};
+
+
+/**
+ * @param {boolean} enabled
+ */
+thin.core.Workspace.prototype.setUiStatusForVerticalAlignTypeUi = function(enabled) {
+  this.isEnabledVerticalAlignTypeUi_= enabled;
+};
+
+
+/** @inheritDoc */
+thin.core.Workspace.prototype.enterDocument = function() {
+  thin.core.Workspace.superClass_.enterDocument.call(this);
+
+  var eventHandler = this.getHandler();
+  var eventType = goog.events.EventType;
+
+  eventHandler.listen(this.element_, eventType.KEYDOWN,
+    this.handleKeyEvent_, false, this);
+
+  eventHandler.listen(this.element_, eventType.KEYUP,
+    this.releaseOnceKeyEventHandling_, false, this);
+};
+
+
+/** @inheritDoc */
+thin.core.Workspace.prototype.exitDocument = function() {
+  thin.core.Workspace.superClass_.exitDocument.call(this);
+
+  var eventHandler = this.getHandler();
+  var eventType = goog.events.EventType;
+
+  eventHandler.unlisten(this.element_, eventType.KEYDOWN);
+  eventHandler.unlisten(this.element_, eventType.KEYUP);
+
+  var layout = this.getLayout();
+  var helpers = layout.getHelpers();
+  var listHelper = helpers.getListHelper();
+
+  helpers.getZoomLayer().dispose();
+  helpers.getDrawLayer().dispose();
+  helpers.getSurface().dispose();
+
+  listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
+    sectionHelper.getDrawLayer().dispose();
+    sectionHelper.getSelectorLayer().dispose();
+  }, this);
+};
+
+
+/**
+ * @param {goog.events.Event} e
+ */
+thin.core.Workspace.prototype.focusElement = function(e) {
+
+  var scrollTarget = this.getParent().getParent().getContentElement();
+  var captureLeft = scrollTarget.scrollLeft;
+
+  this.element_.focus();
+  var currentLeft = scrollTarget.scrollLeft;
+  if(captureLeft != currentLeft){
+    scrollTarget.scrollLeft = captureLeft;
+  }
+};
+
+
+/** @inheritDoc */
+thin.core.Workspace.prototype.disposeInternal = function() {
+  this.format.dispose();
+
+  if (goog.isDef(this.file_)) {
+    this.file_.dispose();
+    delete this.file_;
+  }
+
+  this.action_.dispose();
+  this.history_.dispose();
+
+  delete this.format;
+  delete this.action_;
+  delete this.history_;
+  delete this.layout_;
+
+  goog.base(this, 'disposeInternal');
+};
