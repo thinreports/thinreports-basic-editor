@@ -1,6 +1,4 @@
-# Thinreports Editor
-
-[![Join the chat at https://gitter.im/thinreports/thinreports](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thinreports/thinreports?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Thinreports Editor [![Join the chat at https://gitter.im/thinreports/thinreports-editor](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thinreports/thinreports-editor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [Thinreports](http://www.thinreports.org/) is an open source report tool for Ruby.
 
