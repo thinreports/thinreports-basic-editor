@@ -1,5 +1,7 @@
 # Thinreports Editor
 
+[![Join the chat at https://gitter.im/thinreports/thinreports](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thinreports/thinreports?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [Thinreports](http://www.thinreports.org/) is an open source report tool for Ruby.
 
 * Thinreports Editor (GUI Designer)
@@ -41,9 +43,9 @@ Then, please see the [Installation Guide](http://www.thinreports.org/documentati
   * [Changelog](https://github.com/thinreports/thinreports-editor/blob/master/doc/CHANGELOG.md)
 
 ### Community
-  
+
   * [Discussion Group](https://groups.google.com/forum/#!forum/thinreports)
-  
+
 ### Documentation
 
   * [Getting Started](http://www.thinreports.org/documentation/getting-started/quickstart.html#googtrans)
