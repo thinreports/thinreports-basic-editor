@@ -19,27 +19,32 @@ goog.require('goog.array');
 
 
 /**
- * @param {...*} var_args
+ * @param {string} func for example, 'chrome.storage.local.set'
+ * @param {...*} var_args arguments for func
  * @return {*}
  */
-thin.platform.callNativeFunction = function(var_args) {
-  var argsClone = goog.array.clone(arguments);
-  var args = goog.isArray(argsClone[argsClone.length - 1]) ? argsClone.pop() : [];
-  var methodName = argsClone.pop();
-  var obj = thin.platform.getNativeFunction.apply(goog.global, argsClone);
+thin.platform.callNativeFunction = function(func, var_args) {
+  var nativeFunc = thin.platform.getNativeFunction(func)
 
-  return obj[methodName].apply(obj, args);
+  var funcArgs = goog.array.slice(arguments, 1);
+  var funcReceiver = nativeFunc[0];
+  var funcMethod = nativeFunc[1];
+
+  return funcReceiver[funcMethod].apply(funcReceiver, funcArgs);
 };
 
 
 /**
- * @param {...string} var_args
- * @return {Function}
+ * @param {string} func like 'chrome.storage.local.set'
+ * @return {Array.<Object>} e.g. [Receiver, Method]
  */
-thin.platform.getNativeFunction = function(var_args) {
-  var func = goog.global;
-  goog.array.forEach(arguments, function(methodName) {
-    func = func[methodName];
-  });
-  return func;
+thin.platform.getNativeFunction = function(func) {
+  var objects = func.split('.');
+  var method = objects.pop();
+
+  var receiver = goog.array.reduce(objects, function(parent, obj) {
+    return parent[obj];
+  }, goog.global);
+
+  return [receiver, method];
 };

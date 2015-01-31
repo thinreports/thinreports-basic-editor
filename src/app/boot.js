@@ -1369,7 +1369,7 @@ thin.run_ = function() {
                   thin.Settings.setLocale(newLocale);
                   // Flush all settings to local-storage
                   thin.Settings.flush(function() {
-                    thin.platform.callNativeFunction('chrome', 'runtime', 'reload');
+                    thin.platform.callNativeFunction('chrome.runtime.reload');
                   });
                 }
               },
@@ -1581,7 +1581,7 @@ thin.run_ = function() {
 
             if(!e.isCancel()) {
               goog.global['onbeforeclose'] = null;
-              thin.platform.callNativeFunction('platform', 'Window', 'forceClose', []);
+              thin.platform.callNativeFunction('platform.Window.forceClose');
             }
 
           }, thin.ui.Dialog.ButtonSet.typeYesNoCancel());

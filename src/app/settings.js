@@ -61,7 +61,7 @@ thin.Settings.init = function(fn_onReady) {
     fn_onReady();
   };
   thin.platform.callNativeFunction(
-    'chrome', 'storage', 'local', 'get', [thin.Settings.KEYS, initializer]);
+      'chrome.storage.local.get', thin.Settings.KEYS, initializer);
 };
 
 
@@ -71,7 +71,7 @@ thin.Settings.init = function(fn_onReady) {
 thin.Settings.flush = function(fn_onComplete) {
   var settings = thin.Settings.getInstance();
   thin.platform.callNativeFunction(
-    'chrome', 'storage', 'local', 'set', [settings.storage, fn_onComplete]);
+      'chrome.storage.local.set', settings.storage, fn_onComplete);
 };
 
 
