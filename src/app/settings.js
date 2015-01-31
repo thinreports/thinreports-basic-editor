@@ -15,11 +15,6 @@
 
 goog.provide('thin.Settings');
 
-// goog.require('goog.array');
-// goog.require('thin.platform');
-// goog.require('thin.ui.InputUnitChanger');
-// goog.require('thin.ui.InputUnitChanger.Unit');
-
 
 /**
  * @constructor
@@ -55,9 +50,6 @@ thin.Settings.init = function(fn_onReady) {
    */
   var initializer = function(items) {
     settings.storage = items;
-    // goog.object.forEach(items, function(value, key) {
-    //   settings.storage[key] = value;
-    // });
     fn_onReady();
   };
   thin.platform.callNativeFunction(
