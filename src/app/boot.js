@@ -26,6 +26,7 @@ goog.require('thin');
 goog.require('thin.Settings');
 goog.require('thin.i18n');
 goog.require('thin.platform');
+goog.require('thin.platform.Window');
 goog.require('thin.Font');
 goog.require('thin.Error');
 goog.require('thin.Compatibility');
@@ -1581,7 +1582,7 @@ thin.run_ = function() {
 
             if(!e.isCancel()) {
               goog.global['onbeforeclose'] = null;
-              thin.platform.callNativeFunction('platform.Window.forceClose');
+              thin.platform.Window.close();
             }
 
           }, thin.ui.Dialog.ButtonSet.typeYesNoCancel());
