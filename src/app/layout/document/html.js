@@ -39,7 +39,7 @@ thin.layout.document.HTML.prototype.generate = function() {
     paper: this.getPaperInfo_(),
     screenShot: this.getScreenShot_(),
     shapeGroups: this.data_, 
-    t: thin.i18n.getTranslations()
+    t: thin.i18n.getMessages()
   });
 };
 
