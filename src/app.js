@@ -64,3 +64,4 @@ App.getUILocale = function() {
  * Around security error by ChromeApp
  */
 var CLOSURE_IMPORT_SCRIPT = function() {};
+window.eval = function() {};
