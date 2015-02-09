@@ -127,7 +127,7 @@ See [thinreports-editor/Rakefile](https://github.com/thinreports/thinreports-edi
 See [How to lanuch development version of the Editor](#how-to-launch-development-version-of-the-editor),
 however you need to specify `thinreports-editor/package` directory as app folder for launching production version of the Editor.
 
-Then, **you must be sure that there are no syntax errors or warnings** to see the `thinreports-editor/dev/tmp/javascript-compile.log`.
+Then, **you must be sure that there are no syntax errors and warnings** to see the `thinreports-editor/dev/tmp/javascript-compile.log`.
 
 **Note:** Currentry the following errors will be logged in the log file, but you can ignore that.
 
