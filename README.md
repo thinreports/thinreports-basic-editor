@@ -49,7 +49,7 @@ See [doc/TRANSLATION.md](https://github.com/thinreports/thinreports-editor/blob/
 ### Sending a Pull Request
 
   1. Fork it
-  2. Clone your forked repository (**Note:** [How to clone the source of the Editor](#how-to-clone-the-source-of-the-Editor))
+  2. Clone your forked repository (**Note:** [How to clone the source of the Editor](#how-to-clone-the-source-of-the-editor))
   3. Create your feature branch: `git checkout -b my-new-feature`
   4. Fix. See [Developing](#developing) about how to develop.
   5. Commit your changes: `git commit -am 'Fixed some bugs'`
@@ -113,7 +113,7 @@ $ cd thinreports-editor
 $ rake build
 ```
 
-This command executes the following processing:
+This command executes the following process:
 
   1. Delete `thinreports-editor/package` directory if exists
   2. Create `thinreports-editor/package` directory
