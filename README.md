@@ -104,7 +104,7 @@ Thereby, script list in `thinreports-editor/src/app.html` will be rebuilt.
 
 ### How to build production version of the Editor
 
-Run thw following command:
+Run the following command:
 
     $ cd thinreports-editor
     $ rake package:build
