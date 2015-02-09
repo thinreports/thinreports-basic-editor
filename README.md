@@ -77,11 +77,11 @@ See [doc/TRANSLATION.md](https://github.com/thinreports/thinreports-editor/blob/
 ### Basic Development Flow
 
   1. Fix your feature
-  2. Rebuild script dependency as needed (See [How to rebuild script dependency](#how-to-rebuild-script-dependency))
-  3. Check operation of your fixes (See [How to launch development version of the Editor](#how-to-launch-development-version-of-the-editor))
-  4. Build production version of the Editor (See [How to build production version of the Editor](#how-to-build-production-version-of-the-editor))
-  5. Check compilation error (See [How to build production version of the Editor](#how-to-build-production-version-of-the-editor))
-  6. Check operation of your fixes (See [How to launch production of the Editor](#how-to-launch-production-of-the-editor))
+  2. Rebuild script dependency as needed - [How to rebuild script dependency](#how-to-rebuild-script-dependency)
+  3. Check operation of your fixes - [How to launch development version of the Editor](#how-to-launch-development-version-of-the-editor)
+  4. Build production version of the Editor - [How to build production version of the Editor](#how-to-build-production-version-of-the-editor)
+  5. Check compilation error - [How to build production version of the Editor](#how-to-build-production-version-of-the-editor)
+  6. Check operation of your fixes - [How to launch production of the Editor](#how-to-launch-production-of-the-editor)
 
 ### How to clone the source of the Editor
 
@@ -97,10 +97,8 @@ See [Step5: Launch your App - ChromeApp Reference](https://developer.chrome.com/
 
 If you edited `goog.require()` or `goog.provide()`, you have to run the following command in order to rebuild the dependency. See [Finding Your Way around the Closure Library](https://developers.google.com/closure/library/docs/introduction) for learning the Closure Library Namespace.
 
-```
-$ cd thinreports-editor
-$ rake dev:calcdeps
-```
+    $ cd thinreports-editor
+    $ rake dev:calcdeps
 
 Thereby, script list in `thinreports-editor/src/app.html` will be rebuilt.
 
@@ -108,14 +106,13 @@ Thereby, script list in `thinreports-editor/src/app.html` will be rebuilt.
 
 Run thw following command:
 
-```
-$ cd thinreports-editor
-$ rake build
-```
+    $ cd thinreports-editor
+    $ rake package:build
+
 
 This command executes the following process:
 
-  1. Delete `thinreports-editor/package` directory if exists
+  1. Remove `thinreports-editor/package` directory if exists
   2. Create `thinreports-editor/package` directory
   3. Copy `src/{app.html,app.js,background.js,manifest.js,locales}` to package directory
   4. Create `package/assets` directory to copy `src/assets/{fonts,iconfs}` to `package/assets` directory
