@@ -95,7 +95,7 @@ See [Step5: Launch your App - ChromeApp Reference](https://developer.chrome.com/
 
 ### How to rebuild script dependency
 
-If you edited `goog.require()` or `goog.provide()`, you have to run the following command in order to rebuild the dependency. See [Finding Your Way around the Closure Library](https://developers.google.com/closure/library/docs/introduction) for learning the Closure Library Namespace.
+If you have edited `goog.require()` or `goog.provide()`, you have to run the following command in order to rebuild the dependency. See [Finding Your Way around the Closure Library](https://developers.google.com/closure/library/docs/introduction) for learning the Closure Library Namespace.
 
     $ cd thinreports-editor
     $ rake dev:calcdeps
