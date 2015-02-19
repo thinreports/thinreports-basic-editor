@@ -66,6 +66,7 @@ namespace :package do
 
     FileUtils.cp_r src.join('assets', 'fonts'), assets
     FileUtils.cp_r src.join('assets', 'icons'), assets
+    FileUtils.cp_r src.join('assets', 'images'), assets
 
     css_files = YAML.load_file src.join('assets', 'config.yml')
     css_files.map! {|filename| src.join 'assets', filename }

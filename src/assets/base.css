@@ -36,10 +36,7 @@ a {
 }
 
 input, select {
-  font-family: Helvetica, Arial, sans-serif;
-}
-*[lang="x-ascii"] {
-  font-family: Helvetica, Arial, sans-serif !important;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 input[type="text"]:disabled {
@@ -48,8 +45,7 @@ input[type="text"]:disabled {
 }
 
 svg {
-  -webkit-border-radius: 2px;
-  -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 }
 
 @font-face {
@@ -79,4 +75,3 @@ svg {
   font-weight: 400;
   src: url(fonts/ipagp.ttf);
 }
-

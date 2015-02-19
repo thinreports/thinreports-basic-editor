@@ -25,19 +25,15 @@
 
 .thin-button-body {
   text-align: center;
-  -webkit-border-radius: 2px;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7),
-      0 0 1px rgba(180, 180, 180, 0.8);
-  background: -webkit-gradient(linear, left top, left bottom, 
-      from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
+  border-radius: 3px;
+  background-color: rgb(240, 240, 240);
   padding: .2em 4px;
-  border: 1px solid rgb(180, 180, 180);
+  border: 1px solid rgb(200, 200, 200);
+  box-sizing: border-box;
 }
 
 .thin-button-label {
-  color: rgb(90, 90, 90);
-  text-shadow: 1px 1px 0 rgb(250, 250, 250);
-  vertical-align: text-bottom;
+  color: rgb(120, 120, 120);
   font-size: inherit;
   line-height: 1.6em;
 }
@@ -46,13 +42,17 @@
   border-color: rgb(140, 140, 140) !important;
 }
 
-.thin-button-active .thin-button-body, 
-.thin-button-checked .thin-button-body {
-  background: rgb(210, 210, 210) !important;
+.thin-button-focused .thin-button-body {
+  border-color: rgb(160, 160, 160);
 }
 
-.thin-button-focused .thin-button-label {
-  color: rgb(0, 0, 0) !important;
+.thin-button-active .thin-button-body, 
+.thin-button-checked .thin-button-body {
+  box-shadow: inset 0 0 0 1px rgba(100, 100, 100, .2) !important;
+}
+
+.thin-button-active .thin-button-label {
+  color: rgb(140, 140, 140) !important;
 }
 
 .thin-button-disabled {

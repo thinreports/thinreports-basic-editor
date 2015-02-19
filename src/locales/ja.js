@@ -14,9 +14,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 App.addLocale({
-  id: 'ja',
-  name: '日本語',
-  font_family: "'Segoe UI', 'Meiryo UI'",
+  id: 'ja', name: '日本語', font_family: "'Helvetica Neue', 'Meiryo UI', Arial",
   default_settings: {
     // Available values: break-word, none
     text_word_wrap: 'none'
@@ -184,7 +182,7 @@ App.addLocale({
     button_help: 'ヘルプ',
     button_preference: '設定',
     button_about: 'Thinreportsについて',
-    button_go_to_forum: 'フォーラム',
+    button_go_to_forum: 'ディスカッション',
     button_feedback: '問題の報告',
     button_translation: '翻訳に協力する',
     button_selection_tool: '選択ツール',
@@ -221,8 +219,7 @@ App.addLocale({
     warning_discard_changes: '保存していないレイアウトがある場合は必ず保存して下さい。',
     warning_discard_changes_en: 'If you have unsaved files, the changes will be discarded. Please be sure to save.',
 
-    text_about_description: 'Thinreports のライセンス、ヘルプ、及びリリース情報については、公式サイト又はプロジェクトサイトよりご確認下さい。',
-    text_editor_force_close_confirmation: '保存されていないファイルがあります。\n保存しますか���',
+    text_editor_force_close_confirmation: '保存されていないファイルがあります。\n保存しますか？',
     text_layout_force_close_confirmation: '内容が変更されています。\n保存しますか？',
     text_change_unit: '単位 {$unit} へ切り替える',
     text_apply_locale_setting: '設定を反映するにはエディタの再読み込みが必要です。\n今すぐ設定を反映しますか？',

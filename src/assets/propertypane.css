@@ -25,10 +25,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 0 3px 0 18px;
-  background: rgb(210, 210, 210) url(icons/toggle-small-expand.png) left center no-repeat;
+  padding: 0 3px 0 23px;
+  background: rgb(235, 235, 235) url(icons/toggle-small-expand.png) 5px center no-repeat;
   cursor: pointer;
-  text-shadow: 1px 1px 0 rgb(245, 245, 245);
   color: rgb(60, 60, 60);
   height: 2.3em;
   line-height: 2.3em;
@@ -40,9 +39,8 @@
   border: 0 !important;
 }
 .thin-proppane-group-target {
-  background-color: rgb(150, 150, 150);
+  background-color: rgb(200, 200, 200);
   color: #fff;
-  text-shadow: 1px 1px 0 rgb(60, 60, 60);
 }
 
 .thin-proppane-prop-body {
@@ -54,7 +52,7 @@
 }
 
 .thin-proppane-prop-target .thin-proppane-prop-body {
-  background-color: rgba(125, 162, 206, 0.3);
+  background-color: rgb(250, 250, 250);
 }
 
 .thin-proppane-propkey {
@@ -62,11 +60,8 @@
   white-space: nowrap;
   cursor: default;  
   text-overflow: ellipsis;
-  width: 90px;
+  width: 35%;
   color: #444;
-/*
-  border-left: 7px solid rgb(235, 235, 235);
-*/
   padding-left: 5px;
   padding-right: 2px;
   line-height: inherit;
@@ -88,8 +83,8 @@
  * CheckboxProperty
  */
 .thin-proppane-propvalue > .thin-checkbox {
-  -webkit-box-sizing: border-box;
-  padding-left: 5px;
+  box-sizing: border-box;
+  padding-left: 7px;
   height: inherit;
   line-height: inherit;
   display: block !important;
@@ -99,9 +94,9 @@
  * InputProperty
  */
 .thin-proppane-propvalue > .thin-input {
-  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
   margin: 0 !important;
-  padding: 0 3px;
+  padding: 0 3px 0 5px;
   width: 100% !important;
   display: block !important;
   border: 0;
@@ -128,12 +123,7 @@
 .thin-proppane-prop-select-body {
   height: inherit;
   line-height: inherit;
-  -webkit-box-sizing: border-box;
-  -webkit-border-radius: 2px;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
-  background-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
-  border: 1px solid rgb(180, 180, 180);
+  box-sizing: border-box;
 }
 
 .thin-proppane-prop-select-button {
@@ -141,25 +131,15 @@
   line-height: 2.0em;
   color: rgb(90, 90, 90);
   text-align: center;
-  padding: 0 7px;
+  padding: 0 3px 0 5px;
   text-overflow: ellipsis;
-  text-shadow: 1px 1px 0 rgb(250, 250, 250);
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .thin-proppane-prop-select-button > span:empty:before {
   content: ".";
   color: transparent;
-  text-shadow: none !important;
-}
-
-.thin-proppane-prop-select-hover .thin-proppane-prop-select-body {
-  border-color: rgb(160, 160, 160) !important;
-}
-
-.thin-proppane-prop-select-active .thin-proppane-prop-select-body, 
-.thin-proppane-prop-select-open .thin-proppane-prop-select-body {
-  background: rgb(210, 210, 210) !important;
 }
 
 .thin-proppane-prop-select-arrow-right .thin-proppane-prop-select-body {
@@ -170,29 +150,30 @@
 }
 .thin-proppane-prop-select-arrow-right .thin-proppane-prop-select-handle {
   display: block;
-  width: 12px;
-  background: transparent url(icons/x-trigger-small.png) no-repeat left center;
+  width: 22px;
+  background: transparent url(icons/x-trigger-small.png) no-repeat center center;
+  box-sizing: border-box;
+  /* For adjusting center position */
+  border-left: 1px solid transparent;
 }
 
-.thin-proppane-prop-select-optionmenu {
+.thin-proppane-prop-select-optionmenu, .thin-proppane-prop-font-selectmenu {
   cursor: default;
   position: absolute;
   z-index: 20000;
 }
 
-.thin-proppane-prop-select-optionmenu-body {
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-  -webkit-box-sizing: border-box;
-  background: rgb(240, 240, 240);
-  border: 1px solid rgb(200, 200, 200);
+.thin-proppane-prop-select-optionmenu-body, .thin-proppane-prop-font-selectmenu-body {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+  box-sizing: border-box;
+  background-color: rgb(250, 250, 250);
+  border-top: 1px solid rgb(235, 235, 235);
   margin: 0;
-  padding: 2px;
   overflow-y: auto;
   max-height: 550px;
-  border-radius: 0 0 2px 2px;
+  border-radius: 0 0 3px 3px;
+  padding: 3px 0;
 }
-
 
 
 /**
@@ -206,54 +187,43 @@
 .thin-proppane-prop-combobox-body {
   height: inherit;
   line-height: inherit;
-  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
   display: -webkit-box;
   white-space: nowrap;
-  background-color: transparent;
-  background-repeat: no-repeat;
-  background-position: right center;
-  background-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
-  -webkit-background-size: 16px 100%;
 }
 
 .thin-proppane-prop-combobox .thin-input {
   height: inherit;
   display: block;
   -webkit-box-flex: 1;
-  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
   border: 0;
   margin: 0;
-  padding: 0 3px;
+  padding: 0 3px 0 5px;
   font-size: 1.1em;
   background-color: transparent;
   line-height: 2.1em;
 }
 
-.thin-proppane-prop-combobox .thin-optionmenu-body {
-  margin-left: -1px;
-}
-
-.thin-proppane-prop-combobox .thin-optionmenu-body {
-  border-top: 1px solid rgb(200, 200, 200) !important;
-}
-
 .thin-proppane-prop-combobox-handle {
-  width: 16px;
-  -webkit-border-radius: 2px;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
-  border: 1px solid rgb(180, 180, 180);
+  width: 22px;
+  border-left: 1px solid rgb(230, 230, 230);
   background: transparent url(icons/x-trigger-small.png) no-repeat center center;
   text-align: center;
-}
-
-.thin-proppane-prop-combobox-active .thin-proppane-prop-combobox-handle {
-  background-color: rgb(210, 210, 210) !important;
+  box-sizing: border-box;
 }
 
 .thin-proppane-prop-combobox-active .thin-input, 
 .thin-proppane-prop-combobox .thin-input-focus {
   background-color: #fff;
+}
+
+/* Option Menu */
+.thin-proppane-propvalue .thin-optionmenu-body {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+  background-color: rgb(250, 250, 250);
+  border: 0;
+  border-top: 1px solid rgb(235, 235, 235) !important;
 }
 
 /**
@@ -270,16 +240,17 @@
 
 .thin-proppane-prop-color-body {
   display: -webkit-box;
+  box-sizing: border-box;
   white-space: nowrap;
-  -webkit-border-top-left-radius: 2px;
-  -webkit-border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
   height: inherit;
   line-height: inherit;
 }
 
 .thin-proppane-prop-color .thin-input {
   display: block;
-  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
   -webkit-box-flex: 1;
   margin: 0 !important;
   width: 100% !important;
@@ -296,7 +267,7 @@
 }
 
 .thin-proppane-prop-color-indicator {
-  width: 20px;
+  width: 21px;
   text-align: center;
   height: inherit;
 }
@@ -306,7 +277,7 @@
   width: 11px;
   height: 11px;
   border: 1px solid transparent;
-  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
   margin-top: 5px;
 }
 
@@ -315,11 +286,12 @@
 }
 
 .thin-proppane-prop-color-button {
-  width: 18px;
-  background: transparent url(icons/color-swatch.png) no-repeat right center;
+  width: 22px;
+  background: transparent url(icons/color-swatch.png) no-repeat center center;
   text-align: center;
   height: inherit;
   line-height: inherit;
+  box-sizing: border-box;
 }
 
 /**
@@ -330,6 +302,7 @@
   height: inherit;
 }
 .thin-proppane-prop-checkable-ctl > .thin-checkbox {
+  box-sizing: border-box;
   width: 30px;
   text-align: center;
   height: inherit;
@@ -339,13 +312,14 @@
 .thin-proppane-prop-checkable-ctl > :last-child {
   display: block;
   -webkit-box-flex: 1;
-  -webkit-box-sizing: border-box;  
+  box-sizing: border-box;  
 }
 
 /**
  * CheckableInputProperty
  */
 .thin-proppane-prop-checkable-ctl .thin-input {
+  box-sizing: border-box;
   margin: 0 !important;
   width: 100% !important;
   font-size: 1.1em;
@@ -375,12 +349,18 @@
 
 .thin-proppane-propvalue .thin-input-unit-changer-body {
   border: 0 !important;
-  -webkit-border-radius: 0 !important;
-  -webkit-box-shadow: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.thin-proppane-propvalue .thin-input-unit-changer-button {
+  background-color: transparent;
+  border-left-color: rgb(235, 235, 235);
+  width: 22px;
 }
 
 .thin-proppane-propvalue .thin-input-unit-changer .thin-input {
-  padding: 0 3px;
+  padding: 0 3px 0 5px;
   font-size: 1.1em;
   background-color: transparent;
   line-height: 2.1em;

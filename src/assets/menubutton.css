@@ -19,16 +19,15 @@
   display: inline-block;
   white-space: nowrap;
   cursor: default;
+  box-sizing: border-box;
 }
 
 .thin-menu-button-body {
-  -webkit-border-radius: 2px;
-  -webkit-box-shadow: 0 0 1px rgba(200, 200, 200, 0.8),
-      inset 0 0 0 1px rgba(255, 255, 255, .7);
-  background-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgb(250, 250, 250)), to(rgb(220, 220, 220)));
-  border: 1px solid rgb(200, 200, 200);
+  border-radius: 2px;
+  background-color: #fff;
+  border: 1px solid rgb(220, 220, 220);
   margin: 0;
+  box-sizing: border-box;
 }
 
 .thin-menu-button-button {
@@ -39,6 +38,7 @@
   white-space: normal !important;
   margin: 0;
   line-height: 1.6em;
+  box-sizing: border-box;
 }
 
 .thin-menu-button-button > span:empty:before {
@@ -49,12 +49,12 @@
 
 .thin-menu-button-hover .thin-menu-button-body, 
 .thin-menu-button-focused .thin-menu-button-body {
-  border-color: rgb(180, 180, 180) !important;
+  border-color: rgb(200, 200, 200) !important;
 }
 
 .thin-menu-button-active .thin-menu-button-body, 
 .thin-menu-button-open .thin-menu-button-body {
-  background: rgb(210, 210, 210) !important;
+  /* Nothing to do by deafult */
 }
 
 .thin-menu-button-disabled {
@@ -85,7 +85,7 @@
   display: -webkit-box !important;
 }
 .thin-menu-button-arrow-right .thin-menu-button-button {
-  -webkit-box-flex: 1;  
+  -webkit-box-flex: 1;
 }
 .thin-menu-button-arrow-right .thin-menu-button-handle {
   display: block;

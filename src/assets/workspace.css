@@ -22,11 +22,9 @@
 svg {
   display: inline-block;
   margin: 30px;
-  /* Fix bug */
-  position: relative;
   z-index: 0;
 }
 
 .s-rect, .s-ellipse, .s-line, .s-text, .s-tblock, .s-image, .s-iblock, .s-pageno {
-  cursor: cell;
+  cursor: move;
 }

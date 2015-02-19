@@ -24,32 +24,30 @@
   min-height: 100px;
 }
 
+/* Tool Box */
 .thin-layout-left {
   width: 40px;
-  border-right: 1px solid #444;
+  border-right: 1px solid #555;
   background-color: #666;
-  -webkit-box-shadow: inset -1px 0 0 #888;
 }
 
+/* Property Pane */
 .thin-layout-right {
   width: 250px;
-  border-left: 1px solid #444;
   min-width: 250px;
   max-width: 550px;
+}
+.thin-layout-right .thin-view-caption {
+  border-left: 1px solid translarent;
+}
+.thin-layout-right .thin-view-body {
+  border-left: 1px solid rgb(210, 210, 210);
 }
 
 .thin-layout-main {
   -webkit-box-flex: 1;
-  background: -webkit-gradient(linear, left top, left bottom, 
-      from(rgb(250, 250, 250)), to(#bbb));
+  background-color: #efefef;
   min-width: 100px;
-}
-
-/* Fix bug */
-.thin-layout-left, 
-.thin-layout-right {
-  position: relative;
-  z-index: 1;
 }
 
 .thin-layout-separator {

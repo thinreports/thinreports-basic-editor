@@ -19,25 +19,17 @@
  * Base styles.
  */
 .thin-dialogs .thin-dialog-content {
-  color: #444;
-  font-size: 1.1em;
+  font-size: 11px;
 }
 
 .thin-dialogs a {
-  color: #444 !important;
   outline: none;
 }
 
-.thin-dialogs .thin-dialog-content textarea {
-  border : 1px solid #aaa;
-  padding: 5px !important;
-  font-size: 12px;
-}
-
 .thin-dialogs .thin-dialog-content fieldset {
-  border: 1px solid #ccc;
-  -webkit-border-radius: 2px;
-  -webkit-box-shadow: 0 0 2px #ccc;
+  border-width: 1px 0 0 0;
+  border-style: solid;
+  border-color: rgb(215, 215, 215);
   padding-top: 7px;
   margin-bottom: 5px;
 }
@@ -51,13 +43,14 @@
 .thin-dialogs .thin-dialogs-setting {
   display: -webkit-box;
   width: 100%;
+  margin-bottom: 4px;
 }
 
 .thin-dialogs .thin-dialogs-setting-caption {
   width: 30%;
   text-align: right;
   padding-right: 15px;
-  line-height: 22px;
+  line-height: 21px;
 }
 
 .thin-dialogs .thin-dialogs-setting-control {
@@ -67,13 +60,24 @@
 /**
  * TextEditor
  */
+.thin-dialog-text-editor .thin-dialog-content {
+  padding: 0 !important;
+}
+
 .thin-dialog-text-editor .goog-textarea {
-  resize : none;
+  min-width: 300px;
+  min-height: 200px;
+  border: 0;
+  margin: 0;
   overflow-y: scroll !important;
-  width: 300px !important;
-  height: 150px !important;
-  font-family: IPAGothic, monospace, serif !important;
-  font-size: 13px !important;
+  font-family: IPAGothic, monospace;
+  font-size: 12px;
+  padding: 5px !important;
+  display: block;
+}
+
+.thin-dialog-text-editor .thin-dialog-buttons {
+  border-top: 1px solid rgb(210, 210, 210);
 }
 
 /**
@@ -97,6 +101,15 @@
 }
 
 /* thin.ui.MenuButton */
+.thin-dialog-report-config .thin-dialog-content {
+  padding: 18px 8px 8px 8px !important;
+}
+
+.thin-dialog-report-config .thin-menu-button {
+  height: 21px;
+  line-height: 21px;
+}
+
 .thin-dialog-report-config .thin-menu-button-button {
   padding-top: 1px !important;
   padding-bottom: 1px !important;
@@ -104,24 +117,28 @@
 
 /* thin.ui.InputUnitChanger */
 .thin-dialog-report-config .thin-input-unit-changer {
-  margin: 1px;
-  font-size: 12px;
-  line-height: 1.2em;
+  height: 21px;
+  line-height: 21px;
 }
 
-.thin-dialog-report-config .thin-input-unit-changer-body {
-  padding: 1px;
+.thin-dialog-report-config .thin-input-unit-changer-body,
+.thin-dialog-report-config .thin-input-unit-changer-button {
+  border-color: rgb(210, 210, 210);
+}
+.thin-dialog-report-config .thin-input-unit-changer-body .thin-input {
+  padding: 0 7px;
+  font-size: 11px;
+  height: 100%;
 }
 
 /* thin.ui.Input */
 .thin-dialogs .thin-dialogs-setting-control > .thin-input {
-  padding: 2px;
-  font-size: 12px;
-  line-height: 1.2em;
-  border: 1px solid #aaa;
-  margin: 1px;
-  -webkit-border-radius: 2px;
-  -webkit-box-shadow: 0 0 1px rgba(180, 180, 180, 0.8);
+  height: 21px;
+  padding: 0 7px;
+  font-size: 11px;
+  border: 1px solid rgb(210, 210, 210);
+  border-radius: 2px;
+  box-sizing: border-box;
 }
 
 .thin-dialogs .thin-dialogs-setting-control > .thin-input:disabled {
@@ -140,25 +157,40 @@
  */
 .thin-dialog-about .thin-dialog-content {
   background-color: #fff !important;
-  padding: 13px !important;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  padding: 25px !important;
 }
 
 .thin-dialog-about .thin-dialog-buttons {
   border-top: 1px solid #ccc;
-  -webkit-box-shadow: inset 0 1px 0 #fff;
+  box-shadow: inset 0 1px 0 #fff;
 }
 
 .thin-dialog-about-appinfo {
-  margin: 12px 0 20px 0;
+  margin-bottom: 20px;
   color: #222 !important;
+  text-align: center;
 }
 
 .thin-dialog-about-appinfo h1 {
-  font-family: Georgia, "Times New Roman", Times, serif;
   margin: 0;
-  font-size: 24px;
-  font-weight: normal;
-  text-shadow: #eee 1px 1px 1px; 
+}
+
+.thin-dialog-about-appinfo h1 img {
+  border: 0;
+  width: 250px;
+}
+
+.thin-dialog-about-links {
+  text-align: center;
+}
+
+.thin-dialog-about-links a {
+  display: inline-block;
+  margin-right: 5px;
+}
+.thin-dialog-about-links a:last-child {
+  margin-right: 0 !important;
 }
 
 .thin-dialog-about-version-info {
@@ -174,49 +206,9 @@
   font-size: 14px;
 }
 
-.thin-dialog-about-details {
-  border-top: 1px solid #ccc;
-  color: #666;
-  font-size: 12px;
-  padding-top: 5px;
-  margin: 15px 0 5px 0;
-}
-
-.thin-dialog-about-details p {
-  margin: 3px 0;
-}
-
 .thin-dialog-about-copyright {
-  font-family: Georgia, 'Times New Roman', Times, serif;
   margin-bottom: 15px !important;
   color: #444 !important;
-}
-
-.thin-dialog-about-resources {
-  padding-left: 10px;
-  font-family: Helvetica, Arial, sans-serif;
-}
-.thin-dialog-about-resources dl,
-.thin-dialog-about-resources dt {
-  margin: 0;
-  padding: 0;
-}
-.thin-dialog-about-resources dd {
-  margin: 3px 0 5px 20px;
-}
-.thin-dialog-about-resources dd strong {
-  display: inline-block;
-  min-width: 65px;
-}
-.thin-dialog-about-resources dt {
-  font-weight: bold;
-  color: #333 !important;
-}
-
-.thin-dialog-about-description {
-  margin-bottom: 10px !important;
-  font-size: 10px !important;
-  line-height: 1.4em;
 }
 
 /**
@@ -236,24 +228,17 @@
   width: 120px;
   display: inline-block;
   text-align: center;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7),
-      0 0 1px rgba(180, 180, 180, 0.8);
-  background: -webkit-gradient(linear, left top, left bottom, 
-      from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));
+  border-radius: 3px;
+  background-color: rgb(240, 240, 240);
   padding: 8px 10px;
-  border: 1px solid rgb(180, 180, 180);
+  border: 1px solid rgb(200, 200, 200);
   text-decoration: none !important;
   color: rgb(90, 90, 90);
-  text-shadow: 1px 1px 0 rgb(250, 250, 250);
-}
-
-.thin-dialog-app-error-links a:first-child {
-  margin-right: 5px;
 }
 
 .thin-dialog-app-error-links a:active {
-  background: rgb(210, 210, 210) !important;
+  box-shadow: inset 0 0 0 1px rgba(100, 100, 100, .2) !important;
+  color: rgb(140, 140, 140) !important;
 }
 
 .thin-dialog-app-error-links a:hover {
@@ -261,6 +246,5 @@
 }
 
 .thin-dialog-app-error-links a:focus {
-  color: rgb(0, 0, 0) !important;
+  border-color: rgb(160, 160, 160);
 }
-

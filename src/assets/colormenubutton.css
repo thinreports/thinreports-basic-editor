@@ -22,8 +22,8 @@
 }
 
 .thin-color-menu-button-body {
-  -webkit-border-radius: 2px;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7),
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7),
       0 0 1px rgba(180, 180, 180, 0.8);
   background-image: -webkit-gradient(linear, left top, left bottom, 
       from(rgb(250, 250, 250)), to(rgb(210, 210, 210)));

@@ -27,7 +27,7 @@ goog.require('thin.core.SvgDrawer');
  */
 thin.core.Layer = function(layout, opt_cursor) {
   goog.base(this, layout.createSvgElement('rect'),
-      layout, null, new goog.graphics.SolidFill('#FFFFFF', 0.01));
+      layout, null, new goog.graphics.SolidFill('#FFFFFF', 0));
   
   if (opt_cursor) {
     this.setCursor(opt_cursor);
@@ -45,7 +45,11 @@ goog.inherits(thin.core.Layer, thin.core.Rect);
  * @param {thin.core.Cursor} cursor
  */
 thin.core.Layer.prototype.setCursor = function(cursor) {
-  delete this.cursor_;
+  if (this.cursor_) {
+    this.cursor_.dispose();
+    delete this.cursor_;
+  }
+
   goog.base(this, 'setCursor', cursor);
   this.getLayout().setElementCursor(this.getElement(), cursor);
 };
@@ -55,5 +59,8 @@ thin.core.Layer.prototype.setCursor = function(cursor) {
 thin.core.Layer.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
 
-  delete this.cursor_;
+  if (this.cursor_) {
+    this.cursor_.dispose();
+    delete this.cursor_;
+  }
 };

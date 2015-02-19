@@ -18,12 +18,13 @@
 .thin-dialog {
   min-width: 200px;
   min-height: 80px;
-  background: #f0f0f0;
-  border: 1px solid #666;
-  -webkit-border-radius: 3px;
-  -webkit-box-shadow: 0 0 5px 1px rgba(160, 160, 160, 0.7);
+  background: rgb(240, 240, 240);
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
   position: absolute;
   z-index: 200;
+  box-sizing: border-box;
 }
 
 .thin-dialog-bg {
@@ -37,33 +38,33 @@
 
 .thin-dialog-title {
   height: 25px;
-  display: -webkit-box;
-  -webkit-box-shadow: inset 0 1px 0 rgb(170, 170, 170);
-  background-image: -webkit-gradient(linear, left top, left bottom, 
-      color-stop(0.01, #888), 
-      color-stop(0.40, #777), 
-      color-stop(1.00, #555));
   padding: 0;
   margin: 0;
   line-height: 25px;
   white-space: nowrap;
+  position: relative;
+  border-bottom: 1px solid rgb(210, 210, 210);
 }
 
 .thin-dialog-title-text {
+  margin: 0 30px;
   display: block !important;
-  -webkit-box-flex: 1;
-  padding: 0 5px 0 8px;
+  overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
-  font: bold 10px/inherit Tahoma, Arial;
+  font-size: 11px;
   font-weight: bold;
-  color: #fff;
+  text-align: center;
+  color: #444;
 }
 
 .thin-dialog-title-close {
-  display: block !important;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  height: 25px;
   width: 22px;
   background: transparent url(icons/x-cross-small-gray.png) center center no-repeat;
-  margin: 4px;
 }
 .thin-dialog-title-close:hover {
   background-image: url(icons/x-cross-circle-small.png) !important;
@@ -74,12 +75,17 @@
 }
 
 .thin-dialog-content {
-  padding: 8px;
-  font-size: 1.1em;
+  color: #555;
+  padding: 18px;
+  box-sizing: border-box;
 }
 
 .thin-dialog-content a {
   text-decoration: underline;
+}
+
+.thin-dialog-buttons {
+  box-sizing: border-box;
 }
 
 .thin-dialog-buttons .thin-button {

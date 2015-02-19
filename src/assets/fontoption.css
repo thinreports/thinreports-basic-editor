@@ -16,33 +16,25 @@
  */
 
 .thin-font-option {
-  padding: 2px 7px 2px 0;
-  -webkit-border-radius: 2px;
+  padding: 1px 0;
+  box-sizing: border-box;
 }
 
 .thin-font-option-highlight {
-  background: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(125, 162, 206, 0.1)), 
-      to(rgba(125, 162, 206, 0.3)));
-  -webkit-box-shadow: inset 0 0 0 1px rgba(125, 162, 206, 0.4);
+  background-color: rgb(170, 170, 170);
+}
+.thin-font-option-highlight .thin-font-option-content {
+  color: #fff;
 }
 
 .thin-font-option-content {
-  color: #777;
+  color: #444;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  text-shadow: 1px 1px 2px #dfdfdf;
-  padding-left: 20px;
-  background-color: transparent;
-  background-position: left center;
-  background-repeat: no-repeat;
-  line-height: 1.6em;
-}
-
-.thin-font-option.builtin-font .thin-font-option-content {
-  color: #555 !important;
-  background-image: url(icons/x-font-safe.png);
+  line-height: 1.8em;
+  margin: 0 7px;
+  box-sizing: border-box;
 }
 
 /*
@@ -55,17 +47,17 @@
 }
 
 .thin-font-optionmenu-body {
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2),
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .15),
         inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-  -webkit-box-sizing: border-box;
-  background: rgb(240, 240, 240);
-  border: 1px solid rgb(200, 200, 200);
+  box-sizing: border-box;
+  background-color: rgb(240, 240, 240);
+  border: 1px solid rgb(210, 210, 210);
   border-top: 0 !important;
   margin: 0;
-  padding: 2px;
   overflow-y: auto;
   max-height: 550px;
-  border-radius: 0 0 2px 2px;
+  border-radius: 0 0 3px 3px;
+  padding: 3px 0;
 }
 
 /*
@@ -80,4 +72,3 @@
   background: rgb(255, 255, 255);
   height: 1px;
 }
-

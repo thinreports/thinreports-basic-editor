@@ -384,13 +384,7 @@ thin.core.Layout.prototype.getDefsElement = function() {
  * @return {Element}
  */
 thin.core.Layout.prototype.createHelpersElement = function(tagName, attrs) {
-  var element = this.createSvgElement(tagName, attrs);
-  this.setElementAttributes(element, {
-    'shape-rendering': 'optimizeSpeed',
-    'color-rendering': 'optimizeSpeed',
-    'text-rendering':  'optimizeSpeed'
-  });
-  return element;
+  return this.createSvgElement(tagName, attrs);
 };
 
 

@@ -14,7 +14,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.core.toolaction.ZoomAction');
-goog.provide('thin.core.toolaction.ZoomAction.CursorPath_');
 
 goog.require('thin.core.toolaction.AbstractAction');
 goog.require('goog.events');
@@ -34,23 +33,13 @@ goog.inherits(thin.core.toolaction.ZoomAction, thin.core.toolaction.AbstractActi
 
 
 /**
- * @enum {string}
- * @private
- */
-thin.core.toolaction.ZoomAction.CursorPath_ = {
-  ZOOMIN: 'assets/icons/zoom-in.png',
-  ZOOMOUT: 'assets/icons/zoom-out.png'
-};
-
-
-/**
  * @param {thin.core.Layer} zoomLayer
  * @private
  */
 thin.core.toolaction.ZoomAction.prototype.setZoomOutMode_ = function(zoomLayer) {
-  zoomLayer.setCursor(new thin.core.Cursor(
-      thin.core.toolaction.ZoomAction.CursorPath_.ZOOMOUT, true));
-  this.layout.setElementCursor(zoomLayer.getElement(), zoomLayer.getCursor());
+  var cursor = thin.core.Cursor.getCursorByName('ZOOMOUT');
+  zoomLayer.setCursor(cursor);
+  this.layout.setElementCursor(zoomLayer.getElement(), cursor);
 };
 
 
@@ -59,9 +48,9 @@ thin.core.toolaction.ZoomAction.prototype.setZoomOutMode_ = function(zoomLayer) 
  * @private
  */
 thin.core.toolaction.ZoomAction.prototype.setZoomInMode_ = function(zoomLayer) {
-  zoomLayer.setCursor(new thin.core.Cursor(
-      thin.core.toolaction.ZoomAction.CursorPath_.ZOOMIN, true));
-  this.layout.setElementCursor(zoomLayer.getElement(), zoomLayer.getCursor());
+  var cursor = thin.core.Cursor.getCursorByName('ZOOMIN');
+  zoomLayer.setCursor(cursor);
+  this.layout.setElementCursor(zoomLayer.getElement(), cursor);
 };
 
 

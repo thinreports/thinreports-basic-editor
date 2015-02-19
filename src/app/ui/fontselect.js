@@ -32,12 +32,13 @@ goog.require('thin.ui.OptionMenuRenderer');
 /**
  * @param {Array.<thin.Font>} fonts
  * @param {thin.ui.MenuButtonRenderer=} opt_renderer
+ * @param {!thin.ui.FontOptionMenuRenderer=} opt_menuRenderer
  * @constructor
  * @extends {thin.ui.Select}
  */
-thin.ui.FontSelect = function(fonts, opt_renderer) {
+thin.ui.FontSelect = function(fonts, opt_renderer, opt_menuRenderer) {
   var menu = new thin.ui.OptionMenu(
-              thin.ui.FontOptionMenuRenderer.getInstance());
+              opt_menuRenderer || thin.ui.FontOptionMenuRenderer.getInstance());
   goog.base(this, '', menu, opt_renderer);
   
   this.addFonts(fonts);

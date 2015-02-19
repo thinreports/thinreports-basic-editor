@@ -18,7 +18,6 @@
 .thin-toolbox {
   text-align: center;
   margin: 2px 0;
-  /* Fix bug */
   position: relative;
   z-index: 2;
   line-height: 1em;
@@ -28,16 +27,12 @@
  * thin.ui.ToolboxButton
  */
 .thin-toolbox-button {
-  /*margin: 1px;*/
-  display: inline-block;
-  white-space: nowrap;
   cursor: default;
   line-height: normal !important;
 }
 
 .thin-toolbox-button-body {
   text-align: center;
-  -webkit-border-radius: 2px;
   padding: 2px 4px;
   border: 1px solid transparent;
   background-color: transparent;
@@ -48,17 +43,12 @@
 }
 
 .thin-toolbox-button-hover .thin-toolbox-button-body {
-  border-color: rgb(70, 70, 70);
-  -webkit-box-shadow: 0 0 1px rgba(70, 70, 70, 0.8),
-      inset 0 0 0 1px rgb(130, 130, 130);
+  background-color: rgb(80, 80, 80);
 }
 
 .thin-toolbox-button-active .thin-toolbox-button-body, 
 .thin-toolbox-button-selected .thin-toolbox-button-body {
-  border-color: rgb(60, 60, 60);
-  -webkit-box-shadow: 0 0 1px rgba(60, 60, 60, 0.8),
-      inset 1px 1px 0 rgba(70, 70, 70, 0.8);
-  background-color: rgba(70, 70, 70, 0.3) !important;
+  background-color: rgb(70, 70, 70);
 }
 
 .thin-toolbox-button-disabled {
@@ -71,6 +61,5 @@
 .thin-toolbox-separator {
   height: 1px;
   margin: 0.5em 0;
-  background-color: rgb(78, 78, 78);
-  border-bottom: 1px solid rgb(135, 135, 135);
+  border-top: 1px solid #555;
 }

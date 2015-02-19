@@ -16,7 +16,9 @@
 goog.provide('thin.boot');
 
 goog.require('goog.dom');
+goog.require('goog.dom.classes');
 goog.require('goog.style');
+goog.require('goog.async.Delay');
 goog.require('goog.a11y.aria');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Component.EventType');
@@ -111,7 +113,9 @@ thin.boot = function() {
   thin.Settings.init(function() {
     thin.i18n.init();
     thin.Font.init();
-    thin.run_();
+
+    thin.init_();
+    thin.show_();
   });
 };
 
@@ -119,7 +123,7 @@ thin.boot = function() {
 /**
  * @private
  */
-thin.run_ = function() {
+thin.init_ = function() {
   (function() {
     var i18n = thin.i18n;
     var bodyElement = goog.dom.getElementsByTagNameAndClass('body')[0];
@@ -351,7 +355,7 @@ thin.run_ = function() {
       dialog.setWidth(400);
       dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOkCancel());
 
-      var pageTitleInput = new thin.ui.Input('Page Title');
+      var pageTitleInput = new thin.ui.Input();
       dialog.addChild(pageTitleInput, false);
       pageTitleInput.render(goog.dom.getElement('new-config-page-title'));
 
@@ -363,7 +367,7 @@ thin.run_ = function() {
         paperTypeSelectbox.addItem(new thin.ui.Option(
             thin.layout.FormatPage.PaperName[key], thin.layout.FormatPage.PaperType[key]));
       });
-      paperTypeSelectbox.setWidth(152);
+      paperTypeSelectbox.setWidth(150);
       paperTypeSelectbox.render(goog.dom.getElement('new-config-paper-type'));
       paperTypeSelectbox.addEventListener(componentEventType.ACTION, function(e) {
         var enabled = thin.layout.FormatPage.isUserType(paperTypeSelectbox.getValue());
@@ -665,7 +669,7 @@ thin.run_ = function() {
         dialog.setWidth(400);
         dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOkCancel());
 
-        var pageTitleInput = new thin.ui.Input('Page Title');
+        var pageTitleInput = new thin.ui.Input();
         dialog.addChild(pageTitleInput, false);
         pageTitleInput.render(goog.dom.getElement('edit-config-page-title'));
 
@@ -676,7 +680,7 @@ thin.run_ = function() {
           paperTypeSelectbox.addItem(new thin.ui.Option(
               thin.layout.FormatPage.PaperName[key], thin.layout.FormatPage.PaperType[key]));
         });
-        paperTypeSelectbox.setWidth(152);
+        paperTypeSelectbox.setWidth(150);
         paperTypeSelectbox.render(goog.dom.getElement('edit-config-paper-type'));
         paperTypeSelectbox.addEventListener(componentEventType.ACTION, function(e) {
           var enabled = thin.layout.FormatPage.isUserType(paperTypeSelectbox.getValue());
@@ -1398,7 +1402,7 @@ thin.run_ = function() {
       var helpDialog = new thin.ui.Dialog();
       helpDialog.setDisposeOnHide(true);
       helpDialog.setTitle('About');
-      helpDialog.setWidth(400);
+      helpDialog.setWidth(600);
       helpDialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOk());
       helpDialog.decorate(goog.dom.getElement('about-dialog'));
       goog.dom.setTextContent(goog.dom.getElement('about-dialog-version'), thin.getVersion());
@@ -1529,18 +1533,19 @@ thin.run_ = function() {
   })();
 
   (function() {
-    var propview = new thin.ui.PropertyView('PROPERTY');
+    var propview = new thin.ui.PropertyView();
     main.addChildToRight(propview);
     thin.ui.registerComponent('proppane', propview.getControl());
   })();
+
   (function() {
     var textEditorDialog = new thin.ui.Dialog();
     textEditorDialog.setTitle(thin.t('label_text_edit'));
-    textEditorDialog.setWidth(316);
     textEditorDialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOkCancel());
 
     var textEditArea = new goog.ui.Textarea('');
     textEditArea.render(goog.dom.getElement('dialog-texteditor-textarea'));
+
     textEditorDialog.decorate(goog.dom.getElement('dialog-text-editor'));
     textEditorDialog.setControl('textarea', textEditArea);
 
@@ -1593,16 +1598,6 @@ thin.run_ = function() {
     };
   })();
 
-  // goog.events.listen(goog.global, goog.events.EventType.UNLOAD,
-  //   function(e) {
-  //     goog.object.forEach(thin.ui.components, function(obj) {
-  //       goog.isFunction(obj.dispose) && obj.dispose();
-  //     });
-  //     delete thin.ui.components;
-  //     thin.ui.Notification.dispose();
-  //     return true;
-  //   }, false);
-
   goog.events.listen(goog.global, goog.events.EventType.KEYDOWN,
     function(e) {
       var workspace = thin.core.getActiveWorkspace();
@@ -1635,5 +1630,22 @@ thin.run_ = function() {
 
   initUiStatus();
 };
+
+
+/**
+ * @private
+ */
+thin.show_ = function() {
+  var disableSplash = new goog.async.Delay(function() {
+    goog.dom.classes.remove(document.documentElement, 'splash');
+  }, 1000);
+
+  var activateEditor = new goog.async.Delay(function() {
+    goog.dom.classes.add(document.documentElement, 'active');
+    disableSplash.start();
+  }, 1000);
+
+  activateEditor.start();
+}
 
 goog.events.listen(goog.global, goog.events.EventType.LOAD, thin.boot, false, this);

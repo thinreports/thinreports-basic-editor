@@ -21,18 +21,12 @@ goog.require('goog.Disposable');
 
 /**
  * @param {string} type
- * @param {boolean=} opt_isUri
  * @extends {goog.Disposable}
  * @constructor
  */
-thin.core.Cursor = function(type, opt_isUri) {
+thin.core.Cursor = function(type) {
   goog.base(this);
-
-  if (opt_isUri) {
-    this.setUri(type)
-  } else {
-    this.setType(type);
-  }
+  this.setType(type);
 };
 goog.inherits(thin.core.Cursor, goog.Disposable);
 
@@ -43,7 +37,7 @@ goog.inherits(thin.core.Cursor, goog.Disposable);
 thin.core.Cursor.Type = {
   DEFAULT: 'default',
   CROSSHAIR: 'crosshair',
-  MOVE: 'cell',
+  MOVE: 'move',
   TLEFT: 'nw-resize',
   TCENTER: 'n-resize',
   TRIGHT: 'ne-resize',
@@ -52,7 +46,9 @@ thin.core.Cursor.Type = {
   BLEFT: 'sw-resize',
   BCENTER: 's-resize',
   BRIGHT: 'se-resize',
-  NOTALLOWED: 'not-allowed'
+  NOTALLOWED: 'not-allowed',
+  ZOOMIN: '-webkit-zoom-in',
+  ZOOMOUT: '-webkit-zoom-out'
 };
 
 
@@ -100,6 +96,12 @@ thin.core.Cursor.getCursorByName = function(name) {
     case 'NOTALLOWED':
       cursor = type.NOTALLOWED;
       break;
+    case 'ZOOMIN':
+      cursor = type.ZOOMIN;
+      break
+    case 'ZOOMOUT':
+      cursor = type.ZOOMOUT;
+      break;
     default:
       throw new thin.Error('Unknown Cursor Name');
       break;
@@ -123,25 +125,10 @@ thin.core.Cursor.prototype.type_;
 
 
 /**
- * @type {string}
- * @private
- */
-thin.core.Cursor.prototype.uri_;
-
-
-/**
- * @type {boolean}
- * @private
- */
-thin.core.Cursor.prototype.isUri_ = false;
-
-
-/**
  * @param {string} type
  */
 thin.core.Cursor.prototype.setType = function(type) {
   this.type_ = type;
-  this.isUri_ = false;
 };
 
 
@@ -149,20 +136,7 @@ thin.core.Cursor.prototype.setType = function(type) {
  * @return {string}
  */
 thin.core.Cursor.prototype.getType = function() {
-  if (this.isUri_ === true) {
-    return 'url(' + this.uri_ + '), ' + this.default_;
-  } else {
-    return this.type_;
-  }
-};
-
-
-/**
- * @param {string} uri
- */
-thin.core.Cursor.prototype.setUri = function(uri) {
-  this.uri_ = uri;
-  this.isUri_ = true;
+  return this.type_;
 };
 
 
@@ -185,5 +159,4 @@ thin.core.Cursor.prototype.getDefault = function() {
 thin.core.Cursor.prototype.disposeInternal = function() {
   delete this.default_;
   delete this.type_;
-  delete this.uri_;
 };

@@ -41,7 +41,7 @@ thin.core.OutlineHelper.FILL_ = new goog.graphics.SolidFill('none');
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.core.OutlineHelper.STROKE_ = new goog.graphics.Stroke('1px', '#0000FF');
+thin.core.OutlineHelper.STROKE_ = new goog.graphics.Stroke('1px', '#999');
 
 
 /**

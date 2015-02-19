@@ -52,6 +52,7 @@ goog.require('thin.ui.Input.Validator');
 goog.require('thin.ui.InputColorPicker');
 goog.require('thin.ui.InputColorPickerRenderer');
 goog.require('thin.ui.FontSelect');
+goog.require('thin.ui.FontOptionMenuRenderer');
 goog.require('thin.ui.InputUnitChanger');
 
 
@@ -1013,15 +1014,19 @@ thin.ui.PropertyPane.SelectProperty.prototype.enterDocument = function() {
  * @extends {thin.ui.PropertyPane.SelectProperty}
  */
 thin.ui.PropertyPane.FontSelectProperty = function(opt_label) {
+  var propCssClass = thin.ui.PropertyPane.PropertyRenderer.CSS_CLASS;
+
   var renderer = goog.ui.ControlRenderer.getCustomRenderer(
-        thin.ui.MenuButtonRenderer, 
-        thin.ui.getCssName(thin.ui.PropertyPane.PropertyRenderer.CSS_CLASS, 'select'));
-  
+        thin.ui.MenuButtonRenderer, thin.ui.getCssName(propCssClass, 'select'));
+  var menuRenderer = goog.ui.ContainerRenderer.getCustomRenderer(
+        thin.ui.FontOptionMenuRenderer, thin.ui.getCssName(propCssClass, 'font-selectmenu'));
+
   var control = new thin.ui.FontSelect(thin.Font.getFonts(),
-                  /** @type {thin.ui.MenuButtonRenderer} */ (renderer));
-  
+                  /** @type {thin.ui.MenuButtonRenderer} */ (renderer),
+                  /** @type {thin.ui.FontOptionMenuRenderer} */ (menuRenderer));
+
   control.getMenu().setMaxHeight(250);
-  
+
   thin.ui.PropertyPane.Property.call(this, opt_label || thin.t('field_font_family'), control);
 };
 goog.inherits(thin.ui.PropertyPane.FontSelectProperty, thin.ui.PropertyPane.SelectProperty);
@@ -1646,4 +1651,3 @@ thin.ui.PropertyPane.PropertyEvent = function(type, pane, property, opt_target) 
   this.property = property
 };
 goog.inherits(thin.ui.PropertyPane.PropertyEvent, goog.events.Event);
-

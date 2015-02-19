@@ -22,7 +22,8 @@
 
 .thin-menuitem-body {
   display: -webkit-box;
-  -webkit-border-radius: 2px;
+  border: 1px solid transparent;
+  box-sizing: border-box;
 }
 
 .thin-menuitem.link-item .thin-menuitem-body {
@@ -51,8 +52,6 @@
 .thin-menuitem-symbol {
   -webkit-box-ordinal-group: 1;
   width: 25px;
-  border-right: 1px solid rgb(230, 230, 230);
-  -webkit-box-shadow: 1px 0 0 rgb(255, 255, 255);
   text-align: center;
   vertical-align: initial !important;
   display: block !important;
@@ -60,13 +59,11 @@
 }
 
 .thin-menuitem-hover .thin-menuitem-body {
-  background: -webkit-gradient(linear, left top, left bottom, 
-      from(rgba(125, 162, 206, 0.1)), 
-      to(rgba(125, 162, 206, 0.3)));
-  -webkit-box-shadow: inset 0 0 0 1px rgba(125, 162, 206, 0.4);
+  color: #fff;
+  background-color: rgb(170, 170, 170);
 }
 .thin-menuitem-hover .thin-menuitem-symbol {
-  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
   border-color: transparent !important;
 }
 

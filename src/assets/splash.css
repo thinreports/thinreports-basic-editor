@@ -1,0 +1,71 @@
+/**
+ * Copyright (C) 2011 Matsukei Co.,Ltd.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+html.splash {
+  height: 100%;
+  opacity: 1;
+  background-color: #fff;
+  background-image: url("images/thinreports-logo.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 300px;
+  -webkit-animation-duration: 1.5s;
+  -webkit-animation-name: splash-fade-in;
+}
+
+body {
+  visibility: hidden;
+  opacity: 0;
+}
+
+html.active body {
+  visibility: visible;
+  opacity: 1;
+  -webkit-animation-duration: .5s;
+  -webkit-animation-name: editor-fade-in;
+}
+
+@-webkit-keyframes splash-fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  1% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes editor-fade-in {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  1% {
+    visibility: visible;
+    opacity: 0;
+  }
+
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
+}

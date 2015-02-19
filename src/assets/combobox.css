@@ -23,44 +23,44 @@
 .thin-combobox-body {
   display: -webkit-box;
   white-space: nowrap;
-  background-image: -webkit-gradient(linear, left top, left bottom, 
-      from(rgb(250, 250, 250)), to(rgb(220, 220, 220)));  
-  -webkit-border-top-left-radius: 2px;
-  -webkit-border-top-right-radius: 2px;
-  -webkit-box-shadow: 0 0 1px rgba(200, 200, 200, 0.8);
-  border: 1px solid rgb(200, 200, 200);
   border-radius: 2px;
+  border: 1px solid rgb(220, 220, 220);
 }
 
-.thin-combobox:hover .thin-combobox-body {
-  border-color: rgb(180, 180, 180) !important;
+.thin-combobox:hover .thin-combobox-body,
+.thin-combobox:hover .thin-input {
+  border-color: rgb(200, 200, 200) !important;
 }
 
 .thin-combobox .thin-input {
   display: block;
   -webkit-box-flex: 1;
+  box-sizing: border-box;
   border-width: 0 1px 0 0;
-  border-color: rgb(200, 200, 200);
+  border-color: rgb(220, 220, 220);
   border-style: solid;
   margin: 0;
-  padding: 0.2em 3px !important;
+  padding: .2em 4px !important;
   width: auto !important;
-  font-size: 1.0em;
+  font-size: 1em;
   line-height: 1.6em;
 }
 
 .thin-combobox-handle {
   width: 18px;
-  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
   background: transparent url(icons/x-trigger-small.png) no-repeat center center;
   text-align: center;
 }
 
 .thin-combobox-active .thin-combobox-handle {
-  background-color: rgb(210, 210, 210) !important;
+  box-shadow: inset 0 0 0 1px rgba(180, 180, 180, .1);
+}
+.thin-combobox-active .thin-combobox-body,
+.thin-combobox-active .thin-input {
+  border-color: rgb(200, 200, 200) !important;
 }
 
 .thin-combobox-disabled {
   opacity: 0.4;
 }
-

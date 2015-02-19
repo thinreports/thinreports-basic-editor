@@ -18,26 +18,19 @@
 .thin-menuseparator {
   white-space: nowrap;
   cursor: default;
-  display: -webkit-box;
-}
-
-.thin-menuseparator-symbol {
-  width: 25px;
-  border-right: 1px solid rgb(230, 230, 230);
-  -webkit-box-shadow: 1px 0 0 rgb(255, 255, 255);
 }
 
 .thin-menuseparator-content {
-  -webkit-box-flex: 1;
-  padding: 2px 0;
+  box-sizing: border-box;
+  padding: 2px 0 1px 0;
 }
 
 .thin-menuseparator-line {
   padding: 0;
   margin: 0;
   border-width: 1px 0 0 0;
-  border-color: rgb(230, 230, 230);
+  border-color: rgb(220, 220, 220);
   border-style: solid;
-  background: rgb(255, 255, 255);
+  background-color: rgba(255, 255, 255, .8);
   height: 1px;
 }

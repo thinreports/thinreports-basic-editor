@@ -14,9 +14,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 App.addLocale({
-  id: 'en',
-  name: 'English',
-  font_family: "'Lucida Grande', 'Segoe UI', Helvetica, Arial",
+  id: 'en', name: 'English', font_family: "'Lucida Grande', 'Helvetica Neue', Arial",
   default_settings: {
     // Available values: break-word, none
     text_word_wrap: 'break-word'
@@ -184,9 +182,9 @@ App.addLocale({
     button_help: 'Help',
     button_preference: 'Preference', 
     button_about: 'About',
-    button_go_to_forum: 'Forum',
+    button_go_to_forum: 'Discussion Group',
     button_feedback: 'Feedback',
-    button_translation: 'Contribute to the translation', 
+    button_translation: 'Contribute to Translating', 
     button_selection_tool: 'Selection',
     button_zoom_tool: 'Zoom',
     button_rectangle_tool: 'Rectangle',
@@ -222,7 +220,6 @@ App.addLocale({
     warning_discard_changes: 'If you have unsaved files, the changes will be discarded. Please be sure to save.', 
     warning_discard_changes_en: '', 
 
-    text_about_description: 'Please see the official site or official project site about the license, help, release notes of Thinreports.',
     text_editor_force_close_confirmation: 'There is unsaved layout files.\nSave these files before close?',
     text_layout_force_close_confirmation: 'This layout has been changed.\nSave before close?',
     text_layout_export_definition_confirmation: 'Before export layout definition, it is necessary to save this layout file.\nSave this layout?',

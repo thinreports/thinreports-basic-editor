@@ -51,7 +51,6 @@ thin.ui.MenuSeparatorRenderer.prototype.createDom = function(separator) {
   var cssClass = this.getCssClass();
   var domHelper = separator.getDomHelper();
   return domHelper.createDom('div', this.getClassNames(separator).join(' '), 
-      domHelper.createDom('div', thin.ui.getCssName(cssClass, 'symbol')), 
       domHelper.createDom('div', thin.ui.getCssName(cssClass, 'content'), 
           domHelper.createDom('hr', thin.ui.getCssName(cssClass, 'line'))));
 };

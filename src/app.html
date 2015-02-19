@@ -16,9 +16,9 @@
 -->
 
 <!DOCTYPE html>
-<html>
+<html class="splash">
   <head>
-    <title>ThinreportsEditor</title>
+    <title>Thinreports Editor</title>
     <meta charset="UTF-8">
     <script src="app.js"></script>
     <script src="locales/ja.js"></script>
@@ -42,9 +42,6 @@
     <script src="lib/closure-library/closure/goog/math/box.js"></script>
     <script src="lib/closure-library/closure/goog/math/rect.js"></script>
     <script src="lib/closure-library/closure/goog/style/style.js"></script>
-    <script src="lib/closure-library/closure/goog/a11y/aria/roles.js"></script>
-    <script src="lib/closure-library/closure/goog/a11y/aria/attributes.js"></script>
-    <script src="lib/closure-library/closure/goog/a11y/aria/aria.js"></script>
     <script src="lib/closure-library/closure/goog/disposable/idisposable.js"></script>
     <script src="lib/closure-library/closure/goog/disposable/disposable.js"></script>
     <script src="lib/closure-library/closure/goog/debug/entrypointregistry.js"></script>
@@ -58,11 +55,15 @@
     <script src="lib/closure-library/closure/goog/events/listenable.js"></script>
     <script src="lib/closure-library/closure/goog/events/listener.js"></script>
     <script src="lib/closure-library/closure/goog/events/events.js"></script>
-    <script src="lib/closure-library/closure/goog/events/eventhandler.js"></script>
     <script src="lib/closure-library/closure/goog/events/eventtarget.js"></script>
+    <script src="lib/closure-library/closure/goog/timer/timer.js"></script>
+    <script src="lib/closure-library/closure/goog/async/delay.js"></script>
+    <script src="lib/closure-library/closure/goog/a11y/aria/roles.js"></script>
+    <script src="lib/closure-library/closure/goog/a11y/aria/attributes.js"></script>
+    <script src="lib/closure-library/closure/goog/a11y/aria/aria.js"></script>
+    <script src="lib/closure-library/closure/goog/events/eventhandler.js"></script>
     <script src="lib/closure-library/closure/goog/ui/idgenerator.js"></script>
     <script src="lib/closure-library/closure/goog/ui/component.js"></script>
-    <script src="lib/closure-library/closure/goog/timer/timer.js"></script>
     <script src="lib/closure-library/closure/goog/events/keycodes.js"></script>
     <script src="lib/closure-library/closure/goog/events/keyhandler.js"></script>
     <script src="lib/closure-library/closure/goog/ui/controlcontent.js"></script>
@@ -189,7 +190,6 @@
     <script src="app/ui/view.js"></script>
     <script src="app/ui/toolboxview.js"></script>
     <script src="app/ui/tabpane.js"></script>
-    <script src="lib/closure-library/closure/goog/async/delay.js"></script>
     <script src="lib/closure-library/closure/goog/ui/checkboxrenderer.js"></script>
     <script src="lib/closure-library/closure/goog/ui/checkbox.js"></script>
     <script src="lib/closure-library/closure/goog/structs/collection.js"></script>
@@ -351,6 +351,7 @@
 <!--STYLES begin-->
     <link rel="stylesheet" href="assets/workspace.css">
     <link rel="stylesheet" href="assets/base.css">
+    <link rel="stylesheet" href="assets/splash.css">
     <link rel="stylesheet" href="assets/layout.css">
     <link rel="stylesheet" href="assets/view.css">
     <link rel="stylesheet" href="assets/icon.css">
@@ -593,33 +594,26 @@
     <div id="about-dialog" class="thin-dialogs thin-dialog-about" style="display:none;">
       <div class="thin-dialog-content">
         <div class="thin-dialog-about-appinfo">
-          <h1>Thinreports Editor</h1>
+          <h1><a href="http://www.thinreports.org" target="_blank"><img src="assets/images/thinreports-logo.svg"></a></h1>
           <div class="thin-dialog-about-version-info">
             <span id="about-dialog-version"></span>
-            <a href="https://github.com/thinreports/thinreports-editor/blob/master/doc/CHANGELOG.md" target="_blank">ChangeLog</a>
+            <a href="https://github.com/thinreports/thinreports-editor/blob/master/doc/CHANGELOG.md" target="_blank">CHANGELOG</a>
           </div>
         </div>
-        <div class="thin-dialog-about-details">
-          <p class="thin-dialog-about-copyright">
-            &copy; 2010-2014 <a href="http://www.matsukei.co.jp/" target="_blank">Matsukei</a> Corp.
-          </p>
-          <p class="thin-dialog-about-description" data-i18n="text_about_description"></p>
-          <div class="thin-dialog-about-resources">
-            <dl>
-              <dt>Official Site:</dt>
-              <dd><a href="http://www.thinreports.org/" target="_blank">http://www.thinreports.org/</a></dd>
-              <dt>GitHub:</dt>
-              <dd><a href="https://github.com/thinreports/thinreports-editor" target="_blank">https://github.com/thinreports/thinreports-editor</a></dd>
-              <dt>Discussion Group:</dt>
-              <dd><a href="https://groups.google.com/forum/#!forum/thinreports" target="_blank">https://groups.google.com/forum/#!forum/thinreports</a></dd>
-              <dt>Social:</dt>
-              <dd><strong>facebook:</strong> <a href="http://www.facebook.com/Thinreports.org" target="_blank">http://www.facebook.com/Thinreports.org</a></dd>
-              <dd><strong>Twitter:</strong> <a href="http://twitter.com/#!/thinreports_org" target="_blank">@thinreports_org</a></dd>
-            </dl>
-          </div>
+        <div class="thin-dialog-about-copyright">
+          &copy; 2010-2015 Matsukei Corp.
+          Thinreports Editor is licensed under <a href="https://github.com/thinreports/thinreports-editor/blob/master/GPLv3" target="_blank">the GPLv3</a>.
+          See <a href="https://github.com/thinreports/thinreports-editor/blob/master/LICENSE" target="_blank">LICENSE</a> for further details.
+        </div>
+        <div class="thin-dialog-about-links">
+          <a href="http://www.thinreports.org/" target="_blank">Official Site</a>
+          <a href="http://www.thinreports.org/documentation" target="_blank">Documentation</a>
+          <a href="https://github.com/thinreports/thinreports-editor" target="_blank">GitHub</a>
+          <a href="https://groups.google.com/forum/#!forum/thinreports" target="_blank">Discussion Group</a>
+          <a href="http://twitter.com/#!/thinreports_org" target="_blank">Twitter</a>
         </div>
       </div>
-    </div>
+     </div>
 
     <!-- Dialog template for App Error. -->
     <div id="app-error-dialog" class="thin-dialogs thin-dialog-app-error" style="display:none;">
