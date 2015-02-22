@@ -103,7 +103,7 @@ thin.core.ShapeStructure.serializeForText_ = function(shape, json) {
     'width': Number(shape.getAttribute('x-width')),
     'height': Number(shape.getAttribute('x-height'))
   };
-  json['inline-format'] = shape.getAttribute('x-inline-format') == 'true';
+  json['inline-format'] = shape.getAttribute('x-inline-format') || 'false';
 
   thin.core.ShapeStructure.forEachShapeAttribute_(shape,
     function(key, value) {
