@@ -241,7 +241,7 @@ thin.core.ShapeStructure.serializeForTblock_ = function(shape, json) {
     'height': height
   };
 
-  json['inline-format'] = shape.getAttribute('x-inline-format') || 'true';
+  json['inline-format'] = shape.getAttribute('x-inline-format') || 'false';
 
   if (tag == 'text') {
     switch(anchor) {
