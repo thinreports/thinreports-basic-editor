@@ -2738,9 +2738,4 @@ thin.core.Action.prototype.actionTextEdit = function(opt_isDraw) {
       textEditorListener, false, this);
 
   textEditorDialog.setVisible(true);
-  textEditArea.setMinHeight(150);
-  textEditArea.setMaxHeight(150);
-  var textEditAreaElement = textEditArea.getElement();
-  textEditAreaElement.focus();
-  textEditAreaElement.select();
 };
