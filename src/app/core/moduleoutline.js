@@ -209,7 +209,7 @@ thin.core.ModuleOutline.prototype.setupMouseDownHandler = function() {
   goog.events.listen(this, goog.events.EventType.MOUSEDOWN, function(e) {
     layout.getWorkspace().focusElement(e);
 
-    if (e.ctrlKey && this.isForMultiple()) {
+    if ((e.ctrlKey || e.metaKey) && this.isForMultiple()) {
       var removeShape = this.getTargetShape();
       var listHelper = helpers.getListHelper();
       var captureProperties = multipleShapesHelper.getCloneProperties();

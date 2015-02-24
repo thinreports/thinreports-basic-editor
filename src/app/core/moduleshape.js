@@ -406,7 +406,7 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
     var oldShapesByGlobal = activeShapeManager.getClone();
     var captureProperties = multipleShapesHelper.getCloneProperties();
     var captureActive = listHelper.isActive();
-    var captureCtrlKey = e.ctrlKey;
+    var captureCtrlKey = e.ctrlKey || e.metaKey;
     
     if (captureActive) {
       var activeShapeManagerByListShape = listHelper.getActiveShape();
