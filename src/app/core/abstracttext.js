@@ -102,10 +102,18 @@ thin.core.AbstractText.prototype.setTop = function(top) {
 
 
 /**
+ * @return {SVGRect}
+ */
+thin.core.AbstractText.prototype.getBBox = function() {
+  return this.getElement()['getBBox']();
+};
+
+
+/**
  * @return {number}
  */
 thin.core.AbstractText.prototype.getHeight = function() {
-  this.height_ = this.getElement()['getBBox']().height;
+  this.height_ = this.getBBox().height;
   return this.height_;
 };
 
@@ -114,7 +122,7 @@ thin.core.AbstractText.prototype.getHeight = function() {
  * @return {number}
  */
 thin.core.AbstractText.prototype.getWidth = function() {
-  this.width_ = this.getElement()['getBBox']().width;
+  this.width_ = this.getBBox().width;
   return this.width_;
 };
 
@@ -135,16 +143,8 @@ thin.core.AbstractText.prototype.getBaseLine = function() {
 /**
  * @return {number}
  */
-thin.core.AbstractText.prototype.getOffsetTop = function() {
-  return this.getElement()['offsetTop'];
-};
-
-
-/**
- * @return {number}
- */
 thin.core.AbstractText.prototype.getAscent = function() {
-  return Math.round(this.getBaseLine() - this.getOffsetTop());
+  return Math.round(this.getBaseLine() - this.getBBox().y);
 };
 
 
