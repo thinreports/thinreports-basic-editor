@@ -1601,7 +1601,7 @@ thin.init_ = function() {
   goog.events.listen(goog.global, goog.events.EventType.KEYDOWN,
     function(e) {
       var workspace = thin.core.getActiveWorkspace();
-      if (workspace && e.ctrlKey) {
+      if (workspace && (e.ctrlKey || e.metaKey)) {
         if (e.keyCode == goog.events.KeyCodes.S) {
           if (e.shiftKey) {
             workspace.saveAs();

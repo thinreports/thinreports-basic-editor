@@ -255,7 +255,7 @@ thin.core.Workspace.prototype.handleUndoRedoKeyEvent_ = function(e) {
   var keyCode = e.keyCode;
   var keyCodes = goog.events.KeyCodes;
 
-  if (e.ctrlKey) {
+  if (e.ctrlKey || e.metaKey) {
     switch(keyCode) {
       case keyCodes.Z:
         this.undo();
@@ -278,7 +278,7 @@ thin.core.Workspace.prototype.handleCopyPasteKeyEvent_ = function(e) {
   var keyCode = e.keyCode;
   var keyCodes = goog.events.KeyCodes;
 
-  if (e.ctrlKey) {
+  if (e.ctrlKey || e.metaKey) {
     switch(keyCode) {
       case keyCodes.C:
         this.action_.actionCopyShapes();

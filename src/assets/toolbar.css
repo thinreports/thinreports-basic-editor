@@ -70,8 +70,8 @@
   width: 1px;
   overflow: hidden;
   display: inline-block;
-  background-color: rgb(210, 210, 210);
-  border-right: 1px solid rgb(255, 255, 255);
+  background-color: #ddd;
+  border-right: 1px solid rgba(255, 255, 255, .8);
   margin: 0 3px;
   vertical-align: middle;
 }

@@ -259,8 +259,7 @@ thin.core.ListSectionHelper.prototype.createSectionLabel_ = function() {
   var layout = this.layout_;
   var sectionLabel = new thin.core.TextShape(layout.createSvgElement('g'), layout);
   sectionLabel.createTextContent(this.sectionName_.toLowerCase());
-  sectionLabel.setFontItalic(true);
-  sectionLabel.setFontFamily('Georgia');
+  sectionLabel.setFontFamily('Helvetica,Arial');
   sectionLabel.setFontSize(12);
   sectionLabel.setTextAnchor(thin.core.TextStyle.HorizonAlignType.MIDDLE);
   sectionLabel.setVerticalAlign(thin.core.TextStyle.VerticalAlignType.CENTER);
