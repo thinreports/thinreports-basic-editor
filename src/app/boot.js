@@ -1635,7 +1635,7 @@ thin.init_ = function() {
   goog.events.listen(goog.global, goog.events.EventType.CONTEXTMENU,
     function(e) {
       if (!goog.global.COMPILED) {
-       return true;
+        return true;
       }
 
       var target = e.target;
