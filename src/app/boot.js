@@ -1551,6 +1551,11 @@ thin.init_ = function() {
 
     textEditorDialog.addEventListener(goog.ui.Dialog.EventType.AFTER_HIDE, focusWorkspace);
 
+    textEditorDialog.addEventListener(goog.ui.Dialog.EventType.AFTER_SHOW,
+      function(e) {
+        textEditorDialog.getControl('textarea').getElement().focus();
+      });
+
     thin.ui.registerComponent('texteditor', textEditorDialog);
    })();
   (function() {
