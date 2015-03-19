@@ -1616,16 +1616,43 @@ thin.init_ = function() {
 
   goog.events.listen(goog.global, goog.events.EventType.ERROR,
     function(e) {
-      var dialog = new thin.ui.Dialog();
-      dialog.setDisposeOnHide(true);
-      dialog.setTitle('Error');
-      dialog.setWidth(400);
-      dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOk());
-      dialog.decorate(goog.dom.getElement('app-error-dialog'));
-      dialog.addEventListener(goog.ui.Dialog.EventType.AFTER_HIDE, focusWorkspace);
-      dialog.setVisible(true);
+      var dialogElement = goog.dom.getElement('app-error-dialog');
 
+      if (!goog.style.isElementShown(dialogElement)) {
+        var dialog = new thin.ui.Dialog();
+        dialog.setDisposeOnHide(true);
+        dialog.setTitle('Error');
+        dialog.setWidth(400);
+        dialog.setButtonSet(thin.ui.Dialog.ButtonSet.typeOk());
+        dialog.decorate(dialogElement);
+        dialog.addEventListener(goog.ui.Dialog.EventType.AFTER_HIDE, focusWorkspace);
+        dialog.setVisible(true);
+      }
       return false;
+    }, false);
+
+  // Disable the context menu in production, COMPILED is true.
+  goog.events.listen(goog.global, goog.events.EventType.CONTEXTMENU,
+    function(e) {
+      if (!goog.global.COMPILED) {
+       return true;
+      }
+
+      var target = e.target;
+
+      if (goog.dom.isElement(target)) {
+        switch(target.tagName.toLowerCase()) {
+          case 'input':
+            if (target.getAttribute('type') == 'text') {
+              return true;
+            }
+            break;
+          case 'textarea':
+            return true;
+            break;
+        }
+      }
+      e.preventDefault();
     }, false);
 
   initUiStatus();

@@ -127,7 +127,7 @@ def compile_scripts(verbose: false)
                  " -c #{ closure_compiler_jar }" +
                  %| -f "--compilation_level=ADVANCED_OPTIMIZATIONS"| +
                  %| -f "--warning_level=#{ warning_level }"| +
-                 %| -f "--output_wrapper=(function(){%output%})();"|
+                 %| -f "--define='COMPILED=true'"|
 end
 
 
