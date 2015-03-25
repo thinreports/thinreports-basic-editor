@@ -585,6 +585,7 @@ thin.core.Workspace.prototype.save = function() {
 
 thin.core.Workspace.prototype.save_ = function() {
   this.getFile().save(this.getSaveFormat_());
+  this.removeBackup();
 };
 
 
@@ -1068,8 +1069,20 @@ thin.core.Workspace.prototype.focusElement = function(e) {
 };
 
 
+thin.core.Workspace.prototype.addBackup = function() {
+  thin.core.Workspace.Backup.add(this.getId(), this);
+};
+
+
+thin.core.Workspace.prototype.removeBackup = function() {
+  thin.core.Workspace.Backup.remove(this.getId());
+};
+
+
 /** @inheritDoc */
 thin.core.Workspace.prototype.disposeInternal = function() {
+  this.removeBackup();
+
   this.format.dispose();
 
   if (goog.isDef(this.file_)) {

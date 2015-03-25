@@ -114,6 +114,18 @@ thin.core.LayoutStructure.createScreenShot = function(layout) {
 /**
  * @param {thin.core.Layout} layout
  * @return {string}
+ */
+thin.core.LayoutStructure.createBackup = function(layout) {
+  var svg = layout.getElement().cloneNode(true);
+  thin.core.LayoutStructure.finalizeLayoutElement_(svg);
+
+  return thin.core.serializeToXML(/** @type {Element} */(svg));
+};
+
+
+/**
+ * @param {thin.core.Layout} layout
+ * @return {string}
  * @private
  */
 thin.core.LayoutStructure.serializeForFormat_ = function(layout) {

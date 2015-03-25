@@ -23,6 +23,7 @@ goog.require('goog.a11y.aria');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Textarea');
+goog.require('goog.Timer');
 
 goog.require('thin');
 goog.require('thin.Settings');
@@ -76,6 +77,7 @@ goog.require('thin.ui.InputUnitChanger');
 goog.require('thin.core');
 goog.require('thin.core.Component');
 goog.require('thin.core.Workspace');
+goog.require('thin.core.Workspace.Backup');
 goog.require('thin.core.toolaction.SelectAction');
 goog.require('thin.core.toolaction.ZoomAction');
 goog.require('thin.core.toolaction.RectAction');
@@ -1557,50 +1559,6 @@ thin.init_ = function() {
       });
 
     thin.ui.registerComponent('texteditor', textEditorDialog);
-   })();
-  (function() {
-    goog.global['onbeforeclose'] = function() {
-      var pageCount = tabpane.getPageCount();
-      var isChanged = false;
-
-      for(var count = 0; count < pageCount; count++) {
-        if(tabpane.getPage(count).getContent().isChanged()) {
-          isChanged = true;
-          break;
-        }
-      }
-
-      if (isChanged) {
-        thin.ui.Message.disposeActiveMessage();
-
-        thin.ui.Message.confirm(
-          thin.t('text_editor_force_close_confirmation'), thin.t('label_confirmation'),
-          function(e) {
-            if (e.isYes()) {
-              e.target.setVisible(false);
-              var removePage = tabpane.getSelectedPage();
-              var removeWorkspace;
-              while (removePage) {
-                removeWorkspace = removePage.getContent();
-                if (removeWorkspace.isChanged() && !removeWorkspace.save()) {
-                  return;
-                }
-                tabpane.destroyPage(removePage);
-                removePage = tabpane.getSelectedPage();
-              }
-            }
-
-            if(!e.isCancel()) {
-              goog.global['onbeforeclose'] = null;
-              thin.platform.Window.close();
-            }
-
-          }, thin.ui.Dialog.ButtonSet.typeYesNoCancel());
-        return false;
-      } else {
-        return true;
-      }
-    };
   })();
 
   goog.events.listen(goog.global, goog.events.EventType.KEYDOWN,
@@ -1661,6 +1619,63 @@ thin.init_ = function() {
     }, false);
 
   initUiStatus();
+
+  (function() {
+    // 60 sec
+    var ms = 60000;
+    if (!goog.global.COMPILED) {
+      // 6 sec
+      ms = 6000;
+    }
+    var timer = new goog.Timer(ms);
+
+    goog.events.listen(timer, goog.Timer.TICK, function(e) {
+      var tabpane = thin.ui.getComponent('tabpane');
+      var pageCount = tabpane.getPageCount();
+      var workspace = null;
+
+      for(var count = 0; count < pageCount; count++) {
+        workspace = tabpane.getPage(count).getContent();
+        workspace.addBackup();
+      }
+    });
+
+    thin.core.Workspace.Backup.isEmpty(function(result) {
+      if (result) {
+        timer.start();
+      } else {
+        var tabpane = thin.ui.getComponent('tabpane');
+        var confirmDialog = thin.ui.Message.confirm(thin.t('text_unsaved_layout_exists_confirmation'),
+          thin.t('label_confirmation'), function(e) {
+
+          if (e.isYes()) {
+            confirmDialog.setVisible(false);
+
+            thin.core.Workspace.Backup.getIds(function(ids) {
+              goog.array.forEach(ids, function(id) {
+                thin.core.Workspace.Backup.remove(id, function(tlf) {
+                  var format = thin.layout.Format.parse(tlf);
+                  var workspace = new thin.core.Workspace(format);
+                  workspace.createDom();
+
+                  var newPage = new thin.ui.TabPane.TabPage(workspace.getTabName(), workspace);
+                  tabpane.addPage(newPage);
+                  if (workspace.draw()) {
+                    focusWorkspace(e);
+                  } else {
+                    throw new thin.Error(thin.t('error_unexpected_error'));
+                  }
+                });
+              });
+            });
+          } else {
+            thin.core.Workspace.Backup.clear();
+          }
+          timer.start();
+        }, thin.ui.Dialog.ButtonSet.typeYesNo());
+      }
+    });
+  })();
 };
 
 

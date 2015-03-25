@@ -231,6 +231,7 @@ App.addLocale({
     text_feedback_in_project_site: 'Project Site',
     text_feedback_in_github: 'GitHub Issues',
     text_please_feedback: 'Please report a your issue in the following site. Also, please tell us in detail the situation that your issue occurred.',
+    text_unsaved_layout_exists_confirmation: 'Layout you have not saved exists.\nDo you want to restore?',
 
     shape_rectangle: 'Rectangle', 
     shape_ellipse: 'Ellipse', 
