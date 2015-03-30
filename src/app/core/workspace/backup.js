@@ -14,6 +14,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.core.Workspace.Backup');
+goog.provide('thin.core.Workspace.Backup.KEY');
 
 goog.require('goog.object');
 goog.require('goog.Disposable');
@@ -56,93 +57,72 @@ thin.core.Workspace.Backup.KEY = 'tlfs';
 
 
 /**
- * @param {string} id
- * @param {thin.core.Workspace} workspace
+ * @param {Object} tlfs
+ * @param {Object=} opt_callbacks
  */
-thin.core.Workspace.Backup.add = function(id, workspace) {
-  var backup = new thin.core.Workspace.Backup(workspace);
-  thin.core.Workspace.Backup.get_(function(tlfs) {
-    tlfs[id] = backup.getSaveFormat();
-    thin.core.Workspace.Backup.set_(tlfs);
+thin.core.Workspace.Backup.set = function(tlfs, opt_callbacks) {
+  var callbacks = {
+    beforeStart: goog.nullFunction,
+    complete: goog.nullFunction
+  }
+  if (opt_callbacks) {
+    goog.object.extend(callbacks, opt_callbacks);
+  }
 
-    backup.dispose();
-  });
+  thin.core.Workspace.Backup.set_(tlfs, callbacks);
 };
 
 
 /**
  * @param {string} tlfs
- * @param {Function=} fn
+ * @param {Object} callbacks
  * @private
  */
-thin.core.Workspace.Backup.set_ = function(tlfs, opt_callback_fn, opt_obj) {
-  var new_backup = {};
-  var scope = opt_obj || goog.global;
-  var callback_fn = goog.bind((opt_callback_fn || goog.nullFunction), scope);
+thin.core.Workspace.Backup.set_ = function(tlfs, callbacks) {
+  thin.core.Workspace.Backup.get_(function(current_tlfs) {
+    // beforeStart
+    callbacks.beforeStart(current_tlfs);
 
-  goog.object.set(new_backup, thin.core.Workspace.Backup.KEY, tlfs);
-  thin.platform.callNativeFunction('chrome.storage.local.set', new_backup, callback_fn);
-};
-
-
-/**
- * @param {Function} fn
- * @param {Object=} opt_obj
- * @private
- */
-thin.core.Workspace.Backup.get_ = function(fn, opt_obj) {
-  var key = thin.core.Workspace.Backup.KEY;
-  var scope = opt_obj || goog.global;
-
-  thin.platform.callNativeFunction('chrome.storage.local.get', [key], function(storage) {
-    fn.call(scope, (storage[key] || {}));
+    // complete
+    var new_backup = {};
+    goog.object.set(new_backup, thin.core.Workspace.Backup.KEY, tlfs);
+    thin.platform.callNativeFunction('chrome.storage.local.set',
+      new_backup, callbacks.complete);
   });
 };
 
 
 /**
- * @param {Function} fn
+ * @param {Function} callback_fn
  * @param {Object=} opt_obj
+ * @private
  */
-thin.core.Workspace.Backup.getIds = function(fn, opt_obj) {
-  thin.core.Workspace.Backup.get_(function(tlfs) {
-    fn.call(this, goog.object.getKeys(tlfs))
-  }, opt_obj);
+thin.core.Workspace.Backup.get_ = function(callback_fn, opt_obj) {
+  var key = thin.core.Workspace.Backup.KEY;
+  var scope = opt_obj || goog.global;
+
+  thin.platform.callNativeFunction('chrome.storage.local.get', [key], function(storage) {
+    callback_fn.call(scope, (storage[key] || {}));
+  });
 };
 
 
 /**
  * @param {thin.core.Workspace} id
- * @param {Function=} opt_callback_fn
  */
-thin.core.Workspace.Backup.remove = function(id, opt_callback_fn, opt_obj) {
-  var callback_fn = opt_callback_fn || goog.nullFunction;
-
+thin.core.Workspace.Backup.remove = function(id) {
   thin.core.Workspace.Backup.get_(function(tlfs) {
-    var tlf = tlfs[id];
     goog.object.remove(tlfs, id);
-
-    thin.core.Workspace.Backup.set_(tlfs, function() {
-      callback_fn.call(this, tlf);
-    }, opt_obj);
+    thin.core.Workspace.Backup.set(tlfs);
   });
 };
 
 
 /**
- * @param {Function} fn
- * @param {Object=} opt_obj
+ * @param {Object} callbacks
  */
-thin.core.Workspace.Backup.isEmpty = function(fn, opt_obj) {
-  var scope = opt_obj || goog.global;
-  thin.core.Workspace.Backup.get_(function(tlfs) {
-    fn.call(scope, goog.object.isEmpty(tlfs));
-  });
-};
-
-
-thin.core.Workspace.Backup.clear = function(opt_callback_fn, opt_obj) {
-  thin.core.Workspace.Backup.set_({}, opt_callback_fn, opt_obj);
+thin.core.Workspace.Backup.clear = function(callbacks) {
+  thin.core.Workspace.Backup.set({}, callbacks);
 };
 
 

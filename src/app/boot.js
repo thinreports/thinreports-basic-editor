@@ -1633,46 +1633,47 @@ thin.init_ = function() {
       var tabpane = thin.ui.getComponent('tabpane');
       var pageCount = tabpane.getPageCount();
       var workspace = null;
+      var tlfs = {};
 
       for(var count = 0; count < pageCount; count++) {
         workspace = tabpane.getPage(count).getContent();
-        workspace.addBackup();
+        if (workspace.isChanged()) {
+          goog.object.extend(tlfs, workspace.createBackup());
+        }
       }
+      thin.core.Workspace.Backup.set(tlfs);
     });
 
-    thin.core.Workspace.Backup.isEmpty(function(result) {
-      if (result) {
-        timer.start();
-      } else {
-        var tabpane = thin.ui.getComponent('tabpane');
-        var confirmDialog = thin.ui.Message.confirm(thin.t('text_unsaved_layout_exists_confirmation'),
-          thin.t('label_confirmation'), function(e) {
+    thin.core.Workspace.Backup.clear({
+      beforeStart: function(tlfs) {
+        if (!goog.object.isEmpty(tlfs)) {
 
-          if (e.isYes()) {
-            confirmDialog.setVisible(false);
+          var confirmDialog = thin.ui.Message.confirm(
+            thin.t('text_unsaved_layout_exists_confirmation'),
+            thin.t('label_confirmation'), function(e) {
 
-            thin.core.Workspace.Backup.getIds(function(ids) {
-              goog.array.forEach(ids, function(id) {
-                thin.core.Workspace.Backup.remove(id, function(tlf) {
-                  var format = thin.layout.Format.parse(tlf);
-                  var workspace = new thin.core.Workspace(format);
-                  workspace.createDom();
+            if (e.isYes()) {
+              confirmDialog.setVisible(false);
+              goog.object.forEach(tlfs, function(tlf, id) {
+                var format = thin.layout.Format.parse(tlf);
+                var workspace = new thin.core.Workspace(format);
+                workspace.createDom();
+                workspace.forceInitFingerPrint();
 
-                  var newPage = new thin.ui.TabPane.TabPage(workspace.getTabName(), workspace);
-                  tabpane.addPage(newPage);
-                  if (workspace.draw()) {
-                    focusWorkspace(e);
-                  } else {
-                    throw new thin.Error(thin.t('error_unexpected_error'));
-                  }
-                });
+                var newPage = new thin.ui.TabPane.TabPage(workspace.getTabName(), workspace);
+                tabpane.addPage(newPage);
+                if (workspace.draw()) {
+                  focusWorkspace(e);
+                } else {
+                  throw new thin.Error(thin.t('error_unexpected_error'));
+                }
               });
-            });
-          } else {
-            thin.core.Workspace.Backup.clear();
-          }
-          timer.start();
-        }, thin.ui.Dialog.ButtonSet.typeYesNo());
+            }
+          }, thin.ui.Dialog.ButtonSet.typeYesNo());
+        }
+      },
+      complete: function() {
+        timer.start();
       }
     });
   })();

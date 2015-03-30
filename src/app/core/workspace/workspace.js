@@ -106,10 +106,10 @@ thin.core.Workspace.prototype.file_;
 
 
 /**
- * @type {number|null}
+ * @type {number}
  * @private
  */
-thin.core.Workspace.prototype.fingerPrint_ = null;
+thin.core.Workspace.prototype.fingerPrint_;
 
 
 /**
@@ -698,16 +698,23 @@ thin.core.Workspace.prototype.isChanged = function() {
 };
 
 
-/**
- * @private
- */
-thin.core.Workspace.prototype.updateFingerPrint_ = function() {
-  this.fingerPrint_ = this.getFingerPrint_();
+thin.core.Workspace.prototype.forceInitFingerPrint = function() {
+  if (!goog.isDef(this.fingerPrint_) && this.isNew()) {
+    this.fingerPrint_ = thin.core.hash32(this.getId());
+  }
 };
 
 
 /**
- * @return {number}
+ * @private
+ */
+thin.core.Workspace.prototype.updateFingerPrint_ = function() {
+  this.fingerPrint_ = /** @type {number} */ (this.getFingerPrint_());
+};
+
+
+/**
+ * @return {number|null}
  * @private
  */
 thin.core.Workspace.prototype.getFingerPrint_ = function() {
@@ -1048,13 +1055,30 @@ thin.core.Workspace.prototype.focusElement = function(e) {
 };
 
 
-thin.core.Workspace.prototype.addBackup = function() {
-  thin.core.Workspace.Backup.add(this.getId(), this);
+/**
+ * @return {number}
+ * @private
+ */
+thin.core.Workspace.prototype.getBackupId_ = function() {
+  return goog.getHashCode(this);
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.Workspace.prototype.createBackup = function() {
+  var tlf = {};
+  var backup = new thin.core.Workspace.Backup(this);
+  goog.object.set(tlf, this.getBackupId_(), backup.getSaveFormat());
+  backup.dispose();
+
+  return tlf;
 };
 
 
 thin.core.Workspace.prototype.removeBackup = function() {
-  thin.core.Workspace.Backup.remove(this.getId());
+  thin.core.Workspace.Backup.remove(this.getBackupId_());
 };
 
 
