@@ -32,13 +32,13 @@ thin.platform.File.open = function(accepts, callbacks) {
   };
 
   thin.platform.callNativeFunction('chrome.fileSystem.chooseEntry',
-      options, function(fileEntry) {
-        if (fileEntry) {
-          callbacks.success(fileEntry);
-        } else {
-          callbacks.cancel();
-        }
-      });
+    options, function(fileEntry) {
+      if(thin.platform.getNativeProperty('chrome.runtime.lastError')) {
+        callbacks.cancel();
+      } else {
+        callbacks.success(fileEntry);
+      }
+    });
 };
 
 
@@ -79,10 +79,10 @@ thin.platform.File.saveAs = function(fileName, accepts, callbacks) {
 
   thin.platform.callNativeFunction('chrome.fileSystem.chooseEntry',
     options, function(fileEntry) {
-      if (fileEntry) {
-        callbacks.success(fileEntry);
-      } else {
+      if(thin.platform.getNativeProperty('chrome.runtime.lastError')) {
         callbacks.cancel();
+      } else {
+        callbacks.success(fileEntry);
       }
     });
 };

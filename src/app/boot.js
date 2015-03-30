@@ -305,25 +305,27 @@ thin.init_ = function() {
     tabpane.addEventListener(tabPaneEventType.CLOSE_PAGE, function(e) {
       var removePage = e.page;
       var removeWorkspace = removePage.getContent();
+      var destroyPage = function() {
+        tabpane.destroyPage(removePage);
+        if(tabpane.getPageCount() == 0) {
+          initUiStatus();
+        }
+      };
 
       if(removeWorkspace.isChanged()) {
         var confirmDialogFromTab = thin.ui.Message.confirm(
           thin.t('text_layout_force_close_confirmation'), thin.t('label_confirmation'),
           function(e) {
-
             if (e.isYes()) {
-              confirmDialogFromTab.setVisible(false);
-              if(!removeWorkspace.save()) {
-                focusWorkspace(e);
-                return;
-              }
+              removeWorkspace.save({
+                success: destroyPage,
+                cancel: function() {
+                  focusWorkspace(e);
+                }
+              });
             }
-
-            if (!e.isCancel()) {
-              tabpane.destroyPage(removePage);
-              if(tabpane.getPageCount() == 0) {
-                initUiStatus();
-              }
+            if (e.isNo()) {
+              destroyPage();
             }
             focusWorkspace(e);
           }, thin.ui.Dialog.ButtonSet.typeYesNoCancel());

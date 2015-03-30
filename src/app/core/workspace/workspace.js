@@ -572,28 +572,57 @@ thin.core.Workspace.prototype.updateFormatPage = function(newMargins, newPaperTy
 };
 
 
-thin.core.Workspace.prototype.save = function() {
+/**
+ * @param {Object=} opt_callbacks
+ */
+thin.core.Workspace.prototype.save = function(opt_callbacks) {
+  var callbacks = {
+    success: goog.nullFunction,
+    cancel: goog.nullFunction
+  }
+  if (opt_callbacks) {
+    goog.object.extend(callbacks, opt_callbacks);
+  }
+
   if (this.isNew()) {
-    this.saveAs();
+    this.saveAs(callbacks);
   } else {
     if (this.isChanged()) {
-      this.save_();
+      this.save_(callbacks.success);
     }
   }
 };
 
 
-thin.core.Workspace.prototype.save_ = function() {
+/**
+ * @param {Function} callback_fn
+ * @private
+ */
+thin.core.Workspace.prototype.save_ = function(callback_fn) {
   this.getFile().save(this.getSaveFormat_());
   this.updateFingerPrint_();
   this.removeBackup();
+  callback_fn();
 };
 
 
-thin.core.Workspace.prototype.saveAs = function() {
+/**
+ * @param {Object=} opt_callbacks
+ */
+thin.core.Workspace.prototype.saveAs = function(opt_callbacks) {
+  var callbacks = {
+    success: goog.nullFunction,
+    cancel: goog.nullFunction
+  }
+  if (opt_callbacks) {
+    goog.object.extend(callbacks, opt_callbacks);
+  }
+
   thin.layout.File.saveDialog(this.getSuggestedFileName(), {
-    success: goog.bind(this.saveAs_, this),
-    cancel: goog.nullFunction,
+    success: goog.bind(function(file) {
+      this.saveAs_(file, callbacks.success);
+    }, this),
+    cancel: callbacks.cancel,
     error: goog.nullFunction
   });
 };
@@ -601,14 +630,18 @@ thin.core.Workspace.prototype.saveAs = function() {
 
 /**
  * @param {thin.layout.File} file
+ * @param {Function} callback_fn
+ * @private
  */
-thin.core.Workspace.prototype.saveAs_ = function(file) {
+thin.core.Workspace.prototype.saveAs_ = function(file, callback_fn) {
   this.setFile(file);
-  this.save_();
+  this.save_(callback_fn);
 
   var page = thin.ui.getComponent('tabpane').getSelectedPage();
-  page.setTitle(this.getTabName());
-  page.setTooltip(file.getPath());
+  if (page && page.getContent() == this) {
+    page.setTitle(this.getTabName());
+    page.setTooltip(file.getPath());
+  }
 };
 
 

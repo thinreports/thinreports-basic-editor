@@ -48,3 +48,15 @@ thin.platform.getNativeFunction = function(func) {
 
   return [receiver, method];
 };
+
+
+/**
+ * @param {string} func like 'chrome.runtime.lastError'
+ * @return {*}
+ */
+thin.platform.getNativeProperty = function(property) {
+  var objects = property.split('.');
+  return goog.array.reduce(objects, function(parent, obj) {
+    return parent[obj];
+  }, goog.global);
+};
