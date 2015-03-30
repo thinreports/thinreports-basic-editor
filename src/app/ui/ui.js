@@ -58,10 +58,10 @@ thin.ui.setInputValueForZoomRate = function(zoomRate) {
 
 
 /**
- * @param {boolean} status
+ * @param {boolean} enabled
  */
-thin.ui.adjustUiStatusToRedo = function(status) {
-  thin.ui.getComponent('toolbar').getChild('redo').setEnabled(!status);
+thin.ui.adjustUiStatusToRedo = function(enabled) {
+  thin.ui.getComponent('toolbar').getChild('redo').setEnabled(enabled);
 };
 
 

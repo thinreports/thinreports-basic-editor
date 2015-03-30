@@ -270,7 +270,7 @@ thin.init_ = function() {
 
       thin.ui.adjustToUiStatusForWorkspace();
       thin.ui.setInputValueForZoomRate(selectedWorkspace.getUiStatusForZoom());
-      thin.ui.adjustUiStatusToRedo(selectedWorkspace.getHistory().isLatest());
+      thin.ui.adjustUiStatusToRedo(selectedWorkspace.getHistory().canRedo());
 
       (function() {
         var helpers = layout.getHelpers();

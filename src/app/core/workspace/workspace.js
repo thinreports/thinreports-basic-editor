@@ -460,14 +460,14 @@ thin.core.Workspace.prototype.activateGroupVersioning = function() {
 thin.core.Workspace.prototype.undo = function() {
   var historyManager = this.history_;
   historyManager.undo();
-  thin.ui.adjustUiStatusToRedo(historyManager.isLatest());
+  thin.ui.adjustUiStatusToRedo(historyManager.canRedo());
 };
 
 
 thin.core.Workspace.prototype.redo = function() {
   var historyManager = this.history_;
   historyManager.redo();
-  thin.ui.adjustUiStatusToRedo(historyManager.isLatest());
+  thin.ui.adjustUiStatusToRedo(historyManager.canRedo());
 };
 
 
