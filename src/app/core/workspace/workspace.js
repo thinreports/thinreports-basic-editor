@@ -106,10 +106,10 @@ thin.core.Workspace.prototype.file_;
 
 
 /**
- * @type {number}
+ * @type {number|null}
  * @private
  */
-thin.core.Workspace.prototype.fingerPrint_;
+thin.core.Workspace.prototype.fingerPrint_ = null;
 
 
 /**
@@ -585,6 +585,7 @@ thin.core.Workspace.prototype.save = function() {
 
 thin.core.Workspace.prototype.save_ = function() {
   this.getFile().save(this.getSaveFormat_());
+  this.updateFingerPrint_();
   this.removeBackup();
 };
 
@@ -641,7 +642,6 @@ thin.core.Workspace.prototype.getSaveFormat_ = function() {
   var format = this.format;
   format.setSvg(layout.toXML());
   format.setLayoutGuides(layout.getHelpers().getLayoutGuideHelper().getGuides());
-  this.updateFingerPrint_();
   return format.toJSON();
 };
 
@@ -701,23 +701,8 @@ thin.core.Workspace.prototype.isChanged = function() {
 /**
  * @private
  */
-thin.core.Workspace.prototype.initFingerPrint_ = function() {
-  if (!goog.isDef(this.fingerPrint_)) {
-    if (this.isNew()) {
-      this.updateFingerPrint_();
-    } else {
-      this.fingerPrint_ = this.layout_.getFormat().getFingerPrint();
-    }
-  }
-};
-
-
-/**
- * @private
- */
 thin.core.Workspace.prototype.updateFingerPrint_ = function() {
   this.fingerPrint_ = this.getFingerPrint_();
-  this.layout_.getFormat().setFingerPrint(this.fingerPrint_);
 };
 
 
@@ -726,12 +711,7 @@ thin.core.Workspace.prototype.updateFingerPrint_ = function() {
  * @private
  */
 thin.core.Workspace.prototype.getFingerPrint_ = function() {
-  var layout = this.layout_;
-
-  return thin.core.hash32(
-    thin.core.LayoutStructure.serializeForFingerPrint(layout) +
-    goog.json.serialize(this.format.page.toHash()) +
-    goog.json.serialize(layout.getHelpers().getLayoutGuideHelper().getGuides()));
+  return this.getHistory().getCurrentFingerPrint();
 };
 
 
@@ -753,7 +733,6 @@ thin.core.Workspace.prototype.setup = function() {
   helper.getGuideHelper().init();
   helper.getListHelper().init();
   helper.getLayoutGuideHelper().createFromHelperConfig();
-  this.initFingerPrint_();
 };
 
 

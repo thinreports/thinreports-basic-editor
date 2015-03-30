@@ -35,7 +35,6 @@ thin.layout.Format = function(opt_format) {
   
   if (goog.isDefAndNotNull(opt_format) && goog.isObject(opt_format)) {
     this.setSvg(opt_format['svg']);
-    this.setFingerPrint(opt_format['finger-print']);
     this.page = this.setPage(opt_format['config']);
     
     var formatVersion = opt_format['version'];
@@ -76,13 +75,6 @@ thin.layout.Format.prototype.isOverWritableVersion_ = false;
 
 
 /**
- * @type {number}
- * @private
- */
-thin.layout.Format.prototype.fingerPrint_;
-
-
-/**
  * @type {string}
  * @private
  */
@@ -115,29 +107,12 @@ thin.layout.Format.prototype.toJSON = function() {
   
   return goog.json.serialize({
     "version": this.version_,
-    "finger-print": this.fingerPrint_,
     "config": this.page.toHash(),
     "svg": this.svg_,
     "state": {
       "layout-guide": this.getLayoutGuides()
     }
   });
-};
-
-
-/**
- * @param {number} fingerPrint
- */
-thin.layout.Format.prototype.setFingerPrint = function(fingerPrint) {
-  this.fingerPrint_ = fingerPrint;
-};
-
-
-/**
- * @return {number}
- */
-thin.layout.Format.prototype.getFingerPrint = function() {
-  return this.fingerPrint_;
 };
 
 

@@ -198,6 +198,19 @@ thin.core.HistoryManager.prototype.getCurrentVersion_ = function() {
 
 
 /**
+ * @return {number|null}
+ */
+thin.core.HistoryManager.prototype.getCurrentFingerPrint = function() {
+  var version = this.getCurrentVersion_();
+  if (version) {
+    return goog.getHashCode(version);
+  } else {
+    return null;
+  }
+};
+
+
+/**
  * @return {*}
  * @private
  */

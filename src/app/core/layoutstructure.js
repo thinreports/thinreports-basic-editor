@@ -57,19 +57,6 @@ thin.core.LayoutStructure.serialize = function(layout) {
 
 
 /**
- * @param {thin.core.Layout} layout
- * @return {string}
- */
-thin.core.LayoutStructure.serializeForFingerPrint = function(layout) {
-  var xml;
-  thin.core.LayoutStructure.inRawLayout_(layout, function() {
-    xml = thin.core.LayoutStructure.serializeForFingerPrint_(layout);
-  });
-  return xml;
-};
-
-
-/**
  * @param {string} svg
  * @return {string}
  */
@@ -145,38 +132,6 @@ thin.core.LayoutStructure.serializeForFormat_ = function(layout) {
       /** @type {Element} */(svg))[0].childNodes);
 
   return thin.core.serializeToXML(/** @type {Element} */(svg));
-};
-
-
-/**
- * @param {thin.core.Layout} layout
- * @return {string}
- * @private
- */
-thin.core.LayoutStructure.serializeForFingerPrint_ = function(layout) {
-  var listShapeClassId = thin.core.ListShape.ClassIds;
-  var classIdPrefix = thin.core.ListShape.CLASSID;
-  var detailClassId = classIdPrefix + listShapeClassId['DETAIL'];
-
-  var canvasElement = goog.dom.getElementsByTagNameAndClass('g', 
-                        thin.core.Layout.CANVAS_CLASS_ID,
-                        /** @type {Element} */(layout.getElement().cloneNode(true)))[0];
-
-  var elements = goog.dom.getElementsByTagNameAndClass('g', 
-                    classIdPrefix, canvasElement);
-
-  goog.array.forEach(elements, function(element) {
-    goog.array.forEach(element.childNodes, function(sectionElement) {
-      if (sectionElement.tagName == 'g' && 
-          sectionElement.getAttribute('class') != detailClassId) {
-        if (thin.core.ShapeStructure.getEnabledOfSection(sectionElement, element) == 'false') {
-          goog.dom.removeChildren(sectionElement);
-        }
-      }
-    });
-  });
-  
-  return thin.core.serializeToXML(canvasElement);
 };
 
 
