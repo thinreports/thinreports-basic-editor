@@ -2,7 +2,7 @@
 
 ### Features
 
-* 静的・動的テキストに対するインライン書式の有効／無効を設定可能に #12
+* Inline format option for Text and TextBlock #12
 
 ### Bug fixes
 
