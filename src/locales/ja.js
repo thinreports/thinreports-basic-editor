@@ -229,7 +229,7 @@ App.addLocale({
     text_feedback_in_project_site: 'プロジェクトサイトへ',
     text_feedback_in_github: 'GitHub Issues へ',
     text_please_feedback: '下記サイトより問題の報告をお願いします。また、問題が発生した状況をできるだけ詳しく教えて下さい。',
-    text_unsaved_layout_exists_confirmation: '未保存と思われるファイルが存在します。復元しますか？',
+    text_unsaved_layout_exists_confirmation: '前回、未保存のレイアウトが存在します。\n復元しますか？',
 
     shape_rectangle: '四角形',
     shape_ellipse: '楕円形',
