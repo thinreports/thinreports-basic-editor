@@ -40,7 +40,6 @@ goog.require('goog.ui.ControlContent');
 goog.require('goog.ui.ControlRenderer');
 goog.require('thin.ui.Component');
 goog.require('thin.ui.Layout');
-goog.require('thin.ui.Icon');
 goog.require('thin.ui.Button');
 goog.require('thin.ui.IconButton');
 goog.require('thin.ui.ButtonRenderer');
@@ -66,7 +65,7 @@ thin.ui.TabPane = function(opt_tabLocation) {
    */
   this.tabLocation_ =
       opt_tabLocation ? opt_tabLocation : thin.ui.TabPane.TabLocation.TOP;
-  
+
   this.setupContainers_();
   this.setHandleWindowResizeEvent(true);
 };
@@ -98,7 +97,7 @@ thin.ui.TabPane.prototype.contents_;
  * @enum {string}
  */
 thin.ui.TabPane.EventType = {
-  CHANGE_PAGE: goog.ui.Component.EventType.CHANGE, 
+  CHANGE_PAGE: goog.ui.Component.EventType.CHANGE,
   CLOSE_PAGE: goog.ui.Component.EventType.CLOSE
 };
 
@@ -120,12 +119,12 @@ thin.ui.TabPane.CSS_CLASS = thin.ui.getCssName('thin-tabpane');
 
 thin.ui.TabPane.prototype.setupContainers_ = function() {
   // Setup TabBar.
-  this.bar_ = new goog.ui.Container(goog.ui.Container.Orientation.HORIZONTAL, 
+  this.bar_ = new goog.ui.Container(goog.ui.Container.Orientation.HORIZONTAL,
       goog.ui.ContainerRenderer.getCustomRenderer(
           goog.ui.ContainerRenderer, thin.ui.getCssName(this.getCssClass(), 'tabs')));
   this.bar_.setFocusable(false);
   this.bar_.setFocusableChildrenAllowed(true);
-  
+
   // Setup TabContents.
   this.contents_ = new thin.ui.TabPane.TabContents();
 };
@@ -140,11 +139,11 @@ thin.ui.TabPane.prototype.getCssClass = function() {
 
 
 /** @inheritDoc */
-thin.ui.TabPane.prototype.createDom = function() {  
+thin.ui.TabPane.prototype.createDom = function() {
   var cssClass = this.getCssClass();
   var element = this.getDomHelper().createDom('div', cssClass);
   this.setElementInternal(element);
-  
+
   this.addChild(this.bar_, true);
 
   switch (this.tabLocation_) {
@@ -167,12 +166,12 @@ thin.ui.TabPane.prototype.createDom = function() {
  */
 thin.ui.TabPane.prototype.addPage = function(page) {
   var count = this.getPageCount();
-  
+
   this.pages_[count] = page;
-  
+
   this.bar_.addChild(page.getTabButton(), true);
   this.contents_.addChild(page.getTabContent(), true);
-    
+
   page.setParent(this, count);
   this.setSelectedPage(page);
 };
@@ -184,7 +183,7 @@ thin.ui.TabPane.prototype.addPage = function(page) {
 thin.ui.TabPane.prototype.removePage = function(page) {
   var isBubble = this.dispatchEvent(new thin.ui.TabPaneEvent(
       thin.ui.TabPane.EventType.CLOSE_PAGE, this, page));
-  
+
   if (isBubble) {
     this.destroyPage(page);
   }
@@ -208,11 +207,11 @@ thin.ui.TabPane.prototype.removePageIndex = function(index) {
  */
 thin.ui.TabPane.prototype.destroyPage = function(page) {
   var wasSelectedPage = this.isSelectedPage(page);
-  
-  goog.array.removeAt(this.pages_, 
+
+  goog.array.removeAt(this.pages_,
           /** @type {number} */ (page.getIndex()));
   page.dispose();
-  
+
   if (wasSelectedPage) {
     this.selected_ = null;
     this.setSelectedIndex(this.getPageCount() - 1);
@@ -326,24 +325,24 @@ thin.ui.TabPane.prototype.updatePages_ = function() {
 thin.ui.TabPane.prototype.handleWindowResize_ = function(e) {
   var parentElement = this.getParent().getContentElement();
   var bodyElement = this.contents_.getContentElement();
-  
+
   var offsetTop = goog.style.getPageOffsetTop(bodyElement);
   var parentOffsetTop = goog.style.getPageOffsetTop(parentElement);
-  
-  goog.style.setHeight(bodyElement, 
-      goog.style.getSize(parentElement).height - (offsetTop - parentOffsetTop)); 
+
+  goog.style.setHeight(bodyElement,
+      goog.style.getSize(parentElement).height - (offsetTop - parentOffsetTop));
 };
 
 
 /** @inheritDoc */
 thin.ui.TabPane.prototype.disposeInternal = function() {
   thin.ui.TabPane.superClass_.disposeInternal.call(this);
-  
+
   this.contents_.dispose();
   this.bar_.dispose();
-  
+
   this.selected_ = null;
-  
+
   delete this.tabLocation_;
   delete this.contents_;
   delete this.bar_;
@@ -372,12 +371,12 @@ thin.ui.TabPane.TabContents.prototype.getCssClass = function() {
 /** @inheritDoc */
 thin.ui.TabPane.TabContents.prototype.createDom = function() {
   thin.ui.TabPane.TabContents.superClass_.createDom.call(this);
-  
+
   var element = this.getElement();
-  
+
   element.appendChild(
       this.getDomHelper().createDom('div', thin.ui.getCssName(this.getCssClass(), 'body')));
-  
+
   goog.dom.classes.set(element, this.getCssClass());
 };
 
@@ -408,7 +407,7 @@ thin.ui.TabPane.TabContents.prototype.getContentsBodyElement_ = function() {
  */
 thin.ui.TabPane.TabPage = function(title, opt_content, opt_closable) {
   goog.Disposable.call(this);
-  
+
   /**
    * @type {goog.dom.DomHelper}
    * @private
@@ -420,7 +419,7 @@ thin.ui.TabPane.TabPage = function(title, opt_content, opt_closable) {
    * @private
    */
   this.content_ = new thin.ui.TabPane.TabContent(opt_content);
-  
+
   /**
    * @type {thin.ui.TabPane.TabButton}
    * @private
@@ -444,7 +443,7 @@ thin.ui.TabPane.TabPage = function(title, opt_content, opt_closable) {
    * @private
    */
   this.enabled_ = true;
-  
+
   this.setupPerformActions_();
 };
 goog.inherits(thin.ui.TabPane.TabPage, goog.Disposable);
@@ -561,10 +560,10 @@ thin.ui.TabPane.TabPage.prototype.setVisible = function(visible) {
   if (this.isEnabled()) {
     var content = this.content_;
     var button = this.button_;
-    
+
     content.setVisible(visible);
     button.setSelected(visible);
-    
+
     if (visible) {
       content.enterDocument();
       button.enterDocument();
@@ -611,10 +610,10 @@ thin.ui.TabPane.TabPage.prototype.onClose_ = function(e) {
  */
 thin.ui.TabPane.TabPage.prototype.setupPerformActions_ = function() {
   goog.events.listen(
-      this.button_.getTriggerButton(), goog.ui.Component.EventType.ACTION, 
+      this.button_.getTriggerButton(), goog.ui.Component.EventType.ACTION,
           this.onSelect_, false, this);
   goog.events.listen(
-      this.button_.getCloseButton(), goog.ui.Component.EventType.ACTION, 
+      this.button_.getCloseButton(), goog.ui.Component.EventType.ACTION,
           this.onClose_, false, this);
 };
 
@@ -628,7 +627,7 @@ thin.ui.TabPane.TabPage.prototype.disposeInternal = function() {
 
   delete this.button_;
   delete this.content_;
-  
+
   this.parent_ = null;
   this.index_ = null;
   this.dom_ = null;
@@ -644,43 +643,42 @@ thin.ui.TabPane.TabPage.prototype.disposeInternal = function() {
 thin.ui.TabPane.TabButton = function(content, opt_closable) {
   var cssClass = thin.ui.getCssName(thin.ui.TabPane.CSS_CLASS, 'tab-button');
 
-  goog.ui.Control.call(this, null, 
+  goog.ui.Control.call(this, null,
       goog.ui.ControlRenderer.getCustomRenderer(
           goog.ui.ControlRenderer, cssClass));
-  
+
   /**
    * @type {boolean}
    * @private
    */
-  this.closable_ = goog.isDef(opt_closable) 
+  this.closable_ = goog.isDef(opt_closable)
       ? opt_closable === true : true;
-  
+
   /**
    * @type {thin.ui.Button}
    * @private
    */
-  this.triggerButton_ = new thin.ui.Button(content, 
-      new thin.ui.Icon('document'), 
+  this.triggerButton_ = new thin.ui.Button(content, null,
       /** @type {thin.ui.ButtonRenderer} */ (
         goog.ui.ControlRenderer.getCustomRenderer(
           thin.ui.ButtonRenderer, thin.ui.getCssName(cssClass, 'trigger'))));
   this.triggerButton_.setTooltip(content);
-  
+
   /**
    * @type {thin.ui.IconButton?}
    * @private
    */
   this.closeButton_ = null;
-  
+
   if (this.isClosable()) {
-    this.closeButton_ = new thin.ui.IconButton(new thin.ui.Icon(), 
+    this.closeButton_ = new thin.ui.IconButton(new thin.ui.Icon(),
         /** @type {thin.ui.ButtonRenderer} */ (
         goog.ui.ControlRenderer.getCustomRenderer(
-          thin.ui.ButtonRenderer, 
+          thin.ui.ButtonRenderer,
           thin.ui.getCssName(cssClass, 'close'))));
     this.closeButton_.setTooltip('Close');
   }
-  
+
   this.setSupportedState(goog.ui.Component.State.ACTIVE, false);
   this.setSupportedState(goog.ui.Component.State.FOCUSED, false);
   this.setSupportedState(goog.ui.Component.State.SELECTED, true);
@@ -701,13 +699,13 @@ thin.ui.TabPane.TabButton.prototype.createDom = function() {
   var element = this.getRenderer().createDom(this);
   var bodyElement = this.getDomHelper().createDom(
       'div', thin.ui.getCssName(this.getRenderer().getCssClass(), 'body'));
-  
+
   this.triggerButton_.render(bodyElement);
   if (this.isClosable()) {
     this.closeButton_.render(bodyElement);
   }
   element.appendChild(bodyElement);
-  
+
   this.setElementInternal(element);
 };
 
@@ -766,10 +764,10 @@ thin.ui.TabPane.TabButton.prototype.getTooltip = function() {
 /** @inheritDoc */
 thin.ui.TabPane.TabButton.prototype.disposeInternal = function() {
   thin.ui.TabPane.TabButton.superClass_.disposeInternal.call(this);
-  
+
   this.triggerButton_.dispose();
   this.closeButton_.dispose();
-  
+
   delete this.triggerButton_;
   delete this.closeButton_;
 };
@@ -782,7 +780,7 @@ thin.ui.TabPane.TabButton.prototype.disposeInternal = function() {
  */
 thin.ui.TabPane.TabContent = function(opt_content) {
   thin.ui.Component.call(this);
-  
+
   if (opt_content) {
     this.addChild(opt_content, true);
   }
@@ -793,8 +791,8 @@ goog.inherits(thin.ui.TabPane.TabContent, thin.ui.Component);
 /** @inheritDoc */
 thin.ui.TabPane.TabContent.prototype.createDom = function() {
   thin.ui.TabPane.TabContent.superClass_.createDom.call(this);
-  
-  goog.dom.classes.set(this.getElement(), 
+
+  goog.dom.classes.set(this.getElement(),
       thin.ui.getCssName(thin.ui.TabPane.CSS_CLASS, 'content'));
 };
 
@@ -831,7 +829,7 @@ thin.ui.TabPaneEvent = function(type, target, page, opt_beforePage) {
    * @type {thin.ui.TabPane.TabPage}
    */
   this.page = page;
-  
+
   /**
    * @type {thin.ui.TabPane.TabPage|undefined}
    */
