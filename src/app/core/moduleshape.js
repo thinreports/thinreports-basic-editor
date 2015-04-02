@@ -19,6 +19,7 @@ goog.require('goog.dom');
 goog.require('goog.string');
 goog.require('goog.object');
 goog.require('goog.math.Coordinate');
+goog.require('goog.math.Rect');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.fx.Dragger');
@@ -422,7 +423,8 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
     e.preventDefault();
     
     layout.getWorkspace().normalVersioning(function(version) {
-    
+      version.setNotHasChanged();
+
       version.upHandler(function() {
         guide.setDisable();
         helpers.disableAll();
@@ -830,7 +832,10 @@ thin.core.ModuleShape.prototype.setupDragHandlers = function() {
     var enabled = outline.isEnable();
     
     layout.getWorkspace().normalVersioning(function(version) {
-    
+      if (goog.math.Rect.equals(shapeBounds, outlineBounds)) {
+        version.setNotHasChanged();
+      }
+
       version.upHandler(function() {
         if (enabled) {
           outline.setBounds(outlineBounds);

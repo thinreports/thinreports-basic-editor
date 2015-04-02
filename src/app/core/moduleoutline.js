@@ -225,6 +225,8 @@ thin.core.ModuleOutline.prototype.setupMouseDownHandler = function() {
       e.preventDefault();
       
       layout.getWorkspace().normalVersioning(function(version) {
+        version.setNotHasChanged();
+
         version.upHandler(function() {
           removeShape.getTargetOutline().disable();
           activeShapeManager.set(oldShapesByGlobal);

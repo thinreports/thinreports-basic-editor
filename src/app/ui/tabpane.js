@@ -586,6 +586,21 @@ thin.ui.TabPane.TabPage.prototype.setParent = function(tabPane, opt_index) {
 
 
 /**
+ * @param {boolean} changed
+ */
+thin.ui.TabPane.TabPage.prototype.setChanged = function(changed) {
+  var tabElement = this.getTabButton().getElement();
+  var changedCssClass = 'changed';
+
+  if (changed) {
+    goog.dom.classes.add(tabElement, changedCssClass);
+  } else {
+    goog.dom.classes.remove(tabElement, changedCssClass);
+  }
+};
+
+
+/**
  * @param {goog.events.Event} e
  */
 thin.ui.TabPane.TabPage.prototype.onSelect_ = function(e) {

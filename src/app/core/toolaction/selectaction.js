@@ -93,7 +93,8 @@ thin.core.toolaction.SelectAction.prototype.handleEndAction = function(
   var newShapes = layout.getActiveShapeFromSelectRange(outline.getBoxSize().clone(), shapesManager.get());
   
   layout.getWorkspace().normalVersioning(function(version) {
-  
+    version.setNotHasChanged();
+
     version.upHandler(function() {
       guide.setDisable();
       helpers.disableAll();

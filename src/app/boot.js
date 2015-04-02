@@ -1664,6 +1664,8 @@ thin.init_ = function() {
 
                 var newPage = new thin.ui.TabPane.TabPage(workspace.getTabName(), workspace);
                 tabpane.addPage(newPage);
+                newPage.setChanged(true);
+
                 if (workspace.draw()) {
                   focusWorkspace(e);
                 } else {

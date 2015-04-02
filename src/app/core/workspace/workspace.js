@@ -637,10 +637,11 @@ thin.core.Workspace.prototype.saveAs_ = function(file, callback_fn) {
   this.setFile(file);
   this.save_(callback_fn);
 
-  var page = thin.ui.getComponent('tabpane').getSelectedPage();
-  if (page && page.getContent() == this) {
+  var page = this.getTabPage();
+  if (page) {
     page.setTitle(this.getTabName());
     page.setTooltip(file.getPath());
+    page.setChanged(false);
   }
 };
 
@@ -700,6 +701,20 @@ thin.core.Workspace.prototype.getFile = function() {
 
 
 /**
+ * @return {thin.ui.TabPane.TabPage|null}
+ */
+thin.core.Workspace.prototype.getTabPage = function() {
+  var page = thin.ui.getComponent('tabpane').getSelectedPage();
+  if (page && page.getContent() == this) {
+    return page;
+  } else {
+    return null;
+  }
+};
+
+
+
+/**
  * @return {string}
  */
 thin.core.Workspace.prototype.getTabName = function() {
@@ -727,7 +742,12 @@ thin.core.Workspace.prototype.getSuggestedFileName = function() {
  * @return {boolean}
  */
 thin.core.Workspace.prototype.isChanged = function() {
-  return this.fingerPrint_ != this.getFingerPrint_();
+  var shapesManager = this.getLayout().getManager().getShapesManager();
+  if (this.isNew() && shapesManager.isEmpty()) {
+    return false;
+  } else {
+    return this.fingerPrint_ != this.getFingerPrint_();
+  }
 };
 
 
@@ -1034,7 +1054,7 @@ thin.core.Workspace.prototype.setUiStatusForVerticalAlignTypeUi = function(enabl
 
 /** @inheritDoc */
 thin.core.Workspace.prototype.enterDocument = function() {
-  thin.core.Workspace.superClass_.enterDocument.call(this);
+  goog.base(this, 'enterDocument');
 
   var eventHandler = this.getHandler();
   var eventType = goog.events.EventType;
@@ -1044,6 +1064,11 @@ thin.core.Workspace.prototype.enterDocument = function() {
 
   eventHandler.listen(this.element_, eventType.KEYUP,
     this.releaseOnceKeyEventHandling_, false, this);
+
+  var historyEventType = thin.core.HistoryManager.EventType;
+  goog.events.listen(this.getHistory(),
+    [historyEventType.UP, historyEventType.DOWN],
+      this.handleHistoryChange, false, this);
 };
 
 
@@ -1057,6 +1082,10 @@ thin.core.Workspace.prototype.exitDocument = function() {
   eventHandler.unlisten(this.element_, eventType.KEYDOWN);
   eventHandler.unlisten(this.element_, eventType.KEYUP);
 
+  var historyEventType = thin.core.HistoryManager.EventType;
+  goog.events.unlisten(this.getHistory(),
+    [historyEventType.UP, historyEventType.DOWN]);
+
   var layout = this.getLayout();
   var helpers = layout.getHelpers();
   var listHelper = helpers.getListHelper();
@@ -1069,6 +1098,17 @@ thin.core.Workspace.prototype.exitDocument = function() {
     sectionHelper.getDrawLayer().dispose();
     sectionHelper.getSelectorLayer().dispose();
   }, this);
+};
+
+
+/**
+ * @param {thin.core.HistoryManagerEvent} e
+ */
+thin.core.Workspace.prototype.handleHistoryChange = function(e) {
+  // console.log(e.version.hasChanged());
+  if (e.version.hasChanged()) {
+    this.getTabPage().setChanged(this.isChanged());
+  }
 };
 
 

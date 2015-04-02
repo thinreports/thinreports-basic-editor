@@ -138,6 +138,9 @@ thin.core.MultiOutlineHelper.prototype.init = function() {
     var activeShapeManager = !listHelper.isActive() ? layout.getManager().getActiveShape() : listHelper.getActiveShape();
 
     layout.getWorkspace().normalVersioning(function(version) {
+      if (transLateX == 0 && transLateY == 0) {
+        version.setNotHasChanged();
+      }
     
       version.upHandler(function() {
         var shapes = activeShapeManager.get();
