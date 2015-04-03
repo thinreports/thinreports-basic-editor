@@ -243,6 +243,15 @@ thin.core.ImageShape.prototype.setHeight = function(height) {
 
 
 /**
+ * @return {number|string} Always returns 0
+ * @override
+ */
+thin.core.ImageShape.prototype.getStrokeWidth = function() {
+  return 0;
+}
+
+
+/**
  * @param {boolean} isBg
  */
 thin.core.ImageShape.prototype.setBackground = function(isBg) {

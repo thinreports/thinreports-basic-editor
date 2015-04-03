@@ -26,25 +26,25 @@ goog.require('thin.core.Component');
  */
 thin.core.AbstractBoxGroup = function(element, layout) {
   goog.base(this, layout, element);
-  
+
   /**
    * @type {number}
    * @private
    */
   this.left_ = Number(layout.getElementAttribute(element, 'x-left'));
-  
+
   /**
    * @type {number}
    * @private
    */
   this.top_ = Number(layout.getElementAttribute(element, 'x-top'));
-  
+
   /**
    * @type {number}
    * @private
    */
   this.width_ = Number(layout.getElementAttribute(element, 'x-width'));
-  
+
   /**
    * @type {number}
    * @private
@@ -71,13 +71,14 @@ thin.core.AbstractBoxGroup.prototype.createBox_ = function(
 
   var layout = this.getLayout();
   var element = opt_element || layout.createSvgElement('rect');
-  
+
   if (goog.isString(opt_classId)) {
     layout.setElementAttributes(element, {
-      'class': opt_classId
+      'class': opt_classId,
+      'stroke-dasharray': 2
     });
   }
-  
+
   return new thin.core.Box(element, layout, null, null);
 };
 
@@ -131,6 +132,14 @@ thin.core.AbstractBoxGroup.prototype.setHeight = function(height) {
     'x-height': height
   });
   this.box_.setHeight(height);
+};
+
+
+/**
+ * @return {number|string}
+ */
+thin.core.AbstractBoxGroup.prototype.getStrokeWidth = function() {
+  return this.box_.getStrokeWidth();
 };
 
 

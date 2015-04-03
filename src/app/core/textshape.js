@@ -162,7 +162,7 @@ thin.core.TextShape.createFromElement = function(element, layout, opt_shapeIdMan
   if (element.hasAttribute('x-valign')) {
     shape.setVerticalAlign(layout.getElementAttribute(element, 'x-valign'));
   }
-  if (thin.isExactlyEqual(kerning, 
+  if (thin.isExactlyEqual(kerning,
         thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
     kerning = thin.core.TextStyle.DEFAULT_KERNING;
   }
@@ -190,12 +190,12 @@ thin.core.TextShape.prototype.createBox_ = function(opt_element) {
 
   var box = thin.core.TblockShape.superClass_.
                 createBox_.call(this, opt_element, opt_classId);
-  
+
   box.setMinWidth(thin.core.TextShape.MIN_WIDTH_);
   box.setStroke(thin.core.TextShape.BOX_STROKE_);
   box.setFill(thin.core.TextShape.BOX_FILL_);
   box.setUsableClipPath(false);
-  
+
   return box;
 };
 
@@ -208,7 +208,7 @@ thin.core.TextShape.prototype.setup = function() {
   var opt_rectElement = thin.core.getElementByClassNameForChildNodes(
                                         boxClassId, element.childNodes);
   this.box_ = this.createBox_(opt_rectElement);
-  
+
   if (!opt_rectElement) {
     this.getLayout().appendChild(this.box_, this);
   }
@@ -220,7 +220,7 @@ thin.core.TextShape.prototype.setup = function() {
  */
 thin.core.TextShape.prototype.setLeft = function(left) {
   thin.core.TextShape.superClass_.setLeft.call(this, left);
-  
+
   var xLeft = thin.numberWithPrecision(this.left_ + this.getShiftValueByTextAnchor());
   goog.array.forEach(this.getTextLineShapes(), function(textline) {
     textline.setLeft(xLeft);
@@ -245,7 +245,7 @@ thin.core.TextShape.prototype.setTop = function(top) {
   var family = this.getFontFamily();
   var fontSize = this.getFontSize();
   var isBold = this.isFontBold();
-  
+
   var ascent = thin.Font.getAscent(family, fontSize, isBold);
   var heightAt = thin.Font.getHeight(family, fontSize);
   var translateY = thin.numberWithPrecision(heightAt * ratio, 2);
@@ -269,15 +269,15 @@ thin.core.TextShape.prototype.getWidthInternal = function() {
   if (!captureVisibled) {
     this.setVisibled(true);
   }
-  
+
   var widthArray = goog.array.map(this.getTextLineShapes(), function(textline) {
     return textline.getWidth();
-  });  
-  
+  });
+
   goog.array.sort(widthArray, function(a, b) {
     return b - a;
   });
-  
+
   if (!captureVisibled) {
     this.setVisibled(false);
   }
@@ -295,8 +295,8 @@ thin.core.TextShape.prototype.getHeightInternal = function() {
   if (!captureVisibled) {
     this.setVisibled(true);
   }
-  
-  var ratio = this.getTextLineHeightRatio();  
+
+  var ratio = this.getTextLineHeightRatio();
   if (thin.isExactlyEqual(ratio, thin.core.TextStyle.DEFAULT_LINEHEIGHT)) {
     ratio = thin.core.TextStyle.DEFAULT_LINEHEIGHT_INTERNAL;
   }
@@ -318,7 +318,7 @@ thin.core.TextShape.prototype.getHeightInternal = function() {
   if (!captureVisibled) {
     this.setVisibled(false);
   }
-  
+
   return height;
 };
 
@@ -363,7 +363,7 @@ thin.core.TextShape.prototype.getWidth = function() {
     this.setWidth(Math.max(this.getMinWidth(), this.width_));
     this.setWidthUpdated(true);
   }
-  
+
   return this.width_;
 };
 
@@ -376,7 +376,7 @@ thin.core.TextShape.prototype.getHeight = function() {
     this.setHeight(Math.max(this.getMinHeight(), this.height_));
     this.setHeightUpdated(true);
   }
-  
+
   return this.height_;
 };
 
@@ -401,7 +401,7 @@ thin.core.TextShape.prototype.setFontSize = function(size) {
  */
 thin.core.TextShape.prototype.setFontFamily = function (family) {
   thin.core.TextShape.superClass_.setFontFamily.call(this, family);
-  
+
   var ratio = this.getTextLineHeightRatio();
   if (!thin.isExactlyEqual(ratio, thin.core.TextStyle.DEFAULT_LINEHEIGHT)) {
     this.setTextLineHeightRatio(ratio);
@@ -474,7 +474,7 @@ thin.core.TextShape.prototype.setTextDecoration = function(underline, linethroug
 
   var decoration = this.fontStyle_.decoration;
   var layout = this.getLayout();
-  
+
   goog.array.forEach(this.getTextLineShapes(), function(textLineShape) {
     layout.setElementAttributes(textLineShape.getElement(), {
       'text-decoration': decoration
@@ -490,7 +490,7 @@ thin.core.TextShape.prototype.setTextDecoration = function(underline, linethroug
 thin.core.TextShape.prototype.getTextContent = function(opt_onlyFirstLine) {
   if (!goog.isString(this.textContent_)) {
     var newTextContent = '';
-    goog.array.forEach(this.getTextLineShapes(), 
+    goog.array.forEach(this.getTextLineShapes(),
       function(textlineShape, lineCount) {
         if (lineCount == 0) {
           newTextContent += textlineShape.getText();
@@ -548,7 +548,7 @@ thin.core.TextShape.prototype.setTextContent = function(textContent, opt_toFirst
 
 
 thin.core.TextShape.prototype.updateDecoration = function() {
-  this.setTextDecoration(this.isFontUnderline(), 
+  this.setTextDecoration(this.isFontUnderline(),
                          this.isFontLinethrough());
 };
 
@@ -584,7 +584,7 @@ thin.core.TextShape.prototype.createTextContent = function(textContent) {
 
   var layout = this.getLayout();
   this.textContent_ = textContent;
-  
+
   var textlineShape;
   goog.array.forEach(textContent.split(/\n/), goog.bind(function(content, lineCount) {
     textlineShape = new thin.core.TextLineShape(
@@ -603,7 +603,7 @@ thin.core.TextShape.prototype.createTextContentFromElement = function(elements) 
   var layout = this.getLayout();
   goog.array.forEach(elements, goog.bind(function(element) {
     if (element.tagName == 'text') {
-      goog.array.insert(this.textLineContainer_, 
+      goog.array.insert(this.textLineContainer_,
             new thin.core.TextLineShape(element, layout));
     }
   }, this));
@@ -668,7 +668,7 @@ thin.core.TextShape.prototype.getCloneCreator = function() {
   var sourceCoordinate = new goog.math.Coordinate(this.getLeft(), this.getTop()).clone();
   var deltaCoordinateForList = this.getDeltaCoordinateForList().clone();
   var deltaCoordinateForGuide = this.getDeltaCoordinateForGuide().clone();
-  
+
   var width = this.getWidth();
   var height = this.getHeight();
   var stroke = this.getStroke();
@@ -701,7 +701,7 @@ thin.core.TextShape.prototype.getCloneCreator = function() {
 
     var shape = layout.createTextShape();
     layout.appendChild(shape, opt_renderTo);
-    
+
     var pasteCoordinate = layout.calculatePasteCoordinate(isAffiliationListShape,
           deltaCoordinateForList, deltaCoordinateForGuide, sourceCoordinate,
           opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate);
@@ -733,7 +733,7 @@ thin.core.TextShape.prototype.getCloneCreator = function() {
  * @private
  */
 thin.core.TextShape.prototype.createPropertyComponent_ = function() {
-  
+
   var scope = this;
   var layout = this.getLayout();
   var workspace = layout.getWorkspace();
@@ -741,52 +741,52 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
 
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
-  
+
   var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
-  
+
   var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
   var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(topInputProperty, baseGroup, 'top');
-  
-  
+
+
   var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
-  
-  
+
+
   var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
-  
-    
+
+
   var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
   var textContentProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_text_content'));
@@ -794,14 +794,14 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
       this.setTextContentPropertyUpdate, false, this);
 
   proppane.addProperty(textContentProperty, baseGroup, 'text-content');
-  
+
   var fontGroup = proppane.addGroup(thin.t('property_group_font'));
-  
+
   var colorInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_font_color'));
   colorInputProperty.getValueControl().getInput().setLabel('none');
   colorInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        
+
         var scope = this;
         var layout = this.getLayout();
         var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
@@ -817,19 +817,19 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
         }
 
         layout.getWorkspace().normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setFill(fill);
             proppane.getPropertyControl('font-color').setValue(fillColor);
           }, scope);
-          
+
           version.downHandler(function() {
             this.setFill(captureFill);
             proppane.getPropertyControl('font-color').setValue(captureFillColor);
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(colorInputProperty , fontGroup, 'font-color');
 
   var fontSizeCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_font_size'));
@@ -839,7 +839,7 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
   fontSizeInputValidation.setInputRange(5);
   fontSizeInputValidation.setAllowDecimal(true, 1);
   fontSizeInput.setValidator(fontSizeInputValidation);
-  
+
   var fontSizeItem;
   goog.array.forEach(thin.core.FontStyle.FONTSIZE_LIST, function(fontSizeValue) {
     fontSizeItem = new thin.ui.ComboBoxItem(fontSizeValue);
@@ -851,9 +851,9 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         workspace.getAction().actionSetFontSize(Number(e.target.getValue()));
       }, false, this);
-  
+
   proppane.addProperty(fontSizeCombProperty , fontGroup, 'font-size');
-  
+
   var fontFamilySelectProperty =
         new thin.ui.PropertyPane.FontSelectProperty();
 
@@ -861,16 +861,16 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         workspace.getAction().actionSetFontFamily(e.target.getValue());
       }, false, this);
-  
+
   proppane.addProperty(fontFamilySelectProperty , fontGroup, 'font-family');
-  
+
 
   var textGroup = proppane.addGroup(thin.t('property_group_text'));
-  
+
   var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
   var textAlignType = thin.core.TextStyle.HorizonAlignType;
-  
+
   textAlignSelect.setTextAlignLeft();
   goog.array.forEach([textAlignType.START, textAlignType.MIDDLE, textAlignType.END], function(type) {
     textAlignSelect.addItem(
@@ -881,28 +881,28 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         workspace.getAction().actionSetTextAnchor(e.target.getValue());
       }, false, this);
-  
+
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
 
 
   var textVerticalAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_vertical_align'));
   var textVerticalAlignSelect = textVerticalAlignSelectProperty.getValueControl();
   var verticalAlignType = thin.core.TextStyle.VerticalAlignType;
-  
+
   textVerticalAlignSelect.setTextAlignLeft();
   goog.array.forEach([verticalAlignType.TOP, verticalAlignType.CENTER, verticalAlignType.BOTTOM], function(type) {
     textVerticalAlignSelect.addItem(
         new thin.ui.Option(thin.core.TextStyle.getVerticalAlignName(type), type));
   });
-  
+
   textVerticalAlignSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         workspace.getAction().actionSetVerticalAlign(e.target.getValue());
       }, false, this);
-  
+
   proppane.addProperty(textVerticalAlignSelectProperty , textGroup, 'text-valign');
-  
-  
+
+
   var lineHeightCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_text_line_height'));
   var lineHeightComb = lineHeightCombProperty.getValueControl();
   var lineHeightInput = lineHeightComb.getInput();
@@ -910,8 +910,8 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
   var lineHeightInputValidation = new thin.ui.Input.NumberValidator(this);
   lineHeightInputValidation.setAllowBlank(true);
   lineHeightInputValidation.setAllowDecimal(true, 1);
-  lineHeightInput.setValidator(lineHeightInputValidation);  
-  
+  lineHeightInput.setValidator(lineHeightInputValidation);
+
   var lineHeightItem;
   goog.array.forEach(thin.core.TextStyle.LINEHEIGHT_LIST, function(lineHeightValue) {
     lineHeightItem = new thin.ui.ComboBoxItem(lineHeightValue);
@@ -925,7 +925,7 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
         var captureHeight = scope.getHeight();
 
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setTextLineHeightRatio(ratio);
             this.setTop(this.getTop());
@@ -933,7 +933,7 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
             proppane.getPropertyControl('line-height').setInternalValue(ratio);
             proppane.getPropertyControl('height').setValue(this.getHeight());
           }, scope);
-          
+
           version.downHandler(function() {
             this.setTextLineHeightRatio(captureRatio);
             this.setHeight(captureHeight);
@@ -944,28 +944,28 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(lineHeightCombProperty , textGroup, 'line-height');
 
   var kerningInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_text_kerning'), 'auto');
   var kerningInput = kerningInputProperty.getValueControl();
-  
+
   var kerningInputValidation = kerningInput.getNumberValidator();
   kerningInputValidation.setAllowDecimal(true, 1);
   kerningInputValidation.setAllowBlank(true);
-  
+
   kerningInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var kerning = e.target.getValue();
-        
+
         if (kerning === thin.core.TextStyle.DEFAULT_KERNING) {
           kerning = goog.string.padNumber(Number(kerning), 0);
         }
-        
+
         var captureSpacing = scope.getKerning();
         var captureWidth = scope.getWidth();
         var captureLeft = scope.getLeft();
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setKerning(kerning);
@@ -984,7 +984,7 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(kerningInputProperty, textGroup, 'kerning');
 
   var inlineFormatProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_inline_format'));
@@ -1008,13 +1008,13 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
   proppane.addProperty(inlineFormatProperty, textGroup, 'inline-format');
 
   var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
-  
+
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
       this.setShapeIdForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
-  
+
   var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
@@ -1031,13 +1031,13 @@ thin.core.TextShape.prototype.setTextContentPropertyUpdate = function(e) {
   var proppane = thin.ui.getComponent('proppane');
   var text = e.target.getValue();
   var captureText = this.getTextContent();
-  
+
   this.getLayout().getWorkspace().normalVersioning(function(version) {
     version.upHandler(function() {
       this.updateFirstTextLine(text);
       proppane.getPropertyControl('text-content').setValue(text || this.getFirstTextLine());
     }, scope);
-    
+
     version.downHandler(function() {
       this.setTextContent(captureText);
       proppane.getPropertyControl('text-content').setValue(this.getFirstTextLine());
@@ -1079,17 +1079,17 @@ thin.core.TextShape.prototype.updateProperties = function() {
     proppane.setTarget(this);
     this.createPropertyComponent_();
   }
-  
+
   var properties = this.getProperties();
   var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
-  
+
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
   proppane.getPropertyControl('width').setValue(properties['width']);
   proppane.getPropertyControl('height').setValue(properties['height']);
   proppane.getPropertyControl('display').setChecked(properties['display']);
   proppane.getPropertyControl('text-content').setValue(properties['text-content']);
-  
+
   var fontColor = properties['font-color'];
   if (thin.isExactlyEqual(fontColor, thin.core.ModuleShape.NONE)) {
     fontColor = proppaneBlank

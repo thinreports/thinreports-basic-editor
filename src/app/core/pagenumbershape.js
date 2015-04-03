@@ -75,14 +75,14 @@ thin.core.PageNumberShape.DEFAULT_FILL = new goog.graphics.SolidFill('#000000');
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.core.PageNumberShape.BOX_FILL_ = new goog.graphics.SolidFill('#f4e2c4', 0.8);
+thin.core.PageNumberShape.BOX_FILL_ = new goog.graphics.SolidFill('#0096fd', 0.1);
 
 
 /**
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.core.PageNumberShape.BOX_STROKE_ = new goog.graphics.Stroke(0.28, '#7C4007');
+thin.core.PageNumberShape.BOX_STROKE_ = new goog.graphics.Stroke(0.5, '#0096fd');
 
 
 /**
@@ -160,7 +160,7 @@ thin.core.PageNumberShape.createFromElement = function(element, layout, opt_shap
 
   var decoration = layout.getElementAttribute(element, 'text-decoration');
   var kerning = layout.getElementAttribute(element, 'kerning');
-  
+
   if (thin.isExactlyEqual(kerning, thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
     kerning = thin.core.TextStyle.DEFAULT_KERNING;
   }
@@ -191,11 +191,11 @@ thin.core.PageNumberShape.prototype.createBox_ = function(opt_element) {
   }
 
   var box = goog.base(this, 'createBox_', opt_element, opt_classId);
-  
+
   box.setStroke(thin.core.PageNumberShape.BOX_STROKE_);
   box.setFill(thin.core.PageNumberShape.BOX_FILL_);
   box.setUsableClipPath(true);
-  
+
   return box;
 };
 
@@ -316,7 +316,7 @@ thin.core.PageNumberShape.prototype.setFormat = function(format) {
  * @return {string}
  */
 thin.core.PageNumberShape.prototype.getFormat = function() {
-  return this.getLayout().getElementAttribute(this.getElement(), 
+  return this.getLayout().getElementAttribute(this.getElement(),
       'x-format') || thin.core.PageNumberShape.DEFAULT_PAGENO_FORMAT;
 };
 
@@ -339,7 +339,7 @@ thin.core.PageNumberShape.prototype.setTargetId = function(targetId) {
  * @return {string}
  */
 thin.core.PageNumberShape.prototype.getTargetId = function() {
-  return this.getLayout().getElementAttribute(this.getElement(), 
+  return this.getLayout().getElementAttribute(this.getElement(),
       'x-target') || '';
 };
 
@@ -393,7 +393,7 @@ thin.core.PageNumberShape.prototype.getCloneCreator = function() {
   var fill = this.getFill();
   var fontsize = this.getFontSize();
   var family = this.getFontFamily();
-  
+
   var bold = this.isFontBold();
   var italic = this.isFontItalic();
   var fontStyle = this.fontStyle_;
@@ -420,7 +420,7 @@ thin.core.PageNumberShape.prototype.getCloneCreator = function() {
 
     var shape = layout.createPageNumberShape();
     layout.appendChild(shape, opt_renderTo);
-    
+
     var pasteCoordinate = layout.calculatePasteCoordinate(isAffiliationListShape, deltaCoordinateForList, deltaCoordinateForGuide, sourceCoordinate, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate);
     shape.setBounds(new goog.math.Rect(pasteCoordinate.x, pasteCoordinate.y, width, height));
 
@@ -451,58 +451,58 @@ thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
   var workspace = layout.getWorkspace();
   var guide = layout.getHelpers().getGuideHelper();
   var textStyle = this.textStyle_;
-  
+
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
-  
+
   var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
-  
-  
+
+
   var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
   var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(topInputProperty, baseGroup, 'top');
-  
-  
+
+
   var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
-  
-  
+
+
   var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
 
   var fontGroup = proppane.addGroup(thin.t('property_group_font'));
-  
+
 
   var colorInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_font_color'));
   colorInputProperty.getValueControl().getInput().setLabel('none');
   colorInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-      
+
         var scope = this;
         var layout = this.getLayout();
         var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
@@ -515,22 +515,22 @@ thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
         var captureFillColor = captureFill.getColor();
         if (thin.isExactlyEqual(captureFillColor, fillNone)) {
           captureFillColor = proppaneBlank;
-        }        
+        }
 
         layout.getWorkspace().normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setFill(fill);
             proppane.getPropertyControl('font-color').setValue(fillColor);
           }, scope);
-          
+
           version.downHandler(function() {
             this.setFill(captureFill);
             proppane.getPropertyControl('font-color').setValue(captureFillColor);
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(colorInputProperty , fontGroup, 'font-color');
 
 
@@ -553,9 +553,9 @@ thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         workspace.getAction().actionSetFontSize(Number(e.target.getValue()));
       }, false, this);
-  
+
   proppane.addProperty(fontSizeCombProperty , fontGroup, 'font-size');
-  
+
 
   var fontFamilySelectProperty =
         new thin.ui.PropertyPane.FontSelectProperty();
@@ -564,16 +564,16 @@ thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         workspace.getAction().actionSetFontFamily(e.target.getValue());
       }, false, this);
-  
+
   proppane.addProperty(fontFamilySelectProperty , fontGroup, 'font-family');
 
 
   var textGroup = proppane.addGroup(thin.t('property_group_text'));
-  
+
   var textAlignSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_align'));
   var textAlignSelect = textAlignSelectProperty.getValueControl();
   var textAlignType = thin.core.TextStyle.HorizonAlignType;
-  
+
   textAlignSelect.setTextAlignLeft();
   goog.array.forEach([textAlignType.START, textAlignType.MIDDLE, textAlignType.END], function(type) {
     textAlignSelect.addItem(
@@ -584,25 +584,25 @@ thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         workspace.getAction().actionSetTextAnchor(e.target.getValue());
       }, false, this);
-  
+
   proppane.addProperty(textAlignSelectProperty , textGroup, 'text-halign');
-  
-  
+
+
   var kerningInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_text_kerning'), 'auto');
   var kerningInput = kerningInputProperty.getValueControl();
   var kerningInputValidation = kerningInput.getNumberValidator();
   kerningInputValidation.setAllowDecimal(true, 1);
   kerningInputValidation.setAllowBlank(true);
-  
+
   kerningInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var kerning = e.target.getValue();
         var captureSpacing = scope.getKerning();
-        
+
         if (kerning !== thin.core.TextStyle.DEFAULT_KERNING) {
           kerning = String(Number(kerning));
         }
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setKerning(kerning);
@@ -614,21 +614,21 @@ thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(kerningInputProperty, textGroup, 'kerning');
 
 
   var textOverflowSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_text_overflow'));
   var textOverflowSelect = textOverflowSelectProperty.getValueControl();
   textOverflowSelect.setTextAlignLeft();
-  
+
   var overflowType = thin.core.TextStyle.OverflowType;
 
   goog.array.forEach([overflowType.TRUNCATE, overflowType.FIT, overflowType.EXPAND], function(type) {
     textOverflowSelect.addItem(
         new thin.ui.Option(thin.core.TextStyle.getOverflowName(type), type));
-  });  
-  
+  });
+
   textOverflowSelectProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var overflow = e.target.getValue();
@@ -645,7 +645,7 @@ thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(textOverflowSelectProperty, textGroup, 'overflow');
 
 
@@ -663,7 +663,7 @@ thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
   formatInput.setValidator(formatValidator);
   formatInput.setTooltip(thin.t('text_placeholder_of_pageno_description'));
 
-  formatInputProperty.addEventListener(propEventType.CHANGE, 
+  formatInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var newFormat = e.target.getValue() || thin.core.PageNumberShape.DEFAULT_PAGENO_FORMAT;
         var oldFormat = scope.getFormat();
@@ -710,58 +710,58 @@ thin.core.PageNumberShape.prototype.createPropertyComponent_ = function() {
 
   targetInput.setValidator(targetValidator);
   targetInput.setTooltip(thin.t('text_counted_page_target_description'));
-  
+
   targetInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var newTargetId = e.target.getValue();
         var oldTargetId = scope.getTargetId();
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setTargetId(newTargetId);
             proppane.getPropertyControl('target').setValue(newTargetId);
           }, scope);
-          
+
           version.downHandler(function() {
             this.setTargetId(oldTargetId);
             proppane.getPropertyControl('target').setValue(oldTargetId);
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(targetInputProperty, pageNoGroup, 'target');
 
 
   var associationGroup = proppane.addGroup(thin.t('property_group_association'));
-  
+
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
-  
+
   idInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        
+
         var shapeId = e.target.getValue();
         var captureShapeId = scope.getShapeId();
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setShapeId(shapeId);
             proppane.getPropertyControl('shape-id').setValue(shapeId);
           }, scope);
-          
+
           version.downHandler(function() {
             this.setShapeId(captureShapeId);
             proppane.getPropertyControl('shape-id').setValue(captureShapeId);
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(idInputProperty, associationGroup, 'shape-id');
 
 
   var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
-  
+
   proppane.addProperty(descProperty, associationGroup, 'desc');
 };
 
@@ -781,12 +781,12 @@ thin.core.PageNumberShape.prototype.getProperties = function() {
     'text-halign': this.getTextAnchor(),
     'kerning': this.getKerning(),
     'overflow': this.getOverflowType(),
-    'format': this.getFormat(), 
-    'target': this.getTargetId(), 
+    'format': this.getFormat(),
+    'target': this.getTargetId(),
     'shape-id': this.getShapeId(),
     'desc': this.getDesc()
   };
-  
+
   return properties;
 };
 
@@ -799,15 +799,15 @@ thin.core.PageNumberShape.prototype.updateProperties = function() {
     proppane.setTarget(this);
     this.createPropertyComponent_();
   }
-  
+
   var properties = this.getProperties();
   var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
-  
+
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
   proppane.getPropertyControl('width').setValue(properties['width']);
   proppane.getPropertyControl('display').setChecked(properties['display']);
-  
+
   var fontColor = properties['font-color'];
   if (thin.isExactlyEqual(fontColor, thin.core.ModuleShape.NONE)) {
     fontColor = proppaneBlank
@@ -820,7 +820,7 @@ thin.core.PageNumberShape.prototype.updateProperties = function() {
   proppane.getPropertyControl('overflow').setValue(properties['overflow']);
   proppane.getPropertyControl('format').setValue(properties['format']);
   proppane.getPropertyControl('target').setValue(properties['target']);
-  
+
   proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
   proppane.getPropertyControl('desc').setValue(properties['desc']);
 };
@@ -861,9 +861,13 @@ thin.core.PageNumberShape.prototype.disposeInternal = function() {
  * @private
  */
 thin.core.PageNumberShape.Label_ = function(parent, layout, opt_element) {
-  var element = opt_element || layout.createSvgElement('text', 
-        {'kerning': 'auto', 'font-size': 11, 'font-family': 'Helvetica', 'text-anchor': 'middle'});
-  var fill = new goog.graphics.SolidFill('#666');
+  var element = opt_element || layout.createSvgElement('text', {
+    'kerning': 'auto',
+    'font-size': 10,
+    'font-family': 'Helvetica',
+    'text-anchor': 'middle'
+  });
+  var fill = new goog.graphics.SolidFill('#0096fd');
 
   /**
    * @type {thin.core.PageNumberShape}
@@ -888,7 +892,7 @@ thin.core.PageNumberShape.Label_.prototype.repositionX = function() {
 
 
 thin.core.PageNumberShape.Label_.prototype.repositionY = function() {
-  this.setTop(this.parent_.getTop() + 
+  this.setTop(this.parent_.getTop() + 1 +
       Number(this.getLayout().getElementAttribute(this.getElement(), 'font-size')));
 };
 

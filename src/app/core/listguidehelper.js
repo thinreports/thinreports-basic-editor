@@ -56,7 +56,7 @@ goog.inherits(thin.core.ListGuideHelper, thin.core.AbstractGuideHelper);
  * @enum {string}
  */
 thin.core.ListGuideHelper.Stroke_ = {
-  COLOR: '#AAAAAA',
+  STROKECOLOR: '#AAAAAA',
   STROKEWIDTH: '8px',
   STROKEOPACITY: '0.6'
 };
@@ -70,20 +70,20 @@ thin.core.ListGuideHelper.prototype.normalBounds_;
 
 
 thin.core.ListGuideHelper.prototype.setup = function() {
-  
+
   var strokeSetting = thin.core.ListGuideHelper.Stroke_;
   var layout = this.getLayout();
   var element = layout.createSvgElement('rect', {
     'stroke-opacity': strokeSetting.STROKEOPACITY
   });
-  var guideBody = new thin.core.GuideBody(element, layout, 
-                    new goog.graphics.Stroke(strokeSetting.STROKEWIDTH, strokeSetting.COLOR), null);
+  var guideBody = new thin.core.GuideBody(element, layout,
+                    new goog.graphics.Stroke(strokeSetting.STROKEWIDTH, strokeSetting.STROKECOLOR), null);
   guideBody.setRounded(0.5);
 
   var cursorMove = new thin.core.Cursor(thin.core.Cursor.Type.MOVE);
   guideBody.setCursor(cursorMove);
   layout.setElementCursor(element, cursorMove);
-  
+
   layout.appendChild(guideBody, this);
   this.body_ = guideBody;
   this.createResizers_();
@@ -182,7 +182,7 @@ thin.core.ListGuideHelper.prototype.adjustToTargetShapeBounds = function() {
   var bottom = top + height;
 
   var positionName = thin.core.AbstractGuideHelper.PositionName;
-  
+
   this.getResizerByPositionName(positionName.TLEFT).adjustToResizerBounds(left, top, strokeWidth);
   this.getResizerByPositionName(positionName.TCENTER).adjustToResizerBounds(center, top, strokeWidth);
   this.getResizerByPositionName(positionName.TRIGHT).adjustToResizerBounds(right, top, strokeWidth);
@@ -237,13 +237,13 @@ thin.core.ListGuideHelper.prototype.init = function() {
     listHelper.initActiveSectionName();
     listHelper.getTarget().updateProperties();
   }, false, this);
-  
+
   goog.events.listen(bodyDragger, eventType.BEFOREDRAG, function(e) {
     if (!listOutline.isEnable()) {
       listOutline.enable();
     }
   }, false, this);
-  
+
   goog.events.listen(bodyDragger, eventType.END, function(e) {
 
     var cursorTypeDefault = thin.core.Cursor.Type.DEFAULT;
@@ -267,14 +267,14 @@ thin.core.ListGuideHelper.prototype.init = function() {
     var shapes = activeShapeManagerByListShape.getClone();
     var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
     var isEmpty = activeShapeManagerByListShape.isEmpty()
-    
-    
+
+
     /**
      * @param {goog.math.Rect} targetBounds
      * @param {goog.math.Coordinate} transLateCoordinate
      */
     var bodyDragEndListener = function(targetBounds, transLateCoordinate) {
-    
+
       if (activeShapeManagerByListShape.isEmpty()) {
         listShape.updateProperties();
         thin.ui.setEnabledForFontUi(false);
@@ -292,13 +292,13 @@ thin.core.ListGuideHelper.prototype.init = function() {
           thin.ui.setEnabledForFontUi(true);
         }
       }
-      
+
       if (enabled) {
         listOutline.setTargetShape(listShape);
         listOutline.setBounds(targetBounds);
         listOutline.setBoundsForTargetShape(targetBounds);
         listHelper.setTransLate(transLateCoordinate);
-        
+
         if (guide.isEnable()) {
           goog.array.forEach(shapes, function(shape) {
             shape.getTargetOutline().setBounds(shape.getBounds());
@@ -308,7 +308,7 @@ thin.core.ListGuideHelper.prototype.init = function() {
         }
       }
     };
-    
+
     workspace.normalVersioning(function(version) {
       if (goog.math.Rect.equals(shapeBounds, outlineBounds) &&
            goog.math.Coordinate.equals(transLate, reLocation)) {
@@ -322,7 +322,7 @@ thin.core.ListGuideHelper.prototype.init = function() {
         listHelper.initActiveSectionName();
         bodyDragEndListener(outlineBounds, transLate);
       }, scope);
-      
+
       version.downHandler(function() {
         activeShapeManagerByListShape.set(shapes);
         listHelper.setActiveSectionName(captureActiveSectionName);
@@ -330,26 +330,26 @@ thin.core.ListGuideHelper.prototype.init = function() {
       }, scope);
     });
   }, false, this);
-  
-  
+
+
   /**
    * @param {goog.events.BrowserEvent} e
    */
   var startResizeListener = function(e) {
-  
+
     var resizer = e.dragger;
     resizer.setAdsorptionX(helpers.getAdsorptionX());
     resizer.setAdsorptionY(helpers.getAdsorptionY());
     resizer.setResizeModeByCoordinate(true);
     resizer.setResizeModeByTransScale(false);
     resizer.setLimits(resizer.calculateLimitsForResize(scope.getBounds(), layout.getBounds().toBox()));
-    
+
     var listShape = listHelper.getTarget();
     listOutline.setTargetShape(listShape);
     var limitBox = resizer.limits.toBox();
     var contentLeftArray = [];
     var contentRightArray = [];
-    
+
     listShape.forEachSectionShape(function(sectionHelperForEach, sectionNameForEach) {
       var minLimitLeft = limitBox.right;
       var minLimitRight = limitBox.left;
@@ -380,9 +380,9 @@ thin.core.ListGuideHelper.prototype.init = function() {
     var minTop = listShape.getTop() + movableHeight;
     var minBottom = listShapeBottom - movableHeight;
     listOutline.enable();
-    
+
     resizer.setSizeLimitFunction(function(nowBounds, startBounds) {
-    
+
       var left = nowBounds.left;
       var top = nowBounds.top;
       var width = nowBounds.width;
@@ -390,7 +390,7 @@ thin.core.ListGuideHelper.prototype.init = function() {
       var nowBox = nowBounds.toBox();
       var isLeft = this.isLeft_;
       var isBottom = this.isBottom_;
-      
+
       if (isLeft && left > minLeft) {
         left = minLeft;
         if (this.isLeft_) {
@@ -417,19 +417,19 @@ thin.core.ListGuideHelper.prototype.init = function() {
         height = 1;
       }
       return new goog.math.Rect(
-                thin.numberWithPrecision(left), 
+                thin.numberWithPrecision(left),
                 thin.numberWithPrecision(top),
                 thin.numberWithPrecision(width),
                 thin.numberWithPrecision(height));
     });
   };
-  
-  
+
+
   /**
    * @param {goog.events.BrowserEvent} e
    */
   var endResizeListener = function(e) {
-  
+
     var resizer = e.dragger;
     this.removeResizeCursor();
     listOutline.disable();
@@ -438,14 +438,14 @@ thin.core.ListGuideHelper.prototype.init = function() {
     var listShapeBoundsForEnd = resizer.getEndShapeBounds() || listShapeBoundsForStart;
     var captureListShapeTopForStart = listShapeBoundsForStart.top;
     var captureListShapeTopForEnd = listShapeBoundsForEnd.top;
-    
+
     var transLateCoordinate = new goog.math.Coordinate(0, captureListShapeTopForEnd - captureListShapeTopForStart);
     var retransLateCoordinate = new goog.math.Coordinate(0, captureListShapeTopForStart - captureListShapeTopForEnd);
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var shapes = activeShapeManagerByListShape.getClone();
     var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
     var isEmptyByListShape = activeShapeManagerByListShape.isEmpty();
-    
+
     /**
      * @param {goog.math.Rect} targetBounds
      * @param {goog.math.Coordinate} translate
@@ -455,12 +455,12 @@ thin.core.ListGuideHelper.prototype.init = function() {
       listOutline.setBounds(targetBounds);
       listOutline.setBoundsForTargetShape(targetBounds);
       listHelper.setTransLate(translate);
-      
+
       if (guide.isEnable()) {
         goog.array.forEach(shapes, function(shape) {
           shape.getTargetOutline().setBounds(shape.getBounds());
         });
-        
+
         if (singleShapeByListShape) {
           singleShapeByListShape.updateProperties();
         } else {
@@ -474,7 +474,7 @@ thin.core.ListGuideHelper.prototype.init = function() {
         listShape.updateProperties();
       }
     };
-    
+
     workspace.normalVersioning(function(version) {
       if (goog.math.Rect.equals(listShapeBoundsForStart, listShapeBoundsForEnd) &&
            goog.math.Coordinate.equals(transLateCoordinate, retransLateCoordinate)) {
@@ -490,7 +490,7 @@ thin.core.ListGuideHelper.prototype.init = function() {
       }, scope);
     });
   };
-  
+
   var tleftResizer = this.getResizerByPositionName(positionName.TLEFT).getResizer();
   goog.events.listen(tleftResizer, draggerEventType.BEFORESTART, function(e) {
     this.setResizeCursor(cursorType.TLEFT);
@@ -499,33 +499,33 @@ thin.core.ListGuideHelper.prototype.init = function() {
       tleftResizer.setResizeModeByTransScale(false);
     }
   }, false, this);
-  
+
   goog.events.listen(tleftResizer, eventType.START, startResizeListener, false, this);
   goog.events.listen(tleftResizer, eventType.END, endResizeListener, false, this);
-  
+
   var tcenterResizer = this.getResizerByPositionName(positionName.TCENTER).getResizer();
   tcenterResizer.setResizeDirectionToHorizon(horizon.CENTER);
   tcenterResizer.setResizeDirectionToVertical(vertical.TOP);
   tcenterResizer.setAspectObserve(false);
-  
+
   goog.events.listen(tcenterResizer, draggerEventType.BEFORESTART, function(e) {
     this.setResizeCursor(cursorType.TCENTER);
   }, false, this);
-  
+
   goog.events.listen(tcenterResizer, eventType.START, startResizeListener, false, this);
   goog.events.listen(tcenterResizer, eventType.END, endResizeListener, false, this);
-  
+
   var trightResizer = this.getResizerByPositionName(positionName.TRIGHT).getResizer();
   trightResizer.setResizeDirectionToHorizon(horizon.RIGHT);
   trightResizer.setResizeDirectionToVertical(vertical.TOP);
-  
+
   goog.events.listen(trightResizer, draggerEventType.BEFORESTART, function(e) {
     this.setResizeCursor(cursorType.TRIGHT);
   }, false, this);
-  
+
   goog.events.listen(trightResizer, eventType.START, startResizeListener, false, this);
   goog.events.listen(trightResizer, eventType.END, endResizeListener, false, this);
-  
+
   var mleftResizer = this.getResizerByPositionName(positionName.MLEFT).getResizer();
   mleftResizer.setResizeDirectionToHorizon(horizon.LEFT);
   mleftResizer.setResizeDirectionToVertical(vertical.MIDDLE);
@@ -533,10 +533,10 @@ thin.core.ListGuideHelper.prototype.init = function() {
   goog.events.listen(mleftResizer, draggerEventType.BEFORESTART, function(e) {
     this.setResizeCursor(cursorType.MLEFT);
   }, false, this);
-  
+
   goog.events.listen(mleftResizer, eventType.START, startResizeListener, false, this);
   goog.events.listen(mleftResizer, eventType.END, endResizeListener, false, this);
-  
+
   var mrightResizer = this.getResizerByPositionName(positionName.MRIGHT).getResizer();
   mrightResizer.setResizeDirectionToHorizon(horizon.RIGHT);
   mrightResizer.setResizeDirectionToVertical(vertical.MIDDLE);
@@ -544,21 +544,21 @@ thin.core.ListGuideHelper.prototype.init = function() {
   goog.events.listen(mrightResizer, draggerEventType.BEFORESTART, function(e) {
     this.setResizeCursor(cursorType.MRIGHT);
   }, false, this);
-  
+
   goog.events.listen(mrightResizer, eventType.START, startResizeListener, false, this);
   goog.events.listen(mrightResizer, eventType.END, endResizeListener, false, this);
-  
+
   var bleftResizer = this.getResizerByPositionName(positionName.BLEFT).getResizer();
   bleftResizer.setResizeDirectionToHorizon(horizon.LEFT);
   bleftResizer.setResizeDirectionToVertical(vertical.BOTTOM);
-  
+
   goog.events.listen(bleftResizer, draggerEventType.BEFORESTART, function(e) {
     this.setResizeCursor(cursorType.BLEFT);
   }, false, this);
-  
+
   goog.events.listen(bleftResizer, eventType.START, startResizeListener, false, this);
   goog.events.listen(bleftResizer, eventType.END, endResizeListener, false, this);
-  
+
   var bcenterResizer = this.getResizerByPositionName(positionName.BCENTER).getResizer();
   bcenterResizer.setResizeDirectionToHorizon(horizon.CENTER);
   bcenterResizer.setResizeDirectionToVertical(vertical.BOTTOM);
@@ -566,18 +566,18 @@ thin.core.ListGuideHelper.prototype.init = function() {
   goog.events.listen(bcenterResizer, draggerEventType.BEFORESTART, function(e) {
     this.setResizeCursor(cursorType.BCENTER);
   }, false, this);
-  
+
   goog.events.listen(bcenterResizer, eventType.START, startResizeListener, false, this);
   goog.events.listen(bcenterResizer, eventType.END, endResizeListener, false, this);
-  
+
   var brightResizer = this.getResizerByPositionName(positionName.BRIGHT).getResizer();
   brightResizer.setResizeDirectionToHorizon(horizon.RIGHT);
   brightResizer.setResizeDirectionToVertical(vertical.BOTTOM);
-  
+
   goog.events.listen(brightResizer, draggerEventType.BEFORESTART, function(e) {
     this.setResizeCursor(cursorType.BRIGHT);
   }, false, this);
-  
+
   goog.events.listen(brightResizer, eventType.START, startResizeListener, false, this);
   goog.events.listen(brightResizer, eventType.END, endResizeListener, false, this);
 };

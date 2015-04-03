@@ -164,7 +164,7 @@ thin.core.ModuleElement.getStrokeName = function(type) {
 thin.core.ModuleElement.getStrokeTypeFromValue = function(strokeDashName) {
   var strokeTypeTemp = thin.core.ModuleElement.StrokeType;
   var strokeTypeNameTemp = thin.core.ModuleElement.StrokeTypeName;
-  
+
   switch (strokeDashName) {
     case strokeTypeNameTemp.SOLID:
       var strokeDashType = strokeTypeTemp.SOLID;
@@ -176,7 +176,7 @@ thin.core.ModuleElement.getStrokeTypeFromValue = function(strokeDashName) {
       var strokeDashType = strokeTypeTemp.DOTTED;
       break;
   }
-  
+
   return /** @type {string} */(strokeDashType);
 };
 
@@ -339,7 +339,7 @@ thin.core.ModuleElement.prototype.getStrokeWidth = function() {
 thin.core.ModuleElement.prototype.setStrokeDashFromType = function(strokeType) {
   var strokeTypeTemp = thin.core.ModuleElement.StrokeType;
   var strokeTypeValueTemp = thin.core.ModuleElement.StrokeTypeValue;
-  
+
   switch (strokeType) {
     case strokeTypeTemp.SOLID:
       var dashValue = strokeTypeValueTemp.SOLID;
@@ -351,7 +351,7 @@ thin.core.ModuleElement.prototype.setStrokeDashFromType = function(strokeType) {
       var dashValue = strokeTypeValueTemp.DOTTED;
       break;
   }
-  
+
   this.dasharray_ = strokeType;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-stroke-type': strokeType,
@@ -365,7 +365,7 @@ thin.core.ModuleElement.prototype.setStrokeDashFromType = function(strokeType) {
  * @return {string}
  */
 thin.core.ModuleElement.prototype.getStrokeDashType = function() {
-  return /** @type {string} */(thin.getValIfNotDef(this.dasharray_, 
+  return /** @type {string} */(thin.getValIfNotDef(this.dasharray_,
              thin.core.ModuleElement.StrokeType.SOLID));
 };
 
@@ -584,7 +584,7 @@ thin.core.ModuleElement.prototype.getAllowWidth = function(width, opt_left) {
     var left = goog.isNumber(opt_left) ? opt_left : this.getLeft();
     var allowWidth = thin.numberWithPrecision(boxSize.right - left);
     var returnWidth = width > allowWidth ? allowWidth : width;
-    
+
     if (this.instanceOfTextShape()) {
       var minWidth = this.getMinWidth();
       if (returnWidth < minWidth) {
@@ -605,21 +605,21 @@ thin.core.ModuleElement.prototype.getAllowWidth = function(width, opt_left) {
  */
 thin.core.ModuleElement.prototype.getAllowHeight = function(height, opt_top) {
   var boxSize = this.getAffiliationRegionBounds().toBox();
-  
+
   if (0 > height) {
     return this.instanceOfTextShape() ? this.getMinHeight() : 1;
   } else {
     var top = goog.isNumber(opt_top) ? opt_top : this.getTop();
     var allowHeight = thin.numberWithPrecision(boxSize.bottom - top);
     var returnHeight = height > allowHeight ? allowHeight : height;
-    
+
     if (this.instanceOfTextShape()) {
       var minHeight = this.getMinHeight();
       if (returnHeight < minHeight) {
         returnHeight = minHeight;
       }
     }
-    
+
     return returnHeight;
   }
 };

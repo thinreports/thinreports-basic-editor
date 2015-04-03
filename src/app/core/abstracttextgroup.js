@@ -28,13 +28,13 @@ goog.require('thin.core.TextStyle');
  */
 thin.core.AbstractTextGroup = function(element, layout) {
   goog.base(this, element, layout);
-  
+
   /**
    * @type {thin.core.FontStyle}
    * @private
    */
   this.fontStyle_ = new thin.core.FontStyle();
-  
+
   /**
    * @type {thin.core.TextStyle}
    * @private
@@ -106,6 +106,15 @@ thin.core.AbstractTextGroup.prototype.setStroke = function(stroke) {
  */
 thin.core.AbstractTextGroup.prototype.getStroke = function() {
   return this.stroke_;
+};
+
+
+/**
+ * @return {number|string} Alyways returns 0
+ * @override
+ */
+thin.core.AbstractTextGroup.prototype.getStrokeWidth = function() {
+  return 0;
 };
 
 
@@ -250,7 +259,7 @@ thin.core.AbstractTextGroup.prototype.setTextDecoration = function(underline, li
   this.fontStyle_.underline = underline;
   this.fontStyle_.linethrough = linethrough;
   this.fontStyle_.decoration = decoration;
-  
+
   this.getLayout().setElementAttributes(this.getElement(), {
     'text-decoration': decoration
   });
@@ -316,7 +325,7 @@ thin.core.AbstractTextGroup.prototype.getTextLineHeightRatio = function() {
  * @return {string}
  */
 thin.core.AbstractTextGroup.prototype.getKerning = function() {
-  return /** @type {string} */ (thin.getValIfNotDef(this.textStyle_.getKerning(), 
+  return /** @type {string} */ (thin.getValIfNotDef(this.textStyle_.getKerning(),
              thin.core.TextStyle.DEFAULT_KERNING));
 };
 
@@ -415,7 +424,7 @@ thin.core.AbstractTextGroup.prototype.updateToolbarUI = function() {
 /** @inheritDoc */
 thin.core.AbstractTextGroup.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
-  
+
   delete this.fontStyle_;
   delete this.textStyle_;
 };

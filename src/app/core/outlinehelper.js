@@ -41,7 +41,7 @@ thin.core.OutlineHelper.FILL_ = new goog.graphics.SolidFill('none');
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.core.OutlineHelper.STROKE_ = new goog.graphics.Stroke('1px', '#999');
+thin.core.OutlineHelper.STROKE_ = new goog.graphics.Stroke('1px', '#0096fd');
 
 
 /**
@@ -256,7 +256,7 @@ thin.core.OutlineHelper.prototype.setup = function() {
   var selector = new thin.core.SelectorOutline(
         layout.createSvgElement('rect'), layout, stroke, null);
   selector.setOutlineHelper(this);
-  
+
   list.disable();
   rect.disable();
   tblock.disable();
@@ -276,7 +276,7 @@ thin.core.OutlineHelper.prototype.setup = function() {
   this.lineOutline_ = line;
   this.textOutline_ = text;
   this.imageOutline_ = image;
-  this.selectorOutline_ = selector;  
+  this.selectorOutline_ = selector;
   layout.appendChild(this.listOutline_, this);
   layout.appendChild(this.lineOutline_, this);
   layout.appendChild(this.ellipseOutline_, this);
@@ -314,6 +314,6 @@ thin.core.OutlineHelper.prototype.disposeInternal = function() {
   delete this.selectorOutline_;
   delete this.listOutline_;
   delete this.imageOutline_;
-  
+
   thin.core.OutlineHelper.superClass_.disposeInternal.call(this);
 };

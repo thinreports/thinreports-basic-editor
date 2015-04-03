@@ -37,7 +37,7 @@ goog.require('thin.core.TextStyle.VerticalAlignType');
  */
 thin.core.ImageblockShape = function(element, layout) {
   goog.base(this, element, layout);
-  
+
   this.setCss(thin.core.ImageblockShape.CLASSID);
 };
 goog.inherits(thin.core.ImageblockShape, thin.core.AbstractBoxGroup);
@@ -96,28 +96,28 @@ thin.core.ImageblockShape.PositionY = {
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.core.ImageblockShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#7C4007');
+thin.core.ImageblockShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#0096fd');
 
 
 /**
  * @type {goog.graphics.Font}
  * @private
  */
-thin.core.ImageblockShape.IDSHAPEFONT_ = new goog.graphics.Font(11, 'Helvetica');
+thin.core.ImageblockShape.IDSHAPEFONT_ = new goog.graphics.Font(10, 'Helvetica');
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.core.ImageblockShape.BOX_FILL_ = new goog.graphics.SolidFill('#f4e2c4', 0.8);
+thin.core.ImageblockShape.BOX_FILL_ = new goog.graphics.SolidFill('#0096fd', 0.1);
 
 
 /**
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.core.ImageblockShape.BOX_STROKE_ = new goog.graphics.Stroke(0.28, '#7C4007');
+thin.core.ImageblockShape.BOX_STROKE_ = new goog.graphics.Stroke(0.5, '#0096fd');
 
 
 /**
@@ -146,7 +146,7 @@ thin.core.ImageblockShape.prototype.positionX_ =
  * @type {string|thin.core.ImageblockShape.PositionY}
  * @private
  */
-thin.core.ImageblockShape.prototype.positionY_ = 
+thin.core.ImageblockShape.prototype.positionY_ =
   thin.core.ImageblockShape.PositionY.DEFAULT;
 
 
@@ -199,8 +199,8 @@ thin.core.ImageblockShape.prototype.getPositionY = function() {
 /** @inheritDoc */
 thin.core.ImageblockShape.prototype.setLeft = function(left) {
   goog.base(this, 'setLeft', left);
-  
-  this.id_.setLeft(this.left_ + 2);
+
+  this.id_.setLeft(this.left_ + 4);
   this.updateMarkStyle_();
 };
 
@@ -208,7 +208,7 @@ thin.core.ImageblockShape.prototype.setLeft = function(left) {
 /** @inheritDoc */
 thin.core.ImageblockShape.prototype.setTop = function(top) {
   goog.base(this, 'setTop', top);
-  
+
   this.id_.setTop(this.top_ + 11);
   this.updateMarkStyle_();
 };
@@ -236,7 +236,7 @@ thin.core.ImageblockShape.prototype.setHeight = function(height) {
  */
 thin.core.ImageblockShape.createFromElement = function(element, layout, opt_shapeIdManager) {
   var shape = new thin.core.ImageblockShape(element, layout);
-  
+
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
   shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
@@ -256,10 +256,10 @@ thin.core.ImageblockShape.createFromElement = function(element, layout, opt_shap
 thin.core.ImageblockShape.prototype.createBox_ = function(opt_element) {
   var box = goog.base(this, 'createBox_', opt_element,
     !opt_element ? this.getBoxClassId_() : undefined);
-  
+
   box.setStroke(thin.core.ImageblockShape.BOX_STROKE_);
   box.setFill(thin.core.ImageblockShape.BOX_FILL_);
-  
+
   return box;
 };
 
@@ -284,7 +284,7 @@ thin.core.ImageblockShape.prototype.createId_ = function(opt_element) {
       'kerning': thin.core.TextStyle.DEFAULT_ELEMENT_KERNING
     });
 
-  return new thin.core.IdShape(element, layout, null, 
+  return new thin.core.IdShape(element, layout, null,
                   thin.core.ImageblockShape.IDSHAPEFILL_);
 };
 
@@ -298,17 +298,17 @@ thin.core.ImageblockShape.prototype.createMark_ = function(opt_element) {
   var layout = this.getLayout();
   var mark = new goog.graphics.SvgImageElement(
     opt_element || layout.createSvgElement('image'), layout);
-  
+
   if (!opt_element) {
     var element = mark.getElement();
     var config = thin.core.ImageblockShape.Mark_;
-    
+
     mark.setSize(/** @type {number} */ (config.SIZE), /** @type {number} */ (config.SIZE));
     layout.setElementAttributes(mark.getElement(), {'class': this.getMarkClassId_(), 'opacity': 0.5});
     layout.setElementAttributesNS(thin.core.Layout.SVG_NS_XLINK, mark.getElement(),
       {'xlink:href': config.SOURCE});
   }
-  
+
   return mark;
 };
 
@@ -317,18 +317,18 @@ thin.core.ImageblockShape.prototype.updateMarkStyle_ = function() {
   var config = thin.core.ImageblockShape.Mark_;
   var basis = config.SIZE / 2;
   var layout = this.getLayout();
-  
+
   var w = this.getWidth();
   var h = this.getHeight();
   var x = this.getLeft();
   var y = this.getTop();
-  
+
   if (h < config.SIZE + 5 || w < config.SIZE + 5) {
     layout.setElementAttributes(this.mark_.getElement(), {'display': 'none'});
   } else if (layout.getElementAttribute(this.mark_.getElement(), 'display') == 'none') {
     layout.setElementAttributes(this.mark_.getElement(), {'display': 'inline'});
   }
-  
+
   this.mark_.setPosition(x + Math.floor(w / 2) - basis - this.getParentTransLateX(),
                          y + Math.floor(h / 2) - basis - this.getParentTransLateY());
 };
@@ -360,7 +360,7 @@ thin.core.ImageblockShape.prototype.getMarkClassId_ = function() {
  */
 thin.core.ImageblockShape.prototype.getIdClassId_ = function() {
   return thin.core.ImageblockShape.CLASSID +
-         thin.core.ImageblockShape.ClassIds.ID;  
+         thin.core.ImageblockShape.ClassIds.ID;
 };
 
 
@@ -368,7 +368,7 @@ thin.core.ImageblockShape.prototype.getIdClassId_ = function() {
 thin.core.ImageblockShape.prototype.setup = function() {
   var element = this.getElement();
   var layout = this.getLayout();
-  
+
   // Setup Box element.
   var boxElement = thin.core.getElementByClassNameForChildNodes(
     this.getBoxClassId_(), element.childNodes);
@@ -377,20 +377,20 @@ thin.core.ImageblockShape.prototype.setup = function() {
   if (!boxElement) {
     layout.appendChild(this.box_, this);
   }
-  
+
   // Setup Mark element.
   var markElement = thin.core.getElementByClassNameForChildNodes(
     this.getMarkClassId_(), element.childNodes);
-  
+
   this.mark_ = this.createMark_(markElement);
   if (!markElement) {
     layout.appendChild(this.mark_, this);
   }
-  
+
   // Setup ID element.
   var idElement = thin.core.getElementByClassNameForChildNodes(
     this.getIdClassId_(), element.childNodes);
-  
+
   this.id_ = this.createId_(idElement);
   if (!idElement) {
     layout.appendChild(this.id_, this);
@@ -454,18 +454,18 @@ thin.core.ImageblockShape.prototype.getCloneCreator = function() {
 
     var shape = layout.createImageblockShape();
     layout.appendChild(shape, opt_renderTo);
-    shape.setShapeId(layout.getNextShapeId(shapeIdPrefix, 
+    shape.setShapeId(layout.getNextShapeId(shapeIdPrefix,
                      opt_shapeIdManager), opt_shapeIdManager);
-    
+
     var pasteCoordinate = layout.calculatePasteCoordinate(isAffiliationListShape,
       deltaCoordinateForList, deltaCoordinateForGuide, sourceCoordinate,
       opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate);
     shape.setBounds(new goog.math.Rect(pasteCoordinate.x, pasteCoordinate.y, width, height));
-    
+
     shape.setPositionX(posX);
     shape.setPositionY(posY);
     shape.setDisplay(display);
-    
+
     return shape;
   };
 };
@@ -479,66 +479,66 @@ thin.core.ImageblockShape.prototype.createPropertyComponent_ = function() {
   var layout = this.getLayout();
   var workspace = layout.getWorkspace();
   var guide = layout.getHelpers().getGuideHelper();
-  
+
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
-  
+
   var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
-  
-  
+
+
   var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
   var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(topInputProperty, baseGroup, 'top');
-  
-  
+
+
   var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
-  
-  
+
+
   var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
-  
-  
+
+
   var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
 
   var positionGroup = proppane.addGroup(thin.t('property_group_position'));
-  
+
   var positionX = thin.core.ImageblockShape.PositionX;
   var posXSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_horizontal_position'));
   var posXSelect = posXSelectProperty.getValueControl();
-  
+
   posXSelect.setTextAlignLeft();
   posXSelect.addItem(new thin.ui.Option(thin.t('label_left_position'), positionX.LEFT));
   posXSelect.addItem(new thin.ui.Option(thin.t('label_center_position'), positionX.CENTER));
@@ -549,7 +549,7 @@ thin.core.ImageblockShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         var posX = e.target.getValue();
         var capturePosX = scope.getPositionX();
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setPositionX(posX);
@@ -561,13 +561,13 @@ thin.core.ImageblockShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(posXSelectProperty , positionGroup, 'position-x');
-  
+
   var positionY = thin.core.ImageblockShape.PositionY;
   var posYSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_vertical_position'));
   var posYSelect = posYSelectProperty.getValueControl();
-  
+
   posYSelect.setTextAlignLeft();
   posYSelect.addItem(new thin.ui.Option(thin.t('label_top_position'), positionY.TOP));
   posYSelect.addItem(new thin.ui.Option(thin.t('label_middle_position'), positionY.CENTER));
@@ -578,7 +578,7 @@ thin.core.ImageblockShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         var posY = e.target.getValue();
         var capturePosY = scope.getPositionY();
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setPositionY(posY);
@@ -590,23 +590,23 @@ thin.core.ImageblockShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(posYSelectProperty , positionGroup, 'position-y');
-  
+
   var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
-  
+
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.getIdValidator().setValidatePresence(true);
-  
+
   idInputProperty.addEventListener(propEventType.CHANGE,
       this.setShapeIdForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
-  
+
   var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
-  
+
   proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
@@ -636,10 +636,10 @@ thin.core.ImageblockShape.prototype.updateProperties = function() {
     proppane.setTarget(this);
     this.createPropertyComponent_();
   }
-  
+
   var properties = this.getProperties();
   var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
-  
+
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
   proppane.getPropertyControl('width').setValue(properties['width']);
@@ -660,7 +660,7 @@ thin.core.ImageblockShape.prototype.setInitShapeProperties = function(properties
   if (this.isAffiliationListShape()) {
     opt_shapeIdManager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
   }
-  
+
   this.setShapeId(this.getLayout().getNextShapeId(
         thin.core.ShapeIdManager.DefaultPrefix.IMAGE_BLOCK, opt_shapeIdManager),
         opt_shapeIdManager);
@@ -672,10 +672,10 @@ thin.core.ImageblockShape.prototype.setInitShapeProperties = function(properties
 thin.core.ImageblockShape.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   this.disposeInternalForShape();
-  
+
   this.id_.dispose();
   delete this.id_;
-  
+
   delete this.positionX_;
   delete this.positionY_;
 };

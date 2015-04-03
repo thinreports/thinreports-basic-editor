@@ -48,7 +48,7 @@ thin.core.ModuleOutline.prototype.enable_ = false;
 thin.core.ModuleOutline.prototype.outlineHelper_;
 
 
-thin.core.ModuleOutline.prototype.toShape = goog.abstractMethod; 
+thin.core.ModuleOutline.prototype.toShape = goog.abstractMethod;
 
 
 thin.core.ModuleOutline.prototype.getInitShapeProperties = goog.abstractMethod;
@@ -192,7 +192,7 @@ thin.core.ModuleOutline.prototype.disposeInternalForOutline = function() {
  * @param {number} width
  */
 thin.core.ModuleOutline.prototype.setStrokeWidth = function(width) {
-  this.setStrokeWidth_(width);
+  this.setStrokeWidth_(width + 4);
 };
 
 
@@ -205,7 +205,7 @@ thin.core.ModuleOutline.prototype.setupMouseDownHandler = function() {
   var helpers = layout.getHelpers();
   var guide = helpers.getGuideHelper();
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
-  
+
   goog.events.listen(this, goog.events.EventType.MOUSEDOWN, function(e) {
     layout.getWorkspace().focusElement(e);
 
@@ -216,14 +216,14 @@ thin.core.ModuleOutline.prototype.setupMouseDownHandler = function() {
       var manager = !listHelper.isActive() ? layout.getManager() : listHelper;
       var activeShapeManager = manager.getActiveShape();
       var oldShapesByGlobal = activeShapeManager.getClone();
-      var singleShapeForUp = (activeShapeManager.getCount() == 2) ? 
+      var singleShapeForUp = (activeShapeManager.getCount() == 2) ?
         goog.array.find(oldShapesByGlobal, function(target) {
           return target != removeShape;
         }) : false;
-      
+
       e.stopPropagation();
       e.preventDefault();
-      
+
       layout.getWorkspace().normalVersioning(function(version) {
         version.setChanged(false);
 
@@ -231,7 +231,7 @@ thin.core.ModuleOutline.prototype.setupMouseDownHandler = function() {
           removeShape.getTargetOutline().disable();
           activeShapeManager.set(oldShapesByGlobal);
           activeShapeManager.remove(removeShape);
-          
+
           if (singleShapeForUp) {
             singleShapeForUp.getTargetOutline().disable();
             singleShapeForUp.updateToolbarUI();
@@ -241,9 +241,9 @@ thin.core.ModuleOutline.prototype.setupMouseDownHandler = function() {
             layout.calculateGuideBounds(activeShapeManager.get());
             guide.adjustToTargetShapeBounds();
           }
-          
+
         }, scope);
-        
+
         version.downHandler(function() {
           activeShapeManager.set(oldShapesByGlobal);
           manager.setActiveShape(removeShape);
@@ -251,7 +251,7 @@ thin.core.ModuleOutline.prototype.setupMouseDownHandler = function() {
           layout.setOutlineForMultiple(shapes);
           layout.calculateGuideBounds(shapes);
           guide.adjustToTargetShapeBounds();
-          
+
           if (singleShapeForUp) {
             guide.setEnableAndTargetShape(helpers.getMultiOutlineHelper());
             multipleShapesHelper.setCloneProperties(captureProperties);

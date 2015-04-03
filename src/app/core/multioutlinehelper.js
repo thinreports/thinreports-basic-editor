@@ -49,14 +49,32 @@ thin.core.MultiOutlineHelper.MULTIPLE_ = true;
  * @type {string}
  * @private
  */
-thin.core.MultiOutlineHelper.COLOR_ = '#94C3F5';
+thin.core.MultiOutlineHelper.COLOR_ = '#0096fd';
 
 
 /**
- * @type {goog.graphics.SolidFill}
+ * @param {goog.graphics.Element} outline
+ * @param {goog.graphics.Element} shape
  * @private
  */
-thin.core.MultiOutlineHelper.FILL_ = new goog.graphics.SolidFill(thin.core.MultiOutlineHelper.COLOR_, 0.3);
+thin.core.MultiOutlineHelper.prototype.setOutlineStyle_ = function(outline, shape) {
+  outline.setFill(new goog.graphics.SolidFill('#fff', 0));
+  outline.setStroke(new goog.graphics.Stroke(0, '#0096fd'));
+  outline.setStrokeWidth(shape.getStrokeWidth());
+  this.getLayout().setElementAttributes(outline.getElement(), {
+    'stroke-opacity': 0.3
+  });
+};
+
+
+/**
+ * @param {goog.graphics.Element} shape
+ * @return {goog.graphics.Stroke}
+ * @private
+ */
+thin.core.MultiOutlineHelper.prototype.initStrokeBy_ = function(shape) {
+  return new goog.graphics.Stroke(shape.getStrokeWidth())
+};
 
 
 /**
@@ -84,24 +102,24 @@ thin.core.MultiOutlineHelper.prototype.init = function() {
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var guideOutline = guide.getGuideOutline();
   var body = goog.dom.getDocument().body;
-  
+
   var dragger = new thin.core.SvgDragger(guideOutline, this);
   dragger.setDragModeByTranslate(true);
-  
+
   var eventType = goog.fx.Dragger.EventType;
-  
+
   goog.events.listen(dragger, eventType.BEFOREDRAG, function(e) {
     if (!guideOutline.isVisibled()) {
       guideOutline.setVisibled(true);
     }
   }, false, dragger);
-  
+
   goog.events.listen(dragger, eventType.START, function(e) {
-  
+
     this.setDelta(guide.getBounds());
     this.setAdsorptionX(helpers.getAdsorptionX());
     this.setAdsorptionY(helpers.getAdsorptionY());
-    
+
     var cursorTypeMove = thin.core.Cursor.Type.MOVE;
     var cursorMove = new thin.core.Cursor(cursorTypeMove);
     goog.style.setStyle(body, 'cursor', cursorTypeMove);
@@ -111,13 +129,13 @@ thin.core.MultiOutlineHelper.prototype.init = function() {
     multipleShapesHelper.captureProperties();
     multipleShapesHelper.updateProperties();
   }, false, dragger);
-  
+
   goog.events.listen(dragger, eventType.END, function(e) {
-  
+
     var scope = this;
     var currentPositionX = e.endX;
     var currentPositionY = e.endY;
-    
+
     var startTransLate = dragger.getStartTransLatePosition().clone();
     var startPositionX = startTransLate.x;
     var startPositionY = startTransLate.y;
@@ -126,7 +144,7 @@ thin.core.MultiOutlineHelper.prototype.init = function() {
     var transLateY = currentPositionY - startPositionY;
     var reLocationX = startPositionX - currentPositionX;
     var reLocationY = startPositionY - currentPositionY;
-    
+
     var cursorTypeDefault = thin.core.Cursor.Type.DEFAULT;
     var cursorDefault = new thin.core.Cursor(cursorTypeDefault);
     goog.style.setStyle(body, 'cursor', cursorTypeDefault);
@@ -141,7 +159,7 @@ thin.core.MultiOutlineHelper.prototype.init = function() {
       if (transLateX == 0 && transLateY == 0) {
         version.setChanged(false);
       }
-    
+
       version.upHandler(function() {
         var shapes = activeShapeManager.get();
         this.setTransLate(transLateX, transLateY, shapes);
@@ -150,7 +168,7 @@ thin.core.MultiOutlineHelper.prototype.init = function() {
         layout.calculateGuideBounds(shapes);
         guide.adjustToTargetShapeBounds();
       }, scope);
-      
+
       version.downHandler(function() {
         var shapes = activeShapeManager.get();
         this.setTransLate(reLocationX, reLocationY, shapes);
@@ -259,12 +277,12 @@ thin.core.MultiOutlineHelper.prototype.setOutlineForMultiple = function(outline,
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toRectOutline = function(shape, helpers) {
-  var outline = helpers.createRectOutline(this, shape.getStroke(),
-                    thin.core.MultiOutlineHelper.FILL_, {
-                      'stroke-opacity': 0
-                    });
+  var outline = helpers.createRectOutline(this);
+
   outline.setBounds(shape.getBounds());
   outline.setRounded(shape.getRounded());
+
+  this.setOutlineStyle_(outline, shape);
   this.setOutlineForMultiple(outline, shape);
 };
 
@@ -276,11 +294,12 @@ thin.core.MultiOutlineHelper.prototype.toRectOutline = function(shape, helpers) 
 thin.core.MultiOutlineHelper.prototype.toEllipseOutline = function(shape, helpers) {
   var radius = shape.getRadius();
   var center = shape.getCenterCoordinate();
-  var outline = helpers.createEllipseOutline(this, null, 
-                    thin.core.MultiOutlineHelper.FILL_, {
-                      'stroke-opacity': 0
-                    });
+  var outline = helpers.createEllipseOutline(this);
+
   outline.setBounds(shape.getBounds());
+  outline.setStrokeWidth(shape.getStrokeWidth());
+
+  this.setOutlineStyle_(outline, shape);
   this.setOutlineForMultiple(outline, shape);
 };
 
@@ -291,15 +310,14 @@ thin.core.MultiOutlineHelper.prototype.toEllipseOutline = function(shape, helper
  */
 thin.core.MultiOutlineHelper.prototype.toLineOutline = function(shape, helpers) {
   var coordinate = shape.getCoordinate();
-  var stroke = new goog.graphics.Stroke(shape.getStroke().getWidth(), thin.core.MultiOutlineHelper.COLOR_);
-  var outline = helpers.createLineOutline(this, stroke, {
+  var outline = helpers.createLineOutline(this, null, {
     'x1': coordinate.x0,
     'y1': coordinate.y0,
     'x2': coordinate.x1,
-    'y2': coordinate.y1,
-    'stroke-opacity': 0.6
+    'y2': coordinate.y1
   });
-  outline.setStrokeWidth(stroke.getWidth());
+
+  this.setOutlineStyle_(outline, shape);
   this.setOutlineForMultiple(outline, shape);
 };
 
@@ -309,11 +327,10 @@ thin.core.MultiOutlineHelper.prototype.toLineOutline = function(shape, helpers) 
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toTextOutline = function(shape, helpers) {
-  var outline = helpers.createTextOutline(this, shape.getStroke(), 
-                    thin.core.MultiOutlineHelper.FILL_, {
-                      'stroke-opacity': 0
-                    });
+  var outline = helpers.createTextOutline(this);
+
   outline.setBounds(shape.getBounds());
+  this.setOutlineStyle_(outline, shape);
   this.setOutlineForMultiple(outline, shape);
 };
 
@@ -323,11 +340,10 @@ thin.core.MultiOutlineHelper.prototype.toTextOutline = function(shape, helpers) 
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toTblockOutline = function(shape, helpers) {
-  var outline = helpers.createTblockOutline(this, shape.getStroke(),
-                    thin.core.MultiOutlineHelper.FILL_, {
-                      'stroke-opacity': 0
-                    });
+  var outline = helpers.createTblockOutline(this);
+
   outline.setBounds(shape.getBounds());
+  this.setOutlineStyle_(outline, shape);
   this.setOutlineForMultiple(outline, shape);
 };
 
@@ -337,11 +353,10 @@ thin.core.MultiOutlineHelper.prototype.toTblockOutline = function(shape, helpers
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toPageNumberOutline = function(shape, helpers) {
-  var outline = helpers.createPageNumberOutline(this, shape.getStroke(),
-                    thin.core.MultiOutlineHelper.FILL_, {
-                      'stroke-opacity': 0
-                    });
+  var outline = helpers.createPageNumberOutline(this);
+
   outline.setBounds(shape.getBounds());
+  this.setOutlineStyle_(outline, shape);
   this.setOutlineForMultiple(outline, shape);
 };
 
@@ -351,11 +366,10 @@ thin.core.MultiOutlineHelper.prototype.toPageNumberOutline = function(shape, hel
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toImageblockOutline = function(shape, helpers) {
-  var outline = helpers.createImageblockOutline(this, null, 
-                    thin.core.MultiOutlineHelper.FILL_, {
-                      'stroke-opacity': 0
-                    });
+  var outline = helpers.createImageblockOutline(this);
+
   outline.setBounds(shape.getBounds());
+  this.setOutlineStyle_(outline, shape);
   this.setOutlineForMultiple(outline, shape);
 };
 
@@ -365,10 +379,9 @@ thin.core.MultiOutlineHelper.prototype.toImageblockOutline = function(shape, hel
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toImageOutline = function(shape, helpers) {
-  var outline = helpers.createImageOutline(this, null,
-                    thin.core.MultiOutlineHelper.FILL_, {
-                      'stroke-opacity': 0
-                    });
+  var outline = helpers.createImageOutline(this);
+
   outline.setBounds(shape.getBounds());
+  this.setOutlineStyle_(outline, shape);
   this.setOutlineForMultiple(outline, shape);
 };

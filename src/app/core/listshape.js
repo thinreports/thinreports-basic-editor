@@ -14,7 +14,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.core.ListShape');
-goog.provide('thin.core.ListShape.ClassIds');
 
 goog.require('goog.dom');
 goog.require('goog.object');
@@ -47,7 +46,7 @@ goog.require('thin.core.ModuleShape');
  * @extends {thin.core.Component}
  */
 thin.core.ListShape = function(layout, opt_element, opt_referenceElement) {
-  
+
   /**
    * @type {Object.<thin.core.ListSectionShape>}
    * @private
@@ -87,24 +86,17 @@ thin.core.ListShape.ClassIds = {
 
 
 /**
- * @type {number}
- * @private
- */
-thin.core.ListShape.DELTAX_ = 2;
-
-
-/**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.core.ListShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#7C4007');
+thin.core.ListShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#0096fd');
 
 
 /**
  * @type {goog.graphics.Font}
  * @private
  */
-thin.core.ListShape.IDSHAPEFONT_ = new goog.graphics.Font(11, 'Helvetica');
+thin.core.ListShape.IDSHAPEFONT_ = new goog.graphics.Font(10, 'Helvetica');
 
 
 /**
@@ -154,12 +146,12 @@ thin.core.ListShape.createFromElement = function(groupElement, layout) {
   var classId = thin.core.ListShape.ClassIds;
 
   shape.setIdShape(layout.getElementAttribute(groupElement, 'x-id'),
-    thin.core.getElementByClassNameForChildNodes(thin.core.ListShape.CLASSID + classId['ID'], 
+    thin.core.getElementByClassNameForChildNodes(thin.core.ListShape.CLASSID + classId['ID'],
     shape.getElement().childNodes));
   shape.setBounds(new goog.math.Rect(
       Number(layout.getElementAttribute(groupElement, 'x')),
       Number(layout.getElementAttribute(groupElement, 'y')),
-      Number(layout.getElementAttribute(groupElement, 'width')), 
+      Number(layout.getElementAttribute(groupElement, 'width')),
       Number(layout.getElementAttribute(groupElement, 'height'))));
 
   shape.setDisplay(layout.getElementAttribute(groupElement, 'x-display') == 'true');
@@ -180,12 +172,12 @@ thin.core.ListShape.createFromElement = function(groupElement, layout) {
     sectionGroup.setTransformation(transLateCoordinate.x, transLateCoordinate.y, 0, 0, 0);
     sectionShapeForScope.setTop(Number(layout.getElementAttribute(sectionElement, 'x-top')));
     sectionShapeForScope.setHeight(Number(layout.getElementAttribute(sectionElement, 'x-height')));
-    
+
     goog.array.forEach(sectionElement.childNodes, function(element) {
       layout.drawBasicShapeFromElement(element, sectionShapeForScope);
     });
   });
-  
+
   var shapeElement = shape.getElement();
   shape.forEachSectionShape(function(sectionShapeForScope, sectionNameForScope) {
     if (thin.core.ShapeStructure.getEnabledOfSection(
@@ -213,9 +205,9 @@ thin.core.ListShape.prototype.setup_ = function(opt_referenceElement) {
   var sectionNameForPageFooter = sectionNameForTemp.PAGEFOOTER;
   var sectionNameForFooter = sectionNameForTemp.FOOTER;
   var listShapeFaceClassId = thin.core.ListShape.CLASSID + classId['FACE'];
-  var stroke = new goog.graphics.Stroke(1, '#BBBBBB');
+  var stroke = new goog.graphics.Stroke(0.5, '#0096fd');
   var fill = new goog.graphics.SolidFill('#FFFFFF');
-  
+
   if (opt_referenceElement) {
     var rect = thin.core.getElementByClassNameForChildNodes(
                    listShapeFaceClassId, opt_referenceElement.childNodes);
@@ -224,22 +216,22 @@ thin.core.ListShape.prototype.setup_ = function(opt_referenceElement) {
     var sectionShapeForHeader = new thin.core.HeaderSectionShape(layout, this, sectionNameForHeader,
                                        thin.core.getElementByClassNameForChildNodes(
                                          sectionNameForHeader, opt_referenceElement.childNodes));
-                                         
+
     var sectionShapeForDetail = new thin.core.DetailSectionShape(layout, this, sectionNameForDetail,
                                        thin.core.getElementByClassNameForChildNodes(
                                          sectionNameForDetail, opt_referenceElement.childNodes));
-                                         
+
     var sectionShapeForPageFooter = new thin.core.PageFooterSectionShape(layout, this, sectionNameForPageFooter,
                                            thin.core.getElementByClassNameForChildNodes(
                                              sectionNameForPageFooter, opt_referenceElement.childNodes));
-                                             
-    var sectionShapeForFooter = new thin.core.FooterSectionShape(layout, this, sectionNameForFooter, 
+
+    var sectionShapeForFooter = new thin.core.FooterSectionShape(layout, this, sectionNameForFooter,
                                        thin.core.getElementByClassNameForChildNodes(
                                          sectionNameForFooter, opt_referenceElement.childNodes));
-  
+
   } else {
     var rect = layout.createSvgElement('rect', {
-      'stroke-dasharray': 5
+      'stroke-dasharray': 2
     });
     var face = new thin.core.RectShape(rect, layout, stroke, fill);
     var sectionShapeForHeader = new thin.core.HeaderSectionShape(layout, this, sectionNameForHeader);
@@ -247,12 +239,12 @@ thin.core.ListShape.prototype.setup_ = function(opt_referenceElement) {
     var sectionShapeForPageFooter = new thin.core.PageFooterSectionShape(layout, this, sectionNameForPageFooter);
     var sectionShapeForFooter = new thin.core.FooterSectionShape(layout, this, sectionNameForFooter);
   }
-  
+
   layout.setElementAttributes(rect, {
     'fill-opacity': 0,
     'class': listShapeFaceClassId
   });
-  
+
   this.face_ = face;
   layout.appendChild(face, this);
 
@@ -359,10 +351,10 @@ thin.core.ListShape.prototype.setIdShape = function(varId, opt_element) {
     'font-style': 'normal',
     'text-anchor': thin.core.TextStyle.HorizonAlignType.START
   });
-  
+
   var idShape = new thin.core.IdShape(element, layout, null, listShape.IDSHAPEFILL_);
   layout.appendChild(idShape, this);
-  goog.dom.insertSiblingAfter(this.face_.getElement(), element);  
+  goog.dom.insertSiblingAfter(this.face_.getElement(), element);
 
   this.id_ = idShape;
   this.setShapeId(varId);
@@ -422,7 +414,7 @@ thin.core.ListShape.prototype.setEnabledForSection = function(enabled, sectionNa
   var sectionShapeForScope = this.getSectionShape(sectionNameForScope);
   sectionShapeForScope.setEnabled(enabled);
   layout.setVisibled(sectionShapeForScope.getGroup(), enabled);
-  this.setEnabledForSectionInternal(enabled, 
+  this.setEnabledForSectionInternal(enabled,
       thin.core.ListShape.ClassIds[sectionNameForScope]);
 
   if (enabled) {
@@ -454,10 +446,10 @@ thin.core.ListShape.prototype.setEnabledForSection = function(enabled, sectionNa
     sectionShapeForScope.initHeightForLastActive();
 
     var captureListShapeLeft = this.getLeft();
-    var captureListShapeRight = this.getBounds().toBox().right;    
+    var captureListShapeRight = this.getBounds().toBox().right;
     var targetContentLeft = boxSizeByShapes.left;
     var targetContentRight = boxSizeByShapes.right;
-    
+
     if (targetContentLeft < captureListShapeLeft) {
       this.setLeft(targetContentLeft);
       this.setWidth(captureListShapeRight - targetContentLeft);
@@ -467,7 +459,7 @@ thin.core.ListShape.prototype.setEnabledForSection = function(enabled, sectionNa
       this.setWidth(targetContentRight - captureListShapeLeft);
     }
     listHelper.setTransLateOfNextSectionShapes(
-        new goog.math.Coordinate(0, newSectionHeight), 
+        new goog.math.Coordinate(0, newSectionHeight),
         sectionShapeForScope);
     sectionHelperForScope.active(this);
   } else {
@@ -487,7 +479,7 @@ thin.core.ListShape.prototype.setEnabledForSection = function(enabled, sectionNa
 thin.core.ListShape.prototype.setLeft = function(left) {
   left = thin.numberWithPrecision(left);
   this.left_ = left;
-  this.id_.setLeft(left + thin.core.ListShape.DELTAX_);
+  this.id_.setLeft(left + 4);
   this.face_.setLeft(left);
   this.getLayout().setElementAttributes(this.getElement(), {
     'x': left
@@ -502,7 +494,7 @@ thin.core.ListShape.prototype.setTop = function(top) {
   var listShape = thin.core.ListShape;
   top = thin.numberWithPrecision(top);
   this.top_ = top;
-  this.id_.setTop(top + ((listShape.IDSHAPEFONT_.size * 0.8) + listShape.DELTAX_));
+  this.id_.setTop(top + ((listShape.IDSHAPEFONT_.size * 0.8) + 4));
   this.face_.setTop(top);
   this.getLayout().setElementAttributes(this.getElement(), {
     'y': top
@@ -567,8 +559,8 @@ thin.core.ListShape.prototype.setHeightForSectionShape = function(unlimitedHeigh
   var transLateCoordinate = new goog.math.Coordinate(0, allowHeight - captureSectionHeight);
   var retransLateCoordinate = new goog.math.Coordinate(0, captureSectionHeight - allowHeight);
   var shapes = this.activeshapes_.getClone();
-  
-  
+
+
   /**
    * @param {number} sectionHeight
    * @param {goog.math.Coordinate} transLate
@@ -586,13 +578,13 @@ thin.core.ListShape.prototype.setHeightForSectionShape = function(unlimitedHeigh
     }
     sectionShapeForScope.updateProperties();
   };
-  
+
   layout.getWorkspace().normalVersioning(function(version) {
-  
+
     version.upHandler(function() {
       updateListShape(allowHeight, transLateCoordinate);
     }, scope);
-    
+
     version.downHandler(function() {
       updateListShape(captureSectionHeight, retransLateCoordinate);
     }, scope);
@@ -622,24 +614,24 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
   var workspace = layout.getWorkspace();
   var listHelper = layout.getHelpers().getListHelper();
   var sectionName = thin.core.ListHelper.SectionName;
-  
+
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
-  
+
   var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
-  
-  
+
+
   var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   leftInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var captureLeft = scope.getLeft();
         var allowLeft = scope.getAllowLeft(Number(e.target.getValue()));
         var transLate = new goog.math.Coordinate(allowLeft - captureLeft, 0);
         var retransLate = new goog.math.Coordinate(captureLeft - allowLeft, 0);
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             listHelper.setTransLate(transLate);
@@ -647,7 +639,7 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
             listHelper.update();
             this.updateProperties();
           }, scope);
-          
+
           version.downHandler(function() {
             listHelper.setTransLate(retransLate);
             this.setLeft(captureLeft);
@@ -656,21 +648,21 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
   var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   topInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var captureTop = scope.getTop();
         var allowTop = scope.getAllowTop(Number(e.target.getValue()));
         var transLate = new goog.math.Coordinate(0, allowTop - captureTop);
         var retransLate = new goog.math.Coordinate(0, captureTop - allowTop);
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             listHelper.setTransLate(transLate);
@@ -678,7 +670,7 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
             listHelper.update();
             this.updateProperties();
           }, scope);
-          
+
           version.downHandler(function() {
             listHelper.setTransLate(retransLate);
             this.setTop(captureTop);
@@ -687,25 +679,25 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(topInputProperty, baseGroup, 'top');
-  
-  
+
+
   var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   widthInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var captureWidth = scope.getWidth();
         var allowWidth = scope.getAllowWidth(Number(e.target.getValue()));
-        
+
         if (captureWidth > allowWidth) {
-        
+
           var listShapeLeft = scope.getLeft();
           var allowRight = listShapeLeft + allowWidth;
           var contentRightArray = [];
-    
+
           scope.forEachSectionShape(function(sectionShapeForEach, sectionNameForEach) {
             var minLimitRight = allowRight;
             if (sectionShapeForEach.isEnabled()) {
@@ -720,20 +712,20 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
             goog.array.insert(contentRightArray, minLimitRight);
           }, this);
           goog.array.sort(contentRightArray);
-          
+
           var limitRight = contentRightArray[contentRightArray.length - 1];
           if (limitRight > allowRight) {
             allowWidth = limitRight - listShapeLeft;
           }
         }
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setWidth(allowWidth);
             listHelper.update();
             this.updateProperties();
           }, scope);
-          
+
           version.downHandler(function() {
             this.setWidth(captureWidth);
             listHelper.update();
@@ -741,14 +733,14 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
-  
-  
+
+
   var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   heightInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var captureHeight = scope.getHeight();
@@ -768,7 +760,7 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
             listHelper.update();
             this.updateProperties();
           }, scope);
-          
+
           version.downHandler(function() {
             this.setHeight(captureHeight);
             listHelper.update();
@@ -776,28 +768,28 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
-  
-  
+
+
   var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
-  
-  
+
+
   var listGroup = proppane.addGroup(thin.t('property_group_list'));
-  
-  
+
+
   var changingPageCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_auto_page_break'));
   changingPageCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var pageSetting = e.target.isChecked();
         var capturePageSetting = scope.isChangingPage();
-        
+
         workspace.normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setChangingPage(pageSetting);
             if (pageSetting) {
@@ -807,7 +799,7 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
             }
             this.updateProperties();
           }, scope);
-          
+
           version.downHandler(function() {
             this.setChangingPage(capturePageSetting);
             if (capturePageSetting) {
@@ -819,46 +811,46 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(changingPageCheckProperty, listGroup, 'list-changing-page');
-  
-  
+
+
   var headerEnabledCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_list_header'));
   headerEnabledCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         this.setSectionEnabled(e.target.isChecked(), sectionName.HEADER);
       }, false, this);
-  
+
   proppane.addProperty(headerEnabledCheckProperty, listGroup, 'list-header-enable');
-  
-  
+
+
   var pageFooterEnabledCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_list_page_footer'));
   pageFooterEnabledCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         this.setSectionEnabled(e.target.isChecked(), sectionName.PAGEFOOTER);
       }, false, this);
-  
+
   proppane.addProperty(pageFooterEnabledCheckProperty, listGroup, 'list-pagefooter-enable');
-  
-  
+
+
   var footerEnabledCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_list_footer'));
   footerEnabledCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         this.setSectionEnabled(e.target.isChecked(), sectionName.FOOTER);
       }, false, this);
-  
+
   proppane.addProperty(footerEnabledCheckProperty, listGroup, 'list-footer-enable');
 
 
   var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
-  
+
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
         var shapeId = e.target.getValue();
         var oldShapeId = scope.getShapeId();
         var pageNumberReferences = scope.getPageNumberReferences();
-        
+
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             this.setShapeId(shapeId);
@@ -867,7 +859,7 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
               shape.setTargetId(shapeId);
             });
           }, scope);
-          
+
           version.downHandler(function() {
             this.setShapeId(oldShapeId);
             this.updateProperties();
@@ -877,13 +869,13 @@ thin.core.ListShape.prototype.createPropertyComponent_ = function() {
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
-  
+
   var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
-  
+
   proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
@@ -895,7 +887,7 @@ thin.core.ListShape.prototype.updateProperties = function() {
     proppane.setTarget(this);
     this.createPropertyComponent_();
   }
-  
+
   var listHelper = this.getLayout().getHelpers().getListHelper();
   var activeSectionName = listHelper.getActiveSectionName();
   if (activeSectionName) {
@@ -907,12 +899,12 @@ thin.core.ListShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('width').setValue(this.getWidth());
     proppane.getPropertyControl('height').setValue(this.getHeight());
     proppane.getPropertyControl('display').setChecked(this.getDisplay());
-    
+
     proppane.getPropertyControl('list-header-enable').setChecked(this.getSectionShape(sectionName.HEADER).isEnabled());
     proppane.getPropertyControl('list-pagefooter-enable').setChecked(this.getSectionShape(sectionName.PAGEFOOTER).isEnabled());
     proppane.getPropertyControl('list-footer-enable').setChecked(this.getSectionShape(sectionName.FOOTER).isEnabled());
     proppane.getPropertyControl('list-changing-page').setChecked(this.isChangingPage());
-    
+
     proppane.getPropertyControl('shape-id').setValue(this.getShapeId());
     proppane.getPropertyControl('desc').setValue(this.getDesc());
     proppane.getChild('list-changing-page').setEnabled(listHelper.isEnableChangingPage(this));
@@ -948,14 +940,14 @@ thin.core.ListShape.prototype.removePageNumberReference = function(pageNumber) {
 thin.core.ListShape.prototype.disposeInternal = function() {
   thin.core.ListShape.superClass_.disposeInternal.call(this);
   this.disposeInternalForShape();
-  
+
   this.id_.dispose();
   this.face_.dispose();
   this.activeshapes_.dispose();
   goog.object.forEach(this.sectionShapes_, function(sectionShape) {
     sectionShape.dispose();
   });
-  
+
   delete this.id_;
   delete this.face_;
   delete this.activeshapes_;

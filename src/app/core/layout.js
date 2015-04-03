@@ -61,9 +61,9 @@ thin.core.Layout = function(workspace) {
    * @private
    */
   this.manager_ = new thin.core.StateManager(this);
-  
+
   var helpers = new thin.core.Helpers(this);
-  
+
   /**
    * @type {thin.core.Helpers}
    * @private
@@ -114,7 +114,7 @@ thin.core.Layout.prototype.drawBasicShapeFromElement = function(element, opt_sec
   var opt_shapeIdManager;
   var opt_group;
   var shape;
-  
+
   if (opt_sectionShape) {
     var manager = opt_sectionShape.getManager();
     opt_shapeIdManager = opt_sectionShape.getManager().getShapeIdManager();
@@ -122,20 +122,20 @@ thin.core.Layout.prototype.drawBasicShapeFromElement = function(element, opt_sec
   } else {
     var manager = this.manager_;
   }
-  
+
   switch (this.getElementAttribute(element, 'class')) {
     case thin.core.RectShape.CLASSID:
       shape = thin.core.RectShape.createFromElement(element, this, opt_shapeIdManager);
       break;
-      
+
     case thin.core.EllipseShape.CLASSID:
       shape = thin.core.EllipseShape.createFromElement(element, this, opt_shapeIdManager);
       break;
-      
+
     case thin.core.LineShape.CLASSID:
       shape = thin.core.LineShape.createFromElement(element, this, opt_shapeIdManager);
       break;
-      
+
     case thin.core.TblockShape.CLASSID:
       shape = thin.core.TblockShape.createFromElement(element, this, opt_shapeIdManager);
       break;
@@ -147,20 +147,20 @@ thin.core.Layout.prototype.drawBasicShapeFromElement = function(element, opt_sec
     case thin.core.TextShape.CLASSID:
       shape = thin.core.TextShape.createFromElement(element, this, opt_shapeIdManager);
       break;
-    
+
     case thin.core.ImageShape.CLASSID:
       shape = thin.core.ImageShape.createFromElement(element, this, opt_shapeIdManager);
       break;
-    
+
     case thin.core.ImageblockShape.CLASSID:
       shape = thin.core.ImageblockShape.createFromElement(element, this, opt_shapeIdManager);
       break;
-    
+
     default:
       throw new Error('Unknown shape.');
       break;
   }
-  
+
   this.setOutlineForSingle(shape);
   manager.addShape(shape, opt_sectionShape);
   this.appendChild(shape, opt_group);
@@ -291,20 +291,20 @@ thin.core.Layout.prototype.removeElementCursor = function(element) {
 /** @inheritDoc */
 thin.core.Layout.prototype.createDom = function() {
   thin.core.Layout.superClass_.createDom.call(this);
-  
+
   this.setElementAttributes(this.element_, {
     'xmlns': goog.graphics.SvgGraphics.SVG_NS_,
     'xmlns:xlink': thin.core.Layout.SVG_NS_XLINK
   });
   this.element_.removeAttribute('overflow');
-  
+
   this.setElementAttributes(this.canvasElement.getElement(), {
     'class': thin.core.Layout.CANVAS_CLASS_ID
   });
 
   this.setCoordOrigin(0, 0);
   this.setCoordSize(Number(this.width), Number(this.height));
-  
+
   this.helpers_.render();
 };
 
@@ -494,7 +494,7 @@ thin.core.Layout.prototype.getBoxSize = function() {
  * @return {Array}
  */
 thin.core.Layout.prototype.getTargetIndexOfShapes = function(shapes, parentGroup) {
-      
+
   var childNodes = parentGroup.getElement().childNodes;
   var shapeIndexArr = [];
   goog.array.forEach(childNodes, function(element, elementCount) {
@@ -609,7 +609,7 @@ thin.core.Layout.prototype.moveShapeToAfter = function(shapes, targetIndexByShap
  * @param {goog.graphics.SvgGroupElement} parentGroup
  */
 thin.core.Layout.prototype.moveShapeByPreviousElement = function(shapes, targetIndexByShapes, previousTarget, parentGroup) {
-  
+
   this.forEachByChildNodesIndex(shapes, targetIndexByShapes, function(shape, count) {
     var previousElement = previousTarget[count];
     if (goog.isDefAndNotNull(previousElement)) {
@@ -617,7 +617,7 @@ thin.core.Layout.prototype.moveShapeByPreviousElement = function(shapes, targetI
     } else {
       goog.dom.insertSiblingBefore(shape.getElement(),
           goog.dom.getFirstElementChild(parentGroup.getElement()));
-    }    
+    }
   });
 };
 
@@ -635,7 +635,7 @@ thin.core.Layout.prototype.moveShapeByNextElement = function(shapes, targetIndex
     if (goog.isDefAndNotNull(nextElement)) {
       goog.dom.insertSiblingBefore(shape.getElement(), nextElement);
     } else {
-      goog.dom.insertSiblingAfter(shape.getElement(), 
+      goog.dom.insertSiblingAfter(shape.getElement(),
          goog.dom.getLastElementChild(parentGroup.getElement()));
     }
   });
@@ -770,7 +770,7 @@ thin.core.Layout.prototype.pasteShapes = function() {
   var isMultipleByClipBoard = clipBoardManager.isMultiple();
   var clipBoardShapes = clipBoardManager.getClone();
   var clipBoardShapesSize = clipBoardManager.getShapeBounds().getSize();
-  
+
   var manager = this.manager_;
   var helpers = this.helpers_;
   var guide = helpers.getGuideHelper();
@@ -781,10 +781,10 @@ thin.core.Layout.prototype.pasteShapes = function() {
   var layout = this;
   var isAllowRenderToListShape = false;
   var isAdaptDeltaForList = false;
-  
+
   var listHelper = helpers.getListHelper();
   var isActive = listHelper.isActive();
-  
+
   if (isActive) {
     var captureActiveSectionName = listHelper.getActiveSectionName() || listHelper.getDefaultActiveSectionName();
     var captureSectionShapeForActive = activeShapeManager.getIfSingle().getSectionShape(captureActiveSectionName);
@@ -794,15 +794,15 @@ thin.core.Layout.prototype.pasteShapes = function() {
     var layerHeight = renderToLayerBounds.height;
     var clipBoardWidth = clipBoardShapesSize.width;
     var clipBoardHeight = clipBoardShapesSize.height;
-    
+
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var oldShapesByListShape = activeShapeManagerByListShape.getClone();
-    
+
     if (layerWidth >= clipBoardWidth &&
     layerHeight >= clipBoardHeight) {
-    
+
       isAllowRenderToListShape = true;
-      
+
       var basisCoordinate = new goog.math.Coordinate(renderToLayerBounds.left, renderToLayerBounds.top).clone();
       var deltaCoordinate = clipBoardManager.getDeltaCoordinate();
       if (goog.isDef(deltaCoordinate)) {
@@ -812,12 +812,12 @@ thin.core.Layout.prototype.pasteShapes = function() {
       }
     }
   }
-  
+
   var pasteShapes = [];
   var captureShapeIdArray = [];
   var captureRefIdArray = [];
   var defaultRefId = thin.core.TblockShape.DEFAULT_REFID;
-  
+
   /**
    * @param {boolean=} opt_isAdaptDeltaForList
    * @param {goog.graphics.SvgGroupElement=} opt_captureRenderTo
@@ -842,16 +842,16 @@ thin.core.Layout.prototype.pasteShapes = function() {
       }
     });
   };
-  
+
   if (isAllowRenderToListShape) {
     var shapeIdManager = captureSectionShapeForActive.getManager().getShapeIdManager();
     createCloneShapes(isAdaptDeltaForList, captureRenderTo, basisCoordinate, shapeIdManager);
   } else {
     createCloneShapes();
   }
-  
+
   this.workspace_.normalVersioning(function(version) {
-  
+
     version.upHandler(function() {
       guide.setDisable();
       helpers.disableAll();
@@ -909,11 +909,11 @@ thin.core.Layout.prototype.pasteShapes = function() {
         singleShape.updateProperties();
       }
     }, layout);
-    
+
     version.downHandler(function() {
       guide.setDisable();
       helpers.disableAll();
-      
+
       if (!isActive) {
         this.removeShapes(activeShapeManager.get());
         activeShapeManager.set(oldShapesByGlobal);
@@ -946,7 +946,7 @@ thin.core.Layout.prototype.pasteShapes = function() {
           activeShapeManagerByListShape.set(oldShapesByListShape);
           listHelper.setActiveSectionName(captureActiveSectionName);
         }
-        
+
         if (activeShapeManagerByListShape.isEmpty()) {
           activeShapeManager.getIfSingle().updateProperties();
           thin.ui.setEnabledForFontUi(false);
@@ -976,7 +976,7 @@ thin.core.Layout.prototype.pasteShapes = function() {
  * @param {Array} shapes
  */
 thin.core.Layout.prototype.getCloneShapes = function(shapes) {
-  
+
   var clipBoardManager = thin.core.ClipboardShapeManager.getInstance();
   clipBoardManager.clear();
   clipBoardManager.setShapeBounds(this.calculateActiveShapeBounds(shapes));
@@ -993,7 +993,7 @@ thin.core.Layout.prototype.getCloneShapes = function(shapes) {
     var guide = helper.getGuideHelper();
     clipBoardManager.setDeltaCoordinate(new goog.math.Coordinate(guide.getLeft() - listShape.getLeft(), guide.getTop() - sectionShapeForActive.getTop()).clone());
   }
-  
+
   this.forEachByChildNodesIndex(shapes, this.getTargetIndexOfShapes(shapes, parentGroup), function(shape) {
     clipBoardManager.add(shape.getCloneCreator());
   });
@@ -1017,7 +1017,7 @@ thin.core.Layout.prototype.remove = function(shape) {
  */
 thin.core.Layout.prototype.removeShape = function(shape) {
   var listHelper = this.helpers_.getListHelper();
-  
+
   if (shape.instanceOfListShape()) {
     if (listHelper.isEnableChangingPage(shape)) {
       listHelper.clearChangingPageSetShape();
@@ -1026,7 +1026,7 @@ thin.core.Layout.prototype.removeShape = function(shape) {
       target.removeTargetShape();
     });
   }
-  
+
   if (shape.instanceOfTblockShape()) {
     if (shape.isReferences()) {
       goog.array.forEach(shape.getReferringShapes(), function(target) {
@@ -1041,7 +1041,7 @@ thin.core.Layout.prototype.removeShape = function(shape) {
   if (shape.instanceOfPageNumberShape()) {
     shape.removeTargetShape();
   }
-  
+
   if (shape.isAffiliationListShape()) {
     var listShape = listHelper.getTarget();
     var manager = listShape.getSectionShape(shape.getAffiliationSectionName()).getManager();
@@ -1095,7 +1095,7 @@ thin.core.Layout.prototype.calculateActiveShapeBounds = function(shapes) {
   var minY = [];
   var maxX = [];
   var maxY = [];
-  
+
   var box;
   goog.array.forEachRight(shapes, function(shape) {
     box = shape.getBoxSize();
@@ -1104,7 +1104,7 @@ thin.core.Layout.prototype.calculateActiveShapeBounds = function(shapes) {
     goog.array.insert(maxX, box.right);
     goog.array.insert(maxY, box.bottom);
   });
-  
+
   /**
    * @param {number} a The first object to be compared.
    * @param {number} b The second object to be compared.
@@ -1113,12 +1113,12 @@ thin.core.Layout.prototype.calculateActiveShapeBounds = function(shapes) {
   var desc = function(a, b) {
     return b - a;
   };
-  
+
   goog.array.sort(minX);
   goog.array.sort(minY);
   goog.array.sort(maxX, desc);
   goog.array.sort(maxY, desc);
-  
+
   return goog.math.Rect.createFromBox(new goog.math.Box(minY[0], maxX[0], maxY[0], minX[0]));
 };
 
@@ -1390,7 +1390,7 @@ thin.core.Layout.prototype.getUpperLeftShape = function(shapes) {
     goog.object.set(shapeIndexes, upperLeft, i);
     goog.array.insertAt(upperPos, upperLeft, i);
   });
-  
+
   goog.array.sort(upperPos);
   return shapes[shapeIndexes[upperPos[0]]];
 };

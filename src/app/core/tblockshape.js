@@ -14,8 +14,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.core.TblockShape');
-goog.provide('thin.core.TblockShape.ClassIds');
-goog.provide('thin.core.TblockShape.Delta_');
 
 goog.require('goog.dom');
 goog.require('goog.array');
@@ -82,16 +80,7 @@ thin.core.TblockShape.ClassIds = {
 
 
 /**
- * @enum {number}
- * @private
- */
-thin.core.TblockShape.Delta_ = {
-  X: 2,
-  Y: 11
-};
-
-
-/**
+ * Default text color.
  * @type {goog.graphics.SolidFill}
  * @private
  */
@@ -102,28 +91,28 @@ thin.core.TblockShape.DEFAULT_FILL = new goog.graphics.SolidFill('#000000');
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.core.TblockShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#7C4007');
+thin.core.TblockShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#0096fd');
 
 
 /**
  * @type {goog.graphics.Font}
  * @private
  */
-thin.core.TblockShape.IDSHAPEFONT_ = new goog.graphics.Font(11, 'Helvetica');
+thin.core.TblockShape.IDSHAPEFONT_ = new goog.graphics.Font(10, 'Helvetica');
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.core.TblockShape.BOX_FILL_ = new goog.graphics.SolidFill('#f4e2c4', 0.8);
+thin.core.TblockShape.BOX_FILL_ = new goog.graphics.SolidFill('#0096fd', 0.1);
 
 
 /**
  * @type {goog.graphics.Stroke}
  * @private
  */
-thin.core.TblockShape.BOX_STROKE_ = new goog.graphics.Stroke(0.28, '#7C4007');
+thin.core.TblockShape.BOX_STROKE_ = new goog.graphics.Stroke(0.5, '#0096fd');
 
 
 /**
@@ -726,7 +715,7 @@ thin.core.TblockShape.prototype.removeReferringShape = function(referringShape) 
  */
 thin.core.TblockShape.prototype.setLeft = function(left) {
   thin.core.TblockShape.superClass_.setLeft.call(this, left);
-  this.id_.setLeft(this.left_ + thin.core.TblockShape.Delta_.X);
+  this.id_.setLeft(this.left_ + 4);
 };
 
 
@@ -735,7 +724,7 @@ thin.core.TblockShape.prototype.setLeft = function(left) {
  */
 thin.core.TblockShape.prototype.setTop = function(top) {
   thin.core.TblockShape.superClass_.setTop.call(this, top);
-  this.id_.setTop(this.top_ + thin.core.TblockShape.Delta_.Y);
+  this.id_.setTop(this.top_ + 11);
 };
 
 

@@ -35,13 +35,6 @@ goog.mixin(thin.core.LineOutline.prototype, thin.core.ModuleOutline.prototype);
 
 
 /**
- * @type {number}
- * @private
- */
-thin.core.LineOutline.THICK_STROKE_PX_ = 4;
-
-
-/**
  * @param {goog.graphics.Element} shape
  */
 thin.core.LineOutline.prototype.setTargetShape = function(shape) {
@@ -60,7 +53,7 @@ thin.core.LineOutline.prototype.setBoundsByCoordinate = function(startPosX, star
 
   var x1 = Math.min(startPosX, clientPosX);
   var x2 = Math.max(startPosX, clientPosX);
-  
+
   if (x1 == startPosX) {
     var y1 = startPosY;
     var y2 = clientPosY;
@@ -68,14 +61,14 @@ thin.core.LineOutline.prototype.setBoundsByCoordinate = function(startPosX, star
     var y1 = clientPosY;
     var y2 = startPosY;
   }
-  
+
   this.x1_ = x1;
   this.x2_ = x2;
   this.y1_ = y1;
   this.y2_ = y2;
   this.calculateDirection(y1, y2);
   this.setBounds(new goog.math.Rect(
-    x1, Math.min(y1, y2), 
+    x1, Math.min(y1, y2),
     thin.numberWithPrecision(Math.abs(x1 - x2)),
     thin.numberWithPrecision(Math.abs(y1 - y2))));
 };
@@ -86,12 +79,6 @@ thin.core.LineOutline.prototype.setBoundsByCoordinate = function(startPosX, star
  */
 thin.core.LineOutline.prototype.toShape = function() {
   return this.getLayout().createLineShape();
-};
-
-
-/** @inheritDoc */
-thin.core.LineOutline.prototype.setStrokeWidth = function(width) {
-  this.setStrokeWidth_(width + thin.core.LineOutline.THICK_STROKE_PX_);
 };
 
 

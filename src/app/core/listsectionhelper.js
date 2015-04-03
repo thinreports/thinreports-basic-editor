@@ -47,37 +47,37 @@ goog.require('thin.core.ModuleShape');
  * @extends {goog.Disposable}
  */
 thin.core.ListSectionHelper = function(layout, sectionName) {
-  
+
   /**
    * @type {thin.core.Layout}
    * @private
    */
   this.layout_ = layout;
-  
+
   /**
    * @type {string}
    * @private
    */
   this.sectionName_ = sectionName;
-  
+
   /**
    * @type {thin.core.ListSectionHelper.Separator_}
    * @private
    */
   this.separator_ = new thin.core.ListSectionHelper.Separator_(layout);
-  
+
   /**
    * @type {thin.core.Layer}
    * @private
    */
   this.drawLayer_ = this.createDrawLayer_();
-  
+
   /**
    * @type {thin.core.Layer}
    * @private
    */
   this.selectorLayer_ = this.createSelectorLayer_();
-  
+
   /**
    * @type {thin.core.TextShape}
    * @private
@@ -184,26 +184,26 @@ thin.core.ListSectionHelper.prototype.active = function(target, opt_visibled) {
   var sectionShape = target.getSectionShape(this.sectionName_);
   var isEnabled = sectionShape.isEnabled();
   var separator = this.separator_;
-  
+
   separator.setVisibled(isEnabled);
   separator.getDragger().setEnabled(isEnabled);
-  
+
   if (goog.isBoolean(opt_visibled)) {
     this.drawLayer_.setVisibled(opt_visibled);
   } else {
     this.drawLayer_.setVisibled(
       this.layout_.getWorkspace().getUiStatusForAction() != 'selector');
   }
-  
+
   if (isEnabled) {
     var selectorLayer = this.selectorLayer_;
     var selectorElement = selectorLayer.getElement();
-    
+
     goog.dom.insertSiblingBefore(selectorElement, sectionShape.getGroup().getElement());
     selectorLayer.setVisibled(true);
     goog.dom.insertSiblingBefore(this.label_.getElement(), selectorElement);
   }
-  
+
   this.active_ = true;
 };
 
@@ -211,19 +211,19 @@ thin.core.ListSectionHelper.prototype.active = function(target, opt_visibled) {
 thin.core.ListSectionHelper.prototype.inactive = function() {
   if (this.isActive()) {
     var layout = this.layout_;
-    
+
     this.drawLayer_.setVisibled(false);
     this.separator_.setVisibled(false);
     this.selectorLayer_.setVisibled(false);
-    
+
     var listHelperGroup = layout.getHelpers().getListHelper();
-    
+
     layout.appendChild(this.selectorLayer_, listHelperGroup);
-    
+
     var label = this.label_;
     layout.appendChild(label, listHelperGroup);
     label.setVisibled(false);
-    
+
     this.active_ = false;
   }
 };
@@ -244,7 +244,7 @@ thin.core.ListSectionHelper.prototype.createDrawLayer_ = function() {
  */
 thin.core.ListSectionHelper.prototype.createSelectorLayer_ = function() {
   var layout = this.layout_;
-  var selectorLayer = new thin.core.ActionLayer(layout, 
+  var selectorLayer = new thin.core.ActionLayer(layout,
           new thin.core.Cursor(thin.core.Cursor.Type.CROSSHAIR));
   selectorLayer.setFill(new goog.graphics.SolidFill('#FFFFFF', 0.3));
   return selectorLayer;
@@ -347,7 +347,7 @@ goog.inherits(thin.core.FooterSectionHelper, thin.core.ListSectionHelper);
  * @extends {thin.core.Component}
  */
 thin.core.ListSectionHelper.Separator_ = function(layout) {
-  
+
   /**
    * @type {thin.core.Layout}
    * @private
@@ -359,13 +359,13 @@ thin.core.ListSectionHelper.Separator_ = function(layout) {
    * @private
    */
   this.line_ = this.createLine_();
-  
+
   /**
    * @type {thin.core.ListSectionHelper.SeparatorHandle_}
    * @private
    */
   this.leftHandle_ = this.createHandle_();
-  
+
   /**
    * @type {thin.core.ListSectionHelper.SeparatorHandle_}
    * @private
@@ -386,7 +386,7 @@ goog.inherits(thin.core.ListSectionHelper.Separator_, thin.core.Component);
  */
 thin.core.ListSectionHelper.Separator_.prototype.createLine_ = function() {
   return new thin.core.DraggableLine(
-                    thin.core.DraggableLine.Direction.HORIZONTAL, this.layout_, 
+                    thin.core.DraggableLine.Direction.HORIZONTAL, this.layout_,
                     thin.core.ListSectionHelper.FILL_);
 };
 
@@ -431,7 +431,7 @@ thin.core.ListSectionHelper.Separator_.prototype.init = function(sectionName) {
   var multipleShapesHelper = helpers.getMultipleShapesHelper();
   var guide = helpers.getGuideHelper();
   var listHelper = helpers.getListHelper();
-  
+
   var body = goog.dom.getDocument().body;
   var dragLayer = layout.getHelpers().getDragLayer();
   var dragger = new thin.core.SvgDragger(this);
@@ -460,7 +460,7 @@ thin.core.ListSectionHelper.Separator_.prototype.init = function(sectionName) {
     var listShape = listHelper.getTarget();
     var listShapeBounds = listShape.getBounds();
     var sectionShape = listShape.getSectionShape(sectionName);
-    
+
     var blankRangeHeight = listHelper.getBlankRangeBounds().height;
     var sectionBoundsByShapes = layout.calculateActiveShapeBounds(
           sectionShape.getManager().getShapesManager().get());
@@ -487,7 +487,7 @@ thin.core.ListSectionHelper.Separator_.prototype.init = function(sectionName) {
     var singleShape = activeShapeManagerByListShape.getIfSingle();
     var isMultiple = activeShapeManagerByListShape.isMultiple();
     var isEmpty = activeShapeManagerByListShape.isEmpty();
-    
+
     /**
      * @param {number} sectionHeight
      * @param {goog.math.Coordinate} transLate
@@ -506,7 +506,7 @@ thin.core.ListSectionHelper.Separator_.prototype.init = function(sectionName) {
         layout.calculateGuideBounds(shapes);
         guide.adjustToTargetShapeBounds();
       }
-      
+
       if (isEmpty) {
         listShape.updateProperties();
       } else {
@@ -527,12 +527,12 @@ thin.core.ListSectionHelper.Separator_.prototype.init = function(sectionName) {
       version.upHandler(function() {
         updateListShape(newSectionHeight, transLateCoordinate);
       }, scope);
-      
+
       version.downHandler(function() {
         updateListShape(captureSectionHeight, retransLateCoordinate);
       }, scope);
     });
-    
+
   }, false, dragger);
 
   this.dragger_ = dragger;
@@ -570,7 +570,7 @@ thin.core.ListSectionHelper.Separator_.prototype.setTop = function(top) {
   this.line_.setTop(top);
   this.leftHandle_.setTop(top - (this.leftHandle_.getHeight() / 2));
   this.rightHandle_.setTop(top - (this.rightHandle_.getHeight() / 2));
-  
+
   top = thin.numberWithPrecision(top - this.getParentTransLateY());
   this.top_ = top;
 };
@@ -612,11 +612,11 @@ thin.core.ListSectionHelper.Separator_.prototype.getDragger = function() {
 /** @override */
 thin.core.ListSectionHelper.Separator_.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
-  
+
   this.line_.dispose();
   this.leftHandle_.dispose();
   this.rightHandle_.dispose();
-  
+
   delete this.layout_;
   delete this.line_;
   delete this.leftHandle_;
@@ -632,7 +632,7 @@ thin.core.ListSectionHelper.Separator_.prototype.disposeInternal = function() {
  * @private
  */
 thin.core.ListSectionHelper.SeparatorHandle_ = function(element, layout) {
-  goog.base(this, element, layout, 
+  goog.base(this, element, layout,
       null, new goog.graphics.SolidFill('#ffffff'));
 };
 goog.inherits(thin.core.ListSectionHelper.SeparatorHandle_, thin.core.Rect);

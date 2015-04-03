@@ -14,9 +14,10 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.core.GuideResizer');
-goog.provide('thin.core.GuideResizer.Fill_');
 
 goog.require('goog.math.Size');
+goog.require('goog.graphics.SolidFill');
+goog.require('goog.graphics.Stroke');
 goog.require('thin.core.Ellipse');
 goog.require('thin.core.SvgResizer');
 goog.require('thin.core.ModuleShape');
@@ -25,15 +26,16 @@ goog.require('thin.core.ModuleShape');
 /**
  * @param {Element} element
  * @param {thin.core.Layout} layout
- * @param {goog.graphics.Stroke?} stroke
  * @param {thin.core.GuideHelper} affiliationGroup
  * @constructor
  * @extends {thin.core.Ellipse}
  */
-thin.core.GuideResizer = function(element, layout, stroke, affiliationGroup) {
-  thin.core.Ellipse.call(this, element, layout, stroke,
-    thin.core.GuideResizer.Fill_.DEFAULTFILL);
-  
+thin.core.GuideResizer = function(element, layout, affiliationGroup) {
+  goog.base(this, element, layout, null, null);
+
+  // Apply style for stroke and fill
+  this.setStrokeAndFill();
+
   /**
    * @type {thin.core.GuideHelper}
    * @private
@@ -45,20 +47,10 @@ goog.mixin(thin.core.GuideResizer.prototype, thin.core.ModuleShape.prototype);
 
 
 /**
- * @enum {goog.graphics.SolidFill}
- * @private
- */
-thin.core.GuideResizer.Fill_ = {
-  DEFAULTFILL: new goog.graphics.SolidFill('#FFFFFF'),
-  READONLYFILL: new goog.graphics.SolidFill('#DDDDDD')
-};
-
-
-/**
  * @type {number}
  * @private
  */
-thin.core.GuideResizer.RESIZERSIZE_ = 8;
+thin.core.GuideResizer.RESIZERSIZE_ = 9;
 
 
 /**
@@ -87,15 +79,28 @@ thin.core.GuideResizer.prototype.isReadOnly = function() {
  * @param {boolean} readonly
  */
 thin.core.GuideResizer.prototype.setReadOnly = function(readonly) {
-  var fillSetting = thin.core.GuideResizer.Fill_;
   this.readOnly_ = readonly;
-  this.setFill(readonly ? fillSetting.READONLYFILL : fillSetting.DEFAULTFILL);
+  this.setStrokeAndFill(readonly);
   this.getResizer().setEnabled(!readonly);
-  
+
   if (readonly) {
     this.getLayout().removeElementCursor(this.getElement());
   } else {
     this.getLayout().setElementCursor(this.getElement(), this.getCursor());
+  }
+};
+
+
+/**
+ * @param {boolean=} opt_readonly
+ */
+thin.core.GuideResizer.prototype.setStrokeAndFill = function(opt_readonly) {
+  if (opt_readonly) {
+    this.setStroke(new goog.graphics.Stroke('1px', '#ffffff'));
+    this.setFill(new goog.graphics.SolidFill('#A4D8FF'));
+  } else {
+    this.setStroke(new goog.graphics.Stroke('1px', '#ffffff'));
+    this.setFill(new goog.graphics.SolidFill('#0096fd'));
   }
 };
 
