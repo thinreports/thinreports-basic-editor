@@ -602,6 +602,7 @@ thin.core.Workspace.prototype.save_ = function(callback_fn) {
   this.getFile().save(this.getSaveFormat_());
   this.updateFingerPrint_();
   this.removeBackup();
+  this.getTabPage().setChanged(false);
   callback_fn();
 };
 
@@ -641,7 +642,6 @@ thin.core.Workspace.prototype.saveAs_ = function(file, callback_fn) {
   if (page) {
     page.setTitle(this.getTabName());
     page.setTooltip(file.getPath());
-    page.setChanged(false);
   }
 };
 
@@ -742,12 +742,7 @@ thin.core.Workspace.prototype.getSuggestedFileName = function() {
  * @return {boolean}
  */
 thin.core.Workspace.prototype.isChanged = function() {
-  var shapesManager = this.getLayout().getManager().getShapesManager();
-  if (this.isNew() && shapesManager.isEmpty()) {
-    return false;
-  } else {
-    return this.fingerPrint_ != this.getFingerPrint_();
-  }
+  return this.fingerPrint_ != this.getFingerPrint_();
 };
 
 
@@ -771,7 +766,7 @@ thin.core.Workspace.prototype.updateFingerPrint_ = function() {
  * @private
  */
 thin.core.Workspace.prototype.getFingerPrint_ = function() {
-  return this.getHistory().getCurrentFingerPrint();
+  return this.getHistory().getHasChangedFingerPrint();
 };
 
 
@@ -1105,10 +1100,7 @@ thin.core.Workspace.prototype.exitDocument = function() {
  * @param {thin.core.HistoryManagerEvent} e
  */
 thin.core.Workspace.prototype.handleHistoryChange = function(e) {
-  // console.log(e.version.hasChanged());
-  if (e.version.hasChanged()) {
-    this.getTabPage().setChanged(this.isChanged());
-  }
+  this.getTabPage().setChanged(this.isChanged());
 };
 
 

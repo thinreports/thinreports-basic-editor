@@ -39,7 +39,7 @@ thin.core.HistoryManager = function(opt_maxCount) {
    * @type {thin.core.HistoryManager.VersionBuffer}
    * @private
    */
-  this.history_ = new thin.core.HistoryManager.VersionBuffer(opt_maxCount || 20);
+  this.history_ = new thin.core.HistoryManager.VersionBuffer(opt_maxCount);
 };
 goog.inherits(thin.core.HistoryManager, goog.events.EventTarget);
 
@@ -220,13 +220,16 @@ thin.core.HistoryManager.prototype.getCurrentVersion_ = function() {
 /**
  * @return {number|null}
  */
-thin.core.HistoryManager.prototype.getCurrentFingerPrint = function() {
-  var version = this.getCurrentVersion_();
-  if (version) {
-    return goog.getHashCode(version);
-  } else {
-    return null;
+thin.core.HistoryManager.prototype.getHasChangedFingerPrint = function() {
+  var version;
+  for (var c = this.current_ -1; c >= 0; c--) {
+    version = this.history_.get(c);
+    if (version.hasChanged()) {
+      return goog.getHashCode(version);
+    }
   }
+
+  return null;
 };
 
 
@@ -386,6 +389,10 @@ thin.core.HistoryManager.prototype.dispatchDownEvent = function(version) {
  * @private
  */
 thin.core.HistoryManager.prototype.dispatchEvent_ = function(type, version) {
+  /**
+   * @type {string}
+   */
+  this.lastRunType = type;
   this.dispatchEvent(new thin.core.HistoryManagerEvent(type, version, this));
 };
 
@@ -567,7 +574,7 @@ thin.core.HistoryManager.VersionGroup.prototype.down = function() {
 thin.core.HistoryManager.VersionGroup.prototype.add = function(version) {
   this.versions_[this.versions_.length] = version;
   if (!version.hasChanged()) {
-    this.setNotHasChanged();
+    this.setChanged(false);
   }
 };
 
@@ -598,8 +605,11 @@ thin.core.HistoryManager.VersionGroup.prototype.disposeInternal = function() {
   CustomVersion.prototype.changed_ = true;
 
 
-  CustomVersion.prototype.setNotHasChanged = function() {
-    this.changed_ = false;
+  /**
+   * @param {boolean} changed
+   */
+  CustomVersion.prototype.setChanged = function(changed) {
+    this.changed_ = changed;
   };
 
 

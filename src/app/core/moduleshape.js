@@ -423,7 +423,7 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
     e.preventDefault();
     
     layout.getWorkspace().normalVersioning(function(version) {
-      version.setNotHasChanged();
+      version.setChanged(false);
 
       version.upHandler(function() {
         guide.setDisable();
@@ -833,7 +833,7 @@ thin.core.ModuleShape.prototype.setupDragHandlers = function() {
     
     layout.getWorkspace().normalVersioning(function(version) {
       if (goog.math.Rect.equals(shapeBounds, outlineBounds)) {
-        version.setNotHasChanged();
+        version.setChanged(false);
       }
 
       version.upHandler(function() {

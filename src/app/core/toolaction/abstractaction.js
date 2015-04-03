@@ -176,7 +176,7 @@ thin.core.toolaction.AbstractAction.prototype.commonEndAction = function(
 
   layout.getWorkspace().normalVersioning(function(version) {
     if (opt_isCancelDraw) {
-      version.setNotHasChanged();
+      version.setChanged(false);
     }
 
     version.upHandler(function() {

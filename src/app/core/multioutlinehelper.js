@@ -139,7 +139,7 @@ thin.core.MultiOutlineHelper.prototype.init = function() {
 
     layout.getWorkspace().normalVersioning(function(version) {
       if (transLateX == 0 && transLateY == 0) {
-        version.setNotHasChanged();
+        version.setChanged(false);
       }
     
       version.upHandler(function() {
