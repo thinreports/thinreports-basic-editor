@@ -379,6 +379,7 @@ thin.core.Workspace.prototype.draw = function() {
     layout.drawShapeFromElements(canvasNode.childNodes);
     this.setup();
 
+    var listHelper = layout.getListHelper();
     /**
      * @param {Array} shapes
      * @param {thin.core.ListSectionShape=} opt_shapeIdManager
@@ -391,6 +392,8 @@ thin.core.Workspace.prototype.draw = function() {
             var managerForList = sectionShapeForEach.getManager();
             setupHandlers(managerForList.getShapesManager().get(), managerForList.getShapeIdManager());
           });
+          listHelper.active(shape);
+          listHelper.inactive();
         } else {
           shape.setupEventHandlers();
           if (shape.instanceOfTblockShape()) {
