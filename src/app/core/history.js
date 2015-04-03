@@ -15,7 +15,6 @@
 
 goog.provide('thin.core.HistoryManager');
 goog.provide('thin.core.HistoryManager.Mode');
-goog.provide('thin.core.HistoryManager.EventType');
 goog.provide('thin.core.HistoryManager.Version');
 goog.provide('thin.core.HistoryManager.VersionGroup');
 goog.provide('thin.core.HistoryManager.VersionBuffer');
@@ -24,13 +23,12 @@ goog.require('goog.array');
 goog.require('goog.object');
 goog.require('goog.Delay');
 goog.require('goog.Disposable');
-goog.require('goog.events.EventTarget');
 
 
 /**
  * @param {number=} opt_maxCount
  * @constructor
- * @extends {goog.events.EventTarget}
+ * @extends {goog.Disposable}
  */
 thin.core.HistoryManager = function(opt_maxCount) {
   goog.base(this);
@@ -41,7 +39,7 @@ thin.core.HistoryManager = function(opt_maxCount) {
    */
   this.history_ = new thin.core.HistoryManager.VersionBuffer(opt_maxCount);
 };
-goog.inherits(thin.core.HistoryManager, goog.events.EventTarget);
+goog.inherits(thin.core.HistoryManager, goog.Disposable);
 
 
 /**
@@ -51,15 +49,6 @@ thin.core.HistoryManager.Mode = {
   NORMAL: 0x00, 
   CHAIN: 0x01, 
   GROUP: 0x02
-};
-
-
-/**
- * @enum {string}
- */
-thin.core.HistoryManager.EventType = {
-  UP: 'history-up',
-  DOWN: 'history-down'
 };
 
 
@@ -91,6 +80,13 @@ thin.core.HistoryManager.prototype.delay_;
 thin.core.HistoryManager.prototype.versionGroup_;
 
 
+/**
+ * @type {Function}
+ * @private
+ */
+thin.core.HistoryManager.prototype.handleChange_ = goog.nullFunction;
+
+
 thin.core.HistoryManager.prototype.undo = function() {
   this.fireActivateDelaying_();
   
@@ -98,8 +94,7 @@ thin.core.HistoryManager.prototype.undo = function() {
     var version = this.getCurrentVersion_();
     version.down();
     this.current_--;
-
-    this.dispatchDownEvent(version);
+    this.handleChange_();
   }
 };
 
@@ -109,8 +104,7 @@ thin.core.HistoryManager.prototype.redo = function() {
     var version = this.getNextVersion_();
     version.up();
     this.current_++;
-
-    this.dispatchUpEvent(version);
+    this.handleChange_();
   }
 };
 
@@ -151,8 +145,7 @@ thin.core.HistoryManager.prototype.addNormal = function(setupFn) {
   version.up();
   history.add(version);
   this.current_ = this.nextCurrent_();
-
-  this.dispatchUpEvent(version);
+  this.handleChange_();
 };
 
 
@@ -262,8 +255,7 @@ thin.core.HistoryManager.prototype.activateVersionGroup_ = function() {
     }
     history.add(this.versionGroup_);
     this.current_ = this.nextCurrent_();
-
-    this.dispatchUpEvent(this.versionGroup_);
+    this.handleChange_();
 
     delete this.versionGroup_;
   }
@@ -355,6 +347,15 @@ thin.core.HistoryManager.prototype.nextCurrent_ = function() {
 };
 
 
+/**
+ * @param {Function} fn
+ * @param {Object=} opt_selfObj
+ */
+thin.core.HistoryManager.prototype.setChangeHandler = function(fn, opt_selfObj) {
+  this.handleChange_ = goog.bind(fn, opt_selfObj);
+};
+
+
 /** @inheritDoc */
 thin.core.HistoryManager.prototype.disposeInternal = function() {
   this.activateVersionGroup_();
@@ -364,80 +365,6 @@ thin.core.HistoryManager.prototype.disposeInternal = function() {
     this.delay_.dispose();
     delete this.delay_;
   }
-};
-
-
-/**
- * @param {thin.core.HistoryManager.Version|thin.core.HistoryManager.VersionGroup} version
- */
-thin.core.HistoryManager.prototype.dispatchUpEvent = function(version) {
-  this.dispatchEvent_(thin.core.HistoryManager.EventType.UP, version);
-};
-
-
-/**
- * @param {thin.core.HistoryManager.Version|thin.core.HistoryManager.VersionGroup} version
- */
-thin.core.HistoryManager.prototype.dispatchDownEvent = function(version) {
-  this.dispatchEvent_(thin.core.HistoryManager.EventType.DOWN, version);
-};
-
-
-/**
- * @param {string} type
- * @param {thin.core.HistoryManager.Version|thin.core.HistoryManager.VersionGroup} version
- * @private
- */
-thin.core.HistoryManager.prototype.dispatchEvent_ = function(type, version) {
-  /**
-   * @type {string}
-   */
-  this.lastRunType = type;
-  this.dispatchEvent(new thin.core.HistoryManagerEvent(type, version, this));
-};
-
-
-/**
- * @param {string} type
- * @param {thin.core.HistoryManager.Version|thin.core.HistoryManager.VersionGroup} version
- * @param {thin.core.HistoryManager} history
- * @constructor
- * @extends {goog.events.Event}
- */
-thin.core.HistoryManagerEvent = function(type, version, history) {
-  goog.base(this, type);
-
-  /**
-   * @type {string}
-   */
-  this.type = type;
-
-  /**
-   * @type {thin.core.HistoryManager.Version|thin.core.HistoryManager.VersionGroup}
-   */
-  this.version = version;
-
-  /**
-   * @type {thin.core.HistoryManager}
-   */
-  this.history = history;
-};
-goog.inherits(thin.core.HistoryManagerEvent, goog.events.Event);
-
-
-/**
- * @return {boolean}
- */
-thin.core.HistoryManagerEvent.prototype.isUp = function() {
-  return this.type == thin.core.HistoryManager.EventType.UP;
-};
-
-
-/**
- * @return {boolean}
- */
-thin.core.HistoryManagerEvent.prototype.isDown = function() {
-  return !this.isUp();
 };
 
 

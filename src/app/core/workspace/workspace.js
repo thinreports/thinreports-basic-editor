@@ -1060,10 +1060,7 @@ thin.core.Workspace.prototype.enterDocument = function() {
   eventHandler.listen(this.element_, eventType.KEYUP,
     this.releaseOnceKeyEventHandling_, false, this);
 
-  var historyEventType = thin.core.HistoryManager.EventType;
-  goog.events.listen(this.getHistory(),
-    [historyEventType.UP, historyEventType.DOWN],
-      this.handleHistoryChange, false, this);
+  this.getHistory().setChangeHandler(this.handleHistoryChange, this);
 };
 
 
@@ -1076,10 +1073,6 @@ thin.core.Workspace.prototype.exitDocument = function() {
 
   eventHandler.unlisten(this.element_, eventType.KEYDOWN);
   eventHandler.unlisten(this.element_, eventType.KEYUP);
-
-  var historyEventType = thin.core.HistoryManager.EventType;
-  goog.events.unlisten(this.getHistory(),
-    [historyEventType.UP, historyEventType.DOWN]);
 
   var layout = this.getLayout();
   var helpers = layout.getHelpers();
@@ -1096,10 +1089,7 @@ thin.core.Workspace.prototype.exitDocument = function() {
 };
 
 
-/**
- * @param {thin.core.HistoryManagerEvent} e
- */
-thin.core.Workspace.prototype.handleHistoryChange = function(e) {
+thin.core.Workspace.prototype.handleHistoryChange = function() {
   this.getTabPage().setChanged(this.isChanged());
 };
 
