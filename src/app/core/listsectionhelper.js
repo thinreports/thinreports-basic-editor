@@ -519,7 +519,11 @@ thin.core.ListSectionHelper.Separator_.prototype.init = function(sectionName) {
     };
 
     layout.getWorkspace().normalVersioning(function(version) {
-    
+      if (newSectionHeight == captureSectionHeight &&
+           goog.math.Coordinate.equals(transLateCoordinate, retransLateCoordinate)) {
+        version.setChanged(false);
+      }
+
       version.upHandler(function() {
         updateListShape(newSectionHeight, transLateCoordinate);
       }, scope);

@@ -314,7 +314,7 @@ thin.core.GuideHelper.prototype.init = function() {
 
     if (isSingle) {
       var startBounds = resizer.getStartShapeBounds();
-      var endBounds = resizer.getEndShapeBounds() || startBounds;      
+      var endBounds = resizer.getEndShapeBounds() || startBounds;
     } else {
       var captureOutlineStartBounds = [];
       goog.array.forEach(captureShapes, function(shape) {
@@ -340,7 +340,10 @@ thin.core.GuideHelper.prototype.init = function() {
     }
 
     layout.getWorkspace().normalVersioning(function(version) {
-    
+      if (goog.math.Rect.equals(startBounds, endBounds)) {
+        version.setChanged(false);
+      }
+
       version.upHandler(function() {
         if (isSingle) {
           var outline = target.getTargetOutline();

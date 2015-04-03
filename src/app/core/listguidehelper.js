@@ -310,7 +310,11 @@ thin.core.ListGuideHelper.prototype.init = function() {
     };
     
     workspace.normalVersioning(function(version) {
-    
+      if (goog.math.Rect.equals(shapeBounds, outlineBounds) &&
+           goog.math.Coordinate.equals(transLate, reLocation)) {
+        version.setChanged(false);
+      }
+
       version.upHandler(function() {
         guide.setDisable();
         helpers.disableAll();
@@ -472,11 +476,15 @@ thin.core.ListGuideHelper.prototype.init = function() {
     };
     
     workspace.normalVersioning(function(version) {
-    
+      if (goog.math.Rect.equals(listShapeBoundsForStart, listShapeBoundsForEnd) &&
+           goog.math.Coordinate.equals(transLateCoordinate, retransLateCoordinate)) {
+        version.setChanged(false);
+      }
+
       version.upHandler(function() {
         resizersDragEndListener(listShapeBoundsForEnd, transLateCoordinate);
       }, scope);
-      
+
       version.downHandler(function() {
         resizersDragEndListener(listShapeBoundsForStart, retransLateCoordinate);
       }, scope);

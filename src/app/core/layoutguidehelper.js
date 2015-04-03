@@ -338,6 +338,8 @@ thin.core.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
     draggableLine.updateProperties();
 
     layout.getWorkspace().normalVersioning(function(version) {
+      version.setChanged(false);
+
       var activeShapeManager = layout.getManager().getActiveShape();
       var isEmpty = activeShapeManager.isEmpty();
       if (!isEmpty) {
@@ -347,6 +349,7 @@ thin.core.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
           var activeShapeManagerByListShape = listHelper.getActiveShape();
         }
       }
+
       version.upHandler(function() {
       }, draggableLine);
       
@@ -373,7 +376,7 @@ thin.core.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
           }
         }
       }, draggableLine);
-    });    
+    });
   }, false, dragger);
 
   return draggableLine;
