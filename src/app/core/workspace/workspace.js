@@ -458,16 +458,12 @@ thin.core.Workspace.prototype.activateGroupVersioning = function() {
 
 
 thin.core.Workspace.prototype.undo = function() {
-  var historyManager = this.history_;
-  historyManager.undo();
-  thin.ui.adjustUiStatusToRedo(historyManager.canRedo());
+  this.history_.undo();
 };
 
 
 thin.core.Workspace.prototype.redo = function() {
-  var historyManager = this.history_;
-  historyManager.redo();
-  thin.ui.adjustUiStatusToRedo(historyManager.canRedo());
+  this.history_.redo();
 };
 
 
@@ -1091,6 +1087,10 @@ thin.core.Workspace.prototype.exitDocument = function() {
 
 thin.core.Workspace.prototype.handleHistoryChange = function() {
   this.getTabPage().setChanged(this.isChanged());
+
+  var historyManager = this.getHistory();
+  thin.ui.adjustUiStatusToRedo(historyManager.canRedo());
+  thin.ui.adjustUiStatusToUndo(historyManager.canUndo());
 };
 
 

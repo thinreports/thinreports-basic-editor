@@ -60,6 +60,14 @@ thin.ui.setInputValueForZoomRate = function(zoomRate) {
 /**
  * @param {boolean} enabled
  */
+thin.ui.adjustUiStatusToUndo = function(enabled) {
+  thin.ui.getComponent('toolbar').getChild('undo').setEnabled(enabled);
+};
+
+
+/**
+ * @param {boolean} enabled
+ */
 thin.ui.adjustUiStatusToRedo = function(enabled) {
   thin.ui.getComponent('toolbar').getChild('redo').setEnabled(enabled);
 };

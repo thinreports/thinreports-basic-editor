@@ -173,6 +173,7 @@ thin.init_ = function() {
     toolbar.getChild('grid').setChecked(false);
     toolbar.getChild('guide').setChecked(false);
 
+    toolbar.getChild('undo').setEnabled(false);
     toolbar.getChild('redo').setEnabled(false);
     toolbar.getChild('zoom-rate').setInternalValue('100');
     toolFamily_.setValue(null);
@@ -270,6 +271,7 @@ thin.init_ = function() {
 
       thin.ui.adjustToUiStatusForWorkspace();
       thin.ui.setInputValueForZoomRate(selectedWorkspace.getUiStatusForZoom());
+      thin.ui.adjustUiStatusToUndo(selectedWorkspace.getHistory().canUndo());
       thin.ui.adjustUiStatusToRedo(selectedWorkspace.getHistory().canRedo());
 
       (function() {
