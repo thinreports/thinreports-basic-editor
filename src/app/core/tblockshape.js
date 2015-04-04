@@ -98,21 +98,21 @@ thin.core.TblockShape.IDSHAPEFILL_ = new goog.graphics.SolidFill('#0096fd');
  * @type {goog.graphics.Font}
  * @private
  */
-thin.core.TblockShape.IDSHAPEFONT_ = new goog.graphics.Font(10, 'Helvetica');
+thin.core.TblockShape.IDSHAPEFONT_ = new goog.graphics.Font(10.5, 'Helvetica');
 
 
 /**
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.core.TblockShape.BOX_FILL_ = new goog.graphics.SolidFill('#0096fd', 0.1);
+thin.core.TblockShape.BOX_FILL_ = new goog.graphics.SolidFill('#0096fd', 0.2);
 
 
 /**
- * @type {goog.graphics.Stroke}
+ * @type {goog.graphics.Stroke?}
  * @private
  */
-thin.core.TblockShape.BOX_STROKE_ = new goog.graphics.Stroke(0.5, '#0096fd');
+thin.core.TblockShape.BOX_STROKE_ = null;
 
 
 /**

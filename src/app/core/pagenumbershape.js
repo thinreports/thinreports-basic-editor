@@ -75,14 +75,14 @@ thin.core.PageNumberShape.DEFAULT_FILL = new goog.graphics.SolidFill('#000000');
  * @type {goog.graphics.SolidFill}
  * @private
  */
-thin.core.PageNumberShape.BOX_FILL_ = new goog.graphics.SolidFill('#0096fd', 0.1);
+thin.core.PageNumberShape.BOX_FILL_ = new goog.graphics.SolidFill('#0096fd', 0.2);
 
 
 /**
- * @type {goog.graphics.Stroke}
+ * @type {goog.graphics.Stroke?}
  * @private
  */
-thin.core.PageNumberShape.BOX_STROKE_ = new goog.graphics.Stroke(0.5, '#0096fd');
+thin.core.PageNumberShape.BOX_STROKE_ = null;
 
 
 /**
