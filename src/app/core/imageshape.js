@@ -248,7 +248,7 @@ thin.core.ImageShape.prototype.setHeight = function(height) {
  */
 thin.core.ImageShape.prototype.getStrokeWidth = function() {
   return 0;
-}
+};
 
 
 /**

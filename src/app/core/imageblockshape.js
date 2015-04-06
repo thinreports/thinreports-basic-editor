@@ -229,6 +229,15 @@ thin.core.ImageblockShape.prototype.setHeight = function(height) {
 
 
 /**
+ * @return {number|string} Always returns 0
+ * @override
+ */
+thin.core.ImageblockShape.prototype.getStrokeWidth = function() {
+  return 0;
+};
+
+
+/**
  * @param {Element} element
  * @param {thin.core.Layout} layout
  * @param {thin.core.ShapeIdManager=} opt_shapeIdManager

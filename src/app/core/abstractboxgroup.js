@@ -74,8 +74,7 @@ thin.core.AbstractBoxGroup.prototype.createBox_ = function(
 
   if (goog.isString(opt_classId)) {
     layout.setElementAttributes(element, {
-      'class': opt_classId,
-      'stroke-dasharray': 2
+      'class': opt_classId
     });
   }
 
