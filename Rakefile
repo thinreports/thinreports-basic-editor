@@ -68,7 +68,7 @@ namespace :package do
     FileUtils.cp_r src.join('assets', 'icons'), assets
     FileUtils.cp_r src.join('assets', 'images'), assets
 
-    css_files = YAML.load_file src.join('assets', 'config.yml')
+    css_files = YAML.load_file src.join('assets', 'css-files.yml')
     css_files.map! {|filename| src.join 'assets', filename }
 
     system "java -jar #{ closure_stylesheets_jar }" +
