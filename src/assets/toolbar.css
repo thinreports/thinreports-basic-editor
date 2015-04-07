@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2011 Matsukei Co.,Ltd.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -109,7 +109,7 @@
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
 }
 
-.thin-toolbar-button-active .thin-toolbar-button-body, 
+.thin-toolbar-button-active .thin-toolbar-button-body,
 .thin-toolbar-button-checked .thin-toolbar-button-body {
   border-color: rgb(200, 200, 200);
   box-shadow: inset 0 0 0 1px rgba(180, 180, 180, .1);
@@ -129,7 +129,7 @@
 }
 
 .thin-toolbar-menu-button-body {
-  border-radius: 2px; 
+  border-radius: 2px;
   border: 1px solid transparent;
 }
 
@@ -151,7 +151,7 @@
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
 }
 
-.thin-toolbar-menu-button-active .thin-toolbar-menu-button-body, 
+.thin-toolbar-menu-button-active .thin-toolbar-menu-button-body,
 .thin-toolbar-menu-button-open .thin-toolbar-menu-button-body {
   border-color: rgb(200, 200, 200);
   box-shadow: inset 0 0 0 1px rgba(180, 180, 180, .1);
@@ -166,31 +166,36 @@
 }
 
 .thin-toolbar-menu-button-arrow-auto .thin-toolbar-menu-button-button:after {
-  content: url(icons/x-trigger-small.png);
-  padding-left: 3px;
-  margin: 0;
+  content: "";
+  display: inline-block;
+  background: transparent url(icons/x-trigger.svg) no-repeat center center;
+  background-size: 7px;
+  width: 8px;
+  height: 8px;
+  margin-left: 3px;
 }
 
 
 .thin-toolbar-menu-button-arrow-bottom .thin-toolbar-menu-button-handle {
-  content: url(icons/x-trigger-small.png);
-  text-align: center;
+  content: "";
   display: block;
-  height: 10px;
-  line-height: 10px;
-  overflow: hidden;
+  background: transparent url(icons/x-trigger.svg) no-repeat center center;
+  background-size: 7px;
+  width: 8px;
+  height: 8px;
 }
 
 .thin-toolbar-menu-button-arrow-right .thin-toolbar-menu-button-body {
   display: -webkit-box !important;
 }
 .thin-toolbar-menu-button-arrow-right .thin-toolbar-menu-button-button {
-  -webkit-box-flex: 1;  
+  -webkit-box-flex: 1;
 }
 .thin-toolbar-menu-button-arrow-right .thin-toolbar-menu-button-handle {
   display: block;
   width: 12px;
-  background: transparent url(icons/x-trigger-small.png) no-repeat left center;
+  background: transparent url(icons/x-trigger.svg) no-repeat left center;
+  background-size: 7px;
 }
 
 /**
@@ -206,9 +211,9 @@
   opacity: 0.4;
 }
 
-.thin-toolbar-split-button-hover .thin-toolbar-split-button-button-body, 
-.thin-toolbar-split-button-hover .thin-toolbar-split-button-handle, 
-.thin-toolbar-split-button-open .thin-toolbar-split-button-button-body, 
+.thin-toolbar-split-button-hover .thin-toolbar-split-button-button-body,
+.thin-toolbar-split-button-hover .thin-toolbar-split-button-handle,
+.thin-toolbar-split-button-open .thin-toolbar-split-button-button-body,
 .thin-toolbar-split-button-open .thin-toolbar-split-button-handle,
 .thin-toolbar-split-button-checked .thin-toolbar-split-button-handle {
   border-color: rgb(200, 200, 200);
@@ -229,19 +234,20 @@
   display: inline-block;
 }
 
-.thin-toolbar-split-button-button-active .thin-toolbar-split-button-button-body, 
+.thin-toolbar-split-button-button-active .thin-toolbar-split-button-button-body,
 .thin-toolbar-split-button-button-checked .thin-toolbar-split-button-button-body {
   border-color: rgb(200, 200, 200);
   box-shadow: inset 0 0 0 1px rgba(180, 180, 180, .1);
 }
 
 .thin-toolbar-split-button-handle {
-  border: 1px solid transparent;  
+  border: 1px solid transparent;
   text-align: center;
   overflow: hidden;
-  background: transparent url(icons/x-trigger-small.png) center center no-repeat;
+  background: transparent url(icons/x-trigger.svg) center center no-repeat;
+  background-size: 7px;
 }
-.thin-toolbar-split-button-handle-active, 
+.thin-toolbar-split-button-handle-active,
 .thin-toolbar-split-button-handle-open {
   border-color: rgb(140, 140, 140);
   background-color: rgb(240, 240, 240) !important;

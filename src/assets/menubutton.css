@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2011 Matsukei Co.,Ltd.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -47,12 +47,12 @@
   text-shadow: none !important;
 }
 
-.thin-menu-button-hover .thin-menu-button-body, 
+.thin-menu-button-hover .thin-menu-button-body,
 .thin-menu-button-focused .thin-menu-button-body {
   border-color: rgb(200, 200, 200) !important;
 }
 
-.thin-menu-button-active .thin-menu-button-body, 
+.thin-menu-button-active .thin-menu-button-body,
 .thin-menu-button-open .thin-menu-button-body {
   /* Nothing to do by deafult */
 }
@@ -66,19 +66,17 @@
 }
 
 .thin-menu-button-arrow-auto .thin-menu-button-button:after {
-  content: url(icons/x-trigger-small.png);
-  padding-left: 3px;
-  margin: 0;
+  content: "";
+  display: inline-block;
+  background: transparent url(icons/x-trigger.svg) no-repeat center center;
+  margin-left: 3px;
 }
 
-
-.thin-menu-button-arrow-bottom .thin-menu-button-handle {
-  content: url(icons/x-trigger-small.png);
-  text-align: center;
+ .thin-menu-button-arrow-bottom .thin-menu-button-handle {
+  content: "";
   display: block;
+  background: transparent url(icons/x-trigger.svg) no-repeat center center;
   height: 10px;
-  line-height: 10px;
-  overflow: hidden;
 }
 
 .thin-menu-button-arrow-right .thin-menu-button-body {
@@ -90,5 +88,6 @@
 .thin-menu-button-arrow-right .thin-menu-button-handle {
   display: block;
   width: 12px;
-  background: transparent url(icons/x-trigger-small.png) no-repeat left center;
+  background: transparent url(icons/x-trigger.svg) no-repeat left center;
+  background-size: 7px;
 }

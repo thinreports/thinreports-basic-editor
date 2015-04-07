@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2011 Matsukei Co.,Ltd.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -44,11 +44,12 @@
 }
 
 .thin-checkbox-checked .thin-checkbox-box {
-  background-image: url(icons/x-check-sprite.png);
+  background-image: url(icons/x-check-sprite.svg);
+  background-size: 8px;
 }
 
 .thin-checkbox-undetermined {
-  background-image: url(icons/x-check-sprite.png);
+  background-image: url(icons/x-check-sprite.svg);
   background-color: rgba(180, 185, 189, 0.5) !important;
 }
 
@@ -56,4 +57,3 @@
   opacity: 0.4;
   cursor: default !important;
 }
-

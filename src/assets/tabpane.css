@@ -94,12 +94,12 @@
   display: none;
 }
 
+.thin-tabpane-tab-button-close .thin-icon {
+  background-size: 7px;
+}
 .thin-tabpane-tab-button-hover .thin-tabpane-tab-button-close .thin-icon {
-  background-image: url(icons/x-cross-small-gray.png);
+  background-image: url(icons/x-close-white.svg);
 }
 .thin-tabpane-tab-button-selected .thin-tabpane-tab-button-close .thin-icon {
-  background-image: url(icons/x-cross-small-black.png);
-}
-.thin-tabpane-tab-button-close .thin-icon:hover {
-  background-image: url(icons/x-cross-circle-small.png) !important;
+  background-image: url(icons/x-close-black.svg);
 }

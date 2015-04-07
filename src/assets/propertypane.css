@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2011 Matsukei Co.,Ltd.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -63,7 +63,7 @@
 .thin-proppane-propkey {
   overflow: hidden;
   white-space: nowrap;
-  cursor: default;  
+  cursor: default;
   text-overflow: ellipsis;
   width: 35%;
   color: #444;
@@ -80,7 +80,7 @@
   line-height: inherit;
 }
 
-.thin-proppane-prop-disabled .thin-proppane-propkey, 
+.thin-proppane-prop-disabled .thin-proppane-propkey,
 .thin-proppane-prop-disabled .thin-proppane-propvalue > * {
   opacity: 0.4;
 }
@@ -152,12 +152,13 @@
   display: -webkit-box !important;
 }
 .thin-proppane-prop-select-arrow-right .thin-proppane-prop-select-button {
-  -webkit-box-flex: 1;  
+  -webkit-box-flex: 1;
 }
 .thin-proppane-prop-select-arrow-right .thin-proppane-prop-select-handle {
   display: block;
   width: 22px;
-  background: transparent url(icons/x-trigger-small.png) no-repeat center center;
+  background: transparent url(icons/x-trigger.svg) no-repeat center center;
+  background-size: 7px;
   box-sizing: border-box;
   /* For adjusting center position */
   border-left: 1px solid transparent;
@@ -214,12 +215,13 @@
 .thin-proppane-prop-combobox-handle {
   width: 22px;
   border-left: 1px solid rgb(230, 230, 230);
-  background: transparent url(icons/x-trigger-small.png) no-repeat center center;
+  background: transparent url(icons/x-trigger.svg) no-repeat center center;
+  background-size: 7px;
   text-align: center;
   box-sizing: border-box;
 }
 
-.thin-proppane-prop-combobox-active .thin-input, 
+.thin-proppane-prop-combobox-active .thin-input,
 .thin-proppane-prop-combobox .thin-input-focus {
   background-color: #fff;
 }
@@ -318,7 +320,7 @@
 .thin-proppane-prop-checkable-ctl > :last-child {
   display: block;
   -webkit-box-flex: 1;
-  box-sizing: border-box;  
+  box-sizing: border-box;
 }
 
 /**
