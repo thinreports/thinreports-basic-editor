@@ -231,7 +231,6 @@ thin.core.PageNumberShape.prototype.setup = function() {
   this.label_ = this.createLabel_(label);
   if (!label) {
     this.getLayout().appendChild(this.label_, this);
-    this.label_.reposition();
   }
 };
 
@@ -878,12 +877,6 @@ thin.core.PageNumberShape.Label_ = function(parent, layout, opt_element) {
   goog.base(this, element, layout, null, fill);
 };
 goog.inherits(thin.core.PageNumberShape.Label_, thin.core.AbstractText);
-
-
-thin.core.PageNumberShape.Label_.prototype.reposition = function() {
-  this.repositionX();
-  this.repositionY();
-};
 
 
 thin.core.PageNumberShape.Label_.prototype.repositionX = function() {
