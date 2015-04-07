@@ -34,7 +34,6 @@ Thin.setLocale('en', "'Lucida Grande', 'Segoe UI', Helvetica, Arial", {
   property_group_list_page_footer: 'List Page Footer',
   property_group_image: 'Image', 
   property_group_pageno: 'Page no',
-  property_group_background_image: 'Background Image', 
 
   label_title_setting: 'Title',
   label_page_setting: 'Page',
@@ -141,7 +140,6 @@ Thin.setLocale('en', "'Lucida Grande', 'Segoe UI', Helvetica, Arial", {
   field_pageno_format: 'Format',
   field_counted_page_target: 'Counted Target',
   field_default_counted_page_target: 'Report', 
-  field_background_image: 'Background', 
   field_inline_format: 'Allow inline format',
 
   button_new_report: 'New',
