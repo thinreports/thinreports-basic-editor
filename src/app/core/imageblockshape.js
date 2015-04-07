@@ -65,8 +65,8 @@ thin.core.ImageblockShape.ClassIds = {
  * @private
  */
 thin.core.ImageblockShape.Mark_ = {
-  SOURCE: 'assets/icons/x-image-mark.png',
-  SIZE: 32
+  SOURCE: 'assets/icons/x-image-mark.svg',
+  SIZE: 16
 };
 
 
