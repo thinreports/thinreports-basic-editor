@@ -214,7 +214,7 @@ Thin.setLocale('en', "'Lucida Grande', 'Segoe UI', Helvetica, Arial", {
   warning_discard_changes_en: '', 
   info_non_standard_font: '{$font} is non-standard font, so may not be displayed correctly.',
 
-  text_about_description: 'Please see the official site or official project site about the license, help, release notes of ThinReports.',
+  text_about_description: 'Please see the official site or official project site about the license, help, release notes of Thinreports.',
   text_editor_force_close_confirmation: 'There is unsaved layout files.\nSave these files before close?',
   text_layout_force_close_confirmation: 'This layout has been changed.\nSave before close?',
   text_layout_export_definition_confirmation: 'Before export layout definition, it is necessary to save this layout file.\nSave this layout?',

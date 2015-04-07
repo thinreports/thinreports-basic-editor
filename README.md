@@ -1,9 +1,9 @@
-# ThinReports Editor
+# Thinreports Editor
 
-[ThinReports](http://www.thinreports.org/) is Open Source Reporting Solution for Ruby.
+[Thinreports](http://www.thinreports.org/) is Open Source Reporting Solution for Ruby.
 
-* ThinReports Editor (GUI Designer)
-* ThinReports Generator (Report Generator for Ruby)
+* Thinreports Editor (GUI Designer)
+* Thinreports Generator (Report Generator for Ruby)
 
 ## Editor's features
 

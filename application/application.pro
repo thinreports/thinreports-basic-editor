@@ -2,7 +2,7 @@ resources.source = resources
 resources.target = .
 DEPLOYMENTFOLDERS = resources
 
-TARGET   = ThinReportsEditor
+TARGET   = ThinreportsEditor
 SOURCES += main.cpp
 
 include(platform/platform.pri)

@@ -1,3 +1,27 @@
+## 0.8.0
+
+### Features
+
+#### ChromeApp Only
+
+* New design for ChromeApp version #22
+
+#### Qt and ChromeApp
+
+* Inline format option for Text and TextBlock #12
+* Change official name from ThinReports to Thinreports #19
+
+### Bug fixes
+
+#### ChromeApp Only
+
+* Windowsのテーマをクラシックに設定するとテキストツールが正常に表示されない #11
+* Thinreport Editor auto close when right click #10
+
+#### Qt and ChromeApp
+
+* レイアウト定義書におけるページ番号ツールのカウント対象が一覧表の場合、表示されない
+
 ## 0.7.7.2
 
 ### Bug fixes

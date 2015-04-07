@@ -174,7 +174,7 @@ Thin.setLocale('ja', "'Segoe UI', 'Meiryo UI'", {
   button_send_to_back: '最背面へ移動',
   button_help: 'ヘルプ',
   button_preference: '設定', 
-  button_about: 'ThinReportsについて',
+  button_about: 'Thinreportsについて',
   button_go_to_forum: 'フォーラム',
   button_feedback: '問題の報告',
   button_translation: '翻訳に協力する', 
@@ -213,7 +213,7 @@ Thin.setLocale('ja', "'Segoe UI', 'Meiryo UI'", {
   warning_discard_changes_en: 'If you have unsaved files, the changes will be discarded. Please be sure to save.', 
   info_non_standard_font: '{$font} は標準フォントではないため、PDF 出力時に正しく表示されない可能性があります。',
 
-  text_about_description: 'ThinReports のライセンス、ヘルプ、及びリリース情報については、公式サイト又はプロジェクトサイトよりご確認下さい。',
+  text_about_description: 'Thinreports のライセンス、ヘルプ、及びリリース情報については、公式サイト又はプロジェクトサイトよりご確認下さい。',
   text_editor_force_close_confirmation: '保存されていないファイルがあります。\n保存しますか？',
   text_layout_force_close_confirmation: '内容が変更されています。\n保存しますか？',
   text_layout_export_definition_confirmation: 'エクスポートするには、レイアウトを保存する必要があります。保存しますか？',

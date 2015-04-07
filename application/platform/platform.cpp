@@ -35,7 +35,7 @@ void Platform::boot(const QString core)
     QString app = adjustPath(core);
 
     if (!isDebugMode() && !QFile::exists(app)) {
-        QMessageBox::critical(this, tr("ThinReportsEditor Booting Error"),
+        QMessageBox::critical(this, tr("ThinreportsEditor Booting Error"),
                               "Unable to load application.");
         exit(0);
     }

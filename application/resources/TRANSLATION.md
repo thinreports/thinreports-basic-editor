@@ -1,4 +1,4 @@
-# Contributing to i18n of ThinReportsEditor
+# Contributing to i18n of ThinreportsEditor
 
 ## How to translate in your own language
 
@@ -6,11 +6,11 @@ Related files are as follows:
 
 * **Translation file**
   * Windows: `INSTALLDIR\resources\core\locales\*.js`
-  * Mac OS: `ThinReportsEditor.app/Contents/Resources/core/locales/*.js`
+  * Mac OS: `ThinreportsEditor.app/Contents/Resources/core/locales/*.js`
   * Linux: `INSTALLDIR/resources/core/locales/*.js`
 * **Configuration script**
   * Windows: `INSTALLDIR\resources\core\app.js`
-  * Mac OS: `ThinReportsEditor.app/Contents/Resources/core/app.js`
+  * Mac OS: `ThinreportsEditor.app/Contents/Resources/core/app.js`
   * LInux: `INSTALLDIR/resources/core/app.js`
 
 ### Create a Translation file

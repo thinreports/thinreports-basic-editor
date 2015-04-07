@@ -34,7 +34,6 @@ Thin.setLocale('en', "'Lucida Grande', 'Segoe UI', Helvetica, Arial", {
   property_group_list_page_footer: 'List Page Footer',
   property_group_image: 'Image', 
   property_group_pageno: 'Page no',
-  property_group_background_image: 'Background Image', 
 
   label_title_setting: 'Title',
   label_page_setting: 'Page',
@@ -141,7 +140,6 @@ Thin.setLocale('en', "'Lucida Grande', 'Segoe UI', Helvetica, Arial", {
   field_pageno_format: 'Format',
   field_counted_page_target: 'Counted Target',
   field_default_counted_page_target: 'Report', 
-  field_background_image: 'Background', 
   field_inline_format: 'Allow inline format',
 
   button_new_report: 'New',
@@ -216,7 +214,7 @@ Thin.setLocale('en', "'Lucida Grande', 'Segoe UI', Helvetica, Arial", {
   warning_discard_changes_en: '', 
   info_non_standard_font: '{$font} is non-standard font, so may not be displayed correctly.',
 
-  text_about_description: 'Please see the official site or official project site about the license, help, release notes of ThinReports.',
+  text_about_description: 'Please see the official site or official project site about the license, help, release notes of Thinreports.',
   text_editor_force_close_confirmation: 'There is unsaved layout files.\nSave these files before close?',
   text_layout_force_close_confirmation: 'This layout has been changed.\nSave before close?',
   text_layout_export_definition_confirmation: 'Before export layout definition, it is necessary to save this layout file.\nSave this layout?',
