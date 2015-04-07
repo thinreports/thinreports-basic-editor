@@ -2,27 +2,24 @@
 
 ### Features
 
+#### ChromeApp Only
+
 * New design for ChromeApp version #22
-* Improve platform.callNativeFunction method #20
-* Change official name from ThinReports to Thinreports #19
-* Add development and packaging task #17
-* Improve development tools and directory structure #13
+
+#### Qt and ChromeApp
+
 * Inline format option for Text and TextBlock #12
-* Made to bundle closure-library by gitsubmodule
-* Change platform to ChromeApp form Qt
+* Change official name from ThinReports to Thinreports #19
 
 ### Bug fixes
 
-* Disable native context-menu in production #28
-* Wrong position of Text and caption of list section #27
-* Key-events dose not work with ChromeApp ver #26
-* Exported specification file is empty #24
-* Show confirmation dialog if there are unsaved files #23
-* External links doesn't work #16
-* thin.i18n dosen't work with ChromeApp #15
-* Localize messages using chrome.i18n instead of thin.i18n #14
+#### ChromeApp Only
+
 * Windowsのテーマをクラシックに設定するとテキストツールが正常に表示されない #11
 * Thinreport Editor auto close when right click #10
+
+#### Qt and ChromeApp
+
 * レイアウト定義書におけるページ番号ツールのカウント対象が一覧表の場合、表示されない
 
 ## 0.7.7.2
