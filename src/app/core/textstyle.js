@@ -80,7 +80,19 @@ thin.core.TextStyle.DEFAULT_KERNING = '';
 /**
  * @type {string}
  */
+thin.core.TextStyle.DEFAULT_LETTER_SPACING = '';
+
+
+/**
+ * @type {string}
+ */
 thin.core.TextStyle.DEFAULT_ELEMENT_KERNING = 'auto';
+
+
+/**
+ * @type {string}
+ */
+thin.core.TextStyle.DEFAULT_ELEMENT_LETTER_SPACING = 'normal';
 
 
 /**

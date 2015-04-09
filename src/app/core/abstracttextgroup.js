@@ -195,13 +195,21 @@ thin.core.AbstractTextGroup.prototype.setTextLineHeightRatio = function(ratio) {
  * @param {string} spacing
  */
 thin.core.AbstractTextGroup.prototype.setKerning = function(spacing) {
+  var layout = this.getLayout();
+  var element = this.getElement();
   if (thin.isExactlyEqual(spacing, thin.core.TextStyle.DEFAULT_KERNING)) {
-    this.getLayout().setElementAttributes(this.getElement(), {
+    layout.setElementAttributes(element, {
       'kerning': thin.core.TextStyle.DEFAULT_ELEMENT_KERNING
     });
+    layout.setElementAttributes(element, {
+      'letter-spacing': thin.core.TextStyle.DEFAULT_ELEMENT_LETTER_SPACING
+    });
   } else {
-    this.getLayout().setElementAttributes(this.getElement(), {
+    layout.setElementAttributes(element, {
       'kerning': spacing
+    });
+    layout.setElementAttributes(element, {
+      'letter-spacing': spacing
     });
   }
   this.textStyle_.setKerning(spacing);
