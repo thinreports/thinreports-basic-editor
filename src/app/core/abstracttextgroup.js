@@ -199,16 +199,12 @@ thin.core.AbstractTextGroup.prototype.setKerning = function(spacing) {
   var element = this.getElement();
   if (thin.isExactlyEqual(spacing, thin.core.TextStyle.DEFAULT_KERNING)) {
     layout.setElementAttributes(element, {
-      'kerning': thin.core.TextStyle.DEFAULT_ELEMENT_KERNING
-    });
-    layout.setElementAttributes(element, {
+      'kerning': thin.core.TextStyle.DEFAULT_ELEMENT_KERNING,
       'letter-spacing': thin.core.TextStyle.DEFAULT_ELEMENT_LETTER_SPACING
     });
   } else {
     layout.setElementAttributes(element, {
-      'kerning': spacing
-    });
-    layout.setElementAttributes(element, {
+      'kerning': spacing,
       'letter-spacing': spacing
     });
   }
