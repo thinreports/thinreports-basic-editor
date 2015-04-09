@@ -187,15 +187,21 @@ thin.editor.AbstractTextGroup.prototype.setTextLineHeightRatio = function(ratio)
  * @param {string} spacing
  */
 thin.editor.AbstractTextGroup.prototype.setKerning = function(spacing) {
+  var layout = this.getLayout();
+  var element = this.getElement();
   if (thin.isExactlyEqual(spacing, thin.editor.TextStyle.DEFAULT_KERNING)) {
-    this.getLayout().setElementAttributes(this.getElement(), {
+    layout.setElementAttributes(element, {
       'kerning': thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING
     });
   } else {
-    this.getLayout().setElementAttributes(this.getElement(), {
+    layout.setElementAttributes(element, {
       'kerning': spacing
     });
   }
+  layout.setElementAttributes(element, {
+    'letter-spacing': 0
+  });
+
   this.textStyle_.setKerning(spacing);
 };
 
