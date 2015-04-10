@@ -103,7 +103,7 @@ thin.editor.ShapeStructure.serializeForText_ = function(shape, json) {
     'width': Number(shape.getAttribute('x-width')),
     'height': Number(shape.getAttribute('x-height'))
   };
-  json['inline-format'] = shape.getAttribute('x-inline-format') == 'true';
+  json['inline-format'] = shape.getAttribute('x-inline-format') || 'false';
 
   thin.editor.ShapeStructure.forEachShapeAttribute_(shape,
     function(key, value) {
@@ -241,7 +241,7 @@ thin.editor.ShapeStructure.serializeForTblock_ = function(shape, json) {
     'height': height
   };
 
-  json['inline-format'] = shape.getAttribute('x-inline-format') == 'true';
+  json['inline-format'] = shape.getAttribute('x-inline-format') || 'false';
 
   if (tag == 'text') {
     switch(anchor) {
