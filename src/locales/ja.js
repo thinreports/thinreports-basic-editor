@@ -145,7 +145,6 @@ App.addLocale({
     field_pageno_format: '書式',
     field_counted_page_target: 'カウント対象',
     field_default_counted_page_target: 'レポート',
-    field_inline_format: 'インライン書式の許可',
 
     button_new_report: '新規作成',
     button_save: '保存',

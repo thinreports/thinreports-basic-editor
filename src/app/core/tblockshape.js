@@ -279,7 +279,6 @@ thin.core.TblockShape.createFromElement = function(element, layout, opt_shapeIdM
   shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
 
   shape.setDefaultValueOfLink(layout.getElementAttribute(element, 'x-value'));
-  shape.setInlineFormatAllowed(layout.getElementAttribute(element, 'x-inline-format') == 'true');
 
   shape.setBaseFormat(layout.getElementAttribute(element, 'x-format-base'));
 
@@ -892,7 +891,6 @@ thin.core.TblockShape.prototype.getCloneCreator = function() {
   var deltaCoordinate = this.getDeltaCoordinateForList();
   var overflow = this.getOverflowType();
   var wordWrap = this.getTextWordWrap();
-  var inlineFormat = this.getInlineFormatAllowed();
 
   /**
    * @param {thin.core.Layout} layout
@@ -933,7 +931,6 @@ thin.core.TblockShape.prototype.getCloneCreator = function() {
     shape.setFormatStyle(formatStyle);
     shape.setOverflowType(overflow);
     shape.setTextWordWrap(wordWrap);
-    shape.setInlineFormatAllowed(inlineFormat);
 
     return shape;
   };
@@ -1288,26 +1285,6 @@ thin.core.TblockShape.prototype.createPropertyComponent_ = function() {
       }, false, this);
 
   proppane.addProperty(textWordWrapSelectProperty, textGroup, 'word-wrap');
-
-  var inlineFormatProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_inline_format'));
-  inlineFormatProperty.addEventListener(propEventType.CHANGE,
-      function(e) {
-        var inlineFormat = e.target.isChecked();
-        var captureInlineFormat = scope.getKerning();
-
-        workspace.normalVersioning(function(version) {
-          version.upHandler(function() {
-            this.setInlineFormatAllowed(inlineFormat);
-            proppane.getPropertyControl('inline-format').setChecked(inlineFormat);
-          }, scope);
-          version.downHandler(function() {
-            this.setInlineFormatAllowed(captureInlineFormat);
-            proppane.getPropertyControl('inline-format').setChecked(captureInlineFormat);
-          }, scope);
-        });
-      }, false, this);
-
-  proppane.addProperty(inlineFormatProperty, textGroup, 'inline-format');
 
   var formatGroup = proppane.addGroup(thin.t('property_group_simple_format'), 'format-group');
 
@@ -1745,8 +1722,7 @@ thin.core.TblockShape.prototype.getProperties = function() {
     'default-value': this.getDefaultValueOfLink(),
     'format-type': this.getFormatType(),
     'format-base': this.getBaseFormat(),
-    'desc': this.getDesc(),
-    'inline-format': this.getInlineFormatAllowed()
+    'desc': this.getDesc()
   };
 
   var formatStyle = this.getFormatStyle();
@@ -1808,7 +1784,6 @@ thin.core.TblockShape.prototype.updateProperties = function() {
 
   proppane.getPropertyControl('word-wrap').setValue(
       properties['word-wrap'] || thin.core.TextStyle.getDefaultWordWrap());
-  proppane.getPropertyControl('inline-format').setChecked(properties['inline-format']);
 
   var formatType = properties['format-type'];
   proppane.getPropertyControl('format-type').setValue(formatType);

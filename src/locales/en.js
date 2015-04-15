@@ -145,7 +145,6 @@ App.addLocale({
     field_pageno_format: 'Format',
     field_counted_page_target: 'Counted Target',
     field_default_counted_page_target: 'Report', 
-    field_inline_format: 'Allow inline format',
 
     button_new_report: 'New',
     button_save: 'Save',

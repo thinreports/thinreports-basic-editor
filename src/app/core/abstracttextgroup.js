@@ -45,12 +45,6 @@ goog.inherits(thin.core.AbstractTextGroup, thin.core.AbstractBoxGroup);
 
 
 /**
- * @type {boolean}
- */
-thin.core.AbstractTextGroup.DEFAULT_INLINE_FORMAT_ALLOWED = false;
-
-
-/**
  * The latest fill applied to this element.
  * @type {goog.graphics.Fill?}
  * @protected
@@ -64,13 +58,6 @@ thin.core.AbstractTextGroup.prototype.fill = null;
  * @private
  */
 thin.core.AbstractTextGroup.prototype.stroke_ = null;
-
-
-/**
- * @type {boolean}
- * @private
- */
-thin.core.AbstractTextGroup.prototype.inlineFormat_ = thin.core.AbstractTextGroup.DEFAULT_INLINE_FORMAT_ALLOWED;
 
 
 /**
@@ -271,18 +258,6 @@ thin.core.AbstractTextGroup.prototype.setTextDecoration = function(underline, li
 
 
 /**
- * @param {boolean} inlineFormat
- */
-thin.core.AbstractTextGroup.prototype.setInlineFormatAllowed = function(inlineFormat) {
-  inlineFormat = !!inlineFormat;
-  this.inlineFormat_ = inlineFormat;
-  this.getLayout().setElementAttributes(this.getElement(), {
-    'x-inline-format': inlineFormat
-  });
-};
-
-
-/**
  * @return {number}
  */
 thin.core.AbstractTextGroup.prototype.getFontSize = function () {
@@ -395,14 +370,6 @@ thin.core.AbstractTextGroup.prototype.isFontUnderline = function() {
  */
 thin.core.AbstractTextGroup.prototype.isFontLinethrough = function() {
   return this.fontStyle_.linethrough;
-};
-
-
-/**
- * @return {boolean}
- */
-thin.core.AbstractTextGroup.prototype.getInlineFormatAllowed = function() {
-  return this.inlineFormat_;
 };
 
 

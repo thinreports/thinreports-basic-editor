@@ -8,7 +8,6 @@
 
 #### Qt and ChromeApp
 
-* Inline format option for Text and TextBlock #12
 * Change official name from ThinReports to Thinreports #19
 
 ### Bug fixes
