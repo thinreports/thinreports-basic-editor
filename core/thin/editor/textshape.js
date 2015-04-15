@@ -156,7 +156,6 @@ thin.editor.TextShape.createFromElement = function(element, layout, opt_shapeIdM
   shape.setFontLinethrough(/line-through/.test(deco));
   shape.setFontBold(layout.getElementAttribute(element, 'font-weight') == 'bold');
   shape.setTextAnchor(layout.getElementAttribute(element, 'text-anchor'));
-  shape.setInlineFormatAllowed(layout.getElementAttribute(element, 'x-inline-format') == 'true');
 
   if (element.hasAttribute('x-valign')) {
     shape.setVerticalAlign(layout.getElementAttribute(element, 'x-valign'));
@@ -699,7 +698,6 @@ thin.editor.TextShape.prototype.getCloneCreator = function() {
   var display = this.getDisplay();
   var isAffiliationListShape = this.isAffiliationListShape();
   var deltaCoordinate = this.getDeltaCoordinateForList();
-  var inlineFormat = this.getInlineFormatAllowed();
 
   /**
    * @param {thin.editor.Layout} layout
@@ -731,7 +729,6 @@ thin.editor.TextShape.prototype.getCloneCreator = function() {
     shape.setFontLinethrough(linethrough);
     shape.setKerning(kerning);
     shape.setDisplay(display);
-    shape.setInlineFormatAllowed(inlineFormat);
 
     shape.setBounds(new goog.math.Rect(
           pasteCoordinate.x, pasteCoordinate.y, width, height));
@@ -998,26 +995,6 @@ thin.editor.TextShape.prototype.createPropertyComponent_ = function() {
   
   proppane.addProperty(kerningInputProperty, textGroup, 'kerning');
 
-  var inlineFormatProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_inline_format'));
-  inlineFormatProperty.addEventListener(propEventType.CHANGE,
-      function(e) {
-        var inlineFormat = e.target.isChecked();
-        var captureInlineFormat = scope.getKerning();
-
-        workspace.normalVersioning(function(version) {
-          version.upHandler(function() {
-            this.setInlineFormatAllowed(inlineFormat);
-            proppane.getPropertyControl('inline-format').setChecked(inlineFormat);
-          }, scope);
-          version.downHandler(function() {
-            this.setInlineFormatAllowed(captureInlineFormat);
-            proppane.getPropertyControl('inline-format').setChecked(captureInlineFormat);
-          }, scope);
-        });
-      }, false, this);
-
-  proppane.addProperty(inlineFormatProperty, textGroup, 'inline-format');
-
   var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
   
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
@@ -1076,8 +1053,7 @@ thin.editor.TextShape.prototype.getProperties = function() {
     'text-valign': this.getVerticalAlign(),
     'kerning': this.getKerning(),
     'shape-id': this.getShapeId(),
-    'desc': this.getDesc(),
-    'inline-format': this.getInlineFormatAllowed()
+    'desc': this.getDesc()
   };
 };
 
@@ -1114,7 +1090,6 @@ thin.editor.TextShape.prototype.updateProperties = function() {
   proppane.getPropertyControl('text-valign').setValue(
         thin.editor.TextStyle.getVerticalAlignValueFromType(properties['text-valign']));
   proppane.getPropertyControl('kerning').setValue(properties['kerning']);
-  proppane.getPropertyControl('inline-format').setChecked(properties['inline-format']);
   proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
   proppane.getPropertyControl('desc').setValue(properties['desc']);
 };
