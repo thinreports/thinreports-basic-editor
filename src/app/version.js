@@ -72,7 +72,7 @@ thin.getVersion = function(opt_ignorePre) {
  * @return {string}
  */
 thin.getNextMajorVersion = function() {
-  return String((thin.Version.MAJOR + (thin.Version.MINOR * 0.1)) + 0.1) + '.0';
+  return '1.0.0';
 };
 
 

@@ -25,8 +25,8 @@ goog.require('thin.Compatibility');
  * @enum {Array.<Array>}
  */
 thin.layout.CompatibilityRule = {
-  ALL:      [['>=', '0.6.0.pre3'], ['<',  thin.getNextMajorVersion()]], 
-  COMPLETE: [['>=', '0.6.0.pre3'], ['<=', thin.getVersion()]], 
+  ALL:      [['>=', '0.7.0'], ['<',  thin.getNextMajorVersion()]],
+  COMPLETE: [['>=', '0.7.0'], ['<=', thin.getVersion()]],
   WARNING:  [['>', thin.getVersion()], ['<', thin.getNextMajorVersion()]]
 };
 

@@ -368,11 +368,6 @@ thin.core.Workspace.prototype.draw = function() {
     var file = this.getFile();
     var xmlString = thin.core.LayoutStructure.restoreStructure(format.getSvg());
 
-    thin.Compatibility.applyIf(format.getVersion(), '=', '0.6.0.pre3',
-      function() {
-        xmlString = thin.core.LayoutStructure.restoreKerningFromLetterSpacing(xmlString);
-      });
-
     var doc = new DOMParser().parseFromString(xmlString, "application/xml");
     var canvasNode = goog.dom.getLastElementChild(doc.documentElement);
 
