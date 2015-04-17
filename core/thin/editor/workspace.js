@@ -325,10 +325,6 @@ thin.editor.Workspace.create = function(file) {
     var version = format.getVersion();
 
     var xmlString = thin.editor.LayoutStructure.restoreStructure(format.getSvg());
-    thin.Compatibility.applyIf(version, '=', '0.6.0.pre3',
-      function() {
-        xmlString = thin.editor.LayoutStructure.restoreKerningFromLetterSpacing(xmlString);
-      });
 
     var userTypeCompatibilityFn = function() {
       var formatPage = format.page;

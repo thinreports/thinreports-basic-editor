@@ -80,21 +80,6 @@ thin.editor.LayoutStructure.restoreStructure = function(svg) {
 
 
 /**
- * @param {string} xml
- * @return {string}
- * @deprecated Will be removed in 0.8.0.
- */
-thin.editor.LayoutStructure.restoreKerningFromLetterSpacing = function(xml) {
-  return xml.replace(/(<[^>]*?)(letter-spacing="(.+?)")([^<]*?>)/g, function(str, prefix, attr, spacing, suffix) {
-    if (spacing == 'normal') {
-      spacing = thin.editor.TextStyle.DEFAULT_ELEMENT_KERNING;
-    }
-    return prefix + 'kerning="' + spacing + '"' + suffix;
-  });
-};
-
-
-/**
  * @param {thin.editor.Layout} layout
  * @return {string} The base64 encoded string.
  */
