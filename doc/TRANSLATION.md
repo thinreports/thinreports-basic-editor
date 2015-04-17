@@ -8,9 +8,9 @@
 2. Clone your forked repository (**Note:** [How to clone the source of the Editor](https://github.com/thinreports/thinreports-editor#how-to-clone-the-source-of-the-editor))
 3. Create your locale branch: `git checkout -b new-locale`
 
-### Create a Translation file
+### Creating a Translation file
 
-There are translation files in `src\locales\*.js`.
+There are translation files in `src/locales/*.js`.
 
 Copy the `en.js` and create a translation file with a name like `xx.js` for your language:
 
@@ -43,7 +43,7 @@ Translate in your language:
 
 ### Enabling your language
 
-Add the following to your `src\app.html`:
+Modify the your `src/app.html` as follows:
 
 ```html
 <!DOCTYPE html>
