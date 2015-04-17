@@ -1,17 +1,17 @@
-# Contributing to i18n of ThinReportsEditor
+# Contributing to i18n of ThinreportsEditor
 
 ## How to translate in your own language
 
-Related files are as follows:
+### Preparation for translate
+
+1. Fork [thinreports/thinreports-editor](https://github.com/thinreports/thinreports-editor) on github
+2. Clone your forked repository (**Note:** [How to clone the source of the Editor](https://github.com/thinreports/thinreports-editor#how-to-clone-the-source-of-the-editor))
+3. Create your locale branch: `git checkout -b new-locale`
+
+Cloned files are as follows:
 
 * **Translation file**
-  * Windows: `INSTALLDIR\resources\core\locales\*.js`
-  * Mac OS: `ThinReportsEditor.app/Contents/Resources/core/locales/*.js`
-  * Linux: `INSTALLDIR/resources/core/locales/*.js`
-* **Configuration script**
-  * Windows: `INSTALLDIR\resources\core\app.js`
-  * Mac OS: `ThinReportsEditor.app/Contents/Resources/core/app.js`
-  * LInux: `INSTALLDIR/resources/core/app.js`
+  * `src\locales\*.js`
 
 ### Create a Translation file
 
@@ -22,38 +22,49 @@ Copy the `en.js`, create a translation file with a name like `xx.js` for your la
 Modify the `xx.js` as follows:
 
 ```javascript
-Thin.setLocale('<your language like "en", "ja">', '<best font-families in your language>') {
-  toolbar_group_file: 'File',
-    :
+App.addLocale({
+  id: '<your language code>', name: '<your language name>', font_family: "'<best font-families in your language>'",
+  default_settings: {
+    // Available values: break-word, none
+    // This value use in 'Text Block'
+    text_word_wrap: '<your language text wrapping>'
+  },
+  messages: {
+      :
+  }
 });
 ```
 
 Translate into your language
 
 ```javascript
-  toolbar_group_file: '<translated text>',
-    :
+  messages: {
+    toolbar_group_file: '<translated text>',
+      :
+  }
 ```
 
 ### Enable your language
 
-Add the following to your `app.js` (Configuration script):
+Add the following to your `src\app.html`:
 
-```javascript
-/**
- * Available locales
- */
-Thin.LOCALES = {
-  'ja': '日本語',
-  'en': 'English',
-  'xx': '<your language name>'
-};
+```html
+<!DOCTYPE html>
+  <html class="splash">
+    <head>
+      <title>Thinreports Editor</title>
+      <meta charset="UTF-8">
+      <script src="app.js"></script>
+      <script src="locales/ja.js"></script>
+      <script src="locales/en.js"></script>
+      <script src="locales/xx.js"></script>
+        :
 ```
 
 ### Check the translations on Editor to switch to your language
 
-1. Start the Editor
-2. Open the preference dialog  
+1. Start the Editor to see [How to launch development version of the Editor](https://github.com/thinreports/thinreports-editor#how-to-launch-development-version-of-the-editor)
+2. Open the preference dialog
 (You can find the preference button on the right side of the toolbar)
 3. Select your language, press the OK button to apply
 
@@ -61,9 +72,8 @@ Thin.LOCALES = {
 
 ### Pull request
 
-1. Fork [thinreports/thinreports-editor](https://github.com/thinreports/thinreports-editor) on github
-2. Create your feature branch: `git checkout -b new-locale`
-3. Add your translation file and add your language setting to `app.js`
-4. Commit: `git commit -am 'added xx locale'`
-5. Push to the branch: `git push origin new-locale`
-6. Create new pull request
+1. See [Preparation to translate](https://github.com/thinreports/thinreports-editor/blob/master/doc/TRANSLATION.md#Preparation-for-translate)
+2. Add your translation file and add your language setting to `app.html`
+3. Commit: `git commit -am 'added xx locale'`
+4. Push to the branch: `git push origin new-locale`
+5. Create new pull request
