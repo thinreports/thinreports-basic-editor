@@ -1,21 +1,18 @@
-# Contributing to i18n of ThinreportsEditor
+# Contributing to Translation
 
 ## How to translate in your own language
 
-### Preparation for translate
+### Preparation
 
 1. Fork [thinreports/thinreports-editor](https://github.com/thinreports/thinreports-editor) on github
 2. Clone your forked repository (**Note:** [How to clone the source of the Editor](https://github.com/thinreports/thinreports-editor#how-to-clone-the-source-of-the-editor))
 3. Create your locale branch: `git checkout -b new-locale`
 
-Cloned files are as follows:
-
-* **Translation file**
-  * `src\locales\*.js`
-
 ### Create a Translation file
 
-Copy the `en.js`, create a translation file with a name like `xx.js` for your language
+There are translation files in `src\locales\*.js`.
+
+Copy the `en.js` and create a translation file with a name like `xx.js` for your language:
 
     % cp en.js xx.js
 
@@ -35,7 +32,7 @@ App.addLocale({
 });
 ```
 
-Translate into your language
+Translate in your language:
 
 ```javascript
   messages: {
@@ -44,7 +41,7 @@ Translate into your language
   }
 ```
 
-### Enable your language
+### Enabling your language
 
 Add the following to your `src\app.html`:
 
@@ -63,7 +60,7 @@ Add the following to your `src\app.html`:
 
 ### Check the translations on Editor to switch to your language
 
-1. Start the Editor to see [How to launch development version of the Editor](https://github.com/thinreports/thinreports-editor#how-to-launch-development-version-of-the-editor)
+1. Launch the Editor with referring to [How to launch development version of the Editor](https://github.com/thinreports/thinreports-editor#how-to-launch-development-version-of-the-editor)
 2. Open the preference dialog
 (You can find the preference button on the right side of the toolbar)
 3. Select your language, press the OK button to apply
@@ -72,7 +69,7 @@ Add the following to your `src\app.html`:
 
 ### Pull request
 
-1. See [Preparation to translate](https://github.com/thinreports/thinreports-editor/blob/master/doc/TRANSLATION.md#preparation-for-translate)
+1. See [Preparation](https://github.com/thinreports/thinreports-editor/blob/master/doc/TRANSLATION.md#preparation)
 2. Add your translation file and add your language setting to `app.html`
 3. Commit: `git commit -am 'added xx locale'`
 4. Push to the branch: `git push origin new-locale`
