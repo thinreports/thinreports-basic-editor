@@ -23,7 +23,7 @@ App.addLocale({
   id: '<your language code>', name: '<your language name>', font_family: "'<best font-families in your language>'",
   default_settings: {
     // Available values: break-word, none
-    // This value use in 'Text Block'
+    // This settings will be used in 'Text Block'.
     text_word_wrap: '<your language text wrapping>'
   },
   messages: {
