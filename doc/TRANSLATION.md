@@ -72,7 +72,7 @@ Add the following to your `src\app.html`:
 
 ### Pull request
 
-1. See [Preparation to translate](https://github.com/thinreports/thinreports-editor/blob/master/doc/TRANSLATION.md#Preparation-for-translate)
+1. See [Preparation to translate](https://github.com/thinreports/thinreports-editor/blob/master/doc/TRANSLATION.md#preparation-for-translate)
 2. Add your translation file and add your language setting to `app.html`
 3. Commit: `git commit -am 'added xx locale'`
 4. Push to the branch: `git push origin new-locale`
