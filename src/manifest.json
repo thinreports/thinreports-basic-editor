@@ -2,6 +2,8 @@
   "manifest_version": 2,
   "name": "Thinreports Editor",
   "version": "0.8.0",
+  "description": "The Report Designer of Thinreports, open source report generation tool",
+  "author": "Thinreports.org",
   "icons": {
     "16": "assets/images/icon-16.png",
     "48": "assets/images/icon-48.png",
