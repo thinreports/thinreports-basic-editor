@@ -95,7 +95,7 @@ namespace :package do
     html = package.join('app.html').read
 
     # remove dependent script tags for development
-    html.sub! /<!\-\-SCRIPTS begin\-\->.*<!\-\-SCRIPTS end\-\->\n/m, ''
+    html.sub! /<!\-\-SCRIPTS begin\-\->.*<!\-\-SCRIPTS end\-\->(\n|\r\n)/m, ''
 
     # replace dependent style tags to tag for including compiled style.css
     indent = ' ' * 4
