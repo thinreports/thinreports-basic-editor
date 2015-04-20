@@ -14,7 +14,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.layout.document');
-goog.provide('thin.layout.document.Type');
 
 goog.require('thin.layout.document.File');
 goog.require('thin.layout.document.CSV');
@@ -22,24 +21,35 @@ goog.require('thin.layout.document.HTML');
 
 
 /**
+ * @enum {string}
+ */
+thin.layout.document.Type = {
+  HTML: 'html',
+  CSV: 'csv'
+};
+
+
+/**
+ * @param {thin.layout.document.Type} type
  * @param {thin.core.Layout} layout
  */
-thin.layout.document.generate = function(layout) {
-  var fileName = layout.getWorkspace().getSuggestedFileName();
-  thin.layout.document.File.saveDialog(fileName, {
+thin.layout.document.exportAs = function(type, layout) {
+  var filename = layout.getWorkspace().getSuggestedFileName();
+
+  thin.layout.document.File.saveDialog(type, filename, {
     success: function(file) {
       var ext = file.getExt();
       var doc;
-      switch(ext) {
-        case thin.layout.document.File.EXT_NAMES.CSV:
+      switch(type) {
+        case thin.layout.document.Type.CSV:
           doc = thin.layout.document.generateCSV(layout);
           break;
-        case thin.layout.document.File.EXT_NAMES.HTML:
+        case thin.layout.document.Type.HTML:
           doc = thin.layout.document.generateHTML(layout);
           break;
       }
 
-      file.save(doc, thin.layout.document.File.MIME_TYPES[ext]);
+      file.save(doc, thin.layout.document.File.getMimeTypeByExtensionName(ext));
     },
     cancel: goog.nullFunction,
     error: goog.nullFunction

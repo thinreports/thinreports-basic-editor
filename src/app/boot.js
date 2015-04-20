@@ -526,15 +526,22 @@ thin.init_ = function() {
     toolSave.addItem(new thin.ui.MenuSeparator());
 
     // Export ID-Structure
-    var toolExportIds = new thin.ui.MenuItem(thin.t('button_export_definition'),
-          new thin.ui.Icon('export-layout-doc'));
-    toolSave.addItem(toolExportIds);
-    toolExportIds.addEventListener(componentEventType.ACTION, function(e) {
-      var workspace = thin.core.getActiveWorkspace();
-      if (workspace) {
-        workspace.generateLayoutDocument();
-        focusWorkspace(e);
-      }
+    var exportTypes = [
+      { type: thin.layout.document.Type.HTML, label: thin.t('button_export_document_as_html') },
+      { type: thin.layout.document.Type.CSV,  label: thin.t('button_export_document_as_csv') }
+    ];
+    var exportMenuItem;
+
+    goog.array.forEach(exportTypes, function(exportType) {
+      exportMenuItem = new thin.ui.MenuItem(exportType.label, new thin.ui.Icon('export-layout-doc'));
+      exportMenuItem.addEventListener(componentEventType.ACTION, function(e) {
+        var workspace = thin.core.getActiveWorkspace();
+        if (workspace) {
+          workspace.exportDocumentAs(exportType.type);
+          focusWorkspace(e);
+        }
+      });
+      toolSave.addItem(exportMenuItem);
     });
 
     // Open report file

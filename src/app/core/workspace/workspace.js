@@ -640,8 +640,11 @@ thin.core.Workspace.prototype.saveAs_ = function(file, callback_fn) {
 };
 
 
-thin.core.Workspace.prototype.generateLayoutDocument = function() {
-  thin.layout.document.generate(this.getLayout());
+/**
+ * @param {thin.layout.document.Type} type
+ */
+thin.core.Workspace.prototype.exportDocumentAs = function(type) {
+  thin.layout.document.exportAs(type, this.getLayout());
 };
 
 

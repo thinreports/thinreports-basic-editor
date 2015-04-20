@@ -90,7 +90,6 @@ App.addLocale({
     label_shape_type: '種別',
     label_layout: 'レイアウト',
     label_shapes: 'オブジェクト',
-    label_export_layout_definition: 'レイアウト定義をエクスポート',
 
     field_page_title: 'ページタイトル',
     field_paper_type: '用紙',
@@ -149,7 +148,8 @@ App.addLocale({
     button_new_report: '新規作成',
     button_save: '保存',
     button_saveas: '名前を付けて保存',
-    button_export_definition: 'レイアウト定義をエクスポート',
+    button_export_document_as_html: 'ドキュメントをエクスポート（HTML形式）',
+    button_export_document_as_csv: 'ドキュメントをエクスポート（CSV形式）',
     button_open: '開く',
     button_undo: '元に戻す',
     button_redo: 'やり直す',

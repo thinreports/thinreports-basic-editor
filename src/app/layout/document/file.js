@@ -36,32 +36,6 @@ goog.inherits(thin.layout.document.File, goog.Disposable);
 /**
  * @enum {string}
  */
-thin.layout.document.File.EXT_NAMES = {
-  CSV: 'csv',
-  HTML: 'html'
-};
-
-
-/**
- * @type {string}
- * @private
- */
-thin.layout.document.File.EXT_DESCRIPTION_ = 'Text CSV/HTML Document';
-
-
-/**
- * @type {Array.<Object>}
- * @private
- */
-thin.layout.document.File.ACCEPTS_ = [{
-  'extensions': goog.object.getValues(thin.layout.document.File.EXT_NAMES),
-  'description': thin.layout.document.File.EXT_DESCRIPTION_
-}];
-
-
-/**
- * @enum {string}
- */
 thin.layout.document.File.MIME_TYPES = {
   'csv': 'text/csv',
   'html': 'text/html'
@@ -76,11 +50,23 @@ thin.layout.document.File.prototype.file_;
 
 
 /**
+ * @param {thin.layout.document.Type} type
  * @param {string} fileName
  * @param {Object.<Function>} callbacks
  */
-thin.layout.document.File.saveDialog = function(fileName, callbacks) {
-  thin.platform.File.saveAs(fileName, thin.layout.document.File.ACCEPTS_, {
+thin.layout.document.File.saveDialog = function(type, fileName, callbacks) {
+  var accepts;
+
+  switch(type) {
+    case thin.layout.document.Type.HTML:
+      accepts = [{ 'extensions': ['html'], 'description': 'HTML document' }];
+      break;
+    case thin.layout.document.Type.CSV:
+      accepts = [{ 'extensions': ['csv'], 'description': 'Text CSV' }];
+      break;
+  }
+
+  thin.platform.File.saveAs(fileName, accepts, {
     success: function(entry) {
       thin.layout.document.File.handleSelectFileToSave(callbacks, entry);
     },
@@ -89,6 +75,15 @@ thin.layout.document.File.saveDialog = function(fileName, callbacks) {
       thin.ui.Notification.error(thin.t('error_can_not_save'));
     }
   });
+};
+
+
+/**
+ * @param {string} extName
+ * @return {string}
+ */
+thin.layout.document.File.getMimeTypeByExtensionName = function(extName) {
+  return /** @type {string} */ (thin.layout.document.File.MIME_TYPES[extName]);
 };
 
 
