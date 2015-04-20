@@ -11,6 +11,7 @@
     "256": "assets/images/icon-256.png"
   },
   "minimum_chrome_version": "23",
+  "offline_enabled": true,
   "app": {
     "background": {
       "scripts": ["background.js"]
