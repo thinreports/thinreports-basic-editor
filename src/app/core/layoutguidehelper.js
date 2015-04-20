@@ -32,13 +32,13 @@ goog.require('thin.core.DraggableLine.Direction');
  */
 thin.core.LayoutGuideHelper = function(layout) {
   thin.core.Component.call(this, layout);
-  
+
   /**
    * @type {Array.<thin.core.DraggableLine>}
    * @private
    */
   this.ylines_ = [];
-  
+
   /**
    * @type {Array.<thin.core.DraggableLine>}
    * @private
@@ -51,7 +51,7 @@ goog.inherits(thin.core.LayoutGuideHelper, thin.core.Component);
 /**
  * @type {goog.graphics.SolidFill}
  */
-thin.core.LayoutGuideHelper.FILL = new goog.graphics.SolidFill('#FF00FF', 0.6);
+thin.core.LayoutGuideHelper.FILL = new goog.graphics.SolidFill('#0096fd', 0.8);
 
 
 /**
@@ -102,7 +102,7 @@ thin.core.LayoutGuideHelper.prototype.disable = function(disabled) {
   this.disable_ = disabled;
   var isTarget = false;
   var target = thin.ui.getComponent('proppane').getTarget();
-  
+
   goog.array.forEach(this.ylines_, function(yline) {
     yline.setVisibled(!disabled);
     if (target == yline) {
@@ -115,19 +115,19 @@ thin.core.LayoutGuideHelper.prototype.disable = function(disabled) {
       isTarget = true;
     }
   });
-  
+
   if (disabled && isTarget) {
     var layout = this.getLayout();
     var helpers = layout.getHelpers();
     var multipleShapesHelper = helpers.getMultipleShapesHelper();
     var activeShapeManager = layout.getManager().getActiveShape();
-    
+
     if (activeShapeManager.isEmpty()) {
       layout.updatePropertiesForEmpty();
     } else {
       var listHelper = helpers.getListHelper();
       var singleShape = activeShapeManager.getIfSingle();
-      
+
       if (!listHelper.isActive()) {
         if (singleShape) {
           singleShape.updateProperties();
@@ -172,7 +172,7 @@ thin.core.LayoutGuideHelper.prototype.getGuides = function() {
       'position': y
     }, guides.length);
   });
-  
+
   return guides;
 };
 
@@ -200,16 +200,16 @@ thin.core.LayoutGuideHelper.prototype.getYPositions = function() {
 thin.core.LayoutGuideHelper.prototype.createFromHelperConfig = function() {
   var workspace = this.workspace_;
   var guides = workspace.format.getLayoutGuides();
-  
+
   if (goog.array.isEmpty(guides)) {
     return;
   }
-  
+
   if (!this.isEnable()) {
     thin.ui.getComponent('toolbar').getChild('guide').setChecked(true);
     this.disable_ = false;
   }
-  
+
   var scope = this;
   var yline, xline;
   goog.array.forEach(guides, function (guide) {
@@ -236,7 +236,7 @@ thin.core.LayoutGuideHelper.prototype.createYLayoutGuide = function() {
         new goog.math.Rect(0, thin.numberWithPrecision(size.height * 0.1, 0), size.width, 1),
         thin.core.Cursor.Type.BCENTER);
   goog.array.insert(this.ylines_, yline);
-  
+
   return yline;
 };
 
@@ -250,7 +250,7 @@ thin.core.LayoutGuideHelper.prototype.createXLayoutGuide = function() {
         new goog.math.Rect(thin.numberWithPrecision(size.width * 0.1), 0, 1, size.height),
         thin.core.Cursor.Type.MRIGHT);
   goog.array.insert(this.xlines_, xline);
-  
+
   return xline;
 };
 
@@ -258,7 +258,7 @@ thin.core.LayoutGuideHelper.prototype.createXLayoutGuide = function() {
 thin.core.LayoutGuideHelper.prototype.removeLayoutGuide = function() {
   if (this.isEnable()) {
     var removeLine = thin.ui.getComponent('proppane').getTarget();
-    
+
     if (removeLine instanceof thin.core.DraggableLine) {
       var layout = this.getLayout();
       var helpers = layout.getHelpers();
@@ -270,7 +270,7 @@ thin.core.LayoutGuideHelper.prototype.removeLayoutGuide = function() {
       } else {
         var listHelper = helpers.getListHelper();
         var singleShape = activeShapeManager.getIfSingle();
-        
+
         if (!listHelper.isActive()) {
           if (singleShape) {
             singleShape.updateProperties();
@@ -290,7 +290,7 @@ thin.core.LayoutGuideHelper.prototype.removeLayoutGuide = function() {
           }
         }
       }
-      
+
       removeLine.dispose();
       removeLine.remove();
       if (removeLine.isHorizontal()) {
@@ -323,7 +323,7 @@ thin.core.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
   draggableLine.init();
   draggableLine.reapplySizeAndStroke();
   layout.appendChild(draggableLine, this);
-  
+
   var dragger = draggableLine.getDragger();
   var eventType = goog.fx.Dragger.EventType;
   goog.events.listen(dragger, eventType.START, function(e) {
@@ -352,7 +352,7 @@ thin.core.LayoutGuideHelper.prototype.createLayoutGuide_ = function(
 
       version.upHandler(function() {
       }, draggableLine);
-      
+
       version.downHandler(function() {
         if (isEmpty) {
           layout.updatePropertiesForEmpty();
