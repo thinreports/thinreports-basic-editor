@@ -148,10 +148,6 @@ thin.ui.ComboBox.prototype.getInputElement = function() {
  * @private
  */
 thin.ui.ComboBox.prototype.showMenu_ = function() {
-  goog.events.listen(this.menu_, 
-    goog.ui.Component.EventType.HIGHLIGHT, 
-      this.handleHighlightItem, false, this);
-
   this.menu_.setVisible(true);
   goog.dom.classes.add(this.getElement(),
       thin.ui.getCssName(this.getCssClass(), 'active'));
@@ -164,32 +160,8 @@ thin.ui.ComboBox.prototype.showMenu_ = function() {
  */
 thin.ui.ComboBox.prototype.hideMenu_ = function() {
   this.menu_.setVisible(false);
-
-  goog.events.unlisten(this.menu_, 
-    goog.ui.Component.EventType.HIGHLIGHT, 
-      this.handleHighlightItem, false, this);
-  
   goog.dom.classes.remove(this.getElement(),
       thin.ui.getCssName(this.getCssClass(), 'active'));
-};
-
-
-/** @override */
-thin.ui.ComboBox.prototype.onMenuSelected_ = function(e) {
-  this.logger_.info('onMenuSelected_()');
-  var item = /** @type {!goog.ui.MenuItem} */ (e.target);
-  // Stop propagation of the original event and redispatch to allow the menu
-  // select to be cancelled at this level. i.e. if a menu item should cause
-  // some behavior such as a user prompt instead of assigning the caption as
-  // the value.
-  if (this.dispatchEvent(new goog.ui.ItemEvent(
-      goog.ui.Component.EventType.ACTION, this, item))) {
-    var caption = item.getCaption();
-    this.logger_.fine('Menu selection: ' + caption + '. Dismissing menu');
-    this.labelInput_.getElement().blur();
-    this.dismiss();
-  }
-  e.stopPropagation();
 };
 
 
@@ -273,17 +245,6 @@ thin.ui.ComboBox.prototype.handleInputChange_ = function() {
 
   this.setItemHighlightFromToken_(token);
   this.lastToken_ = token;
-};
-
-
-/**
- * @param {goog.events.Event} e
- */
-thin.ui.ComboBox.prototype.handleHighlightItem = function(e) {
-  var caption = e.target.getCaption();
-  if (this.labelInput_.getValue() != caption) {
-    this.labelInput_.getElement().value = caption;
-  }
 };
 
 
