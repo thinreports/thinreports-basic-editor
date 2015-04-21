@@ -1100,7 +1100,7 @@ thin.core.ModuleShape.prototype.setStrokeDashTypeForPropertyUpdate = function(e)
     }, scope);
     
     version.downHandler(function() {
-      this.setStrokeDashFromType(captureStrokeDashType);
+      this.setStrokeDashFromType(captureStrokeType);
       proppane.getPropertyControl('stroke-dash-type').setValue(captureStrokeType);
     }, scope);
   });
