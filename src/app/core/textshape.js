@@ -1005,18 +1005,23 @@ thin.core.TextShape.prototype.createPropertyComponent_ = function() {
  */
 thin.core.TextShape.prototype.setTextContentPropertyUpdate = function(e) {
   var scope = this;
+  var guide = this.getLayout().getHelpers().getGuideHelper();
   var proppane = thin.ui.getComponent('proppane');
   var text = e.target.getValue();
+  var captureWidth = this.getWidth();
   var captureText = this.getTextContent();
 
   this.getLayout().getWorkspace().normalVersioning(function(version) {
     version.upHandler(function() {
       this.updateFirstTextLine(text);
+      guide.adjustToTargetShapeBounds();
       proppane.getPropertyControl('text-content').setValue(text || this.getFirstTextLine());
     }, scope);
 
     version.downHandler(function() {
       this.setTextContent(captureText);
+      this.setWidth(captureWidth);
+      guide.adjustToTargetShapeBounds();
       proppane.getPropertyControl('text-content').setValue(this.getFirstTextLine());
     }, scope);
   });
