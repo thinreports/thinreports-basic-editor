@@ -95,7 +95,7 @@ thin.i18n.getMessages = function() {
  * @return {string}
  */
 thin.i18n.getFontFamily = function() {
-  return thin.i18n.currentLocale_.font_family;
+  return thin.i18n.currentLocale_['font_family'];
 };
 
 
