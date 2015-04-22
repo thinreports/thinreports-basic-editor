@@ -166,4 +166,4 @@ Please see [LICENSE](https://github.com/thinreports/thinreports-editor/blob/mast
 
 ## Copyright
 
-&copy; 2010-2015 Thinreports.org, sponsored by [Matsukei Corp](http://www.matsukei.co.jp).
+&copy; 2010-2015 [Matsukei Co.,Ltd](http://www.matsukei.co.jp).
