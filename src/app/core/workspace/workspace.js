@@ -1116,7 +1116,7 @@ thin.core.Workspace.prototype.focusElement = function(e) {
  * @private
  */
 thin.core.Workspace.prototype.getBackupId_ = function() {
-  return goog.getHashCode(this);
+  return goog.getUid(this);
 };
 
 

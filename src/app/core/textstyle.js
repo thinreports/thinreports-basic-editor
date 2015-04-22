@@ -127,7 +127,7 @@ thin.core.TextStyle.getDefaultWordWrap = function() {
  */
 thin.core.TextStyle.getWordWrapName = function(wordWrapType) {
   var type = thin.core.TextStyle.WordWrapType;
-  var name;
+  var name = '';
 
   switch(wordWrapType) {
     case type.NONE:
@@ -147,7 +147,7 @@ thin.core.TextStyle.getWordWrapName = function(wordWrapType) {
  */
 thin.core.TextStyle.getVerticalAlignName = function(vAlignType) {
   var type = thin.core.TextStyle.VerticalAlignType;
-  var name;
+  var name = '';
 
   switch(vAlignType) {
     case type.TOP:

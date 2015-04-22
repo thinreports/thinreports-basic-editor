@@ -41,7 +41,7 @@ goog.inherits(thin.File, goog.Disposable);
 
 
 /**
- * @type {FileEntry}
+ * @type {FileEntry|thin.File.DummyEntry}
  * @private
  */
 thin.File.prototype.entry_;

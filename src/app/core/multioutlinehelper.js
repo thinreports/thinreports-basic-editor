@@ -73,7 +73,7 @@ thin.core.MultiOutlineHelper.prototype.setOutlineStyle_ = function(outline, shap
  * @private
  */
 thin.core.MultiOutlineHelper.prototype.initStrokeBy_ = function(shape) {
-  return new goog.graphics.Stroke(shape.getStrokeWidth())
+  return new goog.graphics.Stroke(shape.getStrokeWidth(), '')
 };
 
 
@@ -277,7 +277,7 @@ thin.core.MultiOutlineHelper.prototype.setOutlineForMultiple = function(outline,
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toRectOutline = function(shape, helpers) {
-  var outline = helpers.createRectOutline(this);
+  var outline = helpers.createRectOutline(this, null, null);
 
   outline.setBounds(shape.getBounds());
   outline.setRounded(shape.getRounded());
@@ -294,7 +294,7 @@ thin.core.MultiOutlineHelper.prototype.toRectOutline = function(shape, helpers) 
 thin.core.MultiOutlineHelper.prototype.toEllipseOutline = function(shape, helpers) {
   var radius = shape.getRadius();
   var center = shape.getCenterCoordinate();
-  var outline = helpers.createEllipseOutline(this);
+  var outline = helpers.createEllipseOutline(this, null, null);
 
   outline.setBounds(shape.getBounds());
   outline.setStrokeWidth(shape.getStrokeWidth());
@@ -327,7 +327,7 @@ thin.core.MultiOutlineHelper.prototype.toLineOutline = function(shape, helpers) 
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toTextOutline = function(shape, helpers) {
-  var outline = helpers.createTextOutline(this);
+  var outline = helpers.createTextOutline(this, null, null);
 
   outline.setBounds(shape.getBounds());
   this.setOutlineStyle_(outline, shape);
@@ -340,7 +340,7 @@ thin.core.MultiOutlineHelper.prototype.toTextOutline = function(shape, helpers) 
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toTblockOutline = function(shape, helpers) {
-  var outline = helpers.createTblockOutline(this);
+  var outline = helpers.createTblockOutline(this, null, null);
 
   outline.setBounds(shape.getBounds());
   this.setOutlineStyle_(outline, shape);
@@ -353,7 +353,7 @@ thin.core.MultiOutlineHelper.prototype.toTblockOutline = function(shape, helpers
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toPageNumberOutline = function(shape, helpers) {
-  var outline = helpers.createPageNumberOutline(this);
+  var outline = helpers.createPageNumberOutline(this, null, null);
 
   outline.setBounds(shape.getBounds());
   this.setOutlineStyle_(outline, shape);
@@ -366,7 +366,7 @@ thin.core.MultiOutlineHelper.prototype.toPageNumberOutline = function(shape, hel
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toImageblockOutline = function(shape, helpers) {
-  var outline = helpers.createImageblockOutline(this);
+  var outline = helpers.createImageblockOutline(this, null, null);
 
   outline.setBounds(shape.getBounds());
   this.setOutlineStyle_(outline, shape);
@@ -379,7 +379,7 @@ thin.core.MultiOutlineHelper.prototype.toImageblockOutline = function(shape, hel
  * @param {thin.core.Helpers} helpers
  */
 thin.core.MultiOutlineHelper.prototype.toImageOutline = function(shape, helpers) {
-  var outline = helpers.createImageOutline(this);
+  var outline = helpers.createImageOutline(this, null, null);
 
   outline.setBounds(shape.getBounds());
   this.setOutlineStyle_(outline, shape);

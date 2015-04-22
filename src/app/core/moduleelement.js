@@ -140,7 +140,7 @@ thin.core.ModuleElement.prototype.affiliationSectionName_;
  */
 thin.core.ModuleElement.getStrokeName = function(type) {
   var strokeType = thin.core.ModuleElement.StrokeType;
-  var strokeName;
+  var strokeName = '';
 
   switch(type) {
     case strokeType.SOLID:
@@ -154,30 +154,6 @@ thin.core.ModuleElement.getStrokeName = function(type) {
       break;
   }
   return strokeName;
-};
-
-
-/**
- * @param {string} strokeDashName
- * @return {string}
- */
-thin.core.ModuleElement.getStrokeTypeFromValue = function(strokeDashName) {
-  var strokeTypeTemp = thin.core.ModuleElement.StrokeType;
-  var strokeTypeNameTemp = thin.core.ModuleElement.StrokeTypeName;
-
-  switch (strokeDashName) {
-    case strokeTypeNameTemp.SOLID:
-      var strokeDashType = strokeTypeTemp.SOLID;
-      break;
-    case strokeTypeNameTemp.DASHED:
-      var strokeDashType = strokeTypeTemp.DASHED;
-      break;
-    case strokeTypeNameTemp.DOTTED:
-      var strokeDashType = strokeTypeTemp.DOTTED;
-      break;
-  }
-
-  return /** @type {string} */(strokeDashType);
 };
 
 

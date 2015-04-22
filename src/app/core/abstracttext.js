@@ -102,7 +102,7 @@ thin.core.AbstractText.prototype.setTop = function(top) {
 
 
 /**
- * @return {SVGRect}
+ * @return {Object}
  */
 thin.core.AbstractText.prototype.getBBox = function() {
   return this.getElement()['getBBox']();

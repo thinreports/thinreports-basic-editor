@@ -51,7 +51,7 @@ thin.platform.getNativeFunction = function(func) {
 
 
 /**
- * @param {string} func like 'chrome.runtime.lastError'
+ * @param {string} property like 'chrome.runtime.lastError'
  * @return {*}
  */
 thin.platform.getNativeProperty = function(property) {

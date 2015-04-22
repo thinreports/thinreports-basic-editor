@@ -23,7 +23,7 @@ thin.platform.Window.close = function() {
 };
 
 /**
- * @return {Object}
+ * @return {*}
  */
 thin.platform.Window.getCurrent = function() {
   return thin.platform.callNativeFunction('chrome.app.window.current');

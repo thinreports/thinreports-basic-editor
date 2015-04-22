@@ -113,7 +113,7 @@ thin.core.PageNumberShape.prototype.base_;
 
 
 /**
- * @type {thin.core.ListShape}
+ * @type {goog.graphics.Element}
  * @private
  */
 thin.core.PageNumberShape.prototype.targetShape_;

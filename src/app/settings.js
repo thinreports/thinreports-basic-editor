@@ -41,7 +41,7 @@ thin.Settings.KEYS = [
 
 
 /**
- * @param {Function} fn_ready
+ * @param {Function} fn_onReady
  */
 thin.Settings.init = function(fn_onReady) {
   var settings = thin.Settings.getInstance();

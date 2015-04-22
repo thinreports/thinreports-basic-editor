@@ -1546,7 +1546,7 @@ thin.init_ = function() {
   })();
 
   (function() {
-    var propview = new thin.ui.PropertyView();
+    var propview = new thin.ui.PropertyView('');
     main.addChildToRight(propview);
     thin.ui.registerComponent('proppane', propview.getControl());
   })();

@@ -218,7 +218,7 @@ thin.core.HistoryManager.prototype.getHasChangedFingerPrint = function() {
   for (var c = this.current_ -1; c >= 0; c--) {
     version = this.history_.get(c);
     if (version.hasChanged()) {
-      return goog.getHashCode(version);
+      return goog.getUid(version);
     }
   }
 
@@ -526,7 +526,7 @@ thin.core.HistoryManager.VersionGroup.prototype.disposeInternal = function() {
 
 
   /**
-   * @type {Function}
+   * @type {boolean}
    * @private
    */
   CustomVersion.prototype.changed_ = true;
