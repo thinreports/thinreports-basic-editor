@@ -1,6 +1,6 @@
 # Thinreports Editor [![Join the chat at https://gitter.im/thinreports/thinreports-editor](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thinreports/thinreports-editor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[Thinreports](http://www.thinreports.org/) is an open source report generating tool for Ruby.
+[Thinreports](http://www.thinreports.org/) is an open source report generation tool for Ruby.
 
   * Thinreports Editor (GUI Designer)
   * Thinreports Generator (Report Generator for Ruby)
