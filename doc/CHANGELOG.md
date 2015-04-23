@@ -1,25 +1,33 @@
 ## 0.8.0
 
+Released the `Qt version` and `ChromeApp version` from Editor 0.8.0.
+This by abolished the `Qt version` in the next major version (1.0.0), is scheduled to **release only `ChromeApp version`**. Therefore, **`ChromeApp version` is recommended**, **`Qt version` is deprecated**.
+
+Note: The Editor that was released in the past called the `Qt version`.
+
 ### Features
 
-#### ChromeApp Only
+#### ChromeApp ver Only
 
 * New design for ChromeApp version #22
+* Split the button for exporting document into per filetype
 
-#### Qt and ChromeApp
+#### Qt ver and ChromeApp ver
 
 * Change official name from ThinReports to Thinreports #19
+* Improvement of combobox selection operation #37
 
 ### Bug fixes
 
-#### ChromeApp Only
+#### ChromeApp ver Only
 
 * Windowsのテーマをクラシックに設定するとテキストツールが正常に表示されない #11
 * Thinreport Editor auto close when right click #10
 
-#### Qt and ChromeApp
+#### Qt ver and ChromeApp ver
 
 * レイアウト定義書におけるページ番号ツールのカウント対象が一覧表の場合、表示されない
+* Does not resize the outline after updating content of the text in Property #42
 
 ## 0.7.7.2
 
