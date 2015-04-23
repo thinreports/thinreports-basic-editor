@@ -15,7 +15,7 @@ Therefore, **ChromeApp version is recommended, DesktopApp version is deprecated*
 * レイアウト定義書におけるページ番号ツールのカウント対象が一覧表の場合、表示されない
 * Does not resize the outline after updating content of the text in Property #42
 
-#### DesktopApp
+### DesktopApp
 
 **[DEPRECATION] DesktopApp ver is deprecated.  Please use ChromeApp ver instead.**
 
