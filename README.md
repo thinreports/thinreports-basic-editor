@@ -29,7 +29,7 @@ Please [contribute to translate](https://github.com/thinreports/thinreports-edit
 ChromeApp version of Thinreports is available for Windows, Mac, and Linux computers.
 Please see [System requirements - Chrome Help](https://support.google.com/chrome/answer/95346?hl=en) for more information.
 
-### Qt ver(not ChromeApp)
+### DesktopApp ver
 
   * Windows XP/7/8/8.1
 
