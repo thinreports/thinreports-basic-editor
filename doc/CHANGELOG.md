@@ -1,7 +1,7 @@
 ## 0.8.0
 
-Editor 0.8.0 Released. It has ChromeApp version and DesktopApp version.
-DesktopApp version will abolished in the next major version (1.0.0).
+Editor 0.8.0 has been released. It contains ChromeApp version and DesktopApp version.
+DesktopApp version will be abolished in the next major version (1.0.0).
 Therefore, **ChromeApp version is recommended, DesktopApp version is deprecated**.
 
 ### ChromeApp
@@ -10,14 +10,14 @@ Therefore, **ChromeApp version is recommended, DesktopApp version is deprecated*
 * Split the button for exporting document into per filetype
 * Change official name from ThinReports to Thinreports #19
 * Improvement of combobox selection operation #37
-* Windowsのテーマをクラシックに設定するとテキストツールが正常に表示されない #11
-* Thinreport Editor auto close when right click #10
+* Windowsのテーマをクラシックに設定するとテキストツールが正常に表示されない #11 [Ayaka]
+* Thinreport Editor auto close when right click #10 [khacluan]
 * レイアウト定義書におけるページ番号ツールのカウント対象が一覧表の場合、表示されない
 * Does not resize the outline after updating content of the text in Property #42
 
 ### DesktopApp
 
-**[DEPRECATION] DesktopApp ver is deprecated.  Please use ChromeApp ver instead.**
+**[DEPRECATION] DesktopApp version is deprecated.  Please use ChromeApp version instead.**
 
 * Change official name from ThinReports to Thinreports #19
 * Improvement of combobox selection operation #37
