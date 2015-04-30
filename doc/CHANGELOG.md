@@ -1,28 +1,28 @@
 ## 0.8.0
 
-Editor 0.8.0 Released. It has ChromeApp version and DesktopApp version.
-DesktopApp version will abolished in the next major version (1.0.0).
-Therefore, **ChromeApp version is recommended, DesktopApp version is deprecated**.
+Editor 0.8.0 has been released. It includes two versions, ChromeApp ver and DesktopApp ver.
+However the DesktopApp ver has been deprecated and it will be **abolished** in the next major version.
 
-### ChromeApp
+### ChromeApp ver
 
 * New design for ChromeApp version #22
 * Split the button for exporting document into per filetype
 * Change official name from ThinReports to Thinreports #19
 * Improvement of combobox selection operation #37
-* Windowsのテーマをクラシックに設定するとテキストツールが正常に表示されない #11
-* Thinreport Editor auto close when right click #10
-* レイアウト定義書におけるページ番号ツールのカウント対象が一覧表の場合、表示されない
-* Does not resize the outline after updating content of the text in Property #42
+* Fixed: Windowsのテーマをクラシックに設定するとテキストツールが正常に表示されない #11
+* Fixed: Thinreport Editor auto close when right click #10
+* Fixed: レイアウト定義書におけるページ番号ツールのカウント対象が一覧表の場合、表示されない
+* Fixed: Does not resize the outline after updating content of the text in Property #42
 
-### DesktopApp
+### DesktopApp ver
 
-**[DEPRECATION] DesktopApp ver is deprecated.  Please use ChromeApp ver instead.**
+**DEPRECATION:** This version won't be released in the next major version.
+Please use ChromeApp ver instead.
 
 * Change official name from ThinReports to Thinreports #19
 * Improvement of combobox selection operation #37
-* レイアウト定義書におけるページ番号ツールのカウント対象が一覧表の場合、表示されない
-* Does not resize the outline after updating content of the text in Property #42
+* Fixed: レイアウト定義書におけるページ番号ツールのカウント対象が一覧表の場合、表示されない
+* Fixed: Does not resize the outline after updating content of the text in Property #42
 
 ## 0.7.7.2
 
