@@ -29,13 +29,20 @@ App.DEFAULT_LOCALE = 'en';
  */
 App.locales_ = [];
 
+/**
+ * @type {Array.<string>}
+ * @private
+ */
+App.localeIds_ = [];
+
 
 /**
  * @param {string} id
  * @param {Object} locale
  */
 App.addLocale = function(locale) {
-  App.locales_[App.locales_.length] = locale;
+  App.locales_.push(locale);
+  App.localeIds_.push(locale.id);
 };
 
 
@@ -51,12 +58,20 @@ App.getLocales = function() {
  * @return {string} browser locale
  */
 App.getUILocale = function() {
-  return (
-    navigator.language
-    || navigator.browserLanguage
-    || navigator.userLanguage
-    || App.DEFAULT_LOCALE
-  ).substr(0, 2).toLowerCase();
+  var locale = navigator.language
+                || navigator.browserLanguage
+                || navigator.userLanguage;
+  if (locale) {
+    locale = locale.substr(0, 2).toLowerCase();
+
+    if (App.localeIds_.indexOf(locale) == -1) {
+      locale = App.DEFAULT_LOCALE;
+    }
+  } else {
+    locale = App.DEFAULT_LOCALE;
+  }
+
+  return locale;
 };
 
 
