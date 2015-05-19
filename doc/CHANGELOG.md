@@ -1,3 +1,9 @@
+## 0.8.1
+
+This release includes a fix for the bug that does not work in unsupported system languages (#45).
+
+* Fixed: Does not work in unsupported system languages #45
+
 ## 0.8.0
 
 Editor 0.8.0 has been released. It includes two versions, ChromeApp ver and DesktopApp ver.

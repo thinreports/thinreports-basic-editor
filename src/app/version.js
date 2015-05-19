@@ -33,7 +33,7 @@ thin.Version.MINOR = 8;
 /**
  * @type {number}
  */
-thin.Version.TINY = 0;
+thin.Version.TINY = 1;
 
 
 /**
