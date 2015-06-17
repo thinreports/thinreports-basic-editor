@@ -92,8 +92,10 @@ thin.core.ShapeStructure.serializeForText_ = function(shape, json) {
 
   if (shape.hasAttribute('x-line-height')) {
     json['line-height'] = Number(shape.getAttribute('x-line-height'));
+    json['line-height-ratio'] = Number(shape.getAttribute('x-line-height-ratio'));
   } else {
     json['line-height'] = blank;
+    json['line-height-ratio'] = blank;
   }
 
   json['valign'] = shape.getAttribute('x-valign') || blank;
@@ -191,8 +193,10 @@ thin.core.ShapeStructure.serializeForTblock_ = function(shape, json) {
 
   if (shape.hasAttribute('x-line-height')) {
     json['line-height'] = Number(shape.getAttribute('x-line-height'));
+    json['line-height-ratio'] = Number(shape.getAttribute('x-line-height-ratio'));
   } else {
     json['line-height'] = blank;
+    json['line-height-ratio'] = blank;
   }
 
   var format = {
