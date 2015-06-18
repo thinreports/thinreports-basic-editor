@@ -12,9 +12,11 @@
 
 There are translation files in `src/locales/*.js`.
 
-Copy the `en.js` and create a translation file with a name like `xx.js` for your language:
+Copy the `en.js` and create a translation file with a name like `xx.js` for your language code:
 
     % cp en.js xx.js
+
+Note: Please refer to [this site](https://developers.google.com/+/web/api/supported-languages) for language code.
 
 Modify the `xx.js` as follows:
 
