@@ -1147,6 +1147,8 @@ thin.core.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
   
   var baseFormatInputProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_basic_format'));
   var baseFormatInput = baseFormatInputProperty.getValueControl();
+  baseFormatInput.setTooltip(thin.t('text_placeholder_of_base_format_description'));
+
   baseFormatInputProperty.addEventListener(propEventType.CHANGE, function(e) {
   
     var formatBase = e.target.getValue();

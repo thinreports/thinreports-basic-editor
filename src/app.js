@@ -55,6 +55,14 @@ App.getLocales = function() {
 
 
 /**
+ * @return {string} default locale
+ */
+App.getDefaultUILocale = function() {
+  return App.DEFAULT_LOCALE;
+};
+
+
+/**
  * @return {string} browser locale
  */
 App.getUILocale = function() {
