@@ -61,13 +61,8 @@ App.getUILocale = function() {
   var locale = navigator.language
                 || navigator.browserLanguage
                 || navigator.userLanguage;
-  if (locale) {
-    locale = locale.substr(0, 2).toLowerCase();
 
-    if (App.localeIds_.indexOf(locale) == -1) {
-      locale = App.DEFAULT_LOCALE;
-    }
-  } else {
+  if (!locale || App.localeIds_.indexOf(locale) == -1) {
     locale = App.DEFAULT_LOCALE;
   }
 

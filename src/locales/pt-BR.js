@@ -14,7 +14,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 App.addLocale({
-  id: 'pt_br', name: 'Portugues Brasil', Fonte_family: "'Lucida Grande', 'Helvetica Neue', Arial",
+  id: 'pt-BR', name: 'Portugues Brasil', font_family: "'Lucida Grande', 'Helvetica Neue', Arial",
   default_settings: {
     // Available values: break-word, none
     text_word_wrap: 'break-word'
@@ -194,7 +194,7 @@ App.addLocale({
     button_page_number_tool: 'Numero de Pagina',
     button_list_tool: 'Lista',
 
-	error_id_is_already_used: '{$id} ja esta em uso.',
+    error_id_is_already_used: '{$id} ja esta em uso.',
     error_invalid_value: 'Um Valor Invalido.',
     error_id_contains_invalid_characters: 'Os caracteres disponiveis sao apenas um caractere alfanumerico e um sublinhado.',
     error_id_is_required: 'ID is required.',
