@@ -28,3 +28,9 @@ svg {
 .s-rect, .s-ellipse, .s-line, .s-text, .s-tblock, .s-image, .s-iblock, .s-pageno {
   cursor: move;
 }
+
+.s-tblock, .s-pageno {
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+}
