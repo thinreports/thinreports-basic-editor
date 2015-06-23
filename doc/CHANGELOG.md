@@ -1,3 +1,9 @@
+## 0.8.2
+
+* Support Brazillian Portuguese locale #48
+* Show description of Base Format in Tooltip #52
+* Fixed: Invalid style is applied to ID text #35
+
 ## 0.8.1
 
 This release includes a fix for the bug that does not work in unsupported system languages (#45).
