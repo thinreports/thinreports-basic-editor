@@ -224,7 +224,7 @@ App.addLocale({
     text_apply_locale_setting: 'After reloading the Editor, the setting will be applied.\nDo you want to apply now?',
     text_layout_force_edit_confirmation: 'Because this layout has been created with a newer version, there is a risk of some configurations are broken by editing.\nAre you sure you want to edit anyway?',
     text_placeholder_of_pageno_description: '[Available Placeholders] {page}:Page Number, {total}:Total Page Count',
-    text_placeholder_of_base_format_description: '[Available Placeholders] {value}:Dynamic value to be assigned via the Generator',
+    text_placeholder_of_base_format_description: '[Available Placeholders] {value}:The formatted value',
     text_counted_page_target_description: '[Allowed Targets] List (The ID of target List) or Report (Empty)',
     text_feedback_in_project_site: 'Project Site',
     text_feedback_in_github: 'GitHub Issues',
