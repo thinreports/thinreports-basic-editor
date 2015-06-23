@@ -1,8 +1,8 @@
 ## 0.8.2
 
-* Translate to Brazilian Portuguese #48
-* Added placeholder text of base format description in Property #52
-* Fixed: Underline style is added to ID of TextBlock and PageNumber #35
+* Support Brazillian Portuguese locale #48
+* Show description of Base Format in Tooltip #52
+* Fixed: Invalid style is applied to ID text #35
 
 ## 0.8.1
 
