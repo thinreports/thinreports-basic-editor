@@ -1,3 +1,9 @@
+## 0.8.2
+
+* Translate to Brazilian Portuguese #48
+* Added placeholder text of base format description in Property #52
+* Fixed: Underline style is added to ID of TextBlock and PageNumber #35
+
 ## 0.8.1
 
 This release includes a fix for the bug that does not work in unsupported system languages (#45).
