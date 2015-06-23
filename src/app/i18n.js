@@ -42,6 +42,20 @@ thin.i18n.translations_;
 
 
 /**
+ * @type {Object}
+ * @private
+ */
+thin.i18n.defaultLocale_;
+
+
+/**
+ * @type {Object}
+ * @private
+ */
+thin.i18n.defaultTranslations_;
+
+
+/**
  * @param {string} name
  * @param {Object=} opt_values
  * @return {string}
@@ -49,7 +63,9 @@ thin.i18n.translations_;
 thin.i18n.translate = function(name, opt_values) {
   var i18n = thin.i18n;
   var msg = i18n.makeMessage_(
-      i18n.getMessages()[name], opt_values) || '';
+      i18n.getMessages()[name] || 
+        i18n.getDefaultMessages()[name], opt_values) || '';
+
   return goog.string.newLineToBr(goog.string.htmlEscape(msg));
 };
 
@@ -88,6 +104,19 @@ thin.i18n.getMessages = function() {
     i18n.translations_ = /** @type {Object} */(i18n.currentLocale_['messages']);
   }
   return i18n.translations_;
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.i18n.getDefaultMessages = function() {
+  var i18n = thin.i18n;
+
+  if (!i18n.defaultTranslations_) {
+    i18n.defaultTranslations_ = /** @type {Object} */(i18n.defaultLocale_['messages']);
+  }
+  return i18n.defaultTranslations_;
 };
 
 
@@ -133,6 +162,12 @@ thin.i18n.init = function() {
 
   i18n.currentLocaleId_ = localeId;
   i18n.currentLocale_ = locale;
+
+  var defaultLocaleId = thin.callApp('getDefaultUILocale');
+  i18n.defaultLocaleId_ = defaultLocaleId;
+  i18n.defaultLocale_ = goog.array.find(locales, function(loc) {
+    return loc.id == defaultLocaleId;
+  });
 };
 
 

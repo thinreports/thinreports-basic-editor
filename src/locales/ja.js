@@ -222,6 +222,7 @@ App.addLocale({
     text_apply_locale_setting: '設定を反映するにはエディタの再読み込みが必要です。\n今すぐ設定を反映しますか？',
     text_layout_force_edit_confirmation: 'このレイアウトは新しいバージョンのエディタで作成されているため、\n編集すると一部の設定情報が消失する可能性があります。\nそれでも開きますか？',
     text_placeholder_of_pageno_description: '[利用可能なプレースホルダ] {page}:ページ番号, {total}:総ページ数',
+    text_placeholder_of_base_format_description: '[利用可能なプレースホルダ] {value}:書式が反映された値',
     text_counted_page_target_description: '[指定可能な対象] リスト（対象リストID） or レポート（空）',
     text_feedback_in_project_site: 'プロジェクトサイトへ',
     text_feedback_in_github: 'GitHub Issues へ',
