@@ -572,7 +572,7 @@ thin.init_ = function() {
             }
           }
 
-          try {
+          // try {
             var workspace = thin.core.Workspace.create(file);
             if (workspace) {
               var targetVersion = workspace.getLayout().getFormat().getVersion();
@@ -590,42 +590,42 @@ thin.init_ = function() {
                 }
               };
 
-              switch(thin.layout.checkCompatibility(targetVersion)) {
-                case compatibilityState.WARNING:
-                  thin.ui.Message.confirm(thin.t('text_layout_force_edit_confirmation'),
-                      thin.t('label_confirmation'),
-                      function(e) {
-                        if (e.isOk()) {
-                          addPageHandler();
-                        }
-                      });
-                  break;
-                case compatibilityState.ERROR:
-                  throw new thin.Error(thin.t('error_can_not_edit_layout_file',
-                      {'required': thin.layout.inspectCompatibleRule(),
-                       'version': targetVersion}));
-                  break;
-                default:
+              // switch(thin.layout.checkCompatibility(targetVersion)) {
+              //   case compatibilityState.WARNING:
+              //     thin.ui.Message.confirm(thin.t('text_layout_force_edit_confirmation'),
+              //         thin.t('label_confirmation'),
+              //         function(e) {
+              //           if (e.isOk()) {
+              //             addPageHandler();
+              //           }
+              //         });
+              //     break;
+              //   case compatibilityState.ERROR:
+              //     throw new thin.Error(thin.t('error_can_not_edit_layout_file',
+              //         {'required': thin.layout.inspectCompatibleRule(),
+              //          'version': targetVersion}));
+              //     break;
+              //   default:
                   addPageHandler();
-                  break;
-              }
+              //     break;
+              // }
             }
-          } catch (er) {
-            var message;
-            if (er instanceof thin.Error) {
-              message = er.message;
-            } else {
-              message = thin.t('error_unknown');
-            }
+          // } catch (er) {
+            // var message;
+            // if (er instanceof thin.Error) {
+            //   message = er.message;
+            // } else {
+            //   message = thin.t('error_unknown');
+            // }
 
-            thin.ui.Message.alert(message, 'Error',
-              function(er) {
-                var activeWorkspace = thin.core.getActiveWorkspace();
-                if (activeWorkspace) {
-                  activeWorkspace.focusElement(er);
-                }
-              });
-          }
+            // thin.ui.Message.alert(message, 'Error',
+            //   function(er) {
+            //     var activeWorkspace = thin.core.getActiveWorkspace();
+            //     if (activeWorkspace) {
+            //       activeWorkspace.focusElement(er);
+            //     }
+            //   });
+          // }
         },
         cancel: goog.nullFunction,
         error: function(code) {

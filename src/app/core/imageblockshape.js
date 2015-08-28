@@ -238,26 +238,6 @@ thin.core.ImageblockShape.prototype.getStrokeWidth = function() {
 
 
 /**
- * @param {Element} element
- * @param {thin.core.Layout} layout
- * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.core.ImageblockShape}
- */
-thin.core.ImageblockShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-  var shape = new thin.core.ImageblockShape(element, layout);
-
-  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
-  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
-  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
-  shape.setPositionX(layout.getElementAttribute(element, 'x-position-x'));
-  shape.setPositionY(layout.getElementAttribute(element, 'x-position-y'));
-  shape.initIdentifier();
-
-  return shape;
-};
-
-
-/**
  * @param {Element=} opt_element
  * @return {thin.core.Box}
  * @private
@@ -687,4 +667,111 @@ thin.core.ImageblockShape.prototype.disposeInternal = function() {
 
   delete this.positionX_;
   delete this.positionY_;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.ImageblockShape.prototype.getPositionXToHash = function() {
+  return this.getPositionX();
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.ImageblockShape.prototype.getPositionYToHash = function() {
+  var postionYToHash = '';
+  var postionYType = thin.core.ImageblockShape.PositionY;
+
+  // SVG: top, center, bottom
+  // TLF: top, middle, bottom
+  switch(this.getPositionY()) {
+    case postionYType.CENTER:
+      postionYToHash = 'middle';
+      break;
+    case postionYType.BOTTOM:
+      postionYToHash = postionYType.BOTTOM;
+      break;
+    default:
+      postionYToHash = postionYType.TOP;
+      break;
+  }
+
+  return postionYToHash;
+};
+
+
+/**
+ * @param {string|thin.core.ImageblockShape.PositionX} position
+ */
+thin.core.ImageblockShape.prototype.setPositionXFromHash = function(position) {
+  this.setPositionX(position);
+};
+
+
+/**
+ * @param {string|thin.core.ImageblockShape.PositionY} postionYToHash
+ */
+thin.core.ImageblockShape.prototype.setPositionYFromHash = function(postionYToHash) {
+  var position = '';
+  var postionYType = thin.core.ImageblockShape.PositionY;
+
+  // SVG: top, center, bottom
+  // TLF: top, middle, bottom
+  switch(postionYToHash) {
+    case 'middle':
+      position = postionYType.CENTER;
+      break;
+    default:
+      position = postionYToHash;
+      break;
+  }
+
+  this.setPositionY(position);
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.ImageblockShape.prototype.getType = function() {
+  return 'image-block';
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.ImageblockShape.prototype.toHash = function() {
+  var hash = this.toHash_();
+
+  goog.object.extend(hash['style'], {
+    'position-x': this.getPositionXToHash(),
+    'position-y': this.getPositionYToHash()
+  });
+
+  return hash;
+};
+
+
+/**
+ * @param {Object} attrs
+ */
+thin.core.ImageblockShape.prototype.update = function(attrs) {
+  this.update_(attrs);
+
+  goog.object.forEach(attrs, function(value, attr) {
+    switch (attr) {
+      case 'position-x':
+        this.setPositionXFromHash(value);
+        break;
+      case 'position-y':
+        this.setPositionYFromHash(value);
+        break;
+      default:
+        break;
+      }
+  }, this);
 };

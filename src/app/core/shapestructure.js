@@ -15,443 +15,11 @@
 
 goog.provide('thin.core.ShapeStructure');
 
-goog.require('goog.dom');
-goog.require('goog.array');
-goog.require('goog.object');
-goog.require('goog.json');
-goog.require('goog.json.Serializer');
 goog.require('goog.math.Coordinate');
-goog.require('thin.core.TextStyle');
-goog.require('thin.core.TextStyle.HorizonAlignType');
-goog.require('thin.core.TextStyle.VerticalAlignType');
 
 
 /**
- * @type {string}
- * @private
- */
-thin.core.ShapeStructure.BLANK_ = '';
-
-
-/**
- * @param {Element} shape
- * @return {string}
- */
-thin.core.ShapeStructure.serialize = function(shape) {
-  var shapeClassId = shape.getAttribute('class');
-  var json = {
-    'type': shapeClassId,
-    'id': shape.getAttribute('x-id'),
-    'display': shape.getAttribute('x-display') || 'true',
-    'desc': shape.getAttribute('x-desc')
-  };
-  
-  switch(shapeClassId) {
-    case thin.core.TblockShape.CLASSID:
-      json = thin.core.ShapeStructure.serializeForTblock_(shape, json);
-      break;
-    case thin.core.ListShape.CLASSID:
-      json = thin.core.ShapeStructure.serializeForList_(shape, json);
-      break;
-    case thin.core.TextShape.CLASSID:
-      json = thin.core.ShapeStructure.serializeForText_(shape, json);
-      break;
-    case thin.core.ImageblockShape.CLASSID:
-      json = thin.core.ShapeStructure.serializeForImageblock_(shape, json);
-      break;
-    case thin.core.PageNumberShape.CLASSID:
-      json = thin.core.ShapeStructure.serializeForPageNumber_(shape, json);
-      break;
-    default:
-      var attrs = {};
-      thin.core.ShapeStructure.forEachShapeAttribute_(shape,
-        function(key, value) {
-          attrs[key] = value;
-        });
-      
-      json['svg'] = {
-        'tag':   shape.tagName,
-        'attrs': attrs
-      };
-      break;
-  }
-  
-  return goog.json.serialize(json);
-};
-
-
-/**
- * @param {Element} shape
- * @param {Object} json
- * @return {Object}
- * @private
- */
-thin.core.ShapeStructure.serializeForText_ = function(shape, json) {
-  var attrs = {};
-  var blank = thin.core.ShapeStructure.BLANK_;
-
-  if (shape.hasAttribute('x-line-height')) {
-    json['line-height'] = Number(shape.getAttribute('x-line-height'));
-    json['line-height-ratio'] = Number(shape.getAttribute('x-line-height-ratio'));
-  } else {
-    json['line-height'] = blank;
-    json['line-height-ratio'] = blank;
-  }
-
-  json['valign'] = shape.getAttribute('x-valign') || blank;
-  json['box'] = {
-    'x': Number(shape.getAttribute('x-left')),
-    'y': Number(shape.getAttribute('x-top')),
-    'width': Number(shape.getAttribute('x-width')),
-    'height': Number(shape.getAttribute('x-height'))
-  };
-
-  thin.core.ShapeStructure.forEachShapeAttribute_(shape,
-    function(key, value) {
-      if (key == 'space') {
-        key = 'xml:space'
-      }
-      attrs[key] = value;
-    });
-  
-  var textLineShapes = [];
-  var textLineContainer = [];
-  
-  goog.array.forEach(shape.childNodes, function(textlineElement) {
-    if (textlineElement.tagName == 'text') {
-      goog.array.insertAt(textLineShapes, 
-            textlineElement, textLineShapes.length);
-      goog.array.insertAt(textLineContainer, 
-            textlineElement.firstChild.data, textLineContainer.length);
-    }
-  });
-
-  json['text'] = textLineContainer;
-  json['svg'] = {
-    'tag':     shape.tagName,
-    'attrs':   attrs,
-    'content': thin.core.ShapeStructure.serializeToContent(textLineShapes)
-  };
-  return json;
-};
-
-
-/**
- * @param {Element} shape
- * @param {Object} json
- * @return {Object}
- * @private
- */
-thin.core.ShapeStructure.serializeForImageblock_ = function(shape, json) {
-  var left = Number(shape.getAttribute('x-left'));
-  var top = Number(shape.getAttribute('x-top'));
-  var width = Number(shape.getAttribute('x-width'));
-  var height = Number(shape.getAttribute('x-height'));
-  
-  json['box'] = {
-    'x': left,
-    'y': top,
-    'width': width,
-    'height': height
-  };
-  
-  json['position-x'] = shape.getAttribute('x-position-x')
-    || thin.core.ImageblockShape.PositionX.DEFAULT;
-  json['position-y'] = shape.getAttribute('x-position-y')
-    || thin.core.ImageblockShape.PositionY.DEFAULT;
-  
-  json['svg'] = {
-    'tag': 'image',
-    'attrs': {
-      'x': left,
-      'y': top,
-      'width': width,
-      'height': height
-    }
-  };
-  return json;
-};
-
-
-
-/**
- * @param {Element} shape
- * @param {Object} json
- * @return {Object}
- * @private
- */
-thin.core.ShapeStructure.serializeForTblock_ = function(shape, json) {
-  var blank = thin.core.ShapeStructure.BLANK_;
-  var mutliple = shape.getAttribute('x-multiple') || 'false';
-  var isMultiMode = mutliple == 'true';
-  var anchor = shape.getAttribute('text-anchor');
-  var tag = isMultiMode ? 'textArea' : 'text';
-  var formatType = isMultiMode ? blank : shape.getAttribute('x-format-type') || blank;
-  
-  json['multiple'] = mutliple;
-  json['valign'] = shape.getAttribute('x-valign') || blank;
-
-  if (shape.hasAttribute('x-line-height')) {
-    json['line-height'] = Number(shape.getAttribute('x-line-height'));
-    json['line-height-ratio'] = Number(shape.getAttribute('x-line-height-ratio'));
-  } else {
-    json['line-height'] = blank;
-    json['line-height-ratio'] = blank;
-  }
-
-  var format = {
-    'base': shape.getAttribute('x-format-base') || blank,
-    'type': formatType
-  };
-  if (formatType != blank) {
-    switch (formatType) {
-      case 'datetime':
-        goog.object.set(format, formatType, {
-          'format': shape.getAttribute('x-format-datetime-format') || blank
-        });
-        break;
-      case 'number':
-        goog.object.set(format, formatType, {
-          'delimiter': shape.getAttribute('x-format-number-delimiter') || blank,
-          'precision': Number(shape.getAttribute('x-format-number-precision')) || 0
-        });        
-        break;
-      case 'padding':
-        goog.object.set(format, formatType, {
-          'length': Number(shape.getAttribute('x-format-padding-length')) || 0,
-          'char': shape.getAttribute('x-format-padding-char') || '0',
-          'direction': shape.getAttribute('x-format-padding-direction') || 'L'
-        });        
-        break;
-    }
-  }
-  
-  var attrs = {};
-  
-  var left = Number(shape.getAttribute('x-left'));
-  var top = Number(shape.getAttribute('x-top'));
-  var width = Number(shape.getAttribute('x-width'));
-  var height = Number(shape.getAttribute('x-height'));
-  
-  var family = shape.getAttribute('font-family');
-  var fontSize = Number(shape.getAttribute('font-size'));
-  var isBold = shape.getAttribute('font-weight') == 'bold';
-
-  json['box'] = {
-    'x': left,
-    'y': top,
-    'width': width,
-    'height': height
-  };
-
-  if (tag == 'text') {
-    switch(anchor) {
-      case thin.core.TextStyle.HorizonAlignType.MIDDLE:
-        left = thin.numberWithPrecision(left + (width / 2));
-        break;
-      case thin.core.TextStyle.HorizonAlignType.END:
-        left = thin.numberWithPrecision(left + width);
-        break;
-    }
-    
-    var ascent = thin.Font.getAscent(family, fontSize, isBold);
-    
-    attrs['x'] = left;
-    attrs['y'] = thin.numberWithPrecision(top + ascent);
-  } else {
-    attrs['x'] = left;
-    attrs['y'] = top;
-    attrs['width'] = width;
-    attrs['height'] = height;
-  }
-  attrs['xml:space'] = 'preserve';
-
-  thin.core.ShapeStructure.forEachShapeAttribute_(shape,
-    function(key, value) {
-      attrs[key] = value;
-    });
-  
-  json['format'] = format;
-  json['value'] = shape.getAttribute('x-value') || blank;
-  json['ref-id'] = shape.getAttribute('x-ref-id') || blank;
-  json['overflow'] = shape.getAttribute('x-overflow') || blank;
-  json['word-wrap'] = shape.getAttribute('x-word-wrap') || thin.core.TextStyle.getDefaultWordWrap();
-  json['svg'] = {
-    'tag': tag,
-    'attrs': attrs
-  };
-  return json;
-};
-
-
-/**
- * @param {Element} shape
- * @param {Object} json
- * @return {Object}
- * @private
- */
-thin.core.ShapeStructure.serializeForPageNumber_ = function(shape, json) {
-  var left = Number(shape.getAttribute('x-left'));
-  var top = Number(shape.getAttribute('x-top'));
-  var width = Number(shape.getAttribute('x-width'));
-
-  var attrs = {};
-  
-  var family = shape.getAttribute('font-family');
-  var fontSize = Number(shape.getAttribute('font-size'));
-  var isBold = shape.getAttribute('font-weight') == 'bold';
-
-  json['box'] = {
-    'x': left,
-    'y': top,
-    'width': width, 
-    'height': Number(shape.getAttribute('x-height'))
-  };
-
-  switch(shape.getAttribute('text-anchor')) {
-    case thin.core.TextStyle.HorizonAlignType.MIDDLE:
-      attrs['x'] = thin.numberWithPrecision(left + (width / 2));
-      break;
-    case thin.core.TextStyle.HorizonAlignType.END:
-      attrs['x'] = thin.numberWithPrecision(left + width);
-      break;
-    default:
-      attrs['x'] = left;
-      break;
-  }
-  
-  attrs['y'] = thin.numberWithPrecision(top + 
-      thin.Font.getAscent(family, fontSize, isBold));
-
-  thin.core.ShapeStructure.forEachShapeAttribute_(shape,
-    function(key, value) {
-      attrs[key] = value;
-    });
-  
-  json['target'] = shape.getAttribute('x-target') || '';
-  json['format'] = shape.getAttribute('x-format') || '';
-  json['overflow'] = shape.getAttribute('x-overflow') || '';
-  json['svg'] = {
-    'tag': 'text',
-    'attrs': attrs
-  };
-  return json;
-};
-
-
-/**
- * @param {string} sectionClassId
- * @return {string}
- */
-thin.core.ShapeStructure.getSectionName = function(sectionClassId) {
-  return sectionClassId.replace(/s\-list\-/, '');
-};
-
-
-/**
- * @param {Element} element
- * @param {Element} parentElement
- * @return {string}
- */
-thin.core.ShapeStructure.getEnabledOfSection = function(element, parentElement) {
-  var sectionClassId = element.getAttribute('class');
-  var sectionName = thin.core.ShapeStructure.getSectionName(sectionClassId);
-  return parentElement.getAttribute('x-' + sectionName + '-enabled') || 'true';
-};
-
-
-/**
- * @param {Element} shape
- * @param {Object} json
- * @return {Object}
- * @private
- */
-thin.core.ShapeStructure.serializeForList_ = function(shape, json) {
-  var listShapeClassId = thin.core.ListShape.ClassIds;
-  var classIdPrefix = thin.core.ListShape.CLASSID;
-  var headerClassId = classIdPrefix + listShapeClassId['HEADER'];
-  var detailClassId = classIdPrefix + listShapeClassId['DETAIL'];
-  var listGroupChildNodes = shape.childNodes;
-  var detailTop = Number(thin.core.getElementByClassNameForChildNodes(
-                      detailClassId, listGroupChildNodes).getAttribute('x-top'));
-
-  var enabledForSection;
-  var sectionName;
-  var childGroupClassId;
-  var isDetailSection;
-  
-  goog.array.forEachRight(listGroupChildNodes, function(childShape) {
-    childGroupClassId = childShape.getAttribute('class');
-    if (childShape.tagName == 'g') {
-      enabledForSection = thin.core.ShapeStructure.getEnabledOfSection(childShape, shape);
-      sectionName = thin.core.ShapeStructure.getSectionName(childGroupClassId);
-      isDetailSection = childGroupClassId == detailClassId;
-      json[sectionName] = thin.core.ShapeStructure.serializeForListForSection_(
-                              childShape, enabledForSection == 'true', 
-                              (childGroupClassId == headerClassId || 
-                               isDetailSection) ? null : detailTop);
-      if (!isDetailSection) {
-        json[sectionName + '-enabled'] = enabledForSection;        
-      }
-    }
-  });
-  json['svg'] = {
-    'tag': shape.tagName,
-    'attrs': {}
-  };
-  
-  var headerStruct = json[thin.core.ShapeStructure.getSectionName(headerClassId)];
-  var headerHeight = 0;
-  if (goog.isDef(headerStruct['height'])) {
-    headerHeight = Number(headerStruct['height']);
-  }
-  json['content-height'] = Number(shape.getAttribute('height')) - headerHeight;
-  json['page-break'] = shape.getAttribute('x-changing-page') || 'false';
-  
-  return json;
-};
-
-
-/**
- * @param {Node} sectionGroup
- * @param {boolean} enabled
- * @param {number=} opt_detailTop
- * @return {Object}
- * @private
- */
-thin.core.ShapeStructure.serializeForListForSection_ = function(
-    sectionGroup, enabled, opt_detailTop) {
-
-  if (!enabled) {
-    goog.dom.removeChildren(sectionGroup);
-    return {};
-  }
-  var json = {
-    'height': Number(sectionGroup.getAttribute('x-height')),
-    'svg': {
-      'tag': sectionGroup.tagName,
-      'content': thin.core.ShapeStructure.serializeToContent(
-                    thin.core.LayoutStructure.serializeShapes(
-                        sectionGroup.cloneNode(true).childNodes, 1))
-    }
-  };
-
-  var translate = thin.core.ShapeStructure.getTransLateCoordinate(sectionGroup);
-  var isCalculateDiff = goog.isNumber(opt_detailTop);
-  if (isCalculateDiff) {
-    var diffY = Number(sectionGroup.getAttribute('x-top')) - opt_detailTop;
-  }
-  
-  goog.object.set(json, 'translate', {
-    'x': translate.x,
-    'y': isCalculateDiff ? translate.y - diffY : translate.y
-  });
-
-  return json;
-};
-
-
-/**
+ * @deprecated
  * @param {Element|Node} transformElement
  * @return {goog.math.Coordinate}
  */
@@ -474,30 +42,349 @@ thin.core.ShapeStructure.getTransLateCoordinate = function(transformElement) {
 
 
 /**
- * @param {goog.array.ArrayLike} childNodes
+ * @deprecated
+ * @param {string} sectionClassId
  * @return {string}
  */
-thin.core.ShapeStructure.serializeToContent = function(childNodes) {
-  var content = '';
-  goog.array.forEach(childNodes, function(element) {
-    content += thin.core.serializeToXML(element);
-  });
-  
-  return content;
+thin.core.ShapeStructure.getSectionName = function(sectionClassId) {
+  return sectionClassId.replace(/s\-list\-/, '');
 };
 
 
 /**
- * @param {Element} shape
- * @param {Function} f
- * @private
+ * @deprecated
+ * @param {Element} element
+ * @param {Element} parentElement
+ * @return {string}
  */
-thin.core.ShapeStructure.forEachShapeAttribute_ = function(shape, f) {
-  var attrName;
-  for(var i = 0, attr; attr = shape.attributes[i]; i++) {
-    attrName = attr.name;
-    if (!/^x-/.test(attrName) && attrName != 'class' && attrName != 'style') {
-      f(attrName, attr.value);
-    }
+thin.core.ShapeStructure.getEnabledOfSection = function(element, parentElement) {
+  var sectionClassId = element.getAttribute('class');
+  var sectionName = thin.core.ShapeStructure.getSectionName(sectionClassId);
+  return parentElement.getAttribute('x-' + sectionName + '-enabled') || 'true';
+};
+
+
+/**
+ * @param {Element} element
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.EllipseShape}
+ */
+thin.core.ShapeStructure.createEllipseShapeFromElement = function(element, layout, opt_shapeIdManager) {
+  var shape = new thin.core.EllipseShape(element, layout, 
+                new goog.graphics.Stroke(
+                      Number(layout.getElementAttribute(element, 'stroke-width')),
+                      layout.getElementAttribute(element, 'stroke')),
+                new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
+  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
+  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
+  shape.setStrokeDashFromType(layout.getElementAttribute(element, 'x-stroke-type'));
+  shape.initIdentifier();
+  return shape;
+};
+
+
+/**
+ * @param {Element} element
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.ImageblockShape}
+ */
+thin.core.ShapeStructure.createImageblockShapeFromElement = function(element, layout, opt_shapeIdManager) {
+  var shape = new thin.core.ImageblockShape(element, layout);
+
+  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
+  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
+  shape.setPositionX(layout.getElementAttribute(element, 'x-position-x'));
+  shape.setPositionY(layout.getElementAttribute(element, 'x-position-y'));
+  shape.initIdentifier();
+
+  return shape;
+};
+
+
+/**
+ * @param {Element} element
+ * @return {thin.core.ImageFile}
+ */
+thin.core.ShapeStructure.createImageFileFromElement = function(element) {
+  var entry = thin.File.createDummyEntry('DummyImageFile');
+  var coreFile = new thin.File(entry, '', element.href.baseVal);
+
+  return new thin.core.ImageFile(coreFile);
+};
+
+
+/**
+ * @param {Element} element
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.ImageShape}
+ */
+thin.core.ShapeStructure.createImageShapeFromElement = function(element, layout, opt_shapeIdManager) {
+  var shape = new thin.core.ImageShape(element, layout);
+  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
+  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
+  shape.setFile(thin.core.ShapeStructure.createImageFileFromElement(element));
+  shape.initIdentifier();
+
+  return shape;
+};
+
+
+/**
+ * @param {Element} element
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.LineShape}
+ */
+thin.core.ShapeStructure.createLineShapeFromElement = function(element, layout, opt_shapeIdManager) {
+
+  var shape = new thin.core.LineShape(element, layout, 
+                  new goog.graphics.Stroke(
+                      Number(layout.getElementAttribute(element, 'stroke-width')),
+                      layout.getElementAttribute(element, 'stroke')));
+  
+  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
+  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
+  shape.setStrokeDashFromType(layout.getElementAttribute(element, 'x-stroke-type'));
+  shape.initIdentifier();
+  return shape;
+};
+
+
+/**
+ * @param {Element} groupElement
+ * @param {thin.core.Layout} layout
+ * @return {thin.core.ListShape}
+ */
+thin.core.ShapeStructure.createListShapeFromElement = function(groupElement, layout) {
+  var shape = new thin.core.ListShape(layout,
+                    /** @type {Element} */(groupElement.cloneNode(false)), groupElement);
+  var classId = thin.core.ListShape.ClassIds;
+
+  shape.setIdShape(layout.getElementAttribute(groupElement, 'x-id'),
+    thin.core.getElementByClassNameForChildNodes(thin.core.ListShape.CLASSID + classId['ID'],
+    shape.getElement().childNodes));
+  shape.setBounds(new goog.math.Rect(
+      Number(layout.getElementAttribute(groupElement, 'x')),
+      Number(layout.getElementAttribute(groupElement, 'y')),
+      Number(layout.getElementAttribute(groupElement, 'width')),
+      Number(layout.getElementAttribute(groupElement, 'height'))));
+
+  shape.setDisplay(layout.getElementAttribute(groupElement, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(groupElement, 'x-desc'));
+  if (layout.getElementAttribute(groupElement, 'x-changing-page') == 'true') {
+    shape.setChangingPage(true);
+    layout.getHelpers().getListHelper().setChangingPageSetShape(shape);
+  } else {
+    shape.setChangingPage(false);
   }
+
+  shape.forEachSectionShape(function(sectionShapeForScope, sectionNameForScope) {
+    var sectionGroup = sectionShapeForScope.getGroup();
+    var sectionElement = thin.core.getElementByClassNameForChildNodes(
+                          layout.getElementAttribute(sectionGroup.getElement(), 'class'),
+                          groupElement.childNodes);
+    var transLateCoordinate = thin.core.ShapeStructure.getTransLateCoordinate(sectionElement);
+    sectionGroup.setTransformation(transLateCoordinate.x, transLateCoordinate.y, 0, 0, 0);
+    sectionShapeForScope.setTop(Number(layout.getElementAttribute(sectionElement, 'x-top')));
+    sectionShapeForScope.setHeight(Number(layout.getElementAttribute(sectionElement, 'x-height')));
+
+    goog.array.forEach(sectionElement.childNodes, function(element) {
+      layout.drawBasicShapeFromElement(element, sectionShapeForScope);
+    });
+  });
+
+  var shapeElement = shape.getElement();
+  shape.forEachSectionShape(function(sectionShapeForScope, sectionNameForScope) {
+    if (thin.core.ShapeStructure.getEnabledOfSection(
+            sectionShapeForScope.getGroup().getElement(), shapeElement) == "false") {
+
+      shape.setEnabledForSection(false, sectionNameForScope);
+      sectionShapeForScope.initHeightForLastActive();
+    }
+  });
+  shape.initIdentifier();
+
+  return shape;
+};
+
+
+/**
+ * @param {Element} element
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.PageNumberShape}
+ */
+thin.core.ShapeStructure.createPageNumberShapeFromElement = function(element, layout, opt_shapeIdManager) {
+  element.removeAttribute('clip-path');
+  var shape = new thin.core.PageNumberShape(element, layout);
+
+  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
+  shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
+  shape.setFontSize(Number(layout.getElementAttribute(element, 'font-size')));
+  shape.setFontFamily(layout.getElementAttribute(element, 'font-family'));
+
+  var decoration = layout.getElementAttribute(element, 'text-decoration');
+  var kerning = layout.getElementAttribute(element, 'kerning');
+
+  if (thin.isExactlyEqual(kerning, thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
+    kerning = thin.core.TextStyle.DEFAULT_KERNING;
+  }
+  shape.setKerning(/** @type {string} */ (kerning));
+  shape.setFontUnderline(/underline/.test(decoration));
+  shape.setFontLinethrough(/line-through/.test(decoration));
+  shape.setFontItalic(layout.getElementAttribute(element, 'font-style') == 'italic');
+  shape.setFontBold(layout.getElementAttribute(element, 'font-weight') == 'bold');
+  shape.setTextAnchor(layout.getElementAttribute(element, 'text-anchor'));
+  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
+  shape.initIdentifier();
+
+  return shape;
+};
+
+
+/**
+ * @param {Element} element
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.RectShape}
+ */
+thin.core.ShapeStructure.createRectShapeFromElement = function(element, layout, opt_shapeIdManager) {
+  var shape = new thin.core.RectShape(element, layout,
+                    new goog.graphics.Stroke(
+                       Number(layout.getElementAttribute(element, 'stroke-width')), 
+                       layout.getElementAttribute(element, 'stroke')),
+                    new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
+  
+  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
+  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
+  shape.setStrokeDashFromType(layout.getElementAttribute(element, 'x-stroke-type'));
+  shape.setRounded(Number(layout.getElementAttribute(element, 'rx')));
+  shape.initIdentifier();
+  return shape;
+};
+
+
+/**
+ * @param {Element} element
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.TblockShape}
+ */
+thin.core.ShapeStructure.createTblockShapeFromElement = function(element, layout, opt_shapeIdManager) {
+  element.removeAttribute('clip-path');
+  var shape = new thin.core.TblockShape(element, layout);
+
+  shape.setMultiModeInternal(layout.getElementAttribute(element, 'x-multiple') == 'true');
+  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
+  shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
+  shape.setFontSize(Number(layout.getElementAttribute(element, 'font-size')));
+  shape.setFontFamily(layout.getElementAttribute(element, 'font-family'));
+
+  var decoration = layout.getElementAttribute(element, 'text-decoration');
+  var lineHeight = layout.getElementAttribute(element, 'x-line-height');
+  var lineHeightRatio = layout.getElementAttribute(element, 'x-line-height-ratio');
+  var kerning = layout.getElementAttribute(element, 'kerning');
+
+  if (element.hasAttribute('x-valign')) {
+    shape.setVerticalAlign(layout.getElementAttribute(element, 'x-valign'));
+  }
+  if (thin.isExactlyEqual(kerning,
+        thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
+    kerning = thin.core.TextStyle.DEFAULT_KERNING;
+  }
+  shape.setKerning(/** @type {string} */ (kerning));
+  if (!goog.isNull(lineHeightRatio)) {
+    shape.setTextLineHeightRatio(lineHeightRatio);
+  }
+  shape.setFontUnderline(/underline/.test(decoration));
+  shape.setFontLinethrough(/line-through/.test(decoration));
+  shape.setFontItalic(layout.getElementAttribute(element, 'font-style') == 'italic');
+  shape.setFontBold(layout.getElementAttribute(element, 'font-weight') == 'bold');
+  shape.setTextAnchor(layout.getElementAttribute(element, 'text-anchor'));
+  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
+
+  shape.setDefaultValueOfLink(layout.getElementAttribute(element, 'x-value'));
+
+  shape.setBaseFormat(layout.getElementAttribute(element, 'x-format-base'));
+
+  var formatType = layout.getElementAttribute(element, 'x-format-type');
+  var formatTypeTemp = thin.core.formatstyles.FormatType;
+
+  switch (formatType) {
+    case formatTypeTemp.NONE:
+      shape.setFormatStyle(null);
+      break;
+    case formatTypeTemp.NUMBER:
+      var delimiter = layout.getElementAttribute(element, 'x-format-number-delimiter');
+      shape.setFormatStyle(new thin.core.formatstyles.NumberFormat(
+        delimiter, Number(layout.getElementAttribute(element, 'x-format-number-precision')),
+        !thin.isExactlyEqual(delimiter, thin.core.formatstyles.NumberFormat.DISABLE_DELIMITER)));
+      break;
+    case formatTypeTemp.DATETIME:
+      shape.setFormatStyle(new thin.core.formatstyles.DatetimeFormat(
+        layout.getElementAttribute(element, 'x-format-datetime-format')));
+      break;
+    case formatTypeTemp.PADDING:
+      shape.setFormatStyle(new thin.core.formatstyles.PaddingFormat(
+        layout.getElementAttribute(element, 'x-format-padding-direction'),
+        layout.getElementAttribute(element, 'x-format-padding-char'),
+        Number(layout.getElementAttribute(element, 'x-format-padding-length'))));
+      break;
+  }
+
+  shape.initIdentifier();
+  return shape;
+};
+
+
+/**
+ * @param {Element} element
+ * @param {thin.core.Layout} layout
+ * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
+ * @return {thin.core.TextShape}
+ */
+thin.core.ShapeStructure.createTextShapeFromElement = function(element, layout, opt_shapeIdManager) {
+  var deco = layout.getElementAttribute(element, 'text-decoration');
+  var lineHeightRatio = layout.getElementAttribute(element, 'x-line-height-ratio');
+  var kerning = layout.getElementAttribute(element, 'kerning');
+  var shape = new thin.core.TextShape(element, layout);
+
+  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
+  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
+  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
+  shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
+  shape.createTextContentFromElement(element.childNodes);
+  shape.setFontItalic(layout.getElementAttribute(element, 'font-style') == 'italic');
+  shape.setFontFamily(layout.getElementAttribute(element, 'font-family'));
+  var fontSize = Number(layout.getElementAttribute(element, 'font-size'));
+  shape.setFontSize(fontSize);
+  shape.setFontUnderline(/underline/.test(deco));
+  shape.setFontLinethrough(/line-through/.test(deco));
+  shape.setFontBold(layout.getElementAttribute(element, 'font-weight') == 'bold');
+  shape.setTextAnchor(layout.getElementAttribute(element, 'text-anchor'));
+
+  if (element.hasAttribute('x-valign')) {
+    shape.setVerticalAlign(layout.getElementAttribute(element, 'x-valign'));
+  }
+  if (thin.isExactlyEqual(kerning,
+        thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
+    kerning = thin.core.TextStyle.DEFAULT_KERNING;
+  }
+  shape.setKerning(/** @type {string} */ (kerning));
+  if (!goog.isNull(lineHeightRatio)) {
+    shape.setTextLineHeightRatio(lineHeightRatio);
+  }
+
+  shape.initIdentifier();
+  return shape;
 };

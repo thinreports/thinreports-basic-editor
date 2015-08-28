@@ -144,41 +144,6 @@ thin.core.PageNumberShape.prototype.updateToolbarUI = function() {
 
 
 /**
- * @param {Element} element
- * @param {thin.core.Layout} layout
- * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.core.PageNumberShape}
- */
-thin.core.PageNumberShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-  element.removeAttribute('clip-path');
-  var shape = new thin.core.PageNumberShape(element, layout);
-
-  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
-  shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
-  shape.setFontSize(Number(layout.getElementAttribute(element, 'font-size')));
-  shape.setFontFamily(layout.getElementAttribute(element, 'font-family'));
-
-  var decoration = layout.getElementAttribute(element, 'text-decoration');
-  var kerning = layout.getElementAttribute(element, 'kerning');
-
-  if (thin.isExactlyEqual(kerning, thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
-    kerning = thin.core.TextStyle.DEFAULT_KERNING;
-  }
-  shape.setKerning(/** @type {string} */ (kerning));
-  shape.setFontUnderline(/underline/.test(decoration));
-  shape.setFontLinethrough(/line-through/.test(decoration));
-  shape.setFontItalic(layout.getElementAttribute(element, 'font-style') == 'italic');
-  shape.setFontBold(layout.getElementAttribute(element, 'font-weight') == 'bold');
-  shape.setTextAnchor(layout.getElementAttribute(element, 'text-anchor'));
-  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
-  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
-  shape.initIdentifier();
-
-  return shape;
-};
-
-
-/**
  * @param {Element=} opt_element
  * @return {thin.core.Box}
  * @private
@@ -894,4 +859,54 @@ thin.core.PageNumberShape.Label_.prototype.repositionY = function() {
 thin.core.PageNumberShape.Label_.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   delete this.parent_;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.PageNumberShape.prototype.getType = function() {
+  return 'page-number';
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.PageNumberShape.prototype.toHash = function() {
+  var hash = goog.base(this, 'toHash');
+
+  goog.object.extend(hash, {
+    'format': this.getFormat(),
+    'target': this.getTargetId() || 'report'
+  });
+  goog.object.set(hash['style'], 'overflow', this.getOverflowType());
+
+  return hash;
+};
+
+
+/**
+ * @param {Object} attrs
+ */
+thin.core.PageNumberShape.prototype.update = function(attrs) {
+  goog.base(this, 'update', attrs);
+
+  goog.object.forEach(attrs, function(value, attr) {
+    switch (attr) {
+      case 'format':
+        this.setFormat(value);
+        break;
+      case 'target':
+        // FIXME setShapeId
+        // this.setTargetId(value);
+        break;
+      case 'overflow':
+        this.setOverflowType(value);
+        break;
+      default:
+        // Do Nothing
+        break;
+      }
+  }, this);
 };

@@ -27,4 +27,8 @@ thin.core.formatstyles.AbstractFormat = function() {
 };
 goog.inherits(thin.core.formatstyles.AbstractFormat, goog.Disposable);
 
+
 thin.core.formatstyles.AbstractFormat.prototype.inspect = goog.abstractMethod;
+
+
+thin.core.formatstyles.AbstractFormat.prototype.toHash = goog.abstractMethod;

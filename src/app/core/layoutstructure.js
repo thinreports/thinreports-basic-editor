@@ -16,9 +16,6 @@
 goog.provide('thin.core.LayoutStructure');
 
 goog.require('goog.array');
-goog.require('goog.dom');
-goog.require('goog.string');
-goog.require('thin.core.ShapeStructure');
 goog.require('thin.platform.String');
 
 
@@ -44,19 +41,7 @@ thin.core.LayoutStructure.Regexp_ = {
 
 
 /**
- * @param {thin.core.Layout} layout
- * @return {string}
- */
-thin.core.LayoutStructure.serialize = function(layout) {
-  var xml;
-  thin.core.LayoutStructure.inRawLayout_(layout, function() {
-    xml = thin.core.LayoutStructure.serializeForFormat_(layout);
-  });
-  return xml;
-};
-
-
-/**
+ * @deprecated
  * @param {string} svg
  * @return {string}
  */
@@ -96,31 +81,7 @@ thin.core.LayoutStructure.createBackup = function(layout) {
 
 
 /**
- * @param {thin.core.Layout} layout
- * @return {string}
- * @private
- */
-thin.core.LayoutStructure.serializeForFormat_ = function(layout) {
-  var layoutSize = layout.getNormalLayoutSize();
-  var svg = layout.getElement().cloneNode(true);
-  
-  thin.core.LayoutStructure.finalizeLayoutElement_(svg);
-  
-  svg.setAttribute('width', layoutSize.width);
-  svg.setAttribute('height', layoutSize.height);
-  svg.removeAttribute('id');
-  svg.removeAttribute('style');
-  svg.removeAttribute('class');
-  
-  thin.core.LayoutStructure.serializeShapes(
-      goog.dom.getElementsByTagNameAndClass('g', thin.core.Layout.CANVAS_CLASS_ID, 
-      /** @type {Element} */(svg))[0].childNodes);
-
-  return thin.core.serializeToXML(/** @type {Element} */(svg));
-};
-
-
-/**
+ * @deprecated
  * @param {thin.core.Layout} layout
  * @param {Function} f
  * @private
@@ -164,56 +125,7 @@ thin.core.LayoutStructure.inRawLayout_ = function(layout, f) {
 
 
 /**
- * @param {NodeList} shapes
- * @param {number=} opt_sectionDepth
- * @return {NodeList}
- */
-thin.core.LayoutStructure.serializeShapes = function(shapes, opt_sectionDepth) {
-  var layoutUtilTemplate = thin.core.LayoutStructure.Template_;
-  
-  var shapeTemplateFactor = layoutUtilTemplate.SHAPE;
-  var layoutTemplateFactor = layoutUtilTemplate.LAYOUT;
-
-  var layoutTemplate = goog.array.repeat(layoutTemplateFactor, 2);
-  var shapeTemplate = goog.array.repeat(shapeTemplateFactor, 2);  
-  
-  if (opt_sectionDepth) {
-    var depth = goog.string.repeat(layoutUtilTemplate.CONNECT, opt_sectionDepth);
-    
-    shapeTemplate[0] = depth + shapeTemplate[0];
-    shapeTemplate[1] += depth;
-    layoutTemplate[0] = depth + layoutTemplate[0];
-    layoutTemplate[1] += depth;
-    
-    goog.array.forEachRight(shapes, function(shape, i) {
-      if (thin.core.LayoutStructure.isSerializableShape_(shape)) {
-        goog.dom.replaceNode(thin.core.LayoutStructure.formatStructure_(
-          thin.core.ShapeStructure.serialize(shape), shapeTemplate), shape);
-      // When visibility of shape is hidden and shape has not id.
-      } else if (thin.core.LayoutStructure.isHiddenShape_(shape)) {
-        goog.dom.replaceNode(thin.core.LayoutStructure.formatStructure_(
-          thin.core.serializeToXML(shape), layoutTemplate), shape);
-      }
-    });
-  } else {
-    goog.array.forEachRight(shapes, function(shape, i) {
-      if (thin.core.LayoutStructure.isSerializableShape_(shape)) {
-        goog.dom.insertSiblingBefore(thin.core.LayoutStructure.formatStructure_(
-          thin.core.ShapeStructure.serialize(shape), shapeTemplate), shape);
-        goog.dom.replaceNode(thin.core.LayoutStructure.formatStructure_(
-          thin.core.serializeToXML(shape), layoutTemplate), shape);
-      // When visibility of shape is hidden and shape has not id.
-      } else if (thin.core.LayoutStructure.isHiddenShape_(shape)) {
-        goog.dom.replaceNode(thin.core.LayoutStructure.formatStructure_(
-          thin.core.serializeToXML(shape), layoutTemplate), shape);        
-      }
-    });
-  }
-  return shapes;
-};
-
-
-/**
+ * @deprecated
  * @param {Element} layoutElement
  * @private
  */
@@ -229,33 +141,46 @@ thin.core.LayoutStructure.finalizeLayoutElement_ = function(layoutElement) {
 
 
 /**
- * @param {Element} element
- * @return {boolean}
- * @private
+ * @param {thin.core.Layout} layout
  */
-thin.core.LayoutStructure.isSerializableShape_ = function(element) {
-  var type = element.getAttribute('class');
-  return goog.array.contains(['s-tblock', 's-iblock', 's-list', 's-pageno'], type) || !goog.string.isEmpty(element.getAttribute('x-id'));
+thin.core.LayoutStructure.convertToNewLayoutSchema = function(layout) {
+  var format = layout.getFormat();
+
+  var xmlString = thin.core.LayoutStructure.restoreStructure(format.getSvg());
+  var doc = new DOMParser().parseFromString(xmlString, "application/xml");
+  var canvasNode = goog.dom.getLastElementChild(doc.documentElement);
+
+  layout.drawShapeFromElements(canvasNode.childNodes);
+
+  var shapes = layout.getManager().getShapesManager().get();
+  thin.core.LayoutStructure.applyRefId(layout, shapes);
+
+  format.setSvg(layout.toHash());
+  layout.removeShapes(shapes);
 };
 
 
 /**
- * @param {Element} element
- * @return {boolean}
- * @private
+ * @param {thin.core.Layout} layout
+ * @param {Array} shapes
+ * @param {thin.core.ListSectionShape=} opt_shapeIdManager
  */
-thin.core.LayoutStructure.isHiddenShape_ = function(element) {
-  return !thin.core.LayoutStructure.isSerializableShape_(element) &&
-      element.getAttribute('x-display') == 'false';
-};
-
-
-/**
- * @param {string} content
- * @param {Array} template
- * @return {Comment}
- * @private
- */
-thin.core.LayoutStructure.formatStructure_ = function(content, template) {
-  return goog.dom.getDocument().createComment(template[0] + content + template[1]);
+thin.core.LayoutStructure.applyRefId = function(layout, shapes, opt_shapeIdManager) {
+  goog.array.forEach(shapes, function(shape) {
+    if (shape.instanceOfListShape()) {
+      shape.forEachSectionShape(function(sectionShapeForEach, sectionNameForEach) {
+        var managerForList = sectionShapeForEach.getManager();
+        thin.core.LayoutStructure.applyRefId(layout,
+          managerForList.getShapesManager().get(),
+            managerForList.getShapeIdManager());
+      });
+    } else {
+      if (shape.instanceOfTblockShape()) {
+        var refId = layout.getElementAttribute(shape.getElement(), 'x-ref-id');
+        if (!thin.isExactlyEqual(refId, thin.core.TblockShape.DEFAULT_REFID)) {
+          shape.setRefId(refId, layout.getShapeForShapeId(refId, opt_shapeIdManager));
+        }
+      }
+    }
+  });
 };

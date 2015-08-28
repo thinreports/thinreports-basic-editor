@@ -31,8 +31,8 @@ goog.require('goog.Disposable');
  * @extends {goog.Disposable}
  */
 thin.layout.FormatPage = function(config) {
-  goog.Disposable.call(this);
-  
+  goog.base(this);
+
   var page = goog.object.clone(thin.layout.FormatPage.DEFAULT_SETTINGS);
   goog.object.extend(page, Object(goog.object.get(config, 'page')));
   
@@ -40,17 +40,9 @@ thin.layout.FormatPage = function(config) {
                 page['orientation'],
                 page['width'],
                 page['height']);
-  
-  this.setMargin(page['margin-top'],
-                 page['margin-right'],
-                 page['margin-bottom'],
-                 page['margin-left']);
-  
-  /**
-   * @type {string}
-   * @private
-   */
-  this.title_ = config['title'];
+
+  var margin = page['margin'];
+  this.setMargin(margin[0], margin[1], margin[2], margin[3]);
 };
 goog.inherits(thin.layout.FormatPage, goog.Disposable);
 
@@ -113,11 +105,15 @@ thin.layout.FormatPage.DirectionType = {
 thin.layout.FormatPage.DEFAULT_SETTINGS = {
   'paper-type': thin.layout.FormatPage.PaperType['A4'],
   'orientation': thin.layout.FormatPage.DirectionType.PR,
-  'margin-top': 20,
-  'margin-bottom': 20,
-  'margin-left': 20,
-  'margin-right': 20
+  'margin': [20, 20, 20, 20]
 };
+
+
+/**
+ * @type {string}
+ * @private
+ */
+thin.layout.FormatPage.prototype.title_;
 
 
 /**
@@ -258,28 +254,28 @@ thin.layout.FormatPage.prototype.setMargin = function(top, right, bottom, left) 
  * @return {Object}
  */
 thin.layout.FormatPage.prototype.toHash = function() {
-  var hash = {
-    "title": this.title_,
-    "option": {}
-  };
-  
-  var page = {
+  var report = {
     "paper-type": this.getPaperType(),
     "orientation": this.getOrientation(),
-    "margin-top": this.marginTop_,
-    "margin-bottom": this.marginBottom_,
-    "margin-left": this.marginLeft_,
-    "margin-right": this.marginRight_
-  }
+    "margin": [
+      this.marginTop_,
+      this.marginRight_,
+      this.marginBottom_,
+      this.marginLeft_
+    ]
+  };
 
   if (this.isUserType()) {
-    page["width"] = this.getWidth();
-    page["height"] = this.getHeight();
+    goog.object.extend(report, {
+      "width": this.getWidth(),
+      "height": this.getHeight()
+    });
   }
-  
-  hash["page"] = page;
 
-  return hash;
+  return {
+    "title": this.title_,
+    "report": report
+  };
 };
 
 

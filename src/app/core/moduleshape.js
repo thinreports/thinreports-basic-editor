@@ -175,6 +175,21 @@ thin.core.ModuleShape.prototype.setStrokeWidth = function(width) {
 
 /**
  * @this {goog.graphics.Element}
+ * @param {string?} color
+ */
+thin.core.ModuleShape.prototype.setStrokeColor = function(color) {
+  var strokeNone = thin.core.ModuleShape.NONE;
+
+  var strokeColor = /** @type {string} */(thin.getValIfNotDef(color, ''));
+  var stroke = new goog.graphics.Stroke(this.getStroke().getWidth(),
+    thin.isExactlyEqual(strokeColor, '') ? strokeNone : strokeColor);
+
+  this.setStroke(stroke);
+};
+
+
+/**
+ * @this {goog.graphics.Element}
  * @param {string} shapeId
  */
 thin.core.ModuleShape.prototype.setShapeIdInternal = function(shapeId) {
@@ -1222,4 +1237,119 @@ thin.core.ModuleShape.prototype.setSectionEnabled = function(
  */
 thin.core.ModuleShape.prototype.isIntersects = function(judgement_box) {
   return goog.math.Box.intersects(judgement_box, this.getBoxSize());
+};
+
+
+/**
+ * @this {goog.graphics.Element}
+ * @param {string?} color
+ */
+thin.core.ModuleShape.prototype.setFillColor = function(color) {
+  var fillNone = thin.core.ModuleShape.NONE;
+
+  var fillColor = /** @type {string} */(thin.getValIfNotDef(color, ''));
+  var fill = new goog.graphics.SolidFill(
+    thin.isExactlyEqual(fillColor, '') ? fillNone : fillColor);
+
+  this.setFill(fill);
+};
+
+
+/**
+ * @this {goog.graphics.Element}
+ * @return {string}
+ */
+thin.core.ModuleShape.prototype.getType = function() {
+  return this.getElement().tagName;
+};
+
+
+/**
+ * @private
+ * @this {goog.graphics.Element}
+ * @return {Object}
+ */
+thin.core.ModuleShape.prototype.toHash_ = function() {
+  var style = {
+    'display': this.getDisplay()
+  };
+
+  var stroke = this.getStroke();
+  if (stroke) {
+    goog.object.extend(style, {
+      'border-color': stroke.getColor(),
+      'border-width': this.getStrokeWidth(),
+      'border-style': this.getStrokeDashType()
+    });
+  }
+  var fill = this.getFill();
+  if (fill) {
+    goog.object.set(style, 'fill-color', fill.getColor());
+  }
+
+  return {
+    'id': this.getShapeId(),
+    'type': this.getType(),
+    'description': this.getDesc(),
+    // Absolute positions(without translate)
+    'x': this.left_,
+    'y': this.top_,
+    'width': this.width_,
+    'height': this.height_,
+    'style': style
+  };
+};
+
+
+/**
+ * @private
+ * @this {goog.graphics.Element}
+ * @param {Object}
+ */
+thin.core.ModuleShape.prototype.update_ = function(attrs) {
+  goog.object.forEach(attrs, function(value, attr) {
+    switch (attr) {
+      case 'id':
+        // FIXME setShapeId
+        this.setShapeId(value);
+        break;
+      case 'description':
+        this.setDesc(value);
+        break;
+      case 'x':
+        this.setLeft(value);
+        break;
+      case 'y':
+        this.setTop(value);
+        break;
+      case 'width':
+        this.setWidth(value);
+        break;
+      case 'height':
+        this.setHeight(value);
+        break;
+      case 'display':
+        this.setDisplay(value);
+        break;
+      case 'border-color':
+        this.setStrokeColor(value);
+        break;
+      case 'border-width':
+        this.setStrokeWidth(value);
+        break;
+      case 'border-style':
+        this.setStrokeDashFromType(value);
+        break;
+      case 'fill-color':
+        this.setFillColor(value);
+        break;
+      case 'style':
+        this.update(value);
+        break;
+      default:
+        // Do Nothing
+        break;
+      }
+
+  }, this);
 };

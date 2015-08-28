@@ -322,16 +322,6 @@ thin.core.Workspace.prototype.enablingOnceKeyEventHandling_ = function(enable) {
 thin.core.Workspace.create = function(file) {
   try {
     var format = thin.layout.Format.parse(file.getContent());
-    var version = format.getVersion();
-    var userTypeCompatibilityFn = function() {
-      var formatPage = format.page;
-      if (thin.layout.FormatPage.isUserType(formatPage.getPaperType().toLowerCase())) {
-        formatPage.setPaperType(thin.layout.FormatPage.PaperType['USER']);
-      }
-    };
-    thin.Compatibility.applyIf(version, '=', '0.7.7', userTypeCompatibilityFn);
-    thin.Compatibility.applyIf(version, '=', '0.7.7.1', userTypeCompatibilityFn);
-
     var workspace = new thin.core.Workspace(format, file);
     workspace.createDom();
 
@@ -365,42 +355,14 @@ thin.core.Workspace.prototype.draw = function() {
   try {
     var layout = this.getLayout();
     var format = layout.getFormat();
-    var file = this.getFile();
-    var xmlString = thin.core.LayoutStructure.restoreStructure(format.getSvg());
 
-    var doc = new DOMParser().parseFromString(xmlString, "application/xml");
-    var canvasNode = goog.dom.getLastElementChild(doc.documentElement);
+    thin.Compatibility.applyIf(format.getVersion(), '<', '1.0.0', function() {
+      thin.core.LayoutStructure.convertToNewLayoutSchema(layout);
+    });
 
-    layout.drawShapeFromElements(canvasNode.childNodes);
+    layout.drawShapes(format.getSvg());
     this.setup();
 
-    var listHelper = layout.getListHelper();
-    /**
-     * @param {Array} shapes
-     * @param {thin.core.ListSectionShape=} opt_shapeIdManager
-     */
-    var setupHandlers = function(shapes, opt_shapeIdManager) {
-      goog.array.forEach(shapes, function(shape) {
-        if (shape.instanceOfListShape()) {
-          shape.setupEventHandlers();
-          shape.forEachSectionShape(function(sectionShapeForEach, sectionNameForEach) {
-            var managerForList = sectionShapeForEach.getManager();
-            setupHandlers(managerForList.getShapesManager().get(), managerForList.getShapeIdManager());
-          });
-          listHelper.active(shape);
-          listHelper.inactive();
-        } else {
-          shape.setupEventHandlers();
-          if (shape.instanceOfTblockShape()) {
-            var refId = layout.getElementAttribute(shape.getElement(), 'x-ref-id');
-            if (!thin.isExactlyEqual(refId, thin.core.TblockShape.DEFAULT_REFID)) {
-              shape.setRefId(refId, layout.getShapeForShapeId(refId, opt_shapeIdManager));
-            }
-          }
-        }
-      });
-    };
-    setupHandlers(layout.getManager().getShapesManager().get());
     return true;
   } catch (e) {
     return false;
@@ -671,7 +633,7 @@ thin.core.Workspace.prototype.setFormat = function(format) {
 thin.core.Workspace.prototype.getSaveFormat_ = function() {
   var layout = this.layout_;
   var format = this.format;
-  format.setSvg(layout.toXML());
+  format.setSvg(layout.toHash());
   format.setLayoutGuides(layout.getHelpers().getLayoutGuideHelper().getGuides());
   return format.toJSON();
 };
@@ -769,7 +731,7 @@ thin.core.Workspace.prototype.getFingerPrint_ = function() {
 
 /** @inheritDoc */
 thin.core.Workspace.prototype.createDom = function() {
-  thin.core.Workspace.superClass_.createDom.call(this);
+  goog.base(this, 'createDom');
   this.layout_.setElementAttributes(this.element_, {
     'class': 'workspace'
   });

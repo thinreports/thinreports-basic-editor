@@ -64,29 +64,6 @@ thin.core.RectShape.prototype.getClassId = function() {
 };
 
 
-/**
- * @param {Element} element
- * @param {thin.core.Layout} layout
- * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.core.RectShape}
- */
-thin.core.RectShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-  var shape = new thin.core.RectShape(element, layout,
-                    new goog.graphics.Stroke(
-                       Number(layout.getElementAttribute(element, 'stroke-width')), 
-                       layout.getElementAttribute(element, 'stroke')),
-                    new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
-  
-  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
-  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
-  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
-  shape.setStrokeDashFromType(layout.getElementAttribute(element, 'x-stroke-type'));
-  shape.setRounded(Number(layout.getElementAttribute(element, 'rx')));
-  shape.initIdentifier();
-  return shape;
-};
-
-
 thin.core.RectShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getRectOutline());
 };
@@ -385,4 +362,40 @@ thin.core.RectShape.prototype.setInitShapeProperties = function(properties) {
 thin.core.RectShape.prototype.disposeInternal = function() {
   thin.core.RectShape.superClass_.disposeInternal.call(this);
   this.disposeInternalForShape();
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.RectShape.prototype.toHash = function() {
+  var hash = this.toHash_();
+
+  goog.object.extend(hash, {
+    'rx': this.getRounded(),
+    'ry': this.getRounded()
+  });
+
+  return hash;
+};
+
+
+/**
+ * @param {Object} attrs
+ */
+thin.core.RectShape.prototype.update = function(attrs) {
+  this.update_(attrs);
+
+  goog.object.forEach(attrs, function(value, attr) {
+    switch (attr) {
+      case 'rx':
+        this.setRounded(value);
+        break;
+      case 'ry':
+        this.setRounded(value);
+        break;
+      default:
+        break;
+      }
+  }, this);
 };

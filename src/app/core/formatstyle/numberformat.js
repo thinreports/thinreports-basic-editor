@@ -126,3 +126,16 @@ thin.core.formatstyles.NumberFormat.prototype.disposeInternal = function() {
   delete this.delimiter_;
   delete this.precision_;
 };
+
+
+/**
+ * @return {Object}
+ */
+thin.core.formatstyles.NumberFormat.prototype.toHash = function() {
+  return {
+    'number': {
+      'delimiter': this.getDelimiter(),
+      'precision': this.getPrecision()
+    }
+  };
+};

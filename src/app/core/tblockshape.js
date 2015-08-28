@@ -239,80 +239,6 @@ thin.core.TblockShape.prototype.updateToolbarUI = function() {
 
 
 /**
- * @param {Element} element
- * @param {thin.core.Layout} layout
- * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.core.TblockShape}
- */
-thin.core.TblockShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-  element.removeAttribute('clip-path');
-  var shape = new thin.core.TblockShape(element, layout);
-
-  shape.setMultiModeInternal(layout.getElementAttribute(element, 'x-multiple') == 'true');
-  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
-  shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
-  shape.setFontSize(Number(layout.getElementAttribute(element, 'font-size')));
-  shape.setFontFamily(layout.getElementAttribute(element, 'font-family'));
-
-  var decoration = layout.getElementAttribute(element, 'text-decoration');
-  var lineHeight = layout.getElementAttribute(element, 'x-line-height');
-  var lineHeightRatio = layout.getElementAttribute(element, 'x-line-height-ratio');
-  var kerning = layout.getElementAttribute(element, 'kerning');
-
-  if (element.hasAttribute('x-valign')) {
-    shape.setVerticalAlign(layout.getElementAttribute(element, 'x-valign'));
-  }
-  if (thin.isExactlyEqual(kerning,
-        thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
-    kerning = thin.core.TextStyle.DEFAULT_KERNING;
-  }
-  shape.setKerning(/** @type {string} */ (kerning));
-  if (!goog.isNull(lineHeightRatio)) {
-    shape.setTextLineHeightRatio(lineHeightRatio);
-  }
-  shape.setFontUnderline(/underline/.test(decoration));
-  shape.setFontLinethrough(/line-through/.test(decoration));
-  shape.setFontItalic(layout.getElementAttribute(element, 'font-style') == 'italic');
-  shape.setFontBold(layout.getElementAttribute(element, 'font-weight') == 'bold');
-  shape.setTextAnchor(layout.getElementAttribute(element, 'text-anchor'));
-  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
-  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
-
-  shape.setDefaultValueOfLink(layout.getElementAttribute(element, 'x-value'));
-
-  shape.setBaseFormat(layout.getElementAttribute(element, 'x-format-base'));
-
-  var formatType = layout.getElementAttribute(element, 'x-format-type');
-  var formatTypeTemp = thin.core.formatstyles.FormatType;
-
-  switch (formatType) {
-    case formatTypeTemp.NONE:
-      shape.setFormatStyle(null);
-      break;
-    case formatTypeTemp.NUMBER:
-      var delimiter = layout.getElementAttribute(element, 'x-format-number-delimiter');
-      shape.setFormatStyle(new thin.core.formatstyles.NumberFormat(
-        delimiter, Number(layout.getElementAttribute(element, 'x-format-number-precision')),
-        !thin.isExactlyEqual(delimiter, thin.core.formatstyles.NumberFormat.DISABLE_DELIMITER)));
-      break;
-    case formatTypeTemp.DATETIME:
-      shape.setFormatStyle(new thin.core.formatstyles.DatetimeFormat(
-        layout.getElementAttribute(element, 'x-format-datetime-format')));
-      break;
-    case formatTypeTemp.PADDING:
-      shape.setFormatStyle(new thin.core.formatstyles.PaddingFormat(
-        layout.getElementAttribute(element, 'x-format-padding-direction'),
-        layout.getElementAttribute(element, 'x-format-padding-char'),
-        Number(layout.getElementAttribute(element, 'x-format-padding-length'))));
-      break;
-  }
-
-  shape.initIdentifier();
-  return shape;
-};
-
-
-/**
  * @param {Element=} opt_element
  * @return {thin.core.Box}
  * @private
@@ -1904,4 +1830,99 @@ thin.core.TblockShape.prototype.disposeInternal = function() {
   delete this.referenceShape_;
   delete this.referringShapes_;
   delete this.formatStyle_;
+};
+
+/**
+ * @return {string}
+ */
+thin.core.TblockShape.prototype.getType = function() {
+  return 'text-block';
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.TblockShape.prototype.toHash = function() {
+  var hash = goog.base(this, 'toHash');
+
+  var format = {
+    'base': this.getBaseFormat(),
+    'type': this.getFormatType()
+  };
+
+  if (this.formatStyle_) {
+    goog.object.extend(format, this.formatStyle_.toHash());
+  }
+
+  goog.object.extend(hash, {
+    'reference-id': this.getRefId(),
+    'value': this.getDefaultValueOfLink(),
+    'mulitple-line': this.isMultiMode(),
+    'format': format
+  });
+
+  goog.object.extend(hash['style'], {
+    'overflow': this.getOverflowType(),
+    'word-wrap': this.getTextWordWrap()
+  });
+
+  return hash;
+};
+
+
+/**
+ * @param {Object} attrs
+ */
+thin.core.TblockShape.prototype.update = function(attrs) {
+  goog.base(this, 'update', attrs);
+
+  goog.object.forEach(attrs, function(value, attr) {
+    switch (attr) {
+      case 'format':
+        this.setBaseFormat(value['base']);
+        this.setFormatType(value['type']);
+        var format = value[value['type']];
+
+        switch (value['type']) {
+          case 'number':
+            this.setFormatStyle(
+              new thin.core.formatstyles.NumberFormat(
+                format['delimiter'], format['precision'],
+                  !thin.isExactlyEqual(format['delimiter'],
+                    thin.core.formatstyles.NumberFormat.DISABLE_DELIMITER)));
+            break;
+          case 'padding':
+            this.setFormatStyle(
+              new thin.core.formatstyles.PaddingFormat(
+                format['direction'], format['char'], format['length']));
+            break;
+          case 'datetime':
+            this.setFormatStyle(
+              new thin.core.formatstyles.DatetimeFormat(
+                format['format']));
+            break;
+        }
+        break;
+      case 'reference-id':
+        // FIXME setShapeId
+        // this.setRefId(value);
+        break;
+      case 'value':
+        this.setDefaultValueOfLink(value);
+        break;
+      case 'mulitple-line':
+        this.setMultiMode(value);
+        break;
+      case 'overflow':
+        this.setOverflowType(value);
+        break;
+      case 'word-wrap':
+        this.setTextWordWrap(value);
+        break;
+      default:
+        // Do Nothing
+        break;
+      }
+  }, this);
 };

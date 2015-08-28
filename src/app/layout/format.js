@@ -28,15 +28,16 @@ goog.require('thin.Compatibility');
  * @extends {goog.Disposable}
  */
 thin.layout.Format = function(opt_format) {
-  goog.Disposable.call(this);
+  goog.base(this);
 
   this.state_ = {};
   var currentVersion = thin.getVersion();
-  
+
   if (goog.isDefAndNotNull(opt_format) && goog.isObject(opt_format)) {
-    this.setSvg(opt_format['svg']);
-    this.page = this.setPage(opt_format['config']);
-    
+    this.setSvg(opt_format['items']);
+    this.page = this.setPage(opt_format['report']);
+    this.page.setTitle(opt_format['title']);
+
     var formatVersion = opt_format['version'];
     var state = opt_format['state'];
     var guides;
@@ -93,7 +94,35 @@ thin.layout.Format.prototype.state_;
  * @return {thin.layout.Format}
  */
 thin.layout.Format.parse = function(content) {
-  return new thin.layout.Format(JSON.parse(content));
+  var hash = JSON.parse(content);
+  var version = hash['version'];
+
+  thin.Compatibility.applyIf(version, '<', '1.0.0', function() {
+    var config = goog.object.clone(hash['config']);
+
+    goog.object.set(hash, 'title', config['title']);
+
+    var margin = [];
+    goog.array.insert(margin, config['margin-top']);
+    goog.array.insert(margin, config['margin-right']);
+    goog.array.insert(margin, config['margin-bottom']);
+    goog.array.insert(margin, config['margin-left']);
+
+    goog.object.remove(hash, 'config');
+    goog.object.remove(config, 'title');
+    goog.object.remove(config, 'margin-top');
+    goog.object.remove(config, 'margin-right');
+    goog.object.remove(config, 'margin-bottom');
+    goog.object.remove(config, 'margin-left');
+
+    goog.object.set(config, 'margin', margin);
+    goog.object.set(hash, 'report', config);
+    goog.object.set(hash, 'items', hash['svg']);
+
+    goog.object.remove(hash, 'svg');
+  });
+
+  return new thin.layout.Format(hash);
 };
 
 
@@ -104,15 +133,17 @@ thin.layout.Format.prototype.toJSON = function() {
   if (this.isOverWritableVersion_) {
     this.version_ = thin.getVersion();
   }
-  
-  return goog.json.serialize({
+
+  var hash = {
     "version": this.version_,
-    "config": this.page.toHash(),
-    "svg": this.svg_,
+    "items": this.svg_,
     "state": {
-      "layout-guide": this.getLayoutGuides()
+      "layout-guides": this.getLayoutGuides()
     }
-  });
+  };
+  goog.object.extend(hash, this.page.toHash());
+
+  return JSON.stringify(hash, null, '  ');
 };
 
 
@@ -157,7 +188,7 @@ thin.layout.Format.prototype.setLayoutGuides = function(guides) {
 
 
 /**
- * @param {string} svg
+ * @param {Object} svg
  */
 thin.layout.Format.prototype.setSvg = function(svg) {
   this.svg_ = svg;
@@ -176,7 +207,7 @@ thin.layout.Format.prototype.setPage = function(config) {
 /** inheritDoc */
 thin.layout.Format.prototype.disposeInternal = function() {
   thin.layout.Format.superClass_.disposeInternal.call(this);
-  
+
   this.page.dispose();
   delete this.page;
 };

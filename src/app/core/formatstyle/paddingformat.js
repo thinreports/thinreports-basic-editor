@@ -141,3 +141,17 @@ thin.core.formatstyles.PaddingFormat.prototype.disposeInternal = function() {
   delete this.len_;
   delete this.char_;
 };
+
+
+/**
+ * @return {Object}
+ */
+thin.core.formatstyles.PaddingFormat.prototype.toHash = function() {
+  return {
+    'padding': {
+      'length': this.getLength(),
+      'char': this.getChar(),
+      'direction': this.getDirection()
+    }
+  };
+};

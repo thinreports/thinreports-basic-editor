@@ -58,28 +58,6 @@ thin.core.LineShape.prototype.getClassId = function() {
 };
 
 
-/**
- * @param {Element} element
- * @param {thin.core.Layout} layout
- * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.core.LineShape}
- */
-thin.core.LineShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-
-  var shape = new thin.core.LineShape(element, layout, 
-                  new goog.graphics.Stroke(
-                      Number(layout.getElementAttribute(element, 'stroke-width')),
-                      layout.getElementAttribute(element, 'stroke')));
-  
-  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
-  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
-  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
-  shape.setStrokeDashFromType(layout.getElementAttribute(element, 'x-stroke-type'));
-  shape.initIdentifier();
-  return shape;
-};
-
-
 thin.core.LineShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getLineOutline());
 };
@@ -350,4 +328,61 @@ thin.core.LineShape.prototype.setInitShapeProperties = function(properties) {
 thin.core.LineShape.prototype.disposeInternal = function() {
   thin.core.LineShape.superClass_.disposeInternal.call(this);
   this.disposeInternalForShape();
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.LineShape.prototype.toHash = function() {
+  var hash = this.toHash_();
+
+  var layout  = this.getLayout();
+  var element = this.getElement();
+  goog.object.extend(hash, {
+    'x1': Number(layout.getElementAttribute(element, 'x1')),
+    'y1': Number(layout.getElementAttribute(element, 'y1')),
+    'x2': Number(layout.getElementAttribute(element, 'x2')),
+    'y2': Number(layout.getElementAttribute(element, 'y2'))
+  });
+
+  goog.object.remove(hash, 'x');
+  goog.object.remove(hash, 'y');
+  goog.object.remove(hash, 'width');
+  goog.object.remove(hash, 'height');
+
+  return hash;
+};
+
+
+/**
+ * @param {Object} attrs
+ */
+thin.core.LineShape.prototype.update = function(attrs) {
+  this.update_(attrs);
+
+  var keys = goog.object.getKeys(attrs);
+  var result_index = goog.array.findIndex(keys, function(key, index) {
+    return key == 'x1' || key == 'x2' || key == 'y1' || key == 'y2'
+  });
+
+  if (result_index > -1) {
+    var x1 = attrs['x1'];
+    var x2 = attrs['x2'];
+    var y1 = attrs['y1'];
+    var y2 = attrs['y2'];
+
+    this.setX1(x1);
+    this.setX2(x2);
+    this.setY1(y1);
+    this.setY2(y2);
+
+    this.calculateDirection(y1, y2);
+
+    this.setLeft(Math.min(x1, x2));
+    this.setTop(Math.min(y1, y2));
+    this.setWidth(Math.abs(x1 - x2));
+    this.setHeight(Math.abs(y1 - y2));
+  }
+
 };

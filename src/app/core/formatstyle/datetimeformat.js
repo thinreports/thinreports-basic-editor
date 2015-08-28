@@ -68,3 +68,15 @@ thin.core.formatstyles.DatetimeFormat.prototype.disposeInternal = function() {
   
   delete this.format_;
 };
+
+
+/**
+ * @return {Object}
+ */
+thin.core.formatstyles.DatetimeFormat.prototype.toHash = function() {
+  return {
+    'datetime': {
+      'format': this.getFormat()
+    }
+  };
+};
