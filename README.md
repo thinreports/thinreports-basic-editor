@@ -5,15 +5,6 @@
   * Thinreports Editor (GUI Designer)
   * Thinreports Generator (Report Generator for Ruby)
 
-----
-
-## [Feature concepts of the next major version 1.0.0](https://github.com/thinreports/thinreports/labels/CONCEPT)
-
-**We are now developing the next major version 0.8.0.
-And, we are publishing concept of the new features.**
-
----
-
 ## Features
 
 Features of Generator is [here](http://www.thinreports.org/features/generator/).
