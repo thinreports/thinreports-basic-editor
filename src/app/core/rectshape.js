@@ -106,10 +106,10 @@ thin.core.RectShape.prototype.getCloneCreator = function() {
    * @return {thin.core.RectShape}
    */
   return function(layout, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate) {
-    
+
     var shape = layout.createRectShape();
     layout.appendChild(shape, opt_renderTo);
-    
+
     var pasteCoordinate = layout.calculatePasteCoordinate(isAffiliationListShape,
           deltaCoordinateForList, deltaCoordinateForGuide, sourceCoordinate,
           opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate);
@@ -131,81 +131,81 @@ thin.core.RectShape.prototype.getCloneCreator = function() {
  * @private
  */
 thin.core.RectShape.prototype.createPropertyComponent_ = function() {
-  
+
   var scope = this;
   var layout = this.getLayout();
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
-  
+
   var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
-  
-  
+
+
   var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
   var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(topInputProperty, baseGroup, 'top');
-  
-  
+
+
   var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
-  
-  
+
+
   var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
-  
-  
+
+
   var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
-  
+
   var shapeGroup = proppane.addGroup(thin.t('property_group_shape'));
-  
-  
+
+
   var fillInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_fill_color'));
   fillInputProperty.getValueControl().getInput().setLabel('none');
   fillInputProperty.addEventListener(propEventType.CHANGE,
       this.setFillForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(fillInputProperty , shapeGroup, 'fill');
-  
-  
+
+
   var strokeInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_stroke_color'));
   strokeInputProperty.getValueControl().getInput().setLabel('none');
   strokeInputProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(strokeInputProperty , shapeGroup, 'stroke');
-  
-  
+
+
   var strokeWidthCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_stroke_width'));
   var strokeWidthComb = strokeWidthCombProperty.getValueControl();
   var strokeWidthInput = strokeWidthComb.getInput();
@@ -224,10 +224,10 @@ thin.core.RectShape.prototype.createPropertyComponent_ = function() {
   });
   strokeWidthCombProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeWidthForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(strokeWidthCombProperty , shapeGroup, 'stroke-width');
-  
-  
+
+
   var strokeType = thin.core.ModuleElement.StrokeType;
   var strokeDashSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_stroke_type'));
   var strokeDashSelect = strokeDashSelectProperty.getValueControl();
@@ -239,10 +239,10 @@ thin.core.RectShape.prototype.createPropertyComponent_ = function() {
       new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DASHED), strokeType.DASHED));
   strokeDashSelect.addItem(
       new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DOTTED), strokeType.DOTTED));
-  
+
   strokeDashSelectProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeDashTypeForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(strokeDashSelectProperty , shapeGroup, 'stroke-dash-type');
 
 
@@ -252,36 +252,36 @@ thin.core.RectShape.prototype.createPropertyComponent_ = function() {
       function(e) {
         var radius = Number(e.target.getValue());
         var captureRadius = scope.getRounded();
-        
+
         layout.getWorkspace().normalVersioning(function(version) {
-        
+
           version.upHandler(function() {
             this.setRounded(radius);
             proppane.getPropertyControl('radius').setValue(radius);
           }, scope);
-          
+
           version.downHandler(function() {
             this.setRounded(captureRadius);
             proppane.getPropertyControl('radius').setValue(captureRadius);
           }, scope);
         });
       }, false, this);
-  
+
   proppane.addProperty(radiusInputProperty, shapeGroup, 'radius');
 
 
   var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
-  
+
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
       this.setShapeIdForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
-  
+
   var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
-  
+
   proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
@@ -315,17 +315,17 @@ thin.core.RectShape.prototype.updateProperties = function() {
     proppane.setTarget(this);
     this.createPropertyComponent_();
   }
-  
+
   var properties = this.getProperties();
   var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
   var noneColor = thin.core.ModuleShape.NONE;
-  
+
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
   proppane.getPropertyControl('width').setValue(properties['width']);
   proppane.getPropertyControl('height').setValue(properties['height']);
   proppane.getPropertyControl('display').setChecked(properties['display']);
-  
+
   var fill = properties['fill'];
   if (thin.isExactlyEqual(fill, noneColor)) {
     fill = proppaneBlank
@@ -341,10 +341,10 @@ thin.core.RectShape.prototype.updateProperties = function() {
     strokeWidth = proppaneBlank;
   }
   proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
-  
+
   proppane.getPropertyControl('stroke-dash-type').setValue(properties['stroke-dash-type']);
   proppane.getPropertyControl('radius').setValue(properties['radius']);
-  
+
   proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
   proppane.getPropertyControl('desc').setValue(properties['desc']);
 };
@@ -372,8 +372,7 @@ thin.core.RectShape.prototype.toHash = function() {
   var hash = this.toHash_();
 
   goog.object.extend(hash, {
-    'rx': this.getRounded(),
-    'ry': this.getRounded()
+    'border-radius': this.getRounded()
   });
 
   return hash;
@@ -388,10 +387,7 @@ thin.core.RectShape.prototype.update = function(attrs) {
 
   goog.object.forEach(attrs, function(value, attr) {
     switch (attr) {
-      case 'rx':
-        this.setRounded(value);
-        break;
-      case 'ry':
+      case 'border-radius':
         this.setRounded(value);
         break;
       default:

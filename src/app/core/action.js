@@ -1338,7 +1338,6 @@ thin.core.Action.prototype.actionDeleteShapes = function(historyMode) {
   var targetIndexByShapes = layout.getTargetIndexOfShapes(targetShapes, parentGroup);
   var captureShapeIdArray = [];
   var captureRefIdArray = [];
-  var captureReferenceShapesArray = [];
   var captureReferringShapesArray = [];
   var defaultRefId = thin.core.TblockShape.DEFAULT_REFID;
 
@@ -1347,11 +1346,9 @@ thin.core.Action.prototype.actionDeleteShapes = function(historyMode) {
 
     if (shape.instanceOfTblockShape()) {
       goog.array.insertAt(captureRefIdArray, shape.getRefId(), count);
-      goog.array.insertAt(captureReferenceShapesArray, shape.getReferenceShape(), count);
       goog.array.insertAt(captureReferringShapesArray, shape.getReferringShapes(), count);
     } else {
       goog.array.insertAt(captureRefIdArray, defaultRefId, count);
-      goog.array.insertAt(captureReferenceShapesArray, null, count);
       goog.array.insertAt(captureReferringShapesArray, null, count);
     }
 
@@ -1399,7 +1396,7 @@ thin.core.Action.prototype.actionDeleteShapes = function(historyMode) {
           if (shape.instanceOfTblockShape()) {
             var captureRefId = captureRefIdArray[count];
             if (!thin.isExactlyEqual(captureRefId, defaultRefId)) {
-              shape.setRefId(captureRefId, captureReferenceShapesArray[count]);
+              shape.setRefId(captureRefId);
             }
           }
 
@@ -1413,10 +1410,9 @@ thin.core.Action.prototype.actionDeleteShapes = function(historyMode) {
         goog.array.forEach(captureReferringShapesArray, function(referringShapes, count) {
           if (goog.isArray(referringShapes) && !goog.array.isEmpty(referringShapes)) {
             var refId = captureShapeIdArray[count];
-            var referencesShape = shapes[count];
             goog.array.forEach(referringShapes, function(shape) {
               if (!shape.isReferring()) {
-                shape.setRefId(refId, referencesShape);
+                shape.setRefId(refId);
               }
             });
           }
@@ -1477,7 +1473,7 @@ thin.core.Action.prototype.actionDeleteShapes = function(historyMode) {
             if (shape.instanceOfTblockShape()) {
               var captureRefId = captureRefIdArray[count];
               if (!thin.isExactlyEqual(captureRefId, defaultRefId)) {
-                shape.setRefId(captureRefId, captureReferenceShapesArray[count]);
+                shape.setRefId(captureRefId);
               }
             }
 
@@ -1491,10 +1487,9 @@ thin.core.Action.prototype.actionDeleteShapes = function(historyMode) {
           goog.array.forEach(captureReferringShapesArray, function(referringShapes, count) {
             if (goog.isArray(referringShapes) && !goog.array.isEmpty(referringShapes)) {
               var refId = captureShapeIdArray[count];
-              var referencesShape = shapes[count];
               goog.array.forEach(referringShapes, function(shape) {
                 if (!shape.isReferring()) {
-                  shape.setRefId(refId, referencesShape);
+                  shape.setRefId(refId);
                 }
               });
             }

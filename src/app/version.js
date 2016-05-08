@@ -21,19 +21,19 @@ goog.require('goog.string');
 /**
  * @type {number}
  */
-thin.Version.MAJOR = 1;
+thin.Version.MAJOR = 0;
 
 
 /**
  * @type {number}
  */
-thin.Version.MINOR = 0;
+thin.Version.MINOR = 8;
 
 
 /**
  * @type {number}
  */
-thin.Version.TINY = 0;
+thin.Version.TINY = 2;
 
 
 /**
@@ -72,7 +72,7 @@ thin.getVersion = function(opt_ignorePre) {
  * @return {string}
  */
 thin.getNextMajorVersion = function() {
-  return String((thin.Version.MAJOR + (thin.Version.MINOR * 0.1)) + 0.1) + '.0';
+  return '1.0.0';
 };
 
 

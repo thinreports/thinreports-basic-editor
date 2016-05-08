@@ -90,7 +90,7 @@ thin.core.LineShape.prototype.getCloneCreator = function() {
   var fill = this.getFill();
   var strokeDashType = this.getStrokeDashType();
   var display = this.getDisplay();
-  
+
   var isAffiliationListShape = this.isAffiliationListShape();
   var deltaCoordinate = this.getDeltaCoordinateForList();
 
@@ -102,10 +102,10 @@ thin.core.LineShape.prototype.getCloneCreator = function() {
    * @return {thin.core.LineShape}
    */
   return function(layout, opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate) {
-  
+
     var shape = layout.createLineShape();
     layout.appendChild(shape, opt_renderTo);
-    
+
     var pasteCoordinate = layout.calculatePasteCoordinate(isAffiliationListShape,
           deltaCoordinateForList, deltaCoordinateForGuide, sourceCoordinate,
           opt_isAdaptDeltaForList, opt_renderTo, opt_basisCoordinate);
@@ -127,62 +127,62 @@ thin.core.LineShape.prototype.getCloneCreator = function() {
  * @private
  */
 thin.core.LineShape.prototype.createPropertyComponent_ = function() {
-  
+
   var scope = this;
   var layout = this.getLayout();
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
-  
+
   var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
-  
-  
+
+
   var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
   var topInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_top_position'));
   var topInput = topInputProperty.getValueControl();
   topInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(topInputProperty, baseGroup, 'top');
-  
-  
+
+
   var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
-  
-  
+
+
   var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
-  
-  
+
+
   var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
-  
+
   var shapeGroup = proppane.addGroup(thin.t('property_group_shape'));
 
 
@@ -190,10 +190,10 @@ thin.core.LineShape.prototype.createPropertyComponent_ = function() {
   strokeInputProperty.getValueControl().getInput().setLabel('none');
   strokeInputProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(strokeInputProperty , shapeGroup, 'stroke');
-  
-  
+
+
   var strokeWidthCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_stroke_width'));
   var strokeWidthComb = strokeWidthCombProperty.getValueControl();
   var strokeWidthInput = strokeWidthComb.getInput();
@@ -212,10 +212,10 @@ thin.core.LineShape.prototype.createPropertyComponent_ = function() {
   });
   strokeWidthCombProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeWidthForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(strokeWidthCombProperty , shapeGroup, 'stroke-width');
 
-  
+
   var strokeType = thin.core.ModuleElement.StrokeType;
   var strokeDashSelectProperty = new thin.ui.PropertyPane.SelectProperty(thin.t('field_stroke_type'));
   var strokeDashSelect = strokeDashSelectProperty.getValueControl();
@@ -228,25 +228,25 @@ thin.core.LineShape.prototype.createPropertyComponent_ = function() {
       new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DASHED), strokeType.DASHED));
   strokeDashSelect.addItem(
       new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DOTTED), strokeType.DOTTED));
-  
+
   strokeDashSelectProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeDashTypeForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(strokeDashSelectProperty , shapeGroup, 'stroke-dash-type');
 
 
   var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
-  
+
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
       this.setShapeIdForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
-  
+
   var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
-  
+
   proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
@@ -279,16 +279,16 @@ thin.core.LineShape.prototype.updateProperties = function() {
     proppane.setTarget(this);
     this.createPropertyComponent_();
   }
-  
+
   var properties = this.getProperties();
   var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
-  
+
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
   proppane.getPropertyControl('width').setValue(properties['width']);
   proppane.getPropertyControl('height').setValue(properties['height']);
   proppane.getPropertyControl('display').setChecked(properties['display']);
-  
+
   var stroke = properties['stroke'];
   if (thin.isExactlyEqual(stroke, thin.core.ModuleShape.NONE)) {
     stroke = proppaneBlank
@@ -299,9 +299,9 @@ thin.core.LineShape.prototype.updateProperties = function() {
     strokeWidth = proppaneBlank;
   }
   proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
-  
+
   proppane.getPropertyControl('stroke-dash-type').setValue(properties['stroke-dash-type']);
-  
+
   proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
   proppane.getPropertyControl('desc').setValue(properties['desc']);
 };
@@ -379,8 +379,8 @@ thin.core.LineShape.prototype.update = function(attrs) {
 
     this.calculateDirection(y1, y2);
 
-    this.setLeft(Math.min(x1, x2));
-    this.setTop(Math.min(y1, y2));
+    this.setLeft(Math.min(x1, x2) + this.getParentTransLateX());
+    this.setTop(Math.min(y1, y2) + this.getParentTransLateY());
     this.setWidth(Math.abs(x1 - x2));
     this.setHeight(Math.abs(y1 - y2));
   }

@@ -57,26 +57,14 @@ thin.core.LayoutStructure.restoreStructure = function(svg) {
  */
 thin.core.LayoutStructure.createScreenShot = function(layout) {
   var svg;
-  
+
   thin.core.LayoutStructure.inRawLayout_(layout, function() {
     svg = layout.getElement().cloneNode(true);
   });
   thin.core.LayoutStructure.finalizeLayoutElement_(svg);
-  
+
   return thin.platform.String.toBase64(
       thin.core.serializeToXML(/** @type {Element} */ (svg)));
-};
-
-
-/**
- * @param {thin.core.Layout} layout
- * @return {string}
- */
-thin.core.LayoutStructure.createBackup = function(layout) {
-  var svg = layout.getElement().cloneNode(true);
-  thin.core.LayoutStructure.finalizeLayoutElement_(svg);
-
-  return thin.core.serializeToXML(/** @type {Element} */(svg));
 };
 
 
@@ -90,7 +78,7 @@ thin.core.LayoutStructure.inRawLayout_ = function(layout, f) {
   var workspace = layout.getWorkspace();
   var zoomRate = workspace.getUiStatusForZoom();
   var listHelper = layout.getHelpers().getListHelper();
-  
+
   // Set zoom-rate to 100%.
   var scrollTarget = workspace.getParent().getParent().getContentElement();
   var scrollLeft = Number(scrollTarget.scrollLeft);
@@ -108,15 +96,15 @@ thin.core.LayoutStructure.inRawLayout_ = function(layout, f) {
       shapes: listHelper.getActiveShape().getClone()
     };
     listHelper.inactive();
-    
+
     f();
-    
+
     // Activate list and restore states.
     listHelper.active(listStates.target);
     listHelper.getActiveShape().set(listStates.shapes);
     listHelper.setActiveSectionName(listStates.activeSection);
   }
-  
+
   // Restore original zoom-rate.
   workspace.getAction().actionSetZoom(zoomRate);
   scrollTarget.scrollLeft = scrollLeft;
@@ -131,7 +119,7 @@ thin.core.LayoutStructure.inRawLayout_ = function(layout, f) {
  */
 thin.core.LayoutStructure.finalizeLayoutElement_ = function(layoutElement) {
   var canvasId = thin.core.Layout.CANVAS_CLASS_ID;
-  
+
   goog.array.forEachRight(layoutElement.childNodes, function(node, i, nodes) {
     if (canvasId != node.getAttribute('class')) {
       layoutElement.removeChild(nodes[i]);
@@ -178,7 +166,7 @@ thin.core.LayoutStructure.applyRefId = function(layout, shapes, opt_shapeIdManag
       if (shape.instanceOfTblockShape()) {
         var refId = layout.getElementAttribute(shape.getElement(), 'x-ref-id');
         if (!thin.isExactlyEqual(refId, thin.core.TblockShape.DEFAULT_REFID)) {
-          shape.setRefId(refId, layout.getShapeForShapeId(refId, opt_shapeIdManager));
+          shape.setRefId(refId);
         }
       }
     }

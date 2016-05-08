@@ -1098,7 +1098,9 @@ thin.core.TextShape.prototype.update = function(attrs) {
   goog.object.forEach(attrs, function(value, attr) {
     switch (attr) {
       case 'texts':
-        this.setTextContent(value.join("\n"));
+        this.createTextContent(value.join("\n"));
+        this.updateDecoration();
+        this.updatePosition();
         break;
       default:
         // Do Nothing

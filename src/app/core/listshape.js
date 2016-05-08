@@ -855,26 +855,21 @@ thin.core.ListShape.prototype.updateProperties = function() {
 
 
 /**
- * @param {thin.core.PageNumberShape} pageNumber
- */
-thin.core.ListShape.prototype.setPageNumberReference = function(pageNumber) {
-  goog.array.insert(this.pageNumberReferences_, pageNumber);
-};
-
-
-/**
  * @return {Array.<thin.core.PageNumberShape>}
  */
 thin.core.ListShape.prototype.getPageNumberReferences = function() {
-  return goog.array.clone(this.pageNumberReferences_);
-};
+  var refereces = [];
+  var shapeId = this.getShapeId();
 
+  var layout = this.getLayout();
+  layout.forPageNumberShapesEach(
+    layout.getManager().getShapesManager().get(), function(shape, i) {
+      if (thin.isExactlyEqual(shapeId, shape.getTargetId())) {
+        goog.array.insert(refereces, shape);
+      }
+    });
 
-/**
- * @param {thin.core.PageNumberShape} pageNumber
- */
-thin.core.ListShape.prototype.removePageNumberReference = function(pageNumber) {
-  goog.array.remove(this.pageNumberReferences_, pageNumber);
+  return goog.array.clone(refereces);
 };
 
 
@@ -921,6 +916,10 @@ thin.core.ListShape.prototype.toHash = function() {
     'content-height': this.getHeight() - header.getHeight(),
     'auto-page-break': this.isChangingPage()
   });
+
+  if (goog.object.isEmpty(hash['style'])) {
+    goog.object.remove(hash, 'style');
+  }
 
   return hash;
 };

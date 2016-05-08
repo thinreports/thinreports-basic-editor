@@ -477,16 +477,27 @@ thin.core.AbstractTextGroup.prototype.setVerticalAlignFromHash = function(vertic
 thin.core.AbstractTextGroup.prototype.toHash = function() {
   var hash = this.toHash_();
 
+  var lineHeight = this.getTextLineHeight();
+  var lineHeightRatio = this.getTextLineHeightRatio();
+  if (!thin.isExactlyEqual(lineHeightRatio, thin.core.TextStyle.DEFAULT_LINEHEIGHT)) {
+    lineHeight = Number(lineHeight);
+    lineHeightRatio = Number(lineHeightRatio);
+  }
+
+  var letterSpecing = this.getKerning();
+  if (!thin.isExactlyEqual(letterSpecing, thin.core.TextStyle.DEFAULT_KERNING)) {
+    letterSpecing = Number(letterSpecing);
+  }
+
   goog.object.extend(hash['style'], {
-    'font-family': this.getFontFamily(),
+    'font-family': [ this.getFontFamily() ],
     'font-size': this.getFontSize(),
     'color': goog.object.get(hash['style'], 'fill-color'),
     'text-align': this.getTextAnchorToHash(),
     'vertical-align': this.getVerticalAlignToHash(),
-    // default is blank
-    'line-height': this.getTextLineHeight(),
-    'line-height-ratio': this.getTextLineHeightRatio(),
-    'letter-spacing': this.getKerning()
+    'line-height': lineHeight,
+    'line-height-ratio': lineHeightRatio,
+    'letter-spacing': letterSpecing
   });
   goog.object.extend(hash['style'], this.fontStyle_.toHash());
 
@@ -505,7 +516,7 @@ thin.core.AbstractTextGroup.prototype.update = function(attrs) {
   goog.object.forEach(attrs, function(value, attr) {
     switch (attr) {
       case 'font-family':
-        this.setFontFamily(value);
+        this.setFontFamily(value[0]);
         break;
       case 'font-size':
         this.setFontSize(value);

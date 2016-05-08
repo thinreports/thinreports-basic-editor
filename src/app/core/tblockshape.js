@@ -53,12 +53,6 @@ thin.core.TblockShape = function(element, layout) {
   this.setCss(thin.core.TblockShape.CLASSID);
 
   //this.setFactors_();
-
-  /**
-   * @type {Array.<thin.core.TblockShape>}
-   * @private
-   */
-  this.referringShapes_ = [];
 };
 goog.inherits(thin.core.TblockShape, thin.core.AbstractTextGroup);
 goog.mixin(thin.core.TblockShape.prototype, thin.core.ModuleShape.prototype);
@@ -184,20 +178,6 @@ thin.core.TblockShape.prototype.refId_;
  * @type {boolean}
  * @private
  */
-thin.core.TblockShape.prototype.isReferring_ = false;
-
-
-/**
- * @type {boolean}
- * @private
- */
-thin.core.TblockShape.prototype.isReferences_ = false;
-
-
-/**
- * @type {boolean}
- * @private
- */
 thin.core.TblockShape.prototype.multiMode_;
 
 
@@ -205,13 +185,6 @@ thin.core.TblockShape.prototype.multiMode_;
  * @type {thin.core.formatstyles.AbstractFormat}
  */
 thin.core.TblockShape.prototype.formatStyle_ = null;
-
-
-/**
- * @type {goog.graphics.Element}
- * @private
- */
-thin.core.TblockShape.prototype.referenceShape_;
 
 
 /**
@@ -529,7 +502,7 @@ thin.core.TblockShape.prototype.setShapeId = function(shapeId, opt_shapeIdManage
  * @return {boolean}
  */
 thin.core.TblockShape.prototype.isReferring = function() {
-  return this.isReferring_;
+  return !!this.getReferenceShape();
 };
 
 
@@ -537,26 +510,12 @@ thin.core.TblockShape.prototype.isReferring = function() {
  * @return {boolean}
  */
 thin.core.TblockShape.prototype.isReferences = function() {
-  return this.isReferences_;
+  return !goog.array.isEmpty(this.getReferringShapes());
 };
 
 
-/**
- * @param {goog.graphics.Element} referenceShape
- */
-thin.core.TblockShape.prototype.setReferenceShape = function(referenceShape) {
-  this.referenceShape_ = referenceShape;
-  this.isReferring_ = true;
-};
-
-
-thin.core.TblockShape.prototype.removeReferenceShape = function() {
-  if (this.isReferring()) {
-    this.referenceShape_.removeReferringShape(this);
-  }
-  delete this.referenceShape_;
-  this.isReferring_ = false;
-  this.setInternalRefId(thin.core.TblockShape.DEFAULT_REFID);
+thin.core.TblockShape.prototype.removeReferenceShapeId = function() {
+  this.setRefId(thin.core.TblockShape.DEFAULT_REFID);
 };
 
 
@@ -564,33 +523,43 @@ thin.core.TblockShape.prototype.removeReferenceShape = function() {
  * @return {goog.graphics.Element}
  */
 thin.core.TblockShape.prototype.getReferenceShape = function() {
-  return this.referenceShape_;
+  var manager;
+  if (this.isAffiliationListShape()) {
+    manager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
+  }
+
+  return this.getLayout().getShapeForShapeId(this.getRefId(), manager);
+};
+
+
+/**
+ * @return {Array.<thin.core.TblockShape>}
+ */
+thin.core.TblockShape.prototype.getReferringShapes = function() {
+  var manager;
+  var layout = this.getLayout();
+  if (this.isAffiliationListShape()) {
+    manager = this.getAffiliationSectionShape().getManager().getShapesManager();
+  } else {
+    manager = layout.getManager().getShapesManager();
+  }
+
+  var shapeId = this.getShapeId();
+  var refereces = [];
+  layout.forTblockShapesEach(manager.get(), function(shape, i) {
+    if (thin.isExactlyEqual(shapeId, shape.getRefId())) {
+      goog.array.insert(refereces, shape);
+    }
+  });
+
+  return goog.array.clone(refereces);
 };
 
 
 /**
  * @param {string} refId
- * @param {goog.graphics.Element} referenceShape
  */
-thin.core.TblockShape.prototype.setRefId = function(refId, referenceShape) {
-  if (this.refId_ == refId) {
-    // Skip setRefId;
-    return;
-  }
-
-  this.setInternalRefId(refId);
-  if (this.isReferring()) {
-    this.referenceShape_.removeReferringShape(this);
-  }
-  this.setReferenceShape(referenceShape);
-  referenceShape.setReferringShape(this);
-};
-
-
-/**
- * @param {string} refId
- */
-thin.core.TblockShape.prototype.setInternalRefId = function(refId) {
+thin.core.TblockShape.prototype.setRefId = function(refId) {
   this.refId_ = refId;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-ref-id': refId
@@ -604,34 +573,6 @@ thin.core.TblockShape.prototype.setInternalRefId = function(refId) {
 thin.core.TblockShape.prototype.getRefId = function() {
   return /** @type {string} */ (thin.getValIfNotDef(this.refId_,
              thin.core.TblockShape.DEFAULT_REFID));
-};
-
-
-/**
- * @param {goog.graphics.Element} referringShape
- */
-thin.core.TblockShape.prototype.setReferringShape = function(referringShape) {
-  goog.array.insert(this.referringShapes_, referringShape);
-  this.isReferences_ = true;
-};
-
-
-/**
- * @return {Array.<thin.core.TblockShape>}
- */
-thin.core.TblockShape.prototype.getReferringShapes = function() {
-  return goog.array.clone(this.referringShapes_);
-};
-
-
-/**
- * @param {goog.graphics.Element} referringShape
- */
-thin.core.TblockShape.prototype.removeReferringShape = function(referringShape) {
-  goog.array.remove(this.referringShapes_, referringShape);
-  if (goog.array.isEmpty(this.referringShapes_)) {
-    this.isReferences_ = false;
-  }
 };
 
 
@@ -1493,7 +1434,7 @@ thin.core.TblockShape.prototype.createPropertyComponent_ = function() {
             this.setShapeId(shapeId);
             if (isReferences) {
               goog.array.forEach(referringShapes, function(shape) {
-                shape.setRefId(shapeId, scope);
+                shape.setRefId(shapeId);
               });
             }
             proppane.getPropertyControl('shape-id').setValue(shapeId);
@@ -1503,7 +1444,7 @@ thin.core.TblockShape.prototype.createPropertyComponent_ = function() {
             this.setShapeId(captureShapeId);
             if (isReferences) {
               goog.array.forEach(referringShapes, function(shape) {
-                shape.setRefId(captureShapeId, scope);
+                shape.setRefId(captureShapeId);
               });
             }
             proppane.getPropertyControl('shape-id').setValue(captureShapeId);
@@ -1571,17 +1512,17 @@ thin.core.TblockShape.prototype.createPropertyComponent_ = function() {
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             if (isDefaultValue) {
-              this.removeReferenceShape();
+              this.removeReferenceShapeId();
             } else {
-              this.setRefId(refId, referenceShape);
+              this.setRefId(refId);
             }
             proppane.getPropertyControl('ref-id').setValue(refId);
           }, scope);
 
           version.downHandler(function() {
-            this.removeReferenceShape();
+            this.removeReferenceShapeId();
             if (captureIsReferring) {
-              this.setRefId(captureRefId, captureReferenceShape);
+              this.setRefId(captureRefId);
             }
             proppane.getPropertyControl('ref-id').setValue(captureRefId);
           }, scope);
@@ -1827,8 +1768,6 @@ thin.core.TblockShape.prototype.disposeInternal = function() {
   }
 
   delete this.id_;
-  delete this.referenceShape_;
-  delete this.referringShapes_;
   delete this.formatStyle_;
 };
 
@@ -1905,8 +1844,7 @@ thin.core.TblockShape.prototype.update = function(attrs) {
         }
         break;
       case 'reference-id':
-        // FIXME setShapeId
-        // this.setRefId(value);
+        this.setRefId(value);
         break;
       case 'value':
         this.setDefaultValueOfLink(value);

@@ -45,7 +45,7 @@ thin.layout.Format = function(opt_format) {
     this.isOverWritableVersion_ = thin.Compatibility.check(currentVersion, '>', formatVersion);
     this.version_ = formatVersion;
 
-    if (state && (guides = state['layout-guide'])) {
+    if (state && (guides = state['layout-guides'])) {
       this.setLayoutGuides(guides);
     }
   } else {
@@ -97,28 +97,38 @@ thin.layout.Format.parse = function(content) {
   var hash = JSON.parse(content);
   var version = hash['version'];
 
-  thin.Compatibility.applyIf(version, '<', '1.0.0', function() {
+  thin.Compatibility.applyIf(version, '<', '0.9.0', function() {
+    var state = goog.object.clone(hash['state']);
     var config = goog.object.clone(hash['config']);
-
-    goog.object.set(hash, 'title', config['title']);
+    var page = goog.object.clone(config['page']);
 
     var margin = [];
-    goog.array.insert(margin, config['margin-top']);
-    goog.array.insert(margin, config['margin-right']);
-    goog.array.insert(margin, config['margin-bottom']);
-    goog.array.insert(margin, config['margin-left']);
+    goog.array.insertAt(margin, page['margin-top'], 0);
+    goog.array.insertAt(margin, page['margin-right'], 1);
+    goog.array.insertAt(margin, page['margin-bottom'], 2);
+    goog.array.insertAt(margin, page['margin-left'], 3);
+
+    var report = {
+      'paper-type': page['paper-type'],
+      'orientation': page['orientation'],
+      'margin': margin
+    };
+
+    if (thin.layout.FormatPage.isUserType(report['paper-type'])) {
+      goog.object.extend(report, {
+        'width': page['width'],
+        'height': page['height']
+      });
+    }
+
+    goog.object.set(hash, 'title', config['title']);
+    goog.object.set(hash, 'report', report);
+    goog.object.set(hash, 'items', hash['svg']);
+    goog.object.set(hash, 'state', {
+      'layout-guides': state['layout-guide']
+    });
 
     goog.object.remove(hash, 'config');
-    goog.object.remove(config, 'title');
-    goog.object.remove(config, 'margin-top');
-    goog.object.remove(config, 'margin-right');
-    goog.object.remove(config, 'margin-bottom');
-    goog.object.remove(config, 'margin-left');
-
-    goog.object.set(config, 'margin', margin);
-    goog.object.set(hash, 'report', config);
-    goog.object.set(hash, 'items', hash['svg']);
-
     goog.object.remove(hash, 'svg');
   });
 
@@ -159,7 +169,7 @@ thin.layout.Format.prototype.getSvg = function() {
  * @return {Array}
  */
 thin.layout.Format.prototype.getLayoutGuides = function() {
-  return this.state_['layout-guide'] || [];
+  return this.state_['layout-guides'] || [];
 };
 
 
@@ -183,7 +193,7 @@ thin.layout.Format.prototype.getVersion = function() {
  * @param {Array} guides
  */
 thin.layout.Format.prototype.setLayoutGuides = function(guides) {
-  this.state_['layout-guide'] = guides;
+  this.state_['layout-guides'] = guides;
 };
 
 

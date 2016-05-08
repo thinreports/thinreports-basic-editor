@@ -470,6 +470,10 @@ thin.core.ImageShape.prototype.toHash = function() {
     });
   }
 
+  if (goog.object.isEmpty(hash['style'])) {
+    goog.object.remove(hash, 'style');
+  }
+
   return hash;
 };
 

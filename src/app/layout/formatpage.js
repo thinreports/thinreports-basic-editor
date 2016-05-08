@@ -34,8 +34,7 @@ thin.layout.FormatPage = function(config) {
   goog.base(this);
 
   var page = goog.object.clone(thin.layout.FormatPage.DEFAULT_SETTINGS);
-  goog.object.extend(page, Object(goog.object.get(config, 'page')));
-  
+  goog.object.extend(page, config);
   this.setPaper(page['paper-type'],
                 page['orientation'],
                 page['width'],
@@ -237,16 +236,16 @@ thin.layout.FormatPage.prototype.getMarginRight = function() {
 
 
 /**
- * @param {number} top
- * @param {number} right
- * @param {number} bottom
- * @param {number} left
+ * @param {number|string} top
+ * @param {number|string} right
+ * @param {number|string} bottom
+ * @param {number|string} left
  */
 thin.layout.FormatPage.prototype.setMargin = function(top, right, bottom, left) {
-  this.marginTop_ = top;
-  this.marginRight_ = right;
-  this.marginBottom_ = bottom;
-  this.marginLeft_ = left;
+  this.marginTop_ = Number(top);
+  this.marginRight_ = Number(right);
+  this.marginBottom_ = Number(bottom);
+  this.marginLeft_ = Number(left);
 };
 
 
@@ -337,18 +336,18 @@ thin.layout.FormatPage.prototype.setOrientation = function(orientation) {
 
 
 /**
- * @param {number} width
+ * @param {number|string} width
  */
 thin.layout.FormatPage.prototype.setWidth = function(width) {
-  this.width_ = width;
+  this.width_ = Number(width);
 };
 
 
 /**
- * @param {number} height
+ * @param {number|string} height
  */
 thin.layout.FormatPage.prototype.setHeight = function(height) {
-  this.height_ = height;
+  this.height_ = Number(height);
 };
 
 
@@ -399,7 +398,7 @@ thin.layout.FormatPage.prototype.isUserType = function() {
 /** @inheritDoc */
 thin.layout.FormatPage.prototype.disposeInternal = function() {
   thin.layout.FormatPage.superClass_.disposeInternal.call(this);
-  
+
   delete this.paperType_;
   delete this.orientation_;
 };

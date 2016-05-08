@@ -356,7 +356,7 @@ thin.core.Workspace.prototype.draw = function() {
     var layout = this.getLayout();
     var format = layout.getFormat();
 
-    thin.Compatibility.applyIf(format.getVersion(), '<', '1.0.0', function() {
+    thin.Compatibility.applyIf(format.getVersion(), '<', '0.9.0', function() {
       thin.core.LayoutStructure.convertToNewLayoutSchema(layout);
     });
 

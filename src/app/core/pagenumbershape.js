@@ -113,13 +113,6 @@ thin.core.PageNumberShape.prototype.base_;
 
 
 /**
- * @type {goog.graphics.Element}
- * @private
- */
-thin.core.PageNumberShape.prototype.targetShape_;
-
-
-/**
  * @return {string}
  */
 thin.core.PageNumberShape.prototype.getClassId = function() {
@@ -293,9 +286,6 @@ thin.core.PageNumberShape.prototype.setTargetId = function(targetId) {
   layout.setElementAttributes(this.getElement(), {
     'x-target': targetId
   });
-  if (!goog.string.isEmpty(targetId)) {
-    this.setTargetShape_(layout.getShapeForShapeId(targetId));
-  }
 };
 
 
@@ -308,30 +298,10 @@ thin.core.PageNumberShape.prototype.getTargetId = function() {
 };
 
 
-/**
- * @param {goog.graphics.Element} targetShape
- * @private
- */
-thin.core.PageNumberShape.prototype.setTargetShape_ = function(targetShape) {
-  this.targetShape_ = targetShape;
-  this.targetShape_.setPageNumberReference(this);
-};
-
-
-/**
- * @return {goog.graphics.Element}
- */
-thin.core.PageNumberShape.prototype.getTargetShape = function() {
-  return this.targetShape_;
-};
-
-
-thin.core.PageNumberShape.prototype.removeTargetShape = function() {
-  if (this.targetShape_) {
-    this.targetShape_.removePageNumberReference(this);
+thin.core.PageNumberShape.prototype.removeTargetShapeId = function() {
+  if (!goog.string.isEmpty(this.getTargetId())) {
     this.setTargetId('');
   }
-  delete this.targetShape_;
 };
 
 
@@ -880,7 +850,15 @@ thin.core.PageNumberShape.prototype.toHash = function() {
     'format': this.getFormat(),
     'target': this.getTargetId() || 'report'
   });
-  goog.object.set(hash['style'], 'overflow', this.getOverflowType());
+
+  var style = goog.object.clone(hash['style']);
+  goog.object.remove(style, 'word-wrap');
+  goog.object.remove(style, 'line-height');
+  goog.object.remove(style, 'line-height-ratio');
+  goog.object.remove(style, 'vertical-align');
+  goog.object.set(style, 'overflow', this.getOverflowType());
+
+  goog.object.set(hash, 'style', style);
 
   return hash;
 };
@@ -892,14 +870,18 @@ thin.core.PageNumberShape.prototype.toHash = function() {
 thin.core.PageNumberShape.prototype.update = function(attrs) {
   goog.base(this, 'update', attrs);
 
+  this.label_.repositionX();
+  this.label_.repositionY();
+
   goog.object.forEach(attrs, function(value, attr) {
     switch (attr) {
       case 'format':
         this.setFormat(value);
         break;
       case 'target':
-        // FIXME setShapeId
-        // this.setTargetId(value);
+        if (!thin.isExactlyEqual('report', value)){
+          this.setTargetId(value);
+        }
         break;
       case 'overflow':
         this.setOverflowType(value);
