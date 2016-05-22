@@ -848,7 +848,7 @@ thin.core.PageNumberShape.prototype.toHash = function() {
 
   goog.object.extend(hash, {
     'format': this.getFormat(),
-    'target': this.getTargetId() || 'report'
+    'target': this.getTargetId()
   });
 
   var style = goog.object.clone(hash['style']);
@@ -879,9 +879,7 @@ thin.core.PageNumberShape.prototype.update = function(attrs) {
         this.setFormat(value);
         break;
       case 'target':
-        if (!thin.isExactlyEqual('report', value)){
-          this.setTargetId(value);
-        }
+        this.setTargetId(value);
         break;
       case 'overflow':
         this.setOverflowType(value);

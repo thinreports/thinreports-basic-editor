@@ -1797,7 +1797,7 @@ thin.core.TblockShape.prototype.toHash = function() {
   goog.object.extend(hash, {
     'reference-id': this.getRefId(),
     'value': this.getDefaultValueOfLink(),
-    'mulitple-line': this.isMultiMode(),
+    'multiple-line': this.isMultiMode(),
     'format': format
   });
 
@@ -1814,6 +1814,12 @@ thin.core.TblockShape.prototype.toHash = function() {
  * @param {Object} attrs
  */
 thin.core.TblockShape.prototype.update = function(attrs) {
+  if (goog.object.containsKey(attrs, 'style')) {
+    var isMultiple = goog.object.get(attrs,
+      'multiple-line', thin.core.TblockShape.DEFAULT_MULTIPLE);
+    this.setMultiMode(isMultiple);
+  }
+
   goog.base(this, 'update', attrs);
 
   goog.object.forEach(attrs, function(value, attr) {
@@ -1848,9 +1854,6 @@ thin.core.TblockShape.prototype.update = function(attrs) {
         break;
       case 'value':
         this.setDefaultValueOfLink(value);
-        break;
-      case 'mulitple-line':
-        this.setMultiMode(value);
         break;
       case 'overflow':
         this.setOverflowType(value);

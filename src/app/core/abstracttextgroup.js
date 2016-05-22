@@ -148,6 +148,11 @@ thin.core.AbstractTextGroup.prototype.setTextLineHeightRatio = function(ratio) {
 thin.core.AbstractTextGroup.prototype.setKerning = function(spacing) {
   var layout = this.getLayout();
   var element = this.getElement();
+
+  if (isNaN(Number(spacing))) {
+    spacing = thin.core.TextStyle.DEFAULT_KERNING;
+  }
+
   if (thin.isExactlyEqual(spacing, thin.core.TextStyle.DEFAULT_KERNING)) {
     layout.setElementAttributes(element, {
       'kerning': thin.core.TextStyle.DEFAULT_ELEMENT_KERNING,
