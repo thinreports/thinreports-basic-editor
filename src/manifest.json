@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Thinreports Editor",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "The Official Report Designer for Thinreports, an open source report generation tool for Ruby.",
   "author": "Thinreports.org",
   "icons": {
