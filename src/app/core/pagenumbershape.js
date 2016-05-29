@@ -843,24 +843,24 @@ thin.core.PageNumberShape.prototype.getType = function() {
 /**
  * @return {Object}
  */
-thin.core.PageNumberShape.prototype.toHash = function() {
-  var hash = goog.base(this, 'toHash');
+thin.core.PageNumberShape.prototype.asJSON = function() {
+  var object = goog.base(this, 'asJSON');
 
-  goog.object.extend(hash, {
+  goog.object.extend(object, {
     'format': this.getFormat(),
     'target': this.getTargetId()
   });
 
-  var style = goog.object.clone(hash['style']);
+  var style = goog.object.clone(object['style']);
   goog.object.remove(style, 'word-wrap');
   goog.object.remove(style, 'line-height');
   goog.object.remove(style, 'line-height-ratio');
   goog.object.remove(style, 'vertical-align');
   goog.object.set(style, 'overflow', this.getOverflowType());
 
-  goog.object.set(hash, 'style', style);
+  goog.object.set(object, 'style', style);
 
-  return hash;
+  return object;
 };
 
 

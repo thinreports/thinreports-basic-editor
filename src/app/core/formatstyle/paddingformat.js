@@ -146,7 +146,7 @@ thin.core.formatstyles.PaddingFormat.prototype.disposeInternal = function() {
 /**
  * @return {Object}
  */
-thin.core.formatstyles.PaddingFormat.prototype.toHash = function() {
+thin.core.formatstyles.PaddingFormat.prototype.asJSON = function() {
   return {
     'padding': {
       'length': this.getLength(),

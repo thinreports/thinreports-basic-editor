@@ -368,14 +368,14 @@ thin.core.RectShape.prototype.disposeInternal = function() {
 /**
  * @return {Object}
  */
-thin.core.RectShape.prototype.toHash = function() {
-  var hash = this.toHash_();
+thin.core.RectShape.prototype.asJSON = function() {
+  var object = this.asJSON_();
 
-  goog.object.extend(hash, {
+  goog.object.extend(object, {
     'border-radius': this.getRounded()
   });
 
-  return hash;
+  return object;
 };
 
 
@@ -385,13 +385,7 @@ thin.core.RectShape.prototype.toHash = function() {
 thin.core.RectShape.prototype.update = function(attrs) {
   this.update_(attrs);
 
-  goog.object.forEach(attrs, function(value, attr) {
-    switch (attr) {
-      case 'border-radius':
-        this.setRounded(value);
-        break;
-      default:
-        break;
-      }
-  }, this);
+  if (goog.object.containsKey(attrs, 'border-radius')) {
+    this.setRounded(attrs['border-radius']);
+  }
 };

@@ -903,25 +903,25 @@ thin.core.ListShape.prototype.getType = function() {
 /**
  * @return {Object}
  */
-thin.core.ListShape.prototype.toHash = function() {
-  var hash = this.toHash_();
+thin.core.ListShape.prototype.asJSON = function() {
+  var object = this.asJSON_();
   var header = this.getSectionShape(
     thin.core.ListHelper.SectionName.HEADER);
 
   this.forEachSectionShape(function(section, name) {
-    goog.object.set(hash, section.getType(), section.toHash());
+    goog.object.set(object, section.getType(), section.asJSON());
   });
 
-  goog.object.extend(hash, {
+  goog.object.extend(object, {
     'content-height': this.getHeight() - header.getHeight(),
     'auto-page-break': this.isChangingPage()
   });
 
-  if (goog.object.isEmpty(hash['style'])) {
-    goog.object.remove(hash, 'style');
+  if (goog.object.isEmpty(object['style'])) {
+    goog.object.remove(object, 'style');
   }
 
-  return hash;
+  return object;
 };
 
 

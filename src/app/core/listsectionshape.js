@@ -334,8 +334,8 @@ thin.core.ListSectionShape.prototype.getType = function() {
 /**
  * @return {Object}
  */
-thin.core.ListSectionShape.prototype.toHash = function() {
-  var hash = {
+thin.core.ListSectionShape.prototype.asJSON = function() {
+  var object = {
     'enabled': this.isEnabled(),
     'height': this.height_
   };
@@ -350,13 +350,13 @@ thin.core.ListSectionShape.prototype.toHash = function() {
 
     var manager = this.getManager().getShapesManager();
     var items = goog.array.map(identifiers, function(identifier, i) {
-      return manager.getShapeByIdentifier(identifier).toHash();
+      return manager.getShapeByIdentifier(identifier).asJSON();
     });
   } else {
     var items = [];
   }
 
-  goog.object.extend(hash, {
+  goog.object.extend(object, {
     'translate': {
       'x': transform.getTranslateX(),
       'y': transform.getTranslateY()
@@ -364,7 +364,7 @@ thin.core.ListSectionShape.prototype.toHash = function() {
     'items': items
   });
 
-  return hash;
+  return object;
 };
 
 
@@ -555,12 +555,12 @@ thin.core.DetailSectionShape.prototype.updateProperties = function() {
 /**
  * @return {Object}
  */
-thin.core.DetailSectionShape.prototype.toHash = function() {
-  var hash = goog.base(this, 'toHash');
+thin.core.DetailSectionShape.prototype.asJSON = function() {
+  var object = goog.base(this, 'asJSON');
 
-  goog.object.remove(hash, 'enabled');
+  goog.object.remove(object, 'enabled');
 
-  return hash;
+  return object;
 };
 
 

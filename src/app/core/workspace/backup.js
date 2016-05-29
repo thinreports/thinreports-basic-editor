@@ -29,7 +29,7 @@ goog.require('thin.core.LayoutStructure');
  */
 thin.core.Workspace.Backup = function(workspace) {
   var format = thin.layout.Format.parse(workspace.format.toJSON());
-  format.setSvg(workspace.getLayout().toHash());
+  format.setItems(workspace.getLayout().asJSON());
 
   /**
    * @type {thin.layout.Format}

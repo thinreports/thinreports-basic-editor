@@ -475,7 +475,7 @@ thin.core.Layout.prototype.createHelpersElement = function(tagName, attrs) {
 /**
  * @return {Object}
  */
-thin.core.Layout.prototype.toHash = function() {
+thin.core.Layout.prototype.asJSON = function() {
   var childNodes = this.getCanvasElement().getElement().childNodes;
   var identifiers = goog.array.map(childNodes, function(element, i) {
     return element.getAttribute('id');
@@ -483,7 +483,7 @@ thin.core.Layout.prototype.toHash = function() {
 
   var manager = this.getManager().getShapesManager();
   return goog.array.map(identifiers, function(identifier, i) {
-    return manager.getShapeByIdentifier(identifier).toHash();
+    return manager.getShapeByIdentifier(identifier).asJSON();
   });
 };
 

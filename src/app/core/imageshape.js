@@ -458,23 +458,23 @@ thin.core.ImageShape.prototype.getFill = function() {
 /**
  * @return {Object}
  */
-thin.core.ImageShape.prototype.toHash = function() {
-  var hash = this.toHash_();
+thin.core.ImageShape.prototype.asJSON = function() {
+  var object = this.asJSON_();
 
   // data:image/png;base64,xxxxxxxx
   var content = this.getFile().getContent();
   if (/^data:(.+?);base64,(.+)/.test(content)) {
-    goog.object.set(hash, 'data', {
+    goog.object.set(object, 'data', {
       'mime-type': RegExp.$1,
       'base64': RegExp.$2
     });
   }
 
-  if (goog.object.isEmpty(hash['style'])) {
-    goog.object.remove(hash, 'style');
+  if (goog.object.isEmpty(object['style'])) {
+    goog.object.remove(object, 'style');
   }
 
-  return hash;
+  return object;
 };
 
 
@@ -484,16 +484,9 @@ thin.core.ImageShape.prototype.toHash = function() {
 thin.core.ImageShape.prototype.update = function(attrs) {
   this.update_(attrs);
 
-  goog.object.forEach(attrs, function(value, attr) {
-    switch (attr) {
-      case 'data':
-        this.setFile(thin.core.ImageShape.createImageFileFromDataURISchema(value));
-
-        break;
-      default:
-        break;
-      }
-  }, this);
+  if (goog.object.containsKey(attrs, 'data')) {
+    this.setFile(thin.core.ImageShape.createImageFileFromDataURISchema(attrs['data']));
+  }
 };
 
 

@@ -673,7 +673,7 @@ thin.core.ImageblockShape.prototype.disposeInternal = function() {
 /**
  * @return {string}
  */
-thin.core.ImageblockShape.prototype.getPositionXToHash = function() {
+thin.core.ImageblockShape.prototype.getPositionXAsJSON = function() {
   return this.getPositionX();
 };
 
@@ -681,51 +681,51 @@ thin.core.ImageblockShape.prototype.getPositionXToHash = function() {
 /**
  * @return {string}
  */
-thin.core.ImageblockShape.prototype.getPositionYToHash = function() {
-  var postionYToHash = '';
+thin.core.ImageblockShape.prototype.getPositionYAsJSON = function() {
+  var postionYAsJSON = '';
   var postionYType = thin.core.ImageblockShape.PositionY;
 
   // SVG: top, center, bottom
   // TLF: top, middle, bottom
   switch(this.getPositionY()) {
     case postionYType.CENTER:
-      postionYToHash = 'middle';
+      postionYAsJSON = 'middle';
       break;
     case postionYType.BOTTOM:
-      postionYToHash = postionYType.BOTTOM;
+      postionYAsJSON = postionYType.BOTTOM;
       break;
     default:
-      postionYToHash = postionYType.TOP;
+      postionYAsJSON = postionYType.TOP;
       break;
   }
 
-  return postionYToHash;
+  return postionYAsJSON;
 };
 
 
 /**
- * @param {string|thin.core.ImageblockShape.PositionX} position
+ * @param {string|thin.core.ImageblockShape.PositionX} positionXFromJSON
  */
-thin.core.ImageblockShape.prototype.setPositionXFromHash = function(position) {
-  this.setPositionX(position);
+thin.core.ImageblockShape.prototype.setPositionXFromJSON = function(positionXFromJSON) {
+  this.setPositionX(positionXFromJSON);
 };
 
 
 /**
- * @param {string|thin.core.ImageblockShape.PositionY} postionYToHash
+ * @param {string|thin.core.ImageblockShape.PositionY} postionYFromJSON
  */
-thin.core.ImageblockShape.prototype.setPositionYFromHash = function(postionYToHash) {
+thin.core.ImageblockShape.prototype.setPositionYFromJSON = function(postionYFromJSON) {
   var position = '';
   var postionYType = thin.core.ImageblockShape.PositionY;
 
   // SVG: top, center, bottom
   // TLF: top, middle, bottom
-  switch(postionYToHash) {
+  switch(postionYFromJSON) {
     case 'middle':
       position = postionYType.CENTER;
       break;
     default:
-      position = postionYToHash;
+      position = postionYFromJSON;
       break;
   }
 
@@ -744,15 +744,15 @@ thin.core.ImageblockShape.prototype.getType = function() {
 /**
  * @return {Object}
  */
-thin.core.ImageblockShape.prototype.toHash = function() {
-  var hash = this.toHash_();
+thin.core.ImageblockShape.prototype.asJSON = function() {
+  var object = this.asJSON_();
 
-  goog.object.extend(hash['style'], {
-    'position-x': this.getPositionXToHash(),
-    'position-y': this.getPositionYToHash()
+  goog.object.extend(object['style'], {
+    'position-x': this.getPositionXAsJSON(),
+    'position-y': this.getPositionYAsJSON()
   });
 
-  return hash;
+  return object;
 };
 
 
@@ -765,10 +765,10 @@ thin.core.ImageblockShape.prototype.update = function(attrs) {
   goog.object.forEach(attrs, function(value, attr) {
     switch (attr) {
       case 'position-x':
-        this.setPositionXFromHash(value);
+        this.setPositionXFromJSON(value);
         break;
       case 'position-y':
-        this.setPositionYFromHash(value);
+        this.setPositionYFromJSON(value);
         break;
       default:
         break;

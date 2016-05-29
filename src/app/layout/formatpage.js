@@ -104,6 +104,7 @@ thin.layout.FormatPage.DirectionType = {
 thin.layout.FormatPage.DEFAULT_SETTINGS = {
   'paper-type': thin.layout.FormatPage.PaperType['A4'],
   'orientation': thin.layout.FormatPage.DirectionType.PR,
+  // [top, right, bottom, left]
   'margin': [20, 20, 20, 20]
 };
 
@@ -252,7 +253,7 @@ thin.layout.FormatPage.prototype.setMargin = function(top, right, bottom, left) 
 /**
  * @return {Object}
  */
-thin.layout.FormatPage.prototype.toHash = function() {
+thin.layout.FormatPage.prototype.asJSON = function() {
   var report = {
     "paper-type": this.getPaperType(),
     "orientation": this.getOrientation(),

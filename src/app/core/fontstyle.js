@@ -76,7 +76,7 @@ thin.core.FontStyle.prototype.decoration;
 /**
  * @return {Object}
  */
-thin.core.FontStyle.prototype.toHash = function() {
+thin.core.FontStyle.prototype.asJSON = function() {
   var array = [];
 
   if (this.bold) {

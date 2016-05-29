@@ -442,15 +442,19 @@ thin.init_ = function() {
 
       dialog.addEventListener(goog.ui.Dialog.EventType.SELECT, function(e) {
         if (e.isOk()) {
+          var margin = [];
+          goog.array.insertAt(margin, pageMarginTop.getValue() || 0, 0);
+          goog.array.insertAt(margin, pageMarginRight.getValue() || 0, 1);
+          goog.array.insertAt(margin, pageMarginBottom.getValue() || 0, 2);
+          goog.array.insertAt(margin, pageMarginLeft.getValue() || 0, 3);
+
           var paperTypeValue = paperTypeSelectbox.getValue();
-          var formatConfig = {
+          var report = {
             'paper-type': paperTypeValue,
             'orientation': pageDirectionSelectbox.getValue(),
-            'margin-top': pageMarginTop.getValue() || 0,
-            'margin-bottom': pageMarginBottom.getValue() || 0,
-            'margin-left': pageMarginLeft.getValue() || 0,
-            'margin-right': pageMarginRight.getValue() || 0
+            'margin': margin
           };
+
           if (thin.layout.FormatPage.isUserType(paperTypeValue)) {
             var userWidth = pageWidthInput.getValue();
             var userHeight = pageHeightInput.getValue();
@@ -462,14 +466,13 @@ thin.init_ = function() {
               });
               return false;
             }
-            formatConfig['width'] = Number(userWidth);
-            formatConfig['height'] = Number(userHeight);
+            report['width'] = Number(userWidth);
+            report['height'] = Number(userHeight);
           }
           var format = new thin.layout.Format();
-          format.page = format.setPage({
-            'title': pageTitleInput.getValue(),
-            'page': formatConfig
-          });
+          format.page = format.setPage(report);
+          format.page.setTitle(pageTitleInput.getValue());
+
           var workspace = new thin.core.Workspace(format);
           tabpane.addPage(new thin.ui.TabPane.TabPage(workspace.getTabName(), workspace));
           workspace.setup();
@@ -492,9 +495,9 @@ thin.init_ = function() {
 
       var defaultMargin = thin.layout.FormatPage.DEFAULT_SETTINGS['margin'];
       pageMarginTop.setValue(defaultMargin[0]);
-      pageMarginBottom.setValue(defaultMargin[1]);
-      pageMarginLeft.setValue(defaultMargin[2]);
-      pageMarginRight.setValue(defaultMargin[3]);
+      pageMarginRight.setValue(defaultMargin[1]);
+      pageMarginBottom.setValue(defaultMargin[2]);
+      pageMarginLeft.setValue(defaultMargin[3]);
 
       dialog.setVisible(true);
     });

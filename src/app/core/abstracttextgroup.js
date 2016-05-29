@@ -143,15 +143,27 @@ thin.core.AbstractTextGroup.prototype.setTextLineHeightRatio = function(ratio) {
 
 
 /**
+ * @deprecated See: https://github.com/thinreports/thinreports-editor/issues/38
+ * @param {string|number} spacing
+ * @return {string}
+ */
+thin.core.AbstractTextGroup.prototype.convertKerningToDefaultInSince06 = function(spacing) {
+  if (isNaN(Number(spacing))) {
+    spacing = thin.core.TextStyle.DEFAULT_KERNING;
+  }
+
+  return spacing;
+};
+
+
+/**
  * @param {string} spacing
  */
 thin.core.AbstractTextGroup.prototype.setKerning = function(spacing) {
   var layout = this.getLayout();
   var element = this.getElement();
 
-  if (isNaN(Number(spacing))) {
-    spacing = thin.core.TextStyle.DEFAULT_KERNING;
-  }
+  spacing = this.convertKerningToDefaultInSince06(spacing);
 
   if (thin.isExactlyEqual(spacing, thin.core.TextStyle.DEFAULT_KERNING)) {
     layout.setElementAttributes(element, {
@@ -382,38 +394,38 @@ thin.core.AbstractTextGroup.prototype.disposeInternal = function() {
 /**
  * @return {string}
  */
-thin.core.AbstractTextGroup.prototype.getTextAnchorToHash = function() {
-  var textAlignToHash = '';
+thin.core.AbstractTextGroup.prototype.getTextAnchorAsJSON = function() {
+  var textAlignAsJSON = '';
   var horizonAlignType = thin.core.TextStyle.HorizonAlignType;
 
   // SVG: start, middle, end
   // TLF: left, center, right
   switch(this.getTextAnchor()) {
     case horizonAlignType.MIDDLE:
-      textAlignToHash = 'center';
+      textAlignAsJSON = 'center';
       break;
     case horizonAlignType.END:
-      textAlignToHash = 'right';
+      textAlignAsJSON = 'right';
       break;
     default:
-      textAlignToHash = 'left';
+      textAlignAsJSON = 'left';
       break;
   }
 
-  return textAlignToHash;
+  return textAlignAsJSON;
 };
 
 
 /**
- * @param {string} textAlignToHash
+ * @param {string} textAlignFromJSON
  */
-thin.core.AbstractTextGroup.prototype.setTextAnchorFromHash = function(textAlignToHash) {
+thin.core.AbstractTextGroup.prototype.setTextAnchorFromJSON = function(textAlignFromJSON) {
   var anchor = '';
   var horizonAlignType = thin.core.TextStyle.HorizonAlignType;
 
   // SVG: start, middle, end
   // TLF: left, center, right
-  switch(textAlignToHash) {
+  switch(textAlignFromJSON) {
     case 'center':
       anchor = horizonAlignType.MIDDLE;
       break;
@@ -432,43 +444,43 @@ thin.core.AbstractTextGroup.prototype.setTextAnchorFromHash = function(textAlign
 /**
  * @return {string}
  */
-thin.core.AbstractTextGroup.prototype.getVerticalAlignToHash = function() {
-  var verticalAlignToHash = '';
+thin.core.AbstractTextGroup.prototype.getVerticalAlignAsJSON = function() {
+  var verticalAlignAsJSON = '';
   var verticalAlignType = thin.core.TextStyle.VerticalAlignType;
 
   // SVG: top, center, bottom
   // TLF: top, middle, bottom
   switch(this.getVerticalAlign()) {
     case verticalAlignType.CENTER:
-      verticalAlignToHash = 'middle';
+      verticalAlignAsJSON = 'middle';
       break;
     case verticalAlignType.BOTTOM:
-      verticalAlignToHash = verticalAlignType.BOTTOM;
+      verticalAlignAsJSON = verticalAlignType.BOTTOM;
       break;
     default:
-      verticalAlignToHash = verticalAlignType.TOP;
+      verticalAlignAsJSON = verticalAlignType.TOP;
       break;
   }
 
-  return verticalAlignToHash;
+  return verticalAlignAsJSON;
 };
 
 
 /**
- * @param {string} verticalAlignToHash
+ * @param {string} verticalAlignFromJSON
  */
-thin.core.AbstractTextGroup.prototype.setVerticalAlignFromHash = function(verticalAlignToHash) {
+thin.core.AbstractTextGroup.prototype.setVerticalAlignFromJSON = function(verticalAlignFromJSON) {
   var valign = '';
   var verticalAlignType = thin.core.TextStyle.VerticalAlignType;
 
   // SVG: top, center, bottom
   // TLF: top, middle, bottom
-  switch(verticalAlignToHash) {
+  switch(verticalAlignFromJSON) {
     case 'middle':
       valign = verticalAlignType.CENTER;
       break;
     default:
-      valign = verticalAlignToHash;
+      valign = verticalAlignFromJSON;
       break;
   }
 
@@ -479,8 +491,8 @@ thin.core.AbstractTextGroup.prototype.setVerticalAlignFromHash = function(vertic
 /**
  * @return {Object}
  */
-thin.core.AbstractTextGroup.prototype.toHash = function() {
-  var hash = this.toHash_();
+thin.core.AbstractTextGroup.prototype.asJSON = function() {
+  var object = this.asJSON_();
 
   var lineHeight = this.getTextLineHeight();
   var lineHeightRatio = this.getTextLineHeightRatio();
@@ -494,21 +506,21 @@ thin.core.AbstractTextGroup.prototype.toHash = function() {
     letterSpecing = Number(letterSpecing);
   }
 
-  goog.object.extend(hash['style'], {
+  goog.object.extend(object['style'], {
     'font-family': [ this.getFontFamily() ],
     'font-size': this.getFontSize(),
-    'color': goog.object.get(hash['style'], 'fill-color'),
-    'text-align': this.getTextAnchorToHash(),
-    'vertical-align': this.getVerticalAlignToHash(),
+    'color': goog.object.get(object['style'], 'fill-color'),
+    'text-align': this.getTextAnchorAsJSON(),
+    'vertical-align': this.getVerticalAlignAsJSON(),
     'line-height': lineHeight,
     'line-height-ratio': lineHeightRatio,
     'letter-spacing': letterSpecing
   });
-  goog.object.extend(hash['style'], this.fontStyle_.toHash());
+  goog.object.extend(object['style'], this.fontStyle_.asJSON());
 
-  goog.object.remove(hash['style'], 'fill-color');
+  goog.object.remove(object['style'], 'fill-color');
 
-  return hash;
+  return object;
 };
 
 
@@ -530,10 +542,10 @@ thin.core.AbstractTextGroup.prototype.update = function(attrs) {
         this.setFillColor(value);
         break;
       case 'text-align':
-        this.setTextAnchorFromHash(value);
+        this.setTextAnchorFromJSON(value);
         break;
       case 'vertical-align':
-        this.setVerticalAlignFromHash(value);
+        this.setVerticalAlignFromJSON(value);
         break;
       case 'line-height-ratio':
         this.setTextLineHeightRatio(value);

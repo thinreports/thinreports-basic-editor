@@ -360,7 +360,7 @@ thin.core.Workspace.prototype.draw = function() {
       thin.core.LayoutStructure.convertToNewLayoutSchema(layout);
     });
 
-    layout.drawShapes(format.getSvg());
+    layout.drawShapes(format.getItems());
     this.setup();
 
     return true;
@@ -633,8 +633,9 @@ thin.core.Workspace.prototype.setFormat = function(format) {
 thin.core.Workspace.prototype.getSaveFormat_ = function() {
   var layout = this.layout_;
   var format = this.format;
-  format.setSvg(layout.toHash());
+  format.setItems(layout.asJSON());
   format.setLayoutGuides(layout.getHelpers().getLayoutGuideHelper().getGuides());
+
   return format.toJSON();
 };
 

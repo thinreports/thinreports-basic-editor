@@ -334,24 +334,24 @@ thin.core.LineShape.prototype.disposeInternal = function() {
 /**
  * @return {Object}
  */
-thin.core.LineShape.prototype.toHash = function() {
-  var hash = this.toHash_();
+thin.core.LineShape.prototype.asJSON = function() {
+  var object = this.asJSON_();
 
   var layout  = this.getLayout();
   var element = this.getElement();
-  goog.object.extend(hash, {
+  goog.object.extend(object, {
     'x1': Number(layout.getElementAttribute(element, 'x1')),
     'y1': Number(layout.getElementAttribute(element, 'y1')),
     'x2': Number(layout.getElementAttribute(element, 'x2')),
     'y2': Number(layout.getElementAttribute(element, 'y2'))
   });
 
-  goog.object.remove(hash, 'x');
-  goog.object.remove(hash, 'y');
-  goog.object.remove(hash, 'width');
-  goog.object.remove(hash, 'height');
+  goog.object.remove(object, 'x');
+  goog.object.remove(object, 'y');
+  goog.object.remove(object, 'width');
+  goog.object.remove(object, 'height');
 
-  return hash;
+  return object;
 };
 
 

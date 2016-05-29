@@ -1080,12 +1080,12 @@ thin.core.TextShape.prototype.getType = function() {
 /**
  * @return {Object}
  */
-thin.core.TextShape.prototype.toHash = function() {
-  var hash = goog.base(this, 'toHash');
+thin.core.TextShape.prototype.asJSON = function() {
+  var object = goog.base(this, 'asJSON');
 
-  goog.object.set(hash, 'texts', this.getTextContent().split("\n"));
+  goog.object.set(object, 'texts', this.getTextContent().split("\n"));
 
-  return hash;
+  return object;
 };
 
 
@@ -1095,16 +1095,9 @@ thin.core.TextShape.prototype.toHash = function() {
 thin.core.TextShape.prototype.update = function(attrs) {
   goog.base(this, 'update', attrs);
 
-  goog.object.forEach(attrs, function(value, attr) {
-    switch (attr) {
-      case 'texts':
-        this.createTextContent(value.join("\n"));
-        this.updateDecoration();
-        this.updatePosition();
-        break;
-      default:
-        // Do Nothing
-        break;
-      }
-  }, this);
+  if (goog.object.containsKey(attrs, 'texts')) {
+    this.createTextContent(attrs['texts'].join("\n"));
+    this.updateDecoration();
+    this.updatePosition();
+  }
 };

@@ -25,7 +25,7 @@ goog.require('thin.core.formatstyles.AbstractFormat');
  */
 thin.core.formatstyles.DatetimeFormat = function(datetimeFormat) {
   thin.core.formatstyles.AbstractFormat.call(this);
-  
+
   /**
    * @type {string}
    * @private
@@ -65,7 +65,7 @@ thin.core.formatstyles.DatetimeFormat.prototype.inspect = function() {
 /** @inheritDoc */
 thin.core.formatstyles.DatetimeFormat.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
-  
+
   delete this.format_;
 };
 
@@ -73,7 +73,7 @@ thin.core.formatstyles.DatetimeFormat.prototype.disposeInternal = function() {
 /**
  * @return {Object}
  */
-thin.core.formatstyles.DatetimeFormat.prototype.toHash = function() {
+thin.core.formatstyles.DatetimeFormat.prototype.asJSON = function() {
   return {
     'datetime': {
       'format': this.getFormat()

@@ -1782,8 +1782,8 @@ thin.core.TblockShape.prototype.getType = function() {
 /**
  * @return {Object}
  */
-thin.core.TblockShape.prototype.toHash = function() {
-  var hash = goog.base(this, 'toHash');
+thin.core.TblockShape.prototype.asJSON = function() {
+  var object = goog.base(this, 'asJSON');
 
   var format = {
     'base': this.getBaseFormat(),
@@ -1791,22 +1791,22 @@ thin.core.TblockShape.prototype.toHash = function() {
   };
 
   if (this.formatStyle_) {
-    goog.object.extend(format, this.formatStyle_.toHash());
+    goog.object.extend(format, this.formatStyle_.asJSON());
   }
 
-  goog.object.extend(hash, {
+  goog.object.extend(object, {
     'reference-id': this.getRefId(),
     'value': this.getDefaultValueOfLink(),
     'multiple-line': this.isMultiMode(),
     'format': format
   });
 
-  goog.object.extend(hash['style'], {
+  goog.object.extend(object['style'], {
     'overflow': this.getOverflowType(),
     'word-wrap': this.getTextWordWrap()
   });
 
-  return hash;
+  return object;
 };
 
 

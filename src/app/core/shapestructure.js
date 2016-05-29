@@ -27,7 +27,7 @@ thin.core.ShapeStructure.getTransLateCoordinate = function(transformElement) {
   var affineTransform = transformElement.getAttribute('transform');
   var x = 0;
   var y = 0;
-  
+
   if(goog.isDefAndNotNull(affineTransform)) {
     var splitTransLate = affineTransform.match(/[\-\d\,\.]+/)[0].split(',');
     if(splitTransLate.length == 1) {
@@ -65,13 +65,14 @@ thin.core.ShapeStructure.getEnabledOfSection = function(element, parentElement) 
 
 
 /**
+ * @deprecated
  * @param {Element} element
  * @param {thin.core.Layout} layout
  * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
  * @return {thin.core.EllipseShape}
  */
 thin.core.ShapeStructure.createEllipseShapeFromElement = function(element, layout, opt_shapeIdManager) {
-  var shape = new thin.core.EllipseShape(element, layout, 
+  var shape = new thin.core.EllipseShape(element, layout,
                 new goog.graphics.Stroke(
                       Number(layout.getElementAttribute(element, 'stroke-width')),
                       layout.getElementAttribute(element, 'stroke')),
@@ -86,6 +87,7 @@ thin.core.ShapeStructure.createEllipseShapeFromElement = function(element, layou
 
 
 /**
+ * @deprecated
  * @param {Element} element
  * @param {thin.core.Layout} layout
  * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
@@ -106,6 +108,7 @@ thin.core.ShapeStructure.createImageblockShapeFromElement = function(element, la
 
 
 /**
+ * @deprecated
  * @param {Element} element
  * @return {thin.core.ImageFile}
  */
@@ -118,6 +121,7 @@ thin.core.ShapeStructure.createImageFileFromElement = function(element) {
 
 
 /**
+ * @deprecated
  * @param {Element} element
  * @param {thin.core.Layout} layout
  * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
@@ -136,6 +140,7 @@ thin.core.ShapeStructure.createImageShapeFromElement = function(element, layout,
 
 
 /**
+ * @deprecated
  * @param {Element} element
  * @param {thin.core.Layout} layout
  * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
@@ -143,11 +148,11 @@ thin.core.ShapeStructure.createImageShapeFromElement = function(element, layout,
  */
 thin.core.ShapeStructure.createLineShapeFromElement = function(element, layout, opt_shapeIdManager) {
 
-  var shape = new thin.core.LineShape(element, layout, 
+  var shape = new thin.core.LineShape(element, layout,
                   new goog.graphics.Stroke(
                       Number(layout.getElementAttribute(element, 'stroke-width')),
                       layout.getElementAttribute(element, 'stroke')));
-  
+
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
   shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
@@ -158,6 +163,7 @@ thin.core.ShapeStructure.createLineShapeFromElement = function(element, layout, 
 
 
 /**
+ * @deprecated
  * @param {Element} groupElement
  * @param {thin.core.Layout} layout
  * @return {thin.core.ListShape}
@@ -216,6 +222,7 @@ thin.core.ShapeStructure.createListShapeFromElement = function(groupElement, lay
 
 
 /**
+ * @deprecated
  * @param {Element} element
  * @param {thin.core.Layout} layout
  * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
@@ -251,6 +258,7 @@ thin.core.ShapeStructure.createPageNumberShapeFromElement = function(element, la
 
 
 /**
+ * @deprecated
  * @param {Element} element
  * @param {thin.core.Layout} layout
  * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
@@ -259,10 +267,10 @@ thin.core.ShapeStructure.createPageNumberShapeFromElement = function(element, la
 thin.core.ShapeStructure.createRectShapeFromElement = function(element, layout, opt_shapeIdManager) {
   var shape = new thin.core.RectShape(element, layout,
                     new goog.graphics.Stroke(
-                       Number(layout.getElementAttribute(element, 'stroke-width')), 
+                       Number(layout.getElementAttribute(element, 'stroke-width')),
                        layout.getElementAttribute(element, 'stroke')),
                     new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
-  
+
   shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
   shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
   shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
@@ -274,6 +282,7 @@ thin.core.ShapeStructure.createRectShapeFromElement = function(element, layout, 
 
 
 /**
+ * @deprecated
  * @param {Element} element
  * @param {thin.core.Layout} layout
  * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
@@ -348,6 +357,7 @@ thin.core.ShapeStructure.createTblockShapeFromElement = function(element, layout
 
 
 /**
+ * @deprecated
  * @param {Element} element
  * @param {thin.core.Layout} layout
  * @param {thin.core.ShapeIdManager=} opt_shapeIdManager

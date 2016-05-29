@@ -335,23 +335,22 @@ thin.core.EllipseShape.prototype.disposeInternal = function() {
 /**
  * @return {Object}
  */
-thin.core.EllipseShape.prototype.toHash = function() {
-  var hash = this.toHash_();
+thin.core.EllipseShape.prototype.asJSON = function() {
+  var object = this.asJSON_();
 
-  // var radius = this.getRadius();
-  goog.object.extend(hash, {
+  goog.object.extend(object, {
     'cx': this.cx_,
     'cy': this.cy_,
     'rx': this.rx_,
     'ry': this.ry_
   });
 
-  goog.object.remove(hash, 'x');
-  goog.object.remove(hash, 'y');
-  goog.object.remove(hash, 'width');
-  goog.object.remove(hash, 'height');
+  goog.object.remove(object, 'x');
+  goog.object.remove(object, 'y');
+  goog.object.remove(object, 'width');
+  goog.object.remove(object, 'height');
 
-  return hash;
+  return object;
 };
 
 

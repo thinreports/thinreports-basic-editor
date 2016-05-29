@@ -1269,7 +1269,7 @@ thin.core.ModuleShape.prototype.getType = function() {
  * @this {goog.graphics.Element}
  * @return {Object}
  */
-thin.core.ModuleShape.prototype.toHash_ = function() {
+thin.core.ModuleShape.prototype.asJSON_ = function() {
   var style = {};
 
   var stroke = this.getStroke();
