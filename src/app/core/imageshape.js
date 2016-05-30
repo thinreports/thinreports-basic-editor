@@ -463,10 +463,11 @@ thin.core.ImageShape.prototype.asJSON = function() {
 
   // data:image/png;base64,xxxxxxxx
   var content = this.getFile().getContent();
-  if (/^data:(.+?);base64,(.+)/.test(content)) {
+  var dataUri = content.match(/^data:(.+?);base64,(.+)/);
+  if (dataUri) {
     goog.object.set(object, 'data', {
-      'mime-type': RegExp.$1,
-      'base64': RegExp.$2
+      'mime-type': dataUri[1],
+      'base64': dataUri[2]
     });
   }
 
