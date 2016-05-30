@@ -114,7 +114,7 @@ thin.core.ShapeStructure.createImageblockShapeFromElement = function(element, la
  */
 thin.core.ShapeStructure.createImageFileFromElement = function(element) {
   var entry = thin.File.createDummyEntry('DummyImageFile');
-  var coreFile = new thin.File(entry, '', element.href.baseVal);
+  var coreFile = new thin.File(entry, '', element['href']['baseVal']);
 
   return new thin.core.ImageFile(coreFile);
 };
