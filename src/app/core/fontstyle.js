@@ -71,3 +71,28 @@ thin.core.FontStyle.prototype.linethrough = false;
  * @type {string}
  */
 thin.core.FontStyle.prototype.decoration;
+
+
+/**
+ * @return {Object}
+ */
+thin.core.FontStyle.prototype.asJSON = function() {
+  var array = [];
+
+  if (this.bold) {
+    array.push('bold');
+  }
+  if (this.italic) {
+    array.push('italic');
+  }
+  if (this.linethrough) {
+    array.push('linethrough');
+  }
+  if (this.underline) {
+    array.push('underline');
+  }
+
+  return {
+    'font-style': array
+  };
+};

@@ -53,12 +53,6 @@ thin.core.TblockShape = function(element, layout) {
   this.setCss(thin.core.TblockShape.CLASSID);
 
   //this.setFactors_();
-
-  /**
-   * @type {Array.<thin.core.TblockShape>}
-   * @private
-   */
-  this.referringShapes_ = [];
 };
 goog.inherits(thin.core.TblockShape, thin.core.AbstractTextGroup);
 goog.mixin(thin.core.TblockShape.prototype, thin.core.ModuleShape.prototype);
@@ -184,20 +178,6 @@ thin.core.TblockShape.prototype.refId_;
  * @type {boolean}
  * @private
  */
-thin.core.TblockShape.prototype.isReferring_ = false;
-
-
-/**
- * @type {boolean}
- * @private
- */
-thin.core.TblockShape.prototype.isReferences_ = false;
-
-
-/**
- * @type {boolean}
- * @private
- */
 thin.core.TblockShape.prototype.multiMode_;
 
 
@@ -205,13 +185,6 @@ thin.core.TblockShape.prototype.multiMode_;
  * @type {thin.core.formatstyles.AbstractFormat}
  */
 thin.core.TblockShape.prototype.formatStyle_ = null;
-
-
-/**
- * @type {goog.graphics.Element}
- * @private
- */
-thin.core.TblockShape.prototype.referenceShape_;
 
 
 /**
@@ -235,80 +208,6 @@ thin.core.TblockShape.prototype.canResizeHeight = function() {
 thin.core.TblockShape.prototype.updateToolbarUI = function() {
   goog.base(this, 'updateToolbarUI');
   thin.ui.enablingFontUIs(true, true, true, this.isMultiMode(), false);
-};
-
-
-/**
- * @param {Element} element
- * @param {thin.core.Layout} layout
- * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.core.TblockShape}
- */
-thin.core.TblockShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-  element.removeAttribute('clip-path');
-  var shape = new thin.core.TblockShape(element, layout);
-
-  shape.setMultiModeInternal(layout.getElementAttribute(element, 'x-multiple') == 'true');
-  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
-  shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
-  shape.setFontSize(Number(layout.getElementAttribute(element, 'font-size')));
-  shape.setFontFamily(layout.getElementAttribute(element, 'font-family'));
-
-  var decoration = layout.getElementAttribute(element, 'text-decoration');
-  var lineHeight = layout.getElementAttribute(element, 'x-line-height');
-  var lineHeightRatio = layout.getElementAttribute(element, 'x-line-height-ratio');
-  var kerning = layout.getElementAttribute(element, 'kerning');
-
-  if (element.hasAttribute('x-valign')) {
-    shape.setVerticalAlign(layout.getElementAttribute(element, 'x-valign'));
-  }
-  if (thin.isExactlyEqual(kerning,
-        thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
-    kerning = thin.core.TextStyle.DEFAULT_KERNING;
-  }
-  shape.setKerning(/** @type {string} */ (kerning));
-  if (!goog.isNull(lineHeightRatio)) {
-    shape.setTextLineHeightRatio(lineHeightRatio);
-  }
-  shape.setFontUnderline(/underline/.test(decoration));
-  shape.setFontLinethrough(/line-through/.test(decoration));
-  shape.setFontItalic(layout.getElementAttribute(element, 'font-style') == 'italic');
-  shape.setFontBold(layout.getElementAttribute(element, 'font-weight') == 'bold');
-  shape.setTextAnchor(layout.getElementAttribute(element, 'text-anchor'));
-  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
-  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
-
-  shape.setDefaultValueOfLink(layout.getElementAttribute(element, 'x-value'));
-
-  shape.setBaseFormat(layout.getElementAttribute(element, 'x-format-base'));
-
-  var formatType = layout.getElementAttribute(element, 'x-format-type');
-  var formatTypeTemp = thin.core.formatstyles.FormatType;
-
-  switch (formatType) {
-    case formatTypeTemp.NONE:
-      shape.setFormatStyle(null);
-      break;
-    case formatTypeTemp.NUMBER:
-      var delimiter = layout.getElementAttribute(element, 'x-format-number-delimiter');
-      shape.setFormatStyle(new thin.core.formatstyles.NumberFormat(
-        delimiter, Number(layout.getElementAttribute(element, 'x-format-number-precision')),
-        !thin.isExactlyEqual(delimiter, thin.core.formatstyles.NumberFormat.DISABLE_DELIMITER)));
-      break;
-    case formatTypeTemp.DATETIME:
-      shape.setFormatStyle(new thin.core.formatstyles.DatetimeFormat(
-        layout.getElementAttribute(element, 'x-format-datetime-format')));
-      break;
-    case formatTypeTemp.PADDING:
-      shape.setFormatStyle(new thin.core.formatstyles.PaddingFormat(
-        layout.getElementAttribute(element, 'x-format-padding-direction'),
-        layout.getElementAttribute(element, 'x-format-padding-char'),
-        Number(layout.getElementAttribute(element, 'x-format-padding-length'))));
-      break;
-  }
-
-  shape.initIdentifier();
-  return shape;
 };
 
 
@@ -603,7 +502,7 @@ thin.core.TblockShape.prototype.setShapeId = function(shapeId, opt_shapeIdManage
  * @return {boolean}
  */
 thin.core.TblockShape.prototype.isReferring = function() {
-  return this.isReferring_;
+  return !!this.getReferenceShape();
 };
 
 
@@ -611,26 +510,12 @@ thin.core.TblockShape.prototype.isReferring = function() {
  * @return {boolean}
  */
 thin.core.TblockShape.prototype.isReferences = function() {
-  return this.isReferences_;
+  return !goog.array.isEmpty(this.getReferringShapes());
 };
 
 
-/**
- * @param {goog.graphics.Element} referenceShape
- */
-thin.core.TblockShape.prototype.setReferenceShape = function(referenceShape) {
-  this.referenceShape_ = referenceShape;
-  this.isReferring_ = true;
-};
-
-
-thin.core.TblockShape.prototype.removeReferenceShape = function() {
-  if (this.isReferring()) {
-    this.referenceShape_.removeReferringShape(this);
-  }
-  delete this.referenceShape_;
-  this.isReferring_ = false;
-  this.setInternalRefId(thin.core.TblockShape.DEFAULT_REFID);
+thin.core.TblockShape.prototype.removeReferenceShapeId = function() {
+  this.setRefId(thin.core.TblockShape.DEFAULT_REFID);
 };
 
 
@@ -638,33 +523,43 @@ thin.core.TblockShape.prototype.removeReferenceShape = function() {
  * @return {goog.graphics.Element}
  */
 thin.core.TblockShape.prototype.getReferenceShape = function() {
-  return this.referenceShape_;
+  var manager;
+  if (this.isAffiliationListShape()) {
+    manager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
+  }
+
+  return this.getLayout().getShapeForShapeId(this.getRefId(), manager);
+};
+
+
+/**
+ * @return {Array.<thin.core.TblockShape>}
+ */
+thin.core.TblockShape.prototype.getReferringShapes = function() {
+  var manager;
+  var layout = this.getLayout();
+  if (this.isAffiliationListShape()) {
+    manager = this.getAffiliationSectionShape().getManager().getShapesManager();
+  } else {
+    manager = layout.getManager().getShapesManager();
+  }
+
+  var shapeId = this.getShapeId();
+  var refereces = [];
+  layout.forTblockShapesEach(manager.get(), function(shape, i) {
+    if (thin.isExactlyEqual(shapeId, shape.getRefId())) {
+      goog.array.insert(refereces, shape);
+    }
+  });
+
+  return goog.array.clone(refereces);
 };
 
 
 /**
  * @param {string} refId
- * @param {goog.graphics.Element} referenceShape
  */
-thin.core.TblockShape.prototype.setRefId = function(refId, referenceShape) {
-  if (this.refId_ == refId) {
-    // Skip setRefId;
-    return;
-  }
-
-  this.setInternalRefId(refId);
-  if (this.isReferring()) {
-    this.referenceShape_.removeReferringShape(this);
-  }
-  this.setReferenceShape(referenceShape);
-  referenceShape.setReferringShape(this);
-};
-
-
-/**
- * @param {string} refId
- */
-thin.core.TblockShape.prototype.setInternalRefId = function(refId) {
+thin.core.TblockShape.prototype.setRefId = function(refId) {
   this.refId_ = refId;
   this.getLayout().setElementAttributes(this.getElement(), {
     'x-ref-id': refId
@@ -678,34 +573,6 @@ thin.core.TblockShape.prototype.setInternalRefId = function(refId) {
 thin.core.TblockShape.prototype.getRefId = function() {
   return /** @type {string} */ (thin.getValIfNotDef(this.refId_,
              thin.core.TblockShape.DEFAULT_REFID));
-};
-
-
-/**
- * @param {goog.graphics.Element} referringShape
- */
-thin.core.TblockShape.prototype.setReferringShape = function(referringShape) {
-  goog.array.insert(this.referringShapes_, referringShape);
-  this.isReferences_ = true;
-};
-
-
-/**
- * @return {Array.<thin.core.TblockShape>}
- */
-thin.core.TblockShape.prototype.getReferringShapes = function() {
-  return goog.array.clone(this.referringShapes_);
-};
-
-
-/**
- * @param {goog.graphics.Element} referringShape
- */
-thin.core.TblockShape.prototype.removeReferringShape = function(referringShape) {
-  goog.array.remove(this.referringShapes_, referringShape);
-  if (goog.array.isEmpty(this.referringShapes_)) {
-    this.isReferences_ = false;
-  }
 };
 
 
@@ -1567,7 +1434,7 @@ thin.core.TblockShape.prototype.createPropertyComponent_ = function() {
             this.setShapeId(shapeId);
             if (isReferences) {
               goog.array.forEach(referringShapes, function(shape) {
-                shape.setRefId(shapeId, scope);
+                shape.setRefId(shapeId);
               });
             }
             proppane.getPropertyControl('shape-id').setValue(shapeId);
@@ -1577,7 +1444,7 @@ thin.core.TblockShape.prototype.createPropertyComponent_ = function() {
             this.setShapeId(captureShapeId);
             if (isReferences) {
               goog.array.forEach(referringShapes, function(shape) {
-                shape.setRefId(captureShapeId, scope);
+                shape.setRefId(captureShapeId);
               });
             }
             proppane.getPropertyControl('shape-id').setValue(captureShapeId);
@@ -1645,17 +1512,17 @@ thin.core.TblockShape.prototype.createPropertyComponent_ = function() {
         workspace.normalVersioning(function(version) {
           version.upHandler(function() {
             if (isDefaultValue) {
-              this.removeReferenceShape();
+              this.removeReferenceShapeId();
             } else {
-              this.setRefId(refId, referenceShape);
+              this.setRefId(refId);
             }
             proppane.getPropertyControl('ref-id').setValue(refId);
           }, scope);
 
           version.downHandler(function() {
-            this.removeReferenceShape();
+            this.removeReferenceShapeId();
             if (captureIsReferring) {
-              this.setRefId(captureRefId, captureReferenceShape);
+              this.setRefId(captureRefId);
             }
             proppane.getPropertyControl('ref-id').setValue(captureRefId);
           }, scope);
@@ -1901,7 +1768,102 @@ thin.core.TblockShape.prototype.disposeInternal = function() {
   }
 
   delete this.id_;
-  delete this.referenceShape_;
-  delete this.referringShapes_;
   delete this.formatStyle_;
+};
+
+/**
+ * @return {string}
+ */
+thin.core.TblockShape.prototype.getType = function() {
+  return 'text-block';
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.TblockShape.prototype.asJSON = function() {
+  var object = goog.base(this, 'asJSON');
+
+  var format = {
+    'base': this.getBaseFormat(),
+    'type': this.getFormatType()
+  };
+
+  if (this.formatStyle_) {
+    goog.object.extend(format, this.formatStyle_.asJSON());
+  }
+
+  goog.object.extend(object, {
+    'reference-id': this.getRefId(),
+    'value': this.getDefaultValueOfLink(),
+    'multiple-line': this.isMultiMode(),
+    'format': format
+  });
+
+  goog.object.extend(object['style'], {
+    'overflow': this.getOverflowType(),
+    'word-wrap': this.getTextWordWrap()
+  });
+
+  return object;
+};
+
+
+/**
+ * @param {Object} attrs
+ */
+thin.core.TblockShape.prototype.update = function(attrs) {
+  if (goog.object.containsKey(attrs, 'style')) {
+    var isMultiple = goog.object.get(attrs,
+      'multiple-line', thin.core.TblockShape.DEFAULT_MULTIPLE);
+    this.setMultiMode(isMultiple);
+  }
+
+  goog.base(this, 'update', attrs);
+
+  goog.object.forEach(attrs, function(value, attr) {
+    switch (attr) {
+      case 'format':
+        this.setBaseFormat(value['base']);
+        this.setFormatType(value['type']);
+        var format = value[value['type']];
+
+        switch (value['type']) {
+          case 'number':
+            this.setFormatStyle(
+              new thin.core.formatstyles.NumberFormat(
+                format['delimiter'], format['precision'],
+                  !thin.isExactlyEqual(format['delimiter'],
+                    thin.core.formatstyles.NumberFormat.DISABLE_DELIMITER)));
+            break;
+          case 'padding':
+            this.setFormatStyle(
+              new thin.core.formatstyles.PaddingFormat(
+                format['direction'], format['char'], format['length']));
+            break;
+          case 'datetime':
+            this.setFormatStyle(
+              new thin.core.formatstyles.DatetimeFormat(
+                format['format']));
+            break;
+        }
+        break;
+      case 'reference-id':
+        this.setRefId(value);
+        break;
+      case 'value':
+        this.setDefaultValueOfLink(value);
+        break;
+      case 'overflow':
+        this.setOverflowType(value);
+        break;
+      case 'word-wrap':
+        this.setTextWordWrap(value);
+        break;
+      default:
+        // Do Nothing
+        break;
+      }
+  }, this);
 };

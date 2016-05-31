@@ -27,9 +27,9 @@ goog.require('thin.core.formatstyles.AbstractFormat');
  */
 thin.core.formatstyles.NumberFormat = function(delimiter, precision, enabled) {
   thin.core.formatstyles.AbstractFormat.call(this);
-  
+
   var disableDelimiter = thin.core.formatstyles.NumberFormat.DISABLE_DELIMITER;
-  
+
   if (enabled) {
     if (thin.isExactlyEqual(delimiter, disableDelimiter)) {
       delimiter = thin.core.formatstyles.NumberFormat.DEFAULT_DELIMITER;
@@ -43,14 +43,14 @@ thin.core.formatstyles.NumberFormat = function(delimiter, precision, enabled) {
    * @private
    */
   this.delimiter_ = delimiter;
-  
+
   /**
    * @type {number}
    * @private
    */
   this.precision_ = precision;
-  
-  
+
+
   /**
    * @type {boolean}
    * @private
@@ -122,7 +122,20 @@ thin.core.formatstyles.NumberFormat.prototype.inspect = function() {
 /** @inheritDoc */
 thin.core.formatstyles.NumberFormat.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
-  
+
   delete this.delimiter_;
   delete this.precision_;
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.formatstyles.NumberFormat.prototype.asJSON = function() {
+  return {
+    'number': {
+      'delimiter': this.getDelimiter(),
+      'precision': this.getPrecision()
+    }
+  };
 };

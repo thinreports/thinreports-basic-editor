@@ -35,8 +35,8 @@ thin.layout.CompatibilityRule = {
  * @enum {number}
  */
 thin.layout.CompatibilityState = {
-  COMPLETE: 0x01, 
-  WARNING: 0x02, 
+  COMPLETE: 0x01,
+  WARNING: 0x02,
   ERROR: 0x03
 };
 

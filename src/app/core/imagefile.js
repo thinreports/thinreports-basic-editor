@@ -132,18 +132,6 @@ thin.core.ImageFile.handleSelectFileToOpen = function(callbacks, entry) {
 
 
 /**
- * @param {Element} element
- * @return {thin.core.ImageFile}
- */
-thin.core.ImageFile.createFromElement = function(element) {
-  var entry = thin.File.createDummyEntry('DummyImageFile');
-  var coreFile = new thin.File(entry, '', element.href.baseVal);
-
-  return new thin.core.ImageFile(coreFile);
-};
-
-
-/**
  * @return {string}
  */
 thin.core.ImageFile.prototype.getPath = function() {

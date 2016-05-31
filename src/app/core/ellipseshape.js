@@ -63,27 +63,6 @@ thin.core.EllipseShape.prototype.getClassId = function() {
 };
 
 
-/**
- * @param {Element} element
- * @param {thin.core.Layout} layout
- * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.core.EllipseShape}
- */
-thin.core.EllipseShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-  var shape = new thin.core.EllipseShape(element, layout, 
-                new goog.graphics.Stroke(
-                      Number(layout.getElementAttribute(element, 'stroke-width')),
-                      layout.getElementAttribute(element, 'stroke')),
-                new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
-  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
-  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
-  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
-  shape.setStrokeDashFromType(layout.getElementAttribute(element, 'x-stroke-type'));
-  shape.initIdentifier();
-  return shape;
-};
-
-
 thin.core.EllipseShape.prototype.setDefaultOutline = function() {
   this.setTargetOutline(this.getLayout().getHelpers().getEllipseOutline());
 };
@@ -114,7 +93,7 @@ thin.core.EllipseShape.prototype.getCloneCreator = function() {
   var fill = this.getFill();
   var display = this.getDisplay();
   var isAffiliationListShape = this.isAffiliationListShape();
-  
+
   /**
    * @param {thin.core.Layout} layout
    * @param {boolean=} opt_isAdaptDeltaForList
@@ -148,17 +127,17 @@ thin.core.EllipseShape.prototype.createPropertyComponent_ = function() {
   var scope = this;
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
-  
+
   var baseGroup = proppane.addGroup(thin.t('property_group_basis'));
-  
-  
+
+
   var leftInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_left_position'));
   var leftInput = leftInputProperty.getValueControl();
   leftInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   leftInputProperty.addEventListener(propEventType.CHANGE,
       this.setLeftForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(leftInputProperty, baseGroup, 'left');
 
 
@@ -168,56 +147,56 @@ thin.core.EllipseShape.prototype.createPropertyComponent_ = function() {
 
   topInputProperty.addEventListener(propEventType.CHANGE,
       this.setTopForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(topInputProperty, baseGroup, 'top');
-  
-  
+
+
   var widthInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_width'));
   var widthInput = widthInputProperty.getValueControl();
   widthInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   widthInputProperty.addEventListener(propEventType.CHANGE,
       this.setWidthForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(widthInputProperty, baseGroup, 'width');
-  
-  
+
+
   var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
   heightInput.getNumberValidator().setAllowDecimal(true, 1);
-  
+
   heightInputProperty.addEventListener(propEventType.CHANGE,
       this.setHeightForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(heightInputProperty, baseGroup, 'height');
-  
-  
+
+
   var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
   displayCheckProperty.addEventListener(propEventType.CHANGE,
       this.setDisplayForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(displayCheckProperty, baseGroup, 'display');
 
-  
+
   var shapeGroup = proppane.addGroup(thin.t('property_group_shape'));
-  
-  
+
+
   var fillInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_fill_color'));
   fillInputProperty.getValueControl().getInput().setLabel('none');
   fillInputProperty.addEventListener(propEventType.CHANGE,
       this.setFillForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(fillInputProperty , shapeGroup, 'fill');
-  
-  
+
+
   var strokeInputProperty = new thin.ui.PropertyPane.ColorProperty(thin.t('field_stroke_color'));
   strokeInputProperty.getValueControl().getInput().setLabel('none');
   strokeInputProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(strokeInputProperty , shapeGroup, 'stroke');
-  
-  
+
+
   var strokeWidthCombProperty = new thin.ui.PropertyPane.ComboBoxProperty(thin.t('field_stroke_width'));
   var strokeWidthComb = strokeWidthCombProperty.getValueControl();
   var strokeWidthInput = strokeWidthComb.getInput();
@@ -236,7 +215,7 @@ thin.core.EllipseShape.prototype.createPropertyComponent_ = function() {
   });
   strokeWidthCombProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeWidthForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(strokeWidthCombProperty , shapeGroup, 'stroke-width');
 
   var strokeType = thin.core.ModuleElement.StrokeType;
@@ -251,25 +230,25 @@ thin.core.EllipseShape.prototype.createPropertyComponent_ = function() {
       new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DASHED), strokeType.DASHED));
   strokeDashSelect.addItem(
       new thin.ui.Option(thin.core.ModuleElement.getStrokeName(strokeType.DOTTED), strokeType.DOTTED));
-  
+
   strokeDashSelectProperty.addEventListener(propEventType.CHANGE,
       this.setStrokeDashTypeForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(strokeDashSelectProperty , shapeGroup, 'stroke-dash-type');
 
 
   var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
-  
+
   var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
   idInputProperty.addEventListener(propEventType.CHANGE,
       this.setShapeIdForPropertyUpdate, false, this);
-  
+
   proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
-  
+
   var descProperty = new thin.ui.PropertyPane.InputProperty(thin.t('field_description'));
   descProperty.addEventListener(propEventType.CHANGE,
       this.setDescPropertyUpdate, false, this);
-  
+
   proppane.addProperty(descProperty, cooperationGroup, 'desc');
 };
 
@@ -306,7 +285,7 @@ thin.core.EllipseShape.prototype.updateProperties = function() {
   var properties = this.getProperties();
   var proppaneBlank = thin.core.ModuleShape.PROPPANE_SHOW_BLANK;
   var noneColor = thin.core.ModuleShape.NONE;
-  
+
   proppane.getPropertyControl('left').setValue(properties['left']);
   proppane.getPropertyControl('top').setValue(properties['top']);
   proppane.getPropertyControl('width').setValue(properties['width']);
@@ -327,7 +306,7 @@ thin.core.EllipseShape.prototype.updateProperties = function() {
     strokeWidth = proppaneBlank;
   }
   proppane.getPropertyControl('stroke-width').setInternalValue(strokeWidth);
-  
+
   proppane.getPropertyControl('stroke-dash-type').setValue(properties['stroke-dash-type']);
   proppane.getPropertyControl('shape-id').setValue(properties['shape-id']);
   proppane.getPropertyControl('desc').setValue(properties['desc']);
@@ -350,4 +329,63 @@ thin.core.EllipseShape.prototype.setInitShapeProperties = function(properties) {
 thin.core.EllipseShape.prototype.disposeInternal = function() {
   thin.core.EllipseShape.superClass_.disposeInternal.call(this);
   this.disposeInternalForShape();
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.EllipseShape.prototype.asJSON = function() {
+  var object = this.asJSON_();
+
+  goog.object.extend(object, {
+    'cx': this.cx_,
+    'cy': this.cy_,
+    'rx': this.rx_,
+    'ry': this.ry_
+  });
+
+  goog.object.remove(object, 'x');
+  goog.object.remove(object, 'y');
+  goog.object.remove(object, 'width');
+  goog.object.remove(object, 'height');
+
+  return object;
+};
+
+
+/**
+ * @param {Object} attrs
+ */
+thin.core.EllipseShape.prototype.update = function(attrs) {
+  goog.object.forEach(attrs, function(value, attr) {
+    switch (attr) {
+      case 'rx':
+        this.setRx(value);
+        this.resetLeft();
+        this.resetWidth();
+
+        break;
+      case 'ry':
+        this.setRy(value);
+        this.resetTop();
+        this.resetHeight();
+
+        break;
+      case 'cx':
+        this.setCx(value);
+        this.resetLeft();
+
+        break;
+      case 'cy':
+        this.setCy(value);
+        this.resetTop();
+
+        break;
+      default:
+        break;
+      }
+  }, this);
+
+  this.update_(attrs);
 };

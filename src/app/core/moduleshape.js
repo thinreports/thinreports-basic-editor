@@ -175,6 +175,21 @@ thin.core.ModuleShape.prototype.setStrokeWidth = function(width) {
 
 /**
  * @this {goog.graphics.Element}
+ * @param {string?} color
+ */
+thin.core.ModuleShape.prototype.setStrokeColor = function(color) {
+  var strokeNone = thin.core.ModuleShape.NONE;
+
+  var strokeColor = /** @type {string} */(thin.getValIfNotDef(color, ''));
+  var stroke = new goog.graphics.Stroke(this.getStroke().getWidth(),
+    thin.isExactlyEqual(strokeColor, '') ? strokeNone : strokeColor);
+
+  this.setStroke(stroke);
+};
+
+
+/**
+ * @this {goog.graphics.Element}
  * @param {string} shapeId
  */
 thin.core.ModuleShape.prototype.setShapeIdInternal = function(shapeId) {
@@ -195,7 +210,7 @@ thin.core.ModuleShape.prototype.setShapeId_ = function(newShapeId, opt_shapeIdMa
   if (!opt_shapeIdManager && this.isAffiliationListShape()) {
     opt_shapeIdManager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
   }
-  
+
   var shapeIdManager = opt_shapeIdManager || this.getLayout().getManager().getShapeIdManager();
   var newPrefix = thin.core.ShapeIdManager.getShapeIdPrefix(newShapeId);
   this.deleteShapeId_(shapeIdManager);
@@ -232,7 +247,7 @@ thin.core.ModuleShape.prototype.setShapeId = function(newShapeId, opt_shapeIdMan
   if (!opt_shapeIdManager && this.isAffiliationListShape()) {
     opt_shapeIdManager = this.getAffiliationSectionShape().getManager().getShapeIdManager();
   }
-  
+
   if (thin.isExactlyEqual(newShapeId, thin.core.ModuleShape.DEFAULT_SHAPEID)) {
     this.deleteShapeId_(opt_shapeIdManager);
   } else {
@@ -397,7 +412,7 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
         thin.core.ListShape.CLASSID + goog.object.get(listShapeClassIdTemp, 'FACE');
   var isAffiliationListShape = this.isAffiliationListShape();
   var affiliationSectionName = this.getAffiliationSectionName();
-  
+
   goog.events.listen(this, goog.events.EventType.MOUSEDOWN, function(e) {
     layout.getWorkspace().focusElement(e);
     var singleShapeByGlobal = activeShapeManager.getIfSingle();
@@ -408,7 +423,7 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
     var captureProperties = multipleShapesHelper.getCloneProperties();
     var captureActive = listHelper.isActive();
     var captureCtrlKey = e.ctrlKey || e.metaKey;
-    
+
     if (captureActive) {
       var activeShapeManagerByListShape = listHelper.getActiveShape();
       var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
@@ -418,10 +433,10 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
       var isMultipleByListShape = activeShapeManagerByListShape.isMultiple();
       var captureActiveSectionName = listHelper.getActiveSectionName();
     }
-    
+
     e.stopPropagation();
     e.preventDefault();
-    
+
     layout.getWorkspace().normalVersioning(function(version) {
       version.setChanged(false);
 
@@ -438,9 +453,9 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
           listHelper.active(listShape);
           listShape.updateProperties();
           thin.ui.setEnabledForFontUi(false);
-          
+
         } else {
-        
+
           if (captureCtrlKey) {
             this.dragger_.setEnabled(false);
             if (isAffiliationListShape) {
@@ -493,14 +508,14 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
                   guide.setEnableAndTargetShape(this);
                   layout.setOutlineForSingle(this);
                   this.updateProperties();
-                  
+
                 } else {
                   if (isSelfMouseDown) {
                     activeShapeManager.clear();
                     layout.updatePropertiesForEmpty();
                     thin.ui.setEnabledForFontUi(false);
                   } else {
-                  
+
                     manager.setActiveShape(this);
                     var shapes = activeShapeManager.get();
                     layout.setOutlineForMultiple(shapes);
@@ -524,7 +539,7 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
                 listHelper.inactive();
               }
             }
-            
+
           } else {
             this.dragger_.setEnabled(true);
             if (isAffiliationListShape) {
@@ -548,12 +563,12 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
           }
         }
       }, scope);
-      
+
       version.downHandler(function() {
         if (isListShapeFace) {
           activeShapeManager.set(oldShapesByGlobal);
           listHelper.inactive();
-          
+
           if (!captureActive) {
             if (isEmptyByGlobal) {
               layout.updatePropertiesForEmpty();
@@ -577,7 +592,7 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
           } else {
             listHelper.active(singleShapeByGlobal);
             listHelper.setActiveSectionName(captureActiveSectionName);
-            
+
             if (isEmptyByListShape) {
               singleShapeByGlobal.updateProperties();
               thin.ui.setEnabledForFontUi(false);
@@ -635,7 +650,7 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
               if (isAffiliationListShape) {
                 activeShapeManagerByListShape.set(oldShapesByListShape);
                 listHelper.setActiveSectionName(captureActiveSectionName);
-                
+
                 if (isSelfMouseDown) {
                   singleShapeByListShape.updateToolbarUI();
                   guide.setEnableAndTargetShape(singleShapeByListShape);
@@ -672,7 +687,7 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
                 activeShapeManager.set(oldShapesByGlobal);
                 listHelper.active(singleShapeByGlobal);
                 listHelper.setActiveSectionName(captureActiveSectionName);
-                
+
                 if (isEmptyByListShape) {
                   guide.setDisable();
                   singleShapeByGlobal.updateProperties();
@@ -751,7 +766,7 @@ thin.core.ModuleShape.prototype.setMouseDownHandlers = function() {
                 activeShapeManager.set(oldShapesByGlobal);
                 listHelper.active(singleShapeByGlobal);
                 listHelper.setActiveSectionName(captureActiveSectionName);
-                
+
                 if (isEmptyByListShape) {
                   singleShapeByGlobal.updateProperties();
                   thin.ui.setEnabledForFontUi(false);
@@ -793,14 +808,14 @@ thin.core.ModuleShape.prototype.setupDragHandlers = function() {
   var body = goog.dom.getDocument().body;
   var dragLayer = helpers.getDragLayer();
   var eventType = goog.fx.Dragger.EventType;
-  
+
   var dragger = new thin.core.SvgDragger(this.getTargetOutline(), this);
   this.dragger_ = dragger;
-  
+
   goog.events.listen(dragger, thin.core.AbstractDragger.EventType.BEFORESTART, function(e) {
     this.getTargetOutline().setBounds(this.getBounds());
   }, false, this);
-  
+
   goog.events.listen(dragger, eventType.START, function(e) {
     dragger.setAdsorptionX(helpers.getAdsorptionX());
     dragger.setAdsorptionY(helpers.getAdsorptionY());
@@ -811,7 +826,7 @@ thin.core.ModuleShape.prototype.setupDragHandlers = function() {
     layout.setElementCursor(dragLayer.getElement(), cursorMove);
     dragLayer.setVisibled(true);
   }, false, this);
-  
+
   goog.events.listen(dragger, eventType.BEFOREDRAG, function(e) {
     var outline = this.getTargetOutline();
     if (!outline.isEnable()) {
@@ -819,7 +834,7 @@ thin.core.ModuleShape.prototype.setupDragHandlers = function() {
     }
   }, false, this);
   goog.events.listen(dragger, eventType.END, function(e) {
-  
+
     var cursorTypeDefault = thin.core.Cursor.Type.DEFAULT;
     var cursorDefault = new thin.core.Cursor(cursorTypeDefault);
     goog.style.setStyle(body, 'cursor', cursorTypeDefault);
@@ -830,7 +845,7 @@ thin.core.ModuleShape.prototype.setupDragHandlers = function() {
     var outlineBounds = outline.getBounds();
     var shapeBounds = this.getBounds();
     var enabled = outline.isEnable();
-    
+
     layout.getWorkspace().normalVersioning(function(version) {
       if (goog.math.Rect.equals(shapeBounds, outlineBounds)) {
         version.setChanged(false);
@@ -845,7 +860,7 @@ thin.core.ModuleShape.prototype.setupDragHandlers = function() {
           outline.disable();
         }
       }, scope);
-      
+
       version.downHandler(function() {
         if (enabled) {
           outline.setTargetShape(this);
@@ -865,22 +880,22 @@ thin.core.ModuleShape.prototype.setupDragHandlers = function() {
  * @param {e} thin.ui.PropertyPane.PropertyEvent
  */
 thin.core.ModuleShape.prototype.setLeftForPropertyUpdate = function(e) {
-  
+
   var scope = this;
   var layout = this.getLayout();
   var guide = layout.getHelpers().getGuideHelper();
   var proppane = thin.ui.getComponent('proppane');
   var captureLeft = this.getLeft();
   var allowLeft = this.getAllowLeft(Number(e.target.getValue()));
-  
+
   layout.getWorkspace().normalVersioning(function(version) {
-  
+
     version.upHandler(function() {
       this.setLeft(allowLeft);
       guide.adjustToTargetShapeBounds();
       proppane.getPropertyControl('left').setValue(allowLeft);
     }, scope);
-    
+
     version.downHandler(function() {
       this.setLeft(captureLeft);
       guide.adjustToTargetShapeBounds();
@@ -901,15 +916,15 @@ thin.core.ModuleShape.prototype.setTopForPropertyUpdate = function(e) {
   var proppane = thin.ui.getComponent('proppane');
   var captureTop = this.getTop();
   var allowTop = this.getAllowTop(Number(e.target.getValue()));
-  
+
   layout.getWorkspace().normalVersioning(function(version) {
-  
+
     version.upHandler(function() {
       this.setTop(allowTop);
       guide.adjustToTargetShapeBounds();
       proppane.getPropertyControl('top').setValue(allowTop);
     }, scope);
-    
+
     version.downHandler(function() {
       this.setTop(captureTop);
       guide.adjustToTargetShapeBounds();
@@ -933,14 +948,14 @@ thin.core.ModuleShape.prototype.setWidthForPropertyUpdate = function(e) {
   var allowWidth = Number(e.target.getValue());
 
   layout.getWorkspace().normalVersioning(function(version) {
-  
+
     version.upHandler(function() {
       this.setWidth(allowWidth);
       this.setLeft(captureLeft);
       guide.adjustToTargetShapeBounds();
       proppane.getPropertyControl('width').setValue(allowWidth);
     }, scope);
-    
+
     version.downHandler(function() {
       this.setWidth(captureWidth);
       this.setLeft(captureLeft);
@@ -963,16 +978,16 @@ thin.core.ModuleShape.prototype.setHeightForPropertyUpdate = function(e) {
   var captureHeight = this.getHeight();
   var captureTop = this.getTop();
   var allowHeight = Number(e.target.getValue());
-  
+
   layout.getWorkspace().normalVersioning(function(version) {
-  
+
     version.upHandler(function() {
       this.setHeight(allowHeight);
       this.setTop(captureTop);
       guide.adjustToTargetShapeBounds();
       proppane.getPropertyControl('height').setValue(allowHeight);
     }, scope);
-    
+
     version.downHandler(function() {
       this.setHeight(captureHeight);
       this.setTop(captureTop);
@@ -1003,12 +1018,12 @@ thin.core.ModuleShape.prototype.setFillForPropertyUpdate = function(e) {
   }
 
   this.getLayout().getWorkspace().normalVersioning(function(version) {
-  
+
     version.upHandler(function() {
       this.setFill(fill);
       proppane.getPropertyControl('fill').setValue(fillColor);
     }, scope);
-    
+
     version.downHandler(function() {
       this.setFill(captureFill);
       proppane.getPropertyControl('fill').setValue(captureFillColor);
@@ -1030,7 +1045,7 @@ thin.core.ModuleShape.prototype.setStrokeForPropertyUpdate = function(e) {
   var captureStrokeColor = captureStroke.getColor();
   //  choose none color returned null.
   var strokeColor = /** @type {string} */(thin.getValIfNotDef(e.target.getValue(), proppaneBlank));
-  var stroke = new goog.graphics.Stroke(captureStroke.getWidth(), 
+  var stroke = new goog.graphics.Stroke(captureStroke.getWidth(),
                      thin.isExactlyEqual(strokeColor, proppaneBlank) ? strokeNone : strokeColor);
 
   if (thin.isExactlyEqual(captureStrokeColor, strokeNone)) {
@@ -1038,12 +1053,12 @@ thin.core.ModuleShape.prototype.setStrokeForPropertyUpdate = function(e) {
   }
 
   this.getLayout().getWorkspace().normalVersioning(function(version) {
-  
+
     version.upHandler(function() {
       this.setStroke(stroke);
       proppane.getPropertyControl('stroke').setValue(strokeColor);
     }, scope);
-    
+
     version.downHandler(function() {
       this.setStroke(captureStroke);
       proppane.getPropertyControl('stroke').setValue(captureStrokeColor);
@@ -1063,17 +1078,17 @@ thin.core.ModuleShape.prototype.setStrokeWidthForPropertyUpdate = function(e) {
   var propStrokeWidth = thin.core.ModuleElement.DEFAULT_STROKEWIDTH_OF_PROPPANE;
   var strokeWidth = Number(e.target.getValue());
   var captureStrokeWidth = this.getStroke().getWidth();
-  var showStrokeWidth = thin.isExactlyEqual(strokeWidth, propStrokeWidth) ? 
+  var showStrokeWidth = thin.isExactlyEqual(strokeWidth, propStrokeWidth) ?
                             proppaneBlank : strokeWidth;
-  var showCaptureStrokeWidth = thin.isExactlyEqual(captureStrokeWidth, propStrokeWidth) ? 
+  var showCaptureStrokeWidth = thin.isExactlyEqual(captureStrokeWidth, propStrokeWidth) ?
                                    proppaneBlank : captureStrokeWidth;
-  
+
   this.getLayout().getWorkspace().normalVersioning(function(version) {
     version.upHandler(function() {
       this.setStrokeWidth(strokeWidth);
       proppane.getPropertyControl('stroke-width').setInternalValue(showStrokeWidth);
     }, scope);
-    
+
     version.downHandler(function() {
       this.setStrokeWidth(captureStrokeWidth);
       proppane.getPropertyControl('stroke-width').setInternalValue(showCaptureStrokeWidth);
@@ -1091,14 +1106,14 @@ thin.core.ModuleShape.prototype.setStrokeDashTypeForPropertyUpdate = function(e)
   var proppane = thin.ui.getComponent('proppane');
   var strokeType = e.target.getValue();
   var captureStrokeType = this.getStrokeDashType();
-  
+
   this.getLayout().getWorkspace().normalVersioning(function(version) {
-  
+
     version.upHandler(function() {
       this.setStrokeDashFromType(strokeType);
       proppane.getPropertyControl('stroke-dash-type').setValue(strokeType);
     }, scope);
-    
+
     version.downHandler(function() {
       this.setStrokeDashFromType(captureStrokeType);
       proppane.getPropertyControl('stroke-dash-type').setValue(captureStrokeType);
@@ -1116,14 +1131,14 @@ thin.core.ModuleShape.prototype.setShapeIdForPropertyUpdate = function(e) {
   var proppane = thin.ui.getComponent('proppane');
   var shapeId = e.target.getValue();
   var captureShapeId = this.getShapeId();
-  
+
   this.getLayout().getWorkspace().normalVersioning(function(version) {
 
     version.upHandler(function() {
       this.setShapeId(shapeId);
       proppane.getPropertyControl('shape-id').setValue(shapeId);
     }, scope);
-    
+
     version.downHandler(function() {
       this.setShapeId(captureShapeId);
       proppane.getPropertyControl('shape-id').setValue(captureShapeId);
@@ -1141,13 +1156,13 @@ thin.core.ModuleShape.prototype.setDescPropertyUpdate = function(e) {
   var proppane = thin.ui.getComponent('proppane');
   var desc = e.target.getValue();
   var captureDesc = this.getDesc();
-  
+
   this.getLayout().getWorkspace().normalVersioning(function(version) {
     version.upHandler(function() {
       this.setDesc(desc);
       proppane.getPropertyControl('desc').setValue(desc);
     }, scope);
-    
+
     version.downHandler(function() {
       this.setDesc(captureDesc);
       proppane.getPropertyControl('desc').setValue(captureDesc);
@@ -1165,14 +1180,14 @@ thin.core.ModuleShape.prototype.setDisplayForPropertyUpdate = function(e) {
   var proppane = thin.ui.getComponent('proppane');
   var display = e.target.isChecked();
   var captureDisplay = this.getDisplay();
-  
+
   this.getLayout().getWorkspace().normalVersioning(function(version) {
-  
+
     version.upHandler(function() {
       this.setDisplay(display);
       proppane.getPropertyControl('display').setChecked(display);
     }, scope);
-    
+
     version.downHandler(function() {
       this.setDisplay(captureDisplay);
       proppane.getPropertyControl('display').setChecked(captureDisplay);
@@ -1195,7 +1210,7 @@ thin.core.ModuleShape.prototype.setSectionEnabled = function(
   var listShape = listHelper.getTarget();
   var captureBounds = listShape.getBounds();
   var captureActiveSectionName = listHelper.getActiveSectionName();
-  
+
   layout.getWorkspace().normalVersioning(function(version) {
     version.upHandler(function() {
       listShape.setEnabledForSection(enabled, sectionName);
@@ -1203,7 +1218,7 @@ thin.core.ModuleShape.prototype.setSectionEnabled = function(
       listHelper.initActiveSectionName();
       listShape.updateProperties();
     }, scope);
-    
+
     version.downHandler(function() {
       listShape.setBounds(captureBounds);
       listShape.setEnabledForSection(!enabled, sectionName);
@@ -1222,4 +1237,117 @@ thin.core.ModuleShape.prototype.setSectionEnabled = function(
  */
 thin.core.ModuleShape.prototype.isIntersects = function(judgement_box) {
   return goog.math.Box.intersects(judgement_box, this.getBoxSize());
+};
+
+
+/**
+ * @this {goog.graphics.Element}
+ * @param {string?} color
+ */
+thin.core.ModuleShape.prototype.setFillColor = function(color) {
+  var fillNone = thin.core.ModuleShape.NONE;
+
+  var fillColor = /** @type {string} */(thin.getValIfNotDef(color, ''));
+  var fill = new goog.graphics.SolidFill(
+    thin.isExactlyEqual(fillColor, '') ? fillNone : fillColor);
+
+  this.setFill(fill);
+};
+
+
+/**
+ * @this {goog.graphics.Element}
+ * @return {string}
+ */
+thin.core.ModuleShape.prototype.getType = function() {
+  return this.getElement().tagName;
+};
+
+
+/**
+ * @private
+ * @this {goog.graphics.Element}
+ * @return {Object}
+ */
+thin.core.ModuleShape.prototype.asJSON_ = function() {
+  var style = {};
+
+  var stroke = this.getStroke();
+  if (stroke) {
+    goog.object.extend(style, {
+      'border-color': stroke.getColor(),
+      'border-width': this.getStrokeWidth(),
+      'border-style': this.getStrokeDashType()
+    });
+  }
+  var fill = this.getFill();
+  if (fill) {
+    goog.object.set(style, 'fill-color', fill.getColor());
+  }
+
+  return {
+    'id': this.getShapeId(),
+    'type': this.getType(),
+    'display': this.getDisplay(),
+    'description': this.getDesc(),
+    // Absolute positions(without translate)
+    'x': this.left_,
+    'y': this.top_,
+    'width': this.width_,
+    'height': this.height_,
+    'style': style
+  };
+};
+
+
+/**
+ * @private
+ * @this {goog.graphics.Element}
+ * @param {Object}
+ */
+thin.core.ModuleShape.prototype.update_ = function(attrs) {
+  goog.object.forEach(attrs, function(value, attr) {
+    switch (attr) {
+      case 'id':
+        this.setShapeId(value);
+        break;
+      case 'description':
+        this.setDesc(value);
+        break;
+      case 'x':
+        this.setLeft(value + this.getParentTransLateX());
+        break;
+      case 'y':
+        this.setTop(value + this.getParentTransLateY());
+        break;
+      case 'width':
+        this.setWidth(value);
+        break;
+      case 'height':
+        this.setHeight(value);
+        break;
+      case 'display':
+        this.setDisplay(value);
+        break;
+      case 'border-color':
+        this.setStrokeColor(value);
+        break;
+      case 'border-width':
+        this.setStrokeWidth(value);
+        break;
+      case 'border-style':
+        this.setStrokeDashFromType(value);
+        break;
+      case 'fill-color':
+        this.setFillColor(value);
+        break;
+      case 'style':
+        this.update(value);
+        break;
+      default:
+        // Do Nothing
+        break;
+      }
+
+  }, this);
 };

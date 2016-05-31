@@ -38,7 +38,6 @@ goog.require('thin.core.Helpers');
 goog.require('thin.core.StateManager');
 goog.require('thin.core.ShapeIdManager');
 goog.require('thin.core.ShapeIdManager.DefaultPrefix');
-goog.require('thin.core.LayoutStructure');
 goog.require('thin.core.ClipboardShapeManager');
 
 
@@ -95,10 +94,11 @@ thin.core.Layout.prototype.canvasElement = null;
 
 
 /**
+ * @deprecated
  * @param {Element} element
  */
 thin.core.Layout.prototype.drawListShapeFromElement = function(element) {
-  var shape = thin.core.ListShape.createFromElement(element, this);
+  var shape = thin.core.ShapeStructure.createListShapeFromElement(element, this);
   this.setOutlineForSingle(shape);
   this.manager_.addShape(shape);
   this.appendChild(shape);
@@ -106,6 +106,7 @@ thin.core.Layout.prototype.drawListShapeFromElement = function(element) {
 
 
 /**
+ * @deprecated
  * @param {Element} element
  * @param {thin.core.ListSectionShape=} opt_sectionShape
  */
@@ -125,35 +126,35 @@ thin.core.Layout.prototype.drawBasicShapeFromElement = function(element, opt_sec
 
   switch (this.getElementAttribute(element, 'class')) {
     case thin.core.RectShape.CLASSID:
-      shape = thin.core.RectShape.createFromElement(element, this, opt_shapeIdManager);
+      shape = thin.core.ShapeStructure.createRectShapeFromElement(element, this, opt_shapeIdManager);
       break;
 
     case thin.core.EllipseShape.CLASSID:
-      shape = thin.core.EllipseShape.createFromElement(element, this, opt_shapeIdManager);
+      shape = thin.core.ShapeStructure.createEllipseShapeFromElement(element, this, opt_shapeIdManager);
       break;
 
     case thin.core.LineShape.CLASSID:
-      shape = thin.core.LineShape.createFromElement(element, this, opt_shapeIdManager);
+      shape = thin.core.ShapeStructure.createLineShapeFromElement(element, this, opt_shapeIdManager);
       break;
 
     case thin.core.TblockShape.CLASSID:
-      shape = thin.core.TblockShape.createFromElement(element, this, opt_shapeIdManager);
+      shape = thin.core.ShapeStructure.createTblockShapeFromElement(element, this, opt_shapeIdManager);
       break;
 
     case thin.core.PageNumberShape.CLASSID:
-      shape = thin.core.PageNumberShape.createFromElement(element, this, opt_shapeIdManager);
+      shape = thin.core.ShapeStructure.createPageNumberShapeFromElement(element, this, opt_shapeIdManager);
       break;
 
     case thin.core.TextShape.CLASSID:
-      shape = thin.core.TextShape.createFromElement(element, this, opt_shapeIdManager);
+      shape = thin.core.ShapeStructure.createTextShapeFromElement(element, this, opt_shapeIdManager);
       break;
 
     case thin.core.ImageShape.CLASSID:
-      shape = thin.core.ImageShape.createFromElement(element, this, opt_shapeIdManager);
+      shape = thin.core.ShapeStructure.createImageShapeFromElement(element, this, opt_shapeIdManager);
       break;
 
     case thin.core.ImageblockShape.CLASSID:
-      shape = thin.core.ImageblockShape.createFromElement(element, this, opt_shapeIdManager);
+      shape = thin.core.ShapeStructure.createImageblockShapeFromElement(element, this, opt_shapeIdManager);
       break;
 
     default:
@@ -168,6 +169,7 @@ thin.core.Layout.prototype.drawBasicShapeFromElement = function(element, opt_sec
 
 
 /**
+ * @deprecated
  * @param {NodeList} elements
  * @param {thin.core.ListSectionShape=} opt_sectionShape
  */
@@ -182,6 +184,88 @@ thin.core.Layout.prototype.drawShapeFromElements = function(elements, opt_sectio
       layout.drawBasicShapeFromElement(/** @type {Element} */(element), opt_sectionShape);
     }
   });
+};
+
+
+/**
+ * @param {Object} items
+ * @param {thin.core.ListSectionShape=} opt_sectionShape
+ */
+thin.core.Layout.prototype.drawShapes = function(items, opt_sectionShape) {
+  var shape;
+  goog.array.forEach(items, function(item) {
+    shape = this.drawShape(item, opt_sectionShape);
+  }, this);
+};
+
+
+/**
+ * @param {Object} item
+ * @param {thin.core.ListSectionShape=} opt_sectionShape
+ *
+ * @return {goog.graphics.SvgGroupElement}
+ */
+thin.core.Layout.prototype.drawShape = function(item, opt_sectionShape) {
+  var opt_group;
+  var shape;
+
+  if (opt_sectionShape) {
+    var manager = opt_sectionShape.getManager();
+    opt_group = opt_sectionShape.getGroup();
+  } else {
+    var manager = this.getManager();
+  }
+
+  switch (item['type']) {
+    case 'rect':
+      shape = this.createRectShape();
+      break;
+
+    case 'ellipse':
+      shape = this.createEllipseShape();
+      break;
+
+    case 'line':
+      shape = this.createLineShape();
+      break;
+
+    case 'text-block':
+      shape = this.createTblockShape();
+      break;
+
+    case 'page-number':
+      shape = this.createPageNumberShape();
+      break;
+
+    case 'text':
+      shape = this.createTextShape();
+      break;
+
+    case 'image':
+      shape = this.createImageShape();
+      break;
+
+    case 'image-block':
+      shape = this.createImageblockShape();
+      break;
+
+    case 'list':
+      shape = this.createListShape();
+      break;
+
+    default:
+      throw new Error('Unknown shape.');
+      break;
+  }
+
+  this.setOutlineForSingle(shape);
+  manager.addShape(shape, opt_sectionShape);
+  this.appendChild(shape, opt_group);
+  shape.setupEventHandlers();
+
+  shape.update(item);
+
+  return shape;
 };
 
 
@@ -389,10 +473,18 @@ thin.core.Layout.prototype.createHelpersElement = function(tagName, attrs) {
 
 
 /**
- * @return {string}
+ * @return {Object}
  */
-thin.core.Layout.prototype.toXML = function() {
-  return thin.core.LayoutStructure.serialize(this);
+thin.core.Layout.prototype.asJSON = function() {
+  var childNodes = this.getCanvasElement().getElement().childNodes;
+  var identifiers = goog.array.map(childNodes, function(element, i) {
+    return element.getAttribute('id');
+  });
+
+  var manager = this.getManager().getShapesManager();
+  return goog.array.map(identifiers, function(identifier, i) {
+    return manager.getShapeByIdentifier(identifier).asJSON();
+  });
 };
 
 
@@ -870,7 +962,7 @@ thin.core.Layout.prototype.pasteShapes = function() {
           var referringShape = pasteShapes[count];
           if (referringShape.instanceOfTblockShape()) {
             if (!thin.isExactlyEqual(refId, defaultRefId) && !referringShape.isReferences()) {
-              referringShape.setRefId(refId, layout.getShapeForShapeId(refId, shapeIdManager));
+              referringShape.setRefId(refId);
             }
           }
         });
@@ -889,7 +981,7 @@ thin.core.Layout.prototype.pasteShapes = function() {
           var referringShape = pasteShapes[count];
           if (referringShape.instanceOfTblockShape()) {
             if (!thin.isExactlyEqual(refId, defaultRefId) && !referringShape.isReferences()) {
-              referringShape.setRefId(refId, layout.getShapeForShapeId(refId));
+              referringShape.setRefId(refId);
             }
           }
         });
@@ -1023,23 +1115,23 @@ thin.core.Layout.prototype.removeShape = function(shape) {
       listHelper.clearChangingPageSetShape();
     }
     goog.array.forEach(shape.getPageNumberReferences(), function(target) {
-      target.removeTargetShape();
+      target.removeTargetShapeId();
     });
   }
 
   if (shape.instanceOfTblockShape()) {
     if (shape.isReferences()) {
       goog.array.forEach(shape.getReferringShapes(), function(target) {
-        target.removeReferenceShape();
+        target.removeReferenceShapeId();
       });
     }
     if (shape.isReferring()) {
-      shape.removeReferenceShape();
+      shape.removeReferenceShapeId();
     }
   }
 
   if (shape.instanceOfPageNumberShape()) {
-    shape.removeTargetShape();
+    shape.removeTargetShapeId();
   }
 
   if (shape.isAffiliationListShape()) {
@@ -1275,7 +1367,7 @@ thin.core.Layout.prototype.createTblockShape = function() {
   shape.setFormatType(thin.core.TblockShape.DEFAULT_FORMAT_TYPE);
   shape.setDefaultValueOfLink(thin.core.TblockShape.DEFAULT_VALUE);
   shape.setBaseFormat(thin.core.TblockShape.DEFAULT_FORMAT_BASE);
-  shape.setInternalRefId(thin.core.TblockShape.DEFAULT_REFID);
+  shape.setRefId(thin.core.TblockShape.DEFAULT_REFID);
   shape.setKerning(thin.core.TextStyle.DEFAULT_KERNING);
   shape.setDisplay(thin.core.ModuleShape.DEFAULT_DISPLAY);
   shape.setMultiModeInternal(thin.core.TblockShape.DEFAULT_MULTIPLE);

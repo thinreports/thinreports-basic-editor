@@ -132,50 +132,6 @@ thin.core.TextShape.prototype.updateToolbarUI = function() {
 
 
 /**
- * @param {Element} element
- * @param {thin.core.Layout} layout
- * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.core.TextShape}
- */
-thin.core.TextShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-
-  var deco = layout.getElementAttribute(element, 'text-decoration');
-  var lineHeightRatio = layout.getElementAttribute(element, 'x-line-height-ratio');
-  var kerning = layout.getElementAttribute(element, 'kerning');
-  var shape = new thin.core.TextShape(element, layout);
-
-  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
-  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
-  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
-  shape.setFill(new goog.graphics.SolidFill(layout.getElementAttribute(element, 'fill')));
-  shape.createTextContentFromElement(element.childNodes);
-  shape.setFontItalic(layout.getElementAttribute(element, 'font-style') == 'italic');
-  shape.setFontFamily(layout.getElementAttribute(element, 'font-family'));
-  var fontSize = Number(layout.getElementAttribute(element, 'font-size'));
-  shape.setFontSize(fontSize);
-  shape.setFontUnderline(/underline/.test(deco));
-  shape.setFontLinethrough(/line-through/.test(deco));
-  shape.setFontBold(layout.getElementAttribute(element, 'font-weight') == 'bold');
-  shape.setTextAnchor(layout.getElementAttribute(element, 'text-anchor'));
-
-  if (element.hasAttribute('x-valign')) {
-    shape.setVerticalAlign(layout.getElementAttribute(element, 'x-valign'));
-  }
-  if (thin.isExactlyEqual(kerning,
-        thin.core.TextStyle.DEFAULT_ELEMENT_KERNING)) {
-    kerning = thin.core.TextStyle.DEFAULT_KERNING;
-  }
-  shape.setKerning(/** @type {string} */ (kerning));
-  if (!goog.isNull(lineHeightRatio)) {
-    shape.setTextLineHeightRatio(lineHeightRatio);
-  }
-
-  shape.initIdentifier();
-  return shape;
-};
-
-
-/**
  * @param {Element=} opt_element
  * @return {thin.core.Box}
  * @private
@@ -1110,4 +1066,38 @@ thin.core.TextShape.prototype.disposeInternal = function() {
     textline.dispose();
   });
   delete this.textLineContainer_;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.TextShape.prototype.getType = function() {
+  return 'text';
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.TextShape.prototype.asJSON = function() {
+  var object = goog.base(this, 'asJSON');
+
+  goog.object.set(object, 'texts', this.getTextContent().split("\n"));
+
+  return object;
+};
+
+
+/**
+ * @param {Object} attrs
+ */
+thin.core.TextShape.prototype.update = function(attrs) {
+  goog.base(this, 'update', attrs);
+
+  if (goog.object.containsKey(attrs, 'texts')) {
+    this.createTextContent(attrs['texts'].join("\n"));
+    this.updateDecoration();
+    this.updatePosition();
+  }
 };

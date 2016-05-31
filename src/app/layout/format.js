@@ -28,15 +28,16 @@ goog.require('thin.Compatibility');
  * @extends {goog.Disposable}
  */
 thin.layout.Format = function(opt_format) {
-  goog.Disposable.call(this);
+  goog.base(this);
 
   this.state_ = {};
   var currentVersion = thin.getVersion();
-  
+
   if (goog.isDefAndNotNull(opt_format) && goog.isObject(opt_format)) {
-    this.setSvg(opt_format['svg']);
-    this.page = this.setPage(opt_format['config']);
-    
+    this.setItems(opt_format['items']);
+    this.page = this.setPage(opt_format['report']);
+    this.page.setTitle(opt_format['title']);
+
     var formatVersion = opt_format['version'];
     var state = opt_format['state'];
     var guides;
@@ -44,7 +45,7 @@ thin.layout.Format = function(opt_format) {
     this.isOverWritableVersion_ = thin.Compatibility.check(currentVersion, '>', formatVersion);
     this.version_ = formatVersion;
 
-    if (state && (guides = state['layout-guide'])) {
+    if (state && (guides = state['layout-guides'])) {
       this.setLayoutGuides(guides);
     }
   } else {
@@ -75,10 +76,10 @@ thin.layout.Format.prototype.isOverWritableVersion_ = false;
 
 
 /**
- * @type {string}
+ * @type {Object}
  * @private
  */
-thin.layout.Format.prototype.svg_;
+thin.layout.Format.prototype.items_;
 
 
 /**
@@ -93,7 +94,45 @@ thin.layout.Format.prototype.state_;
  * @return {thin.layout.Format}
  */
 thin.layout.Format.parse = function(content) {
-  return new thin.layout.Format(JSON.parse(content));
+  var object = JSON.parse(content);
+  var version = object['version'];
+
+  thin.Compatibility.applyIf(version, '<', '0.9.0', function() {
+    var state = goog.object.clone(object['state']);
+    var config = goog.object.clone(object['config']);
+    var page = goog.object.clone(config['page']);
+
+    var margin = [];
+    goog.array.insertAt(margin, page['margin-top'], 0);
+    goog.array.insertAt(margin, page['margin-right'], 1);
+    goog.array.insertAt(margin, page['margin-bottom'], 2);
+    goog.array.insertAt(margin, page['margin-left'], 3);
+
+    var report = {
+      'paper-type': page['paper-type'],
+      'orientation': page['orientation'],
+      'margin': margin
+    };
+
+    if (thin.layout.FormatPage.isUserType(report['paper-type'])) {
+      goog.object.extend(report, {
+        'width': page['width'],
+        'height': page['height']
+      });
+    }
+
+    goog.object.set(object, 'title', config['title']);
+    goog.object.set(object, 'report', report);
+    goog.object.set(object, 'items', object['svg']);
+    goog.object.set(object, 'state', {
+      'layout-guides': state['layout-guide']
+    });
+
+    goog.object.remove(object, 'config');
+    goog.object.remove(object, 'svg');
+  });
+
+  return new thin.layout.Format(object);
 };
 
 
@@ -104,23 +143,25 @@ thin.layout.Format.prototype.toJSON = function() {
   if (this.isOverWritableVersion_) {
     this.version_ = thin.getVersion();
   }
-  
-  return goog.json.serialize({
+
+  var object = {
     "version": this.version_,
-    "config": this.page.toHash(),
-    "svg": this.svg_,
+    "items": this.items_,
     "state": {
-      "layout-guide": this.getLayoutGuides()
+      "layout-guides": this.getLayoutGuides()
     }
-  });
+  };
+  goog.object.extend(object, this.page.asJSON());
+
+  return JSON.stringify(object, null, '  ');
 };
 
 
 /**
- * @return {string}
+ * @return {object}
  */
-thin.layout.Format.prototype.getSvg = function() {
-  return this.svg_;
+thin.layout.Format.prototype.getItems = function() {
+  return this.items_;
 };
 
 
@@ -128,7 +169,7 @@ thin.layout.Format.prototype.getSvg = function() {
  * @return {Array}
  */
 thin.layout.Format.prototype.getLayoutGuides = function() {
-  return this.state_['layout-guide'] || [];
+  return this.state_['layout-guides'] || [];
 };
 
 
@@ -152,15 +193,15 @@ thin.layout.Format.prototype.getVersion = function() {
  * @param {Array} guides
  */
 thin.layout.Format.prototype.setLayoutGuides = function(guides) {
-  this.state_['layout-guide'] = guides;
+  this.state_['layout-guides'] = guides;
 };
 
 
 /**
- * @param {string} svg
+ * @param {Object} items
  */
-thin.layout.Format.prototype.setSvg = function(svg) {
-  this.svg_ = svg;
+thin.layout.Format.prototype.setItems = function(items) {
+  this.items_ = items;
 };
 
 
@@ -176,7 +217,7 @@ thin.layout.Format.prototype.setPage = function(config) {
 /** inheritDoc */
 thin.layout.Format.prototype.disposeInternal = function() {
   thin.layout.Format.superClass_.disposeInternal.call(this);
-  
+
   this.page.dispose();
   delete this.page;
 };

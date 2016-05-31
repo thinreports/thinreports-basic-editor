@@ -45,54 +45,18 @@ goog.inherits(thin.core.AbstractTextGroup, thin.core.AbstractBoxGroup);
 
 
 /**
- * The latest fill applied to this element.
- * @type {goog.graphics.Fill?}
- * @protected
- */
-thin.core.AbstractTextGroup.prototype.fill = null;
-
-
-/**
- * The latest stroke applied to this element.
- * @type {goog.graphics.Stroke?}
- * @private
- */
-thin.core.AbstractTextGroup.prototype.stroke_ = null;
-
-
-/**
  * Sets the fill for this element.
- * @param {goog.graphics.Fill?} fill The fill object.
  */
-thin.core.AbstractTextGroup.prototype.setFill = function(fill) {
-  this.fill = fill;
-  this.getLayout().setElementFill(this, fill);
-};
-
-
-/**
- * @return {goog.graphics.Fill?} fill The fill object.
- */
-thin.core.AbstractTextGroup.prototype.getFill = function() {
-  return this.fill;
+thin.core.AbstractTextGroup.prototype.setFillInternal = function() {
+  this.getLayout().setElementFill(this, this.fill);
 };
 
 
 /**
  * Sets the stroke for this element.
- * @param {goog.graphics.Stroke?} stroke The stroke object.
  */
-thin.core.AbstractTextGroup.prototype.setStroke = function(stroke) {
-  this.stroke_ = stroke;
-  this.getLayout().setElementStroke(this, stroke);
-};
-
-
-/**
- * @return {goog.graphics.Stroke?} stroke The stroke object.
- */
-thin.core.AbstractTextGroup.prototype.getStroke = function() {
-  return this.stroke_;
+thin.core.AbstractTextGroup.prototype.setStrokeInternal = function() {
+  this.getLayout().setElementStroke(this, this.stroke_);
 };
 
 
@@ -179,11 +143,28 @@ thin.core.AbstractTextGroup.prototype.setTextLineHeightRatio = function(ratio) {
 
 
 /**
+ * @deprecated See: https://github.com/thinreports/thinreports-editor/issues/38
+ * @param {string|number} spacing
+ * @return {string}
+ */
+thin.core.AbstractTextGroup.prototype.convertKerningToDefaultInSince06 = function(spacing) {
+  if (isNaN(Number(spacing))) {
+    spacing = thin.core.TextStyle.DEFAULT_KERNING;
+  }
+
+  return spacing;
+};
+
+
+/**
  * @param {string} spacing
  */
 thin.core.AbstractTextGroup.prototype.setKerning = function(spacing) {
   var layout = this.getLayout();
   var element = this.getElement();
+
+  spacing = this.convertKerningToDefaultInSince06(spacing);
+
   if (thin.isExactlyEqual(spacing, thin.core.TextStyle.DEFAULT_KERNING)) {
     layout.setElementAttributes(element, {
       'kerning': thin.core.TextStyle.DEFAULT_ELEMENT_KERNING,
@@ -303,6 +284,15 @@ thin.core.AbstractTextGroup.prototype.getTextLineHeightRatio = function() {
 /**
  * @return {string}
  */
+thin.core.AbstractTextGroup.prototype.getTextLineHeight = function() {
+  return /** @type {string} */ (thin.getValIfNotDef(this.getLayout().getElementAttribute(
+      this.getElement(), 'x-line-height'), thin.core.TextStyle.DEFAULT_LINEHEIGHT));
+};
+
+
+/**
+ * @return {string}
+ */
 thin.core.AbstractTextGroup.prototype.getKerning = function() {
   return /** @type {string} */ (thin.getValIfNotDef(this.textStyle_.getKerning(),
              thin.core.TextStyle.DEFAULT_KERNING));
@@ -398,4 +388,191 @@ thin.core.AbstractTextGroup.prototype.disposeInternal = function() {
 
   delete this.fontStyle_;
   delete this.textStyle_;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.AbstractTextGroup.prototype.getTextAnchorAsJSON = function() {
+  var textAlignAsJSON = '';
+  var horizonAlignType = thin.core.TextStyle.HorizonAlignType;
+
+  // SVG: start, middle, end
+  // TLF: left, center, right
+  switch(this.getTextAnchor()) {
+    case horizonAlignType.MIDDLE:
+      textAlignAsJSON = 'center';
+      break;
+    case horizonAlignType.END:
+      textAlignAsJSON = 'right';
+      break;
+    default:
+      textAlignAsJSON = 'left';
+      break;
+  }
+
+  return textAlignAsJSON;
+};
+
+
+/**
+ * @param {string} textAlignFromJSON
+ */
+thin.core.AbstractTextGroup.prototype.setTextAnchorFromJSON = function(textAlignFromJSON) {
+  var anchor = '';
+  var horizonAlignType = thin.core.TextStyle.HorizonAlignType;
+
+  // SVG: start, middle, end
+  // TLF: left, center, right
+  switch(textAlignFromJSON) {
+    case 'center':
+      anchor = horizonAlignType.MIDDLE;
+      break;
+    case 'right':
+      anchor = horizonAlignType.END;
+      break;
+    default:
+      anchor = horizonAlignType.START;
+      break;
+  }
+
+  this.setTextAnchor(anchor);
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.AbstractTextGroup.prototype.getVerticalAlignAsJSON = function() {
+  var verticalAlignAsJSON = '';
+  var verticalAlignType = thin.core.TextStyle.VerticalAlignType;
+
+  // SVG: top, center, bottom
+  // TLF: top, middle, bottom
+  switch(this.getVerticalAlign()) {
+    case verticalAlignType.CENTER:
+      verticalAlignAsJSON = 'middle';
+      break;
+    case verticalAlignType.BOTTOM:
+      verticalAlignAsJSON = verticalAlignType.BOTTOM;
+      break;
+    default:
+      verticalAlignAsJSON = verticalAlignType.TOP;
+      break;
+  }
+
+  return verticalAlignAsJSON;
+};
+
+
+/**
+ * @param {string} verticalAlignFromJSON
+ */
+thin.core.AbstractTextGroup.prototype.setVerticalAlignFromJSON = function(verticalAlignFromJSON) {
+  var valign = '';
+  var verticalAlignType = thin.core.TextStyle.VerticalAlignType;
+
+  // SVG: top, center, bottom
+  // TLF: top, middle, bottom
+  switch(verticalAlignFromJSON) {
+    case 'middle':
+      valign = verticalAlignType.CENTER;
+      break;
+    default:
+      valign = verticalAlignFromJSON;
+      break;
+  }
+
+  this.setVerticalAlign(valign);
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.AbstractTextGroup.prototype.asJSON = function() {
+  var object = this.asJSON_();
+
+  var lineHeight = this.getTextLineHeight();
+  var lineHeightRatio = this.getTextLineHeightRatio();
+  if (!thin.isExactlyEqual(lineHeightRatio, thin.core.TextStyle.DEFAULT_LINEHEIGHT)) {
+    lineHeight = Number(lineHeight);
+    lineHeightRatio = Number(lineHeightRatio);
+  }
+
+  var letterSpecing = this.getKerning();
+  if (!thin.isExactlyEqual(letterSpecing, thin.core.TextStyle.DEFAULT_KERNING)) {
+    letterSpecing = Number(letterSpecing);
+  }
+
+  goog.object.extend(object['style'], {
+    'font-family': [ this.getFontFamily() ],
+    'font-size': this.getFontSize(),
+    'color': goog.object.get(object['style'], 'fill-color'),
+    'text-align': this.getTextAnchorAsJSON(),
+    'vertical-align': this.getVerticalAlignAsJSON(),
+    'line-height': lineHeight,
+    'line-height-ratio': lineHeightRatio,
+    'letter-spacing': letterSpecing
+  });
+  goog.object.extend(object['style'], this.fontStyle_.asJSON());
+
+  goog.object.remove(object['style'], 'fill-color');
+
+  return object;
+};
+
+
+/**
+ * @param {Object} attrs
+ */
+thin.core.AbstractTextGroup.prototype.update = function(attrs) {
+  this.update_(attrs);
+
+  goog.object.forEach(attrs, function(value, attr) {
+    switch (attr) {
+      case 'font-family':
+        this.setFontFamily(value[0]);
+        break;
+      case 'font-size':
+        this.setFontSize(value);
+        break;
+      case 'color':
+        this.setFillColor(value);
+        break;
+      case 'text-align':
+        this.setTextAnchorFromJSON(value);
+        break;
+      case 'vertical-align':
+        this.setVerticalAlignFromJSON(value);
+        break;
+      case 'line-height-ratio':
+        this.setTextLineHeightRatio(value);
+        break;
+      case 'letter-spacing':
+        this.setKerning(value);
+        break;
+      case 'font-style':
+        goog.array.forEach(value, function(font_style) {
+          switch(font_style) {
+            case 'bold':
+              this.setFontBold(true);
+              break;
+            case 'italic':
+              this.setFontItalic(true);
+              break;
+            case 'linethrough':
+              this.setFontLinethrough(true);
+              break;
+            case 'underline':
+              this.setFontUnderline(true);
+              break;
+            }
+        }, this);
+      default:
+        // Do Nothing
+        break;
+      }
+  }, this);
 };

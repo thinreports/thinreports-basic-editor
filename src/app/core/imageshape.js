@@ -82,24 +82,6 @@ thin.core.ImageShape.prototype.getClassId = function() {
 
 
 /**
- * @param {Element} element
- * @param {thin.core.Layout} layout
- * @param {thin.core.ShapeIdManager=} opt_shapeIdManager
- * @return {thin.core.ImageShape}
- */
-thin.core.ImageShape.createFromElement = function(element, layout, opt_shapeIdManager) {
-  var shape = new thin.core.ImageShape(element, layout);
-  shape.setShapeId(layout.getElementAttribute(element, 'x-id'), opt_shapeIdManager);
-  shape.setDisplay(layout.getElementAttribute(element, 'x-display') == 'true');
-  shape.setDesc(layout.getElementAttribute(element, 'x-desc'));
-  shape.setFile(thin.core.ImageFile.createFromElement(element));
-  shape.initIdentifier();
-
-  return shape;
-};
-
-
-/**
  * @param {number} width
  * @param {number} height
  */
@@ -454,4 +436,70 @@ thin.core.ImageShape.prototype.getFile = function() {
 thin.core.ImageShape.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
   this.disposeInternalForShape();
+};
+
+
+/**
+ * @return {null}
+ */
+thin.core.ImageShape.prototype.getStroke = function() {
+  return null;
+};
+
+
+/**
+ * @return {null}
+ */
+thin.core.ImageShape.prototype.getFill = function() {
+  return null;
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.ImageShape.prototype.asJSON = function() {
+  var object = this.asJSON_();
+
+  // data:image/png;base64,xxxxxxxx
+  var content = this.getFile().getContent();
+  var dataUri = content.match(/^data:(.+?);base64,(.+)/);
+  if (dataUri) {
+    goog.object.set(object, 'data', {
+      'mime-type': dataUri[1],
+      'base64': dataUri[2]
+    });
+  }
+
+  if (goog.object.isEmpty(object['style'])) {
+    goog.object.remove(object, 'style');
+  }
+
+  return object;
+};
+
+
+/**
+ * @param {Object} attrs
+ */
+thin.core.ImageShape.prototype.update = function(attrs) {
+  this.update_(attrs);
+
+  if (goog.object.containsKey(attrs, 'data')) {
+    this.setFile(thin.core.ImageShape.createImageFileFromDataURISchema(attrs['data']));
+  }
+};
+
+
+/**
+ * @param {Object} factors
+ * @return {thin.core.ImageFile}
+ */
+thin.core.ImageShape.createImageFileFromDataURISchema = function(factors) {
+  var entry = thin.File.createDummyEntry('DummyImageFile');
+  var path = '';
+  // data:<MIME-type>;base64,<base64 data>
+  var content = 'data:' + factors['mime-type'] + ';base64,' + factors['base64'];
+
+  return new thin.core.ImageFile(new thin.File(entry, path, content));
 };

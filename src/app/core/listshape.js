@@ -136,64 +136,6 @@ thin.core.ListShape.prototype.getClassId = function() {
 
 
 /**
- * @param {Element} groupElement
- * @param {thin.core.Layout} layout
- * @return {thin.core.ListShape}
- */
-thin.core.ListShape.createFromElement = function(groupElement, layout) {
-  var shape = new thin.core.ListShape(layout,
-                    /** @type {Element} */(groupElement.cloneNode(false)), groupElement);
-  var classId = thin.core.ListShape.ClassIds;
-
-  shape.setIdShape(layout.getElementAttribute(groupElement, 'x-id'),
-    thin.core.getElementByClassNameForChildNodes(thin.core.ListShape.CLASSID + classId['ID'],
-    shape.getElement().childNodes));
-  shape.setBounds(new goog.math.Rect(
-      Number(layout.getElementAttribute(groupElement, 'x')),
-      Number(layout.getElementAttribute(groupElement, 'y')),
-      Number(layout.getElementAttribute(groupElement, 'width')),
-      Number(layout.getElementAttribute(groupElement, 'height'))));
-
-  shape.setDisplay(layout.getElementAttribute(groupElement, 'x-display') == 'true');
-  shape.setDesc(layout.getElementAttribute(groupElement, 'x-desc'));
-  if (layout.getElementAttribute(groupElement, 'x-changing-page') == 'true') {
-    shape.setChangingPage(true);
-    layout.getHelpers().getListHelper().setChangingPageSetShape(shape);
-  } else {
-    shape.setChangingPage(false);
-  }
-
-  shape.forEachSectionShape(function(sectionShapeForScope, sectionNameForScope) {
-    var sectionGroup = sectionShapeForScope.getGroup();
-    var sectionElement = thin.core.getElementByClassNameForChildNodes(
-                          layout.getElementAttribute(sectionGroup.getElement(), 'class'),
-                          groupElement.childNodes);
-    var transLateCoordinate = thin.core.ShapeStructure.getTransLateCoordinate(sectionElement);
-    sectionGroup.setTransformation(transLateCoordinate.x, transLateCoordinate.y, 0, 0, 0);
-    sectionShapeForScope.setTop(Number(layout.getElementAttribute(sectionElement, 'x-top')));
-    sectionShapeForScope.setHeight(Number(layout.getElementAttribute(sectionElement, 'x-height')));
-
-    goog.array.forEach(sectionElement.childNodes, function(element) {
-      layout.drawBasicShapeFromElement(element, sectionShapeForScope);
-    });
-  });
-
-  var shapeElement = shape.getElement();
-  shape.forEachSectionShape(function(sectionShapeForScope, sectionNameForScope) {
-    if (thin.core.ShapeStructure.getEnabledOfSection(
-            sectionShapeForScope.getGroup().getElement(), shapeElement) == "false") {
-
-      shape.setEnabledForSection(false, sectionNameForScope);
-      sectionShapeForScope.initHeightForLastActive();
-    }
-  });
-  shape.initIdentifier();
-
-  return shape;
-};
-
-
-/**
  * @param {Element=} opt_referenceElement
  */
 thin.core.ListShape.prototype.setup_ = function(opt_referenceElement) {
@@ -913,26 +855,21 @@ thin.core.ListShape.prototype.updateProperties = function() {
 
 
 /**
- * @param {thin.core.PageNumberShape} pageNumber
- */
-thin.core.ListShape.prototype.setPageNumberReference = function(pageNumber) {
-  goog.array.insert(this.pageNumberReferences_, pageNumber);
-};
-
-
-/**
  * @return {Array.<thin.core.PageNumberShape>}
  */
 thin.core.ListShape.prototype.getPageNumberReferences = function() {
-  return goog.array.clone(this.pageNumberReferences_);
-};
+  var refereces = [];
+  var shapeId = this.getShapeId();
 
+  var layout = this.getLayout();
+  layout.forPageNumberShapesEach(
+    layout.getManager().getShapesManager().get(), function(shape, i) {
+      if (thin.isExactlyEqual(shapeId, shape.getTargetId())) {
+        goog.array.insert(refereces, shape);
+      }
+    });
 
-/**
- * @param {thin.core.PageNumberShape} pageNumber
- */
-thin.core.ListShape.prototype.removePageNumberReference = function(pageNumber) {
-  goog.array.remove(this.pageNumberReferences_, pageNumber);
+  return goog.array.clone(refereces);
 };
 
 
@@ -952,4 +889,68 @@ thin.core.ListShape.prototype.disposeInternal = function() {
   delete this.face_;
   delete this.activeshapes_;
   delete this.sectionShapes_;
+};
+
+
+/**
+ * @return {string}
+ */
+thin.core.ListShape.prototype.getType = function() {
+  return 'list';
+};
+
+
+/**
+ * @return {Object}
+ */
+thin.core.ListShape.prototype.asJSON = function() {
+  var object = this.asJSON_();
+  var header = this.getSectionShape(
+    thin.core.ListHelper.SectionName.HEADER);
+
+  this.forEachSectionShape(function(section, name) {
+    goog.object.set(object, section.getType(), section.asJSON());
+  });
+
+  goog.object.extend(object, {
+    'content-height': this.getHeight() - header.getHeight(),
+    'auto-page-break': this.isChangingPage()
+  });
+
+  if (goog.object.isEmpty(object['style'])) {
+    goog.object.remove(object, 'style');
+  }
+
+  return object;
+};
+
+
+/**
+ * @param {Object} attrs
+ */
+thin.core.ListShape.prototype.update = function(attrs) {
+  var sectionName = thin.core.ListHelper.SectionName;
+  this.update_(attrs);
+
+  goog.object.forEach(attrs, function(value, attr) {
+    switch (attr) {
+      case 'auto-page-break':
+        this.setChangingPage(value);
+        break;
+      case 'header':
+        this.getSectionShape(sectionName.HEADER).update(value);
+        break;
+      case 'detail':
+        this.getSectionShape(sectionName.DETAIL).update(value);
+        break;
+      case 'page-footer':
+        this.getSectionShape(sectionName.PAGEFOOTER).update(value);
+        break;
+      case 'footer':
+        this.getSectionShape(sectionName.FOOTER).update(value);
+        break;
+      default:
+        break;
+      }
+  }, this);
 };
