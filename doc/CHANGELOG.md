@@ -1,3 +1,9 @@
+## 0.9.0
+
+* New format for layout file #56
+* Drop support for layout file created with v0.7 or lower
+* Release only ChromeApp ver from this version
+
 ## 0.8.2
 
 * Support Brazillian Portuguese locale #48
