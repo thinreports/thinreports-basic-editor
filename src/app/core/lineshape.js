@@ -379,10 +379,10 @@ thin.core.LineShape.prototype.update = function(attrs) {
 
     this.calculateDirection(y1, y2);
 
-    this.setLeft(Math.min(x1, x2) + this.getParentTransLateX());
-    this.setTop(Math.min(y1, y2) + this.getParentTransLateY());
-    this.setWidth(Math.abs(x1 - x2));
-    this.setHeight(Math.abs(y1 - y2));
+    this.setLeft_(Math.min(x1, x2) + this.getParentTransLateX());
+    this.setTop_(Math.min(y1, y2) + this.getParentTransLateY());
+    this.setWidth_(Math.abs(x1 - x2));
+    this.setHeight_(Math.abs(y1 - y2));
   }
 
 };
