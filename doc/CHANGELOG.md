@@ -1,3 +1,7 @@
+## 0.9.1
+
+* Fixed: Broken line rendering in list #62 #61 #60 [Yuki Yagi / tomokazu yamamoto / kenta murakami]
+
 ## 0.9.0
 
 * New format for layout file #56
