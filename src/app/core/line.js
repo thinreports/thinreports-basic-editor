@@ -170,12 +170,29 @@ thin.core.Line.prototype.getCoordinate = function() {
 
 /**
  * @param {number} left
+ * @private
+ */
+thin.core.Line.prototype.setLeft_ = function(left) {
+  this.left_ = thin.numberWithPrecision(left - this.getParentTransLateX());
+};
+
+
+/**
+ * @param {number} left
  */
 thin.core.Line.prototype.setLeft = function(left) {
-  left = thin.numberWithPrecision(left - this.getParentTransLateX());
-  this.left_ = left;
-  this.setX1(left);
-  this.setX2(left + this.getWidth());
+  this.setLeft_(left);
+  this.setX1(this.left_);
+  this.setX2(this.left_ + this.getWidth());
+};
+
+
+/**
+ * @param {number} top
+ * @private
+ */
+thin.core.Line.prototype.setTop_ = function(top) {
+  this.top_ = thin.numberWithPrecision(top - this.getParentTransLateY());
 };
 
 
@@ -183,18 +200,17 @@ thin.core.Line.prototype.setLeft = function(left) {
  * @param {number} top
  */
 thin.core.Line.prototype.setTop = function(top) {
-  top = thin.numberWithPrecision(top - this.getParentTransLateY());
-  this.top_ = top;
+  this.setTop_(top);
   
   var directionType = thin.core.Line.DIRECTION_;
   var direction = this.getDirection();
   
   if (direction == directionType.Y1) {
-    var y1 = top;
-    var y2 = top + this.getHeight();
+    var y1 = this.top_;
+    var y2 = this.top_ + this.getHeight();
   } else if (direction == directionType.Y2) {
-    var y1 = top + this.getHeight();
-    var y2 = top;
+    var y1 = this.top_ + this.getHeight();
+    var y2 = this.top_;
   }
   this.setY1(y1);
   this.setY2(y2);
@@ -203,11 +219,29 @@ thin.core.Line.prototype.setTop = function(top) {
 
 /**
  * @param {number} width
+ * @private
  */
-thin.core.Line.prototype.setWidth = function(width) {
+thin.core.Line.prototype.setWidth_ = function(width) {
   width = thin.numberWithPrecision(width);
   this.width_ = width;
-  this.setX2(this.getLeft() + width);
+};
+
+
+/**
+ * @param {number} width
+ */
+thin.core.Line.prototype.setWidth = function(width) {
+  this.setWidth_(width);
+  this.setX2(this.getLeft() + this.width_);
+};
+
+
+/**
+ * @param {number} height
+ * @private
+ */
+thin.core.Line.prototype.setHeight_ = function(height) {
+  this.height_ = thin.numberWithPrecision(height);
 };
 
 
@@ -215,7 +249,7 @@ thin.core.Line.prototype.setWidth = function(width) {
  * @param {number} height
  */
 thin.core.Line.prototype.setHeight = function(height) {
-  this.height_ = thin.numberWithPrecision(height);
+  this.setHeight_(height);
   this.setTop(this.getTop());
 };
 
