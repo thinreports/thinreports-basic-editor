@@ -19,7 +19,7 @@ goog.require('goog.array');
 
 
 /**
- * @param {string} func for example, 'chrome.storage.local.set'
+ * @param {string} func for example 'localStorage.getItem'
  * @param {...*} var_args arguments for func
  * @return {*}
  */
@@ -35,7 +35,7 @@ thin.platform.callNativeFunction = function(func, var_args) {
 
 
 /**
- * @param {string} func like 'chrome.storage.local.set'
+ * @param {string} func
  * @return {Array.<Object>} e.g. [Receiver, Method]
  */
 thin.platform.getNativeFunction = function(func) {
@@ -51,7 +51,7 @@ thin.platform.getNativeFunction = function(func) {
 
 
 /**
- * @param {string} property like 'chrome.runtime.lastError'
+ * @param {string} property
  * @return {*}
  */
 thin.platform.getNativeProperty = function(property) {

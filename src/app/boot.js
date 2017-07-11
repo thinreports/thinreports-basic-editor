@@ -112,13 +112,12 @@ goog.require('thin.layout.File');
  * Launch ThinreportsEditor!
  */
 thin.boot = function() {
-  thin.Settings.init(function() {
-    thin.i18n.init();
-    thin.Font.init();
+  thin.Settings.init();
+  thin.i18n.init();
+  thin.Font.init();
+  thin.init_();
 
-    thin.init_();
-    thin.show_();
-  });
+  thin.show_();
 };
 
 
@@ -1390,9 +1389,8 @@ thin.init_ = function() {
                   // Update locale
                   thin.Settings.setLocale(newLocale);
                   // Flush all settings to local-storage
-                  thin.Settings.flush(function() {
-                    thin.platform.callNativeFunction('chrome.runtime.reload');
-                  });
+                  thin.Settings.flush();
+                  thin.platform.Window.reload();
                 }
               },
               thin.ui.Dialog.ButtonSet.typeYesNo());
