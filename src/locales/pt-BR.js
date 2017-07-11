@@ -217,7 +217,7 @@ App.addLocale({
     warning_discard_changes: 'Se voce tiver arquivos que nao foram salvos, as alteracoes serao descartadas.\nPor favor, nao se esqueca de salvar.',
     warning_discard_changes_en: '',
 
-    text_editor_force_close_confirmation: 'Ha arquivos de layout que nao foram salvos. \nSalvar esses arquivos antes de fechar?',
+    text_editor_force_close_confirmation: 'Existem arquivos não salvos. Tem certeza de que deseja fechar sem salvar as alterações?',
     text_layout_force_close_confirmation: 'Este layout foi alterado. \nSalvar antes de fechar?',
     text_layout_export_definition_confirmation: 'Antes de exportar as definicoes de Layout, e necessario salvar esse arquivo de layout.\nSalvar Esse Layout?',
     text_change_unit: 'Mudar a unidade para {$unit}',

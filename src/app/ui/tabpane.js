@@ -220,6 +220,13 @@ thin.ui.TabPane.prototype.destroyPage = function(page) {
   this.updatePages_();
 };
 
+/**
+ * @return {Array.<thin.ui.TabPane.TabPage>}
+ */
+thin.ui.TabPane.prototype.getPages = function () {
+  return this.pages_;
+};
+
 
 /**
  * @param {number} index

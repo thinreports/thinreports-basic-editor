@@ -216,7 +216,7 @@ App.addLocale({
     warning_discard_changes: '保存していないレイアウトがある場合は必ず保存して下さい。',
     warning_discard_changes_en: 'If you have unsaved files, the changes will be discarded. Please be sure to save.',
 
-    text_editor_force_close_confirmation: '保存されていないファイルがあります。\n保存しますか？',
+    text_editor_force_close_confirmation: '保存されていないファイルがあります。変更を保存せずに閉じても良いですか？',
     text_layout_force_close_confirmation: '内容が変更されています。\n保存しますか？',
     text_change_unit: '単位 {$unit} へ切り替える',
     text_apply_locale_setting: '設定を反映するにはエディタの再読み込みが必要です。\n今すぐ設定を反映しますか？',

@@ -19,12 +19,9 @@ goog.require('thin.platform');
 
 
 thin.platform.Window.close = function() {
-  thin.platform.Window.getCurrent().close();
+  goog.global.close();
 };
 
-/**
- * @return {*}
- */
-thin.platform.Window.getCurrent = function() {
-  return thin.platform.callNativeFunction('chrome.app.window.current');
+thin.platform.Window.reload = function () {
+  goog.global.location.reload();
 };

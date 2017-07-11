@@ -77,7 +77,6 @@ goog.require('thin.ui.InputUnitChanger');
 goog.require('thin.core');
 goog.require('thin.core.Component');
 goog.require('thin.core.Workspace');
-goog.require('thin.core.Workspace.Backup');
 goog.require('thin.core.toolaction.SelectAction');
 goog.require('thin.core.toolaction.ZoomAction');
 goog.require('thin.core.toolaction.RectAction');
@@ -1631,67 +1630,34 @@ thin.init_ = function() {
       e.preventDefault();
     }, false);
 
-  initUiStatus();
+  // goog.events.listen('beforeunload') does not work well.
+  goog.global.onbeforeunload = function (e) {
+    var tabPages = thin.ui.getComponent('tabpane').getPages();
 
-  (function() {
-    // 60 sec
-    var ms = 60000;
-    if (!goog.global.COMPILED) {
-      // 6 sec
-      ms = 6000;
+    var changedPageExists = goog.array.some(tabPages, function (tabPage) {
+      return tabPage.getContent().isChanged();
+    });
+
+    if (!changedPageExists) {
+      return;
     }
-    var timer = new goog.Timer(ms);
 
-    goog.events.listen(timer, goog.Timer.TICK, function(e) {
-      var tabpane = thin.ui.getComponent('tabpane');
-      var pageCount = tabpane.getPageCount();
-      var workspace = null;
-      var tlfs = {};
+    // Cancel termination.
+    e.returnValue = false;
 
-      for(var count = 0; count < pageCount; count++) {
-        workspace = tabpane.getPage(count).getContent();
-        if (workspace.isChanged()) {
-          goog.object.extend(tlfs, workspace.createBackup());
+    thin.ui.Message.disposeActiveMessage();
+    thin.ui.Message.confirm(
+      thin.t('text_editor_force_close_confirmation'), thin.t('label_confirmation'),
+      function (e) {
+        if (e.isYes()) {
+          goog.global.onbeforeunload = null;
+          thin.platform.Window.close();
         }
-      }
-      thin.core.Workspace.Backup.set(tlfs);
-    });
+      }, thin.ui.Dialog.ButtonSet.typeYesNo()
+    );
+  };
 
-    thin.core.Workspace.Backup.clear({
-      beforeStart: function(tlfs) {
-        if (!goog.object.isEmpty(tlfs)) {
-
-          var confirmDialog = thin.ui.Message.confirm(
-            thin.t('text_unsaved_layout_exists_confirmation'),
-            thin.t('label_confirmation'), function(e) {
-
-            if (e.isYes()) {
-              confirmDialog.setVisible(false);
-              goog.object.forEach(tlfs, function(tlf, id) {
-                var format = thin.layout.Format.parse(tlf);
-                var workspace = new thin.core.Workspace(format);
-                workspace.createDom();
-                workspace.forceInitFingerPrint();
-
-                var newPage = new thin.ui.TabPane.TabPage(workspace.getTabName(), workspace);
-                tabpane.addPage(newPage);
-                newPage.setChanged(true);
-
-                if (workspace.draw()) {
-                  focusWorkspace(e);
-                } else {
-                  throw new thin.Error(thin.t('error_unexpected_error'));
-                }
-              });
-            }
-          }, thin.ui.Dialog.ButtonSet.typeYesNo());
-        }
-      },
-      complete: function() {
-        timer.start();
-      }
-    });
-  })();
+  initUiStatus();
 };
 
 

@@ -217,7 +217,7 @@ App.addLocale({
     warning_discard_changes: 'If you have unsaved files, the changes will be discarded. Please be sure to save.',
     warning_discard_changes_en: '',
 
-    text_editor_force_close_confirmation: 'There is unsaved layout files.\nSave these files before close?',
+    text_editor_force_close_confirmation: 'There are unsaved files. Are you sure you want to close without saving changes?',
     text_layout_force_close_confirmation: 'This layout has been changed.\nSave before close?',
     text_layout_export_definition_confirmation: 'Before export layout definition, it is necessary to save this layout file.\nSave this layout?',
     text_change_unit: 'Change unit to {$unit}',
