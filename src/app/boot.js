@@ -317,12 +317,7 @@ thin.init_ = function() {
           thin.t('text_layout_force_close_confirmation'), thin.t('label_confirmation'),
           function(e) {
             if (e.isYes()) {
-              removeWorkspace.save({
-                success: destroyPage,
-                cancel: function() {
-                  focusWorkspace(e);
-                }
-              });
+              removeWorkspace.save(destroyPage);
             }
             if (e.isNo()) {
               destroyPage();
@@ -552,86 +547,67 @@ thin.init_ = function() {
         dom.getElement('tbar-report-open'));
 
     toolOpen.addEventListener(componentEventType.ACTION, function(e) {
-      thin.layout.File.openDialog({
-        success: function(file) {
-          var filePath = file.getPath();
+      thin.layout.File.openDialog(function(file) {
+        var tabpane = thin.ui.getComponent('tabpane');
 
-          var tabpane = thin.ui.getComponent('tabpane');
-          var tabpageCount = tabpane.getPageCount();
+        var openedTabPage = goog.array.find(tabpane.getPages(), function (page) {
+          return page.getContent().getFile().getId() == file.getId();
+        });
 
-          var page;
-          var captureFile;
-          for (var c = 0; c < tabpageCount; c++) {
-            page = tabpane.getPage(c);
-            captureFile = page.getContent().getFile();
-            if (!captureFile.isNew() && filePath == captureFile.getPath()) {
-              tabpane.setSelectedPage(page);
-              // Skip Open report file
-              file.dispose();
-              file = null;
-              focusWorkspace(e);
-              return;
-            }
-          }
+        if (openedTabPage) {
+          tabpane.setSelectedPage(openedTabPage);
+          file.dispose();
+          file = null;
+          focusWorkspace(e);
+          return;
+        }
 
-          try {
-            var workspace = thin.core.Workspace.create(file);
-            if (workspace) {
-              var targetVersion = workspace.getLayout().getFormat().getVersion();
-              var compatibilityState = thin.layout.CompatibilityState;
+        try {
+          var workspace = thin.core.Workspace.create(file);
+          if (workspace) {
+            var targetVersion = workspace.getLayout().getFormat().getVersion();
+            var compatibilityState = thin.layout.CompatibilityState;
 
-              var addPageHandler = function() {
-                var newPage = new thin.ui.TabPane.TabPage(workspace.getTabName(), workspace);
+            var addPageHandler = function() {
+              var newPage = new thin.ui.TabPane.TabPage(workspace.getTabName(), workspace);
 
-                newPage.setTooltip(filePath);
-                tabpane.addPage(newPage);
-                if (workspace.draw()) {
-                  focusWorkspace(e);
-                } else {
-                  throw new thin.Error(thin.t('error_invalid_layout_file'));
-                }
-              };
-
-              switch(thin.layout.checkCompatibility(targetVersion)) {
-                case compatibilityState.WARNING:
-                  thin.ui.Message.confirm(thin.t('text_layout_force_edit_confirmation'),
-                      thin.t('label_confirmation'),
-                      function(e) {
-                        if (e.isOk()) {
-                          addPageHandler();
-                        }
-                      });
-                  break;
-                case compatibilityState.ERROR:
-                  throw new thin.Error(thin.t('error_can_not_edit_layout_file',
-                      {'required': thin.layout.inspectCompatibleRule(),
-                       'version': targetVersion}));
-                  break;
-                default:
-                  addPageHandler();
-                  break;
+              newPage.setTooltip(file.getId());
+              tabpane.addPage(newPage);
+              if (workspace.draw()) {
+                focusWorkspace(e);
+              } else {
+                throw new thin.Error(thin.t('error_invalid_layout_file'));
               }
-            }
-          } catch (er) {
-            var message;
-            if (er instanceof thin.Error) {
-              message = er.message;
-            } else {
-              message = thin.t('error_unknown');
-            }
+            };
 
-            thin.ui.Message.alert(message, 'Error',
-              function(er) {
-                var activeWorkspace = thin.core.getActiveWorkspace();
-                if (activeWorkspace) {
-                  activeWorkspace.focusElement(er);
-                }
-              });
+            switch(thin.layout.checkCompatibility(targetVersion)) {
+              case compatibilityState.WARNING:
+                thin.ui.Message.confirm(thin.t('text_layout_force_edit_confirmation'),
+                    thin.t('label_confirmation'),
+                    function(e) {
+                      if (e.isOk()) {
+                        addPageHandler();
+                      }
+                    });
+                break;
+              case compatibilityState.ERROR:
+                throw new thin.Error(thin.t('error_can_not_edit_layout_file',
+                    {'required': thin.layout.inspectCompatibleRule(),
+                     'version': targetVersion}));
+                break;
+              default:
+                addPageHandler();
+                break;
+            }
           }
-        },
-        cancel: goog.nullFunction,
-        error: function(code) {
-          var message = thin.t('error_unknown');
+        } catch (er) {
+          var message;
+          if (er instanceof thin.Error) {
+            message = er.message;
+          } else {
+            message = thin.t('error_unknown');
+          }
+
           thin.ui.Message.alert(message, 'Error',
             function(er) {
               var activeWorkspace = thin.core.getActiveWorkspace();

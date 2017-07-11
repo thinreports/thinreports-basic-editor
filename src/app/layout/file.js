@@ -16,121 +16,69 @@
 goog.provide('thin.layout.File');
 
 goog.require('goog.Disposable');
-goog.require('thin.File');
 goog.require('thin.platform');
-goog.require('thin.platform.File');
 
 
 /**
- * @param {thin.File=} opt_file
+ * @param {object} attrs
+ * @param {string=} opt_data
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.layout.File = function(opt_file) {
-  if (opt_file) {
-    this.file_ = opt_file;
-  }
-
+thin.layout.File = function(attrs, opt_data) {
   goog.base(this);
+
+  /**
+   * @type {string?}
+   * @private
+   */
+  this.data_ = opt_data;
+
+  /**
+   * @type {object}
+   * @private
+   */
+  this.attrs_ = attrs || {};
 };
 goog.inherits(thin.layout.File, goog.Disposable);
 
 
 /**
- * @type {string}
- * @private
+ * @param {Function} onSuccess
  */
-thin.layout.File.EXT_NAME_ = 'tlf';
-
-
-/**
- * @type {string}
- * @private
- */
-thin.layout.File.EXT_DESCRIPTION_ = 'Thinreports Layout Format';
-
-
-/**
- * @type {string}
- * @private
- */
-thin.layout.File.MIME_TYPE_ = 'application/json';
-
-
-/**
- * @type {Array.<Object>}
- * @private
- */
-thin.layout.File.ACCEPTS_ = [{
-  'extensions': [thin.layout.File.EXT_NAME_],
-  'description': thin.layout.File.EXT_DESCRIPTION_
-}];
-
-
-/**
- * @type {thin.File}
- * @private
- */
-thin.layout.File.prototype.file_;
-
-
-/**
- * @param {Object.<Function>} callbacks
- */
-thin.layout.File.openDialog = function(callbacks) {
-  thin.platform.File.open(thin.layout.File.ACCEPTS_, {
-    success: function(entry) {
-      thin.layout.File.handleSelectFileToOpen(callbacks, entry);
-    },
-    cancel: goog.nullFunction,
-    error: goog.nullFunction
+thin.layout.File.openDialog = function(onSuccess) {
+  thin.callAppHandler('layoutOpen', function (loadedContent, attrs) {
+    const file = new thin.layout.File(
+      /** @type {object} */ (attrs),
+      /** @type {string} */ (loadedContent)
+    );
+    onSuccess(file);
   });
 };
 
 
 /**
- * @param {Object.<Function>} callbacks
- * @param {FileEntry} entry
+ * @param {string} content
+ * @param {Function} onSuccess
  */
-thin.layout.File.handleSelectFileToOpen = function(callbacks, entry) {
-  entry.file(function(file) {
-    var fileReader = new FileReader();
-    fileReader.onload = function(e) {
-      thin.platform.File.getPath(entry, function(path) {
-        var coreFile = new thin.File(entry, path, e.target.result);
-        callbacks.success(new thin.layout.File(coreFile));
-      });
-    };
-    fileReader.onerror = callbacks.error;
-    fileReader.readAsText(file);
-  });
+thin.layout.File.saveDialog = function (content, onSuccess) {
+  var saveLayoutAsHandler = function (savedContent, attrs) {
+    var file = new thin.layout.File(
+      /** @type {object} */ (attrs),
+      /** @type {string} */ (savedContent)
+    );
+    onSuccess(file);
+  };
+
+  thin.callAppHandler('layoutSaveAs', saveLayoutAsHandler, content);
 };
 
 
 /**
- * @param {string} fileName
- * @param {Object.<Function>} callbacks
+ * @return {string}
  */
-thin.layout.File.saveDialog = function(fileName, callbacks) {
-  thin.platform.File.saveAs(fileName, thin.layout.File.ACCEPTS_, {
-    success: function(entry) {
-      thin.layout.File.handleSelectFileToSave(callbacks, entry);
-    },
-    cancel: goog.nullFunction,
-    error: goog.nullFunction
-  });
-};
-
-
-/**
- * @param {Object.<Function>} callbacks
- * @param {FileEntry} entry
- */
-thin.layout.File.handleSelectFileToSave = function(callbacks, entry) {
-  thin.platform.File.getPath(entry, function(path) {
-    var coreFile = new thin.File(entry, path);
-    callbacks.success(new thin.layout.File(coreFile));
-  });
+thin.layout.File.prototype.getId = function () {
+  return this.attrs_.id;
 };
 
 
@@ -138,16 +86,18 @@ thin.layout.File.handleSelectFileToSave = function(callbacks, entry) {
  * @param {string} content
  */
 thin.layout.File.prototype.save = function(content) {
-  this.file_.setContent(content);
-  this.file_.write(content, thin.layout.File.MIME_TYPE_);
+  var saveLayoutHandler = function (attrs) {
+    this.setAttributes(attrs);
+  };
+  thin.callAppHandler('layoutSave', goog.bind(saveLayoutHandler, this), content, this.attrs_);
 };
 
 
 /**
- * @param {thin.File} file
+ * @param {object} attrs
  */
-thin.layout.File.prototype.setFile = function(file) {
-  this.file_ = file;
+thin.layout.File.prototype.setAttributes = function (attrs) {
+  this.attrs_ = attrs;
 };
 
 
@@ -155,7 +105,7 @@ thin.layout.File.prototype.setFile = function(file) {
  * @return {boolean}
  */
 thin.layout.File.prototype.isNew = function() {
-  return !this.file_;
+  return !this.getId();
 };
 
 
@@ -163,32 +113,22 @@ thin.layout.File.prototype.isNew = function() {
  * @return {string}
  */
 thin.layout.File.prototype.getName = function() {
-  return this.file_.getName();
+  return this.attrs_.name;
 };
 
 
 /**
  * @return {string}
  */
-thin.layout.File.prototype.getPath = function() {
-  return this.file_.getPath();
-};
-
-
-/**
- * @return {string}
- */
-thin.layout.File.prototype.getContent = function() {
-  return this.file_.getContent();
+thin.layout.File.prototype.getContent = function () {
+  return this.data_;
 };
 
 
 /** @inheritDoc */
 thin.layout.File.prototype.disposeInternal = function() {
-  if (this.file_) {
-    this.file_.dispose();
-    delete this.file_;
-  }
+  this.attrs_ = null;
+  this.data_ = null;
 
   goog.base(this, 'disposeInternal');
 };
