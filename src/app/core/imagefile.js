@@ -22,56 +22,23 @@ goog.require('thin.platform.File');
 
 
 /**
- * @param {thin.File} file
+ * @param {string} data DataURI data
  * @constructor
  * @extends {goog.Disposable}
+ *
+ * FIXME: The appropriate class name is `thin.core.Image`
  */
-thin.core.ImageFile = function(file) {
-  this.file_ = file;
-  this.setSize();
+thin.core.ImageFile = function(data) {
+  /**
+   * @type {string}
+   * @private
+   */
+  this.data_ = data;
 
+  this.initSize_();
   goog.base(this);
 };
 goog.inherits(thin.core.ImageFile, goog.Disposable);
-
-
-/**
- * @type {Array.<string>}
- * @private
- */
-thin.core.ImageFile.EXT_NAME_ = ['jpg', 'png'];
-
-
-/**
- * @type {string}
- * @private
- */
-thin.core.ImageFile.EXT_DESCRIPTION_ = 'Images';
-
-
-/**
- * @type {Array.<string>}
- * @private
- */
-thin.core.ImageFile.MIMETYPE_ = ['image/jpeg', 'image/png'];
-
-
-/**
- * @type {Array.<Object>}
- * @private
- */
-thin.core.ImageFile.ACCEPTS_ = [{
-  'extensions': thin.core.ImageFile.EXT_NAME_,
-  'description': thin.core.ImageFile.EXT_DESCRIPTION_,
-  'mimeTypes': thin.core.ImageFile.MIMETYPE_
-}];
-
-
-/**
- * @type {thin.File}
- * @private
- */
-thin.core.ImageFile.prototype.file_;
 
 
 /**
@@ -92,61 +59,26 @@ thin.core.ImageFile.prototype.height_;
  * @param {Object.<Function>} callbacks
  */
 thin.core.ImageFile.openDialog = function(callbacks) {
-  thin.platform.File.open(thin.core.ImageFile.ACCEPTS_, {
-    success: function(entry) {
-      thin.core.ImageFile.handleSelectFileToOpen(callbacks, entry);
+  thin.callAppHandler(
+    'imageOpen',
+    function (loadedData) {
+      const image = new thin.core.ImageFile(/** @type {string} */(loadedData));
+      callbacks.success(image);
     },
-    cancel: function() {
-      thin.core.ImageFile.handleCancelFileToOpen(callbacks);
-    },
-    error: goog.nullFunction
-  });
+    function () {
+      callbacks.cancel();
+    }
+  );
 };
 
 
-/**
- * @param {Object.<Function>} callbacks
- */
-thin.core.ImageFile.handleCancelFileToOpen = function(callbacks) {
-  callbacks.cancel();
-};
-
-
-/**
- * @param {Object.<Function>} callbacks
- * @param {FileEntry} entry
- */
-thin.core.ImageFile.handleSelectFileToOpen = function(callbacks, entry) {
-  entry.file(function(file) {
-    var fileReader = new FileReader();
-    fileReader.onload = function(e) {
-      thin.platform.File.getPath(entry, function(path) {
-        var coreFile = new thin.File(entry, path, e.target.result);
-        callbacks.success(new thin.core.ImageFile(coreFile));
-      });
-    };
-    fileReader.onerror = callbacks.error;
-    fileReader.readAsDataURL(file);
-  });
-};
-
-
-/**
- * @return {string}
- */
-thin.core.ImageFile.prototype.getPath = function() {
-  return this.file_.getPath();
-};
-
-
-thin.core.ImageFile.prototype.setSize = function() {
+thin.core.ImageFile.prototype.initSize_ = function() {
   var tmpImg = new Image();
-  tmpImg.src = this.file_.getContent();
+  tmpImg.src = this.data_;
 
   this.width_ = tmpImg.width;
   this.height_ = tmpImg.height;
 
-  // cannot be deleted in ES5 strict mode
   tmpImg = null;
 };
 
@@ -171,7 +103,7 @@ thin.core.ImageFile.prototype.getHeight = function() {
  * @return {string?}
  */
 thin.core.ImageFile.prototype.getContent = function() {
-  return this.file_.getContent();
+  return this.data_;
 };
 
 
@@ -179,14 +111,12 @@ thin.core.ImageFile.prototype.getContent = function() {
  * @return {thin.core.ImageFile}
  */
 thin.core.ImageFile.prototype.clone = function() {
-  return new thin.core.ImageFile(this.file_.clone());
+  return new thin.core.ImageFile(this.data_);
 };
 
 
 /** @inheritDoc */
 thin.core.ImageFile.prototype.disposeInternal = function() {
-  this.file_.dispose();
-  delete this.file_;
-
+  this.data_ = null;
   goog.base(this, 'disposeInternal');
 };

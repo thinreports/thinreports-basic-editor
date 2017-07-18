@@ -1,4 +1,4 @@
-const { dialog } = require('electron').remote;
+const { dialog, nativeImage } = require('electron').remote;
 const fs = require('fs');
 const path = require('path');
 
@@ -50,6 +50,24 @@ handlers.layoutSaveAs = (saveLayoutAs, data) => {
     name: path.basename(filename),
     path: filename
   });
+}
+
+handlers.imageOpen = (loadImage, cancelOpen) => {
+  const imagefiles = dialog.showOpenDialog({
+    filters: [
+      {name: 'Images', extensions: ['jpg', 'png']}
+    ]
+  });
+
+  if (!imagefiles) {
+    cancelOpen();
+    return;
+  }
+
+  // TODO: Better error handling
+  const image = nativeImage.createFromPath(imagefiles[0]);
+
+  loadImage(image.toDataURL());
 }
 
 module.exports = handlers;
