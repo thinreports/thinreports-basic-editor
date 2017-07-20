@@ -70,4 +70,32 @@ handlers.imageOpen = (loadImage, cancelOpen) => {
   loadImage(image.toDataURL());
 }
 
+handlers.exportAs = (type, content) => {
+  let extName, description;
+
+  switch (type) {
+    case 'csv':
+      extName = 'csv';
+      description = 'Text CSV';
+      break;
+    case 'html':
+      extName = 'html';
+      description = 'HTML document';
+      break;
+  }
+
+  const filename = dialog.showSaveDialog({
+    filters: [
+      {extensions: [extName], name: description}
+    ]
+  });
+
+  if (!filename) {
+    return;
+  }
+
+  // TODO: Better error handling
+  fs.writeFileSync(filename, content, { encoding: 'utf-8' });
+}
+
 module.exports = handlers;
