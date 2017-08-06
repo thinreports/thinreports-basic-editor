@@ -47,13 +47,17 @@ goog.inherits(thin.layout.File, goog.Disposable);
  * @param {Function} onSuccess
  */
 thin.layout.File.openDialog = function(onSuccess) {
-  thin.callAppHandler('layoutOpen', function (loadedContent, attrs) {
-    const file = new thin.layout.File(
-      /** @type {object} */ (attrs),
-      /** @type {string} */ (loadedContent)
-    );
-    onSuccess(file);
-  });
+  var callback = {
+    onSuccess: function (content, attrs) {
+      const file = new thin.layout.File(
+        /** @type {object} */ (attrs),
+        /** @type {string} */ (content)
+      );
+      onSuccess(file);
+    },
+    onCancel: function () {}
+  };
+  thin.callAppHandler('layoutOpen', callback);
 };
 
 
@@ -62,15 +66,18 @@ thin.layout.File.openDialog = function(onSuccess) {
  * @param {Function} onSuccess
  */
 thin.layout.File.saveDialog = function (content, onSuccess) {
-  var saveLayoutAsHandler = function (savedContent, attrs) {
-    var file = new thin.layout.File(
-      /** @type {object} */ (attrs),
-      /** @type {string} */ (savedContent)
-    );
-    onSuccess(file);
+  var callback = {
+    onSuccess: function (savedContent, attrs) {
+      var file = new thin.layout.File(
+        /** @type {object} */ (attrs),
+        /** @type {string} */ (savedContent)
+      );
+      onSuccess(file);
+    },
+    onCancel: function () {}
   };
 
-  thin.callAppHandler('layoutSaveAs', saveLayoutAsHandler, content);
+  thin.callAppHandler('layoutSaveAs', callback, content);
 };
 
 
@@ -86,10 +93,13 @@ thin.layout.File.prototype.getId = function () {
  * @param {string} content
  */
 thin.layout.File.prototype.save = function(content) {
-  var saveLayoutHandler = function (attrs) {
-    this.setAttributes(attrs);
+  var callback = {
+    onSuccess: goog.bind(function (attrs) {
+      this.setAttributes(attrs);
+    }, this),
+    onCancel: function () {}
   };
-  thin.callAppHandler('layoutSave', goog.bind(saveLayoutHandler, this), content, this.attrs_);
+  thin.callAppHandler('layoutSave', callback, content, this.attrs_);
 };
 
 
