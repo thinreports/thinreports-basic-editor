@@ -15,6 +15,8 @@
 
 goog.provide('thin.Settings');
 
+goog.require('thin.platform.Storage');
+
 
 /**
  * @constructor
@@ -40,30 +42,21 @@ thin.Settings.KEYS = [
 ];
 
 
-/**
- * @param {Function} fn_onReady
- */
-thin.Settings.init = function(fn_onReady) {
+thin.Settings.init = function() {
   var settings = thin.Settings.getInstance();
-  /**
-   * @param {Object} items
-   */
-  var initializer = function(items) {
-    settings.storage = items;
-    fn_onReady();
-  };
-  thin.platform.callNativeFunction(
-      'chrome.storage.local.get', thin.Settings.KEYS, initializer);
+
+  goog.array.forEach(thin.Settings.KEYS, function (key) {
+    settings.storage[key] = thin.platform.Storage.getItem(key);
+  });
 };
 
 
-/**
- * @param {Function} fn_onComplete
- */
-thin.Settings.flush = function(fn_onComplete) {
+thin.Settings.flush = function() {
   var settings = thin.Settings.getInstance();
-  thin.platform.callNativeFunction(
-      'chrome.storage.local.set', settings.storage, fn_onComplete);
+
+  goog.object.forEach(settings.storage, function (value, key) {
+    thin.platform.Storage.setItem(key, value);
+  });
 };
 
 

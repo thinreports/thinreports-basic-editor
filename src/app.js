@@ -15,6 +15,7 @@
 
 var App = {};
 
+App.handlers = require('./handlers');
 
 /**
  * @type {string}
@@ -76,10 +77,3 @@ App.getUILocale = function() {
 
   return locale;
 };
-
-
-/**
- * Around security error by ChromeApp
- */
-var CLOSURE_IMPORT_SCRIPT = function() {};
-window.eval = function() {};

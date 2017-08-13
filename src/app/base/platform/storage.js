@@ -13,15 +13,22 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-goog.provide('thin.platform.Window');
+goog.provide('thin.platform.Storage');
 
 goog.require('thin.platform');
 
 
-thin.platform.Window.close = function() {
-  goog.global.close();
+/**
+ * @return {string}
+ */
+thin.platform.Storage.getItem = function (key) {
+  return goog.global.localStorage.getItem(key);
 };
 
-thin.platform.Window.reload = function () {
-  goog.global.location.reload();
+/**
+ * @param {string} key
+ * @param {*} value
+ */
+thin.platform.Storage.setItem = function (key, value) {
+  goog.global.localStorage.setItem(key, value);
 };

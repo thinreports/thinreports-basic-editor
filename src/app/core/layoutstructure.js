@@ -134,27 +134,6 @@ thin.core.LayoutStructure.finalizeLayoutElement_ = function(layoutElement) {
 /**
  * @deprecated
  * @param {thin.core.Layout} layout
- */
-thin.core.LayoutStructure.convertToNewLayoutSchema = function(layout) {
-  var format = layout.getFormat();
-
-  var xmlString = thin.core.LayoutStructure.restoreStructure(format.getItems());
-  var doc = new DOMParser().parseFromString(xmlString, "application/xml");
-  var canvasNode = goog.dom.getLastElementChild(doc.documentElement);
-
-  layout.drawShapeFromElements(canvasNode.childNodes);
-
-  var shapes = layout.getManager().getShapesManager().get();
-  thin.core.LayoutStructure.applyRefId(layout, shapes);
-
-  format.setItems(layout.asJSON());
-  layout.removeShapes(shapes);
-};
-
-
-/**
- * @deprecated
- * @param {thin.core.Layout} layout
  * @param {Array} shapes
  * @param {thin.core.ListSectionShape=} opt_shapeIdManager
  */

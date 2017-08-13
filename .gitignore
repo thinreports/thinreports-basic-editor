@@ -1,4 +1,5 @@
 package/
+node_modules/
 dev/tmp/*
 *.pyc
 

@@ -356,10 +356,6 @@ thin.core.Workspace.prototype.draw = function() {
     var layout = this.getLayout();
     var format = layout.getFormat();
 
-    thin.Compatibility.applyIf(format.getVersion(), '<', '0.9.0', function() {
-      thin.core.LayoutStructure.convertToNewLayoutSchema(layout);
-    });
-
     layout.drawShapes(format.getItems());
     this.setup();
 
@@ -529,75 +525,57 @@ thin.core.Workspace.prototype.updateFormatPage = function(newMargins, newPaperTy
 
 
 /**
- * @param {Object=} opt_callbacks
+ * @param {Function=} opt_onSuccess
  */
-thin.core.Workspace.prototype.save = function(opt_callbacks) {
-  var callbacks = {
-    success: goog.nullFunction,
-    cancel: goog.nullFunction
-  }
-  if (opt_callbacks) {
-    goog.object.extend(callbacks, opt_callbacks);
-  }
-
+thin.core.Workspace.prototype.save = function(opt_onSuccess) {
   if (this.isNew()) {
-    this.saveAs(callbacks);
+    this.saveAs();
   } else {
     if (this.isChanged()) {
-      this.save_(callbacks.success);
+      this.save_(opt_onSuccess);
     }
   }
 };
 
 
 /**
- * @param {Function} callback_fn
+ * @param {Function=} opt_onSuccess
  * @private
  */
-thin.core.Workspace.prototype.save_ = function(callback_fn) {
+thin.core.Workspace.prototype.save_ = function(opt_onSuccess) {
   this.getFile().save(this.getSaveFormat_());
   this.updateFingerPrint_();
-  this.removeBackup();
   this.getTabPage().setChanged(false);
-  callback_fn();
+
+  if (opt_onSuccess) {
+    opt_onSuccess();
+  }
 };
 
 
-/**
- * @param {Object=} opt_callbacks
- */
-thin.core.Workspace.prototype.saveAs = function(opt_callbacks) {
-  var callbacks = {
-    success: goog.nullFunction,
-    cancel: goog.nullFunction
-  }
-  if (opt_callbacks) {
-    goog.object.extend(callbacks, opt_callbacks);
-  }
+thin.core.Workspace.prototype.saveAs = function () {
+  var layoutFormat = this.getSaveFormat_();
+  var callback = function (file) {
+    this.saveAs_(file);
+  };
 
-  thin.layout.File.saveDialog(this.getSuggestedFileName(), {
-    success: goog.bind(function(file) {
-      this.saveAs_(file, callbacks.success);
-    }, this),
-    cancel: callbacks.cancel,
-    error: goog.nullFunction
-  });
+  thin.layout.File.saveDialog(layoutFormat, goog.bind(callback, this));
 };
 
 
 /**
  * @param {thin.layout.File} file
- * @param {Function} callback_fn
  * @private
  */
-thin.core.Workspace.prototype.saveAs_ = function(file, callback_fn) {
+thin.core.Workspace.prototype.saveAs_ = function(file) {
   this.setFile(file);
-  this.save_(callback_fn);
+  this.updateFingerPrint_();
+  this.getTabPage().setChanged(false);
 
   var page = this.getTabPage();
   if (page) {
     page.setTitle(this.getTabName());
-    page.setTooltip(file.getPath());
+    page.setTooltip(file.getName());
   }
 };
 
@@ -1073,38 +1051,8 @@ thin.core.Workspace.prototype.focusElement = function(e) {
   }
 };
 
-
-/**
- * @return {number}
- * @private
- */
-thin.core.Workspace.prototype.getBackupId_ = function() {
-  return goog.getUid(this);
-};
-
-
-/**
- * @return {Object}
- */
-thin.core.Workspace.prototype.createBackup = function() {
-  var tlf = {};
-  var backup = new thin.core.Workspace.Backup(this);
-  goog.object.set(tlf, this.getBackupId_(), backup.getSaveFormat());
-  backup.dispose();
-
-  return tlf;
-};
-
-
-thin.core.Workspace.prototype.removeBackup = function() {
-  thin.core.Workspace.Backup.remove(this.getBackupId_());
-};
-
-
 /** @inheritDoc */
 thin.core.Workspace.prototype.disposeInternal = function() {
-  this.removeBackup();
-
   this.format.dispose();
 
   if (goog.isDef(this.file_)) {

@@ -1,0 +1,15 @@
+{
+  "name": "thinreports-editor",
+  "version": "0.0.0",
+  "description": "Thinreports Editor",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^1.6.10",
+    "electron-packager": "^8.7.0",
+    "electron-prebuilt": "^1.4.13"
+  }
+}

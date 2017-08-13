@@ -496,10 +496,6 @@ thin.core.ImageShape.prototype.update = function(attrs) {
  * @return {thin.core.ImageFile}
  */
 thin.core.ImageShape.createImageFileFromDataURISchema = function(factors) {
-  var entry = thin.File.createDummyEntry('DummyImageFile');
-  var path = '';
-  // data:<MIME-type>;base64,<base64 data>
   var content = 'data:' + factors['mime-type'] + ';base64,' + factors['base64'];
-
-  return new thin.core.ImageFile(new thin.File(entry, path, content));
+  return new thin.core.ImageFile(content);
 };

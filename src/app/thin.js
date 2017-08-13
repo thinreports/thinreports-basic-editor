@@ -20,12 +20,25 @@ goog.require('goog.array');
 
 
 /**
+ * Invoke a method of App defined in app.js.
  * @param {string} appMethodName
  * @return {*}
  */
 thin.callApp = function(appMethodName) {
   return goog.global['App'][appMethodName]();
 };
+
+
+/**
+ * Invoke a handler of App defined in app.js.
+ * @param {string} handlerName
+ * @param {...*} var_args
+ * @return {*}
+ */
+thin.callAppHandler = function(handlerName, var_args) {
+  var args = goog.array.slice(arguments, 1);
+  return goog.global['App']['handlers'][handlerName].apply(null, args);
+}
 
 
 /**

@@ -18,7 +18,6 @@ goog.provide('thin.layout.document.Base');
 goog.require('goog.Disposable');
 goog.require('goog.string');
 goog.require('goog.array');
-goog.require('thin.platform.File');
 goog.require('thin.layout.FormatPage.PaperName');
 goog.require('thin.layout.FormatPage.DirectionType');
 goog.require('thin.core.ListHelper.SectionName');

@@ -15,7 +15,6 @@
 
 goog.provide('thin.layout.document');
 
-goog.require('thin.layout.document.File');
 goog.require('thin.layout.document.CSV');
 goog.require('thin.layout.document.HTML');
 
@@ -35,25 +34,23 @@ thin.layout.document.Type = {
  */
 thin.layout.document.exportAs = function(type, layout) {
   var filename = layout.getWorkspace().getSuggestedFileName();
+  var content;
 
-  thin.layout.document.File.saveDialog(type, filename, {
-    success: function(file) {
-      var ext = file.getExt();
-      var doc;
-      switch(type) {
-        case thin.layout.document.Type.CSV:
-          doc = thin.layout.document.generateCSV(layout);
-          break;
-        case thin.layout.document.Type.HTML:
-          doc = thin.layout.document.generateHTML(layout);
-          break;
-      }
+  switch(type) {
+    case thin.layout.document.Type.CSV:
+      content = thin.layout.document.generateCSV(layout);
+      break;
+    case thin.layout.document.Type.HTML:
+      content = thin.layout.document.generateHTML(layout);
+      break;
+  }
 
-      file.save(doc, thin.layout.document.File.getMimeTypeByExtensionName(ext));
-    },
-    cancel: goog.nullFunction,
-    error: goog.nullFunction
-  });
+  var callback = {
+    onSuccess: function () {},
+    onCancel: function () {}
+  };
+
+  thin.callAppHandler('exportAs', callback, type, content);
 };
 
 
