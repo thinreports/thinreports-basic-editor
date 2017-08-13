@@ -1,3 +1,7 @@
+## master (0.10.0)
+
+Won't release chromeapp ver. Instead, release Desktop ver using Electron.
+
 ## 0.9.1
 
 * Fixed: Broken line rendering in list #62 #61 #60 [Yuki Yagi / tomokazu yamamoto / kenta murakami]
