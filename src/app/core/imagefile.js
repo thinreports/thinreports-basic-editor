@@ -16,9 +16,6 @@
 goog.provide('thin.core.ImageFile');
 
 goog.require('goog.Disposable');
-goog.require('thin.File');
-goog.require('thin.platform');
-goog.require('thin.platform.File');
 
 
 /**

@@ -21,7 +21,6 @@ goog.require('goog.string');
 goog.require('goog.math.Rect');
 goog.require('goog.math.Coordinate');
 goog.require('goog.graphics.Font');
-goog.require('thin.core.ShapeStructure');
 goog.require('thin.core.RectShape');
 goog.require('thin.core.TextStyle');
 goog.require('thin.core.TextStyle.HorizonAlignType');
