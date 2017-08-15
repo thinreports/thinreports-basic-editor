@@ -48,14 +48,14 @@ goog.inherits(thin.layout.File, goog.Disposable);
  */
 thin.layout.File.openDialog = function(onSuccess) {
   var callback = {
-    onSuccess: function (content, attrs) {
+    'onSuccess': function (content, attrs) {
       var file = new thin.layout.File(
         /** @type {object} */ (attrs),
         /** @type {string} */ (content)
       );
       onSuccess(file);
     },
-    onCancel: function () {}
+    'onCancel': function () {}
   };
   thin.callAppHandler('layoutOpen', callback);
 };
@@ -67,14 +67,14 @@ thin.layout.File.openDialog = function(onSuccess) {
  */
 thin.layout.File.saveDialog = function (content, onSuccess) {
   var callback = {
-    onSuccess: function (savedContent, attrs) {
+    'onSuccess': function (savedContent, attrs) {
       var file = new thin.layout.File(
         /** @type {object} */ (attrs),
         /** @type {string} */ (savedContent)
       );
       onSuccess(file);
     },
-    onCancel: function () {}
+    'onCancel': function () {}
   };
 
   thin.callAppHandler('layoutSaveAs', callback, content);
