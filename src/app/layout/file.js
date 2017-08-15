@@ -49,7 +49,7 @@ goog.inherits(thin.layout.File, goog.Disposable);
 thin.layout.File.openDialog = function(onSuccess) {
   var callback = {
     onSuccess: function (content, attrs) {
-      const file = new thin.layout.File(
+      var file = new thin.layout.File(
         /** @type {object} */ (attrs),
         /** @type {string} */ (content)
       );

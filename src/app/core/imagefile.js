@@ -58,7 +58,7 @@ thin.core.ImageFile.prototype.height_;
 thin.core.ImageFile.openDialog = function(callbacks) {
   thin.callAppHandler('imageOpen', {
     onSuccess: function (loadedData) {
-      const image = new thin.core.ImageFile(/** @type {string} */(loadedData));
+      var image = new thin.core.ImageFile(/** @type {string} */(loadedData));
       callbacks.success(image);
     },
     onCancel: function () {
