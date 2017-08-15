@@ -40,9 +40,9 @@ thin.ui.CheckboxRenderer.CSS_CLASS = thin.ui.getCssName('thin-checkbox');
 thin.ui.CheckboxRenderer.prototype.createDom = function(ctrl) {
   var cssClass = this.getCssClass();
   var dom = ctrl.getDomHelper();
-  return dom.createDom('div', this.getClassNames(ctrl).join(' '), 
-      dom.createDom('span', thin.ui.getCssName(cssClass, 'box')), 
-      dom.createDom('span', thin.ui.getCssName(cssClass, 'label'), 
+  return dom.createDom('div', this.getClassNames(ctrl).join(' '),
+      dom.createDom('span', thin.ui.getCssName(cssClass, 'box')),
+      dom.createDom('span', thin.ui.getCssName(cssClass, 'label'),
           ctrl.getLabel()));
 };
 
@@ -64,7 +64,7 @@ thin.ui.CheckboxRenderer.prototype.getContentElement = function(element) {
  * @param {number|string} width
  */
 thin.ui.CheckboxRenderer.prototype.setWidth = function(element, width) {
-  goog.style.setStyle(element, 'width', 
+  goog.style.setStyle(element, 'width',
       goog.isNumber(width) ? width + 'px' : width);
 };
 
