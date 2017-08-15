@@ -15,8 +15,6 @@
 
 goog.provide('thin.platform.Storage');
 
-goog.require('thin.platform');
-
 
 /**
  * @return {string}
