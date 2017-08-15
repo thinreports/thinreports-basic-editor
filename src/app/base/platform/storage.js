@@ -17,6 +17,7 @@ goog.provide('thin.platform.Storage');
 
 
 /**
+ * @param {string} key
  * @return {string}
  */
 thin.platform.Storage.getItem = function (key) {
