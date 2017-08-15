@@ -15,6 +15,7 @@
 
 goog.provide('thin.ui.CheckboxRenderer');
 
+goog.require('thin.ui');
 goog.require('goog.ui.CheckboxRenderer');
 
 
