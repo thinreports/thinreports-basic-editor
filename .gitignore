@@ -1,7 +1,4 @@
 src/editor.js
 src/assets/style.css
 node_modules/
-dev/tmp/*
 *.pyc
-
-!dev/tmp/.keep

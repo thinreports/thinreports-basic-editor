@@ -48,8 +48,8 @@ def root
   @root ||= Pathname.pwd
 end
 
-def dev
-  root.join 'dev'
+def vendor
+  root.join 'vendor'
 end
 
 def closure_library
@@ -69,11 +69,11 @@ def closure_builder_py
 end
 
 def closure_compiler_jar
-  dev.join 'bin', 'closure-compiler', 'compiler.jar'
+  vendor.join 'closure-compiler', 'compiler.jar'
 end
 
 def closure_stylesheets_jar
-  dev.join 'bin', 'closure-stylesheets', 'stylesheets.jar'
+  vendor.join 'closure-stylesheets', 'stylesheets.jar'
 end
 
 def soy_to_js_compiler_jar
