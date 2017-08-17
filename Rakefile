@@ -22,7 +22,7 @@ namespace :compile do
     system "python #{ closure_builder_py }" +
        " --root=#{ closure_library }" +
        " --root=#{ closure_templates }" +
-       " --root=#{ app }" +
+       " --root=#{ editor }" +
        " -n thin.boot" +
        " -o compiled" +
        " -c #{ closure_compiler_jar }" +
@@ -37,7 +37,7 @@ namespace :compile do
            " --outputPathFormat {INPUT_DIRECTORY}/{INPUT_FILE_NAME}.js" +
            " --shouldGenerateJsdoc" +
            " --shouldProvideRequireSoyNamespaces" +
-           " #{ app.join 'layout', 'document', 'templates', 'html.soy' }"
+           " #{ editor.join 'layout', 'document', 'templates', 'html.soy' }"
   end
 end
 
@@ -80,8 +80,8 @@ def soy_to_js_compiler_jar
   vendor.join 'closure-templates', 'SoyToJsSrcCompiler.jar'
 end
 
-def app
-  root.join 'src', 'app'
+def editor
+  root.join 'src', 'editor'
 end
 
 def src
