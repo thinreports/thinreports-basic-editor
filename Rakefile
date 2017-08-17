@@ -53,11 +53,11 @@ def vendor
 end
 
 def closure_library
-  root.join 'src', 'lib', 'closure-library'
+  vendor.join 'closure-library'
 end
 
 def closure_templates
-  root.join 'src', 'lib', 'closure-templates'
+  vendor.join 'closure-templates'
 end
 
 def closure_calcdeps_py
@@ -77,7 +77,7 @@ def closure_stylesheets_jar
 end
 
 def soy_to_js_compiler_jar
-  src.join 'lib', 'closure-templates', 'SoyToJsSrcCompiler.jar'
+  vendor.join 'closure-templates', 'SoyToJsSrcCompiler.jar'
 end
 
 def app

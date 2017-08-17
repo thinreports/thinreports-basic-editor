@@ -1,4 +1,0 @@
-[submodule "src/lib/closure-library"]
-	path = src/lib/closure-library
-	url = https://github.com/google/closure-library.git
-	ignore = dirty
