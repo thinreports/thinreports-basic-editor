@@ -1,4 +1,4 @@
-src/editor.js
-src/assets/style.css
+app/editor.js
+app/assets/style.css
 node_modules/
 *.pyc
