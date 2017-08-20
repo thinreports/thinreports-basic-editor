@@ -1,13 +1,15 @@
 {
-  "name": "thinreports-editor",
+  "name": "ThinreportsEditor",
   "version": "0.0.0",
   "description": "Designer for Thinreports",
   "scripts": {
     "start": "electron app",
+    "build": "node tasks/build.js",
     "postinstall": "cd app && npm install"
   },
   "license": "MIT",
   "devDependencies": {
+    "del": "^3.0.0",
     "electron": "^1.6.10",
     "electron-packager": "^8.7.0",
     "electron-prebuilt": "^1.4.13"
