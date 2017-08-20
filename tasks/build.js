@@ -1,14 +1,15 @@
+const where = require('./helper').where
+
 const packager = require('electron-packager')
 const path = require('path')
-const rootdir = path.join(__dirname, '..')
 
 const config = {
   arch: 'x64',
   asar: true,
-  dir: path.join(rootdir, 'app'),
+  dir: where.app,
   // icon: path.join(__dirname, '../app/assets/images'),
   ignore: 'editor/',
-  out: path.join(rootdir, 'builds'),
+  out: path.join(where.root, 'builds'),
   overwrite: true,
   platform: ['darwin', 'linux', 'win32']
 }
