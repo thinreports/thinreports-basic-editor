@@ -1,10 +1,10 @@
 {
   "name": "thinreports-editor",
   "version": "0.0.0",
-  "description": "Thinreports Editor",
-  "main": "src/main.js",
+  "description": "Designer for Thinreports",
   "scripts": {
-    "start": "electron ."
+    "start": "electron src",
+    "postinstall": "cd src && npm install"
   },
   "license": "MIT",
   "devDependencies": {
