@@ -4,6 +4,10 @@
   "description": "Designer for Thinreports",
   "scripts": {
     "start": "electron app",
+    "compile": "npm run compile:javascripts && npm run compile:styles && npm run compile:templates",
+    "compile:javascripts": "node tasks/compile.javascripts.js",
+    "compile:styles": "node tasks/compile.styles.js",
+    "compile:templates": "node tasks/compile.templates.js",
     "build": "node tasks/build.js",
     "postinstall": "cd app && npm install"
   },
@@ -12,6 +16,7 @@
     "del": "^3.0.0",
     "electron": "^1.6.10",
     "electron-packager": "^8.7.0",
-    "electron-prebuilt": "^1.4.13"
+    "electron-prebuilt": "^1.4.13",
+    "js-yaml": "^3.9.1"
   }
 }
