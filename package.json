@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "description": "Designer for Thinreports",
   "scripts": {
-    "start": "electron src",
-    "postinstall": "cd src && npm install"
+    "start": "electron app",
+    "postinstall": "cd app && npm install"
   },
   "license": "MIT",
   "devDependencies": {

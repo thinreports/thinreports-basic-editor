@@ -6,12 +6,12 @@ namespace :compile do
   task :css do
     require 'yaml'
 
-    css_files = YAML.load_file src.join('assets', 'css-files.yml')
-    css_files.map! {|filename| src.join 'assets', filename }
+    css_files = YAML.load_file app.join('assets', 'css-files.yml')
+    css_files.map! {|filename| app.join 'assets', filename }
 
     system "java -jar #{ closure_stylesheets_jar }" +
            " #{ css_files.join ' ' }" +
-           " --output-file #{ src.join 'assets', 'style.css' }" +
+           " --output-file #{ app.join 'assets', 'style.css' }" +
            " --allowed-non-standard-function color-stop"
   end
 
@@ -26,7 +26,7 @@ namespace :compile do
        " -n thin.boot" +
        " -o compiled" +
        " -c #{ closure_compiler_jar }" +
-       " --output_file=#{ src.join 'editor.js' }" +
+       " --output_file=#{ app.join 'editor.js' }" +
        %| -f "--compilation_level=SIMPLE_OPTIMIZATIONS"| +
        %| -f "--warning_level=#{ warning_level }"|
   end
@@ -81,9 +81,9 @@ def soy_to_js_compiler_jar
 end
 
 def editor
-  root.join 'src', 'editor'
+  root.join 'app', 'editor'
 end
 
-def src
-  @src ||= root.join 'src'
+def app
+  @app ||= root.join 'app'
 end
