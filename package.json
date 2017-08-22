@@ -8,7 +8,8 @@
     "compile:javascripts": "node tasks/compile.javascripts.js",
     "compile:styles": "node tasks/compile.styles.js",
     "compile:templates": "node tasks/compile.templates.js",
-    "build": "node tasks/build.js",
+    "package": "node tasks/build.js",
+    "build": "cross-env NODE_ENV=production npm run compile && npm run package",
     "postinstall": "cd app && npm install"
   },
   "license": "MIT",
