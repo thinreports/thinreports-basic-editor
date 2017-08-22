@@ -46,8 +46,8 @@ thin.layout.document.exportAs = function(type, layout) {
   }
 
   var callback = {
-    onSuccess: function () {},
-    onCancel: function () {}
+    'onSuccess': function () {},
+    'onCancel': function () {}
   };
 
   thin.callAppHandler('exportAs', callback, type, content);

@@ -94,10 +94,10 @@ thin.layout.File.prototype.getId = function () {
  */
 thin.layout.File.prototype.save = function(content) {
   var callback = {
-    onSuccess: goog.bind(function (attrs) {
+    'onSuccess': goog.bind(function (attrs) {
       this.setAttributes(attrs);
     }, this),
-    onCancel: function () {}
+    'onCancel': function () {}
   };
   thin.callAppHandler('layoutSave', callback, content, this.attrs_);
 };
