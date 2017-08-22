@@ -4,6 +4,7 @@
   "description": "Designer for Thinreports",
   "scripts": {
     "start": "electron app",
+    "start:production": "cross-env NODE_ENV=production npm run start",
     "compile": "npm run compile:javascripts && npm run compile:styles && npm run compile:templates",
     "compile:javascripts": "node tasks/compile.javascripts.js",
     "compile:styles": "node tasks/compile.styles.js",
