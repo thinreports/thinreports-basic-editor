@@ -13,6 +13,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "cross-env": "^5.0.5",
     "del": "^3.0.0",
     "electron": "^1.6.10",
     "electron-packager": "^8.7.0",
