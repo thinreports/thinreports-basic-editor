@@ -2,6 +2,8 @@ const {app, BrowserWindow, Menu} = require('electron')
 const path = require('path')
 const url = require('url')
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'production'
+
 let win
 
 function createWindow () {
@@ -34,7 +36,7 @@ function createWindow () {
     }
   ]
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'development') {
     template.push({
       label: 'View',
       submenu: [
