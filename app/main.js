@@ -13,7 +13,6 @@ function createWindow () {
     slashes: true
   }))
 
-  win.webContents.openDevTools()
   const template = [
     {
       label: 'Application',
@@ -35,7 +34,26 @@ function createWindow () {
     }
   ]
 
-  win.on('closed', () => win = null);
+  if (process.env.NODE_ENV !== 'production') {
+    template.push({
+      label: 'View',
+      submenu: [
+        {
+          label: 'Reload',
+          accelerator: 'Command+R',
+          click: (_, activeWin) => activeWin.reload()
+        },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: 'Alt+Command+I',
+          click: (_, activeWin) => activeWin.toggleDevTools()
+        },
+      ]
+    })
+  }
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+
+  win.on('closed', () => win = null)
 }
 
 app.on('ready', createWindow)
