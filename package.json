@@ -1,6 +1,7 @@
 {
   "name": "ThinreportsEditor",
   "version": "0.0.0",
+  "license": "GPLv3",
   "description": "Designer for Thinreports",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron app",
@@ -12,7 +13,6 @@
     "release": "cross-env NODE_ENV=production npm run compile && npm run build",
     "postinstall": "cd app && npm install"
   },
-  "license": "MIT",
   "devDependencies": {
     "cross-env": "^5.0.5",
     "del": "^3.0.0",

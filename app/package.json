@@ -1,6 +1,7 @@
 {
   "name": "ThinreportsEditor",
   "version": "0.10.0",
+  "license": "GPLv3",
   "description": "Designer for Thinreports",
   "main": "main.js"
 }
