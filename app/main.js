@@ -7,7 +7,11 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 let win
 
 function createWindow () {
-  win = new BrowserWindow({width: 1000, height: 700})
+  win = new BrowserWindow({
+    width: 1000,
+    height: 700,
+    icon: path.join(__dirname, 'assets/images/app-icon.png')
+  })
 
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),

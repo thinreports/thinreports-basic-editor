@@ -7,7 +7,7 @@ const config = {
   arch: 'x64',
   asar: true,
   dir: where.app,
-  // icon: path.join(__dirname, '../app/assets/images'),
+  icon: path.join(where.app, 'assets/images/app-icon'),
   ignore: 'editor/',
   out: path.join(where.root, 'builds'),
   overwrite: true,
