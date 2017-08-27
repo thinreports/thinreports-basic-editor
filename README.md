@@ -1,4 +1,4 @@
-# Thinreports Editor [![Join the chat at https://gitter.im/thinreports/thinreports-editor](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thinreports/thinreports-editor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Thinreports Editor
 
 [Thinreports](http://www.thinreports.org/) is an open source report generation tool for Ruby.
 
@@ -37,23 +37,11 @@ Please [contribute to translate](https://github.com/thinreports/thinreports-edit
 
 ## Contributing
 
-### Report bug, post your suggestion
+Bug reports and pull requests are welcome on GitHub at https://github.com/thinreports/thinreports-editor.
 
-If you find bugs or improvements for the Editor, please report it [here](https://github.com/thinreports/thinreports-editor/issues/new).
+### Translating for your language
 
-### Translating
-
-See [doc/TRANSLATION.md](https://github.com/thinreports/thinreports-editor/blob/master/doc/TRANSLATION.md).
-
-### Sending a Pull Request
-
-  1. Fork it
-  2. Clone your forked repository (**Note:** [How to clone the source of the Editor](#how-to-clone-the-source-of-the-editor))
-  3. Create your feature branch: `git checkout -b my-new-feature`
-  4. Fix. See [Developing](#developing) about how to develop.
-  5. Commit your changes: `git commit -am 'Fixed some bugs'`
-  6. Push to the branch: `git push origin my-new-feature`
-  7. Create new Pull Request
+See [TRANSLATION.md](https://github.com/thinreports/thinreports-editor/blob/master/TRANSLATION.md).
 
 ## Development
 
