@@ -24,14 +24,9 @@ Please [contribute to translate](https://github.com/thinreports/thinreports-edit
 
 ## Supported Platforms
 
-### ChromeApp ver
-
-ChromeApp version of Thinreports is available for Windows, Mac, and Linux computers.
-Please see [System requirements - Chrome Help](https://support.google.com/chrome/answer/95346?hl=en) for more information.
-
-### DesktopApp ver
-
-  * Windows XP/7/8/8.1
+ * macOS 10.12+
+ * Windows 10+
+ * Ubuntu 16.04+
 
 ## Getting Started
 
@@ -39,7 +34,6 @@ Please see [System requirements - Chrome Help](https://support.google.com/chrome
   * [Quick Start Guide](http://www.thinreports.org/documentation/getting-started/quickstart.html)
   * [Examples](https://github.com/thinreports/thinreports-examples)
   * [Discussion Group](https://groups.google.com/forum/#!forum/thinreports)
-  * [![Join the chat at https://gitter.im/thinreports/thinreports-editor](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thinreports/thinreports-editor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Contributing
 
@@ -61,107 +55,30 @@ See [doc/TRANSLATION.md](https://github.com/thinreports/thinreports-editor/blob/
   6. Push to the branch: `git push origin my-new-feature`
   7. Create new Pull Request
 
-## Developing
+## Development
 
 ### Requirements
 
-  * Chrome Browser
-  * Git
   * [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) 6+ (JDK)
   * [Python](https://wiki.python.org/moin/BeginnersGuide/Download) 2.7+
-  * [Ruby](https://www.ruby-lang.org/ja/) 2.0+ and [Rake](https://rubygems.org/gems/rake)
 
-### References for developing
-
-  * [Google Closure Library](https://developers.google.com/closure/library/)
-  * [Closure Library API Documentation](http://docs.closure-library.googlecode.com/git/index.html)
-  * [Finding Your Way around the Closure Library](https://developers.google.com/closure/library/docs/introduction)
-  * [Getting Started with the Closure Library](https://developers.google.com/closure/library/docs/gettingstarted)
-  * [Annotating JavaScript for the Closure Compiler](https://developers.google.com/closure/compiler/docs/js-for-compiler)
-
-### Basic Development Flow
-
-  1. Fix your feature
-  2. Rebuild script dependency as needed - [How to rebuild script dependency](#how-to-rebuild-script-dependency)
-  3. Check operation of your fixes - [How to launch development version of the Editor](#how-to-launch-development-version-of-the-editor)
-  4. Build production version of the Editor - [How to build production version of the Editor](#how-to-build-production-version-of-the-editor)
-  5. Check compilation error - [How to build production version of the Editor](#how-to-build-production-version-of-the-editor)
-  6. Check operation of your fixes - [How to launch production of the Editor](#how-to-launch-production-of-the-editor)
-
-### How to clone the source of the Editor
-
-    $ git clone https://github.com/thinreports/thinreports-editor.git
-    $ cd thinreports-editor/
-    $ git submodule update --init
-
-### How to launch development version of the Editor
-
-See [Step5: Launch your App - ChromeApp Reference](https://developer.chrome.com/apps/first_app#five) to learn how to launch ChromeApp. Then, specify `thinreports-editor/src` to lanuch.
-
-### How to rebuild script dependency
-
-If you have edited `goog.require()` or `goog.provide()`, you have to run the following command in order to rebuild the dependency. See [Finding Your Way around the Closure Library](https://developers.google.com/closure/library/docs/introduction) for learning the Closure Library Namespace.
-
-    $ cd thinreports-editor
-    $ rake dev:calcdeps
-
-Thereby, script list in `thinreports-editor/src/app.html` will be rebuilt.
-
-### How to build production version of the Editor
-
-Run the following command:
-
-    $ cd thinreports-editor
-    $ rake package:build
-
-
-This command executes the following process:
-
-  1. Remove `thinreports-editor/package` directory if exists
-  2. Create `thinreports-editor/package` directory
-  3. Copy `src/{app.html,app.js,background.js,manifest.js,locales}` to package directory
-  4. Create `package/assets` directory to copy `src/assets/{fonts,iconfs}` to `package/assets` directory
-  5. Compile `src/assets/*.css` to create `src/assets/style.css`
-  6. Append compiled script to `package/app.js`
-  7. Rebuild script list in `package/app.html`
-
-See [thinreports-editor/Rakefile](https://github.com/thinreports/thinreports-editor/blob/master/Rakefile) for further details.
-
-### How to launch production of the Editor
-
-See [How to lanuch development version of the Editor](#how-to-launch-development-version-of-the-editor),
-however you need to specify `thinreports-editor/package` directory as app folder for launching production version of the Editor.
-
-Then, **you must be sure that there are no syntax errors and warnings** to see the `thinreports-editor/dev/tmp/javascript-compile.log`.
-
-**Note:** Currentry the following errors will be logged in the log file, but you can ignore that.
+### Tasks
 
 ```
-/path/to/thinreports-editor/src/lib/closure-library/closure/goog/fx/dom.js:209: WARNING - Parse error. Non-JSDoc comment has annotations. Did you mean to start it with '/**'?
-  /*
-^
+Install dependencies.
+$ npm install
 
-/path/to/thinreports-editor/src/lib/closure-library/closure/goog/fx/dom.js:216: WARNING - Parse error. Non-JSDoc comment has annotations. Did you mean to start it with '/**'?
-  /*
-^
+Launch Editor on development.
+$ npm start
 
-0 error(s), 2 warning(s)
-```
+Compile javascript, css and html templates.
+$ npm run compile
 
-### Guidelines
+Build package for macOS, Windows, Ubuntu(linux).
+$ npm run build
 
-  * JavaScript Annotation required. Syntax and Examples of Annotation is [here](https://developers.google.com/closure/compiler/docs/js-for-compiler)
-
-### Development Tasks
-
-You can see the following task list by running `rake -T`.
-
-```
-rake dev:build_template  # Compile template of the specification sheet to JavaScript
-rake dev:calcdeps        # Calculates core JavaScript dependencies
-rake dev:check           # Check structure and syntax of scripts by testing compilation
-rake package:build       # Build a release package
-rake package:cleanup     # Clean up package
+Run compilation and building on production.
+$ npm run release
 ```
 
 ## License
