@@ -24,14 +24,15 @@ Please [contribute to translate](https://github.com/thinreports/thinreports-edit
 
 ## Supported Platforms
 
- * macOS 10.12+
- * Windows 10+
- * Ubuntu 16.04+
 We tested the following platform:
 
  * macOS 10.12
  * Windows 10
  * Ubuntu 16.04
+
+## Supported Layout versions
+
+Support a layout file that created/modified with 0.8.0+ Editor.
 
 ## Getting Started
 
