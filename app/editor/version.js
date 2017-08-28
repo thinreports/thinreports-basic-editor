@@ -27,13 +27,13 @@ thin.Version.MAJOR = 0;
 /**
  * @type {number}
  */
-thin.Version.MINOR = 9;
+thin.Version.MINOR = 10;
 
 
 /**
  * @type {number}
  */
-thin.Version.TINY = 1;
+thin.Version.TINY = 0;
 
 
 /**
