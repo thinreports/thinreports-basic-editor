@@ -14,7 +14,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 App.addLocale({
-  id: 'ja', name: '日本語', font_family: "'Helvetica Neue', 'Meiryo UI', Arial",
+  id: 'ja', name: '日本語', font_family: "'Helvetica Neue', 'Yu Gothic UI', 'Meiryo UI', Arial",
   default_settings: {
     // Available values: break-word, none
     text_word_wrap: 'none'

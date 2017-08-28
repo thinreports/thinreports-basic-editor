@@ -14,7 +14,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 App.addLocale({
-  id: 'en', name: 'English', font_family: "'Lucida Grande', 'Helvetica Neue', Arial",
+  id: 'en', name: 'English', font_family: "'Lucida Grande', 'Helvetica Neue', 'Yu Gothic UI', Arial",
   default_settings: {
     // Available values: break-word, none
     text_word_wrap: 'break-word'
