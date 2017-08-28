@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu} = require('electron')
+const { app, BrowserWindow, Menu, shell } = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -18,6 +18,11 @@ function createWindow () {
     protocol: 'file:',
     slashes: true
   }))
+
+  win.webContents.on('new-window', (e, url) => {
+    e.preventDefault()
+    shell.openExternal(url)
+  })
 
   const template = [
     {
