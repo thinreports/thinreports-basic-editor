@@ -5,7 +5,7 @@
 ### Preparation
 
 1. Fork [thinreports/thinreports-editor](https://github.com/thinreports/thinreports-editor) on github
-2. Clone your forked repository (**Note:** [How to clone the source of the Editor](https://github.com/thinreports/thinreports-editor#how-to-clone-the-source-of-the-editor))
+2. Clone your forked repository
 3. Create your locale branch: `git checkout -b new-locale`
 
 ### Creating a Translation file
@@ -43,7 +43,7 @@ Translate in your language:
   }
 ```
 
-### Enabling your language
+### Add your language
 
 Modify the your `app/index.html` as follows:
 
@@ -60,19 +60,18 @@ Modify the your `app/index.html` as follows:
         :
 ```
 
-### Check the translations on Editor to switch to your language
+### Check your language
 
-1. Launch the Editor with referring to [How to launch development version of the Editor](https://github.com/thinreports/thinreports-editor#how-to-launch-development-version-of-the-editor)
+1. Launch the Editor (See: [Development Tasks](https://github.com/thinreports/thinreports-editor#tasks))
+```
+$ npm start
+```
 2. Open the preference dialog
 (You can find the preference button on the right side of the toolbar)
 3. Select your language, press the OK button to apply
 
-## How to send us your translation file
+## Send your translation file
 
-### Pull request
-
-1. See [Preparation](https://github.com/thinreports/thinreports-editor/blob/master/TRANSLATION.md#preparation)
-2. Add your translation file and add your translation file path in `app.html`
-3. Commit: `git commit -am 'added xx locale'`
-4. Push to the branch: `git push origin new-locale`
-5. Create new pull request
+1. Commit: `git commit -am 'added xx locale'`
+2. Push to your branch: `git push origin new-locale`
+3. Create new pull request
