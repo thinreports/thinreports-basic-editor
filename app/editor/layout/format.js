@@ -95,43 +95,6 @@ thin.layout.Format.prototype.state_;
  */
 thin.layout.Format.parse = function(content) {
   var object = JSON.parse(content);
-  var version = object['version'];
-
-  thin.Compatibility.applyIf(version, '<', '0.9.0', function() {
-    var state = goog.object.clone(object['state']);
-    var config = goog.object.clone(object['config']);
-    var page = goog.object.clone(config['page']);
-
-    var margin = [];
-    goog.array.insertAt(margin, page['margin-top'], 0);
-    goog.array.insertAt(margin, page['margin-right'], 1);
-    goog.array.insertAt(margin, page['margin-bottom'], 2);
-    goog.array.insertAt(margin, page['margin-left'], 3);
-
-    var report = {
-      'paper-type': page['paper-type'],
-      'orientation': page['orientation'],
-      'margin': margin
-    };
-
-    if (thin.layout.FormatPage.isUserType(report['paper-type'])) {
-      goog.object.extend(report, {
-        'width': page['width'],
-        'height': page['height']
-      });
-    }
-
-    goog.object.set(object, 'title', config['title']);
-    goog.object.set(object, 'report', report);
-    goog.object.set(object, 'items', object['svg']);
-    goog.object.set(object, 'state', {
-      'layout-guides': state['layout-guide']
-    });
-
-    goog.object.remove(object, 'config');
-    goog.object.remove(object, 'svg');
-  });
-
   return new thin.layout.Format(object);
 };
 
