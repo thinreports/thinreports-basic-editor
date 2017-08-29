@@ -32,7 +32,7 @@ We tested the following platform:
 
 ## Supported Layout versions
 
-Support a layout file that created/modified with 0.8.0+ Editor.
+Support a layout file that created/modified with 0.9.0+ Editor.
 
 ## Getting Started
 
