@@ -1431,7 +1431,7 @@ thin.init_ = function() {
     toolHelp.addItem(toolHelpFeedBack);
 
     var toolHelpTranslation = new thin.ui.MenuLinkItem(
-          thin.t('button_translation'), 'https://github.com/thinreports/thinreports-editor/blob/master/doc/TRANSLATION.md');
+          thin.t('button_translation'), 'https://github.com/thinreports/thinreports-editor/blob/master/TRANSLATION.md');
     toolHelp.addItem(toolHelpTranslation);
 
     toolbar.decorate(goog.dom.getElement('thin-toolbar'));

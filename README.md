@@ -20,7 +20,7 @@ Currently supported platforms are Windows, Mac and Linux.
 ### I18n Support
 
 Currently supported locales are Japanese and English.
-Please [contribute to translate](https://github.com/thinreports/thinreports-editor/blob/master/doc/TRANSLATION.md)!
+Please [contribute to translate](https://github.com/thinreports/thinreports-editor/blob/master/TRANSLATION.md)!
 
 ## Supported Platforms
 

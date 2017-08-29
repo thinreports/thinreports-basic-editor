@@ -10,7 +10,7 @@
 
 ### Creating a Translation file
 
-There are translation files in `src/locales/*.js`.
+There are translation files in `app/locales/*.js`.
 
 Copy the `en.js` and create a translation file with a name like `xx.js` for your language code:
 
@@ -45,7 +45,7 @@ Translate in your language:
 
 ### Enabling your language
 
-Modify the your `src/app.html` as follows:
+Modify the your `app/index.html` as follows:
 
 ```html
 <!DOCTYPE html>
@@ -53,7 +53,7 @@ Modify the your `src/app.html` as follows:
     <head>
       <title>Thinreports Editor</title>
       <meta charset="UTF-8">
-      <script src="app.js"></script>
+      <script src="index.js"></script>
       <script src="locales/ja.js"></script>
       <script src="locales/en.js"></script>
       <script src="locales/xx.js"></script>
@@ -71,7 +71,7 @@ Modify the your `src/app.html` as follows:
 
 ### Pull request
 
-1. See [Preparation](https://github.com/thinreports/thinreports-editor/blob/master/doc/TRANSLATION.md#preparation)
+1. See [Preparation](https://github.com/thinreports/thinreports-editor/blob/master/TRANSLATION.md#preparation)
 2. Add your translation file and add your translation file path in `app.html`
 3. Commit: `git commit -am 'added xx locale'`
 4. Push to the branch: `git push origin new-locale`
