@@ -1,5 +1,6 @@
 const where = require('./helper').where
 
+const package = require('../package.json')
 const packager = require('electron-packager')
 const path = require('path')
 
@@ -11,7 +12,10 @@ const config = {
   ignore: 'editor/',
   out: path.join(where.root, 'builds'),
   overwrite: true,
-  platform: ['darwin', 'linux', 'win32']
+  platform: ['darwin', 'linux', 'win32'],
+  win32metadata: {
+    FileDescription: package['name']
+  }
 }
 
 clean()
