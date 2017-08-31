@@ -1,6 +1,22 @@
-## master (0.10.0)
+## 0.10.0
 
-Won't release chromeapp ver. Instead, release Desktop ver using Electron.
+### Released as a Electron based desktop application
+
+Supports macOS and Linux, Windows. Tested version of each platform is below.
+
+  * macOS 10.12
+  * Ubuntu 16.04
+  * Windows 10
+
+Please see [Installation Guide](http://www.thinreports.org/documentation/en/getting-started/installation.html).
+
+**NOTICE** Does not release ChromeApp based application since this version.
+If you want to use Editor 0.9.0 (ChromeApp based), please check the [Installation Guide](http://www.thinreports.org/documentation/en/getting-started/installation.html).
+
+### Drop support for layout created/modified with Editor 0.8.0
+
+This version supports layout file that only created/modified with Editor 0.9.0+.
+If you want to open 0.8.0 version layout, you can convert to 0.9.0 version from 0.8.0 using [thinreports-cli (Unofficial)](https://github.com/hidakatsuya/thinreports-cli).
 
 ## 0.9.1
 
