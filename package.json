@@ -1,7 +1,7 @@
 {
   "name": "ThinreportsEditor",
   "version": "0.0.0",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "description": "Designer for Thinreports",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron app",
