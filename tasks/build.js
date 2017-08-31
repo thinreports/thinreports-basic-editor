@@ -14,7 +14,7 @@ const config = {
   overwrite: true,
   platform: ['darwin', 'linux', 'win32'],
   win32metadata: {
-    FileDescription: package['name']
+    FileDescription: package['productName']
   }
 }
 

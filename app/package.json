@@ -1,5 +1,6 @@
 {
   "name": "ThinreportsEditor",
+  "productName": "Thinreports Editor",
   "version": "0.10.0",
   "license": "GPL-3.0",
   "description": "Designer for Thinreports",
