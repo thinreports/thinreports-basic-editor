@@ -12,10 +12,7 @@ const config = {
   ignore: 'editor/',
   out: path.join(where.root, 'builds'),
   overwrite: true,
-  platform: ['darwin', 'linux', 'win32'],
-  win32metadata: {
-    FileDescription: package['productName']
-  }
+  platform: ['darwin', 'linux', 'win32']
 }
 
 clean()

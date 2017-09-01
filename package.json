@@ -18,8 +18,8 @@
   "devDependencies": {
     "cross-env": "^5.0.5",
     "del": "^3.0.0",
-    "electron": "^1.6.11",
-    "electron-packager": "^8.7.2",
+    "electron": "^1.7.5",
+    "electron-packager": "^9.0.0",
     "electron-prebuilt": "^1.4.13",
     "js-yaml": "^3.9.1"
   }
