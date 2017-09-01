@@ -1,6 +1,6 @@
 ## 0.10.0
 
-### Released as a Electron based desktop application
+### Released as an Electron based desktop application
 
 Supports macOS and Linux, Windows. Tested version of each platform is below.
 
