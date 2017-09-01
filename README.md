@@ -53,26 +53,38 @@ See [TRANSLATION.md](https://github.com/thinreports/thinreports-editor/blob/mast
 
 ### Requirements
 
-  * [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) 6+ (JDK)
-  * [Python](https://wiki.python.org/moin/BeginnersGuide/Download) 2.7+
+  * JDK 6+
+  * Python 3.7+
+  * Node.js
+  * [yarn](https://yarnpkg.com/en/)
 
-### Tasks
+### Getting Started
 
+Install dependencies:
 ```
-Install dependencies.
-$ npm install
+$ yarn install
+```
 
-Launch Editor on development.
-$ npm start
+Compile javascript, css and templates:
+```
+$ yarn run compile
+```
 
-Compile javascript, css and html templates.
-$ npm run compile
+Launch Editor on development:
+```
+$ yarn start
+```
 
-Build package for macOS, Windows, Ubuntu(linux).
-$ npm run build
+### Other Tasks
 
-Run compilation and building on production.
-$ npm run release
+Build package for macOS, Windows, Ubuntu(linux):
+```
+$ yarn run build
+```
+
+Run compilation and building on production:
+```
+$ yarn run release
 ```
 
 ## License
