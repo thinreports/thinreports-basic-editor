@@ -7,10 +7,10 @@
   "author": "Thinreports.org",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron app",
-    "compile": "npm run compile:javascript && npm run compile:css && npm run compile:templates",
+    "compile": "npm run compile:javascript && npm run compile:css && npm run compile:template",
     "compile:javascript": "node tasks/compile.javascript.js",
     "compile:css": "node tasks/compile.css.js",
-    "compile:templates": "node tasks/compile.templates.js",
+    "compile:template": "node tasks/compile.template.js",
     "build": "node tasks/build.js",
     "release": "cross-env NODE_ENV=production npm run compile && npm run build",
     "watch": "node tasks/watch.js",

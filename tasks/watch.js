@@ -32,7 +32,7 @@ function compileJs (path) {
 
 function compileTemplate (path) {
   if (/\.soy$/.test(path)) {
-    runTask('Template compilation', () => execSync('yarn run compile:templates'))
+    runTask('Template compilation', () => execSync('yarn run compile:template'))
   }
 }
 

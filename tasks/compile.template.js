@@ -8,5 +8,5 @@ const command =
   ' --shouldProvideRequireSoyNamespaces' +
   ` ${ require('path').join(where.editor, 'layout', 'document', 'templates', 'html.soy') }`
 
-console.log('\x1b[34mCompiling templates...\n\x1b[0m')
+console.log('\x1b[34mCompiling template...\n\x1b[0m')
 execSync(command)
