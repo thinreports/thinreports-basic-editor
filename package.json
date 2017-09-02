@@ -13,9 +13,11 @@
     "compile:templates": "node tasks/compile.templates.js",
     "build": "node tasks/build.js",
     "release": "cross-env NODE_ENV=production npm run compile && npm run build",
+    "watch": "node tasks/watch.js",
     "postinstall": "cd app && npm install"
   },
   "devDependencies": {
+    "chokidar": "^1.7.0",
     "cross-env": "^5.0.5",
     "del": "^3.0.0",
     "electron": "^1.7.5",

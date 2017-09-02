@@ -77,6 +77,11 @@ $ yarn start
 
 ### Other Tasks
 
+Watch and compile:
+```
+$ yarn run watch
+```
+
 Build package for macOS, Windows, Ubuntu(linux):
 ```
 $ yarn run build
