@@ -11,7 +11,7 @@ const command =
   ` --output-file ${ require('path').join(where.app, 'assets/style.css') }` +
   ' --allowed-non-standard-function color-stop'
 
-console.log('\x1b[34mCompiling styles...\n\x1b[0m')
+console.log('\x1b[34mCompiling CSS...\n\x1b[0m')
 
 execSync(command)
 

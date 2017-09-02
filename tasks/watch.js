@@ -20,7 +20,7 @@ watcher.on('all', (event, path) => {
 
 function compileCss (path) {
   if (/\.css$/.test(path)) {
-    runTask('CSS compilation', () => execSync('yarn run compile:styles'))
+    runTask('CSS compilation', () => execSync('yarn run compile:css'))
   }
 }
 
