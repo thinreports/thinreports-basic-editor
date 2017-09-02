@@ -26,13 +26,13 @@ function clean () {
 function build () {
   console.log('\x1b[34mBuilding electron app(s)...\n\x1b[0m')
 
-  packager(config, (err, appPaths) => {
-    if (err) {
-      console.error('\x1b[31mError from `electron-packager` when building app...\x1b[0m')
-      console.error(err)
-    } else {
+  packager(config)
+    .then((appPaths) => {
       console.log('Build(s) successful!')
       console.log(appPaths)
-    }
-  })
+    })
+    .catch((error) => {
+      console.error('\x1b[31mError from `electron-packager` when building app...\x1b[0m')
+      console.error(error)
+    })
 }
