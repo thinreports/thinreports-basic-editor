@@ -26,7 +26,7 @@ function compileCss (path) {
 
 function compileJs (path) {
   if (/\.js$/.test(path)) {
-    runTask('JavaScript compilation', () => execSync('yarn run compile:javascripts'))
+    runTask('JavaScript compilation', () => execSync('yarn run compile:javascript'))
   }
 }
 

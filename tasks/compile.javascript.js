@@ -15,5 +15,5 @@ const command =
   ` -f "--compilation_level=${ compilationLevel }"` +
   ' -f "--warning_level=DEFAULT"'
 
-console.log(`\x1b[34mCompiling javascripts with ${ compilationLevel }...\n\x1b[0m`)
+console.log(`\x1b[34mCompiling JavaScript with ${ compilationLevel }...\n\x1b[0m`)
 execSync(command)
