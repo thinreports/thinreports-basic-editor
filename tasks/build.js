@@ -37,7 +37,7 @@ function build () {
 
   packager(config.packager)
     .then(mapPackageNameAll)
-    .then(archiveAll)
+    .then(archivePackageAll)
     .then((appPaths) => {
       console.log('Build(s) successful!')
       console.log(appPaths)
@@ -50,6 +50,10 @@ function build () {
 
 function mapPackageNameAll (appPaths) {
   return Promise.all(appPaths.map(mapPackageName))
+}
+
+function archivePackageAll (appPaths) {
+  return Promise.all(appPaths.map(archivePackage))
 }
 
 function mapPackageName (appPath) {
@@ -73,12 +77,8 @@ function mapPackageName (appPath) {
   })
 }
 
-function archiveAll (appPaths) {
-  return Promise.all(appPaths.map(archive))
-}
-
-function archive (path) {
-  const outputPath = `${path}.zip`
+function archivePackage (appPath) {
+  const outputPath = `${appPath}.zip`
 
   return new Promise((resolve, reject) => {
     const archive = archiver.create('zip', {})
@@ -97,7 +97,7 @@ function archive (path) {
     })
 
     archive.pipe(output)
-    archive.directory(path, false)
+    archive.directory(appPath, false)
     archive.finalize()
   })
 }
