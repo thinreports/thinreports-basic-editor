@@ -909,7 +909,7 @@ thin.init_ = function() {
           selectbox.setWidth(170);
         });
 
-    toolFamily.addEventListener(componentEventType.ACTION, function(e) {
+    toolFamily.addEventListener(componentEventType.CHANGE, function(e) {
       var workspace = thin.core.getActiveWorkspace();
       if (workspace) {
         var selectedFamily = toolFamily.getValue();

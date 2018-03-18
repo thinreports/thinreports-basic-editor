@@ -23,6 +23,10 @@ goog.require('goog.ui.ControlRenderer');
 goog.require('goog.ui.MenuItemRenderer');
 goog.require('goog.ui.MenuSeparator');
 goog.require('thin.Font');
+
+goog.require('thin.ui.ComboBox');
+goog.require('thin.ui.ComboBoxItem');
+
 goog.require('thin.ui.Select');
 goog.require('thin.ui.Option');
 goog.require('thin.ui.OptionMenu');
@@ -31,21 +35,20 @@ goog.require('thin.ui.OptionMenuRenderer');
 
 /**
  * @param {Array.<thin.Font>} fonts
- * @param {thin.ui.MenuButtonRenderer=} opt_renderer
  * @param {!thin.ui.FontOptionMenuRenderer=} opt_menuRenderer
  * @constructor
- * @extends {thin.ui.Select}
+ * @extends {thin.ui.ComboBox}
  */
-thin.ui.FontSelect = function(fonts, opt_renderer, opt_menuRenderer) {
+thin.ui.FontSelect = function(fonts, opt_menuRenderer) {
   var menu = new thin.ui.OptionMenu(
               opt_menuRenderer || thin.ui.FontOptionMenuRenderer.getInstance());
-  goog.base(this, '', menu, opt_renderer);
-  
+  goog.base(this, menu);
+
   this.addFonts(fonts);
   this.setValue(thin.Font.getDefaultFontFamily());
   this.setTextAlignLeft();
 };
-goog.inherits(thin.ui.FontSelect, thin.ui.Select);
+goog.inherits(thin.ui.FontSelect, thin.ui.ComboBox);
 
 
 /** @inheritDoc */
@@ -62,9 +65,9 @@ thin.ui.FontSelect.prototype.addFonts = function(fonts) {
 
   goog.array.forEach(fonts, function(font) {
     family = font.getFamily();
-    if (family == 'IPAMincho') {
-      this.addItem(new goog.ui.MenuSeparator());
-    }
+    // if (family == 'IPAMincho') {
+    //   this.addItem(new goog.ui.MenuSeparator());
+    // }
     this.addBuiltinFont(family, font.getName());
   }, this);
 };
@@ -85,7 +88,10 @@ thin.ui.FontSelect.prototype.addBuiltinFont = function(family, name) {
  * @param {string} name
  */
 thin.ui.FontSelect.prototype.addFont = function(type, family, name) {
-  this.addItem(new thin.ui.FontSelectOption(type, family, name));
+  var item = new thin.ui.ComboBoxItem(family);
+  item.setSticky(true);
+  this.addItem(item);
+  // this.addItem(new thin.ui.FontSelectOption(type, family, name));
 };
 
 
@@ -101,7 +107,7 @@ thin.ui.FontSelectOption = function(type, family, name) {
         goog.ui.MenuItemRenderer, thin.ui.getCssName('thin-font-option'));
   goog.base(this, name, family,
       /** @type {goog.ui.MenuItemRenderer} */ (renderer));
-  
+
   this.addClassName(thin.ui.getCssName(type, 'font'));
 };
 goog.inherits(thin.ui.FontSelectOption, thin.ui.Option);
