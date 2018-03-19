@@ -1009,27 +1009,6 @@ thin.ui.PropertyPane.SelectProperty.prototype.enterDocument = function() {
 
 
 /**
- * @param {string=} opt_label
- * @constructor
- * @extends {thin.ui.PropertyPane.SelectProperty}
- */
-thin.ui.PropertyPane.FontSelectProperty = function(opt_label) {
-  var propCssClass = thin.ui.PropertyPane.PropertyRenderer.CSS_CLASS;
-
-  var menuRenderer = goog.ui.ContainerRenderer.getCustomRenderer(
-        thin.ui.FontOptionMenuRenderer, thin.ui.getCssName(propCssClass, 'font-selectmenu'));
-
-  var control = new thin.ui.FontSelect(thin.Font.getFonts(),
-                  /** @type {thin.ui.FontOptionMenuRenderer} */ (menuRenderer));
-
-  control.getMenu().setMaxHeight(250);
-
-  goog.base(this, opt_label || thin.t('field_font_family'), control);
-};
-goog.inherits(thin.ui.PropertyPane.FontSelectProperty, thin.ui.PropertyPane.Property);
-
-
-/**
  * @param {string} label
  * @param {goog.ui.Component=} opt_control
  * @param {goog.ui.Checkbox.State=} opt_checked
@@ -1457,16 +1436,38 @@ thin.ui.PropertyPane.IdInputProperty.Validator_.prototype.disposeInternal = func
 /**
  * @param {string} label
  * @param {thin.ui.OptionMenu=} opt_menu
+ * @param {thin.ui.ComboBox=} opt_control
  * @constructor
  * @extends {thin.ui.PropertyPane.Property}
  */
-thin.ui.PropertyPane.ComboBoxProperty = function(label, opt_menu) {
-  var control = thin.ui.ComboBox.getCustomComboBox(
-      thin.ui.getCssName(thin.ui.PropertyPane.PropertyRenderer.CSS_CLASS, 'combobox'), opt_menu);
+thin.ui.PropertyPane.ComboBoxProperty = function(label, opt_menu, opt_control) {
+  var cssClass = thin.ui.getCssName(thin.ui.PropertyPane.PropertyRenderer.CSS_CLASS, 'combobox');
+  var control;
+
+  if (opt_control) {
+    control = thin.ui.PropertyPane.ComboBoxProperty.buildCustomControl(cssClass, opt_control);
+  } else {
+    control = thin.ui.ComboBox.getCustomComboBox(cssClass, opt_menu);
+  }
 
   thin.ui.PropertyPane.Property.call(this, label, control);
 };
 goog.inherits(thin.ui.PropertyPane.ComboBoxProperty, thin.ui.PropertyPane.Property);
+
+/**
+ * @param {string} cssClass
+ * @param {thin.ui.ComboBox} control
+ * @return {thin.ui.ComboBox}
+ */
+thin.ui.PropertyPane.ComboBoxProperty.buildCustomControl = function (cssClass, control) {
+  /**
+   * @return {string}
+   */
+  control.getCssClass = function () {
+    return cssClass;
+  }
+  return control;
+};
 
 
 /**
@@ -1510,6 +1511,27 @@ thin.ui.PropertyPane.ComboBoxProperty.prototype.enterDocument = function() {
   goog.events.listen(control.getInput().getElement(),
     goog.events.EventType.CLICK, this.handleClick, false, this);
 };
+
+
+/**
+ * @param {string=} opt_label
+ * @constructor
+ * @extends {thin.ui.PropertyPane.ComboBoxProperty}
+ */
+thin.ui.PropertyPane.FontSelectProperty = function(opt_label) {
+  var propCssClass = thin.ui.PropertyPane.PropertyRenderer.CSS_CLASS;
+
+  var menuRenderer = goog.ui.ContainerRenderer.getCustomRenderer(
+        thin.ui.FontOptionMenuRenderer, thin.ui.getCssName(propCssClass, 'font-selectmenu'));
+
+  var control = new thin.ui.FontSelect(thin.Font.getFonts(),
+                  /** @type {thin.ui.FontOptionMenuRenderer} */ (menuRenderer));
+
+  control.getMenu().setMaxHeight(250);
+
+  goog.base(this, opt_label || thin.t('field_font_family'), null, control);
+};
+goog.inherits(thin.ui.PropertyPane.FontSelectProperty, thin.ui.PropertyPane.ComboBoxProperty);
 
 
 /**
