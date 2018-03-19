@@ -14,21 +14,15 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.ui.FontSelect');
-goog.provide('thin.ui.FontSelectOption');
 goog.provide('thin.ui.FontOptionMenuRenderer');
 
 goog.require('goog.array');
 goog.require('goog.style');
-goog.require('goog.ui.ControlRenderer');
-goog.require('goog.ui.MenuItemRenderer');
-goog.require('goog.ui.MenuSeparator');
 goog.require('thin.Font');
 
 goog.require('thin.ui.ComboBox');
 goog.require('thin.ui.ComboBoxItem');
 
-goog.require('thin.ui.Select');
-goog.require('thin.ui.Option');
 goog.require('thin.ui.OptionMenu');
 goog.require('thin.ui.OptionMenuRenderer');
 
@@ -61,63 +55,19 @@ thin.ui.FontSelect.prototype.setValue = function(name) {
  * @param {Array.<thin.Font>} fonts
  */
 thin.ui.FontSelect.prototype.addFonts = function(fonts) {
-  var family;
-
   goog.array.forEach(fonts, function(font) {
-    family = font.getFamily();
-    // if (family == 'IPAMincho') {
-    //   this.addItem(new goog.ui.MenuSeparator());
-    // }
-    this.addBuiltinFont(family, font.getName());
+    this.addFont(font);
   }, this);
 };
 
 
 /**
- * @param {string} family
- * @param {string} name
+ * @param {thin.Font} font
  */
-thin.ui.FontSelect.prototype.addBuiltinFont = function(family, name) {
-  this.addFont(thin.ui.FontSelectOption.Type.BUILTIN, family, name);
-};
-
-
-/**
- * @param {thin.ui.FontSelectOption.Type} type
- * @param {string} family
- * @param {string} name
- */
-thin.ui.FontSelect.prototype.addFont = function(type, family, name) {
-  var item = new thin.ui.ComboBoxItem(family);
+thin.ui.FontSelect.prototype.addFont = function(font) {
+  var item = new thin.ui.ComboBoxItem(font.getFamily());
   item.setSticky(true);
   this.addItem(item);
-  // this.addItem(new thin.ui.FontSelectOption(type, family, name));
-};
-
-
-/**
- * @param {thin.ui.FontSelectOption.Type} type
- * @param {string} family
- * @param {goog.ui.ControlContent} name
- * @constructor
- * @extends {thin.ui.Option}
- */
-thin.ui.FontSelectOption = function(type, family, name) {
-  var renderer = goog.ui.ControlRenderer.getCustomRenderer(
-        goog.ui.MenuItemRenderer, thin.ui.getCssName('thin-font-option'));
-  goog.base(this, name, family,
-      /** @type {goog.ui.MenuItemRenderer} */ (renderer));
-
-  this.addClassName(thin.ui.getCssName(type, 'font'));
-};
-goog.inherits(thin.ui.FontSelectOption, thin.ui.Option);
-
-
-/**
- * @enum {string}
- */
-thin.ui.FontSelectOption.Type = {
-  BUILTIN: 'builtin'
 };
 
 
