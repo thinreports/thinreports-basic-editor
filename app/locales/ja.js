@@ -212,6 +212,8 @@ App.addLocale({
     error_failed_to_load_image: '画像ファイルの読み込みに失敗しました。',
     error_no_valid_placeholder_included: '有効なプレースホルダが一つも含まれていません。',
     error_unexpected_error: '予期しないエラーが発生しました。',
+    error_family_is_not_a_valid_font: '{$family} は有効なフォントではありません。',
+
     notice_no_shapes: 'オブジェクトはありません',
     warning_discard_changes: '保存していないレイアウトがある場合は必ず保存して下さい。',
     warning_discard_changes_en: 'If you have unsaved files, the changes will be discarded. Please be sure to save.',

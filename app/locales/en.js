@@ -212,6 +212,7 @@ App.addLocale({
     error_failed_to_load_image: 'Failed to load image.',
     error_no_valid_placeholder_included: 'No a valid placeholder included.',
     error_unexpected_error: 'An unexpected error occurred.',
+    error_family_is_not_a_valid_font: '{$family} is not a valid font.',
 
     notice_no_shapes: 'No shapes',
     warning_discard_changes: 'If you have unsaved files, the changes will be discarded. Please be sure to save.',

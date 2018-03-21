@@ -104,6 +104,20 @@ thin.Font.getFonts = function() {
 
 
 /**
+ * @param {string} family
+ * @return {boolean}
+ */
+thin.Font.isRegistered = function (family) {
+  var detected = goog.array.find(thin.Font.fontRegistry_,
+    function (font) {
+      return font.getFamily() == family;
+    });
+
+  return detected !== null;
+}
+
+
+/**
  * @type {Object.<Object>}
  * @private
  */

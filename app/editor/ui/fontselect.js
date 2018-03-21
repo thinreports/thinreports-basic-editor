@@ -19,12 +19,15 @@ goog.provide('thin.ui.FontOptionMenuRenderer');
 goog.require('goog.array');
 goog.require('goog.style');
 goog.require('thin.Font');
+goog.require('thin.platform.FontValidator');
 
 goog.require('thin.ui.ComboBox');
 goog.require('thin.ui.ComboBoxItem');
 
 goog.require('thin.ui.OptionMenu');
 goog.require('thin.ui.OptionMenuRenderer');
+
+goog.require('thin.ui.Input.Validator');
 
 
 /**
@@ -41,9 +44,31 @@ thin.ui.FontSelect = function(fonts, opt_menuRenderer) {
   this.addFonts(fonts);
   this.setValue(thin.Font.getDefaultFontFamily());
   this.setTextAlignLeft();
+
+  this.initValidator_();
 };
 goog.inherits(thin.ui.FontSelect, thin.ui.ComboBox);
 
+
+thin.ui.FontSelect.prototype.initValidator_ = function () {
+  var fontValidator = new thin.ui.Input.Validator(this);
+
+  fontValidator.setAllowBlank(false);
+  fontValidator.setMethod(function (fontFamily) {
+    fontValidator.setMessage(thin.t('error_family_is_not_a_valid_font', {'family': fontFamily}));
+
+    if (thin.Font.isRegistered(fontFamily)) {
+      return true;
+    }
+    if (thin.platform.FontValidator.validate(fontFamily)) {
+      return true;
+    }
+
+    return false;
+  });
+
+  this.getInput().setValidator(fontValidator);
+};
 
 /** @inheritDoc */
 thin.ui.FontSelect.prototype.setValue = function(name) {
