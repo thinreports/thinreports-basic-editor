@@ -104,17 +104,47 @@ thin.Font.getFonts = function() {
 
 
 /**
+ * @return {Array.<thin.Font>}
+ */
+thin.Font.getBuiltinFonts = function () {
+  return goog.array.filter(thin.Font.fontRegistry_,
+    function (font) {
+      return font.isBuiltin();
+    });
+};
+
+
+/**
+ * @return {Array.<thin.Font>}
+ */
+thin.Font.getCustomFonts = function () {
+  return goog.array.filter(thin.Font.fontRegistry_,
+    function (font) {
+      return font.isCustom();
+    });
+};
+
+
+/**
  * @param {string} family
  * @return {boolean}
  */
 thin.Font.isRegistered = function (family) {
-  var detected = goog.array.find(thin.Font.fontRegistry_,
+  var detected = thin.Font.findFontByFamily(family);
+  return detected !== null;
+};
+
+
+/**
+ * @param {string} family
+ * @return {thin.Font?}
+ */
+thin.Font.findFontByFamily = function (family) {
+  return goog.array.find(thin.Font.fontRegistry_,
     function (font) {
       return font.getFamily() == family;
     });
-
-  return detected !== null;
-}
+};
 
 
 /**
@@ -191,4 +221,12 @@ thin.Font.prototype.getName = function() {
  */
 thin.Font.prototype.isBuiltin = function() {
   return this.builtin_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+thin.Font.prototype.isCustom = function () {
+  return !this.isBuiltin();
 };

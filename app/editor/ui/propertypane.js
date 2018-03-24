@@ -40,7 +40,6 @@ goog.require('goog.ui.Component.State');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Checkbox');
 goog.require('goog.ui.Checkbox.State');
-goog.require('thin.Font');
 goog.require('thin.ui.Component');
 goog.require('thin.ui.Select');
 goog.require('thin.ui.ComboBox');
@@ -1524,8 +1523,7 @@ thin.ui.PropertyPane.FontSelectProperty = function(opt_label) {
   var menuRenderer = goog.ui.ContainerRenderer.getCustomRenderer(
         thin.ui.FontOptionMenuRenderer, thin.ui.getCssName(propCssClass, 'font-selectmenu'));
 
-  var control = new thin.ui.FontSelect(thin.Font.getFonts(),
-                  /** @type {thin.ui.FontOptionMenuRenderer} */ (menuRenderer));
+  var control = new thin.ui.FontSelect(/** @type {thin.ui.FontOptionMenuRenderer} */ (menuRenderer));
 
   control.getMenu().setMaxHeight(250);
 

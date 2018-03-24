@@ -26,6 +26,7 @@ goog.require('thin.ui.ComboBoxItem');
 
 goog.require('thin.ui.OptionMenu');
 goog.require('thin.ui.OptionMenuRenderer');
+goog.require('thin.ui.MenuSeparator');
 
 goog.require('thin.ui.Input.Validator');
 
@@ -41,13 +42,44 @@ thin.ui.FontSelect = function(fonts, opt_menuRenderer) {
               opt_menuRenderer || thin.ui.FontOptionMenuRenderer.getInstance());
   goog.base(this, menu);
 
-  this.addFonts(fonts);
+  this.loadFonts_();
   this.setValue(thin.Font.getDefaultFontFamily());
   this.setTextAlignLeft();
 
   this.initValidator_();
 };
 goog.inherits(thin.ui.FontSelect, thin.ui.ComboBox);
+
+
+/**
+ * @type {Array.<thin.ui.FontSelect>}
+ * @private
+ */
+thin.ui.FontSelect.activeControlRegistry_ = [];
+
+
+/**
+ * @param {thin.ui.FontSelect} control
+ */
+thin.ui.FontSelect.registerControl = function (control) {
+  goog.array.insert(thin.ui.FontSelect.activeControlRegistry_, control);
+};
+
+
+/**
+ * @param {thin.ui.FontSelect} control
+ */
+thin.ui.FontSelect.unregisterControl = function (control) {
+  goog.array.remove(thin.ui.FontSelect.activeControlRegistry_, control);
+};
+
+
+thin.ui.FontSelect.reloadFontsOfAllControls = function () {
+  goog.array.forEach(thin.ui.FontSelect.activeControlRegistry_,
+    function (control) {
+      control.reloadFonts();
+    });
+};
 
 
 thin.ui.FontSelect.prototype.initValidator_ = function () {
@@ -70,29 +102,85 @@ thin.ui.FontSelect.prototype.initValidator_ = function () {
   this.getInput().setValidator(fontValidator);
 };
 
+
 /** @inheritDoc */
 thin.ui.FontSelect.prototype.setValue = function(name) {
   goog.base(this, 'setValue', name || thin.Font.getDefaultFontFamily());
 };
 
 
+thin.ui.FontSelect.prototype.reloadFonts = function () {
+  this.getMenu().removeChildren(true);
+  this.loadFonts_();
+};
+
+
 /**
- * @param {Array.<thin.Font>} fonts
+ * @param {string} family
+ * @private
  */
-thin.ui.FontSelect.prototype.addFonts = function(fonts) {
-  goog.array.forEach(fonts, function(font) {
-    this.addFont(font);
-  }, this);
+thin.ui.FontSelect.prototype.registerCustomFont_ = function (family) {
+  if (!thin.Font.isRegistered(family)) {
+    thin.Font.register(family);
+
+    thin.ui.FontSelect.reloadFontsOfAllControls();
+  }
+};
+
+
+/**
+ * @private
+ */
+thin.ui.FontSelect.prototype.loadFonts_ = function () {
+  goog.array.forEach(thin.Font.getBuiltinFonts(),
+    function(font) {
+      this.addFont_(font);
+    }, this);
+
+  var customFonts = thin.Font.getCustomFonts();
+
+  if (!goog.array.isEmpty(customFonts)) {
+    this.addItem(new thin.ui.MenuSeparator());
+
+    goog.array.forEach(customFonts,
+      function (font) {
+        this.addFont_(font);
+      }, this);
+  }
 };
 
 
 /**
  * @param {thin.Font} font
+ * @private
  */
-thin.ui.FontSelect.prototype.addFont = function(font) {
+thin.ui.FontSelect.prototype.addFont_ = function(font) {
   var item = new thin.ui.ComboBoxItem(font.getFamily());
   item.setSticky(true);
   this.addItem(item);
+};
+
+
+/** @override */
+thin.ui.FontSelect.prototype.enterDocument = function () {
+  goog.base(this, 'enterDocument');
+
+  thin.ui.FontSelect.registerControl(this);
+
+  var handler = this.getHandler();
+
+  handler.listen(this.getInput(), goog.ui.Component.EventType.CHANGE,
+    function (e) {
+      this.registerCustomFont_(this.getValue());
+    }, false, this);
+};
+
+
+/** @override */
+thin.ui.FontSelect.prototype.exitDocument = function () {
+  goog.base(this, 'exitDocument');
+
+  thin.ui.FontSelect.unregisterControl(this);
 };
 
 
