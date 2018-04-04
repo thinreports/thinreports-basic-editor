@@ -260,10 +260,12 @@ thin.core.Workspace.prototype.handleUndoRedoKeyEvent_ = function(e) {
       case keyCodes.Z:
         this.undo();
         this.enablingOnceKeyEventHandling_(true);
+        e.preventDefault();
         break;
       case keyCodes.Y:
         this.redo();
         this.enablingOnceKeyEventHandling_(true);
+        e.preventDefault();
         break;
     }
   }
