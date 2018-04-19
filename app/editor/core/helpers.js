@@ -40,6 +40,9 @@ goog.require('thin.core.OutlineHelper');
 goog.require('thin.core.MultiOutlineHelper');
 goog.require('thin.core.MultipleShapesHelper');
 
+goog.require('thin.core.StackViewHelper');
+goog.require('thin.core.StackViewOutline');
+
 
 /**
  * @param {thin.core.Layout} layout
@@ -47,7 +50,7 @@ goog.require('thin.core.MultipleShapesHelper');
  * @extends {goog.Disposable}
  */
 thin.core.Helpers = function(layout) {
-  
+
   /**
    * @type {thin.core.Layout}
    * @private
@@ -207,7 +210,7 @@ thin.core.Helpers.prototype.setup = function() {
   surface.setVisibled(true);
 
   this.surface_ = surface;
-  
+
   var gridLayer = new thin.core.Layer(layout);
   gridLayer.setVisibled(true);
   layout.setElementAttributes(gridLayer.getElement(), {
@@ -220,9 +223,10 @@ thin.core.Helpers.prototype.setup = function() {
   this.canvas_ = new thin.core.Rect(layout.createSvgElement('rect'),
                     layout, null, null);
   this.canvas_.setBounds(canvasBounds);
-  
+
   this.drawLayer_ = new thin.core.DrawActionLayer(layout);
-  this.listHelper_ = new thin.core.ListHelper(layout);
+  this.listHelper_ = new thin.core.StackViewHelper(layout);
+  // this.listHelper_ = new thin.core.ListHelper(layout);
   this.dragLayer_ = new thin.core.ActionLayer(layout);
   this.zoomLayer_ = new thin.core.ActionLayer(layout);
 };
@@ -405,6 +409,7 @@ thin.core.Helpers.prototype.getGuideHelper = function() {
  */
 thin.core.Helpers.prototype.getListHelper = function() {
   return this.listHelper_;
+  // return this.listHelper_;
 };
 
 
@@ -568,7 +573,7 @@ thin.core.Helpers.prototype.createLineOutline = function(helper, stroke, opt_att
  */
 thin.core.Helpers.prototype.createTblockOutline = function(helper, stroke, fill, opt_attr) {
   var tblockOutline = new thin.core.TblockOutline(
-                            this.layout_.createSvgElement('rect', opt_attr), 
+                            this.layout_.createSvgElement('rect', opt_attr),
                             this.layout_, stroke, fill);
   tblockOutline.setOutlineHelper(helper);
   return tblockOutline;
@@ -585,7 +590,7 @@ thin.core.Helpers.prototype.createTblockOutline = function(helper, stroke, fill,
  */
 thin.core.Helpers.prototype.createPageNumberOutline = function(helper, stroke, fill, opt_attr) {
   var pageNumberOutline = new thin.core.PageNumberOutline(
-                            this.layout_.createSvgElement('rect', opt_attr), 
+                            this.layout_.createSvgElement('rect', opt_attr),
                             this.layout_, stroke, fill);
   pageNumberOutline.setOutlineHelper(helper);
   return pageNumberOutline;
@@ -620,7 +625,7 @@ thin.core.Helpers.prototype.createImageblockOutline = function(helper, stroke, f
 thin.core.Helpers.prototype.createTextOutline = function(helper, stroke, fill, opt_attr) {
   var textOutline = new thin.core.TextOutline(
                           this.layout_.createSvgElement('rect', opt_attr),
-                          this.layout_, stroke, fill);  
+                          this.layout_, stroke, fill);
   textOutline.setOutlineHelper(helper);
   return textOutline;
 };
@@ -669,7 +674,7 @@ thin.core.Helpers.prototype.disableAll = function() {
  * @return {thin.core.ListOutline}
  */
 thin.core.Helpers.prototype.createListOutline = function(helper, stroke, fill, opt_attr) {
-  var rect = new thin.core.ListOutline(
+  var rect = new thin.core.StackViewOutline(
                     this.layout_.createSvgElement('rect', opt_attr),
                     this.layout_, stroke, fill);
   rect.setOutlineHelper(helper);
@@ -694,7 +699,7 @@ thin.core.Helpers.prototype.disposeInternal = function() {
   this.zoomLayer_.dispose();
   this.drawLayer_.dispose();
   this.dragLayer_.dispose();
-  
+
   delete this.multipleShapesHelper_;
   delete this.guideHelper_;
   delete this.listHelper_;
@@ -709,7 +714,7 @@ thin.core.Helpers.prototype.disposeInternal = function() {
   delete this.zoomLayer_;
   delete this.drawLayer_;
   delete this.dragLayer_;
-  
+
   this.frontContainer_.dispose();
   this.backContainer_.dispose();
   delete this.frontContainer_;

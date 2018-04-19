@@ -57,7 +57,7 @@ thin.core.toolaction.ListAction.prototype.handleActionInternal = function(e, wor
 
 
 /** @override */
-thin.core.toolaction.ListAction.prototype.handleEndAction = 
+thin.core.toolaction.ListAction.prototype.handleEndAction =
     function(e, outline, handler, captureActiveForStart, opt_isCancelDraw) {
   goog.base(this, 'handleEndAction', e, outline, handler, captureActiveForStart, opt_isCancelDraw);
 
@@ -65,4 +65,3 @@ thin.core.toolaction.ListAction.prototype.handleEndAction =
     this.layout.getHelpers().getListHelper().setDrawable(false);
   }
 };
-

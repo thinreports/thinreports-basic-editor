@@ -30,6 +30,7 @@ goog.require('thin.core.PageNumberShape');
 goog.require('thin.core.ListShape');
 goog.require('thin.core.RectShape');
 goog.require('thin.core.LineShape');
+goog.require('thin.core.StackViewShape');
 goog.require('thin.core.EllipseShape');
 goog.require('thin.core.ImageShape');
 goog.require('thin.core.ImageblockShape');
@@ -1241,6 +1242,27 @@ thin.core.Layout.prototype.createListShape = function() {
   shape.setEnabledForSectionInternal(thin.core.HeaderSectionShape.DEFAULT_ENABLED, listClassId['HEADER']);
   shape.setEnabledForSectionInternal(thin.core.PageFooterSectionShape.DEFAULT_ENABLED, listClassId['PAGEFOOTER']);
   shape.setEnabledForSectionInternal(thin.core.FooterSectionShape.DEFAULT_ENABLED, listClassId['FOOTER']);
+  var listHelper = this.helpers_.getListHelper();
+  if (listHelper.isEnableChangingPage(shape)) {
+    shape.setChangingPage(true);
+    listHelper.setChangingPageSetShape(shape);
+  } else {
+    shape.setChangingPage(false);
+  }
+  shape.setDisplay(thin.core.ModuleShape.DEFAULT_DISPLAY);
+  shape.initIdentifier();
+  return shape;
+};
+
+thin.core.Layout.prototype.createStackViewShape = function() {
+  console.log('createStackViewShape', thin.core.StackViewShape);
+  var shape = new thin.core.StackViewShape(this);
+  var listClassId = thin.core.StackViewShape.ClassIds;
+  shape.setIdShape(
+      this.getNextShapeId(thin.core.ShapeIdManager.DefaultPrefix.STACK_VIEW));
+  shape.setEnabledForSectionInternal(thin.core.HeaderSectionShape.DEFAULT_ENABLED, listClassId['HEADER']);
+  // shape.setEnabledForSectionInternal(thin.core.PageFooterSectionShape.DEFAULT_ENABLED, listClassId['PAGEFOOTER']);
+  // shape.setEnabledForSectionInternal(thin.core.FooterSectionShape.DEFAULT_ENABLED, listClassId['FOOTER']);
   var listHelper = this.helpers_.getListHelper();
   if (listHelper.isEnableChangingPage(shape)) {
     shape.setChangingPage(true);

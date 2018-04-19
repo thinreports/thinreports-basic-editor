@@ -28,7 +28,7 @@ goog.require('thin.core.AbstractManager');
  */
 thin.core.ShapeIdManager = function(layout) {
   thin.core.AbstractManager.call(this, layout);
-  
+
   /**
    * @type {Object}
    * @private
@@ -44,7 +44,8 @@ goog.inherits(thin.core.ShapeIdManager, thin.core.AbstractManager);
 thin.core.ShapeIdManager.DefaultPrefix = {
   TEXT_BLOCK: 'text',
   IMAGE_BLOCK: 'image',
-  LIST: 'default'
+  LIST: 'default',
+  STACK_VIEW: 'default'
 };
 
 
@@ -98,7 +99,7 @@ thin.core.ShapeIdManager.getShapeIdIndexes = function(shapeId) {
  */
 thin.core.ShapeIdManager.prototype.getNextId = function(prefix) {
   var suffixes = this.get(prefix);
-  
+
   if (goog.array.isEmpty(suffixes)) {
     return prefix;
   } else {
@@ -210,6 +211,6 @@ thin.core.ShapeIdManager.prototype.add = function(shape, prefix) {
 /** @inheritDoc */
 thin.core.ShapeIdManager.prototype.disposeInternal = function() {
   thin.core.ShapeIdManager.superClass_.disposeInternal.call(this);
-  
+
   delete this.indexes_;
 };
