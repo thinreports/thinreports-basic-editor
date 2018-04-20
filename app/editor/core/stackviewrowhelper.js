@@ -481,6 +481,8 @@ thin.core.StackViewRowHelper.Separator_.prototype.init = function(rowHelper) {
   }, false, dragger);
 
   this.dragger_ = dragger;
+
+  this.reapplySizeAndStroke();
 };
 
 
