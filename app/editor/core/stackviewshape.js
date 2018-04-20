@@ -109,6 +109,8 @@ thin.core.StackViewShape.prototype.id_;
 thin.core.StackViewShape.prototype.face_;
 
 
+thin.core.StackViewShape.prototype.rows_ = [];
+
 /**
  * @type {boolean}
  * @private
@@ -151,31 +153,16 @@ thin.core.StackViewShape.prototype.setup_ = function(opt_referenceElement) {
                    listShapeFaceClassId, opt_referenceElement.childNodes);
     var face = new thin.core.RectShape(rect, layout, stroke, fill);
 
-    var sectionShapeForHeader = new thin.core.StackViewRowAShape(layout, this, sectionNameForHeader,
+    var defaultRow = new thin.core.StackViewRowAShape(layout, this, sectionNameForHeader,
                                        thin.core.getElementByClassNameForChildNodes(
                                          sectionNameForHeader, opt_referenceElement.childNodes));
-    //
-    // var sectionShapeForDetail = new thin.core.DetailSectionShape(layout, this, sectionNameForDetail,
-    //                                    thin.core.getElementByClassNameForChildNodes(
-    //                                      sectionNameForDetail, opt_referenceElement.childNodes));
-    //
-    // var sectionShapeForPageFooter = new thin.core.PageFooterSectionShape(layout, this, sectionNameForPageFooter,
-    //                                        thin.core.getElementByClassNameForChildNodes(
-    //                                          sectionNameForPageFooter, opt_referenceElement.childNodes));
-    //
-    // var sectionShapeForFooter = new thin.core.FooterSectionShape(layout, this, sectionNameForFooter,
-    //                                    thin.core.getElementByClassNameForChildNodes(
-    //                                      sectionNameForFooter, opt_referenceElement.childNodes));
 
   } else {
     var rect = layout.createSvgElement('rect', {
       'stroke-dasharray': 2
     });
     var face = new thin.core.RectShape(rect, layout, stroke, fill);
-    var sectionShapeForHeader = new thin.core.StackViewRowAShape(layout, this, sectionNameForHeader);
-    // var sectionShapeForDetail = new thin.core.DetailSectionShape(layout, this, sectionNameForDetail);
-    // var sectionShapeForPageFooter = new thin.core.PageFooterSectionShape(layout, this, sectionNameForPageFooter);
-    // var sectionShapeForFooter = new thin.core.FooterSectionShape(layout, this, sectionNameForFooter);
+    var defaultRow = new thin.core.StackViewRowAShape(layout, this, sectionNameForHeader);
   }
 
   layout.setElementAttributes(rect, {
@@ -186,17 +173,7 @@ thin.core.StackViewShape.prototype.setup_ = function(opt_referenceElement) {
   this.face_ = face;
   layout.appendChild(face, this);
 
-  this.setSectionShape(sectionShapeForHeader, sectionNameForHeader);
-  // this.setSectionShape(sectionShapeForDetail, sectionNameForDetail);
-  // this.setSectionShape(sectionShapeForPageFooter, sectionNameForPageFooter);
-  // this.setSectionShape(sectionShapeForFooter, sectionNameForFooter);
-
-  // sectionShapeForHeader.setNextSectionShape(sectionShapeForDetail);
-  // sectionShapeForDetail.setPreviousSectionShape(sectionShapeForHeader);
-  // sectionShapeForDetail.setNextSectionShape(sectionShapeForPageFooter);
-  // sectionShapeForPageFooter.setPreviousSectionShape(sectionShapeForDetail);
-  // sectionShapeForPageFooter.setNextSectionShape(sectionShapeForFooter);
-  // sectionShapeForFooter.setPreviousSectionShape(sectionShapeForPageFooter);
+  this.addRow(defaultRow);
 
   this.activeshapes_ = new thin.core.ActiveShapeManager(layout);
 };
@@ -237,6 +214,10 @@ thin.core.StackViewShape.prototype.setSectionShape = function(sectionShape, sect
   this.getLayout().appendChild(sectionShape.getGroup(), this);
 };
 
+thin.core.StackViewShape.prototype.addRow = function(row) {
+  this.rows_.push(row);
+  this.getLayout().appendChild(row.getGroup(), this);
+};
 
 /**
  * @param {string} sectionName
@@ -838,10 +819,11 @@ thin.core.StackViewShape.prototype.updateProperties = function() {
     proppane.getPropertyControl('height').setValue(this.getHeight());
     proppane.getPropertyControl('display').setChecked(this.getDisplay());
 
-    proppane.getPropertyControl('list-header-enable').setChecked(this.getSectionShape(sectionName.HEADER).isEnabled());
+    // FIXME: 不要なプロパティを消す
+    // proppane.getPropertyControl('list-header-enable').setChecked(this.getSectionShape(sectionName.HEADER).isEnabled());
     // proppane.getPropertyControl('list-pagefooter-enable').setChecked(this.getSectionShape(sectionName.PAGEFOOTER).isEnabled());
     // proppane.getPropertyControl('list-footer-enable').setChecked(this.getSectionShape(sectionName.FOOTER).isEnabled());
-    proppane.getPropertyControl('list-changing-page').setChecked(this.isChangingPage());
+    // proppane.getPropertyControl('list-changing-page').setChecked(this.isChangingPage());
 
     proppane.getPropertyControl('shape-id').setValue(this.getShapeId());
     proppane.getPropertyControl('desc').setValue(this.getDesc());

@@ -220,10 +220,12 @@ thin.core.StackViewHelper.prototype.getBlankRangeBounds = function() {
   var listShape = this.target_;
   var listShapeBounds = listShape.getBounds();
   var footerSectionName = thin.core.StackViewHelper.SectionName.HEADER;
-  var sectionShapeForScope = listShape.getSectionShape(footerSectionName);
+  var lastRow = goog.array.peek(listShape.rows_);
   var draggableLineHeight = this.getSectionHelper(footerSectionName).getSeparator().getLineHeight();
   var listShapeBottom = listShapeBounds.toBox().bottom;
-  var blankRangeHeight = (listShapeBottom - sectionShapeForScope.getBounds().toBox().bottom) - draggableLineHeight;
+  console.log('-----');
+  var blankRangeHeight = (listShapeBottom - lastRow.getBounds().toBox().bottom) - draggableLineHeight;
+  console.log('-----');
   if(blankRangeHeight < 0) {
     blankRangeHeight = 0;
   }
@@ -334,9 +336,14 @@ thin.core.StackViewHelper.prototype.update = function() {
   var target = this.target_;
   var guide = this.getListGuideHelper();
   var sectionBounds = this.calculateSectionBoundsForUpdate(target);
-  this.forEachSectionHelper(function(sectionHelperForEach, sectionNameForEach) {
-    sectionHelperForEach.update(target, sectionBounds[sectionNameForEach]);
-  }, this);
+
+  goog.array.forEach(target.rows_, function (row, index) {
+    console.log('row', row);
+    row.helper_.update(target, sectionBounds[index]);
+  });
+  // this.forEachSectionHelper(function(sectionHelperForEach, sectionNameForEach) {
+  //   sectionHelperForEach.update(target, sectionBounds[sectionNameForEach]);
+  // }, this);
   guide.setBounds(target.getBounds().clone());
   guide.adjustToTargetShapeBounds();
   var blankRangeBounds = this.getBlankRangeBounds();
@@ -359,9 +366,12 @@ thin.core.StackViewHelper.prototype.active = function(target) {
 
   var isDrawLayerVisibled = layout.getWorkspace().getUiStatusForAction() != 'selector';
 
-  this.forEachSectionHelper(function(sectionHelper, sectionName) {
-    sectionHelper.active(target, isDrawLayerVisibled);
-  }, this);
+  goog.array.forEach(target.rows_, function (row) {
+    row.helper_.active(target, isDrawLayerVisibled);
+  });
+  // this.forEachSectionHelper(function(sectionHelper, sectionName) {
+  //   sectionHelper.active(target, isDrawLayerVisibled);
+  // }, this);
   var blankRangeSelectorLayer = this.getBlankRangeSelectorLayer();
 
   goog.dom.insertSiblingBefore(blankRangeSelectorLayer.getElement(),
@@ -430,9 +440,9 @@ thin.core.StackViewHelper.prototype.init = function() {
   listGuide.init();
   layout.appendChild(listGuide, this);
 
-  this.forEachSectionHelper(function(sectionHelper) {
-    sectionHelper.init();
-  }, this);
+  // this.forEachSectionHelper(function(sectionHelper) {
+  //   sectionHelper.init();
+  // }, this);
   this.reapplySizeAndStroke();
   var blankRangeMouseDownStackViewener = goog.bind(function(e) {
     e.preventDefault();
@@ -500,41 +510,52 @@ thin.core.StackViewHelper.prototype.init = function() {
 /**
  * @param {thin.core.StackViewShape} listShape
  * @return {Object}
+ * FIXME: 不要
  */
 thin.core.StackViewHelper.prototype.calculateSectionBoundsForUpdate = function(listShape) {
-
   var listShapeBounds = listShape.getBounds();
   var listShapeLeft = listShapeBounds.left;
   var listShapeWidth = listShapeBounds.width;
   var listShapeHeight = listShapeBounds.height;
 
   var sectionBounds = {};
-  var sectionNameForHeader = thin.core.StackViewHelper.SectionName.HEADER;
-  var sectionShapeForHeader = listShape.getSectionShape(sectionNameForHeader);
-  var sectionHeightForHeader = sectionShapeForHeader.getHeight();
-  if(!goog.isNumber(sectionHeightForHeader)) {
-    sectionHeightForHeader = sectionShapeForHeader.getDefaultHeight();
-  }
-  sectionBounds[sectionNameForHeader] = new goog.math.Rect(
-      listShapeLeft, listShapeBounds.top,
-      listShapeWidth, sectionHeightForHeader);
+  // var sectionNameForHeader = thin.core.StackViewHelper.SectionName.HEADER;
+  // var sectionShapeForHeader = listShape.getSectionShape(sectionNameForHeader);
+  // var sectionHeightForHeader = sectionShapeForHeader.getHeight();
+  // if(!goog.isNumber(sectionHeightForHeader)) {
+  //   sectionHeightForHeader = sectionShapeForHeader.getDefaultHeight();
+  // }
+  // sectionBounds[sectionNameForHeader] = new goog.math.Rect(
+  //     listShapeLeft, listShapeBounds.top,
+  //     listShapeWidth, sectionHeightForHeader);
 
-  var sectionNamaForNext;
-  var previousSectionBounds;
-  var sectionHeightForScope;
-  goog.array.forEach(sectionShapeForHeader.getNextSectionShapes(),
-    function(sectionShapeForNext) {
-      sectionNamaForNext = sectionShapeForNext.getSectionName();
-      previousSectionBounds = sectionBounds[sectionShapeForNext.getPreviousSectionShape().getSectionName()];
-      sectionHeightForScope = sectionShapeForNext.getHeight();
-      if(!goog.isNumber(sectionHeightForScope)) {
-        sectionHeightForScope = sectionShapeForNext.getDefaultHeight();
-      }
-      sectionBounds[sectionNamaForNext] = new goog.math.Rect(
-          listShapeLeft, previousSectionBounds.toBox().bottom,
-          listShapeWidth, sectionHeightForScope);
+  var bounds = goog.array.map(listShape.rows_,
+    function(row, index) {
+      return new goog.math.Rect(listShapeLeft, 0, listShapeWidth, row.getHeight() || row.getDefaultHeight());
+      // sectionNamaForNext = sectionShapeForNext.getSectionName();
+      // previousSectionBounds = sectionBounds[sectionShapeForNext.getPreviousSectionShape().getSectionName()];
+      // sectionHeightForScope = sectionShapeForNext.getHeight();
+      // if(!goog.isNumber(sectionHeightForScope)) {
+      //   sectionHeightForScope = sectionShapeForNext.getDefaultHeight();
+      // }
+      // sectionBounds[sectionNamaForNext] = new goog.math.Rect(
+      //     listShapeLeft, previousSectionBounds.toBox().bottom,
+      //     listShapeWidth, sectionHeightForScope);
     });
-  return sectionBounds;
+
+  goog.array.forEach(bounds, function (b, index) {
+    console.log('before', b.top, index);
+    if (index == 0) {
+      b.top = listShapeBounds.top;
+    } else {
+      prevBounds = bounds[index - 1];
+      b.top = prevBounds.y + prevBounds.height;
+    }
+    console.log('after', b.top, index);
+  });
+
+  return bounds;
+  // return sectionBounds;
 };
 
 

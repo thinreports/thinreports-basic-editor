@@ -376,7 +376,8 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     var minRight = contentRightArray[contentRightArray.length - 1];
     var listShapeBottom = listShape.getBounds().toBox().bottom;
     var movableHeight = listShapeBottom -
-          listShape.getSectionShape(sectionNameForFooter).getBounds().toBox().bottom;
+          goog.array.peek(listShape.rows_).getBounds().toBox().bottom;
+          // listShape.getSectionShape(sectionNameForFooter).getBounds().toBox().bottom;
     var minTop = listShape.getTop() + movableHeight;
     var minBottom = listShapeBottom - movableHeight;
     listOutline.enable();

@@ -42,7 +42,7 @@ goog.require('thin.core.ModuleShape');
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.core.StackViewRowHelper = function(layout, sectionName) {
+thin.core.StackViewRowHelper = function(layout, shape) {
 
   /**
    * @type {thin.core.Layout}
@@ -51,10 +51,9 @@ thin.core.StackViewRowHelper = function(layout, sectionName) {
   this.layout_ = layout;
 
   /**
-   * @type {string}
    * @private
    */
-  this.sectionName_ = sectionName;
+  this.shape_ = shape;
 
   /**
    * @type {thin.core.StackViewRowHelper.Separator_}
@@ -111,7 +110,7 @@ thin.core.StackViewRowHelper.prototype.init = function(opt_renderTo) {
   layout.appendChild(separator, renderTo);
   layout.appendChild(this.selectorLayer_, renderTo);
 
-  separator.init(this.sectionName_);
+  separator.init(this);
 };
 
 
@@ -166,7 +165,7 @@ thin.core.StackViewRowHelper.prototype.update = function(target, bounds) {
   separator.setWidth(width);
   separator.setLeft(bounds.left);
   separator.setTop(top + height);
-  var sectionShape = target.getSectionShape(this.sectionName_);
+  var sectionShape = this.shape_;
   sectionShape.setTop(top);
   sectionShape.setHeight(height);
 };
@@ -177,7 +176,7 @@ thin.core.StackViewRowHelper.prototype.update = function(target, bounds) {
  * @param {boolean=} opt_visibled
  */
 thin.core.StackViewRowHelper.prototype.active = function(target, opt_visibled) {
-  var sectionShape = target.getSectionShape(this.sectionName_);
+  var sectionShape = this.shape_;
   var isEnabled = sectionShape.isEnabled();
   var separator = this.separator_;
 
@@ -242,7 +241,7 @@ thin.core.StackViewRowHelper.prototype.createSelectorLayer_ = function() {
   var layout = this.layout_;
   var selectorLayer = new thin.core.ActionLayer(layout,
           new thin.core.Cursor(thin.core.Cursor.Type.CROSSHAIR));
-  selectorLayer.setFill(new goog.graphics.SolidFill('#FFFFFF', 0.3));
+  selectorLayer.setFill(new goog.graphics.SolidFill('#FF0000', 0.3));
   return selectorLayer;
 };
 
@@ -254,7 +253,7 @@ thin.core.StackViewRowHelper.prototype.createSelectorLayer_ = function() {
 thin.core.StackViewRowHelper.prototype.createSectionLabel_ = function() {
   var layout = this.layout_;
   var sectionLabel = new thin.core.TextShape(layout.createSvgElement('g'), layout);
-  sectionLabel.createTextContent(this.sectionName_.toLowerCase());
+  // sectionLabel.createTextContent(this.sectionName_.toLowerCase());
   sectionLabel.setFontFamily('Helvetica,Arial');
   sectionLabel.setFontSize(12);
   sectionLabel.setTextAnchor(thin.core.TextStyle.HorizonAlignType.MIDDLE);
@@ -313,8 +312,7 @@ thin.core.StackViewRowHelper.Separator_ = function(layout) {
    */
   this.leftHandle_ = this.createHandle_();
 
-  /**
-   * @type {thin.core.StackViewRowHelper.SeparatorHandle_}
+  /** * @type {thin.core.StackViewRowHelper.SeparatorHandle_}
    * @private
    */
   this.rightHandle_ = this.createHandle_();
@@ -370,7 +368,7 @@ thin.core.StackViewRowHelper.Separator_.prototype.setup = function() {
  * @param {string} sectionName
  * @return {void}
  */
-thin.core.StackViewRowHelper.Separator_.prototype.init = function(sectionName) {
+thin.core.StackViewRowHelper.Separator_.prototype.init = function(rowHelper) {
   var scope = this;
   var layout = this.layout_;
   var line = this.line_;
@@ -406,7 +404,7 @@ thin.core.StackViewRowHelper.Separator_.prototype.init = function(sectionName) {
   goog.events.listen(dragger, eventType.BEFORESTART, function(e) {
     var listShape = listHelper.getTarget();
     var listShapeBounds = listShape.getBounds();
-    var sectionShape = listShape.getSectionShape(sectionName);
+    var sectionShape = rowHelper.shape_;
 
     var blankRangeHeight = listHelper.getBlankRangeBounds().height;
     var sectionBoundsByShapes = layout.calculateActiveShapeBounds(
@@ -420,7 +418,7 @@ thin.core.StackViewRowHelper.Separator_.prototype.init = function(sectionName) {
   goog.events.listen(dragger, fxEventType.END, function(e) {
     var captureProperties = multipleShapesHelper.getCloneProperties();
     var listShape = listHelper.getTarget();
-    var sectionShape = listShape.getSectionShape(sectionName);
+    var sectionShape = rowHelper.shape_;
     var captureSectionBounds = sectionShape.getBounds();
     var captureSectionHeight = captureSectionBounds.height;
     var captureSectionBottom = captureSectionBounds.toBox().bottom;

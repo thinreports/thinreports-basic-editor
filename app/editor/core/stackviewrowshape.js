@@ -48,6 +48,8 @@ thin.core.StackViewRowShape = function(layout, affiliationGroup, sectionName, op
    */
   this.affiliationGroup_ = affiliationGroup;
 
+  this.helper_ = new thin.core.StackViewRowHelper(layout, this);
+
   /**
    * @type {string}
    * @private
@@ -132,9 +134,11 @@ thin.core.StackViewRowShape.prototype.setup = function(opt_element) {
 
   var group = new goog.graphics.SvgGroupElement(opt_element ||
                       layout.createSvgElement('g', {
-                        'class': thin.core.StackViewShape.CLASSID + classId[this.sectionName_]
+                        'class': 'stack-view-row'//thin.core.StackViewShape.CLASSID + classId[this.sectionName_]
                       }), layout);
   group.setTransformation(0, 0, 0, 0, 0);
+
+  this.helper_.init();
 
   this.group_ = group;
 
