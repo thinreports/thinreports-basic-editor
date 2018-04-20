@@ -116,14 +116,6 @@ thin.core.StackViewHelper.prototype.changingPageSetshape_;
  */
 thin.core.StackViewHelper.prototype.activeSectionName_;
 
-
-thin.core.StackViewHelper.prototype.reapplySizeAndStroke = function() {
-  this.forEachSectionHelper(function(sectionHelperForScope, sectionNameForScope) {
-    sectionHelperForScope.getSeparator().reapplySizeAndStroke();
-  });
-};
-
-
 /**
  * @param {goog.graphics.Element} shape
  */
@@ -440,10 +432,6 @@ thin.core.StackViewHelper.prototype.init = function() {
   listGuide.init();
   layout.appendChild(listGuide, this);
 
-  // this.forEachSectionHelper(function(sectionHelper) {
-  //   sectionHelper.init();
-  // }, this);
-  this.reapplySizeAndStroke();
   var blankRangeMouseDownStackViewener = goog.bind(function(e) {
     e.preventDefault();
     layout.getWorkspace().focusElement(e);
