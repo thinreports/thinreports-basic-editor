@@ -213,11 +213,10 @@ thin.core.StackViewHelper.prototype.getBlankRangeBounds = function() {
   var listShapeBounds = listShape.getBounds();
   var footerSectionName = thin.core.StackViewHelper.SectionName.HEADER;
   var lastRow = goog.array.peek(listShape.rows_);
-  var draggableLineHeight = this.getSectionHelper(footerSectionName).getSeparator().getLineHeight();
+  var draggableLineHeight = lastRow.helper_.getSeparator().getLineHeight();
+  // var draggableLineHeight = this.getSectionHelper(footerSectionName).getSeparator().getLineHeight();
   var listShapeBottom = listShapeBounds.toBox().bottom;
-  console.log('-----');
   var blankRangeHeight = (listShapeBottom - lastRow.getBounds().toBox().bottom) - draggableLineHeight;
-  console.log('-----');
   if(blankRangeHeight < 0) {
     blankRangeHeight = 0;
   }
@@ -264,6 +263,25 @@ thin.core.StackViewHelper.prototype.setActiveSectionName = function(sectionName)
 };
 
 
+// FIXME: StackViewHelperがStackViewShapeと1:1にするなら単純に activeRow を set/get すれば良いが
+// 現状では StackViewHelper は layout に紐づいており、StackViewShape で共有しているためそれができない。
+thin.core.StackViewHelper.prototype.setActiveRow = function (row) {
+  // this.activeRow_ = row;
+};
+
+
+/**
+ * @return {thin.core.StackViewRowShape?}
+ */
+thin.core.StackViewHelper.prototype.getActiveRow = function () {
+  // FIXME: See #setActiveRow
+  // return this.activeRow_;
+ return goog.array.find(this.target_.rows_, function (row) {
+    return row.helper_.isActive();
+  });
+}
+
+
 /**
  * @return {string}
  */
@@ -295,8 +313,8 @@ thin.core.StackViewHelper.prototype.setTransLate = function(translate) {
  * @param {boolean} drawable
  */
 thin.core.StackViewHelper.prototype.setDrawable = function(drawable) {
-  this.forEachSectionHelper(function(helper, name) {
-    helper.getDrawLayer().setDrawable(drawable);
+  goog.array.forEach(this.target_.rows_, function (row) {
+    row.helper_.getDrawLayer().setDrawable(drawable);
   });
 };
 
@@ -318,9 +336,13 @@ thin.core.StackViewHelper.prototype.setTransLateOfNextSectionShapes = function(t
  */
 thin.core.StackViewHelper.prototype.forEachSectionHelper = function(fn, opt_selfObj) {
   var selfObj = opt_selfObj || this;
-  goog.object.forEach(this.sectionHelpers_, goog.bind(function(sectionHelperForEach, sectionNameForEach) {
-    fn.call(selfObj, sectionHelperForEach, sectionNameForEach);
+  var rows = (this.target_ && this.target_.rows_) || [];
+  goog.object.forEach(rows, goog.bind(function(row) {
+    fn.call(selfObj, row.helper_);
   }, selfObj));
+  // goog.object.forEach(this.sectionHelpers_, goog.bind(function(sectionHelperForEach, sectionNameForEach) {
+  //   fn.call(selfObj, sectionHelperForEach, sectionNameForEach);
+  // }, selfObj));
 };
 
 
@@ -330,7 +352,6 @@ thin.core.StackViewHelper.prototype.update = function() {
   var sectionBounds = this.calculateSectionBoundsForUpdate(target);
 
   goog.array.forEach(target.rows_, function (row, index) {
-    console.log('row', row);
     row.helper_.update(target, sectionBounds[index]);
   });
   // this.forEachSectionHelper(function(sectionHelperForEach, sectionNameForEach) {
@@ -367,7 +388,8 @@ thin.core.StackViewHelper.prototype.active = function(target) {
   var blankRangeSelectorLayer = this.getBlankRangeSelectorLayer();
 
   goog.dom.insertSiblingBefore(blankRangeSelectorLayer.getElement(),
-    this.getSectionHelper(thin.core.StackViewHelper.SectionName.HEADER).getSelectorLayer().getElement());
+    target.rows_[0].helper_.getSelectorLayer().getElement());
+    // this.getSectionHelper(thin.core.StackViewHelper.SectionName.HEADER).getSelectorLayer().getElement());
   blankRangeSelectorLayer.setVisibled(true);
   this.getBlankRangeDrawLayer().setVisibled(isDrawLayerVisibled);
   this.getListGuideHelper().setEnableAndTargetShape(target);
@@ -380,9 +402,12 @@ thin.core.StackViewHelper.prototype.active = function(target) {
 
 thin.core.StackViewHelper.prototype.inactive = function() {
   if (this.isActive()) {
-    this.forEachSectionHelper(function(sectionHelper, sectionName) {
-      sectionHelper.inactive(target);
-    }, this);
+    goog.array.forEach(this.target_.rows_, function (row) {
+      row.helper_.inactive(this.target_);
+    });
+    // this.forEachSectionHelper(function(sectionHelper, sectionName) {
+    //   sectionHelper.inactive(target);
+    // }, this);
 
     var blankRangeSelectorLayer = this.getBlankRangeSelectorLayer();
 
@@ -403,10 +428,10 @@ thin.core.StackViewHelper.prototype.inactive = function() {
 
 thin.core.StackViewHelper.prototype.setup = function() {
   var layout = this.getLayout();
-  var sectionName = thin.core.StackViewHelper.SectionName;
+  // var sectionName = thin.core.StackViewHelper.SectionName;
 
-  this.sectionHelpers_ = {};
-  this.sectionHelpers_[sectionName.HEADER] = new thin.core.StackViewRowHelper(layout, sectionName.HEADER);
+  // this.sectionHelpers_ = {};
+  // this.sectionHelpers_[sectionName.HEADER] = new thin.core.StackViewRowHelper(layout, sectionName.HEADER);
   // this.sectionHelpers_[sectionName.DETAIL] = new thin.core.DetailSectionHelper(layout, sectionName.DETAIL);
   // this.sectionHelpers_[sectionName.PAGEFOOTER] = new thin.core.PageFooterSectionHelper(layout, sectionName.PAGEFOOTER);
   // this.sectionHelpers_[sectionName.FOOTER] = new thin.core.FooterSectionHelper(layout, sectionName.FOOTER);
@@ -441,9 +466,10 @@ thin.core.StackViewHelper.prototype.init = function() {
     var shapes = activeShapeManagerByStackViewShape.getClone();
     var isEmpty = activeShapeManagerByStackViewShape.isEmpty();
     var singleShapeByStackViewShape = activeShapeManagerByStackViewShape.getIfSingle();
-    var captureActiveSectionName = this.getActiveSectionName();
+    var activeRow = this.getActiveRow();
+    // var activeRow = this.getActiveSectionName();
     var captureProperties = multipleShapesHelper.getCloneProperties();
-    if (!captureActiveSectionName) {
+    if (!activeRow) {
       // Skip unselected shapes
       return;
     }
@@ -462,7 +488,8 @@ thin.core.StackViewHelper.prototype.init = function() {
       version.downHandler(function() {
 
         activeShapeManagerByStackViewShape.set(shapes);
-        this.setActiveSectionName(captureActiveSectionName);
+        this.setActiveRow(activeRow);
+        // this.setActiveSectionName(activeRow);
 
         if (activeShapeManagerByStackViewShape.isEmpty()) {
           listShape.updateProperties();
@@ -532,14 +559,12 @@ thin.core.StackViewHelper.prototype.calculateSectionBoundsForUpdate = function(l
     });
 
   goog.array.forEach(bounds, function (b, index) {
-    console.log('before', b.top, index);
     if (index == 0) {
       b.top = listShapeBounds.top;
     } else {
       prevBounds = bounds[index - 1];
       b.top = prevBounds.y + prevBounds.height;
     }
-    console.log('after', b.top, index);
   });
 
   return bounds;
@@ -552,9 +577,6 @@ thin.core.StackViewHelper.prototype.disposeInternal = function() {
   this.listGuideHelper_.dispose();
   this.blankRangeSelectorLayer_.dispose();
   this.blankRangeDrawLayer_.dispose();
-  this.forEachSectionHelper(function(sectionHelperForScope) {
-    sectionHelperForScope.dispose();
-  });
   delete this.blankRangeDrawLayer_;
   delete this.blankRangeSelectorLayer_;
   delete this.target_;

@@ -34,7 +34,7 @@ goog.require('thin.core.ModuleShape');
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.core.StackViewRowShape = function(layout, affiliationGroup, sectionName, opt_element) {
+thin.core.StackViewRowShape = function(layout, affiliationGroup/*, sectionName, opt_element*/) {
 
   /**
    * @type {thin.core.Layout}
@@ -54,8 +54,9 @@ thin.core.StackViewRowShape = function(layout, affiliationGroup, sectionName, op
    * @type {string}
    * @private
    */
-  this.sectionName_ = sectionName;
-  this.setup(opt_element);
+  // this.sectionName_ = sectionName;
+  // this.setup(opt_element);
+  this.setup();
 };
 goog.inherits(thin.core.StackViewRowShape, goog.Disposable);
 goog.mixin(thin.core.StackViewRowShape.prototype, thin.core.ModuleElement.prototype);
@@ -139,9 +140,7 @@ thin.core.StackViewRowShape.prototype.setup = function(opt_element) {
   group.setTransformation(0, 0, 0, 0, 0);
 
   this.helper_.init();
-
   this.group_ = group;
-
   this.manager_ = new thin.core.StateManager(layout);
 };
 
@@ -318,12 +317,14 @@ thin.core.StackViewRowShape.prototype.disposeInternal = function() {
   thin.core.StackViewRowShape.superClass_.disposeInternal.call(this);
   this.group_.dispose();
   this.manager_.dispose();
+  this.helper_.dispose();
 
   delete this.group_;
   delete this.manager_;
   delete this.affiliationGroup_;
   delete this.nextSectionShape_;
   delete this.previousSectionShape_;
+  delete this.helper_;
 };
 
 

@@ -215,7 +215,7 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
   var vertical = thin.core.SvgResizer.Vertical;
   var cursorType = thin.core.Cursor.Type;
   var bodyDragger = new thin.core.SvgDragger(listOutline, this.body_);
-  var captureActiveSectionName;
+  var activeRow;
 
   goog.events.listen(bodyDragger, eventType.START, function(e) {
 
@@ -233,7 +233,8 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     dragLayer.setVisibled(true);
     guide.setDisable();
     helpers.disableAll();
-    captureActiveSectionName = listHelper.getActiveSectionName();
+    activeRow = listHelper.getActiveRow();
+    // activeRow = listHelper.getActiveSectionName();
     listHelper.initActiveSectionName();
     listHelper.getTarget().updateProperties();
   }, false, this);
@@ -273,8 +274,7 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
      * @param {goog.math.Rect} targetBounds
      * @param {goog.math.Coordinate} transLateCoordinate
      */
-    var bodyDragEndStackViewener = function(targetBounds, transLateCoordinate) {
-
+    var bodyDragEndListener = function(targetBounds, transLateCoordinate) {
       if (activeShapeManagerByStackViewShape.isEmpty()) {
         listShape.updateProperties();
         thin.ui.setEnabledForFontUi(false);
@@ -320,13 +320,14 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
         helpers.disableAll();
         activeShapeManagerByStackViewShape.clear();
         listHelper.initActiveSectionName();
-        bodyDragEndStackViewener(outlineBounds, transLate);
+        bodyDragEndListener(outlineBounds, transLate);
       }, scope);
 
       version.downHandler(function() {
         activeShapeManagerByStackViewShape.set(shapes);
-        listHelper.setActiveSectionName(captureActiveSectionName);
-        bodyDragEndStackViewener(shapeBounds, reLocation);
+        listHelper.setActiveRow(activeRow);
+        // listHelper.setActiveSectionName(activeRow);
+        bodyDragEndListener(shapeBounds, reLocation);
       }, scope);
     });
   }, false, this);

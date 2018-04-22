@@ -1255,7 +1255,6 @@ thin.core.Layout.prototype.createListShape = function() {
 };
 
 thin.core.Layout.prototype.createStackViewShape = function() {
-  console.log('createStackViewShape', thin.core.StackViewShape);
   var shape = new thin.core.StackViewShape(this);
   var listClassId = thin.core.StackViewShape.ClassIds;
   shape.setIdShape(

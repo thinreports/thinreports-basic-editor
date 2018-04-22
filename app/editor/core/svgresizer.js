@@ -511,7 +511,6 @@ thin.core.SvgResizer.prototype.calculateLimitsForResize = function(targetShapeBo
  * @private
  */
 thin.core.SvgResizer.prototype.initializeLimits_ = function() {
-
   var layout = this.getLayout();
   var targetShape = this.targetShape;
   var listHelper = layout.getHelpers().getListHelper();
@@ -520,14 +519,17 @@ thin.core.SvgResizer.prototype.initializeLimits_ = function() {
   
   if (listHelper.isActive()) {
     if (listHelper.getActiveShape().isMultiple()) {
-
-    var captureActiveSectionName = listHelper.getActiveSectionName();
-      canvasBox = listHelper.getTarget().getSectionShape(captureActiveSectionName).getBounds().toBox();
+      var captureActiveSectionName = listHelper.getActiveSectionName();
+      canvasBox = listHelper.getActiveRow().getBounds().toBox();
+      // canvasBox = listHelper.getTarget().getActiveRow().getBounds().toBox();
+      // canvasBox = listHelper.getTarget().getSectionShape(captureActiveSectionName).getBounds().toBox();
     } else {
       if (!targetShape.instanceOfDraggableLine() && targetShape instanceof thin.core.GuideHelper) {
-        var sectionShapeForScope = listHelper.getTarget().getSectionShape(
-              targetShape.getTargetShape().getAffiliationSectionName());
-        canvasBox = sectionShapeForScope.getBounds().toBox();
+        // var sectionShapeForScope = listHelper.getTarget().getSectionShape(
+        //       targetShape.getTargetShape().getAffiliationSectionName());
+        // canvasBox = sectionShapeForScope.getBounds().toBox();
+        var guide = targetShape;
+        canvasBox = guide.getTargetShape().getAffiliationRegionBounds().toBox();
       }
     }
   }

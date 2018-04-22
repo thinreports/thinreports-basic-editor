@@ -72,12 +72,6 @@ thin.core.StackViewRowHelper = function(layout, shape) {
    * @private
    */
   this.selectorLayer_ = this.createSelectorLayer_();
-
-  /**
-   * @type {thin.core.TextShape}
-   * @private
-   */
-  this.label_ = this.createSectionLabel_();
 };
 goog.inherits(thin.core.StackViewRowHelper, goog.Disposable);
 goog.mixin(thin.core.StackViewRowHelper.prototype, thin.core.ModuleShape.prototype);
@@ -105,12 +99,13 @@ thin.core.StackViewRowHelper.prototype.init = function(opt_renderTo) {
   var separator = this.separator_;
   var renderTo = opt_renderTo || layout.getHelpers().getListHelper();
 
-  layout.appendChild(this.label_, renderTo);
   layout.appendChild(this.drawLayer_, renderTo);
   layout.appendChild(separator, renderTo);
   layout.appendChild(this.selectorLayer_, renderTo);
 
   separator.init(this);
+
+  this.drawLayer_.setDrawable(true);
 };
 
 
@@ -156,10 +151,6 @@ thin.core.StackViewRowHelper.prototype.update = function(target, bounds) {
   var height = bounds.height;
   this.drawLayer_.setBounds(bounds);
   this.selectorLayer_.setBounds(bounds);
-  var label = this.label_;
-  label.setBounds(bounds);
-  label.setVisibled(label.getMinHeight() <= height &&
-                    label.getMinWidth() <= width);
 
   var separator = this.separator_;
   separator.setWidth(width);
@@ -196,7 +187,6 @@ thin.core.StackViewRowHelper.prototype.active = function(target, opt_visibled) {
 
     goog.dom.insertSiblingBefore(selectorElement, sectionShape.getGroup().getElement());
     selectorLayer.setVisibled(true);
-    goog.dom.insertSiblingBefore(this.label_.getElement(), selectorElement);
   }
 
   this.active_ = true;
@@ -209,15 +199,13 @@ thin.core.StackViewRowHelper.prototype.inactive = function() {
 
     this.drawLayer_.setVisibled(false);
     this.separator_.setVisibled(false);
+
     this.selectorLayer_.setVisibled(false);
+    // goog.dom.removeNode(this.selectorLayer_.getElement());
 
     var listHelperGroup = layout.getHelpers().getListHelper();
 
     layout.appendChild(this.selectorLayer_, listHelperGroup);
-
-    var label = this.label_;
-    layout.appendChild(label, listHelperGroup);
-    label.setVisibled(false);
 
     this.active_ = false;
   }
@@ -229,7 +217,9 @@ thin.core.StackViewRowHelper.prototype.inactive = function() {
  * @private
  */
 thin.core.StackViewRowHelper.prototype.createDrawLayer_ = function() {
-  return new thin.core.DrawActionLayer(this.layout_);
+  var layer = new thin.core.DrawActionLayer(this.layout_);
+  layer.setFill(new goog.graphics.SolidFill('#0000ff', 0.1));
+  return layer;
 };
 
 
@@ -243,24 +233,6 @@ thin.core.StackViewRowHelper.prototype.createSelectorLayer_ = function() {
           new thin.core.Cursor(thin.core.Cursor.Type.CROSSHAIR));
   selectorLayer.setFill(new goog.graphics.SolidFill('#FF0000', 0.3));
   return selectorLayer;
-};
-
-
-/**
- * @return {thin.core.TextShape}
- * @private
- */
-thin.core.StackViewRowHelper.prototype.createSectionLabel_ = function() {
-  var layout = this.layout_;
-  var sectionLabel = new thin.core.TextShape(layout.createSvgElement('g'), layout);
-  // sectionLabel.createTextContent(this.sectionName_.toLowerCase());
-  sectionLabel.setFontFamily('Helvetica,Arial');
-  sectionLabel.setFontSize(12);
-  sectionLabel.setTextAnchor(thin.core.TextStyle.HorizonAlignType.MIDDLE);
-  sectionLabel.setVerticalAlign(thin.core.TextStyle.VerticalAlignType.CENTER);
-  sectionLabel.setFill(new goog.graphics.SolidFill('#AAAAAA'));
-  sectionLabel.setVisibled(false);
-  return sectionLabel;
 };
 
 
