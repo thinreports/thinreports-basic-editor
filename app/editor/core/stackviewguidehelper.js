@@ -336,7 +336,7 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
   /**
    * @param {goog.events.BrowserEvent} e
    */
-  var startResizeStackViewener = function(e) {
+  var startResizeListener = function(e) {
 
     var resizer = e.dragger;
     resizer.setAdsorptionX(helpers.getAdsorptionX());
@@ -351,11 +351,11 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     var contentLeftArray = [];
     var contentRightArray = [];
 
-    listShape.forEachSectionShape(function(sectionHelperForEach, sectionNameForEach) {
+    goog.array.forEach(listShape.getRows(), function (row) {
       var minLimitLeft = limitBox.right;
       var minLimitRight = limitBox.left;
-      if (sectionHelperForEach.isEnabled()) {
-        var shapesManagerBySection = sectionHelperForEach.getManager().getShapesManager();
+      if (row.isEnabled()) {
+        var shapesManagerBySection = row.getManager().getShapesManager();
         if (!shapesManagerBySection.isEmpty()) {
           var boxSizeByShapes = layout.calculateActiveShapeBounds(shapesManagerBySection.get()).toBox();
           var contentLeft = boxSizeByShapes.left;
@@ -377,7 +377,7 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     var minRight = contentRightArray[contentRightArray.length - 1];
     var listShapeBottom = listShape.getBounds().toBox().bottom;
     var movableHeight = listShapeBottom -
-          goog.array.peek(listShape.rows_).getBounds().toBox().bottom;
+          goog.array.peek(listShape.getRows()).getBounds().toBox().bottom;
           // listShape.getSectionShape(sectionNameForFooter).getBounds().toBox().bottom;
     var minTop = listShape.getTop() + movableHeight;
     var minBottom = listShapeBottom - movableHeight;
@@ -430,8 +430,7 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
   /**
    * @param {goog.events.BrowserEvent} e
    */
-  var endResizeStackViewener = function(e) {
-
+  var endResizeListener = function(e) {
     var resizer = e.dragger;
     this.removeResizeCursor();
     listOutline.disable();
@@ -452,7 +451,7 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
      * @param {goog.math.Rect} targetBounds
      * @param {goog.math.Coordinate} translate
      */
-    var resizersDragEndStackViewener = function(targetBounds, translate) {
+    var resizersDragEndListener = function(targetBounds, translate) {
       listOutline.setTargetShape(listShape);
       listOutline.setBounds(targetBounds);
       listOutline.setBoundsForTargetShape(targetBounds);
@@ -484,11 +483,11 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
       }
 
       version.upHandler(function() {
-        resizersDragEndStackViewener(listShapeBoundsForEnd, transLateCoordinate);
+        resizersDragEndListener(listShapeBoundsForEnd, transLateCoordinate);
       }, scope);
 
       version.downHandler(function() {
-        resizersDragEndStackViewener(listShapeBoundsForStart, retransLateCoordinate);
+        resizersDragEndListener(listShapeBoundsForStart, retransLateCoordinate);
       }, scope);
     });
   };
@@ -502,8 +501,8 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     }
   }, false, this);
 
-  goog.events.listen(tleftResizer, eventType.START, startResizeStackViewener, false, this);
-  goog.events.listen(tleftResizer, eventType.END, endResizeStackViewener, false, this);
+  goog.events.listen(tleftResizer, eventType.START, startResizeListener, false, this);
+  goog.events.listen(tleftResizer, eventType.END, endResizeListener, false, this);
 
   var tcenterResizer = this.getResizerByPositionName(positionName.TCENTER).getResizer();
   tcenterResizer.setResizeDirectionToHorizon(horizon.CENTER);
@@ -514,8 +513,8 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     this.setResizeCursor(cursorType.TCENTER);
   }, false, this);
 
-  goog.events.listen(tcenterResizer, eventType.START, startResizeStackViewener, false, this);
-  goog.events.listen(tcenterResizer, eventType.END, endResizeStackViewener, false, this);
+  goog.events.listen(tcenterResizer, eventType.START, startResizeListener, false, this);
+  goog.events.listen(tcenterResizer, eventType.END, endResizeListener, false, this);
 
   var trightResizer = this.getResizerByPositionName(positionName.TRIGHT).getResizer();
   trightResizer.setResizeDirectionToHorizon(horizon.RIGHT);
@@ -525,8 +524,8 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     this.setResizeCursor(cursorType.TRIGHT);
   }, false, this);
 
-  goog.events.listen(trightResizer, eventType.START, startResizeStackViewener, false, this);
-  goog.events.listen(trightResizer, eventType.END, endResizeStackViewener, false, this);
+  goog.events.listen(trightResizer, eventType.START, startResizeListener, false, this);
+  goog.events.listen(trightResizer, eventType.END, endResizeListener, false, this);
 
   var mleftResizer = this.getResizerByPositionName(positionName.MLEFT).getResizer();
   mleftResizer.setResizeDirectionToHorizon(horizon.LEFT);
@@ -536,8 +535,8 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     this.setResizeCursor(cursorType.MLEFT);
   }, false, this);
 
-  goog.events.listen(mleftResizer, eventType.START, startResizeStackViewener, false, this);
-  goog.events.listen(mleftResizer, eventType.END, endResizeStackViewener, false, this);
+  goog.events.listen(mleftResizer, eventType.START, startResizeListener, false, this);
+  goog.events.listen(mleftResizer, eventType.END, endResizeListener, false, this);
 
   var mrightResizer = this.getResizerByPositionName(positionName.MRIGHT).getResizer();
   mrightResizer.setResizeDirectionToHorizon(horizon.RIGHT);
@@ -547,8 +546,8 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     this.setResizeCursor(cursorType.MRIGHT);
   }, false, this);
 
-  goog.events.listen(mrightResizer, eventType.START, startResizeStackViewener, false, this);
-  goog.events.listen(mrightResizer, eventType.END, endResizeStackViewener, false, this);
+  goog.events.listen(mrightResizer, eventType.START, startResizeListener, false, this);
+  goog.events.listen(mrightResizer, eventType.END, endResizeListener, false, this);
 
   var bleftResizer = this.getResizerByPositionName(positionName.BLEFT).getResizer();
   bleftResizer.setResizeDirectionToHorizon(horizon.LEFT);
@@ -558,8 +557,8 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     this.setResizeCursor(cursorType.BLEFT);
   }, false, this);
 
-  goog.events.listen(bleftResizer, eventType.START, startResizeStackViewener, false, this);
-  goog.events.listen(bleftResizer, eventType.END, endResizeStackViewener, false, this);
+  goog.events.listen(bleftResizer, eventType.START, startResizeListener, false, this);
+  goog.events.listen(bleftResizer, eventType.END, endResizeListener, false, this);
 
   var bcenterResizer = this.getResizerByPositionName(positionName.BCENTER).getResizer();
   bcenterResizer.setResizeDirectionToHorizon(horizon.CENTER);
@@ -569,8 +568,8 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     this.setResizeCursor(cursorType.BCENTER);
   }, false, this);
 
-  goog.events.listen(bcenterResizer, eventType.START, startResizeStackViewener, false, this);
-  goog.events.listen(bcenterResizer, eventType.END, endResizeStackViewener, false, this);
+  goog.events.listen(bcenterResizer, eventType.START, startResizeListener, false, this);
+  goog.events.listen(bcenterResizer, eventType.END, endResizeListener, false, this);
 
   var brightResizer = this.getResizerByPositionName(positionName.BRIGHT).getResizer();
   brightResizer.setResizeDirectionToHorizon(horizon.RIGHT);
@@ -580,8 +579,8 @@ thin.core.StackViewGuideHelper.prototype.init = function() {
     this.setResizeCursor(cursorType.BRIGHT);
   }, false, this);
 
-  goog.events.listen(brightResizer, eventType.START, startResizeStackViewener, false, this);
-  goog.events.listen(brightResizer, eventType.END, endResizeStackViewener, false, this);
+  goog.events.listen(brightResizer, eventType.START, startResizeListener, false, this);
+  goog.events.listen(brightResizer, eventType.END, endResizeListener, false, this);
 };
 
 

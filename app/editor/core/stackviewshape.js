@@ -42,6 +42,10 @@ goog.require('thin.core.ModuleShape');
  * @extends {thin.core.Component}
  */
 thin.core.StackViewShape = function(layout, opt_element, opt_referenceElement) {
+  /**
+   * @type {Array.<thin.core.StackViewRowShape>}
+   * @private
+   */
   this.rows_ = [];
 
   /**
@@ -198,8 +202,8 @@ thin.core.StackViewShape.prototype.getSections = function() {
  */
 thin.core.StackViewShape.prototype.forEachSectionShape = function(fn, opt_selfObj) {
   var selfObj = opt_selfObj || this;
-  goog.object.forEach(this.sectionShapes_, goog.bind(function(sectionShapeForEachObject, sectionNameForEachObject) {
-    fn.call(selfObj, sectionShapeForEachObject, sectionNameForEachObject);
+  goog.array.forEach(this.rows_, goog.bind(function(row) {
+    fn.call(selfObj, row);
   }, selfObj));
 };
 
@@ -226,6 +230,13 @@ thin.core.StackViewShape.prototype.addRow = function () {
   this.getLayout().appendChild(row.getGroup(), this);
 };
 
+
+/**
+ * @return {Array.<thin.core.StackViewRowShape>}
+ */
+thin.core.StackViewShape.prototype.getRows = function () {
+  return this.rows_;
+};
 
 /**
  * @param {string} sectionName

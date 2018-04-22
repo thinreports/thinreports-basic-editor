@@ -302,9 +302,12 @@ thin.core.StackViewHelper.prototype.getDefaultActiveSectionName = function() {
  * @param {goog.math.Coordinate} translate
  */
 thin.core.StackViewHelper.prototype.setTransLate = function(translate) {
-  this.target_.forEachSectionShape(function(sectionShapeForEach, sectionNameForEach) {
-    sectionShapeForEach.setTransLate(translate);
-  }, this);
+  goog.array.forEach(this.target_.getRows(), function (row) {
+    row.setTransLate(translate);
+  });
+  // this.target_.forEachSectionShape(function(sectionShapeForEach, sectionNameForEach) {
+  //   sectionShapeForEach.setTransLate(translate);
+  // }, this);
 };
 
 

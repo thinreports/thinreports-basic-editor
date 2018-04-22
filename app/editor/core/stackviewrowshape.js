@@ -48,6 +48,10 @@ thin.core.StackViewRowShape = function(layout, affiliationGroup/*, sectionName, 
    */
   this.affiliationGroup_ = affiliationGroup;
 
+  /**
+   * @type {thin.core.StackViewRowHelper}
+   * @private
+   */
   this.helper_ = new thin.core.StackViewRowHelper(layout, this);
 
   /**
@@ -177,6 +181,13 @@ thin.core.StackViewRowShape.prototype.isEnabled = function() {
              thin.core.StackViewRowShape.DEFAULT_ENABLED));
 };
 
+
+/**
+ * @return {thin.core.StackViewRowHelper}
+ */
+thin.core.StackViewRowShape.prototype.getHelper = function () {
+  return this.helper_;
+};
 
 /**
  * @param {number} top
