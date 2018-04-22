@@ -232,6 +232,7 @@ thin.core.StackViewShape.prototype.addRow = function () {
  * @return {thin.core.StackViewSectionShape}
  */
 thin.core.StackViewShape.prototype.getSectionShape = function(sectionName) {
+  console.warn('StackViewShape#getSectionShape has called at', console.trace());
   return this.sectionShapes_[sectionName];
 };
 
