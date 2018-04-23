@@ -112,6 +112,20 @@ thin.core.StackViewRowShape.prototype.lastActiveHeight_;
 
 
 /**
+ * @type {boolean}
+ * @private
+ */
+thin.core.StackViewRowShape.prototype.autoStretch_ = false;
+
+
+/**
+ * @type {number|string}
+ * @private
+ */
+thin.core.StackViewRowShape.prototype.paddingBottom_ = '';
+
+
+/**
  * @return {string}
  */
 thin.core.StackViewRowShape.prototype.getSectionName = function() {
@@ -172,11 +186,52 @@ thin.core.StackViewRowShape.prototype.isEnabled = function() {
 
 
 /**
+ * @return {boolean}
+ */
+thin.core.StackViewRowShape.prototype.isAutoStretch = function () {
+  return this.autoStretch_;
+};
+
+
+/**
+ * @param {boolean} enable 
+ */
+thin.core.StackViewRowShape.prototype.setAutoStretch = function (enable) {
+  this.autoStretch_ = enable;
+};
+
+
+/**
+ * @return {number|string}
+ */
+thin.core.StackViewRowShape.prototype.getPaddingBottom = function () {
+  return this.paddingBottom_;
+};
+
+
+/**
+ * @param {number|string} padding 
+ */
+thin.core.StackViewRowShape.prototype.setPaddingBottom = function (padding) {
+  this.paddingBottom_ = padding;
+};
+
+
+/**
+ * @override
+ */
+thin.core.StackViewRowShape.prototype.setShapeIdInternal = function (id) {
+  this.shapeId_ = id;
+};
+
+
+/**
  * @return {thin.core.StackViewRowHelper}
  */
 thin.core.StackViewRowShape.prototype.getHelper = function () {
   return this.helper_;
 };
+
 
 /**
  * @param {number} top
@@ -316,14 +371,14 @@ thin.core.StackViewRowShape.prototype.getPreviousSectionShape = function() {
  * @private
  */
 thin.core.StackViewRowShape.prototype.createPropertyComponent_ = function() {
-
   var scope = this;
-  var listShape = this.affiliationGroup_;
-  var sectionName = this.sectionName_;
+  var stackView = this.affiliationGroup_;
+  var stackViewHelper = this.getLayout().getHelpers().getListHelper();
+
   var propEventType = thin.ui.PropertyPane.Property.EventType;
   var proppane = thin.ui.getComponent('proppane');
 
-  var containerGroup = proppane.addGroup(thin.t('property_group_list_header'));
+  var containerGroup = proppane.addGroup(thin.t('property_group_stack_view_row'));
 
   var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
   var heightInput = heightInputProperty.getValueControl();
@@ -331,20 +386,40 @@ thin.core.StackViewRowShape.prototype.createPropertyComponent_ = function() {
 
   heightInputProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        listShape.setHeightForSectionShape(
-            Number(e.target.getValue()), sectionName);
+        scope.setHeight(Number(e.target.getValue()));
+        stackViewHelper.update();
       }, false, this);
 
-  proppane.addProperty(heightInputProperty, containerGroup, 'section-header-height');
+  proppane.addProperty(heightInputProperty, containerGroup, 'stack-view-row-height');
 
-
-  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
-  displayCheckProperty.addEventListener(propEventType.CHANGE,
+  var autoScratchCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_auto_scratch'));
+  autoScratchCheckProperty.addEventListener(propEventType.CHANGE,
       function(e) {
-        scope.setSectionEnabled(e.target.isChecked(), sectionName);
+        scope.setAutoStretch(e.target.isChecked());
       }, false, this);
 
-  proppane.addProperty(displayCheckProperty, containerGroup, 'section-header-enable');
+  proppane.addProperty(autoScratchCheckProperty, containerGroup, 'stack-view-row-auto-scratch');
+
+  var paddingBottomInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_padding_bottom'), 'auto');
+  var paddingBottomInput = paddingBottomInputProperty.getValueControl();
+  var paddingBottomValidator = paddingBottomInput.getNumberValidator();
+  paddingBottomValidator.setAllowDecimal(true, 1);
+  paddingBottomValidator.setAllowBlank(true);
+
+  paddingBottomInputProperty.addEventListener(propEventType.CHANGE,
+      function(e) {
+        scope.setPaddingBottom(e.target.getValue());
+      }, false, this);
+
+  proppane.addProperty(paddingBottomInputProperty, containerGroup, 'stack-view-row-padding-bottom');
+
+  var cooperationGroup = proppane.addGroup(thin.t('property_group_association'));
+
+  var idInputProperty = new thin.ui.PropertyPane.IdInputProperty(this, 'ID');
+  idInputProperty.addEventListener(propEventType.CHANGE,
+      this.setShapeIdForPropertyUpdate, false, this);
+
+  proppane.addProperty(idInputProperty, cooperationGroup, 'shape-id');
 };
 
 
@@ -355,8 +430,11 @@ thin.core.StackViewRowShape.prototype.updateProperties = function() {
     proppane.setTarget(this);
     this.createPropertyComponent_();
   }
-  proppane.getPropertyControl('section-header-enable').setChecked(this.isEnabled());
-  proppane.getPropertyControl('section-header-height').setValue(this.height_);
+  proppane.getPropertyControl('stack-view-row-height').setValue(this.getHeight());
+  proppane.getPropertyControl('stack-view-row-auto-scratch').setChecked(this.isAutoStretch());
+  proppane.getPropertyControl('stack-view-row-padding-bottom').setValue(this.getPaddingBottom());
+  proppane.getPropertyControl('stack-view-row-padding-bottom').setValue(this.getPaddingBottom());
+  proppane.getPropertyControl('shape-id').setValue(this.getShapeId());
 };
 
 

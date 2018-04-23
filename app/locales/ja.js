@@ -41,6 +41,7 @@ App.addLocale({
     property_group_list_page_footer: 'ページフッター',
     property_group_image: '画像位置',
     property_group_pageno: 'ページ番号',
+    property_group_stack_view_row: '行',
 
     label_title_setting: 'タイトル設定',
     label_page_setting: '用紙設定',
@@ -145,6 +146,8 @@ App.addLocale({
     field_pageno_format: '書式',
     field_counted_page_target: 'カウント対象',
     field_default_counted_page_target: 'レポート',
+    field_auto_scratch: '自動伸縮',
+    field_padding_bottom: '下余白',
 
     button_new_report: '新規作成',
     button_save: '保存',
