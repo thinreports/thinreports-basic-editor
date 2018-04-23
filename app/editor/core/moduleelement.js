@@ -505,6 +505,15 @@ thin.core.ModuleElement.prototype.getAffiliationSectionShape = function() {
 
 /**
  * @this {goog.graphics.Element}
+ * @return {thin.core.Layout|thin.core.StackViewRowShape}
+ */
+thin.core.ModuleElement.prototype.getParentGroup = function () {
+  return this.affiliationSectionShape_ || this.layout_;
+};
+
+
+/**
+ * @this {goog.graphics.Element}
  * @return {goog.graphics.Element}
  */
 thin.core.ModuleElement.prototype.isAffiliationListShape = function() {

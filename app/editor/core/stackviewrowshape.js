@@ -34,8 +34,7 @@ goog.require('thin.core.ModuleShape');
  * @constructor
  * @extends {goog.Disposable}
  */
-thin.core.StackViewRowShape = function(layout, affiliationGroup/*, sectionName, opt_element*/) {
-
+thin.core.StackViewRowShape = function(layout, affiliationGroup) {
   /**
    * @type {thin.core.Layout}
    * @private
@@ -58,8 +57,6 @@ thin.core.StackViewRowShape = function(layout, affiliationGroup/*, sectionName, 
    * @type {string}
    * @private
    */
-  // this.sectionName_ = sectionName;
-  // this.setup(opt_element);
   this.setup();
 };
 goog.inherits(thin.core.StackViewRowShape, goog.Disposable);
@@ -238,7 +235,7 @@ thin.core.StackViewRowShape.prototype.getHeightForLastActive = function() {
  * @return {number}
  */
 thin.core.StackViewRowShape.prototype.getDefaultHeight = function() {
-  return thin.numberWithPrecision(this.affiliationGroup_.getHeight() * this.defaultHeightRate_);
+  return thin.numberWithPrecision(100.0);
 };
 
 

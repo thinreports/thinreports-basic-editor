@@ -341,6 +341,18 @@ thin.init_ = function() {
     var iconAlign = thin.ui.Icon.Align;
     var dom = toolbar.getDomHelper();
 
+    var stackViewAdd = toolbar.setupChild('stack-view-add-row',
+        new thin.ui.ToolbarButton(thin.t('button_stack_view_add_row'), new thin.ui.Icon('stack-view-row-add')),
+        dom.getElement('tbar-stack-view-add-row'));
+
+    stackViewAdd.addEventListener(componentEventType.ACTION, function (e) {
+      var workspace = thin.core.getActiveWorkspace();
+      if (workspace) {
+        workspace.getAction().actionStackViewAddRow();
+        focusWorkspace(e);
+      }
+    });
+
     // Add report
     var reportAdd = toolbar.setupChild('report-add',
         new thin.ui.ToolbarButton(thin.t('button_new_report'), new thin.ui.Icon('report-add', iconAlign.TOP)),

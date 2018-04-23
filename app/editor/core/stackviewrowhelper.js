@@ -104,8 +104,6 @@ thin.core.StackViewRowHelper.prototype.init = function(opt_renderTo) {
   layout.appendChild(this.selectorLayer_, renderTo);
 
   separator.init(this);
-
-  this.drawLayer_.setDrawable(true);
 };
 
 

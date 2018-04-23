@@ -171,7 +171,7 @@ thin.core.toolaction.AbstractAction.prototype.commonEndAction = function(
     var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
     var oldShapesByListShape = activeShapeManagerByListShape.getClone();
     var captureActiveSectionName = listHelper.getActiveSectionName();
-    var newActiveSectionName = listHelper.getSectionNameByDrawLayer(handler);
+    var activeRow = listHelper.getRowFromDrawLayer(handler);
   }
 
   layout.getWorkspace().normalVersioning(function(version) {
@@ -205,12 +205,10 @@ thin.core.toolaction.AbstractAction.prototype.commonEndAction = function(
           manager.setActiveShape(shape);
         } else {
           activeShapeManagerByListShape.clear();
-          // var newActiveSectionShape = listHelper.getTarget().getSectionShape(newActiveSectionName);
-          var activeRow = listHelper.getActiveRow();
           layout.appendChild(shape, activeRow.getGroup());
           activeRow.getManager().addShape(shape, activeRow);
           listHelper.setActiveShape(shape);
-          listHelper.setActiveRow(listHelper.target_.rows_[0]);
+          listHelper.setActiveRow(activeRow);
         }
         shape.setInitShapeProperties(shapeProperties);
         layout.setOutlineForSingle(shape);

@@ -150,12 +150,12 @@ thin.core.StackViewHelper.prototype.getTarget = function() {
 
 /**
  * @param {thin.core.Layer} drawLayer
- * @return {string|undefined}
+ * @return {thin.core.StackViewRowShape?}
  */
-thin.core.StackViewHelper.prototype.getSectionNameByDrawLayer = function(drawLayer) {
-  return goog.object.findKey(this.sectionHelpers_, function(sectionHelper, sectionName) {
-    return sectionHelper.getDrawLayer() == drawLayer;
-  }, this);
+thin.core.StackViewHelper.prototype.getRowFromDrawLayer = function(drawLayer) {
+  return goog.array.find(this.getTarget().getRows(), function (row) {
+    return row.getHelper().getDrawLayer() == drawLayer;
+  });
 };
 
 
@@ -305,9 +305,6 @@ thin.core.StackViewHelper.prototype.setTransLate = function(translate) {
   goog.array.forEach(this.target_.getRows(), function (row) {
     row.setTransLate(translate);
   });
-  // this.target_.forEachSectionShape(function(sectionShapeForEach, sectionNameForEach) {
-  //   sectionShapeForEach.setTransLate(translate);
-  // }, this);
 };
 
 
@@ -343,24 +340,27 @@ thin.core.StackViewHelper.prototype.forEachSectionHelper = function(fn, opt_self
   goog.object.forEach(rows, goog.bind(function(row) {
     fn.call(selfObj, row.helper_);
   }, selfObj));
-  // goog.object.forEach(this.sectionHelpers_, goog.bind(function(sectionHelperForEach, sectionNameForEach) {
-  //   fn.call(selfObj, sectionHelperForEach, sectionNameForEach);
-  // }, selfObj));
 };
 
 
 thin.core.StackViewHelper.prototype.update = function() {
   var target = this.target_;
   var guide = this.getListGuideHelper();
-  var sectionBounds = this.calculateSectionBoundsForUpdate(target);
+  var rowBounds = this.calculateSectionBoundsForUpdate(target);
+
+  // Calculate height of overall the list
+  var totalRowHeight = goog.array.reduce(rowBounds, function (totalHeight, bounds) {
+    return totalHeight + bounds.height;
+  }, 0);
+
+  var stackViewBounds = target.getBounds();
+  stackViewBounds.height = Math.max(totalRowHeight, stackViewBounds.height);
 
   goog.array.forEach(target.rows_, function (row, index) {
-    row.helper_.update(target, sectionBounds[index]);
+    row.helper_.update(target, rowBounds[index]);
   });
-  // this.forEachSectionHelper(function(sectionHelperForEach, sectionNameForEach) {
-  //   sectionHelperForEach.update(target, sectionBounds[sectionNameForEach]);
-  // }, this);
-  guide.setBounds(target.getBounds().clone());
+
+  guide.setBounds(stackViewBounds);
   guide.adjustToTargetShapeBounds();
   var blankRangeBounds = this.getBlankRangeBounds();
   this.getBlankRangeSelectorLayer().setBounds(blankRangeBounds.clone());
@@ -536,29 +536,9 @@ thin.core.StackViewHelper.prototype.calculateSectionBoundsForUpdate = function(l
   var listShapeWidth = listShapeBounds.width;
   var listShapeHeight = listShapeBounds.height;
 
-  var sectionBounds = {};
-  // var sectionNameForHeader = thin.core.StackViewHelper.SectionName.HEADER;
-  // var sectionShapeForHeader = listShape.getSectionShape(sectionNameForHeader);
-  // var sectionHeightForHeader = sectionShapeForHeader.getHeight();
-  // if(!goog.isNumber(sectionHeightForHeader)) {
-  //   sectionHeightForHeader = sectionShapeForHeader.getDefaultHeight();
-  // }
-  // sectionBounds[sectionNameForHeader] = new goog.math.Rect(
-  //     listShapeLeft, listShapeBounds.top,
-  //     listShapeWidth, sectionHeightForHeader);
-
   var bounds = goog.array.map(listShape.rows_,
     function(row, index) {
       return new goog.math.Rect(listShapeLeft, 0, listShapeWidth, row.getHeight() || row.getDefaultHeight());
-      // sectionNamaForNext = sectionShapeForNext.getSectionName();
-      // previousSectionBounds = sectionBounds[sectionShapeForNext.getPreviousSectionShape().getSectionName()];
-      // sectionHeightForScope = sectionShapeForNext.getHeight();
-      // if(!goog.isNumber(sectionHeightForScope)) {
-      //   sectionHeightForScope = sectionShapeForNext.getDefaultHeight();
-      // }
-      // sectionBounds[sectionNamaForNext] = new goog.math.Rect(
-      //     listShapeLeft, previousSectionBounds.toBox().bottom,
-      //     listShapeWidth, sectionHeightForScope);
     });
 
   goog.array.forEach(bounds, function (b, index) {
@@ -566,12 +546,11 @@ thin.core.StackViewHelper.prototype.calculateSectionBoundsForUpdate = function(l
       b.top = listShapeBounds.top;
     } else {
       prevBounds = bounds[index - 1];
-      b.top = prevBounds.y + prevBounds.height;
+      b.top = prevBounds.top + prevBounds.height;
     }
   });
 
   return bounds;
-  // return sectionBounds;
 };
 
 

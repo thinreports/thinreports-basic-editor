@@ -464,6 +464,16 @@ thin.core.Action.prototype.actionSetFontSize = function(newFontSize) {
 };
 
 
+thin.core.Action.prototype.actionStackViewAddRow = function () {
+  var stackViewHelper = this.layout_.getListHelper();
+  if (stackViewHelper.isActive()) {
+    stackViewHelper.getTarget().addRow();
+    stackViewHelper.update();
+    stackViewHelper.active(stackViewHelper.getTarget());
+  }
+};
+
+
 /**
  * @param {string} newFontFamily
  */
@@ -1324,13 +1334,12 @@ thin.core.Action.prototype.actionDeleteShapes = function(historyMode) {
   if (isActive) {
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var isEmptyByListShape = activeShapeManagerByListShape.isEmpty();
-    var captureActiveSectionName = listHelper.getActiveSectionName();
     if (isEmptyByListShape) {
       var isChangingPage = singleShapeByGlobal.isChangingPage();
       capturePageNumberReferences = singleShapeByGlobal.getPageNumberReferences();
     } else {
       targetShapes = activeShapeManagerByListShape.getClone();
-      parentGroup = singleShapeByGlobal.getSectionShape(captureActiveSectionName).getGroup();
+      parentGroup = targetShapes[0].getParentGroup().getGroup();
     }
   }
 

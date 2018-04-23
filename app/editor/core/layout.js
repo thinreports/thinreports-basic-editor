@@ -1043,7 +1043,7 @@ thin.core.Layout.prototype.removeShape = function(shape) {
 
   if (shape.isAffiliationListShape()) {
     var listShape = listHelper.getTarget();
-    var manager = listShape.getSectionShape(shape.getAffiliationSectionName()).getManager();
+    var manager = shape.getParentGroup().getManager();
     manager.getShapesManager().remove(shape);
     manager.getShapeIdManager().remove(shape);
     listShape.getActiveShape().remove(shape);

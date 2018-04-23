@@ -155,17 +155,11 @@ thin.core.StackViewShape.prototype.setup_ = function(opt_referenceElement) {
     var rect = thin.core.getElementByClassNameForChildNodes(
                    listShapeFaceClassId, opt_referenceElement.childNodes);
     var face = new thin.core.RectShape(rect, layout, stroke, fill);
-
-    // var defaultRow = new thin.core.StackViewRowAShape(layout, this, sectionNameForHeader,
-    //                                    thin.core.getElementByClassNameForChildNodes(
-    //                                      sectionNameForHeader, opt_referenceElement.childNodes));
-
   } else {
     var rect = layout.createSvgElement('rect', {
       'stroke-dasharray': 2
     });
     var face = new thin.core.RectShape(rect, layout, stroke, fill);
-    // var defaultRow = new thin.core.StackViewRowAShape(layout, this, sectionNameForHeader);
   }
 
   layout.setElementAttributes(rect, {
@@ -218,11 +212,6 @@ thin.core.StackViewShape.prototype.setSectionShape = function(sectionShape, sect
 };
 
 
-/**
-// var defaultRow = new thin.core.StackViewRowAShape(layout, this, sectionNameForHeader,
-//                                    thin.core.getElementByClassNameForChildNodes(
-//                                      sectionNameForHeader, opt_referenceElement.childNodes));
- */
 thin.core.StackViewShape.prototype.addRow = function () {
   var row = new thin.core.StackViewRowAShape(this.getLayout(), this);
 
