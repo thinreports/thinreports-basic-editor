@@ -215,9 +215,7 @@ thin.core.StackViewRowHelper.prototype.inactive = function() {
  * @private
  */
 thin.core.StackViewRowHelper.prototype.createDrawLayer_ = function() {
-  var layer = new thin.core.DrawActionLayer(this.layout_);
-  layer.setFill(new goog.graphics.SolidFill('#0000ff', 0.1));
-  return layer;
+  return new thin.core.DrawActionLayer(this.layout_);
 };
 
 
@@ -229,7 +227,7 @@ thin.core.StackViewRowHelper.prototype.createSelectorLayer_ = function() {
   var layout = this.layout_;
   var selectorLayer = new thin.core.ActionLayer(layout,
           new thin.core.Cursor(thin.core.Cursor.Type.CROSSHAIR));
-  selectorLayer.setFill(new goog.graphics.SolidFill('#FF0000', 0.3));
+  selectorLayer.setFill(new goog.graphics.SolidFill('#FFFFFF', 0.3));
   return selectorLayer;
 };
 
