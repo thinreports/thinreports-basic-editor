@@ -14,7 +14,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 goog.provide('thin.core.StackViewRowShape');
-goog.provide('thin.core.StackViewRowAShape');
 
 goog.require('goog.array');
 goog.require('goog.object');
@@ -82,13 +81,6 @@ thin.core.StackViewRowShape.prototype.group_;
  * @private
  */
 thin.core.StackViewRowShape.prototype.manager_;
-
-
-/**
- * @type {number}
- * @private
- */
-thin.core.StackViewRowShape.prototype.defaultHeightRate_;
 
 
 /**
@@ -320,6 +312,54 @@ thin.core.StackViewRowShape.prototype.getPreviousSectionShape = function() {
 };
 
 
+/**
+ * @private
+ */
+thin.core.StackViewRowShape.prototype.createPropertyComponent_ = function() {
+
+  var scope = this;
+  var listShape = this.affiliationGroup_;
+  var sectionName = this.sectionName_;
+  var propEventType = thin.ui.PropertyPane.Property.EventType;
+  var proppane = thin.ui.getComponent('proppane');
+
+  var containerGroup = proppane.addGroup(thin.t('property_group_list_header'));
+
+  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
+  var heightInput = heightInputProperty.getValueControl();
+  heightInput.getNumberValidator().setAllowDecimal(true, 1);
+
+  heightInputProperty.addEventListener(propEventType.CHANGE,
+      function(e) {
+        listShape.setHeightForSectionShape(
+            Number(e.target.getValue()), sectionName);
+      }, false, this);
+
+  proppane.addProperty(heightInputProperty, containerGroup, 'section-header-height');
+
+
+  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
+  displayCheckProperty.addEventListener(propEventType.CHANGE,
+      function(e) {
+        scope.setSectionEnabled(e.target.isChecked(), sectionName);
+      }, false, this);
+
+  proppane.addProperty(displayCheckProperty, containerGroup, 'section-header-enable');
+};
+
+
+thin.core.StackViewRowShape.prototype.updateProperties = function() {
+  var proppane = thin.ui.getComponent('proppane');
+  if (!proppane.isTarget(this)) {
+    this.getLayout().updatePropertiesForEmpty();
+    proppane.setTarget(this);
+    this.createPropertyComponent_();
+  }
+  proppane.getPropertyControl('section-header-enable').setChecked(this.isEnabled());
+  proppane.getPropertyControl('section-header-height').setValue(this.height_);
+};
+
+
 /** @inheritDoc */
 thin.core.StackViewRowShape.prototype.disposeInternal = function() {
   thin.core.StackViewRowShape.superClass_.disposeInternal.call(this);
@@ -401,88 +441,4 @@ thin.core.StackViewRowShape.prototype.update = function(attrs) {
         break;
       }
   }, this);
-};
-
-
-/**
- * @param {thin.core.Layout} layout
- * @param {thin.core.StackViewShape} affiliationGroup
- * @param {string} sectionName
- * @param {Element=} opt_element
- * @constructor
- * @extends {thin.core.StackViewRowShape}
- */
-thin.core.StackViewRowAShape = function(layout, affiliationGroup, sectionName, opt_element) {
-  thin.core.StackViewRowShape.call(this, layout, affiliationGroup, sectionName, opt_element);
-};
-goog.inherits(thin.core.StackViewRowAShape, thin.core.StackViewRowShape);
-
-
-/**
- * @type {boolean}
- */
-thin.core.StackViewRowAShape.DEFAULT_ENABLED = true;
-
-
-/**
- * @type {number}
- * @private
- */
-thin.core.StackViewRowAShape.prototype.defaultHeightRate_ = 0.2;
-
-
-/**
- * @return {boolean}
- */
-thin.core.StackViewRowAShape.prototype.isEnabled = function() {
-  return /** @type {boolean} */(thin.getValIfNotDef(this.isEnabled_,
-             thin.core.StackViewRowAShape.DEFAULT_ENABLED));
-};
-
-
-/**
- * @private
- */
-thin.core.StackViewRowAShape.prototype.createPropertyComponent_ = function() {
-
-  var scope = this;
-  var listShape = this.affiliationGroup_;
-  var sectionName = this.sectionName_;
-  var propEventType = thin.ui.PropertyPane.Property.EventType;
-  var proppane = thin.ui.getComponent('proppane');
-
-  var containerGroup = proppane.addGroup(thin.t('property_group_list_header'));
-
-  var heightInputProperty = new thin.ui.PropertyPane.NumberInputProperty(thin.t('field_height'));
-  var heightInput = heightInputProperty.getValueControl();
-  heightInput.getNumberValidator().setAllowDecimal(true, 1);
-
-  heightInputProperty.addEventListener(propEventType.CHANGE,
-      function(e) {
-        listShape.setHeightForSectionShape(
-            Number(e.target.getValue()), sectionName);
-      }, false, this);
-
-  proppane.addProperty(heightInputProperty, containerGroup, 'section-header-height');
-
-
-  var displayCheckProperty = new thin.ui.PropertyPane.CheckboxProperty(thin.t('field_display'));
-  displayCheckProperty.addEventListener(propEventType.CHANGE,
-      function(e) {
-        scope.setSectionEnabled(e.target.isChecked(), sectionName);
-      }, false, this);
-
-  proppane.addProperty(displayCheckProperty, containerGroup, 'section-header-enable');
-};
-
-
-thin.core.StackViewRowAShape.prototype.updateProperties = function() {
-  var proppane = thin.ui.getComponent('proppane');
-  if (!proppane.isTarget(this)) {
-    this.getLayout().updatePropertiesForEmpty();
-    proppane.setTarget(this);
-    this.createPropertyComponent_();
-  }
-  proppane.getPropertyControl('section-header-enable').setChecked(this.isEnabled());
-  proppane.getPropertyControl('section-header-height').setValue(this.height_);
 };

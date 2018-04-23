@@ -30,7 +30,7 @@ goog.require('thin.core.IdShape');
 goog.require('thin.core.StackViewHelper');
 goog.require('thin.core.StackViewHelper.SectionName');
 goog.require('thin.core.ActiveShapeManager');
-goog.require('thin.core.StackViewRowAShape');
+goog.require('thin.core.StackViewRowShape');
 goog.require('thin.core.ModuleShape');
 
 
@@ -213,7 +213,7 @@ thin.core.StackViewShape.prototype.setSectionShape = function(sectionShape, sect
 
 
 thin.core.StackViewShape.prototype.addRow = function () {
-  var row = new thin.core.StackViewRowAShape(this.getLayout(), this);
+  var row = new thin.core.StackViewRowShape(this.getLayout(), this);
 
   this.rows_.push(row);
   this.getLayout().appendChild(row.getGroup(), this);
