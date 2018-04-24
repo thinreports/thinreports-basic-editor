@@ -147,7 +147,6 @@ App.addLocale({
     field_counted_page_target: 'カウント対象',
     field_default_counted_page_target: 'レポート',
     field_auto_scratch: '自動伸縮',
-    field_padding_bottom: '下余白',
 
     button_new_report: '新規作成',
     button_save: '保存',
