@@ -108,6 +108,9 @@
 .thin-icon-guide-delete {
   background-image: url(icons/cross-button.png);
 }
+.thin-icon-stack-view-row-add {
+  background-image: url(icons/plus-button.png);
+}
 .thin-icon-font-bold {
   background-image: url(icons/edit-bold.png);
 }

@@ -201,7 +201,8 @@ thin.core.SvgDragger.prototype.initializeLimits_ = function() {
     
     if (listHelper.isActive() && !target.instanceOfDraggableLine()) {
       if (listHelper.getActiveShape().isMultiple()) {
-        bounds = listHelper.getTarget().getSectionShape(listHelper.getActiveSectionName()).getBounds();
+        bounds = listHelper.getTarget().getActiveRow().getBounds();
+        // bounds = listHelper.getTarget().getSectionShape(listHelper.getActiveSectionName()).getBounds();
       } else if (this.handleShape.isAffiliationListShape()) {
         bounds = this.handleShape.getAffiliationRegionBounds();
       }

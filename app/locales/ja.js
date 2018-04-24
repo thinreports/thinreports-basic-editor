@@ -25,6 +25,7 @@ App.addLocale({
     toolbar_group_view: '表示',
     toolbar_group_font: 'フォント',
     toolbar_group_position: '配置',
+    toolbar_group_stack_view: 'スタックビュー',
 
     property_group_basis: '基本',
     property_group_shape: '図形',
@@ -40,6 +41,7 @@ App.addLocale({
     property_group_list_page_footer: 'ページフッター',
     property_group_image: '画像位置',
     property_group_pageno: 'ページ番号',
+    property_group_stack_view_row: '行',
 
     label_title_setting: 'タイトル設定',
     label_page_setting: '用紙設定',
@@ -144,6 +146,7 @@ App.addLocale({
     field_pageno_format: '書式',
     field_counted_page_target: 'カウント対象',
     field_default_counted_page_target: 'レポート',
+    field_auto_scratch: '自動伸縮',
 
     button_new_report: '新規作成',
     button_save: '保存',
@@ -193,6 +196,7 @@ App.addLocale({
     button_image_block_tool: '画像ブロックツール',
     button_page_number_tool: 'ページ番号ツール',
     button_list_tool: '一覧表ツール',
+    button_stack_view_add_row: '行を追加',
 
     error_id_is_already_used: '{$id} は既に使用されています。',
     error_invalid_value: '値が正しくありません。',

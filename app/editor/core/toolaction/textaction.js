@@ -77,8 +77,7 @@ thin.core.toolaction.TextAction.prototype.handleEndAction = function(
     if (!listHelper.isActive()) {
       var boxSize = layout.getBounds().toBox();
     } else {
-      var boxSize = listHelper.getTarget().getSectionShape(/** @type {string} */ (
-                        listHelper.getSectionNameByDrawLayer(handler))).getBounds().toBox();
+      var boxSize = listHelper.getRowFromDrawLayer(handler).getBounds().toBox();
     }
     
     var allowWidth = thin.numberWithPrecision(boxSize.right - outline.getLeft());

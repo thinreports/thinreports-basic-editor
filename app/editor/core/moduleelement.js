@@ -459,13 +459,18 @@ thin.core.ModuleElement.prototype.getCursorName = function() {
  * @return {goog.math.Rect}
  */
 thin.core.ModuleElement.prototype.getAffiliationRegionBounds = function() {
-  if (this.isAffiliationListShape()) {
-    var listShape = this.getLayout().getHelpers().getListHelper().getTarget();
-    var sectionShapeForScope = listShape.getSectionShape(this.getAffiliationSectionName());
-    return sectionShapeForScope.getBounds();
-  } else {
-    return this.getLayout().getBounds();
-  }
+  var parent = this.affiliationSectionShape_ || this.getLayout();
+  return parent.getBounds();
+
+  // if (this.isAffiliationListShape()) {
+  //   var listShape = this.getLayout().getHelpers().getListHelper().getTarget();
+  //   var sectionShapeForScope = listShape.getSectionShape(this.getAffiliationSectionName());
+  //   return sectionShapeForScope.getBounds();
+  //   // var listHelper = this.getLayout().getHelpers().getListHelper();
+  //   // return listHelper.getActiveRow().getBounds();
+  // } else {
+  //   return this.getLayout().getBounds();
+  // }
 };
 
 
@@ -475,7 +480,7 @@ thin.core.ModuleElement.prototype.getAffiliationRegionBounds = function() {
  */
 thin.core.ModuleElement.prototype.setAffiliationSection = function(sectionShape) {
   this.affiliationSectionShape_ = sectionShape;
-  this.affiliationSectionName_ = sectionShape.getSectionName();
+  // this.affiliationSectionName_ = sectionShape.getSectionName();
   this.isAffiliationListShape_ = true;
 };
 
@@ -495,6 +500,15 @@ thin.core.ModuleElement.prototype.getAffiliationSectionName = function() {
  */
 thin.core.ModuleElement.prototype.getAffiliationSectionShape = function() {
   return this.affiliationSectionShape_;
+};
+
+
+/**
+ * @this {goog.graphics.Element}
+ * @return {thin.core.Layout|thin.core.StackViewRowShape}
+ */
+thin.core.ModuleElement.prototype.getParentGroup = function () {
+  return this.affiliationSectionShape_ || this.layout_;
 };
 
 
@@ -645,7 +659,7 @@ thin.core.ModuleElement.prototype.instanceOfDraggableLine = function() {
  * @return {boolean}
  */
 thin.core.ModuleElement.prototype.instanceOfListShape = function() {
-  return this instanceof thin.core.ListShape;
+  return this instanceof thin.core.StackViewShape;
 };
 
 

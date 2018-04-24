@@ -118,7 +118,6 @@ thin.core.SvgDrawer.prototype.endDrag = function(e, opt_dragCanceled) {
   this.setRevisionCurrentPosition(null);
 };
 
-
 /**
  * @param {goog.events.BrowserEvent} e
  * @param {number} x

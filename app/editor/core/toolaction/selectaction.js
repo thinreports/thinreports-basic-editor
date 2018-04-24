@@ -84,10 +84,11 @@ thin.core.toolaction.SelectAction.prototype.handleEndAction = function(
     var activeShapeManagerByListShape = listHelper.getActiveShape();
     var oldShapesByListShape = activeShapeManagerByListShape.getClone();
     var singleShapeByListShape = activeShapeManagerByListShape.getIfSingle();
-    var captureActiveSectionName = listHelper.getActiveSectionName();
-    var newActiveSectionName = listHelper.getSectionNameBySelectorLayer(handle);
+    // var captureActiveSectionName = listHelper.getActiveSectionName();
+    // var newActiveSectionName = listHelper.getSectionNameBySelectorLayer(handle);
     if (isActive) {
-      shapesManager = singleShapeByGlobal.getSectionShape(newActiveSectionName).getManager().getShapesManager();
+      // shapesManager = singleShapeByGlobal.getSectionShape(newActiveSectionName).getManager().getShapesManager();
+      shapesManager = listHelper.getActiveRow().getManager().getShapesManager();
     }
   }
   var newShapes = layout.getActiveShapeFromSelectRange(outline.getBoxSize().clone(), shapesManager.get());
@@ -124,7 +125,8 @@ thin.core.toolaction.SelectAction.prototype.handleEndAction = function(
       } else {
         activeShapeManagerByListShape.clear();
         activeShapeManagerByListShape.set(newShapes);
-        listHelper.setActiveSectionName(newActiveSectionName);
+        listHelper.setActiveRow(listHelper.target_.rows_[0]);
+        // listHelper.setActiveSectionName(newActiveSectionName);
         if (activeShapeManagerByListShape.isEmpty()) {
           singleShapeByGlobal.updateProperties();
           thin.ui.setEnabledForFontUi(false);
@@ -175,7 +177,8 @@ thin.core.toolaction.SelectAction.prototype.handleEndAction = function(
           }
         } else {
           listHelper.active(singleShapeByGlobal);
-          listHelper.setActiveSectionName(captureActiveSectionName);
+          listHelper.setActiveRow(listHelper.target_.rows_[0]);
+          // listHelper.setActiveSectionName(captureActiveSectionName);
           
           activeShapeManagerByListShape.set(oldShapesByListShape);
           if (activeShapeManagerByListShape.isEmpty()) {

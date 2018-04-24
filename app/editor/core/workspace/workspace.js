@@ -1020,7 +1020,7 @@ thin.core.Workspace.prototype.exitDocument = function() {
   helpers.getDrawLayer().dispose();
   helpers.getSurface().dispose();
 
-  listHelper.forEachSectionHelper(function(sectionHelper, sectionName) {
+  listHelper.forEachSectionHelper(function(sectionHelper) {
     sectionHelper.getDrawLayer().dispose();
     sectionHelper.getSelectorLayer().dispose();
   }, this);
