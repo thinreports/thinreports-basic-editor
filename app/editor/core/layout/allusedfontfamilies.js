@@ -80,13 +80,13 @@ thin.core.layout.AllUsedFontFamilies.prototype.get_ = function (shapes) {
  * @return {Array.<string>}
  */
 thin.core.layout.AllUsedFontFamilies.prototype.getInListShape_ = function (shape) {
-  var families = [];
+  var familiesEachSection = [];
 
   shape.forEachSectionShape(function (section) {
-    this.get_(section.getManager().getShapesManager().get());
+    familiesEachSection.push(this.get_(section.getManager().getShapesManager().get()));
   }, this)
 
-  return families;
+  return goog.array.flatten(familiesEachSection);
 };
 
 
