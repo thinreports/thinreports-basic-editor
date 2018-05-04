@@ -39,6 +39,7 @@ goog.require('thin.core.StateManager');
 goog.require('thin.core.ShapeIdManager');
 goog.require('thin.core.ShapeIdManager.DefaultPrefix');
 goog.require('thin.core.ClipboardShapeManager');
+goog.require('thin.core.layout.AllUsedFontFamilies');
 
 
 /**
@@ -375,6 +376,19 @@ thin.core.Layout.prototype.getDefsElement = function() {
  */
 thin.core.Layout.prototype.createHelpersElement = function(tagName, attrs) {
   return this.createSvgElement(tagName, attrs);
+};
+
+
+/**
+ * @return {Array.<thin.Font>}
+ */
+thin.core.Layout.prototype.getUsedCustomFonts = function () {
+  var customFonts = thin.Font.getCustomFonts();
+  var allUsedFontFamilies = thin.core.layout.AllUsedFontFamilies.get(this);
+
+  return goog.array.filter(customFonts, function (font) {
+    return goog.array.contains(allUsedFontFamilies, font.getFamily());
+  });
 };
 
 

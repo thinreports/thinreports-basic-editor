@@ -613,8 +613,15 @@ thin.core.Workspace.prototype.setFormat = function(format) {
 thin.core.Workspace.prototype.getSaveFormat_ = function() {
   var layout = this.layout_;
   var format = this.format;
+
   format.setItems(layout.asJSON());
   format.setLayoutGuides(layout.getHelpers().getLayoutGuideHelper().getGuides());
+
+  format.setCustomFonts(
+    goog.array.map(layout.getUsedCustomFonts(), function (font) {
+      return font.getFamily();
+    })
+  );
 
   return format.toJSON();
 };
