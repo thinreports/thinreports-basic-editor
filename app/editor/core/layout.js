@@ -386,9 +386,13 @@ thin.core.Layout.prototype.getUsedCustomFonts = function () {
   var customFonts = thin.Font.getCustomFonts();
   var allUsedFontFamilies = thin.core.layout.AllUsedFontFamilies.get(this);
 
-  return goog.array.filter(customFonts, function (font) {
+  var usedCustomFonts = goog.array.filter(customFonts, function (font) {
     return goog.array.contains(allUsedFontFamilies, font.getFamily());
   });
+
+  goog.array.sort(usedCustomFonts);
+  
+  return usedCustomFonts;
 };
 
 
