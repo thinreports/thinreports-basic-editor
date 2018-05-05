@@ -37,6 +37,7 @@ goog.require('thin.layout.FormatPage.PaperName');
 goog.require('thin.layout.FormatPage.DirectionType');
 goog.require('thin.layout.document');
 goog.require('thin.Font');
+goog.require('thin.core.workspace.CustomFontRegistry');
 
 
 /**
@@ -58,6 +59,11 @@ thin.core.Workspace = function(format, opt_file) {
   } else {
     this.setFile(new thin.layout.File());
   }
+
+  /**
+   * @type {thin.core.workspace.CustomFontRegistry}
+   */
+  this.customFonts = new thin.core.workspace.CustomFontRegistry(format.getCustomFonts());
 
   /**
    * @type {string}

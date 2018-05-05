@@ -51,37 +51,6 @@ thin.ui.FontSelect = function(fonts, opt_menuRenderer) {
 goog.inherits(thin.ui.FontSelect, thin.ui.ComboBox);
 
 
-/**
- * @type {Array.<thin.ui.FontSelect>}
- * @private
- */
-thin.ui.FontSelect.activeControlRegistry_ = [];
-
-
-/**
- * @param {thin.ui.FontSelect} control
- */
-thin.ui.FontSelect.registerControl = function (control) {
-  goog.array.insert(thin.ui.FontSelect.activeControlRegistry_, control);
-};
-
-
-/**
- * @param {thin.ui.FontSelect} control
- */
-thin.ui.FontSelect.unregisterControl = function (control) {
-  goog.array.remove(thin.ui.FontSelect.activeControlRegistry_, control);
-};
-
-
-thin.ui.FontSelect.reloadFontsOfAllControls = function () {
-  goog.array.forEach(thin.ui.FontSelect.activeControlRegistry_,
-    function (control) {
-      control.reloadFonts();
-    });
-};
-
-
 thin.ui.FontSelect.prototype.initValidator_ = function () {
   var fontValidator = new thin.ui.Input.Validator(this);
 
@@ -89,7 +58,9 @@ thin.ui.FontSelect.prototype.initValidator_ = function () {
   fontValidator.setMethod(function (fontFamily) {
     fontValidator.setMessage(thin.t('error_family_is_not_a_valid_font', {'family': fontFamily}));
 
-    if (thin.Font.isRegistered(fontFamily)) {
+    var workspace = thin.core.getActiveWorkspace();
+
+    if (workspace.customFonts.contains(fontFamily)) {
       return true;
     }
     if (thin.platform.FontValidator.validate(fontFamily)) {
@@ -120,10 +91,10 @@ thin.ui.FontSelect.prototype.reloadFonts = function () {
  * @private
  */
 thin.ui.FontSelect.prototype.registerCustomFont_ = function (family) {
-  if (!thin.Font.isRegistered(family)) {
-    thin.Font.register(family);
+  var customFontRegistry = thin.core.getActiveWorkspace().customFonts;
 
-    thin.ui.FontSelect.reloadFontsOfAllControls();
+  if (!customFontRegistry.contains(family)) {
+    customFontRegistry.register(family);
   }
 };
 
@@ -132,20 +103,26 @@ thin.ui.FontSelect.prototype.registerCustomFont_ = function (family) {
  * @private
  */
 thin.ui.FontSelect.prototype.loadFonts_ = function () {
+  var workspace, customFonts;
+
   goog.array.forEach(thin.Font.getBuiltinFonts(),
     function(font) {
       this.addFont_(font);
     }, this);
 
-  var customFonts = thin.Font.getCustomFonts();
+  workspace = thin.core.getActiveWorkspace();
 
-  if (!goog.array.isEmpty(customFonts)) {
-    this.addItem(new thin.ui.MenuSeparator());
+  if (workspace) {
+    customFonts = workspace.customFonts.get();
 
-    goog.array.forEach(customFonts,
-      function (font) {
-        this.addFont_(font);
-      }, this);
+    if (!goog.array.isEmpty(customFonts)) {
+      this.addItem(new thin.ui.MenuSeparator());
+
+      goog.array.forEach(customFonts,
+        function (font) {
+          this.addFont_(font);
+        }, this);
+    }
   }
 };
 
@@ -165,8 +142,6 @@ thin.ui.FontSelect.prototype.addFont_ = function(font) {
 thin.ui.FontSelect.prototype.enterDocument = function () {
   goog.base(this, 'enterDocument');
 
-  thin.ui.FontSelect.registerControl(this);
-
   var handler = this.getHandler();
 
   handler.listen(this.getInput(), goog.ui.Component.EventType.CHANGE,
@@ -176,11 +151,14 @@ thin.ui.FontSelect.prototype.enterDocument = function () {
 };
 
 
-/** @override */
-thin.ui.FontSelect.prototype.exitDocument = function () {
-  goog.base(this, 'exitDocument');
+/**
+ * @override
+ */
+thin.ui.FontSelect.prototype.showMenu_ = function () {
+  // Reload fonts before menu shown
+  this.reloadFonts();
 
-  thin.ui.FontSelect.unregisterControl(this);
+  goog.base(this, 'showMenu_');
 };
 
 
