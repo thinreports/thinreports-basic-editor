@@ -90,7 +90,7 @@ thin.core.layout.AllUsedFontFamilies.prototype.getInListShape_ = function (shape
 };
 
 
-/*
+/**
  * @param {Array} shapes Array.<Shape>
  * @return {Array} Filtered shapes
  * @private
