@@ -22,10 +22,9 @@ goog.require('thin.platform.Font');
 /**
  * @param {string} family
  * @param {string=} opt_name
- * @param {boolean=} opt_builtin
  * @constructor
  */
-thin.Font = function(family, opt_name, opt_builtin) {
+thin.Font = function(family, opt_name) {
   /**
    * @type {string}
    * @private
@@ -37,12 +36,6 @@ thin.Font = function(family, opt_name, opt_builtin) {
    * @private
    */
   this.name_ = opt_name || family;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.builtin_ = opt_builtin || false;
 };
 
 
@@ -50,7 +43,7 @@ thin.Font = function(family, opt_name, opt_builtin) {
  * @type {Array.<thin.Font>}
  * @private
  */
-thin.Font.fontRegistry_ = [];
+thin.Font.builtinFontRegistry_ = [];
 
 
 /**
@@ -63,12 +56,11 @@ thin.Font.defaultFont_;
 /**
  * @param {string} family
  * @param {string=} opt_name
- * @param {boolean=} opt_builtin
  * @return {thin.Font}
  */
-thin.Font.register = function(family, opt_name, opt_builtin) {
-  var font = new thin.Font(family, opt_name || family, opt_builtin);
-  thin.Font.fontRegistry_.push(font);
+thin.Font.register = function(family, opt_name) {
+  var font = new thin.Font(family, opt_name || family);
+  thin.Font.builtinFontRegistry_.push(font);
   return font;
 };
 
@@ -78,12 +70,12 @@ thin.Font.init = function() {
 
   font.defaultFont_ = font.register('Helvetica', null, true);
 
-  font.register('Courier New', null, true);
-  font.register('Times New Roman', null, true);
-  font.register('IPAMincho', 'IPA ' + thin.t('font_mincho'), true);
-  font.register('IPAPMincho', 'IPA P' + thin.t('font_mincho'), true);
-  font.register('IPAGothic', 'IPA ' + thin.t('font_gothic'), true);
-  font.register('IPAPGothic', 'IPA P' + thin.t('font_gothic'), true);
+  font.register('Courier New');
+  font.register('Times New Roman');
+  font.register('IPAMincho', 'IPA ' + thin.t('font_mincho'));
+  font.register('IPAPMincho', 'IPA P' + thin.t('font_mincho'));
+  font.register('IPAGothic', 'IPA ' + thin.t('font_gothic'));
+  font.register('IPAPGothic', 'IPA P' + thin.t('font_gothic'));
 };
 
 
@@ -98,30 +90,8 @@ thin.Font.getDefaultFontFamily = function() {
 /**
  * @return {Array.<thin.Font>}
  */
-thin.Font.getFonts = function() {
-  return thin.Font.fontRegistry_;
-};
-
-
-/**
- * @return {Array.<thin.Font>}
- */
-thin.Font.getBuiltinFonts = function () {
-  return goog.array.filter(thin.Font.fontRegistry_,
-    function (font) {
-      return font.isBuiltin();
-    });
-};
-
-
-/**
- * @return {Array.<thin.Font>}
- */
-thin.Font.getCustomFonts = function () {
-  return goog.array.filter(thin.Font.fontRegistry_,
-    function (font) {
-      return font.isCustom();
-    });
+thin.Font.getBuiltinFonts = function() {
+  return thin.Font.builtinFontRegistry_;
 };
 
 
@@ -213,20 +183,4 @@ thin.Font.prototype.getFamily = function() {
  */
 thin.Font.prototype.getName = function() {
   return this.name_;
-};
-
-
-/**
- * @return {boolean}
- */
-thin.Font.prototype.isBuiltin = function() {
-  return this.builtin_;
-};
-
-
-/**
- * @return {boolean}
- */
-thin.Font.prototype.isCustom = function () {
-  return !this.isBuiltin();
 };
