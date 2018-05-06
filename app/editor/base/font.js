@@ -16,6 +16,7 @@
 goog.provide('thin.Font');
 
 goog.require('goog.array');
+goog.requrie('goog.Disposable');
 goog.require('thin.platform.Font');
 
 
@@ -23,6 +24,7 @@ goog.require('thin.platform.Font');
  * @param {string} family
  * @param {string=} opt_name
  * @constructor
+ * @extends {goog.Disposable}
  */
 thin.Font = function(family, opt_name) {
   /**
@@ -37,6 +39,7 @@ thin.Font = function(family, opt_name) {
    */
   this.name_ = opt_name || family;
 };
+goog.inherits(thin.Font, goog.Disposable);
 
 
 /**
@@ -183,4 +186,12 @@ thin.Font.prototype.getFamily = function() {
  */
 thin.Font.prototype.getName = function() {
   return this.name_;
+};
+
+/** @override */
+thin.Font.prototype.disposeInternal = function () {
+  goog.base(this, 'disposeInternal');
+
+  this.family_ = null;
+  this.name_ = null;
 };
