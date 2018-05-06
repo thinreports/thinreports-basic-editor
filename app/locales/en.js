@@ -217,6 +217,7 @@ App.addLocale({
     notice_no_shapes: 'No shapes',
     warning_discard_changes: 'If you have unsaved files, the changes will be discarded. Please be sure to save.',
     warning_discard_changes_en: '',
+    warning_unavailable_font_not_installed: "{$family} is not available because it won't be installed.",
 
     text_editor_force_close_confirmation: 'There are unsaved files. Are you sure you want to close without saving changes?',
     text_layout_force_close_confirmation: 'This layout has been changed.\nSave before close?',

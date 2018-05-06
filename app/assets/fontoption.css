@@ -37,6 +37,13 @@
   box-sizing: border-box;
 }
 
+.thin-font-option-invalid .thin-font-option-content {
+  background-image: url(icons/exclamation-octagon.png);
+  background-position: 0% 50%;
+  background-repeat: no-repeat;
+  padding-left: 18px;
+}
+
 /*
  * FontOptionMenu
  */

@@ -217,6 +217,7 @@ App.addLocale({
     notice_no_shapes: 'Nao ha formas',
     warning_discard_changes: 'Se voce tiver arquivos que nao foram salvos, as alteracoes serao descartadas.\nPor favor, nao se esqueca de salvar.',
     warning_discard_changes_en: '',
+    warning_unavailable_font_not_installed: '{$family} não está disponível porque não será instalada.',
 
     text_editor_force_close_confirmation: 'Existem arquivos não salvos. Tem certeza de que deseja fechar sem salvar as alterações?',
     text_layout_force_close_confirmation: 'Este layout foi alterado. \nSalvar antes de fechar?',

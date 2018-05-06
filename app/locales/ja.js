@@ -217,6 +217,7 @@ App.addLocale({
     notice_no_shapes: 'オブジェクトはありません',
     warning_discard_changes: '保存していないレイアウトがある場合は必ず保存して下さい。',
     warning_discard_changes_en: 'If you have unsaved files, the changes will be discarded. Please be sure to save.',
+    warning_unavailable_font_not_installed: '{$family} は利用できません。インストールしてください。',
 
     text_editor_force_close_confirmation: '保存されていないファイルがあります。変更を保存せずに閉じても良いですか？',
     text_layout_force_close_confirmation: '内容が変更されています。\n保存しますか？',

@@ -296,11 +296,12 @@ thin.ui.ComboBox.prototype.handleInputEditing = function(e) {
 /**
  * @param {goog.ui.ControlContent} content
  * @param {*=} opt_data
+ * @param {goog.ui.MenuItemRenderer=} opt_renderer
  * @constructor
  * @extends {thin.ui.Option}
  */
-thin.ui.ComboBoxItem = function(content, opt_data) {
-  thin.ui.Option.call(this, content, opt_data);
+thin.ui.ComboBoxItem = function(content, opt_data, opt_renderer) {
+  thin.ui.Option.call(this, content, opt_data, opt_renderer);
 };
 goog.inherits(thin.ui.ComboBoxItem, thin.ui.Option);
 

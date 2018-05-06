@@ -15,6 +15,7 @@
 
 goog.provide('thin.ui.FontSelect');
 goog.provide('thin.ui.FontOptionMenuRenderer');
+goog.provide('thin.ui.FontSelectItem');
 
 goog.require('goog.array');
 goog.require('goog.style');
@@ -120,7 +121,7 @@ thin.ui.FontSelect.prototype.loadFonts_ = function () {
 
       goog.array.forEach(customFonts,
         function (font) {
-          this.addFont_(font);
+          this.addFont_(font, !font.isValid());
         }, this);
     }
   }
@@ -129,11 +130,13 @@ thin.ui.FontSelect.prototype.loadFonts_ = function () {
 
 /**
  * @param {thin.Font} font
+ * @param {boolean=} opt_invalid
  * @private
  */
-thin.ui.FontSelect.prototype.addFont_ = function(font) {
-  var item = new thin.ui.ComboBoxItem(font.getFamily());
+thin.ui.FontSelect.prototype.addFont_ = function(font, opt_invalid) {
+  var item = new thin.ui.FontSelectItem(font, opt_invalid);
   item.setSticky(true);
+
   this.addItem(item);
 };
 
@@ -183,4 +186,46 @@ thin.ui.FontOptionMenuRenderer.CSS_CLASS =
 /** @inheritDoc */
 thin.ui.FontOptionMenuRenderer.prototype.getCssClass = function() {
   return thin.ui.FontOptionMenuRenderer.CSS_CLASS;
+};
+
+
+
+/**
+ * @param {thin.Font} font 
+ * @param {boolean=} opt_invalid 
+ * @constructor
+ * @extends {thin.ui.ComboBoxItem}
+ */
+thin.ui.FontSelectItem = function (font, opt_invalid) {
+  var renderer = goog.ui.ControlRenderer.getCustomRenderer(
+        goog.ui.MenuItemRenderer, thin.ui.getCssName(thin.ui.FontSelectItem.CSS_CLASS));
+ 
+  goog.base(this, font.getFamily(), null, /** @type {goog.ui.MenuItemRenderer} */(renderer));
+
+  /**
+   * @type {boolean?}
+   * @private
+   */
+  this.invalid_ = opt_invalid;
+
+  if (this.invalid_) {
+    this.addClassName(thin.ui.getCssName(thin.ui.FontSelectItem.CSS_CLASS, 'invalid'));
+  }
+};
+goog.inherits(thin.ui.FontSelectItem, thin.ui.ComboBoxItem);
+
+
+/**
+ * @type {string}
+ */
+thin.ui.FontSelectItem.CSS_CLASS = thin.ui.getCssName('thin-font-option');
+
+
+/** @override */
+thin.ui.FontSelectItem.prototype.enterDocument = function () {
+  goog.base(this, 'enterDocument');
+
+  if (this.invalid_) {
+    this.getElement().setAttribute('title', thin.t('warning_unavailable_font_not_installed', { family: this.getContent() }));
+  }
 };

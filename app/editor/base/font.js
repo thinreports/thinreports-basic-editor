@@ -18,6 +18,7 @@ goog.provide('thin.Font');
 goog.require('goog.array');
 goog.require('goog.Disposable');
 goog.require('thin.platform.Font');
+goog.require('thin.platform.FontValidator');
 
 
 /**
@@ -187,6 +188,15 @@ thin.Font.prototype.getFamily = function() {
 thin.Font.prototype.getName = function() {
   return this.name_;
 };
+
+
+/**
+ * @return {boolean}
+ */
+thin.Font.prototype.isValid = function () {
+  return thin.platform.FontValidator.validate(this.family_);
+};
+
 
 /** @override */
 thin.Font.prototype.disposeInternal = function () {
