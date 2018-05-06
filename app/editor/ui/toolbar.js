@@ -249,9 +249,25 @@ goog.inherits(thin.ui.ToolbarSelect, thin.ui.Select);
  */
 thin.ui.ToolbarFontSelect = function() {
   thin.ui.FontSelect.call(this);
-  // this.addClassName(thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'select'));
 };
 goog.inherits(thin.ui.ToolbarFontSelect, thin.ui.FontSelect);
+
+
+/** @override */
+thin.ui.ToolbarFontSelect.prototype.enterDocument = function () {
+  goog.base(this, 'enterDocument');
+
+  var handler = this.getHandler();
+
+  handler.listen(this.getInput(),
+    [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING],
+    function (e) {
+      var workspace = thin.core.getActiveWorkspace();
+      if (workspace) {
+        workspace.focus();
+      }
+    }, false, this);
+};
 
 
 /**

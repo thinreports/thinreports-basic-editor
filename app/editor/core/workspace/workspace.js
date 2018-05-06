@@ -1059,12 +1059,19 @@ thin.core.Workspace.prototype.focusElement = function(e) {
   var scrollTarget = this.getParent().getParent().getContentElement();
   var captureLeft = scrollTarget.scrollLeft;
 
-  this.element_.focus();
+  this.focus();
+
   var currentLeft = scrollTarget.scrollLeft;
   if(captureLeft != currentLeft){
     scrollTarget.scrollLeft = captureLeft;
   }
 };
+
+
+thin.core.Workspace.prototype.focus = function () {
+  this.element_.focus();
+};
+
 
 /** @inheritDoc */
 thin.core.Workspace.prototype.disposeInternal = function() {

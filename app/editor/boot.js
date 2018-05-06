@@ -47,6 +47,7 @@ goog.require('thin.ui.ToolbarSplitToggleButton');
 goog.require('thin.ui.ToolbarToggleIconButton');
 goog.require('thin.ui.ToolbarSelect');
 goog.require('thin.ui.ToolbarFontSelect');
+goog.require('thin.ui.toolbar.ComboBox');
 goog.require('thin.ui.ToggleGroup');
 goog.require('thin.ui.MenuItem');
 goog.require('thin.ui.MenuLinkItem');
@@ -819,7 +820,7 @@ thin.init_ = function() {
     });
     // Zoom rate
     var toolZoomRate = toolbar.setupChild('zoom-rate',
-        new thin.ui.ComboBox(), dom.getElement('tbar-zoom-rate'),
+        new thin.ui.toolbar.ComboBox(), dom.getElement('tbar-zoom-rate'),
         function(combobox) {
           var zoomRateList = ['25', '50', '75', '100', '150', '200', '400', '600'];
           var comboboxItem;
@@ -922,7 +923,7 @@ thin.init_ = function() {
 
     // Font size
     var toolSize = toolbar.setupChild('font-size',
-        new thin.ui.ComboBox(), dom.getElement('tbar-font-size'),
+        new thin.ui.toolbar.ComboBox(), dom.getElement('tbar-font-size'),
         function(combobox) {
           var comboboxItem;
           goog.array.forEach(thin.core.FontStyle.FONTSIZE_LIST, function(fontSize) {
