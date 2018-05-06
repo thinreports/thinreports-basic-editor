@@ -16,7 +16,7 @@
 goog.provide('thin.Font');
 
 goog.require('goog.array');
-goog.requrie('goog.Disposable');
+goog.require('goog.Disposable');
 goog.require('thin.platform.Font');
 
 
