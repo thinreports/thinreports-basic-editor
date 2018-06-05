@@ -1318,7 +1318,7 @@ thin.init_ = function() {
       localeSelectBox.setTextAlignLeft();
       dialog.addChild(localeSelectBox, false);
 
-      var locales = /** @type {Array} */ (thin.callApp('getLocales'));
+      var locales = /** @type {Array} */ (thin.callAppMethod('getLocales'));
 
       goog.array.forEach(locales, function(locale) {
         localeSelectBox.addItem(

@@ -147,11 +147,11 @@ thin.i18n.init = function() {
   var localeId = settings.getLocale();
 
   if (!localeId) {
-    localeId = /** @type {string} */(thin.callApp('getUILocale'));
+    localeId = /** @type {string} */(thin.callAppMethod('getUILocale'));
     settings.setLocale(localeId);
   }
 
-  var locales = /** @type {Array} */(thin.callApp('getLocales'));
+  var locales = /** @type {Array} */(thin.callAppMethod('getLocales'));
   var locale = goog.array.find(locales, function(loc) {
     return loc.id == localeId;
   });
@@ -163,7 +163,7 @@ thin.i18n.init = function() {
   i18n.currentLocaleId_ = localeId;
   i18n.currentLocale_ = locale;
 
-  var defaultLocaleId = thin.callApp('getDefaultUILocale');
+  var defaultLocaleId = thin.callAppMethod('getDefaultUILocale');
   i18n.defaultLocaleId_ = defaultLocaleId;
   i18n.defaultLocale_ = goog.array.find(locales, function(loc) {
     return loc.id == defaultLocaleId;
