@@ -14,7 +14,7 @@
     "build": "node tasks/build.js",
     "release": "cross-env NODE_ENV=production npm run compile && npm run build",
     "watch": "node tasks/watch.js",
-    "postinstall": "cd app && npm install"
+    "postinstall": "cd app && yarn install"
   },
   "devDependencies": {
     "archiver": "^2.0.3",
