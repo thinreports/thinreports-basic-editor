@@ -15,6 +15,7 @@
 
 var App = {};
 
+App.FontMetrics = require('fontmetrics');
 App.handlers = require('./handlers');
 
 /**
