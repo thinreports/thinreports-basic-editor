@@ -1071,7 +1071,7 @@ thin.core.TblockShape.prototype.createPropertyComponent_ = function() {
             scope.setHeight(captureHeight);
           } else {
             scope.setHeight(thin.Font.getHeight(
-                    scope.getFontFamily(), scope.getFontSize()));
+                    scope.getFontFamily(), scope.getFontSize(), shape.isFontBold()));
           }
 
           scope.updateToolbarUI();

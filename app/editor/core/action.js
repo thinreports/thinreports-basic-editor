@@ -384,7 +384,7 @@ thin.core.Action.prototype.actionSetFontSize = function(newFontSize) {
   var setFontSizeTblockShape = function(shape, fontSize) {
     shape.setFontSize(fontSize);
     if (!shape.isMultiMode()) {
-      shape.setHeight(thin.Font.getHeight(shape.getFontFamily(), fontSize));
+      shape.setHeight(thin.Font.getHeight(shape.getFontFamily(), fontSize, shape.isFontBold()));
       if (isMultipleSelect) {
         shape.getTargetOutline().setHeight(shape.getHeight());
       }
@@ -397,7 +397,7 @@ thin.core.Action.prototype.actionSetFontSize = function(newFontSize) {
    */
   var setPageNumberFontSize = function(shape, fontSize) {
     shape.setFontSize(fontSize);
-    shape.setHeight(thin.Font.getHeight(shape.getFontFamily(), fontSize));
+    shape.setHeight(thin.Font.getHeight(shape.getFontFamily(), fontSize, shape.isFontBold()));
     if (isMultipleSelect) {
       shape.getTargetOutline().setHeight(shape.getHeight());
     }
@@ -525,7 +525,7 @@ thin.core.Action.prototype.actionSetFontFamily = function(newFontFamily) {
   var setFontFamilyTblockShape = function(shape, fontFamily) {
     shape.setFontFamily(fontFamily);
     if (!shape.isMultiMode()) {
-      shape.setHeight(thin.Font.getHeight(fontFamily, shape.getFontSize()));
+      shape.setHeight(thin.Font.getHeight(fontFamily, shape.getFontSize(), shape.isFontBold()));
       if (isMultipleSelect) {
         shape.getTargetOutline().setHeight(shape.getHeight());
       }

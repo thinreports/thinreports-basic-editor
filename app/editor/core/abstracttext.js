@@ -125,32 +125,3 @@ thin.core.AbstractText.prototype.getWidth = function() {
   this.width_ = this.getBBox().width;
   return this.width_;
 };
-
-
-/**
- * @return {number}
- */
-thin.core.AbstractText.prototype.getBaseLine = function() {
-  var element = this.getElement();
-  if (element.hasAttribute('y')) {
-    return Number(this.getLayout().getElementAttribute(element, 'y'));
-  } else {
-    return 0;
-  }
-};
-
-
-/**
- * @return {number}
- */
-thin.core.AbstractText.prototype.getAscent = function() {
-  return Math.round(this.getBaseLine() - this.getBBox().y);
-};
-
-
-/**
- * @return {number}
- */
-thin.core.AbstractText.prototype.getDescent = function() {
-  return this.getHeight() - this.getAscent();
-};

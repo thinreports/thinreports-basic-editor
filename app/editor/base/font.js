@@ -125,10 +125,7 @@ thin.Font.findFontByFamily = function (family) {
  * @type {Object.<Object>}
  * @private
  */
-thin.Font.infoRegistry_ = {
-  ascent: {},
-  height: {}
-};
+thin.Font.infoRegistry_ = {};
 
 
 /**
@@ -149,28 +146,33 @@ thin.Font.generateRegistryKey_ = function(var_args) {
  */
 thin.Font.getAscent = function(family, fontSize, isBold) {
   var registryKey = thin.Font.generateRegistryKey_(family, fontSize, isBold);
-  var ascent = thin.Font.infoRegistry_.ascent[registryKey];
-  if (!goog.isDef(ascent)) {
-    ascent = thin.platform.Font.getAscent(family, fontSize, isBold);
-    thin.Font.infoRegistry_.ascent[registryKey] = ascent;
+  var info = thin.Font.infoRegistry_[registryKey];
+
+  if (!goog.isDef(info)) {
+    info = thin.platform.Font.getMetrics(family, fontSize, isBold);
+    thin.Font.infoRegistry_[registryKey] = info;
   }
-  return ascent;
+
+  return info.ascent;
 };
 
 
 /**
  * @param {string} family
  * @param {number} fontSize
+ * @param {boolean} isBold
  * @return {number}
  */
-thin.Font.getHeight = function(family, fontSize) {
+thin.Font.getHeight = function(family, fontSize, isBold) {
   var registryKey = thin.Font.generateRegistryKey_(family, fontSize);
-  var height = thin.Font.infoRegistry_.height[registryKey];
-  if (!goog.isDef(height)) {
-    height = thin.platform.Font.getHeight(family, fontSize);
-    thin.Font.infoRegistry_.height[registryKey] = height;
+  var info = thin.Font.infoRegistry_[registryKey];
+
+  if (!goog.isDef(info)) {
+    info = thin.platform.Font.getMetrics(family, fontSize, isBold);
+    thin.Font.infoRegistry_[registryKey] = info;
   }
-  return height;
+
+  return info.height;
 };
 
 

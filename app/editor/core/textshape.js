@@ -202,8 +202,8 @@ thin.core.TextShape.prototype.setTop = function(top) {
   var isBold = this.isFontBold();
 
   var ascent = thin.Font.getAscent(family, fontSize, isBold);
-  var heightAt = thin.Font.getHeight(family, fontSize);
-  var translateY = thin.numberWithPrecision(heightAt * ratio, 2);
+  var height = thin.Font.getHeight(family, fontSize, isBold);
+  var translateY = thin.numberWithPrecision(height * ratio, 2);
   var y = thin.numberWithPrecision(xTop + ascent, 2);
 
   goog.array.forEach(this.getTextLineShapes(), function(textline, index) {
@@ -257,16 +257,16 @@ thin.core.TextShape.prototype.getHeightInternal = function() {
   }
 
   ratio = Number(ratio);
-  var heightAt = thin.Font.getHeight(this.getFontFamily(), this.getFontSize());
+  var height = thin.Font.getHeight(this.getFontFamily(), this.getFontSize(), this.isFontBold());
   var lineCount = this.getTextLineShapes().length;
 
   if (ratio >= 1) {
-    var height = thin.numberWithPrecision((heightAt * ratio) * lineCount);
-    var diff = thin.numberWithPrecision(heightAt * (ratio - 1), 2);
+    var height = thin.numberWithPrecision((height * ratio) * lineCount);
+    var diff = thin.numberWithPrecision(height * (ratio - 1), 2);
     height = thin.numberWithPrecision(height - diff);
   } else {
-    var height = thin.numberWithPrecision(heightAt * lineCount);
-    var diff = thin.numberWithPrecision(heightAt * (1 - ratio) * (lineCount - 1), 2);
+    var height = thin.numberWithPrecision(height * lineCount);
+    var diff = thin.numberWithPrecision(height * (1 - ratio) * (lineCount - 1), 2);
     height = thin.numberWithPrecision(height - diff);
   }
 
