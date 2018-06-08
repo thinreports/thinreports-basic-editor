@@ -28,10 +28,12 @@ goog.require('thin.platform');
 thin.platform.Font.getMetrics = function (family, fontSize, isBold) {
   var FontMetrics = thin.app('FontMetrics');
 
-  var spec = FontMetrics({
-    'fontFamily': family,
-    'fontWeight': isBold ? 'bold' : 'normal'
-  });
+  var spec = /** @type {Object} */ (
+    FontMetrics({
+      'fontFamily': family,
+      'fontWeight': isBold ? 'bold' : 'normal'
+    })
+  );
 
   var ascent = Math.abs(spec.ascent * fontSize);
   var descent = Math.abs(spec.descent * fontSize);
