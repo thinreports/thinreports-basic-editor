@@ -532,6 +532,17 @@ thin.core.Action.prototype.actionSetFontFamily = function(newFontFamily) {
     }
   };
 
+  /**
+   * @param {thin.core.PageNumberShape} shape
+   * @param {string} fontFamily
+   */
+  var setPageNumberFontFamily = function(shape, fontFamily) {
+    shape.setFontFamily(fontFamily);
+    if (isMultipleSelect) {
+      shape.getTargetOutline().setBounds(shape.getBounds());
+    }
+  };
+
   workspace.normalVersioning(function(version) {
     version.upHandler(function() {
       layout.forTextShapesEach(shapes, function(shape, i) {
@@ -543,7 +554,7 @@ thin.core.Action.prototype.actionSetFontFamily = function(newFontFamily) {
       });
 
       layout.forPageNumberShapesEach(shapes, function(shape, i) {
-        shape.setFontFamily(newFontFamily);
+        setPageNumberFontFamily(shape, newFontFamily);
       });
 
       if (guide.isEnable()) {
@@ -575,7 +586,7 @@ thin.core.Action.prototype.actionSetFontFamily = function(newFontFamily) {
       });
 
       layout.forPageNumberShapesEach(shapes, function(shape, i) {
-        shape.setFontFamily(pageNumberFontFamilies[i]);
+        setPageNumberFontFamily(shape, pageNumberFontFamilies[i]);
       });
 
       if (guide.isEnable()) {

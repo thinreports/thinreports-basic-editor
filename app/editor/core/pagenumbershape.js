@@ -249,18 +249,6 @@ thin.core.PageNumberShape.prototype.setOverflowType = function(type) {
 };
 
 
-/** @override */
-thin.core.PageNumberShape.prototype.setFontFamily = function (family) {
-  goog.base(this, 'setFontFamily', family);
-
-  this.setHeight(thin.Font.getHeight(family, this.getFontSize(), this.isFontBold()));
-
-  if (this.getLayout().getActiveShapeManager().isMultiple()) {
-    this.getTargetOutline().setBounds(this.getBounds());
-  }
-};
-
-
 /**
  * @return {string}
  */
