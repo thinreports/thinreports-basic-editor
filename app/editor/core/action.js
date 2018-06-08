@@ -538,6 +538,7 @@ thin.core.Action.prototype.actionSetFontFamily = function(newFontFamily) {
    */
   var setPageNumberFontFamily = function(shape, fontFamily) {
     shape.setFontFamily(fontFamily);
+    shape.setHeight(thin.Font.getHeight(fontFamily, shape.getFontSize(), shape.isFontBold()));
     if (isMultipleSelect) {
       shape.getTargetOutline().setBounds(shape.getBounds());
     }
