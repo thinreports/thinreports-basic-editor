@@ -383,7 +383,7 @@ thin.core.Layout.prototype.createHelpersElement = function(tagName, attrs) {
  * @return {Array.<thin.Font>}
  */
 thin.core.Layout.prototype.getUsedCustomFonts = function () {
-  var customFonts = this.getWorkspace().customFonts.get();
+  var customFonts = this.getWorkspace().getCustomFonts().get();
   var allUsedFontFamilies = thin.core.layout.AllUsedFontFamilies.get(this);
 
   var usedCustomFonts = goog.array.filter(customFonts, function (font) {

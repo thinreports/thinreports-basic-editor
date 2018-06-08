@@ -62,8 +62,9 @@ thin.core.Workspace = function(format, opt_file) {
 
   /**
    * @type {thin.core.workspace.CustomFontRegistry}
+   * @private
    */
-  this.customFonts = new thin.core.workspace.CustomFontRegistry(format.getCustomFonts());
+  this.customFonts_ = new thin.core.workspace.CustomFontRegistry(format.getCustomFonts());
 
   /**
    * @type {string}
@@ -353,6 +354,14 @@ thin.core.Workspace.create = function(file) {
 
     return null;
   }
+};
+
+
+/**
+ * @return {thin.core.workspace.CustomFontRegistry}
+ */
+thin.core.Workspace.prototype.getCustomFonts = function () {
+  return this.customFonts_;
 };
 
 
@@ -1082,6 +1091,7 @@ thin.core.Workspace.prototype.disposeInternal = function() {
     delete this.file_;
   }
 
+  this.customFonts_.dispose();
   this.action_.dispose();
   this.history_.dispose();
 
@@ -1089,6 +1099,7 @@ thin.core.Workspace.prototype.disposeInternal = function() {
   delete this.action_;
   delete this.history_;
   delete this.layout_;
+  delete this.customFonts_;
 
   goog.base(this, 'disposeInternal');
 };

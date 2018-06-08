@@ -61,7 +61,7 @@ thin.ui.FontSelect.prototype.initValidator_ = function () {
 
     var workspace = thin.core.getActiveWorkspace();
 
-    if (workspace.customFonts.contains(fontFamily)) {
+    if (workspace.getCustomFonts().contains(fontFamily)) {
       return true;
     }
     if (thin.platform.FontValidator.validate(fontFamily)) {
@@ -92,7 +92,7 @@ thin.ui.FontSelect.prototype.reloadFonts = function () {
  * @private
  */
 thin.ui.FontSelect.prototype.registerCustomFont_ = function (family) {
-  var customFontRegistry = thin.core.getActiveWorkspace().customFonts;
+  var customFontRegistry = thin.core.getActiveWorkspace().getCustomFonts();
 
   if (!customFontRegistry.contains(family)) {
     customFontRegistry.register(family);
@@ -114,7 +114,7 @@ thin.ui.FontSelect.prototype.loadFonts_ = function () {
   workspace = thin.core.getActiveWorkspace();
 
   if (workspace) {
-    customFonts = workspace.customFonts.get();
+    customFonts = workspace.getCustomFonts().get();
 
     if (!goog.array.isEmpty(customFonts)) {
       this.addItem(new thin.ui.MenuSeparator());
