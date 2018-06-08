@@ -122,6 +122,6 @@ thin.core.AbstractText.prototype.getHeight = function() {
  * @return {number}
  */
 thin.core.AbstractText.prototype.getWidth = function() {
-  this.width_ = this.getBBox().width;
+  this.width_ = this.getBBox().width * 1.01;
   return this.width_;
 };
