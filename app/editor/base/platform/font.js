@@ -28,6 +28,8 @@ goog.require('thin.platform');
 thin.platform.Font.getMetrics = function (family, fontSize, isBold) {
   var FontMetrics = thin.app('FontMetrics');
 
+  FontMetrics.settings.chars.ascent = 'ぽ';
+
   var spec = /** @type {Object} */ (
     FontMetrics({
       'fontFamily': family,
