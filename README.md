@@ -54,7 +54,7 @@ See [TRANSLATION.md](https://github.com/thinreports/thinreports-editor/blob/mast
 ### Requirements
 
   * JDK 6+
-  * Python 3.7+
+  * Python 2.7
   * Node.js
   * [yarn](https://yarnpkg.com/en/)
 
