@@ -212,10 +212,12 @@ App.addLocale({
     error_failed_to_load_image: 'Falha ao carregar a imagem.',
     error_no_valid_placeholder_included: 'Sem um espaco reservado valido incluido.',
     error_unexpected_error: 'Ocorreu um erro inesperado.',
+    error_family_is_not_a_valid_font: '{$family} is not a valid font.',
 
     notice_no_shapes: 'Nao ha formas',
     warning_discard_changes: 'Se voce tiver arquivos que nao foram salvos, as alteracoes serao descartadas.\nPor favor, nao se esqueca de salvar.',
     warning_discard_changes_en: '',
+    warning_unavailable_font_not_installed: '{$family} não está disponível porque não será instalada.',
 
     text_editor_force_close_confirmation: 'Existem arquivos não salvos. Tem certeza de que deseja fechar sem salvar as alterações?',
     text_layout_force_close_confirmation: 'Este layout foi alterado. \nSalvar antes de fechar?',

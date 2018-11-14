@@ -16,16 +16,18 @@
 goog.provide('thin.Font');
 
 goog.require('goog.array');
+goog.require('goog.Disposable');
 goog.require('thin.platform.Font');
+goog.require('thin.platform.FontValidator');
 
 
 /**
  * @param {string} family
  * @param {string=} opt_name
- * @param {boolean=} opt_builtin
  * @constructor
+ * @extends {goog.Disposable}
  */
-thin.Font = function(family, opt_name, opt_builtin) {
+thin.Font = function(family, opt_name) {
   /**
    * @type {string}
    * @private
@@ -37,20 +39,15 @@ thin.Font = function(family, opt_name, opt_builtin) {
    * @private
    */
   this.name_ = opt_name || family;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.builtin_ = opt_builtin || false;
 };
+goog.inherits(thin.Font, goog.Disposable);
 
 
 /**
  * @type {Array.<thin.Font>}
  * @private
  */
-thin.Font.fontRegistry_ = [];
+thin.Font.builtinFontRegistry_ = [];
 
 
 /**
@@ -63,12 +60,11 @@ thin.Font.defaultFont_;
 /**
  * @param {string} family
  * @param {string=} opt_name
- * @param {boolean=} opt_builtin
  * @return {thin.Font}
  */
-thin.Font.register = function(family, opt_name, opt_builtin) {
-  var font = new thin.Font(family, opt_name || family, opt_builtin);
-  thin.Font.fontRegistry_.push(font);
+thin.Font.register = function(family, opt_name) {
+  var font = new thin.Font(family, opt_name || family);
+  thin.Font.builtinFontRegistry_.push(font);
   return font;
 };
 
@@ -78,12 +74,12 @@ thin.Font.init = function() {
 
   font.defaultFont_ = font.register('Helvetica', null, true);
 
-  font.register('Courier New', null, true);
-  font.register('Times New Roman', null, true);
-  font.register('IPAMincho', 'IPA ' + thin.t('font_mincho'), true);
-  font.register('IPAPMincho', 'IPA P' + thin.t('font_mincho'), true);
-  font.register('IPAGothic', 'IPA ' + thin.t('font_gothic'), true);
-  font.register('IPAPGothic', 'IPA P' + thin.t('font_gothic'), true);
+  font.register('Courier New');
+  font.register('Times New Roman');
+  font.register('IPAMincho', 'IPA ' + thin.t('font_mincho'));
+  font.register('IPAPMincho', 'IPA P' + thin.t('font_mincho'));
+  font.register('IPAGothic', 'IPA ' + thin.t('font_gothic'));
+  font.register('IPAPGothic', 'IPA P' + thin.t('font_gothic'));
 };
 
 
@@ -98,8 +94,30 @@ thin.Font.getDefaultFontFamily = function() {
 /**
  * @return {Array.<thin.Font>}
  */
-thin.Font.getFonts = function() {
-  return thin.Font.fontRegistry_;
+thin.Font.getBuiltinFonts = function() {
+  return thin.Font.builtinFontRegistry_;
+};
+
+
+/**
+ * @param {string} family
+ * @return {boolean}
+ */
+thin.Font.isRegistered = function (family) {
+  var detected = thin.Font.findFontByFamily(family);
+  return detected !== null;
+};
+
+
+/**
+ * @param {string} family
+ * @return {thin.Font?}
+ */
+thin.Font.findFontByFamily = function (family) {
+  return goog.array.find(thin.Font.fontRegistry_,
+    function (font) {
+      return font.getFamily() == family;
+    });
 };
 
 
@@ -107,10 +125,7 @@ thin.Font.getFonts = function() {
  * @type {Object.<Object>}
  * @private
  */
-thin.Font.infoRegistry_ = {
-  ascent: {},
-  height: {}
-};
+thin.Font.infoRegistry_ = {};
 
 
 /**
@@ -131,28 +146,33 @@ thin.Font.generateRegistryKey_ = function(var_args) {
  */
 thin.Font.getAscent = function(family, fontSize, isBold) {
   var registryKey = thin.Font.generateRegistryKey_(family, fontSize, isBold);
-  var ascent = thin.Font.infoRegistry_.ascent[registryKey];
-  if (!goog.isDef(ascent)) {
-    ascent = thin.platform.Font.getAscent(family, fontSize, isBold);
-    thin.Font.infoRegistry_.ascent[registryKey] = ascent;
+  var info = thin.Font.infoRegistry_[registryKey];
+
+  if (!goog.isDef(info)) {
+    info = thin.platform.Font.getMetrics(family, fontSize, isBold);
+    thin.Font.infoRegistry_[registryKey] = info;
   }
-  return ascent;
+
+  return info.ascent;
 };
 
 
 /**
  * @param {string} family
  * @param {number} fontSize
+ * @param {boolean} isBold
  * @return {number}
  */
-thin.Font.getHeight = function(family, fontSize) {
+thin.Font.getHeight = function(family, fontSize, isBold) {
   var registryKey = thin.Font.generateRegistryKey_(family, fontSize);
-  var height = thin.Font.infoRegistry_.height[registryKey];
-  if (!goog.isDef(height)) {
-    height = thin.platform.Font.getHeight(family, fontSize);
-    thin.Font.infoRegistry_.height[registryKey] = height;
+  var info = thin.Font.infoRegistry_[registryKey];
+
+  if (!goog.isDef(info)) {
+    info = thin.platform.Font.getMetrics(family, fontSize, isBold);
+    thin.Font.infoRegistry_[registryKey] = info;
   }
-  return height;
+
+  return info.height;
 };
 
 
@@ -175,6 +195,15 @@ thin.Font.prototype.getName = function() {
 /**
  * @return {boolean}
  */
-thin.Font.prototype.isBuiltin = function() {
-  return this.builtin_;
+thin.Font.prototype.isValid = function () {
+  return thin.platform.FontValidator.validate(this.family_);
+};
+
+
+/** @override */
+thin.Font.prototype.disposeInternal = function () {
+  goog.base(this, 'disposeInternal');
+
+  this.family_ = null;
+  this.name_ = null;
 };

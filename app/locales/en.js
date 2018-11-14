@@ -212,10 +212,12 @@ App.addLocale({
     error_failed_to_load_image: 'Failed to load image.',
     error_no_valid_placeholder_included: 'No a valid placeholder included.',
     error_unexpected_error: 'An unexpected error occurred.',
+    error_family_is_not_a_valid_font: '{$family} is not a valid font.',
 
     notice_no_shapes: 'No shapes',
     warning_discard_changes: 'If you have unsaved files, the changes will be discarded. Please be sure to save.',
     warning_discard_changes_en: '',
+    warning_unavailable_font_not_installed: "{$family} is not available because it won't be installed.",
 
     text_editor_force_close_confirmation: 'There are unsaved files. Are you sure you want to close without saving changes?',
     text_layout_force_close_confirmation: 'This layout has been changed.\nSave before close?',

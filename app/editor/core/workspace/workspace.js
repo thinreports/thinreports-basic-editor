@@ -37,6 +37,7 @@ goog.require('thin.layout.FormatPage.PaperName');
 goog.require('thin.layout.FormatPage.DirectionType');
 goog.require('thin.layout.document');
 goog.require('thin.Font');
+goog.require('thin.core.workspace.CustomFontRegistry');
 
 
 /**
@@ -58,6 +59,12 @@ thin.core.Workspace = function(format, opt_file) {
   } else {
     this.setFile(new thin.layout.File());
   }
+
+  /**
+   * @type {thin.core.workspace.CustomFontRegistry}
+   * @private
+   */
+  this.customFonts_ = new thin.core.workspace.CustomFontRegistry(format.getCustomFonts());
 
   /**
    * @type {string}
@@ -260,10 +267,12 @@ thin.core.Workspace.prototype.handleUndoRedoKeyEvent_ = function(e) {
       case keyCodes.Z:
         this.undo();
         this.enablingOnceKeyEventHandling_(true);
+        e.preventDefault();
         break;
       case keyCodes.Y:
         this.redo();
         this.enablingOnceKeyEventHandling_(true);
+        e.preventDefault();
         break;
     }
   }
@@ -345,6 +354,14 @@ thin.core.Workspace.create = function(file) {
 
     return null;
   }
+};
+
+
+/**
+ * @return {thin.core.workspace.CustomFontRegistry}
+ */
+thin.core.Workspace.prototype.getCustomFonts = function () {
+  return this.customFonts_;
 };
 
 
@@ -611,8 +628,15 @@ thin.core.Workspace.prototype.setFormat = function(format) {
 thin.core.Workspace.prototype.getSaveFormat_ = function() {
   var layout = this.layout_;
   var format = this.format;
+
   format.setItems(layout.asJSON());
   format.setLayoutGuides(layout.getHelpers().getLayoutGuideHelper().getGuides());
+
+  format.setCustomFonts(
+    goog.array.map(layout.getUsedCustomFonts(), function (font) {
+      return font.getFamily();
+    })
+  );
 
   return format.toJSON();
 };
@@ -1044,12 +1068,19 @@ thin.core.Workspace.prototype.focusElement = function(e) {
   var scrollTarget = this.getParent().getParent().getContentElement();
   var captureLeft = scrollTarget.scrollLeft;
 
-  this.element_.focus();
+  this.focus();
+
   var currentLeft = scrollTarget.scrollLeft;
   if(captureLeft != currentLeft){
     scrollTarget.scrollLeft = captureLeft;
   }
 };
+
+
+thin.core.Workspace.prototype.focus = function () {
+  this.element_.focus();
+};
+
 
 /** @inheritDoc */
 thin.core.Workspace.prototype.disposeInternal = function() {
@@ -1060,6 +1091,7 @@ thin.core.Workspace.prototype.disposeInternal = function() {
     delete this.file_;
   }
 
+  this.customFonts_.dispose();
   this.action_.dispose();
   this.history_.dispose();
 
@@ -1067,6 +1099,7 @@ thin.core.Workspace.prototype.disposeInternal = function() {
   delete this.action_;
   delete this.history_;
   delete this.layout_;
+  delete this.customFonts_;
 
   goog.base(this, 'disposeInternal');
 };

@@ -45,8 +45,9 @@ thin.layout.Format = function(opt_format) {
     this.isOverWritableVersion_ = thin.Compatibility.check(currentVersion, '>', formatVersion);
     this.version_ = formatVersion;
 
-    if (state && (guides = state['layout-guides'])) {
-      this.setLayoutGuides(guides);
+    if (state) {
+      this.setLayoutGuides(state['layout-guides'] || []);
+      this.setCustomFonts(state['custom-fonts'] || []);
     }
   } else {
     this.version_ = currentVersion;
@@ -111,7 +112,8 @@ thin.layout.Format.prototype.toJSON = function() {
     "version": this.version_,
     "items": this.items_,
     "state": {
-      "layout-guides": this.getLayoutGuides()
+      "layout-guides": this.getLayoutGuides(),
+      "custom-fonts": this.getCustomFonts()
     }
   };
   goog.object.extend(object, this.page.asJSON());
@@ -137,6 +139,22 @@ thin.layout.Format.prototype.getLayoutGuides = function() {
 
 
 /**
+ * @return {Array.<string>}
+ */
+thin.layout.Format.prototype.getCustomFonts = function () {
+  return this.state_['custom-fonts'] || [];
+};
+
+
+/**
+ * @return {Array}
+ */
+thin.layout.Format.prototype.getCustomFonts = function () {
+  return this.state_['custom-fonts'] || [];
+};
+
+
+/**
  * @param {string} version
  */
 thin.layout.Format.prototype.setVersion = function(version) {
@@ -157,6 +175,14 @@ thin.layout.Format.prototype.getVersion = function() {
  */
 thin.layout.Format.prototype.setLayoutGuides = function(guides) {
   this.state_['layout-guides'] = guides;
+};
+
+
+/**
+ * @param {Array.<string>} fonts 
+ */
+thin.layout.Format.prototype.setCustomFonts = function (fonts) {
+  this.state_['custom-fonts'] = fonts;
 };
 
 

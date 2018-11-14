@@ -30,7 +30,6 @@ goog.require('goog.array');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Separator');
 goog.require('goog.ui.ControlRenderer');
-goog.require('thin.Font');
 goog.require('thin.ui.Component');
 goog.require('thin.ui.Button');
 goog.require('thin.ui.ButtonRenderer');
@@ -72,7 +71,7 @@ thin.ui.Toolbar.CSS_CLASS = thin.ui.getCssName('thin-toolbar');
 thin.ui.Toolbar.prototype.setupChild = function(id, child, renderTo, opt_setupHandler) {
   thin.ui.Toolbar.superClass_.setupChild.call(this, child, id, opt_setupHandler, false);
   child.render(renderTo);
-  
+
   return child;
 };
 
@@ -85,7 +84,7 @@ thin.ui.Toolbar.prototype.setupChild = function(id, child, renderTo, opt_setupHa
  * @extends {thin.ui.Button}
  */
 thin.ui.ToolbarButton = function(content, opt_icon, opt_renderer) {
-  thin.ui.Button.call(this, content, opt_icon, 
+  thin.ui.Button.call(this, content, opt_icon,
     /** @type {thin.ui.ButtonRenderer} */ (opt_renderer ||
       goog.ui.ControlRenderer.getCustomRenderer(
           thin.ui.ButtonRenderer, thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'button'))));
@@ -101,10 +100,10 @@ goog.inherits(thin.ui.ToolbarButton, thin.ui.Button);
  * @extends {thin.ui.ToggleButton}
  */
 thin.ui.ToolbarToggleButton = function(content, opt_icon, opt_renderer) {
-  thin.ui.ToggleButton.call(this, content, opt_icon, 
-    /** @type {thin.ui.ButtonRenderer} */ (opt_renderer || 
+  thin.ui.ToggleButton.call(this, content, opt_icon,
+    /** @type {thin.ui.ButtonRenderer} */ (opt_renderer ||
       goog.ui.ControlRenderer.getCustomRenderer(
-          thin.ui.ButtonRenderer, 
+          thin.ui.ButtonRenderer,
           thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'button'))));
 };
 goog.inherits(thin.ui.ToolbarToggleButton, thin.ui.ToggleButton);
@@ -116,10 +115,10 @@ goog.inherits(thin.ui.ToolbarToggleButton, thin.ui.ToggleButton);
  * @extends {thin.ui.IconButton}
  */
 thin.ui.ToolbarIconButton = function(icon) {
-  thin.ui.IconButton.call(this, icon, 
+  thin.ui.IconButton.call(this, icon,
     /** @type {thin.ui.ButtonRenderer} */ (
       goog.ui.ControlRenderer.getCustomRenderer(
-          thin.ui.ButtonRenderer, 
+          thin.ui.ButtonRenderer,
           thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'button'))));
 };
 goog.inherits(thin.ui.ToolbarIconButton, thin.ui.IconButton);
@@ -131,10 +130,10 @@ goog.inherits(thin.ui.ToolbarIconButton, thin.ui.IconButton);
  * @extends {thin.ui.ToggleIconButton}
  */
 thin.ui.ToolbarToggleIconButton = function(icon) {
-  thin.ui.ToggleIconButton.call(this, icon, 
+  thin.ui.ToggleIconButton.call(this, icon,
     /** @type {thin.ui.ButtonRenderer} */ (
       goog.ui.ControlRenderer.getCustomRenderer(
-          thin.ui.ButtonRenderer, 
+          thin.ui.ButtonRenderer,
           thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'button'))));
 };
 goog.inherits(thin.ui.ToolbarToggleIconButton, thin.ui.ToggleIconButton);
@@ -148,7 +147,7 @@ goog.inherits(thin.ui.ToolbarToggleIconButton, thin.ui.ToggleIconButton);
  * @extends {thin.ui.MenuButton}
  */
 thin.ui.ToolbarMenuButton = function(content, opt_icon, opt_menu) {
-  thin.ui.MenuButton.call(this, content, opt_icon, opt_menu, 
+  thin.ui.MenuButton.call(this, content, opt_icon, opt_menu,
     /** @type {thin.ui.MenuButtonRenderer} */(
       goog.ui.ControlRenderer.getCustomRenderer(
           thin.ui.MenuButtonRenderer, thin.ui.getCssName(
@@ -166,23 +165,23 @@ goog.inherits(thin.ui.ToolbarMenuButton, thin.ui.MenuButton);
  */
 thin.ui.ToolbarSplitButton = function(content, opt_icon, opt_orientation) {
   var cssClass = thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'split-button');
-  
-  thin.ui.SplitButton.call(this, content, opt_icon, opt_orientation, 
+
+  thin.ui.SplitButton.call(this, content, opt_icon, opt_orientation,
     /** @type {thin.ui.SplitButtonRenderer} */ (
       goog.ui.ControlRenderer.getCustomRenderer(
           thin.ui.SplitButtonRenderer, thin.ui.getCssName(cssClass))));
-  
+
   /** @inheritDoc */
-  this.button_ = new thin.ui.ToolbarButton(content, opt_icon, 
+  this.button_ = new thin.ui.ToolbarButton(content, opt_icon,
     /** @type {thin.ui.ButtonRenderer} */ (
       goog.ui.ControlRenderer.getCustomRenderer(
           thin.ui.ButtonRenderer, thin.ui.getCssName(cssClass, 'button'))));
 
   /** @inheritDoc */
   this.handle_ = new thin.ui.ToolbarSplitButton.Handle();
-  
+
   /** @inheritDoc */
-  this.orientation_ = opt_orientation || 
+  this.orientation_ = opt_orientation ||
       thin.ui.SplitButton.Orientation.HORIZONTAL;
 };
 goog.inherits(thin.ui.ToolbarSplitButton, thin.ui.SplitButton);
@@ -193,8 +192,8 @@ goog.inherits(thin.ui.ToolbarSplitButton, thin.ui.SplitButton);
  * @extends {thin.ui.SplitButton.Handle}
  */
 thin.ui.ToolbarSplitButton.Handle = function() {
-  thin.ui.SplitButton.Handle.call(this, 
-    /** @type {thin.ui.SplitButtonHandleRenderer} */ ( 
+  thin.ui.SplitButton.Handle.call(this,
+    /** @type {thin.ui.SplitButtonHandleRenderer} */ (
       goog.ui.ControlRenderer.getCustomRenderer(
           thin.ui.SplitButtonHandleRenderer, thin.ui.getCssName(
               thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'split-button'), 'handle'))));
@@ -211,14 +210,14 @@ goog.inherits(thin.ui.ToolbarSplitButton.Handle, thin.ui.SplitButton.Handle);
  */
 thin.ui.ToolbarSplitToggleButton = function(content, opt_icon, opt_orientation) {
   var cssClass = thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'split-button');
-  
-  thin.ui.SplitToggleButton.call(this, content, opt_icon, opt_orientation, 
+
+  thin.ui.SplitToggleButton.call(this, content, opt_icon, opt_orientation,
       /** @type {thin.ui.SplitButtonRenderer} */ (
         goog.ui.ControlRenderer.getCustomRenderer(
           thin.ui.SplitButtonRenderer, thin.ui.getCssName(cssClass))));
-  
+
   /** @inheritDoc */
-  this.button_ = new thin.ui.ToolbarToggleButton(content, opt_icon, 
+  this.button_ = new thin.ui.ToolbarToggleButton(content, opt_icon,
     /** @type {thin.ui.ButtonRenderer} */ (
       goog.ui.ControlRenderer.getCustomRenderer(
           thin.ui.ButtonRenderer, thin.ui.getCssName(
@@ -249,10 +248,26 @@ goog.inherits(thin.ui.ToolbarSelect, thin.ui.Select);
  * @extends {thin.ui.FontSelect}
  */
 thin.ui.ToolbarFontSelect = function() {
-  thin.ui.FontSelect.call(this, thin.Font.getFonts());
-  this.addClassName(thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'select'));
+  thin.ui.FontSelect.call(this);
 };
 goog.inherits(thin.ui.ToolbarFontSelect, thin.ui.FontSelect);
+
+
+/** @override */
+thin.ui.ToolbarFontSelect.prototype.enterDocument = function () {
+  goog.base(this, 'enterDocument');
+
+  var handler = this.getHandler();
+
+  handler.listen(this.getInput(),
+    [thin.ui.Input.EventType.END_EDITING, thin.ui.Input.EventType.CANCEL_EDITING],
+    function (e) {
+      var workspace = thin.core.getActiveWorkspace();
+      if (workspace) {
+        workspace.focus();
+      }
+    }, false, this);
+};
 
 
 /**
@@ -261,10 +276,10 @@ goog.inherits(thin.ui.ToolbarFontSelect, thin.ui.FontSelect);
  * @extends {goog.ui.Separator}
  */
 thin.ui.ToolbarSeparator = function(opt_renderer) {
-  goog.ui.Separator.call(this, 
-    /** @type {goog.ui.MenuSeparatorRenderer} */(opt_renderer || 
+  goog.ui.Separator.call(this,
+    /** @type {goog.ui.MenuSeparatorRenderer} */(opt_renderer ||
       goog.ui.ControlRenderer.getCustomRenderer(
-          goog.ui.ControlRenderer, 
+          goog.ui.ControlRenderer,
           thin.ui.getCssName(thin.ui.Toolbar.CSS_CLASS, 'separator'))));
 };
 goog.inherits(thin.ui.ToolbarSeparator, goog.ui.Separator);

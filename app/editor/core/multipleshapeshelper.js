@@ -867,8 +867,7 @@ thin.core.MultipleShapesHelper.prototype.createPropertyComponent_ = function() {
           if (shape.instanceOfTblockShape()) {
             shape.setMultiMode(multipleMode);
             if (!multipleMode) {
-              shape.setHeight(thin.Font.getHeight(
-                      shape.getFontFamily(), shape.getFontSize()));
+              shape.setHeight(thin.Font.getHeight(shape.getFontFamily(), shape.getFontSize(), shape.isFontBold()));
               shape.getTargetOutline().setHeight(shape.getHeight());
             }
           }

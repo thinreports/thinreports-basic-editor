@@ -49,7 +49,9 @@ thin.core.TblockOutline.prototype.setBoundsByCoordinate = function(startPosX, st
     thin.numberWithPrecision(Math.abs(startPosX - clientPosX)),
     thin.Font.getHeight(
       workspace.getUiStatusForFontFamily(), 
-      workspace.getUiStatusForFontSize())));
+      workspace.getUiStatusForFontSize(),
+      workspace.getUiStatusForBold()
+    )));
 };
 
 

@@ -129,7 +129,7 @@ thin.core.AbstractTextGroup.prototype.setTextLineHeightRatio = function(ratio) {
   } else {
     var layout = this.getLayout();
     var numRatio = Number(ratio);
-    var heightAt = thin.Font.getHeight(this.getFontFamily(), this.getFontSize());
+    var heightAt = thin.Font.getHeight(this.getFontFamily(), this.getFontSize(), this.isFontBold());
 
     layout.setElementAttributes(element, {
       'x-line-height': heightAt * numRatio

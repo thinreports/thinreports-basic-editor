@@ -50,7 +50,8 @@ thin.core.PageNumberOutline.prototype.setBoundsByCoordinate = function(startPosX
         thin.numberWithPrecision(Math.abs(startPosX - clientPosX)),
         thin.Font.getHeight(
           workspace.getUiStatusForFontFamily(), 
-          workspace.getUiStatusForFontSize()));
+          workspace.getUiStatusForFontSize(),
+          workspace.getUiStatusForBold()));
   this.setBounds(bounds);
 };
 
