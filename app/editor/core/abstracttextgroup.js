@@ -40,6 +40,12 @@ thin.core.AbstractTextGroup = function(element, layout) {
    * @private
    */
   this.textStyle_ = new thin.core.TextStyle();
+
+  /**
+   * @type {Object?}
+   * @private
+   */
+  this.rawFormat_ = null
 };
 goog.inherits(thin.core.AbstractTextGroup, thin.core.AbstractBoxGroup);
 
@@ -118,6 +124,76 @@ thin.core.AbstractTextGroup.prototype.setVerticalAlign = function(valign) {
 
 
 /**
+ * @param {Object} rawFormat
+ */
+thin.core.AbstractTextGroup.prototype.setRawFormat = function (rawFormat) {
+  this.rawFormat_ = rawFormat;
+};
+
+
+/**
+ * @return {Object?}
+ * @private
+ */
+thin.core.AbstractTextGroup.prototype.getRawStyle_ = function () {
+  return this.rawFormat_ && this.rawFormat_['style'];
+};
+
+
+/**
+ * @return {number|string?}
+ */
+thin.core.AbstractTextGroup.prototype.getRawLineHeight = function () {
+  var rawStyle = this.getRawStyle_();
+  var lineHeight;
+
+  if (rawStyle) {
+    lineHeight = rawStyle['line-height'];
+
+    if (lineHeight === thin.core.TextStyle.DEFAULT_LINEHEIGHT) {
+      return lineHeight;
+    } else {
+      return Number(lineHeight);
+    }
+  } else {
+    return null;
+  }
+};
+
+
+/**
+ * @param {number} fontSize
+ * @param {string} fontFamily
+ * @param {number} lineHeightRatio
+ * @return {boolean}
+ * @private
+ */
+thin.core.AbstractTextGroup.prototype.hasLineHeightChanged_ = function (fontSize, fontFamily, lineHeightRatio) {
+  var fontSizeChanged = false;
+  var lineHeightRatioChanged = false;
+  var fontFamilyChanged = false;
+
+  var rawStyles = this.getRawStyle_();
+
+  var rawFontSize, rawLineHeightRatio, rawFontFamily;
+
+  if (rawStyles) {
+    rawFontSize = /** @type {number} */ (Number(rawStyles['font-size']));
+    rawLineHeightRatio = /** @type {number} */ (Number(rawStyles['line-height-ratio']));
+    rawFontFamily = /** @type {string} */ (rawStyles['font-family'][0]);
+
+    fontSizeChanged = rawFontSize !== Number(fontSize);
+    lineHeightRatioChanged = rawLineHeightRatio !== Number(lineHeightRatio);
+    fontFamilyChanged = rawFontFamily !== fontFamily;
+
+    return fontSizeChanged || lineHeightRatioChanged || fontFamilyChanged;
+  } else {
+    return true;
+  }
+};
+
+
+/**
  * @param {string} ratio
  */
 thin.core.AbstractTextGroup.prototype.setTextLineHeightRatio = function(ratio) {
@@ -129,10 +205,17 @@ thin.core.AbstractTextGroup.prototype.setTextLineHeightRatio = function(ratio) {
   } else {
     var layout = this.getLayout();
     var numRatio = Number(ratio);
-    var heightAt = thin.Font.getHeight(this.getFontFamily(), this.getFontSize());
+
+    var lineHeight;
+
+    if (this.hasLineHeightChanged_(this.getFontSize(), this.getFontFamily(), numRatio)) {
+      lineHeight = thin.Font.getHeight(this.getFontFamily(), this.getFontSize()) * numRatio;
+    } else {
+      lineHeight = this.getRawLineHeight();
+    }
 
     layout.setElementAttributes(element, {
-      'x-line-height': heightAt * numRatio
+      'x-line-height': lineHeight
     });
     layout.setElementAttributes(element, {
       'x-line-height-ratio': numRatio
@@ -386,6 +469,7 @@ thin.core.AbstractTextGroup.prototype.updateToolbarUI = function() {
 thin.core.AbstractTextGroup.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
 
+  delete this.rawFormat_;
   delete this.fontStyle_;
   delete this.textStyle_;
 };

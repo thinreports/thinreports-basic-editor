@@ -1,3 +1,9 @@
+## master
+
+### Bugfixes
+
+ * Fixed: the line-height property returns different calculation results depending on environment (#71)
+
 ## 0.10.0
 
 ### Released as an Electron based desktop application
