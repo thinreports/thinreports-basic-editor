@@ -137,6 +137,7 @@ thin.core.Layout.prototype.drawShape = function(item, opt_sectionShape) {
 
     case 'text-block':
       shape = this.createTblockShape();
+      shape.setRawFormat(item);
       break;
 
     case 'page-number':
@@ -145,6 +146,7 @@ thin.core.Layout.prototype.drawShape = function(item, opt_sectionShape) {
 
     case 'text':
       shape = this.createTextShape();
+      shape.setRawFormat(item);
       break;
 
     case 'image':
