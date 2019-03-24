@@ -3,6 +3,7 @@
 ### Bugfixes
 
  * Fixed: the line-height property returns different calculation results depending on environment (#71)
+ * Fixed: the line-height of a text-block is not recalculated when changing font-size (#72)
 
 ## 0.10.0
 

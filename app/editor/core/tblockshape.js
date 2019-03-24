@@ -656,6 +656,19 @@ thin.core.TblockShape.prototype.setTextLineHeightRatio = function(ratio) {
 
 
 /**
+ * @param {string} family
+ */
+thin.core.TblockShape.prototype.setFontFamily = function (family) {
+  goog.base(this, 'setFontFamily', family);
+
+  var ratio = this.getTextLineHeightRatio();
+  if (!thin.isExactlyEqual(ratio, thin.core.TextStyle.DEFAULT_LINEHEIGHT)) {
+    this.setTextLineHeightRatio(ratio);
+  }
+};
+
+
+/**
  * @param {number} size
  */
 thin.core.TblockShape.prototype.setFontSize = function(size) {
