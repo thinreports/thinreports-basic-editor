@@ -11,8 +11,12 @@
     "compile:javascript": "node tasks/compile.javascript.js",
     "compile:css": "node tasks/compile.css.js",
     "compile:template": "node tasks/compile.template.js",
+    "compile:prod": "cross-env NODE_ENV=production npm run compile",
     "build": "node tasks/build.js",
-    "release": "cross-env NODE_ENV=production npm run compile && npm run build",
+    "build:macos": "node tasks/build.js darwin",
+    "build:windows": "node tasks/build.js win32",
+    "build:linux": "node tasks/build.js linux",
+    "release": "npm run compile:prod && npm run build",
     "watch": "node tasks/watch.js",
     "postinstall": "cd app && npm install"
   },
