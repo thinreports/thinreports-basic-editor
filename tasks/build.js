@@ -6,6 +6,8 @@ const archiver = require('archiver')
 const path = require('path')
 const fs = require('fs')
 
+const targetPlatforms = process.argv[2] ? [process.argv[2]] : ['darwin', 'linux', 'win32']
+
 const config = {
   packager: {
     arch: 'x64',
@@ -15,7 +17,7 @@ const config = {
     ignore: 'editor/',
     out: path.join(where.root, 'builds'),
     overwrite: true,
-    platform: ['darwin', 'linux', 'win32']
+    platform: targetPlatforms
   },
   packageName: {
     'Thinreports Editor-darwin-x64': 'ThinreportsEditor-mac',
