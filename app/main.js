@@ -10,7 +10,11 @@ function createWindow () {
   win = new BrowserWindow({
     width: 1000,
     height: 700,
-    icon: path.join(__dirname, 'assets/images/app-icon.png')
+    icon: path.join(__dirname, 'assets/images/app-icon.png'),
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true
+    }
   })
 
   win.loadURL(url.format({
