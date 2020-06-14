@@ -56,40 +56,39 @@ See [TRANSLATION.md](https://github.com/thinreports/thinreports-editor/blob/mast
   * JDK 6+
   * Python 2.7
   * Node.js
-  * [yarn](https://yarnpkg.com/en/)
 
 ### Getting Started
 
 Install dependencies:
 ```
-$ yarn install
+$ npm install
 ```
 
 Compile javascript, css and templates:
 ```
-$ yarn run compile
+$ npm run compile
 ```
 
 Launch Editor on development:
 ```
-$ yarn start
+$ npm start
 ```
 
 ### Other Tasks
 
 Watch and compile:
 ```
-$ yarn run watch
+$ npm run watch
 ```
 
 Build package for macOS, Windows, Ubuntu(linux):
 ```
-$ yarn run build
+$ npm run build
 ```
 
 Run compilation and building on production:
 ```
-$ yarn run release
+$ npm run release
 ```
 
 ## License
