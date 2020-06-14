@@ -1,5 +1,5 @@
 {
-  "name": "ThinreportsEditor",
+  "name": "thinreports-editor",
   "productName": "Thinreports Editor",
   "version": "0.0.0",
   "license": "GPL-3.0",
@@ -17,13 +17,12 @@
     "postinstall": "cd app && npm install"
   },
   "devDependencies": {
-    "archiver": "^2.0.3",
-    "chokidar": "^1.7.0",
-    "cross-env": "^5.0.5",
-    "del": "^3.0.0",
-    "electron": "^1.7.5",
-    "electron-packager": "^9.0.0",
-    "electron-prebuilt": "^1.4.13",
-    "js-yaml": "^3.9.1"
+    "archiver": "^4.0.1",
+    "chokidar": "^3.4.0",
+    "cross-env": "^7.0.2",
+    "del": "^5.1.0",
+    "electron": "^9.0.4",
+    "electron-packager": "^14.2.1",
+    "js-yaml": "^3.14.0"
   }
 }
