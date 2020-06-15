@@ -91,6 +91,22 @@ Run compilation and building on production:
 $ npm run release
 ```
 
+### Compiling using Docker Container
+
+Or if you can use docker, you can compile script and css:
+
+```
+$ docker build -t thinreports-editor:latest .
+$ docker run --rum -v $PWD:/src thinreports-editor:latest
+Compiling JavaScript with SIMPLE_OPTIMIZATIONS...
+```
+
+And, launch electron on development:
+
+```
+$ npm start
+```
+
 ## License
 
 Thinreports Editor is licensed under the [GPLv3](https://github.com/thinreports/thinreports-editor/blob/master/GPLv3).
