@@ -1,0 +1,64 @@
+name: Build and release
+
+on:
+  push:
+    branches:
+      - build/**
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        include:
+          - os: macos-latest
+            build: macos
+          - os: ubuntu-latest
+            build: linux
+          - os: windows-latest
+            build: windows
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.3.0
+        with:
+          java-version: 7
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 2.7
+
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13
+      - name: Install npm packages
+        run: npm install
+
+      - name: Compile scripts
+        run: npm run compile:prod
+
+      - name: Build ${{ matrix.build }}
+        run: npm run build:${{ matrix.build }}
+
+      - name: Upload to artifact if not tagged
+        uses: actions/upload-artifact@v2
+        if: "!startsWith(github.ref, 'refs/tags')"
+        with:
+          name: ${{ matrix.build }}
+          path: builds/*.zip
+
+      - name: Release if tagged
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: builds/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
