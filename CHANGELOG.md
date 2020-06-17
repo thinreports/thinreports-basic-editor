@@ -1,9 +1,16 @@
 ## master
 
+## 0.11.0
+
 ### Bugfixes
 
  * Fixed: the line-height property returns different calculation results depending on environment (#71)
  * Fixed: the line-height of a text-block is not recalculated when changing font-size (#72)
+ * Fixed: does not launch on Ubuntu 20.04 (#75)
+
+### Internal Changes
+
+ * Update to Electron v9 (#76)
 
 ## 0.10.0
 

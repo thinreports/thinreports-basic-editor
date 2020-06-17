@@ -26,9 +26,9 @@ Please [contribute to translate](https://github.com/thinreports/thinreports-edit
 
 We tested the following platform:
 
- * macOS 10.12
+ * macOS 10.15
  * Windows 10
- * Ubuntu 16.04
+ * Ubuntu 18.04, 20.04
 
 ## Supported Layout versions
 
