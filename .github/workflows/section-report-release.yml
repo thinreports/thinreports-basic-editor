@@ -1,0 +1,52 @@
+name: Build and release section-report
+
+on:
+  push:
+    tags:
+      - '*'
+
+defaults:
+  run:
+    working-directory: section_report
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        include:
+          - os: macos-latest
+            package-ext: .dmg
+          - os: ubuntu-latest
+            package-ext: .AppImage
+          - os: windows-latest
+            package-ext: .exe
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13
+
+      - name: Install npm packages
+        run: npm install
+
+      - name: Build package
+        run: npm run electron:build
+
+      - name: Prepare package
+        run: |
+          mkdir package
+          mv dist_electron/*${{ matrix.package-ext }} package/
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "section_report/package/**"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
