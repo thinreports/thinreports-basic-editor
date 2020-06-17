@@ -5,7 +5,7 @@ const path = require('path');
 const handlers = {};
 
 handlers.layoutOpen = (callback) => {
-  const filenames = dialog.showOpenDialog({
+  const filenames = dialog.showOpenDialogSync({
     filters: [
       {name: 'Thinreports Layout File', extensions: ['tlf']}
     ],
@@ -32,7 +32,7 @@ handlers.layoutSave = (callback, data, attrs) => {
 }
 
 handlers.layoutSaveAs = (callback, data) => {
-  const filename = dialog.showSaveDialog({
+  const filename = dialog.showSaveDialogSync({
     filters: [
       {name: 'Thinreports Layout File', extensions: ['tlf']}
     ]
@@ -53,7 +53,7 @@ handlers.layoutSaveAs = (callback, data) => {
 }
 
 handlers.imageOpen = (callback) => {
-  const imagefiles = dialog.showOpenDialog({
+  const imagefiles = dialog.showOpenDialogSync({
     filters: [
       {name: 'Images', extensions: ['jpg', 'png']}
     ]
@@ -83,7 +83,7 @@ handlers.exportAs = (callback, type, content) => {
       break;
   }
 
-  const filename = dialog.showSaveDialog({
+  const filename = dialog.showSaveDialogSync({
     filters: [
       {extensions: [extName], name: description}
     ]
@@ -99,4 +99,4 @@ handlers.exportAs = (callback, type, content) => {
   callback.onSuccess();
 }
 
-module.exports = handlers;
+window.handlers = handlers;
