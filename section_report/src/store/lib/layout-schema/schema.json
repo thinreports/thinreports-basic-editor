@@ -1,0 +1,1072 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "schema-version": {
+      "type": "string",
+      "title": "schema-version"
+    },
+    "last-modified-by": {
+      "type": "string",
+      "title": "last-modified-by"
+    },
+    "title": {
+      "type": "string",
+      "title": "title",
+      "default": ""
+    },
+    "report": {
+      "$ref": "#/definitions/ReportSchema"
+    },
+    "sections": {
+      "$ref": "#/definitions/SectionsSchema"
+    },
+    "state": {
+      "$ref": "#/definitions/StateSchema"
+    }
+  },
+  "required": [
+    "schema-version",
+    "last-modified-by",
+    "title",
+    "sections",
+    "state"
+  ],
+  "definitions": {
+    "ReportSchema": {
+      "type": "object",
+      "title": "report",
+      "properties": {
+        "paper-type": {
+          "type": "string",
+          "title": "paper-type",
+          "enum": [
+            "A3",
+            "A4",
+            "A5",
+            "B4",
+            "B4_ISO",
+            "B5",
+            "B5_ISO",
+            "user"
+          ]
+        },
+        "width": {
+          "type": "number",
+          "title": "width",
+          "default": 0
+        },
+        "height": {
+          "type": "number",
+          "title": "height",
+          "default": 0
+        },
+        "orientation": {
+          "type": "string",
+          "title": "orientation",
+          "enum": [
+            "landscape",
+            "portrait"
+          ]
+        },
+        "margin": {
+          "type": "array",
+          "title": "margin",
+          "items": [
+            {
+              "type": "number",
+              "title": "The Top Margin",
+              "default": 0
+            },
+            {
+              "type": "number",
+              "title": "The Right Margin",
+              "default": 0
+            },
+            {
+              "type": "number",
+              "title": "The Bottom Margin",
+              "default": 0
+            },
+            {
+              "type": "number",
+              "title": "The Left Margin",
+              "default": 0
+            }
+          ],
+          "minItems": 4,
+          "additionalItems": false
+        }
+      },
+      "required": [
+        "height",
+        "margin",
+        "orientation",
+        "paper-type",
+        "width"
+      ]
+    },
+    "StateSchema": {
+      "type": "object",
+      "title": "state",
+      "properties": {
+        "layout-guides": {
+          "type": "array",
+          "title": "layout-guides",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "title": "type",
+                "enum": [
+                  "x",
+                  "y"
+                ]
+              },
+              "position": {
+                "type": "number",
+                "title": "position"
+              }
+            },
+            "required": [
+              "position",
+              "type"
+            ]
+          }
+        }
+      },
+      "required": [
+        "layout-guides"
+      ]
+    },
+    "SectionsSchema": {
+      "type": "array",
+      "title": "sections",
+      "minItems": 0,
+      "items": {
+        "anyOf": [
+          { "$ref": "#/definitions/HeaderSectionSchema" },
+          { "$ref": "#/definitions/DetailSectionSchema" },
+          { "$ref": "#/definitions/FooterSectionSchema" }
+        ]
+      }
+    },
+    "SectionSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "id"
+        },
+        "height": {
+          "type": "number",
+          "title": "height"
+        },
+        "auto-stretch": {
+          "type": "boolean",
+          "title": "auto-stretch"
+        },
+        "items": {
+          "type": "array",
+          "title": "items",
+          "minItems": 0,
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/RectItemSchema" },
+              { "$ref": "#/definitions/EllipseItemSchema" },
+              { "$ref": "#/definitions/LineItemSchema" },
+              { "$ref": "#/definitions/TextItemSchema" },
+              { "$ref": "#/definitions/TextBlockItemSchema" },
+              { "$ref": "#/definitions/ImageBlockItemSchema" },
+              { "$ref": "#/definitions/ImageItemSchema" },
+              { "$ref": "#/definitions/StackViewItemSchema" }
+            ]
+          }
+        }
+      },
+      "required": [
+        "auto-stretch",
+        "height",
+        "id",
+        "items"
+      ]
+    },
+    "HeaderSectionSchema": {
+      "allOf": [
+        { "$ref": "#/definitions/SectionSchema" },
+        {
+          "type": "object",
+          "title": "header section",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "type",
+              "enum": ["header"]
+            },
+            "every-page": {
+              "type": "boolean",
+              "title": "every-page"
+            },
+            "display": {
+              "type": "boolean",
+              "title": "display"
+            }
+          },
+          "required": [
+            "display",
+            "every-page",
+            "type"
+          ]
+        }
+      ]
+    },
+    "DetailSectionSchema": {
+      "allOf": [
+        { "$ref": "#/definitions/SectionSchema" },
+        {
+          "type": "object",
+          "title": "detail section",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "type",
+              "const": "detail"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        }
+      ]
+    },
+    "FooterSectionSchema": {
+      "allOf": [
+        { "$ref": "#/definitions/SectionSchema" },
+        {
+          "type": "object",
+          "title": "footer section",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "type",
+              "const": "footer"
+            },
+            "display": {
+              "type": "boolean",
+              "title": "display"
+            }
+          },
+          "required": [
+            "display",
+            "type"
+          ]
+        }
+      ]
+    },
+    "ItemSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "id"
+        },
+        "display": {
+          "type": "boolean",
+          "title": "display"
+        },
+        "description": {
+          "type": "string",
+          "title": "description"
+        },
+        "follow-stretch": {
+          "type": "string",
+          "title": "follow-stretch",
+          "enum": [
+            "height",
+            "none",
+            "y"
+          ]
+        },
+        "affect-bottom-margin": {
+          "type": "boolean",
+          "title": "affect-bottom-margin"
+        }
+      },
+      "required": [
+        "affect-bottom-margin",
+        "description",
+        "display",
+        "follow-stretch",
+        "id"
+      ]
+    },
+    "ItemBorderStyleSchema": {
+      "type": "object",
+      "properties": {
+        "border-width": {
+          "type": "number",
+          "title": "border-width",
+          "multipleOf": 0.1,
+          "$comment": "Decimal place is 1"
+        },
+        "border-color": {
+          "type": "string",
+          "title": "border-color"
+        },
+        "border-style": {
+          "type": "string",
+          "title": "border-style",
+          "enum": [
+            "dashed",
+            "dotted",
+            "solid"
+          ]
+        }
+      },
+      "required": [
+        "border-color",
+        "border-style",
+        "border-width"
+      ]
+    },
+    "ItemTextStyleSchema": {
+      "type": "object",
+      "properties": {
+        "font-family": {
+          "type": "array",
+          "title": "font-family",
+          "minItems": 1,
+          "items": [
+            {
+              "type": "string",
+              "enum": [
+                "Courier New",
+                "Helvetica",
+                "IPAGothic",
+                "IPAMincho",
+                "IPAPGothic",
+                "IPAPMincho",
+                "Times New Roman"
+              ]
+            }
+          ],
+          "additionalItems": false
+        },
+        "font-size": {
+          "type": "number",
+          "title": "font-size",
+          "multipleOf": 0.1,
+          "$comment": "Decimal place is 1"
+        },
+        "color": {
+          "type": "string",
+          "title": "color"
+        },
+        "font-style": {
+          "type": "array",
+          "title": "font-style",
+          "items": {
+            "type": "string",
+            "enum": [
+              "bold",
+              "italic",
+              "linethrough",
+              "underline"
+            ]
+          }
+        },
+        "text-align": {
+          "type": "string",
+          "title": "text-align",
+          "enum": [
+            "center",
+            "left",
+            "right"
+          ]
+        },
+        "vertical-align": {
+          "type": "string",
+          "title": "vertical-align",
+          "enum": [
+            "bottom",
+            "middle",
+            "top"
+          ]
+        },
+        "line-height": {
+          "title": "line-height",
+          "type": "number",
+          "multipleOf": 0.01,
+          "$comment": "Decimal place is 2"
+        },
+        "line-height-ratio": {
+          "title": "line-height-ratio",
+          "anyOf": [
+            {
+              "type": "string",
+              "const": ""
+            },
+            {
+              "type": "number",
+              "multipleOf": 0.01,
+              "$comment": "Decimal place is 2"
+            }
+          ]
+        },
+        "letter-spacing": {
+          "title": "letter-spacing",
+          "anyOf": [
+            {
+              "type": "string",
+              "const": ""
+            },
+            {
+              "type": "number",
+              "multipleOf": 0.1,
+              "$comment": "Decimal place is 1"
+            }
+          ]
+        }
+      },
+      "required": [
+        "color",
+        "font-family",
+        "font-size",
+        "font-style",
+        "letter-spacing",
+        "line-height",
+        "line-height-ratio",
+        "text-align",
+        "vertical-align"
+      ]
+    },
+    "ItemBoxBoundsSchema": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number",
+          "title": "x",
+          "multipleOf": 0.01,
+          "$comment": "Decimal place is 2"
+        },
+        "y": {
+          "type": "number",
+          "title": "y",
+          "multipleOf": 0.01,
+          "$comment": "Decimal place is 2"
+        },
+        "width": {
+          "type": "number",
+          "title": "width",
+          "multipleOf": 0.01,
+          "$comment": "Decimal place is 2"
+        },
+        "height": {
+          "type": "number",
+          "title": "height",
+          "multipleOf": 0.01,
+          "$comment": "Decimal place is 2"
+        }
+      },
+      "required": [
+        "height",
+        "width",
+        "x",
+        "y"
+      ]
+    },
+    "RectItemSchema": {
+      "allOf": [
+        { "$ref": "#/definitions/ItemSchema" },
+        { "$ref": "#/definitions/ItemBoxBoundsSchema" },
+        {
+          "type": "object",
+          "title": "rect item",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "type",
+              "const": "rect"
+            },
+            "border-radius": {
+              "type": "number",
+              "title": "border-radius"
+            },
+            "style": {
+              "title": "style",
+              "allOf": [
+                { "$ref": "#/definitions/ItemBorderStyleSchema" },
+                {
+                  "type": "object",
+                  "properties": {
+                    "fill-color": {
+                      "type": "string",
+                      "title": "fill-color"
+                    }
+                  },
+                  "required": [
+                    "fill-color"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "border-radius",
+            "style",
+            "type"
+          ]
+        }
+      ]
+    },
+    "EllipseItemSchema": {
+      "allOf": [
+        { "$ref": "#/definitions/ItemSchema" },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "type",
+              "const": "ellipse"
+            },
+            "cx": {
+              "type": "number",
+              "title": "cx",
+              "multipleOf": 0.005,
+              "$comment": "Decimal place is 3"
+            },
+            "cy": {
+              "type": "number",
+              "title": "cy",
+              "multipleOf": 0.005,
+              "$comment": "Decimal place is 3"
+            },
+            "rx": {
+              "type": "number",
+              "title": "rx",
+              "multipleOf": 0.005,
+              "$comment": "Decimal place is 3"
+            },
+            "ry": {
+              "type": "number",
+              "title": "ry",
+              "multipleOf": 0.005,
+              "$comment": "Decimal place is 3"
+            },
+            "style": {
+              "title": "style",
+              "allOf": [
+                { "$ref": "#/definitions/ItemBorderStyleSchema" },
+                {
+                  "type": "object",
+                  "properties": {
+                    "fill-color": {
+                      "type": "string",
+                      "title": "fill-color"
+                    }
+                  },
+                  "required": [
+                    "fill-color"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "cx",
+            "cy",
+            "rx",
+            "ry",
+            "style",
+            "type"
+          ]
+        }
+      ]
+    },
+    "LineItemSchema": {
+      "allOf": [
+        { "$ref": "#/definitions/ItemSchema" },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "type",
+              "const": "line"
+            },
+            "x1": {
+              "type": "number",
+              "title": "x1",
+              "multipleOf": 0.01,
+              "$comment": "Decimal place is 2"
+            },
+            "y1": {
+              "type": "number",
+              "title": "y1",
+              "multipleOf": 0.01,
+              "$comment": "Decimal place is 2"
+            },
+            "x2": {
+              "type": "number",
+              "title": "x2",
+              "multipleOf": 0.01,
+              "$comment": "Decimal place is 2"
+            },
+            "y2": {
+              "type": "number",
+              "title": "y2",
+              "multipleOf": 0.01,
+              "$comment": "Decimal place is 2"
+            },
+            "style": {
+              "$ref": "#/definitions/ItemBorderStyleSchema"
+            }
+
+          },
+          "required": [
+            "style",
+            "type",
+            "x1",
+            "x2",
+            "y1",
+            "y2"
+          ]
+        }
+      ]
+    },
+    "TextItemSchema": {
+      "allOf": [
+        { "$ref": "#/definitions/ItemSchema" },
+        { "$ref": "#/definitions/ItemBoxBoundsSchema" },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "type",
+              "const": "text"
+            },
+            "texts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "title": "texts"
+            },
+            "style": {
+              "$ref": "#/definitions/ItemTextStyleSchema"
+            }
+          },
+          "required": [
+            "style",
+            "texts",
+            "type"
+          ]
+        }
+      ]
+    },
+    "TextBlockItemSchema": {
+      "allOf": [
+        { "$ref": "#/definitions/ItemSchema" },
+        { "$ref": "#/definitions/ItemBoxBoundsSchema" },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "type",
+              "const": "text-block"
+            },
+            "reference-id": {
+              "type": "string",
+              "title": "reference-id",
+              "const": ""
+            },
+            "value": {
+              "type": "string",
+              "title": "value"
+            },
+            "multiple-line": {
+              "type": "boolean",
+              "title": "multiple-line"
+            },
+            "format": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "base": {
+                      "type": "string",
+                      "title": "base"
+                    }
+                  },
+                  "required": [
+                    "base"
+                  ]
+                },
+                {
+                  "anyOf": [
+                    { "$ref": "#/definitions/ItemTextBlockFormatNoneSchema" },
+                    { "$ref": "#/definitions/ItemTextBlockFormatDatetimeSchema" },
+                    { "$ref": "#/definitions/ItemTextBlockFormatNumberSchema" },
+                    { "$ref": "#/definitions/ItemTextBlockFormatPaddingSchema" }
+                  ]
+                }
+              ]
+            },
+            "style": {
+              "title": "style",
+              "allOf": [
+                { "$ref": "#/definitions/ItemTextStyleSchema" },
+                {
+                  "type": "object",
+                  "properties": {
+                    "overflow": {
+                      "type": "string",
+                      "title": "overflow",
+                      "enum": [
+                        "expand",
+                        "fit",
+                        "truncate"
+                      ]
+                    },
+                    "word-wrap": {
+                      "type": "string",
+                      "title": "word-wrap",
+                      "enum": [
+                        "break-word",
+                        "none"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "overflow",
+                    "word-wrap"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "format",
+            "multiple-line",
+            "reference-id",
+            "style",
+            "type",
+            "value"
+          ]
+        }
+      ]
+    },
+    "ItemTextBlockFormatNoneSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "type",
+          "const": ""
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "ItemTextBlockFormatDatetimeSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "type",
+          "const": "datetime"
+        },
+        "datetime": {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "title": "format"
+            }
+          },
+          "required": [
+            "format"
+          ],
+          "title": "datetime"
+        }
+      },
+      "required": [
+        "datetime",
+        "type"
+      ]
+    },
+    "ItemTextBlockFormatNumberSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "type",
+          "const": "number"
+        },
+        "number": {
+          "type": "object",
+          "title": "number",
+          "properties": {
+            "delimiter": {
+              "type": "string",
+              "title": "delimiter"
+            },
+            "precision": {
+              "type": "number",
+              "title": "precision"
+            }
+          },
+          "required": [
+            "delimiter",
+            "precision"
+          ]
+        }
+      },
+      "required": [
+        "number",
+        "type"
+      ]
+    },
+    "ItemTextBlockFormatPaddingSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "type",
+          "const": "padding"
+        },
+        "padding": {
+          "type": "object",
+          "title": "padding",
+          "properties": {
+            "length": {
+              "type": "number",
+              "title": "length"
+            },
+            "char": {
+              "type": "string",
+              "title": "char"
+            },
+            "direction": {
+              "enum": [
+                "L",
+                "R"
+              ],
+              "type": "string",
+              "title": "direction"
+            }
+          },
+          "required": [
+            "char",
+            "direction",
+            "length"
+          ]
+        }
+      },
+      "required": [
+        "padding",
+        "type"
+      ]
+    },
+    "ImageBlockItemSchema": {
+      "allOf": [
+        { "$ref": "#/definitions/ItemSchema" },
+        { "$ref": "#/definitions/ItemBoxBoundsSchema" },
+        {
+          "type": "object",
+          "title": "image-block",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "type",
+              "const": "image-block"
+            },
+            "style": {
+              "type": "object",
+              "properties": {
+                "position-x": {
+                  "enum": [
+                    "center",
+                    "left",
+                    "right"
+                  ],
+                  "type": "string",
+                  "title": "position-x"
+                },
+                "position-y": {
+                  "enum": [
+                    "bottom",
+                    "middle",
+                    "top"
+                  ],
+                  "type": "string",
+                  "title": "position-y"
+                }
+              },
+              "required": [
+                "position-x",
+                "position-y"
+              ],
+              "title": "style"
+            }
+          },
+          "required": [
+            "style",
+            "type"
+          ]
+        }
+      ]
+    },
+    "ImageItemSchema": {
+      "allOf": [
+        { "$ref": "#/definitions/ItemSchema" },
+        { "$ref": "#/definitions/ItemBoxBoundsSchema" },
+        {
+          "type": "object",
+          "title": "image",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "image"
+              ],
+              "title": "type"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "mime-type": {
+                  "enum": [
+                    "image/jpeg",
+                    "image/png"
+                  ],
+                  "type": "string",
+                  "title": "mime-type"
+                },
+                "base64": {
+                  "type": "string",
+                  "title": "base64"
+                }
+              },
+              "required": [
+                "base64",
+                "mime-type"
+              ],
+              "title": "data"
+            }
+          },
+          "required": [
+            "data",
+            "type"
+          ]
+        }
+      ]
+    },
+    "StackViewItemSchema": {
+      "title": "stack-view item",
+      "allOf": [
+        { "$ref": "#/definitions/ItemSchema" },
+        {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number",
+              "title": "x"
+            },
+            "y": {
+              "type": "number",
+              "title": "y"
+            },
+            "width": {
+              "type": "number",
+              "title": "width"
+            }
+          },
+          "required": [
+            "width",
+            "x",
+            "y"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "type",
+              "const": "stack-view"
+            },
+            "follow-stretch": {
+              "enum": [
+                "none",
+                "y"
+              ],
+              "type": "string",
+              "title": "follow-stretch"
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/StackViewItemRowSchema"
+              },
+              "title": "rows"
+            }
+          },
+          "required": [
+            "rows",
+            "follow-stretch",
+            "type"
+          ]
+        }
+      ]
+    },
+    "StackViewItemRowSchema": {
+      "type": "object",
+      "title": "stack-view row",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "id"
+        },
+        "height": {
+          "type": "number",
+          "title": "height"
+        },
+        "auto-stretch": {
+          "type": "boolean",
+          "title": "auto-stretch"
+        },
+        "display": {
+          "type": "boolean",
+          "title": "display"
+        },
+        "items": {
+          "type": "array",
+          "title": "items",
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/RectItemSchema" },
+              { "$ref": "#/definitions/EllipseItemSchema" },
+              { "$ref": "#/definitions/LineItemSchema" },
+              { "$ref": "#/definitions/TextItemSchema" },
+              { "$ref": "#/definitions/TextBlockItemSchema" },
+              { "$ref": "#/definitions/ImageBlockItemSchema" },
+              { "$ref": "#/definitions/ImageItemSchema" }
+            ]
+          }
+        }
+      },
+      "required": [
+        "auto-stretch",
+        "display",
+        "height",
+        "id",
+        "items"
+      ]
+    }
+  }
+}
