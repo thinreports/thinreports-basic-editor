@@ -99,4 +99,4 @@ handlers.exportAs = (callback, type, content) => {
   callback.onSuccess();
 }
 
-module.exports = handlers;
+window.handlers = handlers;

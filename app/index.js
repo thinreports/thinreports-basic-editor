@@ -15,7 +15,7 @@
 
 var App = {};
 
-App.handlers = require('./handlers');
+App.handlers = window.handlers;
 
 /**
  * @type {string}
