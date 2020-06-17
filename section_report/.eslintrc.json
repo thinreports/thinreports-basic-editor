@@ -1,0 +1,44 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "plugin:vue/recommended",
+    "@vue/standard",
+    "@vue/typescript/recommended",
+    ".eslint-todo.json"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/__tests__/*.{j,t}s?(x)",
+        "**/tests/unit/**/*.spec.{j,t}s?(x)"
+      ],
+      "env": {
+        "jest": true
+      }
+    }
+  ],
+  "rules": {
+    "semi": ["error", "always"],
+    "import/order": ["error", {
+      "alphabetize": {
+        "order": "asc"
+      }
+    }],
+    "vue/component-name-in-template-casing": "error",
+    "vue/component-tags-order": ["error", {
+      "order": ["template", "script", "style"]
+    }],
+    "@typescript-eslint/no-unused-vars": ["error", {
+      "vars": "all",
+      "args": "all",
+      "ignoreRestSiblings": true,
+      "argsIgnorePattern": "^_"
+    }]
+  }
+}
