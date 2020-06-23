@@ -1,5 +1,17 @@
 # Thinreports Editor
 
+## About This Version
+
+This version of thinreports-editor was forked from thinreports/thinreports-editor, and has been implemented the section-report format proposed by Thinreports community. We also added some additional features such as stack-view.
+
+See [section_report/README.md](section_report/README.md) for details and usage of the section-report format.
+
+## Our Plan
+
+We are planning to send pull request of this changes to the original Thinreports repository in the near future.
+
+---
+
 [Thinreports](http://www.thinreports.org/) is an open source report generation tool for Ruby.
 
   * Thinreports Editor (GUI Designer)
