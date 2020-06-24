@@ -20,19 +20,19 @@ watcher.on('all', (event, path) => {
 
 function compileCss (path) {
   if (/\.css$/.test(path)) {
-    runTask('CSS compilation', () => execSync('yarn run compile:css'))
+    runTask('CSS compilation', () => execSync('npm run compile:css'))
   }
 }
 
 function compileJs (path) {
   if (/\.js$/.test(path)) {
-    runTask('JavaScript compilation', () => execSync('yarn run compile:javascript'))
+    runTask('JavaScript compilation', () => execSync('npm run compile:javascript'))
   }
 }
 
 function compileTemplate (path) {
   if (/\.soy$/.test(path)) {
-    runTask('Template compilation', () => execSync('yarn run compile:template'))
+    runTask('Template compilation', () => execSync('npm run compile:template'))
   }
 }
 
