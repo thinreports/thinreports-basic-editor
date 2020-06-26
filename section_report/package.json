@@ -2,6 +2,7 @@
   "name": "thinreports-editor",
   "version": "1.0.0-sectionreport.1",
   "private": true,
+  "license": "SEE LICENSE IN LICENSE FILE",
   "scripts": {
     "serve": "cross-env VUE_APP_HANDLERS=browser vue-cli-service serve",
     "build": "cross-env VUE_APP_HANDLERS=browser vue-cli-service build",
