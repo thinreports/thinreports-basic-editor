@@ -2,7 +2,7 @@
 
 ## About This Version
 
-This version of thinreports-editor was forked from thinreports/thinreports-editor, and has been implemented the section-report format proposed by Thinreports community. We also added some additional features such as stack-view.
+This version of thinreports-editor was forked from [thinreports/thinreports-editor](https://github.com/thinreports/thinreports-editor), and has been implemented the [section-report format](https://github.com/thinreports/thinreports/issues/7) proposed by Thinreports community. We also added some additional features such as stack-view.
 
 See [section_report/README.md](section_report/README.md) for details and usage of the section-report format.
 
