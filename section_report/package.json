@@ -2,7 +2,6 @@
   "name": "thinreports-editor",
   "version": "1.0.0-sectionreport.1",
   "private": true,
-  "license": "SEE LICENSE IN LICENSE FILE",
   "scripts": {
     "serve": "cross-env VUE_APP_HANDLERS=browser vue-cli-service serve",
     "build": "cross-env VUE_APP_HANDLERS=browser vue-cli-service build",
@@ -23,36 +22,38 @@
     "camel-case": "^4.1.1",
     "core-js": "^3.6.4",
     "kebab-case": "^1.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "lodash.clonedeep": "^4.5.0",
     "uikit": "^3.3.2",
     "uuid": "^3.4.0",
     "vue": "^2.6.11"
   },
   "devDependencies": {
+    "@types/electron-devtools-installer": "^2.2.0",
     "@types/jest": "^24.9.1",
     "@types/uuid": "^3.4.7",
     "@typescript-eslint/eslint-plugin": "^2.20.0",
     "@typescript-eslint/parser": "^2.20.0",
-    "@vue/cli-plugin-babel": "~4.2.2",
-    "@vue/cli-plugin-eslint": "~4.2.2",
-    "@vue/cli-plugin-typescript": "~4.2.2",
-    "@vue/cli-plugin-unit-jest": "~4.2.2",
-    "@vue/cli-service": "~4.2.2",
+    "@vue/cli-plugin-babel": "^4.5.6",
+    "@vue/cli-plugin-eslint": "^4.5.6",
+    "@vue/cli-plugin-typescript": "^4.5.6",
+    "@vue/cli-plugin-unit-jest": "^4.5.6",
+    "@vue/cli-service": "^4.5.6",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^5.0.1",
     "@vue/test-utils": "1.0.0-beta.29",
     "cross-env": "^7.0.2",
     "electron": "^7.1.13",
+    "electron-devtools-installer": "^3.1.1",
     "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.2.1",
-    "typescript": "~3.7.5",
+    "typescript": "~3.9.3",
     "utility-types": "^3.10.0",
-    "vue-cli-plugin-electron-builder": "~1.4.5",
+    "vue-cli-plugin-electron-builder": "^2.0.0-rc.4",
     "vue-template-compiler": "^2.6.11"
   },
   "postcss": {
@@ -63,5 +64,6 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "license": "SEE LICENSE IN LICENSE FILE"
 }
