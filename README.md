@@ -97,7 +97,7 @@ Or if you can use docker, you can compile script and css:
 
 ```
 $ docker build -t thinreports-editor:latest .
-$ docker run --rum -v $PWD:/src thinreports-editor:latest
+$ docker run --rm -v $PWD:/src:cached thinreports-editor:latest
 Compiling JavaScript with SIMPLE_OPTIMIZATIONS...
 ```
 
