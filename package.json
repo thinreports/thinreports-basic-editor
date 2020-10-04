@@ -21,12 +21,12 @@
     "postinstall": "cd app && npm install"
   },
   "devDependencies": {
-    "archiver": "^4.0.1",
-    "chokidar": "^3.4.0",
+    "archiver": "^5.0.2",
+    "chokidar": "^3.4.2",
     "cross-env": "^7.0.2",
-    "del": "^5.1.0",
+    "del": "^6.0.0",
     "electron": "^9.0.4",
-    "electron-packager": "^14.2.1",
+    "electron-packager": "^15.1.0",
     "js-yaml": "^3.14.0"
   }
 }
