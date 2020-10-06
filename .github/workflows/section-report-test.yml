@@ -4,6 +4,9 @@ on:
   push:
     paths:
       - 'section_report/**'
+  pull_request:
+    paths:
+      - 'section_report/**'
 
 defaults:
   run:
