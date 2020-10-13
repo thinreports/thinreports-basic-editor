@@ -796,12 +796,12 @@ thin.init_ = function() {
     main.getMain().getElement().addEventListener('mousewheel', function(e) {
       var workspace = thin.core.getActiveWorkspace();
       if (!e.ctrlKey || !workspace) return;
-      if(e.wheelDeltaY < 0) {
+      if (e.wheelDeltaY < 0) {
         workspace.getAction().actionSetZoom(workspace.getUiStatusForZoom() - 10);
-      }else {
+      } else {
         workspace.getAction().actionSetZoom(workspace.getUiStatusForZoom() + 10);
       }
-    })
+    });
 
     // Zoom in
     var toolZoomIn = toolbar.setupChild('zoom-in',
