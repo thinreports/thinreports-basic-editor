@@ -793,7 +793,7 @@ thin.init_ = function() {
     });
 
     // Mouse wheel zoom
-    document.body.addEventListener('mousewheel', function(e){
+    main.getMain().getElement().addEventListener('mousewheel', function(e) {
       var workspace = thin.core.getActiveWorkspace();
       if(e.ctrlKey != true || !workspace) return;
       if(e.wheelDeltaY < 0) {
