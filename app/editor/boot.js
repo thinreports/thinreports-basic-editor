@@ -795,7 +795,7 @@ thin.init_ = function() {
     // Mouse wheel zoom
     main.getMain().getElement().addEventListener('mousewheel', function(e) {
       var workspace = thin.core.getActiveWorkspace();
-      if(e.ctrlKey != true || !workspace) return;
+      if (!e.ctrlKey || !workspace) return;
       if(e.wheelDeltaY < 0) {
         workspace.getAction().actionSetZoom(workspace.getUiStatusForZoom() - 10);
       }else {
