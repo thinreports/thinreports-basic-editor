@@ -1,5 +1,7 @@
 ## master
 
+ * Adds CTRL+Mouse wheel zoom #85 [@rhiroshi]
+
 ## 0.11.0
 
 ### Bugfixes
