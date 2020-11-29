@@ -1,0 +1,34 @@
+name: Test section-report
+
+on:
+  push:
+    paths:
+      - 'section_report/**'
+  pull_request:
+    paths:
+      - 'section_report/**'
+
+defaults:
+  run:
+    working-directory: section_report
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 13.x
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Build and test with lint
+      run: |
+        npm install
+        npm run test:lint
+        npm run build
+        npm run test:unit
