@@ -39,7 +39,8 @@ Support a layout file that created/modified with 0.9.0+ Editor.
   * [Installation Guide](http://www.thinreports.org/documentation/getting-started/installation.html)
   * [Quick Start Guide](http://www.thinreports.org/documentation/getting-started/quickstart.html)
   * [Examples](https://github.com/thinreports/thinreports-examples)
-  * [Discussion Group](https://groups.google.com/forum/#!forum/thinreports)
+  * [Discussion Group (GitHub Discussions)](https://github.com/thinreports/thinreports/discussions)
+  * [Discussion Group (Google Groups)](https://groups.google.com/forum/#!forum/thinreports)
 
 ## Contributing
 
