@@ -27,7 +27,7 @@ thin.Version.MAJOR = 0;
 /**
  * @type {number}
  */
-thin.Version.MINOR = 11;
+thin.Version.MINOR = 12;
 
 
 /**

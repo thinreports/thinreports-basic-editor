@@ -1,4 +1,8 @@
-## master
+## master (Unreleased)
+
+## 0.12.0
+
+### Enhancements
 
  * Adds CTRL+Mouse wheel zoom #85 [@rhiroshi]
 
