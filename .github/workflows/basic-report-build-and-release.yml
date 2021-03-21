@@ -1,12 +1,21 @@
-name: Build and release
+name: "[basic-report] Build and release"
 
 on:
   push:
+    paths:
+      - 'basic-report/**'
     branches:
-      - build/**
+      - 'basic-report-build/**'
     tags:
       - '*'
+  pull_request:
+    paths:
+      - 'basic-report/**'
   workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: basic-report
 
 jobs:
   build:

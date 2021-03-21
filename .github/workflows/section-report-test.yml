@@ -1,16 +1,16 @@
-name: Test section-report
+name: "[section-report] Test"
 
 on:
   push:
     paths:
-      - 'section_report/**'
+      - 'section-report/**'
   pull_request:
     paths:
-      - 'section_report/**'
+      - 'section-report/**'
 
 defaults:
   run:
-    working-directory: section_report
+    working-directory: section-report
 
 jobs:
   build:
