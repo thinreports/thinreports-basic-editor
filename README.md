@@ -2,7 +2,7 @@
 
 [Thinreports](https://github.com/thinreports/thinreports) is a tool for generating PDF reports. Thinreports Editor is one of its tools, which is for creating template layouts.
 
-## Template Formats and Editor Apps
+## Editor Apps
 
 There are two template formats in Thinreports. And each template format has its own editor application.
 
