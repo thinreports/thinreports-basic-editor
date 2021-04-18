@@ -24,7 +24,7 @@ Support a layout file that created/modified with 0.9.0+ Editor.
 
   - Bug reports and pull requests are welcome on GitHub
   - Ask a question on [GitHub Discussions](https://github.com/thinreports/thinreports/discussions)
-  - [Contributing to translations](https://github.com/thinreports/thinreports-editor/blob/master/TRANSLATION.md)
+  - [Contributing to translations](https://github.com/thinreports/thinreports-editor/blob/master/basic-report/TRANSLATION.md)
 
 ## Development
 
