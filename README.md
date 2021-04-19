@@ -14,7 +14,7 @@ See [basic-report/](basic-report/) for details.
 
 ### [Section Report Editor](section-report/)
 
-It is a editor to edit templates in the **NEW** section-report format. However, this is **currentry under development**.
+It is an editor to edit templates in the **NEW** section-report format. However, this is **currentry under development**.
 
 See [section-report/](section-report/) for details.
 
