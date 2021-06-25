@@ -1,6 +1,6 @@
 <template>
   <TextAreaProperty
-    label="テキスト"
+    :label="$t('label.text.text')"
     :value="value"
     @change="update"
   />

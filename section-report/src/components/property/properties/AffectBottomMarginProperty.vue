@@ -1,6 +1,6 @@
 <template>
   <CheckProperty
-    label="下余白に影響"
+    :label="$t('label.affect_bottom_margin')"
     :value="value"
     @change="update"
   />

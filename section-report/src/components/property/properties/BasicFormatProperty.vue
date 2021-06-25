@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="基本書式"
+    :label="$t('label.basic_format')"
     :value="value"
     @change="update"
   />

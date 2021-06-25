@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="行間"
+    :label="$t('label.text.line_height_ratio')"
     placeholder="normal"
     :value="value"
     @change="update"

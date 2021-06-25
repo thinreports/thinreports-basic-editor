@@ -1,6 +1,6 @@
 <template>
   <SelectProperty
-    label="折り返し"
+    :label="$t('label.text.word_wrap')"
     :value="value"
     :options="options"
     @change="update"
@@ -26,8 +26,8 @@ export default Vue.extend({
   computed: {
     options (): Option<TextWordWrapStyle>[] {
       return [
-        { label: '領域に合わせる', value: 'none' },
-        { label: '単語単位', value: 'break-word' }
+        { label: this.$t('label.text.word_wrap_none'), value: 'none' },
+        { label: this.$t('label.text.word_wrap_break_word'), value: 'break-word' }
       ];
     }
   },

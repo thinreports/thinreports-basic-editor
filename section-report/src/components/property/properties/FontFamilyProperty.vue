@@ -1,6 +1,6 @@
 <template>
   <SelectProperty
-    label="フォント"
+    :label="$t('label.font.family')"
     :value="value"
     :options="options"
     @change="update"

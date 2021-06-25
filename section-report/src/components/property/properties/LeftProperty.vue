@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="左位置"
+    :label="$t('label.left')"
     :value="value"
     @change="update"
   />

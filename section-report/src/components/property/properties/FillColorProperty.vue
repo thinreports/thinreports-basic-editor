@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="塗り"
+    :label="$t('label.fill_color')"
     :value="value"
     @change="update"
   />

@@ -1,36 +1,36 @@
 <template>
-  <MenuDropdownSubTree title="編集">
+  <MenuDropdownSubTree :title="$t('toolbar.group.edit')">
     <MenuDropdownButton
-      text="元に戻す"
+      :text="$t('toolbar.edit.undo')"
       icon="mdi mdi-undo"
       :disabled="!undoable"
       @click="undo"
     />
     <MenuDropdownButton
-      text="やり直す"
+      :text="$t('toolbar.edit.redo')"
       icon="mdi mdi-redo"
       :disabled="!redoable"
       @click="redo"
     />
     <li class="uk-nav-divider" />
     <MenuDropdownButton
-      text="切り取り"
+      :text="$t('toolbar.edit.cut')"
       icon="mdi mdi-content-cut"
       @click="cut"
     />
     <MenuDropdownButton
-      text="コピー"
+      :text="$t('toolbar.edit.copy')"
       icon="mdi mdi-content-copy"
       @click="copy"
     />
     <MenuDropdownButton
-      text="貼り付け"
+      :text="$t('toolbar.edit.paste')"
       icon="mdi mdi-content-paste"
       @click="paste"
     />
     <li class="uk-nav-divider" />
     <MenuDropdownButton
-      text="削除"
+      :text="$t('toolbar.edit.delete')"
       icon="mdi mdi-delete-forever"
       :disabled="!activeEntityExists"
       @click="remove"

@@ -1,25 +1,25 @@
 <template>
-  <MenuDropdownSubTree title="配置">
+  <MenuDropdownSubTree :title="$t('toolbar.group.location')">
     <MenuDropdownButton
-      text="最前面へ移動"
+      :text="$t('toolbar.location.front')"
       icon="mdi mdi-arrange-bring-to-front"
       :disabled="!isEditable"
       @click="bringToFront"
     />
     <MenuDropdownButton
-      text="前面へ移動"
+      :text="$t('toolbar.location.forward')"
       icon="mdi mdi-arrange-bring-forward"
       :disabled="!isEditable"
       @click="bringForward"
     />
     <MenuDropdownButton
-      text="背面へ移動"
+      :text="$t('toolbar.location.backward')"
       icon="mdi mdi-arrange-send-backward"
       :disabled="!isEditable"
       @click="sendBackward"
     />
     <MenuDropdownButton
-      text="最背面へ移動"
+      :text="$t('toolbar.location.back')"
       icon="mdi mdi-arrange-send-to-back"
       :disabled="!isEditable"
       @click="sendToBack"

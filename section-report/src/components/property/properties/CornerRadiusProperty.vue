@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="角丸"
+    :label="$t('label.corner_radius')"
     :value="value"
     @change="update"
   />

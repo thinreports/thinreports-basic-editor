@@ -1,6 +1,6 @@
 <template>
   <CheckProperty
-    label="表示"
+    :label="$t('label.display')"
     :value="value"
     @change="update"
   />

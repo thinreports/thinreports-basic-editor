@@ -1,6 +1,6 @@
 <template>
   <CheckProperty
-    label="FixedBottom"
+    :label="$t('label.fixed_bottom')"
     :value="value"
     @change="update"
   />

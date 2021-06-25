@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="説明"
+    :label="$t('label.description')"
     :value="value"
     @change="update"
   />

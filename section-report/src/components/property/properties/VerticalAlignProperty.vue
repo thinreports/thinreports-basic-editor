@@ -1,6 +1,6 @@
 <template>
   <SelectProperty
-    label="縦位置"
+    :label="$t('label.align.vertical.vertical')"
     :value="value"
     :options="options"
     @change="update"
@@ -26,9 +26,9 @@ export default Vue.extend({
   computed: {
     options (): Option<VerticalAlign>[] {
       return [
-        { label: '上揃え', value: 'top' },
-        { label: '中央揃え', value: 'middle' },
-        { label: '下揃え', value: 'bottom' }
+        { label: this.$t('label.align.vertical.top'), value: 'top' },
+        { label: this.$t('label.align.vertical.middle'), value: 'middle' },
+        { label: this.$t('label.align.vertical.bottom'), value: 'bottom' }
       ];
     }
   },

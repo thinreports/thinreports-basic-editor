@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="色"
+    :label="$t('label.font.color')"
     :value="value"
     @change="update"
   />

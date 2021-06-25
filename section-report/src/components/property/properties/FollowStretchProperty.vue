@@ -1,6 +1,6 @@
 <template>
   <SelectProperty
-    label="領域伸縮に追従"
+    :label="$t('label.follow_stretch')"
     :value="value"
     :options="options"
     @change="update"

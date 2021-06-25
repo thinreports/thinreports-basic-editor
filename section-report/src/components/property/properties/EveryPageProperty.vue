@@ -1,6 +1,6 @@
 <template>
   <CheckProperty
-    label="毎ページ表示"
+    :label="$t('label.every_page')"
     :value="value"
     @change="update"
   />

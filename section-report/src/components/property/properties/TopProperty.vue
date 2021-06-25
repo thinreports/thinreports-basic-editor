@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="上位置"
+    :label="$t('label.top')"
     :value="value"
     @change="update"
   />
