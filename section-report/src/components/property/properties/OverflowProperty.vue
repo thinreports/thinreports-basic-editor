@@ -26,9 +26,9 @@ export default Vue.extend({
   computed: {
     options (): Option<TextOverflowStyle>[] {
       return [
-        { label: this.$t('label.text.overflow.truncate'), value: 'truncate' },
-        { label: this.$t('label.text.overflow.fit'), value: 'fit' },
-        { label: this.$t('label.text.overflow.expand'), value: 'expand' }
+        { label: this.$tc('label.text.overflow.truncate'), value: 'truncate' },
+        { label: this.$tc('label.text.overflow.fit'), value: 'fit' },
+        { label: this.$tc('label.text.overflow.expand'), value: 'expand' }
       ];
     }
   },

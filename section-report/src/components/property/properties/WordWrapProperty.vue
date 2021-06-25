@@ -26,8 +26,8 @@ export default Vue.extend({
   computed: {
     options (): Option<TextWordWrapStyle>[] {
       return [
-        { label: this.$t('label.text.word_wrap_none'), value: 'none' },
-        { label: this.$t('label.text.word_wrap_break_word'), value: 'break-word' }
+        { label: this.$tc('label.text.word_wrap_none'), value: 'none' },
+        { label: this.$tc('label.text.word_wrap_break_word'), value: 'break-word' }
       ];
     }
   },

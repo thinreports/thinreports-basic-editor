@@ -26,9 +26,9 @@ export default Vue.extend({
   computed: {
     options (): Option<VerticalAlign>[] {
       return [
-        { label: this.$t('label.align.vertical.top'), value: 'top' },
-        { label: this.$t('label.align.vertical.middle'), value: 'middle' },
-        { label: this.$t('label.align.vertical.bottom'), value: 'bottom' }
+        { label: this.$tc('label.align.vertical.top'), value: 'top' },
+        { label: this.$tc('label.align.vertical.middle'), value: 'middle' },
+        { label: this.$tc('label.align.vertical.bottom'), value: 'bottom' }
       ];
     }
   },

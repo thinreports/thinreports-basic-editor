@@ -26,9 +26,9 @@ export default Vue.extend({
   computed: {
     options (): Option<ItemBorderStyle['borderStyle']>[] {
       return [
-        { label: this.$t('label.stroke.type.solid'), value: 'solid' },
-        { label: this.$t('label.stroke.type.dashed'), value: 'dashed' },
-        { label: this.$t('label.stroke.type.dotted'), value: 'dotted' }
+        { label: this.$tc('label.stroke.type.solid'), value: 'solid' },
+        { label: this.$tc('label.stroke.type.dashed'), value: 'dashed' },
+        { label: this.$tc('label.stroke.type.dotted'), value: 'dotted' }
       ];
     }
   },

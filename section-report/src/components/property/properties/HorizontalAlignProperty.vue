@@ -26,9 +26,9 @@ export default Vue.extend({
   computed: {
     options (): Option<HorizontalAlign>[] {
       return [
-        { label: this.$t('label.align.horizontal.left'), value: 'left' },
-        { label: this.$t('label.align.horizontal.center'), value: 'center' },
-        { label: this.$t('label.align.horizontal.right'), value: 'right' }
+        { label: this.$tc('label.align.horizontal.left'), value: 'left' },
+        { label: this.$tc('label.align.horizontal.center'), value: 'center' },
+        { label: this.$tc('label.align.horizontal.right'), value: 'right' }
       ];
     }
   },
