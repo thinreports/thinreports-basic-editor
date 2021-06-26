@@ -58,12 +58,12 @@ jobs:
         if: "!startsWith(github.ref, 'refs/tags')"
         with:
           name: ${{ matrix.build }}
-          path: builds/*.zip
+          path: basic-report/builds/*.zip
 
       - name: Release if tagged
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: builds/*.zip
+          files: basic-report/builds/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
