@@ -16,6 +16,12 @@ module.exports = {
           icon: false
         }
       }
+    },
+    i18n: {
+      locale: 'en',
+      fallbackLocale: 'ja',
+      localeDir: 'locales',
+      enableInSFC: false
     }
   }
 };

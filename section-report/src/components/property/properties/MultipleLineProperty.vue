@@ -1,6 +1,6 @@
 <template>
   <CheckProperty
-    label="複数行"
+    :label="$t('label.text.multiple_lines')"
     :value="value"
     @change="update"
   />

@@ -1,17 +1,17 @@
 <template>
-  <MenuDropdownSubTree title="スタックビュー">
+  <MenuDropdownSubTree :title="$t('toolbar.group.stack_view')">
     <MenuDropdownButton
-      text="行を追加"
+      :text="$t('toolbar.stack_view.add_row')"
       :disabled="!isEditable"
       @click="addRow"
     />
     <MenuDropdownButton
-      text="行を上に移動"
+      :text="$t('toolbar.stack_view.move_up')"
       :disabled="!isEditable"
       @click="moveRowUp"
     />
     <MenuDropdownButton
-      text="行を下に移動"
+      :text="$t('toolbar.stack_view.move_down')"
       :disabled="!isEditable"
       @click="moveRowDown"
     />

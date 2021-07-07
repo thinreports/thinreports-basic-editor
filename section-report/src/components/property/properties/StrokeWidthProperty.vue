@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="線の幅"
+    :label="$t('label.stroke.width')"
     :value="value"
     @change="update"
   />

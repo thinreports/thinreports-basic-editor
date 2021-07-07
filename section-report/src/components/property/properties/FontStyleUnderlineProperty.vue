@@ -1,6 +1,6 @@
 <template>
   <CheckProperty
-    label="下線"
+    :label="$t('label.font.style.underline')"
     :value="value"
     @change="update"
   />

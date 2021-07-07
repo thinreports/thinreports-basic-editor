@@ -1,25 +1,25 @@
 <template>
-  <MenuDropdownSubTree title="セクション">
+  <MenuDropdownSubTree :title="$t('toolbar.group.section')">
     <MenuDropdownButton
-      text="ヘッダーを追加"
+      :text="$t('toolbar.section.new_header')"
       @click="addNewHeader"
     />
     <MenuDropdownButton
-      text="繰り返し行を追加"
+      :text="$t('toolbar.section.new_detail')"
       @click="addNewDetail"
     />
     <MenuDropdownButton
-      text="フッターを追加"
+      :text="$t('toolbar.section.new_footer')"
       @click="addNewFooter"
     />
     <li class="uk-nav-divider" />
     <MenuDropdownButton
-      text="上に移動"
+      :text="$t('toolbar.section.move_up')"
       :disabled="!activeSectionExists"
       @click="moveUp"
     />
     <MenuDropdownButton
-      text="下に移動"
+      :text="$t('toolbar.section.move_down')"
       :disabled="!activeSectionExists"
       @click="moveDown"
     />

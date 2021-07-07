@@ -1,6 +1,6 @@
 <template>
   <CheckProperty
-    label="太字"
+    :label="$t('label.font.style.bold')"
     :value="value"
     @change="update"
   />

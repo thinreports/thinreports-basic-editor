@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="初期値"
+    :label="$t('label.text.default')"
     :value="value"
     @change="update"
   />

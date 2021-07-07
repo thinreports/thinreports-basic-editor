@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="文字間隔"
+    :label="$t('label.text.kerning')"
     placeholder="normal"
     :value="value"
     @change="update"

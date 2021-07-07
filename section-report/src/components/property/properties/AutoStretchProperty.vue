@@ -1,6 +1,6 @@
 <template>
   <CheckProperty
-    label="自動伸縮"
+    :label="$t('label.auto_stretch')"
     :value="value"
     @change="update"
   />

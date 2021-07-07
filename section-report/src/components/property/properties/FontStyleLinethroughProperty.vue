@@ -1,6 +1,6 @@
 <template>
   <CheckProperty
-    label="取消線"
+    :label="$t('label.font.style.linethrough')"
     :value="value"
     @change="update"
   />

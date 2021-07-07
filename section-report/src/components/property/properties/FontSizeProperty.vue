@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="サイズ"
+    :label="$t('label.font.size')"
     :value="value"
     @change="update"
   />

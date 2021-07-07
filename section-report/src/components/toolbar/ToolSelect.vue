@@ -72,6 +72,8 @@
     >
       <ItemIcon type="stack-view" />
     </ToolButton>
+
+    <LocaleMenu />
   </div>
 </template>
 
@@ -80,6 +82,7 @@ import Vue from 'vue';
 import { selectImage } from '../../lib/select-image';
 import { editor, report } from '../../store';
 import ItemIcon from '../icons/ItemIcon.vue';
+import LocaleMenu from './LocaleMenu.vue';
 import MenuDropdown from './MenuDropdown.vue';
 import ToolButton from './ToolButton.vue';
 import { ToolType } from '@/types';
@@ -89,7 +92,8 @@ export default Vue.extend({
   components: {
     MenuDropdown,
     ToolButton,
-    ItemIcon
+    ItemIcon,
+    LocaleMenu
   },
   computed: {
     activeTool () {

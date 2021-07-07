@@ -1,6 +1,6 @@
 <template>
   <SelectProperty
-    label="線の種類"
+    :label="$t('label.stroke.type.type')"
     :value="value"
     :options="options"
     @change="update"
@@ -26,9 +26,9 @@ export default Vue.extend({
   computed: {
     options (): Option<ItemBorderStyle['borderStyle']>[] {
       return [
-        { label: '実線', value: 'solid' },
-        { label: '破線', value: 'dashed' },
-        { label: '点線', value: 'dotted' }
+        { label: this.$tc('label.stroke.type.solid'), value: 'solid' },
+        { label: this.$tc('label.stroke.type.dashed'), value: 'dashed' },
+        { label: this.$tc('label.stroke.type.dotted'), value: 'dotted' }
       ];
     }
   },

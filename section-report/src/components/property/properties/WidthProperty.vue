@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="幅"
+    :label="$t('label.width')"
     :value="value"
     @change="update"
   />

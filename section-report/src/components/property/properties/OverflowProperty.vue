@@ -1,6 +1,6 @@
 <template>
   <SelectProperty
-    label="溢れたとき"
+    :label="$t('label.text.overflow.overflow')"
     :value="value"
     :options="options"
     @change="update"
@@ -26,9 +26,9 @@ export default Vue.extend({
   computed: {
     options (): Option<TextOverflowStyle>[] {
       return [
-        { label: '非表示', value: 'truncate' },
-        { label: '縮小', value: 'fit' },
-        { label: '拡張', value: 'expand' }
+        { label: this.$tc('label.text.overflow.truncate'), value: 'truncate' },
+        { label: this.$tc('label.text.overflow.fit'), value: 'fit' },
+        { label: this.$tc('label.text.overflow.expand'), value: 'expand' }
       ];
     }
   },

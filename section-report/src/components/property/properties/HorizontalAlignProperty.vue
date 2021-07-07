@@ -1,6 +1,6 @@
 <template>
   <SelectProperty
-    label="横位置"
+    :label="$t('label.align.horizontal.horizontal')"
     :value="value"
     :options="options"
     @change="update"
@@ -26,9 +26,9 @@ export default Vue.extend({
   computed: {
     options (): Option<HorizontalAlign>[] {
       return [
-        { label: '左揃え', value: 'left' },
-        { label: '中央揃え', value: 'center' },
-        { label: '右揃え', value: 'right' }
+        { label: this.$tc('label.align.horizontal.left'), value: 'left' },
+        { label: this.$tc('label.align.horizontal.center'), value: 'center' },
+        { label: this.$tc('label.align.horizontal.right'), value: 'right' }
       ];
     }
   },

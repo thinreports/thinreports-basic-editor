@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="線の色"
+    :label="$t('label.stroke.color')"
     :value="value"
     @change="update"
   />

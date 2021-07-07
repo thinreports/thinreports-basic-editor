@@ -1,6 +1,6 @@
 <template>
   <TextProperty
-    label="高さ"
+    :label="$t('label.height')"
     :value="value"
     @change="update"
   />

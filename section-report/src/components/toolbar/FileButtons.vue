@@ -1,17 +1,17 @@
 <template>
-  <MenuDropdownSubTree title="ファイル">
+  <MenuDropdownSubTree :title="$t('toolbar.group.file')">
     <MenuDropdownButton
-      text="新規作成"
+      :text="$t('toolbar.file.new')"
       icon="mdi mdi-file-document-outline"
       @click="newReport"
     />
     <MenuDropdownButton
-      text="保存"
+      :text="$t('toolbar.file.save')"
       icon="mdi mdi-content-save-outline"
       @click="save"
     />
     <MenuDropdownButton
-      text="開く"
+      :text="$t('toolbar.file.open')"
       icon="mdi mdi-folder-open-outline"
       @click="open"
     />
