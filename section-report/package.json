@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
+    "lint": "vue-cli-service lint",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "test:lint": "vue-cli-service lint --no-fix"
+    "test:lint": "vue-cli-service lint --no-fix",
+    "test:unit": "vue-cli-service test:unit"
   },
   "main": "background.js",
   "dependencies": {
