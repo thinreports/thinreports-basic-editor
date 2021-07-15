@@ -25,7 +25,7 @@ import Vue from 'vue';
 import { report, root, metadata } from '../../store';
 import MenuDropdownButton from './MenuDropdownButton.vue';
 import MenuDropdownSubTree from './MenuDropdownSubTree.vue';
-import handlers from '@/handlers';
+import { schemaSave, schemaSaveAs, schemaOpen } from '@/lib/schema-file';
 import layoutJsonSchema from '@/store/lib/layout-schema/schema.json';
 
 export default Vue.extend({
@@ -47,18 +47,18 @@ export default Vue.extend({
       const currentFilename = metadata.getters.filename();
 
       if (currentFilename === null) {
-        handlers.schemaSaveAs(schema, null, (filename) => {
+        schemaSaveAs(schema, null, (filename) => {
           root.actions.saveSchema(filename);
         });
       } else {
-        handlers.schemaSave(schema, currentFilename, () => {
+        schemaSave(schema, currentFilename, () => {
           root.actions.saveSchema();
         });
       }
     },
 
     open () {
-      handlers.schemaOpen((schema, filename) => {
+      schemaOpen((schema, filename) => {
         root.actions.loadSchema(schema, filename);
       });
     },
