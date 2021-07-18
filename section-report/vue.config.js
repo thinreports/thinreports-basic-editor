@@ -15,7 +15,8 @@ module.exports = {
         dmg: {
           icon: false
         }
-      }
+      },
+      nodeIntegration: true
     },
     i18n: {
       locale: 'en',

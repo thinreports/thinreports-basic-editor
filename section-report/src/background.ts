@@ -18,7 +18,10 @@ function createWindow () {
     width: 1500,
     height: 1000,
     webPreferences: {
-      nodeIntegration: true
+      // TODO: Migrate to ipcRenderer.send
+      nodeIntegration: !!process.env.ELECTRON_NODE_INTEGRATION,
+      enableRemoteModule: true,
+      contextIsolation: false
     }
   });
 

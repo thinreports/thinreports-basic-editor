@@ -272,15 +272,6 @@ export type ActiveItemEntity = {
 
 export type ActiveEntity = ActiveSecitionEntity | ActiveStackViewRowEntity | ActiveItemEntity;
 
-export type SchemaOpenOnSuccess = (schema: string, filename: string) => void;
-export type SchemaSaveOnSuccess = () => void;
-export type SchemaSaveAsOnSuccess = (filename: string) => void;
-export type Handlers = {
-  schemaOpen: (onSuccess: SchemaOpenOnSuccess) => void;
-  schemaSave: (schema: string, filename: string, onSuccess: SchemaSaveOnSuccess) => void;
-  schemaSaveAs: (schema: string, filename: string | null, onSuccess: SchemaSaveAsOnSuccess) => void;
-};
-
 export type RootState = {
   report: Report;
   history: History;
