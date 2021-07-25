@@ -42,5 +42,18 @@ jobs:
       - name: Install npm packages
         run: npm install
 
-      - name: Compile scripts
+      - name: Test for successful compilation
         run: npm run compile
+
+      - name: Check for forgetting to compile
+        run: |
+          if ! git diff --exit-code --quiet
+          then
+            echo "Differences where detected in the following files after running compile:"
+            git diff --name-status
+
+            echo ""
+            echo "You probably didn't run the compilation, or forgot to commit the compiled files." \
+              "Please run npm run compile and check the file diffs."
+            exit 1
+          fi
