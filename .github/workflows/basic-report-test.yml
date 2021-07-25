@@ -4,9 +4,12 @@ on:
   push:
     paths:
       - 'basic-report/**'
+      - .github/workflows/basic-report-test.yml
   pull_request:
     paths:
       - 'basic-report/**'
+      - .github/workflows/basic-report-test.yml
+  workflow_dispatch:
 
 defaults:
   run:

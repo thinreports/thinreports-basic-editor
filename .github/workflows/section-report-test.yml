@@ -4,9 +4,12 @@ on:
   push:
     paths:
       - 'section-report/**'
+      - .github/workflows/section-report-test.yml
   pull_request:
     paths:
       - 'section-report/**'
+      - .github/workflows/section-report-test.yml
+  workflow_dispatch:
 
 defaults:
   run:
