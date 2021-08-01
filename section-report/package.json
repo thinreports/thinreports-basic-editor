@@ -1,6 +1,7 @@
 {
-  "name": "thinreports-editor",
+  "name": "thinreports-editor-section",
   "version": "1.0.0-sectionreport.1",
+  "description": "A report designer for Thinreports to edit section-format templates",
   "private": true,
   "scripts": {
     "build": "vue-cli-service build",

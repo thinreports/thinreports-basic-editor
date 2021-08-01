@@ -1,9 +1,8 @@
 {
-  "name": "thinreports-editor",
-  "productName": "Thinreports Editor",
-  "version": "0.0.0",
+  "name": "thinreports-editor-basic",
+  "version": "0.12.0",
   "license": "GPL-3.0",
-  "description": "Designer for Thinreports",
+  "description": "A report designer for Thinreports to edit basic-format templates",
   "author": "Thinreports.org",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron app",

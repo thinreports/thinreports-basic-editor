@@ -1,8 +1,7 @@
 {
-  "name": "thinreports-editor",
-  "productName": "Thinreports Editor",
+  "name": "thinreports-editor-basic",
   "version": "0.12.0",
   "license": "GPL-3.0",
-  "description": "Designer for Thinreports",
+  "description": "A report designer for Thinreports to edit basic-format templates",
   "main": "main.js"
 }
