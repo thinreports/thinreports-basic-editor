@@ -1,5 +1,5 @@
-editor/basic-report:
+basic-editor:
 - basic-report/**/*
 
-editor/section-report:
+section-editor:
 - section-report/**/*
