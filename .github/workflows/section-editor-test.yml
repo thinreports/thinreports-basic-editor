@@ -1,19 +1,19 @@
-name: "[section-report] Test"
+name: "[section-editor] Test"
 
 on:
   push:
     paths:
-      - 'section-report/**'
-      - .github/workflows/section-report-test.yml
+      - 'section-editor/**'
+      - .github/workflows/section-editor-test.yml
   pull_request:
     paths:
-      - 'section-report/**'
-      - .github/workflows/section-report-test.yml
+      - 'section-editor/**'
+      - .github/workflows/section-editor-test.yml
   workflow_dispatch:
 
 defaults:
   run:
-    working-directory: section-report
+    working-directory: section-editor
 
 jobs:
   build:

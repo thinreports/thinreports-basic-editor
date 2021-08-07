@@ -2,21 +2,21 @@
 
 [Thinreports](https://github.com/thinreports/thinreports) is a tool for generating PDF reports. Thinreports Editor is one of its tools, which is for creating template layouts.
 
-## Editor Apps
+## Applications
 
 There are two template formats in Thinreports. And each template format has its own editor application.
 
-### [Basic Report Editor](basic-report/)
+### [Basic Editor](basic-editor/)
 
-It is an editor to edit templates in the basic-report format, which is the traditional and stable format.
+An editor for editing basic-format templates, which is the traditional and stable template format.
 
-See [basic-report/](basic-report/) for details.
+See [basic-editor/](basic-editor/) for details.
 
-### [Section Report Editor](section-report/)
+### [Section Editor](section-editor/)
 
-It is an editor to edit templates in the **NEW** section-report format. However, this is **currentry under development**.
+An editor for editing NEW section-format templates. However, this is currentry under development.
 
-See [section-report/](section-report/) for details.
+See [section-editor/](section-editor/) for details.
 
 ## Copyright
 

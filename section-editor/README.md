@@ -1,8 +1,8 @@
-# Section Report Editor
+# Section Editor
 
 [![[Test] Test](https://github.com/thinreports/thinreports-editor/actions/workflows/section-report-test.yml/badge.svg?branch=master)](https://github.com/thinreports/thinreports-editor/actions/workflows/section-report-test.yml)
 
-A Thinreports editor for editing templates in the section-report format.
+An editor for editing NEW section-format templates. However, this is currentry under development.
 
 ## Current Status
 
@@ -20,7 +20,7 @@ There is currently no production version package available. If you want to use t
 ### Launching the development version editor
 
 ```
-cd section_report/
+cd section-editor/
 npm ci
 npm run electron:serve
 ```

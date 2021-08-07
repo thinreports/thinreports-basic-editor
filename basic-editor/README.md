@@ -1,6 +1,6 @@
-# Basic Report Editor
+# Basic Editor
 
-An editor to edit templates in the basic-report format, which is the traditional and stable format.
+An editor for editing basic-format templates, which is the traditional and stable template format.
 
 ## Supported Platforms
 
@@ -24,7 +24,7 @@ Support a layout file that created/modified with 0.9.0+ Editor.
 
   - Bug reports and pull requests are welcome on GitHub
   - Ask a question on [GitHub Discussions](https://github.com/thinreports/thinreports/discussions)
-  - [Contributing to translations](https://github.com/thinreports/thinreports-editor/blob/master/basic-report/TRANSLATION.md)
+  - [Contributing to translations](https://github.com/thinreports/thinreports-editor/blob/master/basic-editor/TRANSLATION.md)
 
 ## Development
 
@@ -100,9 +100,9 @@ The following two files need to be updated.
 - CHANGELOG.md (required)
 - README.md (if needed)
 
-### 3. Push them to `basic-report-build/release-x.x.x` branch and test the built packages for each platform
+### 3. Push them to `basic-editor-build/release-x.x.x` branch and test the built packages for each platform
 
-Pushing to `basic-report-build/*` branch runs a job to build the package. Make sure that the built packages for each platform work properly. You can download the packages from the artifact of the build. For more information.
+Pushing to `basic-editor-build/*` branch runs a job to build the package. Make sure that the built packages for each platform work properly. You can download the packages from the artifact of the build. For more information.
 
 ### 4. Create pull request
 

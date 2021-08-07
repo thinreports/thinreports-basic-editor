@@ -7,7 +7,7 @@
 1. Fork [thinreports/thinreports-editor](https://github.com/thinreports/thinreports-editor) on github
 2. Clone your forked repository
 3. Create your locale branch: `git switch -c new-locale`
-4. Change `basic-report/` directory: `cd basic-report/`
+4. Change `basic-editor/` directory: `cd basic-editor/`
 
 ### Creating a Translation file
 

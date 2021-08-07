@@ -1,16 +1,16 @@
-name: "[basic-report] Build and release"
+name: "[basic-editor] Build and release"
 
 on:
   push:
     branches:
-      - 'basic-report-build/**'
+      - 'basic-editor-build/**'
     tags:
       - '*'
   workflow_dispatch:
 
 defaults:
   run:
-    working-directory: ./basic-report
+    working-directory: ./basic-editor
 
 jobs:
   build:
@@ -58,12 +58,12 @@ jobs:
         if: "!startsWith(github.ref, 'refs/tags')"
         with:
           name: ${{ matrix.build }}
-          path: basic-report/builds/*.zip
+          path: basic-editor/builds/*.zip
 
       - name: Release if tagged
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: basic-report/builds/*.zip
+          files: basic-editor/builds/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

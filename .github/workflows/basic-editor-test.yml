@@ -1,19 +1,19 @@
-name: "[basic-report] Test"
+name: "[basic-editor] Test"
 
 on:
   push:
     paths:
-      - 'basic-report/**'
-      - .github/workflows/basic-report-test.yml
+      - 'basic-editor/**'
+      - .github/workflows/basic-editor-test.yml
   pull_request:
     paths:
-      - 'basic-report/**'
-      - .github/workflows/basic-report-test.yml
+      - 'basic-editor/**'
+      - .github/workflows/basic-editor-test.yml
   workflow_dispatch:
 
 defaults:
   run:
-    working-directory: ./basic-report
+    working-directory: ./basic-editor
 
 jobs:
   build:

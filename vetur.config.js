@@ -4,6 +4,6 @@ module.exports = {
     "vetur.experimental.templateInterpolationService": true
   },
   projects: [
-    './section-report'
+    './section-editor'
   ]
 };

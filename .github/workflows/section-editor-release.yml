@@ -1,4 +1,4 @@
-name: "[section-report] Build and release section-report"
+name: "[section-editor] Build and release section-editor"
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 defaults:
   run:
-    working-directory: section-report
+    working-directory: section-editor
 
 jobs:
   build:
@@ -47,6 +47,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: "section-report/package/**"
+          files: "section-editor/package/**"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
