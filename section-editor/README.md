@@ -1,6 +1,6 @@
 # Section Editor
 
-[![[Test] Test](https://github.com/thinreports/thinreports-editor/actions/workflows/section-report-test.yml/badge.svg?branch=master)](https://github.com/thinreports/thinreports-editor/actions/workflows/section-report-test.yml)
+[![[Test] Test](https://github.com/thinreports/thinreports-editor/actions/workflows/section-editor-test.yml/badge.svg?branch=master)](https://github.com/thinreports/thinreports-editor/actions/workflows/section-editor-test.yml)
 
 An editor for editing NEW section-format templates. However, this is currentry under development.
 
