@@ -1,6 +1,6 @@
 import _cloneDeep from 'lodash.clonedeep';
 import { DeepReadonly } from 'utility-types';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { ActionsBase } from '../base/actions-base';
 import { SaveHistory } from '../lib/save-history-decorator';
 import { computeTextFontAndLineSize } from '../lib/text-font-and-line-size';

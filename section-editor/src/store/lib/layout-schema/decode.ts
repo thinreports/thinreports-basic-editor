@@ -1,4 +1,4 @@
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { deepChangeToCamelCase } from '@/lib/deep-change-case';
 import { computeContentHeight } from '@/store/report/builders/text-item-builder';
 import { Report, SectionUid, AnySection, AnyItem, ItemUid, StackViewItem, StackViewRowUid, GraphicItem, TextItem } from '@/types';
