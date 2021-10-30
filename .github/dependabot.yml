@@ -1,0 +1,31 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/section-editor" # Location of package manifests
+    schedule:
+      interval: "weekly"
+    ignore:
+      # To update these, vuecli v5 is required
+      - dependency-name: "@typescript-eslint/eslint-plugin"
+      - dependency-name: "@typescript-eslint/parser"
+      - dependency-name: "@vue/cli-plugin-babel"
+      - dependency-name: "@vue/cli-plugin-eslint"
+      - dependency-name: "@vue/cli-plugin-typescript"
+      - dependency-name: "@vue/cli-plugin-unit-jest"
+      - dependency-name: "@vue/cli-service"
+      - dependency-name: "@vue/eslint-config-standard"
+      - dependency-name: "@vue/eslint-config-typescript"
+      - dependency-name: "electron"
+      - dependency-name: "eslint"
+      - dependency-name: "eslint-plugin-import"
+      - dependency-name: "eslint-plugin-node"
+      - dependency-name: "eslint-plugin-promise"
+      - dependency-name: "eslint-plugin-standard"
+      - dependency-name: "eslint-plugin-vue"
+      - dependency-name: "typescript"
+      - dependency-name: "ajv"
