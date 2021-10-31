@@ -10,7 +10,8 @@ updates:
     schedule:
       interval: "daily"
     ignore:
-      # To update these, vuecli v5 is required
+      # These packages cannot be updated due to dependency conflicts caused by vuecli v4.
+      # TODO: Update when vuecli v5, currently in beta, is released.
       - dependency-name: "@typescript-eslint/eslint-plugin"
       - dependency-name: "@typescript-eslint/parser"
       - dependency-name: "@vue/cli-plugin-babel"
