@@ -16,7 +16,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "@mdi/font": "^6.4.95",
+    "@mdi/font": "^6.5.95",
     "@types/lodash.clonedeep": "^4.5.6",
     "ajv": "^6.12.6",
     "bignumber.js": "^9.0.1",
