@@ -1,30 +1,20 @@
 # Basic Editor
 
-An editor for editing basic-format templates, which is the traditional and stable template format.
+[![[basic-editor] Test](https://github.com/thinreports/thinreports-editor/actions/workflows/basic-editor-test.yml/badge.svg)](https://github.com/thinreports/thinreports-editor/actions/workflows/basic-editor-test.yml)
 
-## Supported Platforms
+A editor for editing a [Basic Format](https://github.com/thinreports/thinreports/blob/main/getting-started/basic-format.md) template.
 
-We tested the following platform:
+## Prerequisites
+
+### Supported Platforms
 
  * macOS 10.15+
  * Windows 10
  * Ubuntu 18.04+
 
-## Supported Layout versions
+## Installation
 
-Support a layout file that created/modified with 0.9.0+ Editor.
-
-## Getting Started
-
-  * [Installation Guide](http://www.thinreports.org/documentation/getting-started/installation.html)
-  * [Quick Start Guide](http://www.thinreports.org/documentation/getting-started/quickstart.html)
-  * [Examples](https://github.com/thinreports/thinreports-examples)
-
-## Contributing
-
-  - Bug reports and pull requests are welcome on GitHub
-  - Ask a question on [GitHub Discussions](https://github.com/thinreports/thinreports/discussions)
-  - [Contributing to translations](https://github.com/thinreports/thinreports-editor/blob/master/basic-editor/TRANSLATION.md)
+Please download the package from [the Releases](https://github.com/thinreports/thinreports-editor/releases) and install it.
 
 ## Development
 
@@ -34,38 +24,38 @@ Support a layout file that created/modified with 0.9.0+ Editor.
   * Python 2.7
   * Node.js
 
-### Getting Started
+### Launching the development version app
 
 Install dependencies:
 ```
-$ npm install
+npm install
 ```
 
 Compile javascript, css and templates:
 ```
-$ npm run compile
+npm run compile
 ```
 
 Launch Editor on development:
 ```
-$ npm start
+npm start
 ```
 
-### Other Tasks
+### Tips
 
 Watch and compile:
 ```
-$ npm run watch
+npm run watch
 ```
 
 Build package for macOS, Windows, Ubuntu(linux):
 ```
-$ npm run build
+npm run build
 ```
 
-Run compilation and building on production:
+Run compilation and building the production version app:
 ```
-$ npm run release
+npm run release
 ```
 
 ### Compiling using Docker Container
@@ -73,15 +63,15 @@ $ npm run release
 Or if you can use docker, you can compile script and css:
 
 ```
-$ docker build -t thinreports-editor:latest .
-$ docker run --rm -v $PWD:/src:cached thinreports-editor:latest
+docker build -t thinreports-editor:latest .
+docker run --rm -v $PWD:/src:cached thinreports-editor:latest
 Compiling JavaScript with SIMPLE_OPTIMIZATIONS...
 ```
 
 And, launch electron on development:
 
 ```
-$ npm start
+npm start
 ```
 
 ## Releasing
