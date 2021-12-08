@@ -1,8 +1,8 @@
 import { DeepReadonly } from 'utility-types';
+import { root } from '..';
 import { ActionsBase } from '../base/actions-base';
 import { Getters } from './getters';
 import { Mutations } from './mutations';
-import { root } from '..';
 import { History, Report } from '@/types';
 
 export class Actions extends ActionsBase<History, Getters, Mutations> {

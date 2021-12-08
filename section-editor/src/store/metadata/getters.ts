@@ -1,5 +1,5 @@
-import { GettersBase } from '../base/getters-base';
 import { history } from '..';
+import { GettersBase } from '../base/getters-base';
 import { Metadata } from '@/types';
 
 export class Getters extends GettersBase<Metadata> {

@@ -1,5 +1,5 @@
-import { Actions } from '../report/actions';
 import { root } from '..';
+import { Actions } from '../report/actions';
 
 let lock = false;
 
