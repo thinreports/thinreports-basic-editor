@@ -3,7 +3,7 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        appId: 'com.thinreports.${name}',
+        appId: 'com.thinreports.section-editor',
         productName: 'ThinreportsEditor-section',
         publish: null,
         mac: {
