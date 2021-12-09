@@ -9,7 +9,8 @@ module.exports = {
         mac: {
           artifactName: '${productName}-${version}-darwin.${ext}',
           category: 'public.app-category.developer-tools',
-          darkModeSupport: false
+          darkModeSupport: false,
+          icon: 'build/icon.icns'
         },
         linux: {
           artifactName: '${productName}-${version}-linux.${ext}',
@@ -17,10 +18,8 @@ module.exports = {
           target: 'AppImage'
         },
         win: {
-          artifactName: '${productName}-${version}-win32.${ext}'
-        },
-        dmg: {
-          icon: false
+          artifactName: '${productName}-${version}-win32.${ext}',
+          icon: 'build/icon.ico'
         }
       },
       nodeIntegration: true
