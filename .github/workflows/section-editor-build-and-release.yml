@@ -50,7 +50,7 @@ jobs:
         if: "!startsWith(github.ref, 'refs/tags')"
         with:
           name: ${{ matrix.os }}
-          path: package/*${{ matrix.package-ext }}
+          path: section-editor/package/*${{ matrix.package-ext }}
 
       - name: Release if tagged
         uses: softprops/action-gh-release@v1
