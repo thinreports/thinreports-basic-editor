@@ -7,7 +7,6 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 let win
 
 function createWindow () {
-  console.log(app.getAppPath());
   win = new BrowserWindow({
     width: 1000,
     height: 700,
