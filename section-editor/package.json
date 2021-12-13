@@ -19,7 +19,7 @@
     "@mdi/font": "^6.5.95",
     "@types/lodash.clonedeep": "^4.5.6",
     "ajv": "^6.12.6",
-    "bignumber.js": "^9.0.1",
+    "bignumber.js": "^9.0.2",
     "camel-case": "^4.1.2",
     "core-js": "^3.19.3",
     "kebab-case": "^1.0.1",
