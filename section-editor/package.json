@@ -31,7 +31,7 @@
     "vue-i18n": "^8.26.7"
   },
   "devDependencies": {
-    "@types/electron-devtools-installer": "^2.2.0",
+    "@types/electron-devtools-installer": "^2.2.1",
     "@types/jest": "^27.0.3",
     "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^2.20.0",
