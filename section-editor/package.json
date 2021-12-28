@@ -28,7 +28,7 @@
     "uikit": "^3.9.4",
     "uuid": "^8.3.2",
     "vue": "^2.6.14",
-    "vue-i18n": "^8.26.7"
+    "vue-i18n": "^8.26.8"
   },
   "devDependencies": {
     "@types/electron-devtools-installer": "^2.2.1",
