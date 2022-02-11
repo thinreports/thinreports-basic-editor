@@ -20,9 +20,9 @@ const config = {
     platform: targetPlatforms
   },
   packageName: {
-    'thinreports-editor-basic-darwin-x64': `ThinreportsEditor-basic-${package.version}-darwin`,
-    'thinreports-editor-basic-linux-x64': `ThinreportsEditor-basic-${package.version}-linux`,
-    'thinreports-editor-basic-win32-x64': `ThinreportsEditor-basic-${package.version}-win32`
+    'thinreports-basic-editor-darwin-x64': `thinreports-basic-editor-${package.version}-darwin`,
+    'thinreports-basic-editor-linux-x64': `thinreports-basic-editor-${package.version}-linux`,
+    'thinreports-basic-editor-win32-x64': `thinreports-basic-editor-${package.version}-win32`
   }
 }
 
