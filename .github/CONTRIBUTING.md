@@ -1,2 +1,1 @@
-We only accept bug reports and pull requests in GitHub.
-If you have a support question about how to use thinreports, please [ask on GitHub Discussions](https://github.com/thinreports/thinreports/discussions).
+Please see [How to contribute to Thinreports](https://github.com/thinreports/thinreports/blob/main/CONTRIBUTING.md).
