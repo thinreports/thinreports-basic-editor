@@ -226,7 +226,7 @@ thin.core.AbstractTextGroup.prototype.setTextLineHeightRatio = function(ratio) {
 
 
 /**
- * @deprecated See: https://github.com/thinreports/thinreports-editor/issues/38
+ * @deprecated See: https://github.com/thinreports/thinreports-basic-editor/issues/38
  * @param {string|number} spacing
  * @return {string}
  */

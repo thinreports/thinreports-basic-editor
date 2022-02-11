@@ -4,7 +4,7 @@
 
 ### Preparation
 
-1. Fork [thinreports/thinreports-editor](https://github.com/thinreports/thinreports-editor) on github
+1. Fork [thinreports/thinreports-basic-editor](https://github.com/thinreports/thinreports-basic-editor) on github
 2. Clone your forked repository
 3. Create your locale branch: `git switch -c new-locale`
 
@@ -51,7 +51,7 @@ Modify the your `app/index.html` as follows:
 <!DOCTYPE html>
   <html class="splash">
     <head>
-      <title>Thinreports Editor</title>
+      <title>Thinreports Basic Editor</title>
       <meta charset="UTF-8">
       <script src="index.js"></script>
       <script src="locales/ja.js"></script>

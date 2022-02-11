@@ -1,6 +1,6 @@
 # Thinreports Basic Editor
 
-[![Test](https://github.com/thinreports/thinreports-editor/actions/workflows/test.yml/badge.svg)](https://github.com/thinreports/thinreports-editor/actions/workflows/test.yml)
+[![Test](https://github.com/thinreports/thinreports-basic-editor/actions/workflows/test.yml/badge.svg)](https://github.com/thinreports/thinreports-basic-editor/actions/workflows/test.yml)
 
 A templte editor for [Thinreports](https://github.com/thinreports/thinreports) to edit [Basic Format](https://github.com/thinreports/thinreports#basic-format) template.
 
@@ -20,7 +20,7 @@ See [Two Available Formats](https://github.com/thinreports/thinreports#two-avail
 
 ## Installation
 
-Please download the package from [the Releases](https://github.com/thinreports/thinreports-editor/releases) and install it.
+Please download the package from [the Releases](https://github.com/thinreports/thinreports-basic-editor/releases) and install it.
 
 ## Development
 
@@ -69,8 +69,8 @@ npm run release
 Or if you can use docker, you can compile script and css:
 
 ```
-docker build -t thinreports-editor:latest .
-docker run --rm -v $PWD:/src:cached thinreports-editor:latest
+docker build -t thinreports-basic-editor:latest .
+docker run --rm -v $PWD:/src:cached thinreports-basic-editor:latest
 Compiling JavaScript with SIMPLE_OPTIMIZATIONS...
 ```
 

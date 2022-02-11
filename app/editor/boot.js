@@ -1437,12 +1437,12 @@ thin.init_ = function() {
 
     // Report Bug
     var toolHelpFeedBack = new thin.ui.MenuLinkItem(
-          thin.t('button_feedback'), 'https://github.com/thinreports/thinreports-editor/issues/new',
+          thin.t('button_feedback'), 'https://github.com/thinreports/thinreports-basic-editor/issues/new',
           new thin.ui.Icon('report-bug'));
     toolHelp.addItem(toolHelpFeedBack);
 
     var toolHelpTranslation = new thin.ui.MenuLinkItem(
-          thin.t('button_translation'), 'https://github.com/thinreports/thinreports-editor/blob/master/TRANSLATION.md');
+          thin.t('button_translation'), 'https://github.com/thinreports/thinreports-basic-editor/blob/master/TRANSLATION.md');
     toolHelp.addItem(toolHelpTranslation);
 
     toolbar.decorate(goog.dom.getElement('thin-toolbar'));
