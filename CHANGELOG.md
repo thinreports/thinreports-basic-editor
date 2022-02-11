@@ -1,4 +1,6 @@
-## master (Unreleased)
+## main (Unreleased)
+
+ * Changed the application name to "Thinreports Basic Editor" from "Thinreports Editor"
 
 ## 0.12.0
 
