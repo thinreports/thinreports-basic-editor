@@ -4,6 +4,12 @@
 
 A templte editor for [Thinreports](https://github.com/thinreports/thinreports) to edit [Basic Format](https://github.com/thinreports/thinreports#basic-format) template.
 
+## Renamed to Basic Editor
+
+With [the addition of the new template format Section Format and its editor Section Editor](https://github.com/thinreports/thinreports/issues/12), the editor has been renamed to Thinreports Basic Editor from Thinreports Editor.
+
+See [Two Available Formats](https://github.com/thinreports/thinreports#two-available-formats) for more information.
+
 ## Prerequisites
 
 ### Supported Platforms
