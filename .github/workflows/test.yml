@@ -1,0 +1,48 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 7
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 2.7
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 13
+
+      - name: Install npm packages
+        run: npm install
+
+      - name: Test for successful compilation
+        run: npm run compile
+
+      - name: Check that all build files are up to date
+        run: |
+          if ! git diff --exit-code --quiet
+          then
+            echo "Differences were detected in the following files after running compile:"
+            git diff --name-status
+
+            echo "\nYou probably didn't run the compilation, or forgot to commit the compiled files." \
+              "Please run npm run compile and check the file diffs."
+            exit 1
+          fi
