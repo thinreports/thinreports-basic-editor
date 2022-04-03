@@ -13,7 +13,8 @@ function createWindow () {
     icon: path.join(__dirname, 'assets/images/app-icon.png'),
     webPreferences: {
       enableRemoteModule: true,
-      preload: path.join(__dirname, 'handlers.js')
+      preload: path.join(__dirname, 'handlers.js'),
+      contextIsolation: false
     }
   })
 
