@@ -24,7 +24,7 @@
     "chokidar": "^3.4.2",
     "cross-env": "^7.0.2",
     "del": "^6.0.0",
-    "electron": "^15.5.5",
+    "electron": "^22.3.21",
     "electron-packager": "^15.1.0",
     "js-yaml": "^3.14.0"
   }
