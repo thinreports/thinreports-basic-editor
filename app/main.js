@@ -13,9 +13,6 @@ ipcMain.on('dialog:saveFile', (event, options) => {
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 
-app.commandLine.appendSwitch('disable-gpu');
-app.commandLine.appendSwitch('disable-software-rasterizer');
-
 let win
 
 function createWindow () {

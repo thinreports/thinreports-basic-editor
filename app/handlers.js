@@ -1,4 +1,4 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, nativeImage } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
@@ -53,10 +53,11 @@ handlers.layoutSaveAs = (callback, data) => {
 }
 
 handlers.imageOpen = (callback) => {
-  const imagefiles = dialog.showOpenDialogSync({
+  const imagefiles = ipcRenderer.sendSync('dialog:openFile', {
     filters: [
       {name: 'Images', extensions: ['jpg', 'png']}
-    ]
+    ],
+    properties: ['openFile']
   });
 
   if (!imagefiles) {
@@ -83,7 +84,7 @@ handlers.exportAs = (callback, type, content) => {
       break;
   }
 
-  const filename = dialog.showSaveDialogSync({
+  const filename = ipcRenderer.sendSync('dialog:saveFile', {
     filters: [
       {extensions: [extName], name: description}
     ]
