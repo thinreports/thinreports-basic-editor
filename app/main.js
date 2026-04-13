@@ -1,8 +1,20 @@
 const { app, BrowserWindow, Menu, shell } = require('electron')
 const path = require('path')
 const url = require('url')
+const { ipcMain, dialog } = require('electron');
+
+ipcMain.on('dialog:openFile', (event, options) => {
+  event.returnValue = dialog.showOpenDialogSync(options) || null;
+});
+
+ipcMain.on('dialog:saveFile', (event, options) => {
+  event.returnValue = dialog.showSaveDialogSync(options) || null;
+});
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
+
+app.commandLine.appendSwitch('disable-gpu');
+app.commandLine.appendSwitch('disable-software-rasterizer');
 
 let win
 

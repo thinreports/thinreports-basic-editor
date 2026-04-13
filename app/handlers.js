@@ -1,11 +1,11 @@
-const { dialog, nativeImage } = require('electron').remote;
+const { ipcRenderer } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
 const handlers = {};
 
 handlers.layoutOpen = (callback) => {
-  const filenames = dialog.showOpenDialogSync({
+  const filenames = ipcRenderer.sendSync('dialog:openFile', {
     filters: [
       {name: 'Thinreports Layout File', extensions: ['tlf']}
     ],
@@ -32,7 +32,7 @@ handlers.layoutSave = (callback, data, attrs) => {
 }
 
 handlers.layoutSaveAs = (callback, data) => {
-  const filename = dialog.showSaveDialogSync({
+  const filename = ipcRenderer.sendSync('dialog:saveFile', {
     filters: [
       {name: 'Thinreports Layout File', extensions: ['tlf']}
     ]
